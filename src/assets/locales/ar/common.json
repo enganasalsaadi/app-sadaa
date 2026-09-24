@@ -216,7 +216,11 @@
     },
     "language": {
       "title": "اللغة",
-      "saveSuccess": "تم تحديث اللغة بنجاح"
+      "saveSuccess": "تم تحديث اللغة بنجاح",
+      "options": {
+        "ar": { "native": "العربية", "name": "العربية" },
+        "en": { "native": "English", "name": "الإنجليزية" }
+      }
     },
     "maintenance": {
       "title": "تحت الصيانة",
@@ -290,5 +294,121 @@
     "selectStart": "اختر تاريخ البدء",
     "selectEnd": "اختر تاريخ الانتهاء",
     "days": "{{count}} أيام"
+  },
+  "devShowcase": {
+    "entryLabel": "معرض عناصر التصميم",
+    "title": "معرض نظام التصميم",
+    "topBar": {
+      "themeLabel": "المظهر: {{mode}}",
+      "toggleTheme": "تبديل المظهر",
+      "modeLight": "فاتح",
+      "modeDark": "داكن",
+      "modeSystem": "النظام",
+      "languageLabel": "اللغة: {{lang}}",
+      "directionLabel": "الاتجاه: {{dir}}",
+      "directionRtl": "من اليمين لليسار",
+      "directionLtr": "من اليسار لليمين"
+    },
+    "sections": {
+      "typography": "الطباعة",
+      "colors": "الألوان والحالات",
+      "buttons": "الأزرار",
+      "inputs": "الحقول",
+      "cards": "البطاقات",
+      "modalsToasts": "النوافذ والتنبيهات",
+      "layoutGallery": "معرض التخطيطات"
+    },
+    "typography": {
+      "h1Label": "H1 · عنوان",
+      "h2Label": "H2 · عنوان",
+      "h3Label": "H3 · عنوان",
+      "h4Label": "H4 · عنوان",
+      "titleLabel": "عنوان فرعي",
+      "bodyLabel": "نص أساسي",
+      "bodyMediumLabel": "نص متوسط",
+      "bodySmallLabel": "نص صغير",
+      "captionLabel": "توضيح",
+      "taglineLabel": "شعار العلامة"
+    },
+    "colors": {
+      "brand": "الهوية (كحلي)",
+      "interactive": "التفاعل (تركواز)",
+      "money": "المال (نعناعي)",
+      "premium": "المميز (خردلي)",
+      "warning": "تحذير (برتقالي)",
+      "shadeMain": "أساسي",
+      "shadeText": "نص",
+      "shadeSoft": "خافت"
+    },
+    "statusPills": {
+      "title": "شرائح الحالة (نموذج تطوير)",
+      "draft": "مسودة",
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "completed": "مكتمل",
+      "disputed": "متنازع عليه"
+    },
+    "buttons": {
+      "sampleLabel": "{{variant}} · {{size}}",
+      "statesTitle": "الحالات",
+      "stateDefault": "افتراضي",
+      "stateDisabled": "معطل",
+      "stateLoading": "جارٍ التحميل"
+    },
+    "inputs": {
+      "defaultLabel": "افتراضي",
+      "defaultPlaceholder": "اكتب شيئًا",
+      "focusLabel": "اضغط للتركيز",
+      "focusPlaceholder": "معاينة نمط التركيز",
+      "errorLabel": "مع خطأ",
+      "errorPlaceholder": "حقل مطلوب",
+      "errorMessage": "هذا الحقل مطلوب",
+      "searchLabel": "نمط البحث",
+      "searchPlaceholder": "بحث عن صناع محتوى أو حملات...",
+      "phoneLabel": "رقم الهاتف",
+      "phonePlaceholder": "5XX XXX XXX"
+    },
+    "cards": {
+      "plainTitle": "بطاقة ثابتة",
+      "plainBody": "سطح ثابت بدون تفاعل.",
+      "pressableTitle": "بطاقة قابلة للضغط",
+      "pressableBody": "اضغط لتبديل التحديد.",
+      "moneyTitle": "رصيد الضمان",
+      "moneyCaption": "تم تحويله إلى المحفظة"
+    },
+    "modalsToasts": {
+      "toastSuccessLabel": "تنبيه نجاح",
+      "toastSuccessMessage": "تم إنجاز الصفقة بنجاح",
+      "toastErrorLabel": "تنبيه خطأ",
+      "toastErrorMessage": "حدث خطأ ما",
+      "toastWarningLabel": "تنبيه تحذير",
+      "toastWarningMessage": "الدفع قيد المراجعة",
+      "toastInfoLabel": "تنبيه معلومات",
+      "toastInfoMessage": "تم استلام عرض حملة جديد",
+      "openBottomSheet": "فتح القائمة السفلية",
+      "sheetTitle": "تأكيد الإجراء",
+      "sheetBody": "هذه قائمة تأكيد تجريبية للمعاينة فقط.",
+      "sheetConfirm": "حسنًا",
+      "openSelectionModal": "فتح نافذة الاختيار",
+      "selectionTitle": "اختر خيارًا",
+      "selectionOption1": "الخيار الأول",
+      "selectionOption2": "الخيار الثاني",
+      "selectionOption3": "الخيار الثالث"
+    },
+    "layoutGallery": {
+      "fixedHeaderTitle": "رأس ثابت",
+      "fixedHeaderDescription": "ScreenHeader مع fillStatusBar",
+      "noHeaderScrollTitle": "بدون رأس مع تمرير",
+      "noHeaderScrollDescription": "withScroll بدون رأس",
+      "darkForcedTitle": "سطح داكن إجباري",
+      "darkForcedDescription": "معاينة رموز الوضع الداكن فقط",
+      "ctaButtonTitle": "زر دعوة لاتخاذ إجراء",
+      "ctaButtonDescription": "ctaButton مع alwaysSolid",
+      "noScrollWithHandlerTitle": "معالج تمرير يدوي",
+      "noScrollWithHandlerDescription": "withScroll={false} مع useScrollHandler",
+      "noScrollWithHandlerRow": "الصف {{index}}",
+      "gradientHeroTitle": "تدرج بطولي",
+      "gradientHeroDescription": "withGradient لغسيل الشاشة"
+    }
   }
 }

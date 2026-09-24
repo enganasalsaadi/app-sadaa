@@ -24,7 +24,7 @@ export interface CardProps {
    * بدون `borderColor` يُستخدم `interactive.main` عند `true` و`border.default` عند `false`.
    */
   selected?: boolean;
-  /** ظل من tokens — افتراضي `sm` للكروت */
+  /** ظل من tokens — افتراضي `sm` للكروت (سطوح مسطحة + حد، انظر القاعدة 08) */
   shadow?: ShadowToken;
   /** لون الخلفية؛ يتجاوز اشتقاق `selected` */
   bg?: string;
@@ -68,7 +68,7 @@ const CardInner: React.FC<CardProps> = ({
   children,
   onPress,
   selected,
-  shadow = 'md',
+  shadow = 'sm',
   bg,
   borderRadius = 'lg',
   borderWidth = 'thin',

@@ -1,0 +1,1 @@
+{"excludes": ["node_modules/**", "android/**", "ios/**", "build/**", "dist/**", ".expo/**", "web-build/**", "coverage/**", "*.log"]}

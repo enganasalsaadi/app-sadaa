@@ -5,9 +5,18 @@ import {
   type BottomTabBarProps,
 } from '@react-navigation/bottom-tabs';
 import { AppStatus } from '@/app/bootstrap';
-import { ChooseLanguageScreen } from '@/app/screens';
+import {
+  ChooseLanguageScreen,
+  DevShowcaseScreen,
+  LayoutFixedHeaderScreen,
+  LayoutNoHeaderScrollScreen,
+  LayoutDarkForcedScreen,
+  LayoutCtaButtonScreen,
+  LayoutNoScrollWithHandlerScreen,
+  LayoutGradientHeroScreen,
+} from '@/app/screens';
 import { HomeNavigator } from '@/domains/marketplace';
-import type { RootTabParamList } from '@/core/navigation';
+import type { RootTabParamList, DevShowcaseStackParamList } from '@/core/navigation';
 import { AuthNavigator } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
 import FloatingBottomBar from '@/shared/ui/FloatingBottomBar';
@@ -20,7 +29,7 @@ type RootStackParamList = {
   ChooseLanguage: undefined;
   Auth: undefined;
   Main: undefined;
-};
+} & DevShowcaseStackParamList;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -71,6 +80,42 @@ export const RootNavigator: React.FC<Props> = ({ appStatus }) => {
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />
+      )}
+
+      {/*
+        Dev-only screens layered on top of the Main branch, not an alternate
+        AppStatus branch — reachable only via imperative `navigate()` from the
+        Profile screen's `__DEV__`-gated row. Stripped from production builds
+        by dead-code elimination on the `__DEV__` constant.
+      */}
+      {__DEV__ && (
+        <Stack.Group>
+          <Stack.Screen name="DevShowcase" component={DevShowcaseScreen} />
+          <Stack.Screen
+            name="LayoutFixedHeaderScreen"
+            component={LayoutFixedHeaderScreen}
+          />
+          <Stack.Screen
+            name="LayoutNoHeaderScrollScreen"
+            component={LayoutNoHeaderScrollScreen}
+          />
+          <Stack.Screen
+            name="LayoutDarkForcedScreen"
+            component={LayoutDarkForcedScreen}
+          />
+          <Stack.Screen
+            name="LayoutCtaButtonScreen"
+            component={LayoutCtaButtonScreen}
+          />
+          <Stack.Screen
+            name="LayoutNoScrollWithHandlerScreen"
+            component={LayoutNoScrollWithHandlerScreen}
+          />
+          <Stack.Screen
+            name="LayoutGradientHeroScreen"
+            component={LayoutGradientHeroScreen}
+          />
+        </Stack.Group>
       )}
     </Stack.Navigator>
   );

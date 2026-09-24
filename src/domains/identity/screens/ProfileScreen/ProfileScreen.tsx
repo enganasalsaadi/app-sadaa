@@ -13,6 +13,7 @@ import {
   Camera,
   UserRoundPen,
   ChevronLeft,
+  Palette,
 } from 'lucide-react-native';
 import { useTheme, useStyles, moderateScale } from '@/core/theme';
 import { Layout } from '@/shared/ui/Layout';
@@ -22,6 +23,7 @@ import { Pressable } from '@/shared/ui/primitives/Pressable';
 import { BottomSheet } from '@/shared/ui/BottomSheet';
 import { useProfileScreen } from './hooks/useProfileScreen';
 import type { SettingsStackScreenProps } from '@/core/navigation';
+import { navigate } from '@/core/navigation';
 import { Card, CustomButton, CustomInput, Image } from '@/shared/ui';
 import { useDispatch } from 'react-redux';
 import { clearCredentials } from '@/domains/auth';
@@ -113,9 +115,22 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
     },
   ];
 
+  // Dev-only entry into the Design System Showcase — stripped from production
+  // builds by dead-code elimination on the `__DEV__` constant.
+  const devSettingsItems = __DEV__
+    ? [
+        {
+          key: 'devShowcase',
+          icon: Palette,
+          label: t('devShowcase.entryLabel'),
+          onPress: () => navigate('DevShowcase'),
+        },
+      ]
+    : [];
+
   const settingsItems = isAuthenticated
-    ? [...privateSettingsItems, ...publicSettingsItems]
-    : publicSettingsItems;
+    ? [...privateSettingsItems, ...publicSettingsItems, ...devSettingsItems]
+    : [...publicSettingsItems, ...devSettingsItems];
 
   const closeDeleteSheet = () => {
     setDeleteSheetVisible(false);

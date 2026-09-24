@@ -12,10 +12,7 @@ import { appStorage, StorageKeys } from '@/core/storage';
 import { toastService } from '@/core/toast';
 import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 
-const LANGUAGES = [
-  { code: 'en', label: 'English', nativeLabel: 'English' },
-  { code: 'ar', label: 'Arabic', nativeLabel: 'العربية' },
-];
+const LANGUAGES = ['en', 'ar'] as const;
 
 const LanguageScreenComponent: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -65,20 +62,21 @@ const LanguageScreenComponent: React.FC = () => {
           borderWidth="thin"
           borderColor={colors.border.default}
         >
-          {LANGUAGES.map((lang, index) => {
-            const isSelected = lang.code === currentLang;
+          {LANGUAGES.map((code, index) => {
+            const isSelected = code === currentLang;
             const isLast = index === LANGUAGES.length - 1;
+            const base = `account.language.options.${code}` as const;
             return (
               <Pressable
-                key={lang.code}
-                onPress={() => handleSelect(lang.code)}
+                key={code}
+                onPress={() => handleSelect(code)}
                 row
                 align="center"
                 px="lg"
                 py="md"
                 accessibilityRole="radio"
                 accessibilityState={{ selected: isSelected }}
-                accessibilityLabel={lang.nativeLabel}
+                accessibilityLabel={t(`${base}.native`)}
                 style={isLast ? undefined : styles.divider}
               >
                 <Box flex={1}>
@@ -88,10 +86,10 @@ const LanguageScreenComponent: React.FC = () => {
                       isSelected ? colors.interactive.text : colors.text.primary
                     }
                   >
-                    {lang.nativeLabel}
+                    {t(`${base}.native`)}
                   </Text>
                   <Text variant="caption" color={colors.text.tertiary}>
-                    {lang.label}
+                    {t(`${base}.name`)}
                   </Text>
                 </Box>
                 {isSelected && (

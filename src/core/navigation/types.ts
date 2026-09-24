@@ -28,6 +28,20 @@ export type HomeStackParamList = {
 
 export type SettingsStackParamList = AccountScreens;
 
+/**
+ * Dev-only screens layered on top of the root stack (see RootNavigator,
+ * gated behind `if (__DEV__)`). Not part of any domain's public navigation.
+ */
+export type DevShowcaseStackParamList = {
+  DevShowcase: undefined;
+  LayoutFixedHeaderScreen: undefined;
+  LayoutNoHeaderScrollScreen: undefined;
+  LayoutDarkForcedScreen: undefined;
+  LayoutCtaButtonScreen: undefined;
+  LayoutNoScrollWithHandlerScreen: undefined;
+  LayoutGradientHeroScreen: undefined;
+};
+
 export type RootTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
   SettingsTab: NavigatorScreenParams<SettingsStackParamList>;

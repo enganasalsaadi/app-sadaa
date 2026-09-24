@@ -216,7 +216,11 @@
     },
     "language": {
       "title": "Language",
-      "saveSuccess": "Language updated successfully"
+      "saveSuccess": "Language updated successfully",
+      "options": {
+        "ar": { "native": "العربية", "name": "Arabic" },
+        "en": { "native": "English", "name": "English" }
+      }
     },
     "maintenance": {
       "title": "Under Maintenance",
@@ -290,5 +294,121 @@
     "selectStart": "Select start date",
     "selectEnd": "Select end date",
     "days": "{{count}} days"
+  },
+  "devShowcase": {
+    "entryLabel": "UI Kit Showcase",
+    "title": "Design System Showcase",
+    "topBar": {
+      "themeLabel": "Theme: {{mode}}",
+      "toggleTheme": "Toggle theme",
+      "modeLight": "Light",
+      "modeDark": "Dark",
+      "modeSystem": "System",
+      "languageLabel": "Language: {{lang}}",
+      "directionLabel": "Direction: {{dir}}",
+      "directionRtl": "RTL",
+      "directionLtr": "LTR"
+    },
+    "sections": {
+      "typography": "Typography",
+      "colors": "Colors & Status",
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "cards": "Cards",
+      "modalsToasts": "Modals & Toasts",
+      "layoutGallery": "Layout Gallery"
+    },
+    "typography": {
+      "h1Label": "H1 · Heading",
+      "h2Label": "H2 · Heading",
+      "h3Label": "H3 · Heading",
+      "h4Label": "H4 · Heading",
+      "titleLabel": "Title",
+      "bodyLabel": "Body text",
+      "bodyMediumLabel": "Body medium",
+      "bodySmallLabel": "Body small",
+      "captionLabel": "Caption",
+      "taglineLabel": "Brand tagline"
+    },
+    "colors": {
+      "brand": "Brand (Navy)",
+      "interactive": "Interactive (Teal)",
+      "money": "Money (Mint)",
+      "premium": "Premium (Mustard)",
+      "warning": "Warning (Orange)",
+      "shadeMain": "main",
+      "shadeText": "text",
+      "shadeSoft": "soft"
+    },
+    "statusPills": {
+      "title": "Status pills (dev mock)",
+      "draft": "Draft",
+      "pending": "Pending",
+      "active": "Active",
+      "completed": "Completed",
+      "disputed": "Disputed"
+    },
+    "buttons": {
+      "sampleLabel": "{{variant}} · {{size}}",
+      "statesTitle": "States",
+      "stateDefault": "Default",
+      "stateDisabled": "Disabled",
+      "stateLoading": "Loading"
+    },
+    "inputs": {
+      "defaultLabel": "Default",
+      "defaultPlaceholder": "Type something",
+      "focusLabel": "Tap to focus",
+      "focusPlaceholder": "Focus style preview",
+      "errorLabel": "With error",
+      "errorPlaceholder": "Required field",
+      "errorMessage": "This field is required",
+      "searchLabel": "Search style",
+      "searchPlaceholder": "Search creators, campaigns...",
+      "phoneLabel": "Phone number",
+      "phonePlaceholder": "5XX XXX XXX"
+    },
+    "cards": {
+      "plainTitle": "Plain card",
+      "plainBody": "A static surface with no interaction.",
+      "pressableTitle": "Pressable card",
+      "pressableBody": "Tap to toggle selection.",
+      "moneyTitle": "Escrow balance",
+      "moneyCaption": "Released to wallet"
+    },
+    "modalsToasts": {
+      "toastSuccessLabel": "Success toast",
+      "toastSuccessMessage": "Deal completed successfully",
+      "toastErrorLabel": "Error toast",
+      "toastErrorMessage": "Something went wrong",
+      "toastWarningLabel": "Warning toast",
+      "toastWarningMessage": "Payment is pending review",
+      "toastInfoLabel": "Info toast",
+      "toastInfoMessage": "New campaign offer received",
+      "openBottomSheet": "Open bottom sheet",
+      "sheetTitle": "Confirm action",
+      "sheetBody": "This is a mock confirmation sheet for preview only.",
+      "sheetConfirm": "Got it",
+      "openSelectionModal": "Open selection modal",
+      "selectionTitle": "Choose an option",
+      "selectionOption1": "Option one",
+      "selectionOption2": "Option two",
+      "selectionOption3": "Option three"
+    },
+    "layoutGallery": {
+      "fixedHeaderTitle": "Fixed header",
+      "fixedHeaderDescription": "ScreenHeader with fillStatusBar",
+      "noHeaderScrollTitle": "No header, scroll",
+      "noHeaderScrollDescription": "withScroll, no header",
+      "darkForcedTitle": "Forced dark surface",
+      "darkForcedDescription": "Preview of dark tokens only",
+      "ctaButtonTitle": "CTA button",
+      "ctaButtonDescription": "ctaButton with alwaysSolid",
+      "noScrollWithHandlerTitle": "Manual scroll handler",
+      "noScrollWithHandlerDescription": "withScroll false + useScrollHandler",
+      "noScrollWithHandlerRow": "Row {{index}}",
+      "gradientHeroTitle": "Gradient hero",
+      "gradientHeroDescription": "withGradient screen wash"
+    }
   }
 }
