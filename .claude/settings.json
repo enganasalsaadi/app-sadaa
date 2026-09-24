@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(magick mipmap-xxxhdpi/ic_launcher_foreground.png -background '#888' -flatten /tmp/fg_check.png)",
+      "Bash(magick drawable-xxxhdpi/bootsplash_logo.png -background '#1C3349' -flatten -resize 50% /tmp/bs_check.png)",
+      "Bash(magick ../../../../../ios/Sadaa/Images.xcassets/BootSplashLogo-9d0d1a.imageset/logo-9d0d1a@3x.png -background '#1C3349' -flatten /tmp/ios_bs.png)",
+      "Bash(magick mipmap-mdpi/ic_launcher.png -scale 400% /tmp/mdpi.png)",
+      "Bash(magick ios/Sadaa/Images.xcassets/AppIcon.appiconset/ItunesArtwork@2x.png -format '%[pixel:p{5,5}] %[pixel:p{512,512}]\\\\n' info:)",
+      "Bash(magick android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png -format '%[pixel:p{216,216}]\\\\n' info:)",
+      "Bash(plutil -lint ios/Sadaa.xcodeproj/project.pbxproj)",
+      "Bash(plutil -lint ios/Sadaa/Info.plist)",
+      "Bash(grep -rnE \"isDark|fontFamily|FONT_FAMILY|ALMARAI|Almarai|radii\\\\.\\(xl|2xl|3xl|xs\\)|borderRadius[=:] *['\\\\\"]\\(xl|2xl|3xl|xs\\)['\\\\\"]|shadows\\\\.\\(lg|xl\\)|shadow[=:] *['\\\\\"]\\(lg|xl\\)['\\\\\"]|colors\\\\.brand\\\\b[^.]|\\\\+ *'[0-9A-Fa-f]{2}'|rgba|#[0-9A-Fa-f]{3,6}'|'transparent'|'white'|'black'\" --include='*.ts' --include='*.tsx' .)",
+      "Bash(grep -rn \"as never\\\\|as any\\\\|#[0-9a-fA-F]\\\\{3,6\\\\}['\\\\\"]\" src/domains src/app/screens)",
+      "Bash(grep -rln \"EEF0F3\" src scripts/brand/template.html .claude/rules; sed -i '' 's/#EEF0F3/#F2F4F7/g' src/core/theme/tokens/colors.ts scripts/brand/template.html .claude/rules/08-brand-identity.md; grep -c \"EEF0F3\" scripts/brand/template.html; npx jest src/core 2>&1 | grep -E \"Tests:\")",
+      "Bash(grep -n \"Legacy \\\\`images\\\\|app-icon.svg\\\\` \\(1024\" .claude/rules/08-brand-identity.md)",
+      "Bash(cd /Users/anasalsaadi/Desktop/projects/ـــ/mobile/sadaa/src/shared/ui; cat ../../core/theme/tokens/borderWidths.ts | head -12; cat -n FloatingBottomBar/index.tsx FloatingBottomBar/CurvedTabItem.tsx; cat FloatingBottomBar/CurvedBarBackground.tsx FloatingBottomBar/constants.ts)",
+      "Read(//Users/anasalsaadi/Desktop/projects/ـــ/core/theme/tokens/**)",
+      "Bash(echo \"eslint exit $?\")",
+      "Bash(grep -rnE \"colors\\\\.\\(brand|error\\)\\\\b[^.]|isDark|surface\\\\.\\(variant|sunken|inverse\\)|text\\\\.inverse|interactive\\\\.active|#[0-9a-fA-F]{3,6}['\\\\\"]|as never|as any\" src/domains src/app/screens)",
+      "Bash(cd /Users/anasalsaadi/Desktop/projects/ـــ/mobile/sadaa/src/shared/ui; *)",
+      "Read(//Users/anasalsaadi/Desktop/projects/ـــ/core/api/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/anasalsaadi/Desktop/projects/ـــ/mobile/sadaa/.claude/rules"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/anasalsaadi/.local/bin/graphify hook-guard search",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/anasalsaadi/.local/bin/graphify hook-guard read",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

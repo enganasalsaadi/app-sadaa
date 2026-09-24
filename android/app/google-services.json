@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157516481008",
+    "project_id": "sadaapp-c7142",
+    "storage_bucket": "sadaapp-c7142.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157516481008:android:5937643c421834cb2d5d35",
+        "android_client_info": {
+          "package_name": "com.getsadaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZabAwlOYNnjL_k-hcRGeVzgrReBCLiOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

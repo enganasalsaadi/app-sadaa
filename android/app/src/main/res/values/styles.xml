@@ -1,0 +1,17 @@
+<resources>
+    <style name="AppTheme" parent="Theme.EdgeToEdge">
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <!-- Draw behind system bars; nav bar fully transparent (content + safe area show through) -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- <item name="android:navigationBarColor">@android:color/transparent</item> -->
+        <!-- Material: disable scrim behind 3-button nav so bar stays transparent -->
+        <item name="enforceNavigationBarContrast">false</item>
+    </style>
+
+    <style name="BootTheme" parent="Theme.BootSplash">
+        <item name="bootSplashBackground">@color/bootsplash_background</item>
+        <item name="bootSplashLogo">@drawable/bootsplash_logo</item>
+        <item name="postBootSplashTheme">@style/AppTheme</item>
+    </style>
+</resources>

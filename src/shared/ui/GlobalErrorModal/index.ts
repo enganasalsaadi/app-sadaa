@@ -1,0 +1,1 @@
+export { GlobalErrorModal } from './GlobalErrorModal';
