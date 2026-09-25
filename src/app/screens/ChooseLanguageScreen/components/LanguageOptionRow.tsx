@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Check } from 'lucide-react-native';
 import { Box, Text, Card } from '@/shared/ui';
-import { useTheme, useStyles, moderateScale } from '@/core/theme';
+import { useTheme } from '@/core/theme';
 import type { SupportedLanguage } from '@/core/config';
 import type { LanguageCardAlign } from '../data';
 
@@ -15,11 +16,7 @@ export interface LanguageOptionRowProps {
 export const LanguageOptionRow = React.memo<LanguageOptionRowProps>(
   ({ id, align, isSelected, onSelect }) => {
     const { t } = useTranslation();
-    const { colors } = useTheme();
-    const styles = useStyles(() => ({
-      title: { width: '100%' as const, lineHeight: moderateScale(40) },
-      line: { width: '100%' as const, lineHeight: moderateScale(30) },
-    }));
+    const { colors, sizes } = useTheme();
     const base = `chooseLanguage.options.${id}` as const;
 
     const handlePress = useCallback(() => {
@@ -30,37 +27,40 @@ export const LanguageOptionRow = React.memo<LanguageOptionRowProps>(
       <Card
         onPress={handlePress}
         selected={isSelected}
-        p="xl"
+        bg={colors.surface.main}
+        borderColor={isSelected ? colors.interactive.main : colors.border.default}
+        borderWidth={isSelected ? 'sm' : 'thin'}
+        p="md"
+        row
+        align="center"
+        justify="space-between"
         accessibilityLabel={t(`${base}.a11yLabel`)}
         accessibilityHint={t(`${base}.a11yHint`)}
         shadow="sm"
       >
-        <Box align={align}>
-          <Text
-            variant="h2"
-            style={styles.title}
-            align={align === 'flex-start' ? 'left' : 'right'}
-          >
-            {t(`${base}.title`)}
-          </Text>
-          <Text
-            variant="body"
-            color={colors.text.secondary}
-            mt="xs"
-            align={align === 'flex-start' ? 'left' : 'right'}
-            style={styles.line}
-          >
-            {t(`${base}.subtitle`)}
-          </Text>
-        </Box>
         <Text
-          variant="button"
-          mt="lg"
+          variant="h4"
           align={align === 'flex-start' ? 'left' : 'right'}
-          style={styles.line}
+          writingDirection={id === 'en' ? 'ltr' : undefined}
         >
           {t(`${base}.label`)}
         </Text>
+        {isSelected && (
+          <Box
+            width={sizes.icon.md}
+            height={sizes.icon.md}
+            borderRadius="full"
+            bg={colors.interactive.main}
+            align="center"
+            justify="center"
+          >
+            <Check
+              size={sizes.icon.xs}
+              color={colors.text.onAccent}
+              strokeWidth={2.5}
+            />
+          </Box>
+        )}
       </Card>
     );
   },

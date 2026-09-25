@@ -51,7 +51,7 @@ ENVFILE=.env.staging npx react-native run-ios
 
 ```
 src/
-  app/        App.tsx, navigation/RootNavigator, store/, bootstrap/, screens/ (ChooseLanguage, Maintenance)
+  app/        App.tsx, navigation/RootNavigator, store/, bootstrap/, screens/ (Boot, ChooseLanguage, Maintenance, ForceUpdate)
   core/       api/ config/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ hooks/
   shared/     ui/ (UI kit) · context/ · utils/ · types/
   domains/    auth/ · identity/ · marketplace/ · finance/
@@ -62,9 +62,9 @@ src/
 
 ## Boot & navigation
 
-`useAppBootstrap` (`src/app/bootstrap`) resolves `AppStatus` from MMKV + Redux: `LOADING → CHOOSE_LANGUAGE → UNAUTHENTICATED → AUTHENTICATED`. `RootNavigator` renders exactly one branch per status (`ChooseLanguage` | `Auth` | `Main`). `Main` = bottom tabs (`FloatingBottomBar`), currently `HomeTab` (marketplace) + `SettingsTab` (identity). Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
+`useAppBootstrap` (`src/app/bootstrap`) runs the boot pipeline while the native splash (symbol only) stays up: language → `GET /config` (3s timeout, `extraOptions.silent`, cached in MMKV) → `resolveBootGate` (maintenance from fresh config only; `min_version`/`force_update` → update required; newer `latest_version` → one-time soft-update toast) → auth. **Fail-open:** config failure never blocks (server still answers 503). Statuses: `LOADING → MAINTENANCE | UPDATE_REQUIRED | CHOOSE_LANGUAGE | UNAUTHENTICATED | AUTHENTICATED` (gates win over auth). Boot >1.5s → `BootScreen` (JS copy of the splash + spinner). `RootNavigator` renders exactly one branch per status (`Maintenance` | `ForceUpdate` | `ChooseLanguage` | `Auth` | `Main`). New boot checks go in `resolveBootGate` + a new `AppStatus`, never in screens. `Main` = bottom tabs (`FloatingBottomBar`), currently `HomeTab` (marketplace) + `SettingsTab` (identity). Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
 
-`App.tsx` also: fetches `/config` (`useGetConfigQuery` from `@/core/api`) → `MaintenanceScreen` if `maintenance_mode`; initialises notifications + FCM token; mounts `GlobalErrorModal`, `NetworkSnackbar`, `Toast` (inside `ThemeProvider` — keep it there).
+`App.tsx` also: applies `test_mode` from the boot config; initialises notifications + FCM token; mounts `GlobalErrorModal`, `NetworkSnackbar`, `Toast` (inside `ThemeProvider` — keep it there).
 
 ## Existing infrastructure (reuse, don't rebuild)
 
@@ -96,4 +96,5 @@ src/
 - `API_BASE_URL` in `.env*` + `network_security_config.xml` still point to old domain.
 - MMKV not encrypted (rule 07).
 - Unverified on device after the Navy Trust migration: CustomInput/PhoneInput still hand-pick `row-reverse`/`textAlign` by `isRTL`; `Card` defaults to `shadow="md"` (rule 08 prefers flat + border).
+- `IOS_APP_STORE_ID` (`.env*`) empty until first App Store release — force-update button opens the App Store home until set.
 - `NotificationSettings` in `identity/api/accountApi.ts` still has booking-era fields — replace with Sada notification categories when backend is ready.

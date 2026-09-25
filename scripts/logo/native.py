@@ -5,13 +5,13 @@ Run: python3 scripts/logo/native.py   (needs Google Chrome for SVG rendering + I
 Writes:
   ios/Sadaa/Images.xcassets/AppIcon.appiconset/*.png   every file in its Contents.json, opaque (no alpha)
   ios/Sadaa/Images.xcassets/iTunesArtwork@{1,2,3}x.png  opaque
-  ios/Sadaa/Images.xcassets/BootSplashLogo-*.imageset/*.png   logo-full-dark, transparent, current pixel sizes
-  ios BootSplash colorset + BootSplash.storyboard background -> navy
+  ios/Sadaa/Images.xcassets/BootSplashLogo-*.imageset/*.png   symbol-lg-dark, transparent, SPLASH pt @1x/2x/3x
+  ios BootSplash colorset + BootSplash.storyboard background -> navy, storyboard logo frame -> SPLASH pt
   android res mipmap-*/ic_launcher{,_round,_foreground}.png, playstore-icon.png
-  android res drawable-*/bootsplash_logo.png (logo width 130dp on the 288dp bootsplash canvas)
+  android res drawable-*/bootsplash_logo.png (symbol SPLASH dp on the 288dp bootsplash canvas)
   android res drawable-*/ic_notification.png (24dp, white symbol-mono in the 20dp live area)
   android values colors: ic_launcher_background + bootsplash_background -> navy, notification_accent -> teal
-Sources: app-icon.svg (icons), logo-full-dark.svg (bootsplash), symbol-mono.svg (notification). Adaptive foreground = app-icon.svg minus its navy rect.
+Sources: app-icon.svg (icons), symbol-lg-dark.svg (bootsplash — symbol only, approved 2026-09-24), symbol-mono.svg (notification). Adaptive foreground = app-icon.svg minus its navy rect.
 """
 import json, os, re, subprocess, tempfile
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -21,6 +21,8 @@ XC = os.path.join(IOS, 'Images.xcassets')
 RES = os.path.join(ROOT, 'android', 'app', 'src', 'main', 'res')
 CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 N, T = '#1C3349', '#397D8C'
+# Bootsplash symbol size in pt/dp. Symbol only: native assets can't follow the in-app language.
+SPLASH = 112
 DENS = {'ldpi': .75, 'mdpi': 1, 'hdpi': 1.5, 'xhdpi': 2, 'xxhdpi': 3, 'xxxhdpi': 4}
 TMP = tempfile.mkdtemp()
 
@@ -59,10 +61,6 @@ def circle(svg, out, px):
            f'circle {px / 2 - .5},{px / 2 - .5} {px / 2 - .5},0', ')', '-compose', 'DstIn', '-composite', '-strip', 'PNG32:' + out)
 
 
-def size(path):
-    return tuple(map(int, subprocess.check_output(['magick', 'identify', '-format', '%w %h', path]).split()))
-
-
 def sub(path, pattern, repl):
     s = open(path).read()
     s2 = re.sub(pattern, repl, s)
@@ -76,7 +74,7 @@ def rgb01(hexc):
 
 icon = read('app-icon.svg')
 foreground = re.sub(r'<rect[^>]*/>', '', icon, count=1)
-lockup = read('logo-full-dark.svg')
+splash_svg = read('symbol-lg-dark.svg')
 
 # iOS app icon: size × scale, flattened on navy (App Store rejects alpha).
 iconset = os.path.join(XC, 'AppIcon.appiconset')
@@ -87,13 +85,12 @@ for im in json.load(open(os.path.join(iconset, 'Contents.json')))['images']:
 for k in (1, 2, 3):
     opaque(icon, os.path.join(XC, f'iTunesArtwork@{k}x.png'), 512 * k)
 
-# iOS bootsplash: keep current pixel sizes (storyboard frame depends on them).
+# iOS bootsplash: SPLASH pt square at each scale in the imageset; storyboard frame follows.
 splash = next(d for d in os.listdir(XC) if d.startswith('BootSplashLogo'))
-for f in sorted(os.listdir(os.path.join(XC, splash))):
-    if f.endswith('.png'):
-        p = os.path.join(XC, splash, f)
-        render(lockup, p, *size(p))
-        print(f, size(p))
+for im in json.load(open(os.path.join(XC, splash, 'Contents.json')))['images']:
+    px = SPLASH * int(im['scale'][0])
+    render(splash_svg, os.path.join(XC, splash, im['filename']), px, px)
+    print(im['filename'], px)
 r, g, b = rgb01(N)
 colorset = next(d for d in os.listdir(os.path.join(IOS, 'Colors.xcassets')) if d.startswith('BootSplashBackground'))
 cs = os.path.join(IOS, 'Colors.xcassets', colorset, 'Contents.json')
@@ -102,6 +99,10 @@ data['colors'][0]['color']['components'].update(red=f'{r:.15f}', green=f'{g:.15f
 json.dump(data, open(cs, 'w'), indent=2)
 sub(os.path.join(IOS, 'BootSplash.storyboard'), r'(<namedColor name="BootSplashBackground[^"]*">\s*<color) red="[^"]*" green="[^"]*" blue="[^"]*"',
     rf'\1 red="{r:.15f}" green="{g:.15f}" blue="{b:.15f}"')
+board = os.path.join(IOS, 'BootSplash.storyboard')
+sub(board, r'(<image name="BootSplashLogo[^"]*") width="[^"]*" height="[^"]*"', rf'\1 width="{SPLASH}" height="{SPLASH}"')
+sub(board, r'(image="BootSplashLogo[^"]*"[^>]*>\s*<rect key="frame") x="[^"]*" y="[^"]*" width="[^"]*" height="[^"]*"',
+    rf'\1 x="{(375 - SPLASH) / 2}" y="{(667 - SPLASH) / 2}" width="{SPLASH}" height="{SPLASH}"')
 
 # Android launcher: legacy 48dp (square + circle) and adaptive 108dp foreground.
 # Foreground places the 1024 icon artwork on the 72dp visible area, so the symbol is 0.625×72dp = 45dp (inside the 66dp safe zone).
@@ -116,12 +117,12 @@ for d, k in DENS.items():
     print(d, px, fg)
 opaque(icon, os.path.join(RES, 'playstore-icon.png'), 512)
 
-# Android bootsplash: 288dp canvas, lockup 130dp wide, centred (react-native-bootsplash layout).
+# Android bootsplash: 288dp canvas, symbol SPLASH dp centred (inside the 192dp Android 12 icon mask).
 for d, k in DENS.items():
     p = os.path.join(RES, f'drawable-{d}', 'bootsplash_logo.png')
     if os.path.exists(p):
-        c, w = round(288 * k), round(130 * k)
-        render(lockup, p, c, c, ((c - w) / 2, 0, w, c))
+        c, w = round(288 * k), round(SPLASH * k)
+        render(splash_svg, p, c, c, ((c - w) / 2, (c - w) / 2, w, w))
         print(os.path.relpath(p, RES), c)
 
 # Android notification small icon: 24dp, white silhouette on transparent (OS tints it), symbol in the 20dp live area.

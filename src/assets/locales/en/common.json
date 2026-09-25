@@ -228,21 +228,23 @@
       "closeApp": "Close App"
     }
   },
+  "appUpdate": {
+    "title": "Update required",
+    "subtitle": "This version of Sada is no longer supported. Update to keep your deals and wallet secure.",
+    "cta": "Update now",
+    "available": "A new version of Sada is available in the store."
+  },
   "chooseLanguage": {
     "title": "Choose Language",
     "nextHint": "Confirms your language and continues into the app",
     "heroA11y": "Language selection",
     "options": {
       "ar": {
-        "title": "مرحبا 👋",
-        "subtitle": "كيف حالك ?",
         "label": "العربية",
         "a11yLabel": "Arabic",
         "a11yHint": "Preview the app in Arabic before continuing"
       },
       "en": {
-        "title": "Hi 👋",
-        "subtitle": "how are you doing ?",
         "label": "English",
         "a11yLabel": "English",
         "a11yHint": "Preview the app in English before continuing"

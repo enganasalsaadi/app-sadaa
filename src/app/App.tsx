@@ -15,7 +15,7 @@ import { FONT_FAMILY } from '@/core/theme/tokens/typography';
 import { store, persistor } from '@/app/store';
 import { RootNavigator } from '@/app/navigation/RootNavigator';
 import { navigationRef, navigate } from '@/core/navigation';
-import { useAppBootstrap } from '@/app/bootstrap';
+import { useAppBootstrap, useSlowBoot } from '@/app/bootstrap';
 import { useNetworkMonitor } from '@/core/hooks';
 import { useNotification } from '@/core/hooks';
 import { useFcmNotificationToken } from '@/domains/auth';
@@ -24,24 +24,24 @@ import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
 import { GlobalErrorModal } from '@/shared/ui/GlobalErrorModal';
 import { NetworkSnackbar } from '@/shared/ui/NetworkSnackbar';
-import { useGetConfigQuery } from '@/core/api';
-import { MaintenanceScreen } from '@/app/screens/MaintenanceScreen';
+import { BootScreen } from '@/app/screens/BootScreen';
 import { setTestConfig } from '@/shared/utils/textReplacer';
 const AppContent: React.FC = () => {
   const { isDark, colors } = useTheme();
-  const { isReady, status } = useAppBootstrap();
+  const { isReady, status, config: appConfig } = useAppBootstrap();
+  const isSlowBoot = useSlowBoot(isReady);
   const { initialize, setNavigate } = useNotification();
   const { registerToken } = useFcmNotificationToken();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   useNetworkMonitor();
   useGetProfileQuery(undefined, { skip: !isAuthenticated });
-  const { data: appConfig } = useGetConfigQuery();
 
+  // Native splash covers the whole boot pipeline; on a slow boot BootScreen takes over.
   useEffect(() => {
-    if (isReady) {
+    if (isReady || isSlowBoot) {
       BootSplash.hide({ fade: true });
     }
-  }, [isReady]);
+  }, [isReady, isSlowBoot]);
 
   useEffect(() => {
     if (appConfig) {
@@ -57,11 +57,7 @@ const AppContent: React.FC = () => {
   }, [initialize, setNavigate, registerToken]);
 
   if (!isReady) {
-    return null;
-  }
-
-  if (appConfig?.maintenance_mode) {
-    return <MaintenanceScreen message={appConfig.maintenance_message} />;
+    return isSlowBoot ? <BootScreen /> : null;
   }
 
   return (
@@ -85,7 +81,10 @@ const AppContent: React.FC = () => {
         },
       }}
     >
-      <RootNavigator appStatus={status} />
+      <RootNavigator
+        appStatus={status}
+        maintenanceMessage={appConfig?.maintenance_message}
+      />
       <GlobalErrorModal />
       <NetworkSnackbar />
     </NavigationContainer>

@@ -61,7 +61,11 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-type ExtraOptions = { withPagination?: boolean };
+type ExtraOptions = {
+  withPagination?: boolean;
+  /** Skip global error UI (modal/snackbar) — caller handles failure itself, e.g. boot config (fail-open). */
+  silent?: boolean;
+};
 
 const baseQueryWithGlobalErrorHandler: BaseQueryFn<
   string | FetchArgs,
@@ -93,6 +97,10 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
   if (result.error) {
     const statusCode = result.error.status;
     const normalizedError = normalizeApiError(result.error);
+
+    if (extraOptions?.silent) {
+      return { error: result.error };
+    }
 
     if (statusCode === 500) {
       const retryKey = retryRegistry.register(async () => {

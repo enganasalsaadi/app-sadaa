@@ -1,5 +1,6 @@
 export {env, isDev, isStaging, isProd, apiUrl} from './env';
 export type {AppEnv} from './env';
+export {openAppStore} from './openAppStore';
 export {
   DEFAULT_LANGUAGE,
   DEFAULT_CURRENCY,

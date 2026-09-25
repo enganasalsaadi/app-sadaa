@@ -17,6 +17,8 @@ interface TextProps extends RNTextProps {
   variant?: TypographyVariant;
   color?: string;
   align?: TextStyle['textAlign'];
+  /** يتجاوز اتجاه الكتابة التلقائي (isRTL) — لمحتوى بلغة ثابتة بصرف النظر عن لغة التطبيق */
+  writingDirection?: TextStyle['writingDirection'];
   transform?: TextStyle['textTransform'];
   decoration?: TextStyle['textDecorationLine'];
   italic?: boolean;
@@ -40,6 +42,7 @@ const TextComponent: React.FC<TextProps> = ({
   variant = 'body',
   color,
   align,
+  writingDirection,
   transform,
   decoration,
   italic,
@@ -144,8 +147,10 @@ const TextComponent: React.FC<TextProps> = ({
   ]);
 
   const directionStyle = useMemo<TextStyle>(
-    () => ({ writingDirection: isRTL ? 'rtl' : 'ltr' }),
-    [isRTL],
+    () => ({
+      writingDirection: writingDirection ?? (isRTL ? 'rtl' : 'ltr'),
+    }),
+    [writingDirection, isRTL],
   );
 
   const processedChildren = Array.isArray(children)

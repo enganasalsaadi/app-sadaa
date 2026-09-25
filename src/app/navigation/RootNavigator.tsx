@@ -7,6 +7,8 @@ import {
 import { AppStatus } from '@/app/bootstrap';
 import {
   ChooseLanguageScreen,
+  MaintenanceScreen,
+  ForceUpdateScreen,
   DevShowcaseScreen,
   LayoutFixedHeaderScreen,
   LayoutNoHeaderScrollScreen,
@@ -26,6 +28,8 @@ import { BottomBarProvider } from '@/shared/context/BottomBarContext';
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 type RootStackParamList = {
+  Maintenance: undefined;
+  ForceUpdate: undefined;
   ChooseLanguage: undefined;
   Auth: undefined;
   Main: undefined;
@@ -35,6 +39,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 interface Props {
   appStatus: AppStatus;
+  /** Server text for the maintenance branch (falls back to the i18n default). */
+  maintenanceMessage?: string | null;
 }
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -61,7 +67,7 @@ const MainTabs: React.FC = () => {
   );
 };
 
-export const RootNavigator: React.FC<Props> = ({ appStatus }) => {
+export const RootNavigator: React.FC<Props> = ({ appStatus, maintenanceMessage }) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -70,6 +76,14 @@ export const RootNavigator: React.FC<Props> = ({ appStatus }) => {
         freezeOnBlur: true,
       }}
     >
+      {appStatus === AppStatus.MAINTENANCE && (
+        <Stack.Screen name="Maintenance">
+          {() => <MaintenanceScreen message={maintenanceMessage} />}
+        </Stack.Screen>
+      )}
+      {appStatus === AppStatus.UPDATE_REQUIRED && (
+        <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
+      )}
       {appStatus === AppStatus.CHOOSE_LANGUAGE && (
         <Stack.Screen name="ChooseLanguage">
           {() => <ChooseLanguageScreen />}

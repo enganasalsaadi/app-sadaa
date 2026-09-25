@@ -12,6 +12,9 @@ interface EnvConfig {
 
   ENABLE_LOGS: boolean;
   ENABLE_MOCK_DATA: boolean;
+
+  /** Numeric App Store id for the force-update link; empty until the app is published. */
+  IOS_APP_STORE_ID: string;
 }
 
 const trimSlashes = (
@@ -61,6 +64,8 @@ export const env: EnvConfig = {
 
   ENABLE_LOGS: getBooleanValue('ENABLE_LOGS', true),
   ENABLE_MOCK_DATA: getBooleanValue('ENABLE_MOCK_DATA', false),
+
+  IOS_APP_STORE_ID: getStringValue('IOS_APP_STORE_ID'),
 };
 
 export const isDev = env.APP_ENV === 'development';

@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  Box,
-  Text,
-  CustomButton,
-  Layout,
-  AnimatedIconHero,
-} from '@/shared/ui';
+import { useTranslation } from 'react-i18next';
+import { Box, Text, CustomButton, Layout } from '@/shared/ui';
 import { LanguageOptionRow } from './components';
 import { useChooseLanguageScreen } from './hooks';
 import { Earth } from 'lucide-react-native';
-import { useTheme } from '@/core/theme';
+import { useTheme, moderateScale } from '@/core/theme';
 
 export const ChooseLanguageScreen: React.FC = () => {
   const {
@@ -22,12 +17,22 @@ export const ChooseLanguageScreen: React.FC = () => {
     nextButtonHint,
   } = useChooseLanguageScreen();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   return (
     <Layout withScroll>
       <Box flex={1} pt="5xl" align="center" justify="center">
-        <AnimatedIconHero
-          icon={<Earth size={50} color={colors.text.onBrand} strokeWidth={1.5} />}
-        />
+        <Box
+          width={moderateScale(112)}
+          height={moderateScale(112)}
+          borderRadius="full"
+          bg={colors.interactive.soft}
+          align="center"
+          justify="center"
+          accessibilityRole="image"
+          accessibilityLabel={t('chooseLanguage.heroA11y')}
+        >
+          <Earth size={moderateScale(60)} color={colors.interactive.main} strokeWidth={1.5} />
+        </Box>
       </Box>
 
       <>

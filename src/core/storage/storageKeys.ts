@@ -12,6 +12,8 @@ export const StorageKeys = {
   USER_TOKEN: 'auth.token',
   REFRESH_TOKEN: 'auth.refresh',
   PENDING_USER_DATA: 'auth.pending_user_data',
+  APP_CONFIG_CACHE: 'app.config_cache',
+  UPDATE_PROMPTED_VERSION: 'app.update_prompted_version',
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];
@@ -25,4 +27,8 @@ export interface StorageSchema {
   [StorageKeys.USER_TOKEN]: string;
   [StorageKeys.REFRESH_TOKEN]: string;
   [StorageKeys.PENDING_USER_DATA]: string;
+  /** Last successful GET /config (JSON) — offline fallback for the version gate. */
+  [StorageKeys.APP_CONFIG_CACHE]: string;
+  /** latest_version already announced by the soft-update toast. */
+  [StorageKeys.UPDATE_PROMPTED_VERSION]: string;
 }

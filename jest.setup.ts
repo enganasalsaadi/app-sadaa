@@ -22,3 +22,9 @@ jest.mock('react-native-config', () => ({
   __esModule: true,
   default: {},
 }));
+
+// Its NativeEventEmitter needs the native module at import time.
+jest.mock('react-native-device-info', () => ({
+  getVersion: () => '1.0.0',
+  getBundleId: () => 'com.getsadaapp',
+}));

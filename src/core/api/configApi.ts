@@ -1,8 +1,11 @@
 import { baseApi } from './baseApi';
 
+const CONFIG_TIMEOUT_MS = 3000;
+
 /** Public runtime config fetched on splash (GET /config). */
 export interface AppConfig {
-  app: {
+  /** Version gate. Optional: older backends omit it → no gate. */
+  app?: {
     /** Minimum supported version; below this force an update. */
     min_version: string;
     /** Latest published version. */
@@ -30,7 +33,9 @@ export const configApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
     getConfig: builder.query<AppConfig, void>({
-      query: () => '/config',
+      // Boot blocks on this call, so keep it short; failure is handled by the boot pipeline (fail-open).
+      query: () => ({ url: '/config', timeout: CONFIG_TIMEOUT_MS }),
+      extraOptions: { silent: true },
       providesTags: ['AppConfig'],
     }),
   }),
