@@ -251,6 +251,58 @@
       }
     }
   },
+
+  
+"onboarding": {
+    "next": "Next",
+    "start": "Get Started",
+    "skip": "Skip",
+    "skipHint": "Skip intro and proceed to login",
+    "progress": "Step {{current}} of {{total}}",
+    "slides": {
+      "brands": {
+        "audience": "For Brands",
+        "title": "Advertise Safely with Local Creators",
+        "subtitle": "Direct access, real reach, zero middlemen.",
+        "cardTop": {
+          "title": "Trusted Local Reach",
+          "description": "Creators from your city with real metrics."
+        },
+        "cardBottom": {
+          "title": "Streamlined Management",
+          "description": "Set your brief, review drafts, get reports."
+        }
+      },
+      "creators": {
+        "audience": "For Creators",
+        "title": "Organize Deals, Secure Your Payouts",
+        "subtitle": "All your campaigns and earnings in one place.",
+        "cardTop": {
+          "title": "Live Media Kit",
+          "description": "One link auto-updating your stats and rates."
+        },
+        "cardBottom": {
+          "title": "Clear Offers & Smooth Delivery",
+          "description": "Receive brand offers and submit drafts with ease."
+        }
+      },
+      "trust": {
+        "audience": "For Everyone",
+        "title": "Protected Funds in Every Campaign",
+        "subtitle": "Protection for brands, guarantee for creators.",
+        "cardTop": {
+          "title": "Escrow Protection",
+          "description": "Funds released only after you approve the ad."
+        },
+        "cardBottom": {
+          "title": "Guaranteed Instant Payout",
+          "description": "Earnings reserved upfront, sent to your wallet."
+        }
+      }
+    }
+  }
+
+, 
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",

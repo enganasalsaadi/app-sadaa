@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getVersion } from 'react-native-device-info';
 import i18n from '@/core/i18n';
 import { appStorage, StorageKeys } from '@/core/storage';
@@ -23,7 +23,7 @@ const announceSoftUpdate = (version: string) => {
 
 /**
  * Boot pipeline (native splash stays up until isReady):
- * language → GET /config (fail-open) → maintenance / version gate → auth status.
+ * language → GET /config (fail-open) → maintenance / version gate → onboarding → auth status.
  */
 export const useAppBootstrap = () => {
   const dispatch = useAppDispatch();
@@ -77,6 +77,15 @@ export const useAppBootstrap = () => {
     }
   }, [isAuthenticated, state.isReady, state.status]);
 
+  const completeOnboarding = useCallback(() => {
+    appStorage.set(StorageKeys.HAS_SEEN_ONBOARDING, 'true');
+    setState(prev =>
+      prev.status === AppStatus.ONBOARDING
+        ? { ...prev, status: AppStatus.UNAUTHENTICATED }
+        : prev,
+    );
+  }, []);
+
   const status = useMemo(() => {
     if (!state.isReady) {
       return AppStatus.LOADING;
@@ -98,5 +107,6 @@ export const useAppBootstrap = () => {
     isReady: state.isReady,
     status,
     config: state.config,
+    completeOnboarding,
   };
 };

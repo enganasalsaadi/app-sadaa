@@ -23,6 +23,8 @@ export const BUTTON_COLOR_VARIANTS = [
   'outline',
   'ghost',
   'danger',
+  /** Primary CTA on navy brand surfaces (hero, onboarding) — navy primary vanishes there. */
+  'onBrand',
 ] as const;
 export type ButtonColorVariant = (typeof BUTTON_COLOR_VARIANTS)[number];
 
@@ -39,7 +41,8 @@ export interface ThemeColors {
   premium: HueColors;
   status: Record<StatusTone, HueColors>;
 
-  layout: { base: string; divider: string };
+  /** `transparent`: screen bg when a backdrop (HeroBackdrop) paints behind Layout. */
+  layout: { base: string; divider: string; transparent: string };
   surface: { main: string; elevated: string };
   text: {
     primary: string;
@@ -50,11 +53,29 @@ export interface ThemeColors {
     onAccent: string;
     /** On navy brand surfaces (hero, header) — light in both modes. */
     onBrand: string;
+    /** Secondary text on navy brand surfaces and glass cards over them. */
+    onBrandMuted: string;
   };
   border: { default: string; strong: string };
   icon: { primary: string; secondary: string; disabled: string };
 
   button: Record<ButtonColorVariant, ButtonColors>;
+
+  /** Frosted-glass surfaces — only over the navy gradient, never on neutral bg. */
+  glass: {
+    fill: string;
+    border: string;
+    /** Icon badge inside a glass card. */
+    badge: string;
+    progressTrack: string;
+    progressFill: string;
+    /** Ambient backdrop glows (teal family) behind the glass cards. */
+    glowPrimary: string;
+    glowSecondary: string;
+    /** Icons on glass: interaction (teal) / money (mint) roles, tinted to read on navy. */
+    iconInteractive: string;
+    iconMoney: string;
+  };
 
   navigation: {
     tabBar: { active: string; inactive: string; background: string };
@@ -86,6 +107,8 @@ export interface ThemeColors {
     hero: string[];
     /** Soft wash at the top of screens (Layout withGradient). */
     screenWash: { colors: string[]; locations: number[] };
+    /** Full-screen onboarding backdrop. */
+    onboarding: string[];
   };
   overlay: string;
   /** Full-screen photo/video viewer backdrop — black in both modes. */
@@ -96,6 +119,8 @@ const NAVY = '#1C3349';
 const NAVY_DEEP = '#0B1622';
 const WHITE = '#FFFFFF';
 const ON_TEAL_DARK = '#06121C';
+const BG = '#F5F7F9';
+const ON_BRAND_MUTED = '#C9D6E0';
 
 const lightText = {
   primary: '#0F1D2B',
@@ -141,13 +166,14 @@ export const lightColors: ThemeColors = {
   premium: { main: '#D9B46A', text: '#8A6A24', soft: '#FBF3E2' },
   status: lightStatus,
 
-  layout: { base: '#F5F7F9', divider: '#DCE3EA' },
+  layout: { base: '#F5F7F9', divider: '#DCE3EA', transparent: 'transparent' },
   surface: { main: WHITE, elevated: '#EDF1F4' },
   text: {
     ...lightText,
     link: lightInteractive.text,
     onAccent: WHITE,
     onBrand: WHITE,
+    onBrandMuted: ON_BRAND_MUTED,
   },
   border: { default: '#DCE3EA', strong: '#C3CDD7' },
   icon: {
@@ -178,6 +204,19 @@ export const lightColors: ThemeColors = {
       text: WHITE,
       border: lightStatus.danger.main,
     },
+    onBrand: { bg: BG, text: NAVY, border: BG },
+  },
+
+  glass: {
+    fill: 'rgba(255, 255, 255, 0.15)',
+    border: 'rgba(255, 255, 255, 0.28)',
+    badge: 'rgba(255, 255, 255, 0.18)',
+    progressTrack: 'rgba(255, 255, 255, 0.22)',
+    progressFill: BG,
+    glowPrimary: '#397D8C',
+    glowSecondary: '#6FC0CF',
+    iconInteractive: darkInteractive.main,
+    iconMoney: '#3DDBA5',
   },
 
   navigation: {
@@ -220,6 +259,7 @@ export const lightColors: ThemeColors = {
       colors: ['#E6ECF2', 'rgba(230, 236, 242, 0)'],
       locations: [0, 0.3],
     },
+    onboarding: [NAVY, '#27506A', '#397D8C'],
   },
   overlay: 'rgba(11, 22, 34, 0.5)',
   mediaBackdrop: '#000000',
@@ -232,13 +272,14 @@ export const darkColors: ThemeColors = {
   premium: { main: '#E6C47E', text: '#E6C47E', soft: '#2E2716' },
   status: darkStatus,
 
-  layout: { base: NAVY_DEEP, divider: '#22384C' },
+  layout: { base: NAVY_DEEP, divider: '#22384C', transparent: 'transparent' },
   surface: { main: '#122131', elevated: '#182B3D' },
   text: {
     ...darkText,
     link: darkInteractive.text,
     onAccent: ON_TEAL_DARK,
-    onBrand: '#F5F7F9',
+    onBrand: BG,
+    onBrandMuted: ON_BRAND_MUTED,
   },
   border: { default: '#22384C', strong: '#30495F' },
   icon: {
@@ -269,6 +310,19 @@ export const darkColors: ThemeColors = {
       text: ON_TEAL_DARK,
       border: darkStatus.danger.main,
     },
+    onBrand: { bg: '#5FAFBF', text: ON_TEAL_DARK, border: '#5FAFBF' },
+  },
+
+  glass: {
+    fill: 'rgba(255, 255, 255, 0.07)',
+    border: 'rgba(255, 255, 255, 0.18)',
+    badge: 'rgba(255, 255, 255, 0.10)',
+    progressTrack: 'rgba(255, 255, 255, 0.14)',
+    progressFill: darkInteractive.main,
+    glowPrimary: '#2D6B78',
+    glowSecondary: '#397D8C',
+    iconInteractive: darkInteractive.main,
+    iconMoney: '#3DDBA5',
   },
 
   navigation: {
@@ -311,6 +365,7 @@ export const darkColors: ThemeColors = {
       colors: ['#16303A', 'rgba(22, 48, 58, 0)'],
       locations: [0, 0.3],
     },
+    onboarding: [NAVY_DEEP, NAVY, '#1F4A5C', '#2D6B78'],
   },
   overlay: 'rgba(0, 0, 0, 0.7)',
   mediaBackdrop: '#000000',

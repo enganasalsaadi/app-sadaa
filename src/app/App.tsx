@@ -28,7 +28,7 @@ import { BootScreen } from '@/app/screens/BootScreen';
 import { setTestConfig } from '@/shared/utils/textReplacer';
 const AppContent: React.FC = () => {
   const { isDark, colors } = useTheme();
-  const { isReady, status, config: appConfig } = useAppBootstrap();
+  const { isReady, status, config: appConfig, completeOnboarding } = useAppBootstrap();
   const isSlowBoot = useSlowBoot(isReady);
   const { initialize, setNavigate } = useNotification();
   const { registerToken } = useFcmNotificationToken();
@@ -84,6 +84,7 @@ const AppContent: React.FC = () => {
       <RootNavigator
         appStatus={status}
         maintenanceMessage={appConfig?.maintenance_message}
+        onOnboardingFinish={completeOnboarding}
       />
       <GlobalErrorModal />
       <NetworkSnackbar />

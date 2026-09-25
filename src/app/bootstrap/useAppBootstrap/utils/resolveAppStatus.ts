@@ -1,5 +1,4 @@
-import { appStorage, StorageKeys } from '@/core/storage';
-import { authStorage } from '@/core/storage';
+import { appStorage, authStorage, StorageKeys } from '@/core/storage';
 import { AppStatus } from '../types';
 
 export const resolveAppStatus = (): AppStatus => {
@@ -12,6 +11,11 @@ export const resolveAppStatus = (): AppStatus => {
     const token = authStorage.getToken();
     if (token) {
       return AppStatus.AUTHENTICATED;
+    }
+
+    // Logged-in users skip it: onboarding is a pre-auth intro only.
+    if (appStorage.get(StorageKeys.HAS_SEEN_ONBOARDING) !== 'true') {
+      return AppStatus.ONBOARDING;
     }
 
     return AppStatus.UNAUTHENTICATED;

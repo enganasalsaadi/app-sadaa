@@ -7,6 +7,8 @@ export enum AppStatus {
   /** Installed version below min_version (or force_update). Blocks every other branch. */
   UPDATE_REQUIRED = 'UPDATE_REQUIRED',
   CHOOSE_LANGUAGE = 'CHOOSE_LANGUAGE',
+  /** First run after language choice: intro slides, shown once per install. */
+  ONBOARDING = 'ONBOARDING',
   UNAUTHENTICATED = 'UNAUTHENTICATED',
   AUTHENTICATED = 'AUTHENTICATED',
 }

@@ -7,6 +7,7 @@ export const StorageKeys = {
   THEME_MODE: 'app.theme_mode',
   LANGUAGE: 'app.language',
   HAS_CHOSEN_LANGUAGE: 'app.has_chosen_language',
+  HAS_SEEN_ONBOARDING: 'app.has_seen_onboarding',
   PUSH_TOKEN: 'app.push_token',
   DEVICE_ID_STORAGE_KEY: 'app.device_id',
   USER_TOKEN: 'auth.token',
@@ -22,6 +23,8 @@ export interface StorageSchema {
   [StorageKeys.THEME_MODE]: string;
   [StorageKeys.LANGUAGE]: string;
   [StorageKeys.HAS_CHOSEN_LANGUAGE]: string;
+  /** 'true' once intro slides are finished or skipped. */
+  [StorageKeys.HAS_SEEN_ONBOARDING]: string;
   [StorageKeys.PUSH_TOKEN]: string;
   [StorageKeys.DEVICE_ID_STORAGE_KEY]: string;
   [StorageKeys.USER_TOKEN]: string;

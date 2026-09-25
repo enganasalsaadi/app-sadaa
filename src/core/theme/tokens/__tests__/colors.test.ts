@@ -42,7 +42,7 @@ const textPairs = (c: ThemeColors): [string, string, string][] => {
         string,
       ],
   );
-  const buttons = (['primary', 'secondary', 'danger'] as const).map(
+  const buttons = (['primary', 'secondary', 'danger', 'onBrand'] as const).map(
     v =>
       [`button.${v}`, c.button[v].text, c.button[v].bg] as [
         string,
@@ -56,6 +56,14 @@ const textPairs = (c: ThemeColors): [string, string, string][] => {
     ...buttons,
     ['text.onAccent', c.text.onAccent, c.interactive.main],
     ['text.onBrand', c.text.onBrand, c.brand.main],
+    ...c.gradients.onboarding.slice(0, -1).map(
+      stop =>
+        ['text.onBrandMuted on onboarding', c.text.onBrandMuted, stop] as [
+          string,
+          string,
+          string,
+        ],
+    ),
     ['money.text on soft', c.money.text, c.money.soft],
     ['premium.text on soft', c.premium.text, c.premium.soft],
   ];

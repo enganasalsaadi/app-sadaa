@@ -81,6 +81,16 @@ Status is never conveyed by color alone — pill always has text (+ icon where s
 - `radii.ts` has only `none · sm · md · lg · full` (xs/xl/2xl/3xl removed 2026-09-24). Shadows: only `none · sm · md`.
 - Elevation: flat surfaces + 1px `border`; shadows only `sm`/`md` for floating elements (bottom bar, sheets, FAB).
 
+## Glass & navy surfaces (approved 2026-09-25, onboarding)
+
+- **Glass is allowed only over the navy gradient** (`<HeroBackdrop />` + `<GlassCard />` from `@/shared/ui`). Never on `layout.base`/surface, where it just reads as a washed-out card; use `Card` there.
+- `GlassCard`: radius `lg` (12), 1px `glass.border`, `glass.fill`, shadow `md` (clipped to outside the card so it never shows through the translucent fill). Drawn with **Skia** (`@shopify/react-native-skia`), no `BlurView` on either platform: native blur under animated transforms was the main cause of jank, and blur over a smooth gradient is visually near-invisible. Skia nodes can't read React context: resolve values with `useGlassCardStyle()` outside the `<Canvas>`. Icon badge 44 × 44, radius `md` (8).
+- Tokens (`colors.glass`): fill `rgba(255,255,255,.15)` light / `.07` dark · border `.28` / `.18` · badge `.18` / `.10` · progress track `.22` / `.14`, fill `#F5F7F9` / `#6FC0CF` · glows (teal family only, no mint — mint is money) `#397D8C`+`#6FC0CF` / `#2D6B78`+`#397D8C` · icons on glass: interactive `#6FC0CF`, money `#3DDBA5`.
+- `gradients.onboarding`: light = hero; dark `#0B1622 → #1C3349 → #1F4A5C → #2D6B78`.
+- Text on navy: `text.onBrand` (titles, skip) and `text.onBrandMuted` `#C9D6E0` (subtitles, card body; ≥ 4.5:1 on every gradient stop except the last teal stop, so keep muted text off the bottom).
+- **CTA on navy:** `CustomButton variant="onBrand"`: light `#F5F7F9` fill + navy label, dark = the teal primary. The navy primary is invisible there.
+- Spec asked for 24 radius / 999 pill CTA / 14 badge. **Rejected:** keep the 8–12 range.
+
 ## Logo
 
 Concept **C — Concentric Echo**, geometry v4. **Approved 2026-09-24** (SVG files signed off — logo is final; changes need explicit user approval).

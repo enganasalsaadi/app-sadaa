@@ -51,7 +51,7 @@ ENVFILE=.env.staging npx react-native run-ios
 
 ```
 src/
-  app/        App.tsx, navigation/RootNavigator, store/, bootstrap/, screens/ (Boot, ChooseLanguage, Maintenance, ForceUpdate)
+  app/        App.tsx, navigation/RootNavigator, store/, bootstrap/, screens/ (Boot, ChooseLanguage, Onboarding, Maintenance, ForceUpdate)
   core/       api/ config/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ hooks/
   shared/     ui/ (UI kit) · context/ · utils/ · types/
   domains/    auth/ · identity/ · marketplace/ · finance/
@@ -62,7 +62,7 @@ src/
 
 ## Boot & navigation
 
-`useAppBootstrap` (`src/app/bootstrap`) runs the boot pipeline while the native splash (symbol only) stays up: language → `GET /config` (3s timeout, `extraOptions.silent`, cached in MMKV) → `resolveBootGate` (maintenance from fresh config only; `min_version`/`force_update` → update required; newer `latest_version` → one-time soft-update toast) → auth. **Fail-open:** config failure never blocks (server still answers 503). Statuses: `LOADING → MAINTENANCE | UPDATE_REQUIRED | CHOOSE_LANGUAGE | UNAUTHENTICATED | AUTHENTICATED` (gates win over auth). Boot >1.5s → `BootScreen` (JS copy of the splash + spinner). `RootNavigator` renders exactly one branch per status (`Maintenance` | `ForceUpdate` | `ChooseLanguage` | `Auth` | `Main`). New boot checks go in `resolveBootGate` + a new `AppStatus`, never in screens. `Main` = bottom tabs (`FloatingBottomBar`), currently `HomeTab` (marketplace) + `SettingsTab` (identity). Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
+`useAppBootstrap` (`src/app/bootstrap`) runs the boot pipeline while the native splash (symbol only) stays up: language → `GET /config` (3s timeout, `extraOptions.silent`, cached in MMKV) → `resolveBootGate` (maintenance from fresh config only; `min_version`/`force_update` → update required; newer `latest_version` → one-time soft-update toast) → onboarding (`HAS_SEEN_ONBOARDING`, pre-auth only; logged-in users skip it) → auth. **Fail-open:** config failure never blocks (server still answers 503). Statuses: `LOADING → MAINTENANCE | UPDATE_REQUIRED | CHOOSE_LANGUAGE | ONBOARDING | UNAUTHENTICATED | AUTHENTICATED` (gates win over auth). Boot >1.5s → `BootScreen` (JS copy of the splash + spinner). `RootNavigator` renders exactly one branch per status (`Maintenance` | `ForceUpdate` | `ChooseLanguage` | `Onboarding` | `Auth` | `Main`); `OnboardingScreen` finishes via `completeOnboarding` from `useAppBootstrap` (passed down as a prop). New boot checks go in `resolveBootGate` + a new `AppStatus`, never in screens. `Main` = bottom tabs (`FloatingBottomBar`), currently `HomeTab` (marketplace) + `SettingsTab` (identity). Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
 
 `App.tsx` also: applies `test_mode` from the boot config; initialises notifications + FCM token; mounts `GlobalErrorModal`, `NetworkSnackbar`, `Toast` (inside `ThemeProvider` — keep it there).
 
@@ -71,7 +71,7 @@ src/
 - **API:** `baseApi` with envelope unwrapping, pagination (`withPagination`), 401 refresh, centralised 403/422/5xx/offline handling, `retryRegistry`. Domains `injectEndpoints` with `overrideExisting: true`.
 - **Toasts:** `toastService.success|error|warning|info` (`@/core/toast`) outside React; `useToast()` inside.
 - **Errors UI:** `GlobalErrorModal` (5xx), `NetworkSnackbar` (offline via `useNetworkMonitor`), `InlineError` (400/404/validation).
-- **UI kit (`@/shared/ui`):** `Box Text Pressable Card Image` primitives, `Layout` (safe area, scroll, keyboard, `ctaButton` — use `alwaysSolid` on inner screens), `ScreenHeader` (`fillStatusBar` ⇒ Layout `edges={['left','right']}`), `CustomButton`, `CustomInput`, `PhoneInput` (libphonenumber, E.164), `BottomSheet`, `SelectionModal`, `DateRangePicker`, `GalleryModal`, `SuperList`, `FloatingBottomBar`.
+- **UI kit (`@/shared/ui`):** `Box Text Pressable Card Image` primitives, `Layout` (safe area, scroll, keyboard, `ctaButton` — use `alwaysSolid` on inner screens), `ScreenHeader` (`fillStatusBar` ⇒ Layout `edges={['left','right']}`), `CustomButton`, `CustomInput`, `PhoneInput` (libphonenumber, E.164), `BottomSheet`, `SelectionModal`, `DateRangePicker`, `GalleryModal`, `SuperList`, `FloatingBottomBar`, `HeroBackdrop` + `GlassCard` (Skia, navy surfaces only; theme via `useGlassCardStyle()` outside `<Canvas>`, rule 08).
 - **SuperList:** FlashList v2 — no `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}` when columns change; `scrollRestorationKey` persists offset in MMKV; pass `useScrollHandler()` to `onScroll` when `Layout withScroll={false}`.
 - **Bottom bar:** `useHideBottomBar()` on inner screens.
 - **Theme:** `useTheme()`, `useStyles()`, `useResponsiveValue()`; `moderateScale/fontScale` only for sizes without tokens. Font: Tajawal (rule 08). Colors: hue groups `{main,text,soft}` (`brand interactive money premium status.*`) — `.text` for text, `.main` for fills/icons. Spacing `xs sm md lg xl 2xl … 7xl`; typography `h1–h4 title body bodyMedium bodySmall caption button buttonSmall overline label`.

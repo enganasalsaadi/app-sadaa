@@ -18,6 +18,9 @@ export type {
   BrandLogoVariant,
   BrandLogoSurface,
 } from './BrandLogo';
+export { GlassCard, useGlassCardStyle } from './GlassCard';
+export type { GlassCardProps, GlassCardStyle } from './GlassCard';
+export { HeroBackdrop } from './HeroBackdrop';
 export { CustomButton } from './CustomButton';
 export type { ButtonVariant, ButtonSize } from './CustomButton';
 export { CustomInput } from './CustomInput';

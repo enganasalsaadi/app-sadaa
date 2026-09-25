@@ -7,6 +7,7 @@ import {
 import { AppStatus } from '@/app/bootstrap';
 import {
   ChooseLanguageScreen,
+  OnboardingScreen,
   MaintenanceScreen,
   ForceUpdateScreen,
   DevShowcaseScreen,
@@ -31,6 +32,7 @@ type RootStackParamList = {
   Maintenance: undefined;
   ForceUpdate: undefined;
   ChooseLanguage: undefined;
+  Onboarding: undefined;
   Auth: undefined;
   Main: undefined;
 } & DevShowcaseStackParamList;
@@ -41,6 +43,8 @@ interface Props {
   appStatus: AppStatus;
   /** Server text for the maintenance branch (falls back to the i18n default). */
   maintenanceMessage?: string | null;
+  /** Called when intro slides are finished or skipped. */
+  onOnboardingFinish: () => void;
 }
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -67,7 +71,11 @@ const MainTabs: React.FC = () => {
   );
 };
 
-export const RootNavigator: React.FC<Props> = ({ appStatus, maintenanceMessage }) => {
+export const RootNavigator: React.FC<Props> = ({
+  appStatus,
+  maintenanceMessage,
+  onOnboardingFinish,
+}) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -87,6 +95,11 @@ export const RootNavigator: React.FC<Props> = ({ appStatus, maintenanceMessage }
       {appStatus === AppStatus.CHOOSE_LANGUAGE && (
         <Stack.Screen name="ChooseLanguage">
           {() => <ChooseLanguageScreen />}
+        </Stack.Screen>
+      )}
+      {appStatus === AppStatus.ONBOARDING && (
+        <Stack.Screen name="Onboarding">
+          {() => <OnboardingScreen onFinish={onOnboardingFinish} />}
         </Stack.Screen>
       )}
       {appStatus === AppStatus.UNAUTHENTICATED && (

@@ -1,4 +1,5 @@
 export { ChooseLanguageScreen } from './ChooseLanguageScreen';
+export { OnboardingScreen } from './OnboardingScreen';
 export { MaintenanceScreen } from './MaintenanceScreen';
 export { ForceUpdateScreen } from './ForceUpdateScreen';
 export { BootScreen } from './BootScreen';
