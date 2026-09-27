@@ -9,22 +9,27 @@ import {
   Lock,
   LogOut,
   Trash2,
-  ChevronRight,
   Camera,
   UserRoundPen,
-  ChevronLeft,
   Palette,
 } from 'lucide-react-native';
 import { useTheme, useStyles, moderateScale } from '@/core/theme';
-import { Layout } from '@/shared/ui/Layout';
-import { Box } from '@/shared/ui/primitives/Box';
-import { Text } from '@/shared/ui/primitives/Text';
-import { Pressable } from '@/shared/ui/primitives/Pressable';
-import { BottomSheet } from '@/shared/ui/BottomSheet';
 import { useProfileScreen } from './hooks/useProfileScreen';
 import type { SettingsStackScreenProps } from '@/core/navigation';
 import { navigate } from '@/core/navigation';
-import { Card, CustomButton, CustomInput, Image } from '@/shared/ui';
+import {
+  BottomSheet,
+  Box,
+  CustomButton,
+  CustomInput,
+  IconButton,
+  Image,
+  Layout,
+  ListGroup,
+  ListRow,
+  Pressable,
+  Text,
+} from '@/shared/ui';
 import { useDispatch } from 'react-redux';
 import { clearCredentials } from '@/domains/auth';
 
@@ -34,8 +39,8 @@ const AVATAR_SIZE = moderateScale(88);
 
 const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation();
-  const { colors, isRTL } = useTheme();
-  const styles = useStyles(({ colors: c, radii, borderWidths }) => ({
+  const { colors } = useTheme();
+  const styles = useStyles(({ colors: c, radii }) => ({
     cameraBtn: {
       position: 'absolute' as const,
       bottom: 0,
@@ -46,9 +51,6 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
       alignItems: 'center' as const,
       justifyContent: 'center' as const,
       backgroundColor: c.interactive.main,
-    },
-    itemBorder: {
-      borderBottomWidth: borderWidths.hairline,
     },
     halfButton: {
       flex: 1,
@@ -73,8 +75,6 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
     handleDeleteAccount,
     handleChangePhoto,
   } = useProfileScreen();
-
-  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
 
   const dispatch = useDispatch();
   const privateSettingsItems = [
@@ -141,56 +141,11 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
   const navigateToLogin = () => {
     dispatch(clearCredentials());
   };
-  const renderSettingsItem = (
-    item: (typeof settingsItems)[number],
-    index: number,
-    arr: typeof settingsItems,
-  ) => {
-    const Icon = item.icon;
-    const isLast = index === arr.length - 1;
-    return (
-      <Card
-        key={item.key}
-        onPress={item.onPress}
-        row
-        align="center"
-        px="lg"
-        py="md"
-        style={isLast ? undefined : styles.itemBorder}
-      >
-        <Box
-          width={moderateScale(36)}
-          height={moderateScale(36)}
-          borderRadius="lg"
-          bg={colors.surface.elevated}
-          align="center"
-          justify="center"
-          me="md"
-        >
-          <Icon size={moderateScale(18)} color={colors.icon.primary} />
-        </Box>
-        <Box flex={1}>
-          <Text variant="body" color={colors.text.primary}>
-            {item.label}
-          </Text>
-        </Box>
-        <ChevronIcon size={moderateScale(16)} color={colors.text.tertiary} />
-      </Card>
-    );
-  };
-
   return (
     <>
       <Layout
-        withGradient={false}
-        withScroll
-        contentPadding={false}
-        screenHeader={{
-          title: t('account.profile.title'),
-          fillStatusBar: true,
-          showBackButton: false,
-        }}
-        edges={['bottom', 'left', 'right']}
+        padding="none"
+        header={{ title: t('account.profile.title'), showBackButton: false }}
       >
         {isAuthenticated ? (
           <>
@@ -241,18 +196,12 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
                     .filter(Boolean)
                     .join(' ') || '—'}
                 </Text>
-                <Pressable
+                <IconButton
+                  icon={UserRoundPen}
+                  size="sm"
                   onPress={() => navigation.navigate('EditAccountScreen')}
-                  p="sm"
-                  borderRadius="full"
-                  accessibilityRole="button"
                   accessibilityLabel={t('account.editAccount.title')}
-                >
-                  <UserRoundPen
-                    size={moderateScale(18)}
-                    color={colors.text.secondary}
-                  />
-                </Pressable>
+                />
               </Box>
 
               <Box row align="center" mt="xs" gap="xs">
@@ -326,106 +275,35 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
         )}
 
         {/* Settings section */}
-        <Box px="2xl" pb="5xl">
-          <Text
-            variant="label"
-            color={colors.text.secondary}
-            mb="md"
-          >
-            {t('account.profile.settings')}
-          </Text>
-
-          <Box borderRadius="lg" gap="md">
-            {settingsItems.map((item, index) =>
-              renderSettingsItem(item, index, settingsItems),
-            )}
-          </Box>
+        <Box px="2xl" pb="5xl" gap="lg">
+          <ListGroup title={t('account.profile.settings')}>
+            {settingsItems.map(item => (
+              <ListRow
+                key={item.key}
+                icon={item.icon}
+                title={item.label}
+                onPress={item.onPress}
+              />
+            ))}
+          </ListGroup>
 
           {isAuthenticated && (
             <>
-              {/* Logout */}
-              <Box
-                mt="lg"
-                borderRadius="lg"
-                bg={colors.surface.main}
-                borderWidth="hairline"
-                borderColor={colors.border.default}
-                overflow="hidden"
-              >
-                <Pressable
-                  row
-                  align="center"
-                  px="lg"
-                  py="md"
+              <ListGroup>
+                <ListRow
+                  icon={LogOut}
+                  title={t('account.profile.logout')}
                   onPress={() => setLogoutSheetVisible(true)}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('account.profile.logout')}
-                >
-                  <Box
-                    width={moderateScale(36)}
-                    height={moderateScale(36)}
-                    borderRadius="lg"
-                    bg={colors.surface.elevated}
-                    align="center"
-                    justify="center"
-                    me="md"
-                  >
-                    <LogOut
-                      size={moderateScale(18)}
-                      color={colors.text.secondary}
-                    />
-                  </Box>
-                  <Box flex={1}>
-                    <Text variant="body" color={colors.text.primary}>
-                      {t('account.profile.logout')}
-                    </Text>
-                  </Box>
-                  <ChevronIcon
-                    size={moderateScale(16)}
-                    color={colors.text.tertiary}
-                  />
-                </Pressable>
-              </Box>
-
-              {/* Delete Account */}
-              <Box
-                mt="md"
-                borderRadius="lg"
-                bg={colors.surface.main}
-                borderWidth="hairline"
-                borderColor={colors.status.danger.main}
-                overflow="hidden"
-              >
-                <Pressable
-                  row
-                  align="center"
-                  px="lg"
-                  py="md"
+                />
+              </ListGroup>
+              <ListGroup tone="danger">
+                <ListRow
+                  icon={Trash2}
+                  tone="danger"
+                  title={t('account.profile.deleteAccount')}
                   onPress={() => setDeleteSheetVisible(true)}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('account.profile.deleteAccount')}
-                >
-                  <Box
-                    width={moderateScale(36)}
-                    height={moderateScale(36)}
-                    borderRadius="lg"
-                    bg={colors.status.danger.soft}
-                    align="center"
-                    justify="center"
-                    me="md"
-                  >
-                    <Trash2
-                      size={moderateScale(18)}
-                      color={colors.status.danger.main}
-                    />
-                  </Box>
-                  <Box flex={1}>
-                    <Text variant="body" color={colors.status.danger.text}>
-                      {t('account.profile.deleteAccount')}
-                    </Text>
-                  </Box>
-                </Pressable>
-              </Box>
+                />
+              </ListGroup>
             </>
           )}
         </Box>

@@ -5,6 +5,8 @@ import type {
   GestureResponderEvent,
   ViewStyle,
 } from 'react-native';
+import { HAPTIC_TAP_MS } from '@/core/config';
+import { opacity } from '@/core/theme';
 import { useTheme } from '@/core/theme/hooks/useTheme';
 import type {
   Mutable,
@@ -38,8 +40,6 @@ interface CustomButtonProps
   px?: SpacingToken;
   style?: ViewStyle;
 }
-
-const ACTIVE_OPACITY = 0.85;
 
 const SIZE_PX: Record<ButtonSize, SpacingToken> = {
   sm: 'md',
@@ -86,7 +86,7 @@ const CustomButtonInner: React.FC<CustomButtonProps> = ({
   const handlePress = useCallback(
     (e: GestureResponderEvent) => {
       if (haptic && Platform.OS !== 'web') {
-        Vibration.vibrate(5);
+        Vibration.vibrate(HAPTIC_TAP_MS);
       }
       onPress?.(e);
     },
@@ -115,7 +115,7 @@ const CustomButtonInner: React.FC<CustomButtonProps> = ({
   const mergedStyle = useMemo<ViewStyle>(() => {
     const s: Mutable<ViewStyle> = {};
     if (isDisabled) {
-      s.opacity = 0.5;
+      s.opacity = opacity.disabled;
     }
     if (fullWidth) {
       s.alignSelf = 'stretch';
@@ -136,7 +136,7 @@ const CustomButtonInner: React.FC<CustomButtonProps> = ({
       align="center"
       justify="center"
       scaleOnPress={true}
-      activeOpacity={ACTIVE_OPACITY}
+      activeOpacity={opacity.pressedSubtle}
       onPress={handlePress}
       disabled={isDisabled}
       accessibilityRole="button"

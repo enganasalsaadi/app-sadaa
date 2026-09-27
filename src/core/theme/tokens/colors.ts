@@ -17,6 +17,16 @@ export const STATUS_TONES = [
 ] as const;
 export type StatusTone = (typeof STATUS_TONES)[number];
 
+/** Every hue group a tone-driven component (pill, notice, progress) can take. */
+export const HUE_TONES = [
+  ...STATUS_TONES,
+  'brand',
+  'interactive',
+  'money',
+  'premium',
+] as const;
+export type HueTone = (typeof HUE_TONES)[number];
+
 export const BUTTON_COLOR_VARIANTS = [
   'primary',
   'secondary',
@@ -105,7 +115,7 @@ export interface ThemeColors {
   };
   gradients: {
     hero: string[];
-    /** Soft wash at the top of screens (Layout withGradient). */
+    /** Soft wash at the top of screens (Layout backdrop="wash"). */
     screenWash: { colors: string[]; locations: number[] };
     /** Full-screen onboarding backdrop. */
     onboarding: string[];
@@ -113,6 +123,11 @@ export interface ThemeColors {
   overlay: string;
   /** Full-screen photo/video viewer backdrop — black in both modes. */
   mediaBackdrop: string;
+  /**
+   * Logo drawn in code (Skia) on navy — the fixed 5-color logo palette
+   * (rule 08), identical in both modes: start arcs BG, end arcs teal, mint dot.
+   */
+  logoOnBrand: { arcsStart: string; arcsEnd: string; dot: string };
 }
 
 const NAVY = '#1C3349';
@@ -121,6 +136,7 @@ const WHITE = '#FFFFFF';
 const ON_TEAL_DARK = '#06121C';
 const BG = '#F5F7F9';
 const ON_BRAND_MUTED = '#C9D6E0';
+const LOGO_ON_BRAND = { arcsStart: BG, arcsEnd: '#397D8C', dot: '#12B886' };
 
 const lightText = {
   primary: '#0F1D2B',
@@ -263,6 +279,7 @@ export const lightColors: ThemeColors = {
   },
   overlay: 'rgba(11, 22, 34, 0.5)',
   mediaBackdrop: '#000000',
+  logoOnBrand: LOGO_ON_BRAND,
 };
 
 export const darkColors: ThemeColors = {
@@ -369,7 +386,20 @@ export const darkColors: ThemeColors = {
   },
   overlay: 'rgba(0, 0, 0, 0.7)',
   mediaBackdrop: '#000000',
+  logoOnBrand: LOGO_ON_BRAND,
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>
   isDark ? darkColors : lightColors;
+
+export const resolveHue = (colors: ThemeColors, tone: HueTone): HueColors => {
+  switch (tone) {
+    case 'brand':
+    case 'interactive':
+    case 'money':
+    case 'premium':
+      return colors[tone];
+    default:
+      return colors.status[tone];
+  }
+};

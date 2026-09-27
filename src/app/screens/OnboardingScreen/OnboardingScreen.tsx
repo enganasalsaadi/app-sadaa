@@ -37,12 +37,10 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
     <Box flex={1} bg={colors.brand.main}>
       <HeroBackdrop />
       <Layout
-        withScroll={false}
-        keyboardAvoiding={false}
-        showEndScreenPadding={false}
-        bg={colors.layout.transparent}
-        edges={['top', 'bottom', 'left', 'right']}
-        statusBarStyle="light"
+        mode="static"
+        surface="transparent"
+        statusBar="light"
+        padding={{ x: 'lg' }}
       >
         <GestureDetector gesture={swipeGesture}>
           <Box flex={1}>

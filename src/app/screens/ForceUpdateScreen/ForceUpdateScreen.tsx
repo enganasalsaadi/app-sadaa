@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Download } from 'lucide-react-native';
 import { openAppStore } from '@/core/config';
 import { useTheme, moderateScale } from '@/core/theme';
-import { Box, Text, Layout } from '@/shared/ui';
+import { Box, Text, Layout, LayoutFooter } from '@/shared/ui';
 
 /** Blocking gate (AppStatus.UPDATE_REQUIRED): no way past it except updating. */
 const ForceUpdateScreenComponent: React.FC = () => {
@@ -15,8 +15,8 @@ const ForceUpdateScreenComponent: React.FC = () => {
 
   return (
     <Layout
-      withScroll={false}
-      ctaButton={{ label: t('appUpdate.cta'), onPress: onUpdate, alwaysSolid: true }}
+      mode="static"
+      footer={<LayoutFooter primary={{ label: t('appUpdate.cta'), onPress: onUpdate }} />}
     >
       <Box flex={1} align="center" justify="center" px="xl">
         <Box

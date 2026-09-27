@@ -1,15 +1,13 @@
 import { authStorage } from '@/core/storage';
-import { replace } from '@/core/navigation';
-import { setCredentials, setUser, setToken, clearCredentials } from '../store';
+import {
+  setUser,
+  setToken,
+  clearCredentials,
+  phoneOtpSent,
+} from '../store';
 import type {
   LoginRequest,
   LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-  VerifyOtpRequest,
-  VerifyOtpResponse,
-  ResendOtpRequest,
-  ResendOtpResponse,
   User,
   RegisterFcmTokenPayload,
   RequestPasswordResetRequest,
@@ -18,26 +16,22 @@ import type {
   ResetPasswordRequest,
   UpdateProfileRequest,
   LogoutRequest,
+  VerifyPhoneOtpRequest,
+  ResendPhoneOtpRequest,
 } from '../store';
 import { baseApi } from '@/core/api';
-
-const navigateAfterAuth = () => {
-  // Replace to Main after a short delay to allow the AUTHENTICATED status
-  // re-render to propagate before the navigation stack is confirmed.
-  setTimeout(() => replace('Main'), 300);
-};
 
 export const authApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
     // Phone+password login. No `user` object is returned — `user` is
-    // hydrated separately by GET /auth/me once the token is set (useAuth).
+    // hydrated separately by GET /user/me once the token is set.
     // Routing (Main vs the registration-resume gate) follows automatically
     // from AppStatus once `isOnboardingComplete` is in the store — no
     // imperative navigation here.
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: body => ({ url: '/auth/login', method: 'POST', body }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           authStorage.saveToken(data.token);
@@ -47,33 +41,11 @@ export const authApi = baseApi.injectEndpoints({
               userType: data.user_type,
               currentStep: data.current_step,
               isOnboardingComplete: data.is_onboarding_complete,
+              phone: arg.phone,
             }),
           );
         } catch {}
       },
-    }),
-    register: builder.mutation<RegisterResponse, RegisterRequest>({
-      query: body => ({ url: '/auth/register', method: 'POST', body }),
-    }),
-    // Verify the 5-digit email OTP. On success a bearer token is returned and
-    // the app is logged in immediately (same flow as login).
-    verifyOtp: builder.mutation<VerifyOtpResponse, VerifyOtpRequest>({
-      query: body => ({ url: '/auth/verify-otp', method: 'POST', body }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          authStorage.saveToken(data.token);
-          if (data.refresh_token) {
-            authStorage.saveRefreshToken(data.refresh_token);
-          }
-          dispatch(setCredentials({ user: data.user, token: data.token }));
-          navigateAfterAuth();
-        } catch {}
-      },
-    }),
-    // Resend the email OTP. Throttled server-side (429 on too-frequent sends).
-    resendOtp: builder.mutation<ResendOtpResponse, ResendOtpRequest>({
-      query: body => ({ url: '/auth/resend-otp', method: 'POST', body }),
     }),
     registerFcmToken: builder.mutation<
       { success: boolean },
@@ -101,7 +73,7 @@ export const authApi = baseApi.injectEndpoints({
       },
     }),
     getProfile: builder.query<User, void>({
-      query: () => '/auth/me',
+      query: () => '/user/me',
       providesTags: ['User'],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -122,7 +94,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     // Forgot Password (phone OTP wizard), step 1: sends a 4-digit code.
     // Enumeration-prevention ("المستخدم غير موجود") is handled by the caller
-    // (useRequestPasswordReset), not here — this endpoint just proxies the
+    // (useForgotPasswordScreen), not here — this endpoint just proxies the
     // server response as-is.
     requestPasswordReset: builder.mutation<void, RequestPasswordResetRequest>({
       query: body => ({ url: '/auth/forgot-password', method: 'POST', body }),
@@ -136,14 +108,25 @@ export const authApi = baseApi.injectEndpoints({
     resetPassword: builder.mutation<void, ResetPasswordRequest>({
       query: body => ({ url: '/auth/reset-password', method: 'POST', body }),
     }),
+    // Registration phone verification (4-digit OTP, sent after step-1).
+    verifyPhoneOtp: builder.mutation<void, VerifyPhoneOtpRequest>({
+      query: body => ({ url: '/auth/verify-otp', method: 'POST', body }),
+    }),
+    // Throttled server-side (60s); the timestamp drives the UI countdown.
+    resendPhoneOtp: builder.mutation<void, ResendPhoneOtpRequest>({
+      query: body => ({ url: '/auth/resend-otp', method: 'POST', body }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(phoneOtpSent(Date.now()));
+        } catch {}
+      },
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
-  useRegisterMutation,
-  useVerifyOtpMutation,
-  useResendOtpMutation,
   useLogoutMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
@@ -152,4 +135,6 @@ export const {
   useVerifyPasswordResetOtpMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,
+  useVerifyPhoneOtpMutation,
+  useResendPhoneOtpMutation,
 } = authApi;

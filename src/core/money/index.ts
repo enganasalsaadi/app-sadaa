@@ -5,3 +5,4 @@ export {
   toMajorUnits,
 } from './money';
 export type { CurrencyCode, Money } from './money';
+export { sanitizeAmountText, parseAmountText, toAmountText } from './amountText';

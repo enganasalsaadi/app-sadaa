@@ -1,5 +1,5 @@
 import type { TextStyle, ViewStyle } from 'react-native';
-import type { Theme } from '@/core/theme/types';
+import type { RadiiToken, Theme } from '@/core/theme/types';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 
@@ -28,6 +28,33 @@ export const getInputColors = (theme: Theme): InputColors => {
 
 export const getInputHeight = (size: InputSize, theme: Theme): number => {
   return theme.sizes.input[size];
+};
+
+interface FieldFrameState {
+  focused: boolean;
+  error: boolean;
+  editable: boolean;
+  borderRadius: RadiiToken;
+}
+
+/** Border, fill and row direction shared by every single-field input frame. */
+export const getFieldFrameStyle = (
+  theme: Theme,
+  { focused, error, editable, borderRadius }: FieldFrameState,
+): ViewStyle => {
+  const ic = getInputColors(theme);
+  return {
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    backgroundColor: editable ? ic.background : ic.disabledBg,
+    borderRadius: theme.radii[borderRadius],
+    borderWidth: focused ? theme.borderWidths.sm : theme.borderWidths.thin,
+    borderColor: focused
+      ? ic.focusBorder
+      : error
+      ? theme.colors.form.input.borderError
+      : ic.border,
+  };
 };
 
 export const createInputTextStyle = (theme: Theme): TextStyle => ({

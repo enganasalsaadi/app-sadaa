@@ -19,6 +19,12 @@ describe('formatMoney', () => {
   it('keeps exact cents for small amounts', () => {
     expect(formatMoney({ amount: 5, currency: 'USD' }, 'en')).toBe('$0.05');
   });
+
+  it('signs non-zero amounts with exceptZero', () => {
+    expect(formatMoney({ amount: 5000, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('+$50.00');
+    expect(formatMoney({ amount: -5000, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('-$50.00');
+    expect(formatMoney({ amount: 0, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('$0.00');
+  });
 });
 
 describe('formatNumber', () => {

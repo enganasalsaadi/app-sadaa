@@ -96,9 +96,6 @@ export const fontScale = (size: number): number => {
   return PixelRatio.roundToNearestPixel(Math.min(scaled, maxScale));
 };
 
-/** Uniform hit slop — a number keeps it direction-agnostic (RTL-safe). */
-export const hitSlop = (size: number = 8): number => moderateScale(size);
-
 /**
  * دالة النسبة المئوية للعرض: تحول النسبة المئوية إلى وحدات بكسل.
  * @param percent - النسبة المئوية (مثال: 25 يعني 25% من عرض الشاشة)

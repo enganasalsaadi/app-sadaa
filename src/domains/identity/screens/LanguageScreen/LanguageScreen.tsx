@@ -47,13 +47,8 @@ const LanguageScreenComponent: React.FC = () => {
 
   return (
     <Layout
-      withGradient={false}
-      withScroll
-      contentPadding={false}
-      screenHeader={{
-        title: t('account.language.title'),
-        fillStatusBar: true,
-      }}
+      padding="none"
+      header={{ title: t('account.language.title') }}
     >
       <Box px="2xl" pt="lg">
         <Box

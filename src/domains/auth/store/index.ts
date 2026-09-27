@@ -1,5 +1,12 @@
 export { authReducer } from './authSlice';
-export { setCredentials, setUser, setToken, clearCredentials } from './authSlice';
+export {
+  setUser,
+  setToken,
+  syncOnboardingStep,
+  phoneOtpSent,
+  completeOnboarding,
+  clearCredentials,
+} from './authSlice';
 export {
   selectUser,
   selectToken,
@@ -7,6 +14,8 @@ export {
   selectUserType,
   selectCurrentStep,
   selectIsOnboardingComplete,
+  selectPendingPhone,
+  selectPhoneOtpSentAt,
 } from './authSelectors';
 export type {
   BillingAddress,
@@ -14,13 +23,6 @@ export type {
   AuthState,
   LoginRequest,
   LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-  AuthResponse,
-  VerifyOtpRequest,
-  VerifyOtpResponse,
-  ResendOtpRequest,
-  ResendOtpResponse,
   RegisterFcmTokenPayload,
   RequestPasswordResetRequest,
   VerifyPasswordResetOtpRequest,
@@ -28,4 +30,11 @@ export type {
   ResetPasswordRequest,
   UpdateProfileRequest,
   LogoutRequest,
+  VerifyPhoneOtpRequest,
+  ResendPhoneOtpRequest,
+  BrandStep1Request,
+  BrandStep1Response,
+  BrandSocialLink,
+  BrandStep2Request,
+  BrandOnboardingProgress,
 } from './authTypes';

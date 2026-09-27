@@ -1,47 +1,48 @@
 {
   "auth": {
-    "login": "تسجيل الدخول",
-    "register": "إنشاء حساب",
-    "email": "البريد الإلكتروني",
+    "phone": "رقم الجوال",
+    "phonePlaceholder": "مثال: 0944 123 456",
     "password": "كلمة المرور",
-    "confirmPassword": "تأكيد كلمة المرور",
-    "forgotPassword": "نسيت كلمة المرور؟",
-    "resetPassword": "إعادة تعيين كلمة المرور",
-    "fullName": "الاسم الكامل",
-    "firstName": "الاسم الأول",
-    "lastName": "اسم العائلة",
-    "firstNamePlaceholder": "أدخل الاسم الأول",
-    "lastNamePlaceholder": "أدخل اسم العائلة",
-    "phone": "رقم الهاتف",
-    "logout": "تسجيل الخروج",
-    "welcomeBack": "مرحباً بك في صدى",
-    "loginSubtitle": "سجّل الدخول لإدارة حسابك",
-    "createAccount": "إنشاء حساب جديد",
-    "registerSubtitle": "انضم إلينا وأنشئ حسابك لاستكشاف تجارب مذهلة",
-    "orContinueWith": "أو المتابعة عبر",
-    "agreeTerms": "بالمتابعة، فإنك توافق على الشروط وسياسة الخصوصية",
-    "emailPlaceholder": "أدخل بريدك الإلكتروني",
-    "passwordPlaceholder": "أدخل كلمة المرور",
-    "phonePlaceholder": "أدخل رقم الهاتف مثال: 09462401604",
-    "fullNamePlaceholder": "أدخل اسمك الكامل",
-    "signingIn": "جارٍ تسجيل الدخول...",
-    "signingUp": "جاري إنشاء الحساب...",
-    "liveConfigHint": "رابط الـ API:",
-    "noAccount": "ليس لديك حساب؟",
-    "signUp": "سجل الآن",
-    "haveAccount": "هل لديك حساب بالفعل؟",
-    "signIn": "تسجيل الدخول",
-    "continueAsGuest": "المتابعة كضيف",
-    "verifyPhone": "التحقق من هاتفك",
-    "verifyPhoneSubtitle": "أرسلنا رمز التحقق إلى :{{phone}}",
-    "didNotReceiveOtp": "لم تستقبل الرمز؟",
+    "verifyCode": "تحقق من الرمز",
     "resendOtp": "إعادة إرسال رمز التحقق",
-    "resendOtpIn": "إعادة الإرسال خلال {{count}} ثانية",
-    "verify": "التحقق",
-    "verifying": "جاري التحقق...",
-    "forgotPasswordTitle": "إعادة تعيين كلمة المرور",
-    "forgotPasswordSubtitle": "أدخل رقم هاتفك وسنرسل لك رمزًا لإعادة تعيين كلمة المرور.",
-    "identifierPlaceholder": "أدخل البريد الإلكتروني  ",
+    "didNotReceiveOtp": "لم تستقبل الرمز؟",
+    "otpResent": "تم إرسال رمز تحقق جديد",
+    "otp": {
+      "codeLabel": "رمز التحقق المكوّن من {{count}} أرقام",
+      "resendIn": "إعادة الإرسال بعد {{time}}"
+    },
+    "login": {
+      "title": "أهلاً بعودتك",
+      "subtitle": "سجّل الدخول لمتابعة حملاتك وصفقاتك.",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "or": "أو",
+      "noAccount": "جديد على صدى؟",
+      "createAccount": "إنشاء حساب جديد"
+    },
+    "passwordReset": {
+      "phone": {
+        "title": "نسيت كلمة المرور؟",
+        "subtitle": "أدخل رقم جوالك وسنرسل لك رمزاً لإعادة تعيينها.",
+        "hint": "سنرسل الرمز إلى هذا الرقم عبر رسالة نصية.",
+        "submit": "إرسال الرمز"
+      },
+      "code": {
+        "title": "أدخل رمز التحقق",
+        "subtitle": "أرسلنا رمزاً من 4 أرقام إلى {{phone}}",
+        "changeNumber": "تغيير الرقم"
+      },
+      "password": {
+        "title": "كلمة مرور جديدة",
+        "subtitle": "اختر كلمة مرور قوية لم تستخدمها من قبل.",
+        "label": "كلمة المرور الجديدة",
+        "confirmLabel": "تأكيد كلمة المرور",
+        "placeholder": "8 أحرف على الأقل",
+        "submit": "حفظ كلمة المرور"
+      },
+      "success": "تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة."
+    },
     "accountType": {
       "title": "اختر نوع الحساب",
       "brand": "حساب شركة / براند",
@@ -52,30 +53,98 @@
       "agencySubtitle": "أدر حملات عدة براندات",
       "comingSoon": "قريباً"
     },
-    "sendResetCode": "إرسال رمز إعادة التعيين",
-    "sendingCode": "جارٍ الإرسال...",
-    "verifyOtpTitle": "تحقق من الرمز",
-    "verifyOtpSubtitle": "أرسلنا رمز التحقق إلى :{{identifier}}",
-    "enterOtpPlaceholder": "أدخل رمز التحقق",
-    "verifyCode": "تحقق من الرمز",
-    "verifyingCode": "جارٍ التحقق...",
-    "verifyEmailTitle": "تحقق من بريدك الإلكتروني",
-    "verifyEmailSubtitle": "أرسلنا رمز تحقق مكوّن من 5 أرقام إلى {{email}}",
-    "otpResent": "تم إرسال رمز تحقق جديد",
-    "newPasswordTitle": "تعيين كلمة مرور جديدة",
-    "newPasswordSubtitle": "أنشئ كلمة مرور جديدة لحسابك",
-    "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
-    "confirmNewPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
-    "passwordMismatch": "كلمات المرور غير متطابقة",
-    "updatePassword": "تحديث كلمة المرور",
-    "updatingPassword": "جارٍ التحديث...",
-    "passwordUpdated": "تم تحديث كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة",
-    "loginNow": "تسجيل الدخول الآن",
-    "sendResetLink": "إرسال رابط إعادة التعيين",
-    "sendingLink": "جارٍ الإرسال…",
-    "resetLinkSentTitle": "تحقق من بريدك الإلكتروني",
-    "resetLinkSentSubtitle": "أرسلنا رابط إعادة تعيين كلمة المرور إلى {{email}}. افتحه لتعيين كلمة مرور جديدة.",
-    "backToSignIn": "العودة لتسجيل الدخول"
+    "brandOnboarding": {
+      "account": {
+        "title": "أنشئ حساب علامتك التجارية",
+        "subtitle": "بعض التفاصيل فقط وتصبح جاهزاً لإطلاق حملاتك مع صناع المحتوى.",
+        "sections": {
+          "business": "النشاط التجاري",
+          "contact": "التواصل",
+          "security": "الأمان"
+        },
+        "companyName": "اسم المتجر / الشركة",
+        "companyNamePlaceholder": "مثال: محمصة دمشق",
+        "phoneHint": "سنرسل رمز تحقق إلى هذا الرقم، ولا يمكن تغييره لاحقاً.",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "name@company.com",
+        "passwordPlaceholder": "8 أحرف على الأقل",
+        "passwordConfirmation": "تأكيد كلمة المرور",
+        "submit": "متابعة",
+        "confirmPhone": {
+          "title": "هل هذا رقمك؟",
+          "body": "سنرسل إليه رمزاً من 4 أرقام، ولن تتمكن من تغييره بعد إنشاء الحساب.",
+          "confirm": "نعم، أرسل الرمز",
+          "edit": "تعديل الرقم"
+        }
+      },
+      "phone": {
+        "title": "تأكيد رقم الجوال",
+        "subtitle": "أدخل الرمز المكوّن من 4 أرقام المرسل إلى {{phone}}",
+        "wrongNumber": {
+          "link": "رقم خاطئ؟",
+          "title": "أدخلت رقماً خاطئاً؟",
+          "body": "راسل فريق الدعم على واتساب وسنصححه لك.",
+          "contact": "تواصل معنا على واتساب",
+          "message": "مرحباً فريق صدى، سجّلت حساب علامة تجارية برقم جوال خاطئ: {{phone}}",
+          "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
+        }
+      },
+      "profile": {
+        "title": "هوية نشاطك التجاري",
+        "subtitle": "تساعدنا على مطابقتك مع صناع المحتوى المناسبين في مدينتك.",
+        "governorate": "المحافظة",
+        "governorateHint": "حيث يتواجد معظم زبائنك.",
+        "businessType": "نوع النشاط",
+        "socialLinks": "حسابات التواصل الاجتماعي",
+        "socialLinksHint": "الصق الرابط أو اكتب اسم المستخدم @.",
+        "platforms": {
+          "instagram": "إنستغرام",
+          "facebook": "فيسبوك",
+          "tiktok": "تيك توك",
+          "youtube": "يوتيوب",
+          "telegram": "تيليغرام",
+          "website": "الموقع الإلكتروني"
+        },
+        "morePlatforms": "منصات أخرى",
+        "lookupsError": "تعذّر تحميل الخيارات. تحقق من اتصالك وحاول مرة أخرى.",
+        "submit": "متابعة"
+      },
+      "kyc": {
+        "title": "وثّق نشاطك التجاري",
+        "subtitle": "اختياري الآن، لكن العلامات الموثّقة تُنجز صفقاتها أسرع.",
+        "benefitsTitle": "لماذا التوثيق؟",
+        "benefits": {
+          "badge": "شارة «موثّق» على ملف علامتك التجارية",
+          "visibility": "يثق صناع المحتوى بعروضك ويقبلونها أسرع",
+          "review": "يراجعها فريقنا خلال 48 ساعة"
+        },
+        "pickDocument": "ارفع السجل التجاري",
+        "pickHint": "PDF أو JPG أو PNG · حتى 10 ميجابايت",
+        "documentFallbackName": "السجل التجاري",
+        "errors": {
+          "size": "حجم الملف أكبر من 10 ميجابايت. اختر ملفاً أصغر.",
+          "type": "نقبل ملفات PDF أو JPG أو PNG فقط.",
+          "failed": "تعذّر فتح الملف. جرّب ملفاً آخر."
+        },
+        "submit": "إرسال للمراجعة",
+        "skip": "تخطي الآن",
+        "skipHint": "يمكنك التوثيق لاحقاً من إعدادات حسابك."
+      },
+      "welcome": {
+        "title": "أهلاً بك في صدى",
+        "titleNamed": "أهلاً بك، {{name}}",
+        "subtitle": "حساب علامتك التجارية جاهز. أطلق حملتك الأولى ودع صناع المحتوى يردّدون صدى قصتك.",
+        "underReview": "الوثائق قيد المراجعة",
+        "verifyLater": "وثّق حسابك في أي وقت من الإعدادات",
+        "start": "ابدأ رحلتك"
+      },
+      "progressError": "تعذّر تحميل حالة تسجيلك. تحقق من اتصالك وحاول مرة أخرى."
+    },
+    "passwordStrength": {
+      "weak": "ضعيفة",
+      "fair": "متوسطة",
+      "strong": "قوية"
+    }
   },
   "api": {
     "liveConfig": "الإعدادات المباشرة",
@@ -131,8 +200,52 @@
     "reset": "إعادة تعيين",
     "map": "الخريطة",
     "selected": "محدد",
+    "remove": "إزالة",
     "brandName": "صدى",
-    "tagline": "ثقة في كل صفقة"
+    "tagline": "ثقة في كل صفقة",
+    "optional": "اختياري",
+    "replaceFile": "استبدال الملف",
+    "stepOf": "الخطوة {{current}} من {{total}}",
+    "fileSize": {
+      "kb": "{{value}} كيلوبايت",
+      "mb": "{{value}} ميجابايت"
+    },
+    "layoutList": "عرض قائمة",
+    "layoutGrid2": "شبكة من عمودين",
+    "layoutGrid3": "شبكة من ثلاثة أعمدة",
+    "clear": "مسح",
+    "removeItem": "إزالة {{label}}",
+    "money": {
+      "approx": "≈ {{amount}}",
+      "estimate": "تقديري"
+    },
+    "timeline": {
+      "done": "مكتمل",
+      "current": "جارٍ",
+      "upcoming": "لاحقاً",
+      "error": "متوقف"
+    },
+    "countdown": {
+      "days": "{{days}} ي {{hours}} س",
+      "hours": "{{hours}} س {{minutes}} د",
+      "minutes": "{{minutes}}:{{seconds}}",
+      "expired": "انتهى الوقت",
+      "withLabel": "{{label}} · {{time}}"
+    },
+    "media": {
+      "uploading": "جارٍ الرفع",
+      "failed": "فشل الرفع",
+      "retry": "إعادة الرفع"
+    },
+    "rating": {
+      "rate": "تقييم {{value}} من {{max}}",
+      "summary": "التقييم {{value}} من {{max}}",
+      "count": "عدد التقييمات {{count}}",
+      "countShort": "({{count}})"
+    },
+    "stat": {
+      "change": "تغيّر {{change}}"
+    }
   },
   "errors": {
     "generic": "حدث خطأ ما",
@@ -228,20 +341,20 @@
       "title": "اللغة",
       "saveSuccess": "تم تحديث اللغة بنجاح",
       "options": {
-        "ar": { "native": "العربية", "name": "العربية" },
-        "en": { "native": "English", "name": "الإنجليزية" }
+        "ar": {
+          "native": "العربية",
+          "name": "العربية"
+        },
+        "en": {
+          "native": "English",
+          "name": "الإنجليزية"
+        }
       }
     },
     "maintenance": {
       "title": "تحت الصيانة",
       "defaultSubtitle": "نحن نعمل على تحسينات. يرجى المحاولة مرة أخرى قريباً.",
       "closeApp": "إغلاق التطبيق"
-    },
-    "onboardingResume": {
-      "title": "لنكمل إعداد حسابك",
-      "subtitle": "تم تسجيل دخولك — أكمل من حيث توقفت لتبدأ استخدام صدى.",
-      "subtitleWithStep": "أنت مسجل بحساب {{userType}}، في الخطوة {{currentStep}} من الإعداد.",
-      "logout": "تسجيل الخروج"
     }
   },
   "appUpdate": {
@@ -267,8 +380,7 @@
       }
     }
   },
-
- "onboarding": {
+  "onboarding": {
     "next": "التالي",
     "start": "ابدأ الآن",
     "skip": "تخطي",
@@ -315,8 +427,7 @@
         }
       }
     }
-  }
-,
+  },
   "profile": {
     "title": "الملف الشخصي",
     "editProfile": "تعديل الملف الشخصي",
@@ -349,13 +460,15 @@
     "maxLength": "يجب ألا يتجاوز {{count}} حرفًا",
     "passwordMismatch": "كلمتا المرور غير متطابقتين",
     "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
-    "invalidOtp": "أدخل الرمز المكوّن من 5 أرقام",
     "invalidOtpCode": "أدخل الرمز المكوّن من {{count}} أرقام",
     "phoneLengthExactly": "رقم الهاتف يجب أن يتكون من {{count}} أرقام بالضبط",
     "phoneLengthBetween": "رقم الهاتف يجب أن يتكون بين {{min}} و {{max}} رقمًا",
     "phoneInvalidForCountry": "رقم الهاتف غير صحيح لدولة {{country}}",
     "please_select_aplace": "يرجى اختيار مكان",
-    "invalidTaxNumber": "الرقم الضريبي يجب أن يكون 15 رقمًا بالضبط"
+    "invalidTaxNumber": "الرقم الضريبي يجب أن يكون 15 رقمًا بالضبط",
+    "invalidUrl": "يرجى إدخال رابط صحيح يبدأ بـ https://",
+    "selectOne": "يرجى اختيار خيار واحد",
+    "invalidSocialLink": "أدخل رابطاً صحيحاً لهذه المنصة أو اسم مستخدم @"
   },
   "dateRange": {
     "startDate": "تاريخ البدء",
@@ -363,6 +476,55 @@
     "selectStart": "اختر تاريخ البدء",
     "selectEnd": "اختر تاريخ الانتهاء",
     "days": "{{count}} أيام"
+  },
+  "marketplace": {
+    "deal": {
+      "status": {
+        "pendingApproval": "بانتظار الموافقة",
+        "awaitingPayment": "بانتظار الدفع",
+        "inProgress": "قيد التنفيذ",
+        "underReview": "قيد المراجعة",
+        "readyToPublish": "جاهز للنشر",
+        "published": "منشور",
+        "completed": "مكتمل",
+        "disputed": "نزاع مفتوح",
+        "cancelled": "ملغى",
+        "refunded": "مسترد",
+        "unknown": "حالة غير معروفة"
+      },
+      "meta": "{{counterpart}} · {{adType}}"
+    },
+    "draft": {
+      "status": {
+        "pendingReview": "بانتظار المراجعة",
+        "approved": "معتمدة",
+        "changesRequested": "مطلوب تعديلات"
+      },
+      "version": "المسودة {{version}}",
+      "open": "فتح {{title}}",
+      "submittedAt": "أُرسلت {{date}}",
+      "noteTitle": "ملاحظات العلامة التجارية",
+      "requestChanges": "طلب تعديلات",
+      "approve": "اعتماد"
+    },
+    "creator": {
+      "verified": "صانع محتوى موثّق",
+      "followers": "{{count}} متابع",
+      "priceFrom": "يبدأ من"
+    }
+  },
+  "finance": {
+    "wallet": {
+      "available": "الرصيد المتاح",
+      "escrow": "محجوز في الضمان",
+      "escrowHint": "محجوز للصفقات الجارية",
+      "pending": "قيد التسوية",
+      "withdraw": "سحب",
+      "deposit": "إيداع"
+    },
+    "breakdown": {
+      "estimateNote": "مبلغ تقديري، يُؤكَّد المبلغ النهائي عند الدفع."
+    }
   },
   "devShowcase": {
     "entryLabel": "معرض عناصر التصميم",
@@ -382,10 +544,54 @@
       "typography": "الطباعة",
       "colors": "الألوان والحالات",
       "buttons": "الأزرار",
-      "inputs": "الحقول",
-      "cards": "البطاقات",
-      "modalsToasts": "النوافذ والتنبيهات",
-      "layoutGallery": "معرض التخطيطات"
+      "inputs": "حقول النص والهاتف",
+      "cards": "الأسطح والبطاقات",
+      "layoutGallery": "معرض التخطيطات",
+      "brandLogo": "شعار العلامة",
+      "socialIcons": "أيقونات المنصات الاجتماعية",
+      "chips": "الشرائح",
+      "otpInput": "إدخال رمز التحقق",
+      "formSection": "قسم النموذج",
+      "filePicker": "اختيار ملف",
+      "images": "الصور",
+      "stepProgress": "تقدم الخطوات",
+      "glass": "زجاج على الكحلي",
+      "toasts": "الإشعارات",
+      "inlineError": "خطأ مضمن",
+      "skeleton": "هيكل التحميل",
+      "globalErrors": "الأخطاء العامة",
+      "bottomSheet": "الورقة السفلية والاختيار",
+      "confirmSheet": "ورقة التأكيد",
+      "dateRangePicker": "اختيار نطاق التاريخ",
+      "gallery": "المعرض",
+      "superList": "SuperList",
+      "iconButton": "أزرار الأيقونات",
+      "fab": "زر الإجراء العائم",
+      "segmentedControl": "مفتاح الأقسام",
+      "tabs": "التبويبات",
+      "selectionControls": "المفتاح وخانة الاختيار والخيار الواحد",
+      "searchBar": "شريط البحث",
+      "badges": "الشارات والحالات والوسوم",
+      "structure": "العناوين والفواصل والقيم",
+      "progressBar": "شريط التقدم",
+      "accordion": "القائمة القابلة للطي",
+      "avatarGroup": "مجموعة الصور الشخصية",
+      "notice": "التنبيه",
+      "emptyStates": "الحالة الفارغة وحالة الخطأ",
+      "listRows": "صفوف القوائم والمجموعات",
+      "screenHeader": "رأس الشاشة",
+      "amountInput": "حقل المبلغ",
+      "moneyText": "المبالغ",
+      "statTile": "بطاقة إحصائية",
+      "timeline": "الخط الزمني",
+      "countdown": "العد التنازلي",
+      "mediaTile": "عنصر الوسائط",
+      "ratingStars": "التقييم",
+      "dealStatus": "حالة الصفقة",
+      "dealCard": "بطاقة الصفقة",
+      "creatorCard": "بطاقة صانع المحتوى",
+      "draftReview": "مراجعة المسودة",
+      "wallet": "المحفظة"
     },
     "typography": {
       "h1Label": "H1 · عنوان",
@@ -397,7 +603,13 @@
       "bodyMediumLabel": "نص متوسط",
       "bodySmallLabel": "نص صغير",
       "captionLabel": "توضيح",
-      "taglineLabel": "شعار العلامة"
+      "taglineLabel": "شعار العلامة",
+      "buttonLabel": "نص الزر",
+      "buttonSmallLabel": "نص الزر الصغير",
+      "overlineLabel": "عنوان علوي",
+      "labelLabel": "تسمية الحقل",
+      "amountLabel": "$1,250.00",
+      "amountLargeLabel": "$12,500.00"
     },
     "colors": {
       "brand": "الهوية (كحلي)",
@@ -422,20 +634,27 @@
       "statesTitle": "الحالات",
       "stateDefault": "افتراضي",
       "stateDisabled": "معطل",
-      "stateLoading": "جارٍ التحميل"
+      "stateLoading": "جارٍ التحميل",
+      "withLeftIcon": "أيقونة بادئة",
+      "withRightIcon": "أيقونة لاحقة",
+      "fullWidth": "بعرض كامل"
     },
     "inputs": {
       "defaultLabel": "افتراضي",
       "defaultPlaceholder": "اكتب شيئًا",
-      "focusLabel": "اضغط للتركيز",
-      "focusPlaceholder": "معاينة نمط التركيز",
       "errorLabel": "مع خطأ",
       "errorPlaceholder": "حقل مطلوب",
       "errorMessage": "هذا الحقل مطلوب",
-      "searchLabel": "نمط البحث",
-      "searchPlaceholder": "بحث عن صناع محتوى أو حملات...",
       "phoneLabel": "رقم الهاتف",
-      "phonePlaceholder": "5XX XXX XXX"
+      "phonePlaceholder": "5XX XXX XXX",
+      "disabledLabel": "معطّل",
+      "disabledValue": "قيمة للقراءة فقط",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "multilineLabel": "متعدد الأسطر",
+      "multilinePlaceholder": "اكتب وصف الحملة",
+      "counterLabel": "النبذة (مع عداد)",
+      "counterPlaceholder": "عرّف العلامات التجارية بمحتواك"
     },
     "cards": {
       "plainTitle": "بطاقة ثابتة",
@@ -443,7 +662,10 @@
       "pressableTitle": "بطاقة قابلة للضغط",
       "pressableBody": "اضغط لتبديل التحديد.",
       "moneyTitle": "رصيد الضمان",
-      "moneyCaption": "تم تحويله إلى المحفظة"
+      "moneyCaption": "تم تحويله إلى المحفظة",
+      "boxTitle": "Box",
+      "boxBody": "عنصر تخطيط أساسي: رموز المسافات والزوايا والألوان فقط.",
+      "pressablePrimitiveTitle": "Pressable (اضغط لتبديل البطاقة أدناه)"
     },
     "modalsToasts": {
       "toastSuccessLabel": "تنبيه نجاح",
@@ -466,18 +688,403 @@
     },
     "layoutGallery": {
       "fixedHeaderTitle": "رأس ثابت",
-      "fixedHeaderDescription": "ScreenHeader مع fillStatusBar",
+      "fixedHeaderDescription": "ScreenHeader؛ يظهر الفاصل عند التمرير",
       "noHeaderScrollTitle": "بدون رأس مع تمرير",
-      "noHeaderScrollDescription": "withScroll بدون رأس",
+      "noHeaderScrollDescription": "وضع التمرير بدون رأس",
       "darkForcedTitle": "سطح داكن إجباري",
       "darkForcedDescription": "معاينة رموز الوضع الداكن فقط",
       "ctaButtonTitle": "زر دعوة لاتخاذ إجراء",
-      "ctaButtonDescription": "ctaButton مع alwaysSolid",
+      "ctaButtonDescription": "footer مع LayoutFooter",
       "noScrollWithHandlerTitle": "معالج تمرير يدوي",
-      "noScrollWithHandlerDescription": "withScroll={false} مع useScrollHandler",
+      "noScrollWithHandlerDescription": "الوضع الثابت مع useScrollHandler",
       "noScrollWithHandlerRow": "الصف {{index}}",
       "gradientHeroTitle": "تدرج بطولي",
-      "gradientHeroDescription": "withGradient لغسيل الشاشة"
+      "gradientHeroDescription": "خلفية wash للشاشة",
+      "listStatesTitle": "قائمة + الحالات",
+      "listStatesDescription": "Layout ثابت + SuperList: بيانات وتحميل وفارغ وخطأ وتحديث",
+      "heroSheetTitle": "ورقة مع ترويسة",
+      "heroSheetDescription": "HeroSheet: ترويسة كحلية + ورقة نموذج، تتقلص مع لوحة المفاتيح",
+      "wizardTitle": "معالج الخطوات",
+      "wizardDescription": "WizardShell + useWizardHeader، 3 خطوات",
+      "hideOnScrollTitle": "رأس يختفي عند التمرير",
+      "hideOnScrollDescription": "headerBehavior=\"hideOnScroll\": يختفي عند النزول ويعود عند الصعود",
+      "collapseTitle": "عنوان كبير يتقلص",
+      "collapseDescription": "headerBehavior=\"collapse\": العنوان الكبير يتقلص إلى الشريط",
+      "heroOverlayTitle": "صورة رئيسية مع رأس عائم",
+      "heroOverlayDescription": "hero: يظهر الرأس تدريجياً مع تمرير الصورة",
+      "stickyTitle": "فلتر مثبت",
+      "stickyDescription": "sticky: فلتر مثبت أسفل الرأس",
+      "footerElevateTitle": "تذييل يرتفع عند التمرير",
+      "footerElevateDescription": "footerBehavior=\"elevate\": تتغير خلفية زر الإجراء أثناء مرور المحتوى تحته",
+      "fabTitle": "زر إجراء عائم",
+      "fabDescription": "overlay: زر عائم بعيد عن التذييل ومؤشر الشاشة الرئيسية",
+      "brandHeaderTitle": "رأس بلون الهوية",
+      "brandHeaderDescription": "header variant=\"brand\" مع إجراءات وشارة",
+      "scrollHint": "مرّر لرؤية السلوك.",
+      "heroTitle": "ملف صانع المحتوى",
+      "heroBody": "تمتد الصورة تحت شريط الحالة، وتظهر خلفية الرأس وعنوانه تدريجياً مع تمريرها.",
+      "sendOffer": "إرسال عرض",
+      "totalLabel": "الإجمالي",
+      "filterLabel": "فلتر الحملات",
+      "filterAll": "الكل",
+      "filterOpen": "مفتوحة",
+      "filterClosed": "مغلقة"
+    },
+    "categories": {
+      "foundations": "الأساسيات",
+      "foundationsDescription": "الخطوط والألوان والأسطح والشعار والأيقونات",
+      "actions": "الإجراءات",
+      "actionsDescription": "الأزرار والشرائح",
+      "inputs": "الإدخال",
+      "inputsDescription": "النصوص والهاتف ورمز التحقق ومجموعات النماذج والملفات",
+      "display": "العرض",
+      "displayDescription": "الصور والتقدم والزجاج على الكحلي",
+      "feedback": "التنبيهات",
+      "feedbackDescription": "الإشعارات والأخطاء المضمنة والهياكل والأخطاء العامة",
+      "overlays": "النوافذ المنبثقة",
+      "overlaysDescription": "الأوراق والاختيار والتأكيد والتواريخ والمعرض",
+      "lists": "القوائم",
+      "listsDescription": "حالات وتخطيطات SuperList",
+      "layouts": "التخطيطات",
+      "layoutsDescription": "هيكل الشاشات وأنماطها",
+      "sada": "صدى",
+      "sadaDescription": "الصفقات، صنّاع المحتوى، المسودات، المحفظة"
+    },
+    "chips": {
+      "fashion": "أزياء",
+      "food": "طعام",
+      "tech": "تقنية",
+      "travel": "سفر",
+      "beauty": "جمال",
+      "multiTitle": "Chip (اختيار متعدد)",
+      "singleTitle": "ChipGroup (اختيار واحد)",
+      "disabled": "معطّل",
+      "toggleLoading": "تبديل التحميل"
+    },
+    "otp": {
+      "hint": "أدخل 123456 للنجاح؛ أي رمز آخر يهتز.",
+      "label": "رمز التحقق",
+      "rejected": "رمز غير صحيح",
+      "reset": "إعادة تعيين"
+    },
+    "formSection": {
+      "title": "بيانات العلامة",
+      "description": "تظهر في ملفك العام.",
+      "nameLabel": "اسم العلامة",
+      "namePlaceholder": "مثال: قهوة صدى",
+      "optionalTitle": "الموقع الإلكتروني",
+      "optionalTag": "اختياري",
+      "groupError": "رسالة خطأ على مستوى المجموعة",
+      "websiteLabel": "رابط الموقع",
+      "websitePlaceholder": "https://"
+    },
+    "filePicker": {
+      "title": "ارفع السجل التجاري",
+      "hint": "PDF أو JPG أو PNG · حتى 10 ميغابايت",
+      "error": "الملف كبير جداً",
+      "toggleError": "تبديل الخطأ",
+      "toggleUpload": "تبديل الرفع"
+    },
+    "images": {
+      "avatars": "Avatar · sm md lg xl",
+      "thumbnails": "Thumbnail · sm md · هيكل",
+      "banner": "Banner 16:9 مع تظليل",
+      "contain": "Image · contain"
+    },
+    "stepProgress": {
+      "label": "الخطوة {{current}} من {{total}}"
+    },
+    "glass": {
+      "hint": "HeroBackdrop + GlassCard (Skia). على الأسطح الكحلية فقط."
+    },
+    "inlineError": {
+      "message": "الحملة غير موجودة. ربما أُغلقت."
+    },
+    "globalErrors": {
+      "hint": "مركّبة مرة واحدة في App.tsx؛ هذه الأزرار ترسل حالة تجريبية فقط.",
+      "server500": "خطأ خادم 500",
+      "server503": "غير متاح 503",
+      "showOffline": "إظهار عدم الاتصال",
+      "hideOffline": "إخفاء عدم الاتصال",
+      "mock500": "خطأ خادم تجريبي",
+      "mock503": "صيانة تجريبية"
+    },
+    "confirmSheet": {
+      "openNeutral": "تأكيد إجراء",
+      "openDanger": "إجراء حذف",
+      "neutralTitle": "إرسال العرض؟",
+      "neutralBody": "سيتم إشعار صانع المحتوى ويمكنه القبول أو الرفض.",
+      "dangerTitle": "حذف المسودة؟",
+      "dangerBody": "لا يمكن التراجع عن ذلك.",
+      "confirmed": "تم التأكيد (تجريبي)"
+    },
+    "dateRange": {
+      "selected": "{{start}} ← {{end}}",
+      "open": "اختر التواريخ"
+    },
+    "gallery": {
+      "open": "فتح الصورة {{index}}"
+    },
+    "superList": {
+      "toggleLabel": "LayoutToggle · {{layout}}"
+    },
+    "wizard": {
+      "step1": "الحساب",
+      "step2": "الملف الشخصي",
+      "step3": "المراجعة",
+      "subtitle": "معالج تجريبي",
+      "body": "محتوى الخطوة على الورقة، والترويسة الكحلية ثابتة."
+    },
+    "listStates": {
+      "data": "بيانات",
+      "loading": "تحميل",
+      "empty": "فارغ",
+      "error": "خطأ",
+      "stateLabel": "حالة القائمة",
+      "rowTitle": "حملة {{index}}",
+      "rowBody": "صف تجريبي",
+      "emptyMessage": "لا توجد حملات بعد"
+    },
+    "iconButton": {
+      "sizeTitle": "الحجم {{size}}",
+      "statesTitle": "الألوان والحالات",
+      "like": "إعجاب",
+      "delete": "حذف",
+      "share": "مشاركة",
+      "notifications": "الإشعارات",
+      "add": "إضافة",
+      "onBrandTitle": "على الكحلي وفوق الصور"
+    },
+    "screenHeader": {
+      "solidLabel": "solid: رجوع وعنوان وعنوان فرعي",
+      "actionsLabel": "إجراءات مع شارة",
+      "noBackLabel": "شاشة رئيسية (بدون رجوع)",
+      "brandLabel": "brand: شريط الهوية الكحلي",
+      "transparentLabel": "transparent: فوق الصور",
+      "title": "الحملات",
+      "subtitle": "12 حملة مفتوحة",
+      "favorite": "حفظ"
+    },
+    "fab": {
+      "stageHint": "مثبت في الزاوية السفلية لنهاية الحاوية.",
+      "newCampaign": "حملة جديدة"
+    },
+    "segmented": {
+      "active": "النشطة",
+      "completed": "المكتملة",
+      "week": "أسبوع",
+      "month": "شهر",
+      "year": "سنة",
+      "dealsLabel": "عرض الصفقات",
+      "periodLabel": "الفترة"
+    },
+    "tabs": {
+      "offers": "العروض",
+      "drafts": "المسودات",
+      "archive": "الأرشيف",
+      "all": "الكل",
+      "fixedTitle": "عرض ثابت",
+      "scrollableTitle": "قابلة للتمرير",
+      "inboxLabel": "أقسام الوارد",
+      "nicheLabel": "المجالات"
+    },
+    "selection": {
+      "switchTitle": "المفتاح",
+      "push": "إشعارات الجوال",
+      "email": "تحديثات البريد",
+      "checkboxTitle": "خانة الاختيار",
+      "allPlatforms": "كل المنصات",
+      "instagram": "إنستغرام",
+      "tiktok": "تيك توك",
+      "youtube": "يوتيوب",
+      "terms": "أوافق على شروط الصفقة",
+      "termsDescription": "يبقى المبلغ محجوزاً حتى اعتماد المحتوى.",
+      "termsError": "وافق على الشروط للمتابعة",
+      "disabled": "معطّل",
+      "radioTitle": "طريقة السحب",
+      "wallet": "المحفظة الإلكترونية",
+      "walletDescription": "فوري وبدون رسوم",
+      "cash": "استلام نقدي",
+      "cashDescription": "خلال 24 ساعة",
+      "bank": "تحويل بنكي",
+      "bankDescription": "قريباً"
+    },
+    "searchBar": {
+      "placeholder": "ابحث عن صناع محتوى أو حملات"
+    },
+    "badges": {
+      "badgeTitle": "شارة العدد",
+      "pillTitle": "شارة الحالة",
+      "tagTitle": "الوسم",
+      "success": "نجاح",
+      "warning": "تحذير",
+      "danger": "خطر",
+      "info": "معلومة",
+      "neutral": "محايد",
+      "brand": "الهوية",
+      "interactive": "تفاعلي",
+      "money": "مال",
+      "premium": "مميز",
+      "verified": "موثّق",
+      "underReview": "قيد المراجعة",
+      "noTags": "لا توجد وسوم"
+    },
+    "structure": {
+      "sectionTitle": "الحملات المفتوحة",
+      "sectionSubtitle": "مطابقة لمجالك",
+      "dividerTitle": "الفواصل",
+      "left": "المشاهدات",
+      "right": "التفاعل",
+      "summaryTitle": "ملخص الصفقة",
+      "budget": "الميزانية",
+      "commission": "عمولة المنصة",
+      "commissionHint": "10% من الميزانية",
+      "upfront": "الدفعة المقدمة (30%)",
+      "status": "الحالة",
+      "payout": "أرباحك",
+      "total": "الإجمالي"
+    },
+    "progressBar": {
+      "profile": "اكتمال الملف",
+      "budget": "الميزانية المصروفة",
+      "advance": "تقدّم"
+    },
+    "accordion": {
+      "escrowQ": "كيف يعمل الضمان؟",
+      "escrowA": "تدفع العلامة التجارية إلى حساب الضمان، ويصل المبلغ لصانع المحتوى بعد نشر المحتوى.",
+      "payoutQ": "متى يمكنني السحب؟",
+      "payoutSubtitle": "لصناع المحتوى فقط",
+      "payoutA": "بمجرد اكتمال الصفقة يصبح المبلغ في محفظتك.",
+      "disputeQ": "ماذا لو اختلفنا؟",
+      "disputeA": "افتح نزاعاً من الصفقة، ويراجع الدعم السجل داخل التطبيق."
+    },
+    "avatarGroup": {
+      "applicants_zero": "لم يتقدّم أحد",
+      "applicants_one": "تقدّم صانع محتوى واحد",
+      "applicants_two": "تقدّم صانعا محتوى",
+      "applicants_few": "تقدّم {{count}} صناع محتوى",
+      "applicants_many": "تقدّم {{count}} صانع محتوى",
+      "applicants_other": "تقدّم {{count}} صانع محتوى"
+    },
+    "notice": {
+      "info": "حملتك ظاهرة لصناع المحتوى في دمشق.",
+      "success": "تم اعتماد المسودة ويمكن لصانع المحتوى النشر الآن.",
+      "warning": "موعد الدفع خلال يومين.",
+      "danger": "هذه الصفقة قيد النزاع.",
+      "premium": "رقِّ حسابك للوصول إلى أفضل صناع المحتوى أولاً.",
+      "kycTitle": "وثّق هويتك",
+      "kycMessage": "يتاح السحب بعد التوثيق.",
+      "kycAction": "وثّق الآن",
+      "restore": "إظهار التنبيه المُغلق",
+      "actionPressed": "تم الضغط على الإجراء"
+    },
+    "emptyStates": {
+      "campaignsTitle": "لا توجد حملات بعد",
+      "campaignsMessage": "أنشئ حملتك الأولى لتبدأ باستقبال العروض.",
+      "create": "إنشاء حملة",
+      "createPressed": "تم الضغط على الإنشاء",
+      "inboxTitle": "لا شيء في صندوق الوارد",
+      "errorMessage": "الحملة غير موجودة."
+    },
+    "listRows": {
+      "groupTitle": "الحساب",
+      "groupFooter": "يقبل الصف أيقونة وعنواناً فرعياً وقيمة وأي عنصر في النهاية.",
+      "language": "اللغة",
+      "languageValue": "العربية",
+      "wallet": "المحفظة",
+      "walletSubtitle": "الرصيد المتاح",
+      "notifications": "الإشعارات",
+      "vacation": "وضع الإجازة",
+      "vacationSubtitle": "إيقاف العروض الجديدة مؤقتاً",
+      "kyc": "توثيق الهوية",
+      "sync": "مزامنة إحصاءات الحسابات",
+      "disabled": "صف معطّل",
+      "delete": "حذف الحساب",
+      "pressed": "تم الضغط على الصف"
+    },
+    "moneyText": {
+      "price": "السعر",
+      "muted": "العمولة",
+      "earning": "أرباح",
+      "charge": "خصم",
+      "estimate": "معاينة"
+    },
+    "amountInput": {
+      "budgetLabel": "ميزانية الحملة",
+      "placeholder": "0.00",
+      "withdrawLabel": "مبلغ السحب",
+      "error": "يتجاوز رصيدك المتاح",
+      "lockedLabel": "الدفعة المقدمة (مقفلة)",
+      "stored": "القيمة المخزنة: {{amount}} بأصغر وحدة",
+      "storedEmpty": "القيمة المخزنة: فارغة"
+    },
+    "timeline": {
+      "brief": "قُبل العرض",
+      "paid": "دُفع إلى الضمان",
+      "draft": "المسودة قيد الإنتاج",
+      "draftCaption": "التسليم خلال يومين",
+      "publish": "النشر",
+      "failed": "استُرد المبلغ",
+      "errorTitle": "متوقف"
+    },
+    "countdown": {
+      "draftDue": "موعد المسودة",
+      "reviewWindow": "مهلة المراجعة",
+      "offer": "العرض"
+    },
+    "mediaTile": {
+      "label": "وسائط المسودة",
+      "approved": "معتمدة",
+      "changes": "تعديلات",
+      "reset": "إعادة ضبط الرفع"
+    },
+    "ratingStars": {
+      "inputTitle": "قيّم صانع المحتوى"
+    },
+    "statTile": {
+      "period": "مقارنة بآخر 30 يوماً",
+      "views": "المشاهدات",
+      "engagement": "التفاعل",
+      "followers": "المتابعون",
+      "earnings": "الأرباح"
+    },
+    "dealStatus": {
+      "pillsTitle": "كل الحالات",
+      "progressTitle": "قيد المراجعة",
+      "completedTitle": "مكتملة",
+      "disputedTitle": "نزاع أثناء التنفيذ"
+    },
+    "dealCard": {
+      "pressed": "يفتح الصفقة"
+    },
+    "draftReview": {
+      "note": "يرجى إظهار الشعار في أول 3 ثوانٍ.",
+      "approvedToast": "اعتُمدت المسودة",
+      "changesToast": "طُلبت تعديلات",
+      "openToast": "يفتح العارض",
+      "reset": "إعادة ضبط المراجعة"
+    },
+    "wallet": {
+      "price": "سعر المحتوى",
+      "fee": "عمولة المنصة",
+      "total": "مستحقات صانع المحتوى",
+      "creatorTitle": "محفظة صانع المحتوى",
+      "brandTitle": "محفظة العلامة التجارية",
+      "breakdownTitle": "أرقام الخادم",
+      "estimateTitle": "معاينة تقديرية"
+    },
+    "sada": {
+      "campaignTitle": "إطلاق قائمة الصيف",
+      "campaignTitleAlt": "افتتاح المتجر",
+      "creatorName": "لينا حداد",
+      "creatorNameAlt": "عمر الخطيب",
+      "brandName": "مقهى ياسمين",
+      "adReel": "ريل",
+      "adStory": "ستوري",
+      "nicheBeauty": "تجميل",
+      "nicheTech": "تقنية",
+      "cityDamascus": "دمشق",
+      "cityAleppo": "حلب"
     }
   }
 }

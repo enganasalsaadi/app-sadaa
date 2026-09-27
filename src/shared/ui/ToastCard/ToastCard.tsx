@@ -8,7 +8,7 @@ import {
   Info,
   X,
 } from 'lucide-react-native';
-import { useTheme } from '@/core/theme';
+import { iconStroke, useTheme } from '@/core/theme';
 import type { StatusTone } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
@@ -61,7 +61,7 @@ export const ToastCard: React.FC<ToastCardProps> = ({
       borderColor={tone.main}
       borderWidth="hairline"
     >
-      <Icon size={sizes.icon.md} color={tone.main} strokeWidth={2} />
+      <Icon size={sizes.icon.md} color={tone.main} strokeWidth={iconStroke.regular} />
 
       <Text variant="bodySmall" color={tone.text} style={styles.message}>
         {message}
@@ -70,13 +70,13 @@ export const ToastCard: React.FC<ToastCardProps> = ({
       {onHide ? (
         <Pressable
           onPress={onHide}
-          hitSlop={16}
+          hitSlop={sizes.hitSlop.lg}
           align="center"
           justify="center"
           accessibilityRole="button"
           accessibilityLabel={t('common.close')}
         >
-          <X size={sizes.icon.xs} color={tone.text} strokeWidth={2} />
+          <X size={sizes.icon.xs} color={tone.text} strokeWidth={iconStroke.regular} />
         </Pressable>
       ) : null}
     </Box>

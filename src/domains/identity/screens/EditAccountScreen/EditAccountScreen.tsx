@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller } from 'react-hook-form';
 import { useTheme, moderateScale } from '@/core/theme';
-import { Layout } from '@/shared/ui/Layout';
+import { Layout, LayoutFooter } from '@/shared/ui/Layout';
 import { Box } from '@/shared/ui/primitives/Box';
 import { Text } from '@/shared/ui/primitives/Text';
 import { CustomInput } from '@/shared/ui/CustomInput';
@@ -24,22 +24,19 @@ const EditAccountScreenComponent: React.FC = () => {
   useHideBottomBar();
   return (
     <Layout
-      withGradient={false}
-      withScroll
-      contentPadding={false}
-      screenHeader={{
-        title: t('account.editAccount.title'),
-        fillStatusBar: true,
-      }}
-      ctaButton={{
-        label: t('common.save'),
-        onPress: handleSubmit(onSubmit),
-        isLoading,
-        disabled: isLoading,
-        alwaysSolid: true,
-      }}
+      padding={{ x: '2xl' }}
+      header={{ title: t('account.editAccount.title') }}
+      footer={
+        <LayoutFooter
+          primary={{
+            label: t('common.save'),
+            onPress: handleSubmit(onSubmit),
+            loading: isLoading,
+          }}
+        />
+      }
     >
-      <Box px="2xl" pt="lg" pb="6xl" gap="md">
+      <Box gap="md">
         <Controller
           control={control}
           name="full_name"

@@ -1,90 +1,107 @@
 import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronRight, ChevronLeft } from 'lucide-react-native';
 import type { ParseKeys } from 'i18next';
-import { Box, Text, Card } from '@/shared/ui';
-import { useTheme } from '@/core/theme';
-import type { LayoutVariantScreenName } from '../hooks/useDevShowcaseScreen';
+import { ListGroup } from '@/shared/ui';
+import { ShowcaseLinkRow } from '../components';
+import { useShowcaseNavigation } from '../hooks/useShowcaseNavigation';
+import type { LayoutVariantScreenName } from '../hooks/useShowcaseNavigation';
 
 interface LayoutGalleryRow {
-  screen: LayoutVariantScreenName;
   titleKey: ParseKeys;
   descriptionKey: ParseKeys;
 }
 
-const ROWS: LayoutGalleryRow[] = [
-  {
-    screen: 'LayoutFixedHeaderScreen',
+/** Exhaustive: a new layout screen fails the build until it is listed here. */
+const ROWS = {
+  LayoutFixedHeaderScreen: {
     titleKey: 'devShowcase.layoutGallery.fixedHeaderTitle',
     descriptionKey: 'devShowcase.layoutGallery.fixedHeaderDescription',
   },
-  {
-    screen: 'LayoutNoHeaderScrollScreen',
+  LayoutHideOnScrollScreen: {
+    titleKey: 'devShowcase.layoutGallery.hideOnScrollTitle',
+    descriptionKey: 'devShowcase.layoutGallery.hideOnScrollDescription',
+  },
+  LayoutCollapseHeaderScreen: {
+    titleKey: 'devShowcase.layoutGallery.collapseTitle',
+    descriptionKey: 'devShowcase.layoutGallery.collapseDescription',
+  },
+  LayoutHeroOverlayScreen: {
+    titleKey: 'devShowcase.layoutGallery.heroOverlayTitle',
+    descriptionKey: 'devShowcase.layoutGallery.heroOverlayDescription',
+  },
+  LayoutStickyScreen: {
+    titleKey: 'devShowcase.layoutGallery.stickyTitle',
+    descriptionKey: 'devShowcase.layoutGallery.stickyDescription',
+  },
+  LayoutFooterElevateScreen: {
+    titleKey: 'devShowcase.layoutGallery.footerElevateTitle',
+    descriptionKey: 'devShowcase.layoutGallery.footerElevateDescription',
+  },
+  LayoutFabScreen: {
+    titleKey: 'devShowcase.layoutGallery.fabTitle',
+    descriptionKey: 'devShowcase.layoutGallery.fabDescription',
+  },
+  LayoutBrandHeaderScreen: {
+    titleKey: 'devShowcase.layoutGallery.brandHeaderTitle',
+    descriptionKey: 'devShowcase.layoutGallery.brandHeaderDescription',
+  },
+  LayoutNoHeaderScrollScreen: {
     titleKey: 'devShowcase.layoutGallery.noHeaderScrollTitle',
     descriptionKey: 'devShowcase.layoutGallery.noHeaderScrollDescription',
   },
-  {
-    screen: 'LayoutDarkForcedScreen',
-    titleKey: 'devShowcase.layoutGallery.darkForcedTitle',
-    descriptionKey: 'devShowcase.layoutGallery.darkForcedDescription',
-  },
-  {
-    screen: 'LayoutCtaButtonScreen',
+  LayoutCtaButtonScreen: {
     titleKey: 'devShowcase.layoutGallery.ctaButtonTitle',
     descriptionKey: 'devShowcase.layoutGallery.ctaButtonDescription',
   },
-  {
-    screen: 'LayoutNoScrollWithHandlerScreen',
+  LayoutNoScrollWithHandlerScreen: {
     titleKey: 'devShowcase.layoutGallery.noScrollWithHandlerTitle',
     descriptionKey: 'devShowcase.layoutGallery.noScrollWithHandlerDescription',
   },
-  {
-    screen: 'LayoutGradientHeroScreen',
+  LayoutListStatesScreen: {
+    titleKey: 'devShowcase.layoutGallery.listStatesTitle',
+    descriptionKey: 'devShowcase.layoutGallery.listStatesDescription',
+  },
+  LayoutHeroSheetScreen: {
+    titleKey: 'devShowcase.layoutGallery.heroSheetTitle',
+    descriptionKey: 'devShowcase.layoutGallery.heroSheetDescription',
+  },
+  LayoutWizardScreen: {
+    titleKey: 'devShowcase.layoutGallery.wizardTitle',
+    descriptionKey: 'devShowcase.layoutGallery.wizardDescription',
+  },
+  LayoutGradientHeroScreen: {
     titleKey: 'devShowcase.layoutGallery.gradientHeroTitle',
     descriptionKey: 'devShowcase.layoutGallery.gradientHeroDescription',
   },
-];
+  LayoutDarkForcedScreen: {
+    titleKey: 'devShowcase.layoutGallery.darkForcedTitle',
+    descriptionKey: 'devShowcase.layoutGallery.darkForcedDescription',
+  },
+} as const satisfies Record<LayoutVariantScreenName, LayoutGalleryRow>;
 
-interface LayoutGallerySectionProps {
-  onNavigate: (screen: LayoutVariantScreenName) => void;
-}
+const SCREENS = Object.keys(ROWS) as LayoutVariantScreenName[];
 
-const LayoutGallerySectionComponent: React.FC<LayoutGallerySectionProps> = ({
-  onNavigate,
-}) => {
+const LayoutGalleryDemoComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors, isRTL } = useTheme();
-  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
-
-  const renderRow = useCallback(
-    (row: LayoutGalleryRow) => (
-      <Card
-        key={row.screen}
-        onPress={() => onNavigate(row.screen)}
-        row
-        align="center"
-        accessibilityLabel={t(row.titleKey)}
-      >
-        <Box flex={1}>
-          <Text variant="body">{t(row.titleKey)}</Text>
-          <Text variant="caption" color={colors.text.secondary} mt="xs">
-            {t(row.descriptionKey)}
-          </Text>
-        </Box>
-        <ChevronIcon size={18} color={colors.text.tertiary} />
-      </Card>
-    ),
-    [t, colors, onNavigate, ChevronIcon],
+  const navigation = useShowcaseNavigation();
+  const onNavigate = useCallback(
+    (screen: LayoutVariantScreenName) => navigation.navigate(screen),
+    [navigation],
   );
 
   return (
-    <Card>
-      <Box gap="md">
-        <Text variant="title">{t('devShowcase.sections.layoutGallery')}</Text>
-        {ROWS.map(renderRow)}
-      </Box>
-    </Card>
+    <ListGroup>
+      {SCREENS.map(screen => (
+        <ShowcaseLinkRow
+          key={screen}
+          id={screen}
+          title={t(ROWS[screen].titleKey)}
+          description={t(ROWS[screen].descriptionKey)}
+          onPress={onNavigate}
+        />
+      ))}
+    </ListGroup>
   );
 };
 
-export const LayoutGallerySection = memo(LayoutGallerySectionComponent);
+export const LayoutGalleryDemo = memo(LayoutGalleryDemoComponent);

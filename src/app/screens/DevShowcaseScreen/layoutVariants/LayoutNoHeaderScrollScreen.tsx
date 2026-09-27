@@ -5,7 +5,7 @@ import { useTheme } from '@/core/theme';
 import { goBack } from '@/core/navigation';
 
 /**
- * Layout gallery variant: `withScroll` with no `screenHeader`/`heroHeader` —
+ * Layout gallery variant: scroll mode with no `header` —
  * a plain scrollable body, back navigation handled inline.
  */
 const LayoutNoHeaderScrollScreenComponent: React.FC = () => {
@@ -13,7 +13,7 @@ const LayoutNoHeaderScrollScreenComponent: React.FC = () => {
   const { colors } = useTheme();
 
   return (
-    <Layout withScroll>
+    <Layout>
       <Box gap="lg">
         <CustomButton
           title={t('common.back')}

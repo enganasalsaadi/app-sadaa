@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Text, Layout } from '@/shared/ui';
+import { Box, Text, Layout, LayoutFooter } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import { goBack } from '@/core/navigation';
 
 /**
- * Layout gallery variant: `ctaButton` with `alwaysSolid` — a fixed bottom
- * CTA whose background never fades, even without a hero header to scroll past.
+ * Layout gallery variant: `footer` with `LayoutFooter` — the primary action
+ * pinned below the content and above the keyboard.
  */
 const LayoutCtaButtonScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -14,12 +14,9 @@ const LayoutCtaButtonScreenComponent: React.FC = () => {
 
   return (
     <Layout
-      withScroll
-      ctaButton={{
-        label: t('common.back'),
-        onPress: goBack,
-        alwaysSolid: true,
-      }}
+      footer={
+        <LayoutFooter primary={{ label: t('common.back'), onPress: goBack }} />
+      }
     >
       <Box gap="sm">
         <Text variant="h4">

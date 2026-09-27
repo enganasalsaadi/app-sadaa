@@ -54,6 +54,13 @@ export interface AuthState {
   userType?: string;
   currentStep?: number;
   isOnboardingComplete?: boolean;
+  // E.164 phone captured at login/step-1 time — fallback for the brand OTP
+  // screens when GET /onboarding/progress hasn't populated profile.phone yet
+  // (e.g. immediately after step-1, before the server persists it).
+  pendingPhone?: string;
+  // When the last phone-verification OTP was sent (epoch ms) — drives the
+  // resend countdown across restarts. Unset after login: nothing was sent.
+  phoneOtpSentAt?: number;
 }
 
 export interface LoginRequest {
@@ -62,7 +69,7 @@ export interface LoginRequest {
 }
 
 // POST /auth/login — phone+password. No `user` object is returned; `user`
-// is hydrated separately via GET /auth/me (see useAuth). `status` is an
+// is hydrated separately via GET /user/me. `status` is an
 // opaque server-defined string (e.g. "pending_kyc"), not a client state
 // machine we own.
 export interface LoginResponse {
@@ -75,52 +82,11 @@ export interface LoginResponse {
   is_onboarding_complete: boolean;
 }
 
-export interface RegisterRequest {
-  full_name: string;
-  email: string;
-  phone: string;
-  password: string;
-}
-
-// POST /auth/register returns only the email — no token. Verify OTP to log in.
-export interface RegisterResponse {
-  email: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  token: string;
-  token_type?: string;
-  abilities?: string[];
-  refresh_token?: string;
-}
-
-// POST /auth/verify-otp — verifies the 5-digit email OTP and logs in
-// immediately (grants free trial on first verify). Returns the same envelope
-// as /auth/login.
-export interface VerifyOtpRequest {
-  email: string;
-  otp: string;
-  device_name?: string;
-}
-
-export type VerifyOtpResponse = AuthResponse;
-
-// POST /auth/resend-otp — resends the email OTP (throttled server-side).
-export interface ResendOtpRequest {
-  email: string;
-}
-
-export interface ResendOtpResponse {
-  success: boolean;
-  message: string;
-}
-
 export type { RegisterFcmTokenPayload } from '@/core/notification/notificationTypes';
 
 // Forgot Password (phone OTP wizard): POST /auth/forgot-password.
 // Always returns 200 with the same message regardless of whether the phone
-// exists (no account enumeration) — see useRequestPasswordReset.
+// exists (no account enumeration) — see useResetPhoneScreen.
 export interface RequestPasswordResetRequest {
   phone: string;
 }
@@ -154,4 +120,66 @@ export interface LogoutRequest {
 export interface UpdateProfileRequest {
   full_name: string;
   phone: string;
+}
+
+// POST /auth/verify-otp (brand phone-verification context) — 4-digit code.
+export interface VerifyPhoneOtpRequest {
+  phone: string;
+  code: string;
+  type: 'phone_verification';
+}
+
+// POST /auth/resend-otp (brand phone-verification context), throttled server-side (60s).
+export interface ResendPhoneOtpRequest {
+  phone: string;
+  type: 'phone_verification';
+}
+
+// POST /onboarding/brand/step-1
+export interface BrandStep1Request {
+  company_name: string;
+  phone: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export interface BrandStep1Response {
+  token: string;
+  token_type: string;
+  user_id: string;
+  user_type: 'brand';
+  status: string;
+  current_step: number;
+  is_onboarding_complete: boolean;
+}
+
+export interface BrandSocialLink {
+  platform: string;
+  url: string;
+}
+
+// POST /onboarding/brand/step-2
+export interface BrandStep2Request {
+  governorate: string;
+  business_type: string;
+  social_links: BrandSocialLink[];
+}
+
+// GET /onboarding/progress
+export interface BrandOnboardingProgress {
+  is_onboarding_complete: boolean;
+  /** Opaque server account status ("active", "pending_kyc"). */
+  status?: string;
+  is_phone_verified: boolean;
+  current_step: number;
+  has_kyc_document: boolean;
+  profile: {
+    company_name?: string;
+    phone?: string;
+    email?: string;
+    business_type?: string | null;
+    governorate?: string | null;
+    social_links?: BrandSocialLink[];
+  };
 }

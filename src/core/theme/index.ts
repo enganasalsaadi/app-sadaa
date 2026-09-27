@@ -15,11 +15,18 @@ export {
   isLandscape,
   screenWidth,
   screenHeight,
-  hitSlop,
 } from './utils/responsive';
 
 export {FONT_FAMILY} from './tokens/typography';
-export {STATUS_TONES, BUTTON_COLOR_VARIANTS} from './tokens/colors';
+export {motion, opacity, iconStroke} from './tokens/motion';
+export type {MotionDurationToken} from './tokens/motion';
+export {
+  STATUS_TONES,
+  HUE_TONES,
+  BUTTON_COLOR_VARIANTS,
+  resolveHue,
+} from './tokens/colors';
+export type {HueTone} from './tokens/colors';
 
 export type {
   Theme,

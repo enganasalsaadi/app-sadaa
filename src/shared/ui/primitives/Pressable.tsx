@@ -2,18 +2,13 @@ import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type {
   PressableProps as RNPressableProps,
   ViewStyle,
-  DimensionValue,
   GestureResponderEvent,
 } from 'react-native';
 import { Pressable as RNPressable, Animated } from 'react-native';
-import { useTheme } from '@/core/theme/hooks/useTheme';
-import type {
-  SpacingToken,
-  RadiiToken,
-  BorderWidthToken,
-  ShadowToken,
-  Mutable,
-} from '@/core/theme/types';
+import { motion, opacity } from '@/core/theme';
+import type { Mutable } from '@/core/theme/types';
+import type { BoxStyleProps } from './boxStyle';
+import { splitBoxStyleProps, useBoxStyle } from './boxStyle';
 
 type RequestIdleCallback = (
   callback: () => void,
@@ -28,50 +23,18 @@ const getRequestIdleCallback = (): RequestIdleCallback | undefined => {
     : undefined;
 };
 
-interface PressableProps extends Omit<RNPressableProps, 'style'> {
+// With scaleOnPress, onPress is deferred so the release animation gets a frame
+// budget before the handler (often a navigation) blocks the JS thread.
+const PRESS_RELEASE_DELAY_MS = 100;
+// Upper bound for waiting on an idle slot; the press must never feel lost.
+const PRESS_IDLE_TIMEOUT_MS = 100;
+// Fallback defer when requestIdleCallback is unavailable (older iOS/Android engines).
+const PRESS_FALLBACK_DELAY_MS = 50;
+
+interface PressableProps
+  extends Omit<RNPressableProps, 'style'>,
+    BoxStyleProps {
   style?: ViewStyle;
-  p?: SpacingToken;
-  px?: SpacingToken;
-  py?: SpacingToken;
-  pt?: SpacingToken;
-  pb?: SpacingToken;
-  ps?: SpacingToken;
-  pe?: SpacingToken;
-  m?: SpacingToken;
-  mx?: SpacingToken;
-  my?: SpacingToken;
-  mt?: SpacingToken;
-  mb?: SpacingToken;
-  ms?: SpacingToken;
-  me?: SpacingToken;
-  gap?: SpacingToken;
-  rowGap?: SpacingToken;
-  columnGap?: SpacingToken;
-  bg?: string;
-  borderRadius?: RadiiToken;
-  borderTopStartRadius?: RadiiToken;
-  borderTopEndRadius?: RadiiToken;
-  borderBottomStartRadius?: RadiiToken;
-  borderBottomEndRadius?: RadiiToken;
-  borderWidth?: BorderWidthToken;
-  borderColor?: string;
-  row?: boolean;
-  wrap?: boolean;
-  flex?: number;
-  align?: ViewStyle['alignItems'];
-  justify?: ViewStyle['justifyContent'];
-  alignSelf?: ViewStyle['alignSelf'];
-  overflow?: ViewStyle['overflow'];
-  position?: ViewStyle['position'];
-  width?: DimensionValue;
-  height?: DimensionValue;
-  minWidth?: DimensionValue;
-  minHeight?: DimensionValue;
-  maxWidth?: DimensionValue;
-  maxHeight?: DimensionValue;
-  opacity?: number;
-  zIndex?: number;
-  shadow?: ShadowToken;
   activeOpacity?: number;
   scaleOnPress?: boolean;
   disabled?: boolean;
@@ -80,58 +43,27 @@ interface PressableProps extends Omit<RNPressableProps, 'style'> {
 const PressableComponent: React.FC<PressableProps> = ({
   style,
   children,
-  p,
-  px,
-  py,
-  pt,
-  pb,
-  ps,
-  pe,
-  m,
-  mx,
-  my,
-  mt,
-  mb,
-  ms,
-  me,
-  gap: gapProp,
-  rowGap: rowGapProp,
-  columnGap: columnGapProp,
-  bg,
-  borderRadius: borderRadiusProp,
-  borderTopStartRadius: btsrProp,
-  borderTopEndRadius: bterProp,
-  borderBottomStartRadius: bbsrProp,
-  borderBottomEndRadius: bberProp,
-  borderWidth: borderWidthProp,
-  borderColor,
-  row,
-  wrap,
-  flex: flexProp,
-  align,
-  justify,
-  alignSelf,
-  overflow,
-  position,
-  width,
-  height,
-  minWidth,
-  minHeight,
-  maxWidth,
-  maxHeight,
-  opacity: opacityProp,
-  zIndex: zIndexProp,
-  shadow,
-  activeOpacity = 0.7,
+  activeOpacity = opacity.pressed,
   scaleOnPress = false,
   disabled = false,
   onPressIn: externalPressIn,
   onPressOut: externalPressOut,
   onPress: externalPress,
   onLongPress: externalLongPress,
-  ...rest
+  ...props
 }) => {
-  const { spacing, radii, shadows, borderWidths } = useTheme();
+  const { styleProps, rest } = splitBoxStyleProps(props);
+  const computedStyle = useBoxStyle(styleProps);
+  const {
+    flex: flexProp,
+    alignSelf,
+    width,
+    height,
+    minWidth,
+    minHeight,
+    maxWidth,
+    maxHeight,
+  } = styleProps;
   const scaleAnim = useMemo(() => new Animated.Value(1), []);
   const animRef = useRef<Animated.CompositeAnimation | null>(null);
   const longPressOccurredRef = useRef(false);
@@ -156,10 +88,9 @@ const PressableComponent: React.FC<PressableProps> = ({
       if (scaleOnPress) {
         resetScale();
         Animated.spring(scaleAnim, {
-          toValue: 0.96,
+          toValue: motion.pressScale,
           useNativeDriver: true,
-          speed: 80,
-          bounciness: 8,
+          ...motion.spring,
         }).start();
       }
       externalPressIn?.(e);
@@ -174,7 +105,7 @@ const PressableComponent: React.FC<PressableProps> = ({
         scaleAnim.stopAnimation();
         Animated.timing(scaleAnim, {
           toValue: 1,
-          duration: 100,
+          duration: motion.duration.fast,
           useNativeDriver: true,
         }).start();
       }
@@ -205,205 +136,17 @@ const PressableComponent: React.FC<PressableProps> = ({
           // requestIdleCallback instead of InteractionManager (deprecated).
           const ric = getRequestIdleCallback();
           if (ric) {
-            ric(() => externalPress?.(e), { timeout: 100 });
+            ric(() => externalPress?.(e), { timeout: PRESS_IDLE_TIMEOUT_MS });
           } else {
-            // fallback للـ iOS والـ Android القديمة
-            setTimeout(() => externalPress?.(e), 50);
+            setTimeout(() => externalPress?.(e), PRESS_FALLBACK_DELAY_MS);
           }
-        }, 100);
+        }, PRESS_RELEASE_DELAY_MS);
       } else {
         externalPress?.(e);
       }
     },
     [disabled, externalPress, scaleOnPress],
   );
-
-  const computedStyle = useMemo<ViewStyle>(() => {
-    const s: Mutable<ViewStyle> = {};
-
-    if (p !== undefined) {
-      s.padding = spacing[p];
-    }
-    if (px !== undefined) {
-      s.paddingHorizontal = spacing[px];
-    }
-    if (py !== undefined) {
-      s.paddingVertical = spacing[py];
-    }
-    if (pt !== undefined) {
-      s.paddingTop = spacing[pt];
-    }
-    if (pb !== undefined) {
-      s.paddingBottom = spacing[pb];
-    }
-    if (ps !== undefined) {
-      s.paddingStart = spacing[ps];
-    }
-    if (pe !== undefined) {
-      s.paddingEnd = spacing[pe];
-    }
-
-    if (m !== undefined) {
-      s.margin = spacing[m];
-    }
-    if (mx !== undefined) {
-      s.marginHorizontal = spacing[mx];
-    }
-    if (my !== undefined) {
-      s.marginVertical = spacing[my];
-    }
-    if (mt !== undefined) {
-      s.marginTop = spacing[mt];
-    }
-    if (mb !== undefined) {
-      s.marginBottom = spacing[mb];
-    }
-    if (ms !== undefined) {
-      s.marginStart = spacing[ms];
-    }
-    if (me !== undefined) {
-      s.marginEnd = spacing[me];
-    }
-
-    if (gapProp !== undefined) {
-      s.gap = spacing[gapProp];
-    }
-    if (rowGapProp !== undefined) {
-      s.rowGap = spacing[rowGapProp];
-    }
-    if (columnGapProp !== undefined) {
-      s.columnGap = spacing[columnGapProp];
-    }
-
-    if (bg !== undefined) {
-      s.backgroundColor = bg;
-    }
-    if (borderRadiusProp !== undefined) {
-      s.borderRadius = radii[borderRadiusProp];
-    }
-    if (btsrProp !== undefined) {
-      s.borderTopStartRadius = radii[btsrProp];
-    }
-    if (bterProp !== undefined) {
-      s.borderTopEndRadius = radii[bterProp];
-    }
-    if (bbsrProp !== undefined) {
-      s.borderBottomStartRadius = radii[bbsrProp];
-    }
-    if (bberProp !== undefined) {
-      s.borderBottomEndRadius = radii[bberProp];
-    }
-    if (borderWidthProp !== undefined) {
-      s.borderWidth = borderWidths[borderWidthProp];
-    }
-    if (borderColor !== undefined) {
-      s.borderColor = borderColor;
-    }
-
-    if (row) {
-      s.flexDirection = 'row';
-    }
-    if (wrap) {
-      s.flexWrap = 'wrap';
-    }
-    if (flexProp !== undefined) {
-      s.flex = flexProp;
-    }
-    if (align !== undefined) {
-      s.alignItems = align;
-    }
-    if (justify !== undefined) {
-      s.justifyContent = justify;
-    }
-    if (alignSelf !== undefined) {
-      s.alignSelf = alignSelf;
-    }
-    if (overflow !== undefined) {
-      s.overflow = overflow;
-    }
-    if (position !== undefined) {
-      s.position = position;
-    }
-
-    if (width !== undefined) {
-      s.width = width;
-    }
-    if (height !== undefined) {
-      s.height = height;
-    }
-    if (minWidth !== undefined) {
-      s.minWidth = minWidth;
-    }
-    if (minHeight !== undefined) {
-      s.minHeight = minHeight;
-    }
-    if (maxWidth !== undefined) {
-      s.maxWidth = maxWidth;
-    }
-    if (maxHeight !== undefined) {
-      s.maxHeight = maxHeight;
-    }
-
-    if (opacityProp !== undefined) {
-      s.opacity = opacityProp;
-    }
-    if (zIndexProp !== undefined) {
-      s.zIndex = zIndexProp;
-    }
-
-    if (shadow !== undefined) {
-      Object.assign(s, shadows[shadow]);
-    }
-
-    return s;
-  }, [
-    spacing,
-    radii,
-    shadows,
-    borderWidths,
-    p,
-    px,
-    py,
-    pt,
-    pb,
-    ps,
-    pe,
-    m,
-    mx,
-    my,
-    mt,
-    mb,
-    ms,
-    me,
-    gapProp,
-    rowGapProp,
-    columnGapProp,
-    bg,
-    borderRadiusProp,
-    btsrProp,
-    bterProp,
-    bbsrProp,
-    bberProp,
-    borderWidthProp,
-    borderColor,
-    row,
-    wrap,
-    flexProp,
-    align,
-    justify,
-    alignSelf,
-    overflow,
-    position,
-    width,
-    height,
-    minWidth,
-    minHeight,
-    maxWidth,
-    maxHeight,
-    opacityProp,
-    zIndexProp,
-    shadow,
-  ]);
 
   const wrapperStyle = useMemo<ViewStyle>(() => {
     const s: Mutable<ViewStyle> = {};

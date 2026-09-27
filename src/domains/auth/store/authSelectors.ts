@@ -9,3 +9,7 @@ export const selectCurrentStep = (state: RootState) => state.auth.currentStep ??
 // never redirected into the registration-resume gate.
 export const selectIsOnboardingComplete = (state: RootState) =>
   state.auth.isOnboardingComplete ?? true;
+export const selectPendingPhone = (state: RootState) =>
+  state.auth.pendingPhone ?? '';
+export const selectPhoneOtpSentAt = (state: RootState) =>
+  state.auth.phoneOtpSentAt ?? null;

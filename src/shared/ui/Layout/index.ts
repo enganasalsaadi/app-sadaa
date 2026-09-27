@@ -1,7 +1,16 @@
-export {Layout} from './Layout';
-export type {LayoutProps} from './Layout';
-export {LayoutKeyboardContainer} from './LayoutKeyboardContainer';
-export type {LayoutKeyboardContainerProps} from './LayoutKeyboardContainer';
-export {EndScreenPadding} from './EndScreenPadding';
-export type {EndScreenPaddingProps} from './EndScreenPadding';
-export {LAYOUT_DEFAULT_PX, LAYOUT_DEFAULT_PY} from './constants';
+export { Layout } from './Layout';
+export { LayoutFooter } from './LayoutFooter';
+export type {
+  LayoutProps,
+  LayoutMode,
+  LayoutSurface,
+  LayoutKeyboard,
+  LayoutBackdrop,
+  LayoutStatusBar,
+  LayoutHeaderBehavior,
+  LayoutFooterBehavior,
+  LayoutPadding,
+  LayoutHeaderConfig,
+  LayoutScrollProps,
+} from './types';
+export type { LayoutFooterProps, LayoutFooterAction } from './LayoutFooter';

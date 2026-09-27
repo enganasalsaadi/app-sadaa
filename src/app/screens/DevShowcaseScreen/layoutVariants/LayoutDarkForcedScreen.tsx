@@ -16,8 +16,8 @@ const LayoutDarkForcedScreenComponent: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <Layout withScroll bg={darkColors.layout.base} contentBg={darkColors.layout.base}>
-      <Box gap="lg">
+    <Layout padding="none">
+      <Box flex={1} gap="lg" p="xl" bg={darkColors.layout.base}>
         <CustomButton
           title={t('common.back')}
           onPress={goBack}

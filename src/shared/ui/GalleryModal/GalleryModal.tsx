@@ -1,30 +1,30 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import {
   Modal,
   FlatList,
-  Dimensions,
   StatusBar,
-  StyleSheet,
-  TouchableOpacity,
+  useWindowDimensions,
   type ListViewToken,
+  type ViewStyle,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@/core/theme';
-import { moderateScale } from '@/core/theme/utils/responsive';
+import { iconStroke, useStyles, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 import { Image } from '../primitives/Image';
+import { Pressable } from '../primitives/Pressable';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-interface GalleryModalProps {
+export interface GalleryModalProps {
   images: string[];
   visible: boolean;
   initialIndex?: number;
   onClose: () => void;
   onIndexChange?: (index: number) => void;
 }
+
+const VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 50 };
 
 const GalleryModalComponent: React.FC<GalleryModalProps> = ({
   images,
@@ -34,19 +34,79 @@ const GalleryModalComponent: React.FC<GalleryModalProps> = ({
   onIndexChange,
 }) => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, sizes } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
-  const activeIndexRef = useRef(initialIndex);
+
+  const styles = useStyles(
+    ({ spacing, zIndices }): Record<'closeButton' | 'counter', ViewStyle> => ({
+      closeButton: {
+        position: 'absolute',
+        top: insets.top + spacing.lg,
+        end: spacing.xl,
+        zIndex: zIndices.overlay,
+      },
+      counter: {
+        position: 'absolute',
+        bottom: spacing['5xl'],
+        start: 0,
+        end: 0,
+      },
+    }),
+    [insets.top],
+  );
 
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ListViewToken[] }) => {
       const index = viewableItems[0]?.index;
       if (index !== null && index !== undefined) {
-        activeIndexRef.current = index;
         onIndexChange?.(index);
       }
     },
     [onIndexChange],
+  );
+
+  const getItemLayout = useCallback(
+    (_: ArrayLike<string> | null | undefined, index: number) => ({
+      length: width,
+      offset: width * index,
+      index,
+    }),
+    [width],
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: string; index: number }) => (
+      <Box width={width} height={height} align="center" justify="center">
+        <Image
+          uri={item}
+          width={width}
+          height={height}
+          resizeMode="contain"
+          showSkeleton={false}
+        />
+        <Box style={styles.counter} align="center">
+          <Box px="lg" py="sm" borderRadius="full" bg={colors.overlay}>
+            <Text variant="caption" color={colors.text.onBrand}>
+              {index + 1} / {images.length}
+            </Text>
+          </Box>
+        </Box>
+      </Box>
+    ),
+    [width, height, styles.counter, colors, images.length],
+  );
+
+  const closeIcon = useMemo(
+    () => (
+      <X
+        size={sizes.icon.sm}
+        color={colors.text.onBrand}
+        strokeWidth={iconStroke.regular}
+      />
+    ),
+    [sizes.icon.sm, colors.text.onBrand],
   );
 
   if (images.length === 0) return null;
@@ -62,28 +122,21 @@ const GalleryModalComponent: React.FC<GalleryModalProps> = ({
       <Box flex={1} bg={colors.mediaBackdrop}>
         <StatusBar barStyle="light-content" />
 
-        <TouchableOpacity
+        <Pressable
           style={styles.closeButton}
           onPress={onClose}
-          hitSlop={16}
+          hitSlop={sizes.hitSlop.lg}
+          width={sizes.iconButton.sm}
+          height={sizes.iconButton.sm}
+          borderRadius="full"
+          bg={colors.overlay}
+          align="center"
+          justify="center"
           accessibilityRole="button"
           accessibilityLabel={t('common.close')}
         >
-          <Box
-            width={moderateScale(36)}
-            height={moderateScale(36)}
-            borderRadius="full"
-            bg={colors.overlay}
-            align="center"
-            justify="center"
-          >
-            <X
-              size={moderateScale(18)}
-              color={colors.text.onBrand}
-              strokeWidth={2}
-            />
-          </Box>
-        </TouchableOpacity>
+          {closeIcon}
+        </Pressable>
 
         <FlatList
           ref={listRef}
@@ -93,36 +146,10 @@ const GalleryModalComponent: React.FC<GalleryModalProps> = ({
           showsHorizontalScrollIndicator={false}
           initialScrollIndex={initialIndex}
           keyExtractor={(uri, i) => `gallery-${i}-${uri.slice(-20)}`}
-          getItemLayout={(_, index) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index,
-          })}
+          getItemLayout={getItemLayout}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-          renderItem={({ item, index }) => (
-            <Box
-              width={SCREEN_WIDTH}
-              height={SCREEN_HEIGHT}
-              align="center"
-              justify="center"
-            >
-              <Image
-                uri={item}
-                width={SCREEN_WIDTH}
-                height={SCREEN_HEIGHT}
-                resizeMode="contain"
-                showSkeleton={false}
-              />
-              <Box style={styles.counter} align="center">
-                <Box px="lg" py="sm" borderRadius="full" bg={colors.overlay}>
-                  <Text variant="caption" color={colors.text.onBrand}>
-                    {index + 1} / {images.length}
-                  </Text>
-                </Box>
-              </Box>
-            </Box>
-          )}
+          viewabilityConfig={VIEWABILITY_CONFIG}
+          renderItem={renderItem}
         />
       </Box>
     </Modal>
@@ -130,18 +157,3 @@ const GalleryModalComponent: React.FC<GalleryModalProps> = ({
 };
 
 export const GalleryModal = memo(GalleryModalComponent);
-
-const styles = StyleSheet.create({
-  closeButton: {
-    position: 'absolute',
-    top: 56,
-    end: 20,
-    zIndex: 10,
-  },
-  counter: {
-    position: 'absolute',
-    bottom: 48,
-    start: 0,
-    end: 0,
-  },
-});

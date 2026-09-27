@@ -1,34 +1,62 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Building2, Sparkles, Users } from 'lucide-react-native';
+import { Building2, ChevronLeft, ChevronRight, Sparkles, Users } from 'lucide-react-native';
+import type { LucideIcon } from 'lucide-react-native';
+import type { ParseKeys } from 'i18next';
 import { useTheme } from '@/core/theme';
 import { Box, Text, Pressable, BottomSheet } from '@/shared/ui';
 
-export type AccountType = 'brand' | 'influencer';
+export type AccountType = 'brand' | 'influencer' | 'agency';
 
-interface AccountTypeSheetProps {
-  visible: boolean;
-  onClose: () => void;
+interface AccountTypeOptionDef {
+  type: AccountType;
+  icon: LucideIcon;
+  titleKey: ParseKeys;
+  subtitleKey: ParseKeys;
+  available: boolean;
+}
+
+// Flip `available` as each registration wizard ships.
+const OPTIONS: readonly AccountTypeOptionDef[] = [
+  {
+    type: 'brand',
+    icon: Building2,
+    titleKey: 'auth.accountType.brand',
+    subtitleKey: 'auth.accountType.brandSubtitle',
+    available: true,
+  },
+  {
+    type: 'influencer',
+    icon: Users,
+    titleKey: 'auth.accountType.influencer',
+    subtitleKey: 'auth.accountType.influencerSubtitle',
+    available: false,
+  },
+  {
+    type: 'agency',
+    icon: Sparkles,
+    titleKey: 'auth.accountType.agency',
+    subtitleKey: 'auth.accountType.agencySubtitle',
+    available: false,
+  },
+];
+
+interface AccountTypeOptionProps {
+  option: AccountTypeOptionDef;
   onSelect: (type: AccountType) => void;
 }
 
-export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
-  visible,
-  onClose,
-  onSelect,
-}) => {
+const AccountTypeOption: React.FC<AccountTypeOptionProps> = memo(({ option, onSelect }) => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, sizes, isRTL } = useTheme();
+  const Icon = option.icon;
+  const Chevron = isRTL ? ChevronLeft : ChevronRight;
+  const disabled = !option.available;
+  const title = t(option.titleKey);
 
-  const renderOption = (
-    icon: React.ReactNode,
-    title: string,
-    subtitle: string,
-    onPress?: () => void,
-    disabled = false,
-  ) => (
+  return (
     <Pressable
-      onPress={onPress}
+      onPress={() => onSelect(option.type)}
       disabled={disabled}
       row
       align="center"
@@ -43,39 +71,52 @@ export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
       accessibilityState={{ disabled }}
     >
       <Box
-        width={44}
-        height={44}
+        width={sizes.button.md}
+        height={sizes.button.md}
         borderRadius="md"
-        bg={colors.interactive.soft}
+        bg={disabled ? colors.surface.elevated : colors.interactive.soft}
         align="center"
         justify="center"
       >
-        {icon}
+        <Icon
+          size={sizes.icon.md}
+          color={disabled ? colors.icon.disabled : colors.interactive.main}
+        />
       </Box>
       <Box flex={1} gap="xs">
         <Box row align="center" gap="sm">
-          <Text variant="body" color={colors.text.primary}>
+          <Text variant="bodyMedium" color={disabled ? colors.text.secondary : colors.text.primary}>
             {title}
           </Text>
-          {disabled && (
-            <Box
-              px="sm"
-              py="xs"
-              borderRadius="full"
-              bg={colors.status.neutral.soft}
-            >
+          {disabled ? (
+            <Box px="sm" py="xs" borderRadius="full" bg={colors.status.neutral.soft}>
               <Text variant="caption" color={colors.status.neutral.text}>
                 {t('auth.accountType.comingSoon')}
               </Text>
             </Box>
-          )}
+          ) : null}
         </Box>
         <Text variant="bodySmall" color={colors.text.secondary}>
-          {subtitle}
+          {t(option.subtitleKey)}
         </Text>
       </Box>
+      {disabled ? null : <Chevron size={sizes.icon.sm} color={colors.icon.secondary} />}
     </Pressable>
   );
+});
+
+interface AccountTypeSheetProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelect: (type: AccountType) => void;
+}
+
+export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
+  visible,
+  onClose,
+  onSelect,
+}) => {
+  const { t } = useTranslation();
 
   return (
     <BottomSheet visible={visible} onClose={onClose}>
@@ -83,26 +124,9 @@ export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
         <Text variant="h4" align="center">
           {t('auth.accountType.title')}
         </Text>
-
-        {renderOption(
-          <Building2 size={22} color={colors.interactive.main} />,
-          t('auth.accountType.brand'),
-          t('auth.accountType.brandSubtitle'),
-          () => onSelect('brand'),
-        )}
-        {renderOption(
-          <Users size={22} color={colors.interactive.main} />,
-          t('auth.accountType.influencer'),
-          t('auth.accountType.influencerSubtitle'),
-          () => onSelect('influencer'),
-        )}
-        {renderOption(
-          <Sparkles size={22} color={colors.icon.disabled} />,
-          t('auth.accountType.agency'),
-          t('auth.accountType.agencySubtitle'),
-          undefined,
-          true,
-        )}
+        {OPTIONS.map(option => (
+          <AccountTypeOption key={option.type} option={option} onSelect={onSelect} />
+        ))}
       </Box>
     </BottomSheet>
   );

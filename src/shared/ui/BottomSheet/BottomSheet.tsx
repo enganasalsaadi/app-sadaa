@@ -1,18 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   Modal,
   Animated,
-  TouchableOpacity,
   KeyboardAvoidingView,
-  Dimensions,
   StyleSheet,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '@/core/theme';
-import { Box } from '../primitives';
+import { useTranslation } from 'react-i18next';
+import { motion, useTheme } from '@/core/theme';
+import { Box, Pressable } from '../primitives';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+/** Default cap so the sheet never hides the whole screen behind it. */
+const DEFAULT_MAX_HEIGHT_RATIO = 0.75;
+
+// Clamped so the sheet never overshoots upwards and reveals a gap below it.
+const SHEET_SPRING = { ...motion.spring, overshootClamping: true } as const;
 
 interface BottomSheetProps {
   visible: boolean;
@@ -31,17 +35,19 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   onClose,
   children,
   snapHeight,
-  maxHeight = SCREEN_HEIGHT * 0.75,
+  maxHeight: maxHeightProp,
   showHandle = true,
   bg,
   fullScreen = false,
   muted = false,
 }) => {
-  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { colors, sizes, spacing } = useTheme();
   const insets = useSafeAreaInsets();
+  const { height: windowHeight } = useWindowDimensions();
   const [isVisible, setIsVisible] = useState(false);
   const backdropAnim = useRef(new Animated.Value(0)).current;
-  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const sheetAnim = useRef(new Animated.Value(windowHeight)).current;
 
   useEffect(() => {
     if (visible) {
@@ -49,13 +55,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       Animated.parallel([
         Animated.timing(backdropAnim, {
           toValue: 1,
-          duration: 250,
+          duration: motion.duration.base,
           useNativeDriver: true,
         }),
         Animated.spring(sheetAnim, {
           toValue: 0,
-          tension: 70,
-          friction: 12,
+          ...SHEET_SPRING,
           useNativeDriver: true,
         }),
       ]).start();
@@ -63,24 +68,41 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       Animated.parallel([
         Animated.timing(backdropAnim, {
           toValue: 0,
-          duration: 200,
+          duration: motion.duration.base,
           useNativeDriver: true,
         }),
         Animated.timing(sheetAnim, {
-          toValue: SCREEN_HEIGHT,
-          duration: 220,
+          toValue: windowHeight,
+          duration: motion.duration.base,
           useNativeDriver: true,
         }),
       ]).start(() => setIsVisible(false));
     }
-  }, [visible, backdropAnim, sheetAnim]);
+  }, [visible, backdropAnim, sheetAnim, windowHeight]);
 
-  const sheetStyle = fullScreen
-    ? { height: SCREEN_HEIGHT - insets.top }
-    : snapHeight
-    ? { height: snapHeight }
-    : { maxHeight };
+  const sheetStyle = useMemo(() => {
+    if (fullScreen) return { height: windowHeight - insets.top };
+    if (snapHeight) return { height: snapHeight };
+    return { maxHeight: maxHeightProp ?? windowHeight * DEFAULT_MAX_HEIGHT_RATIO };
+  }, [fullScreen, snapHeight, maxHeightProp, windowHeight, insets.top]);
+
+  const overlayStyle = useMemo(
+    () => [
+      StyleSheet.absoluteFill,
+      { backgroundColor: colors.overlay, opacity: backdropAnim },
+    ],
+    [colors.overlay, backdropAnim],
+  );
+
+  const translateStyle = useMemo(
+    () => ({ transform: [{ translateY: sheetAnim }] }),
+    [sheetAnim],
+  );
+
   const backgroundColor = bg ?? colors.navigation.bottomSheet.background;
+  // Android draws the gesture bar over the sheet, so pad a little extra.
+  const bottomSpacer =
+    insets.bottom + (Platform.OS === 'android' ? spacing.xl : 0);
 
   return (
     <Modal
@@ -90,29 +112,22 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       statusBarTranslucent
       onRequestClose={onClose}
     >
-      {/* Overlay — pointerEvents none so touches reach the touchable below */}
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: colors.overlay, opacity: backdropAnim },
-        ]}
-      />
+      {/* Overlay — pointerEvents none so touches reach the dismiss area below */}
+      <Animated.View pointerEvents="none" style={overlayStyle} />
 
       <KeyboardAvoidingView
         style={styles.keyboardAvoiding}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        {/* Backdrop dismiss area */}
-        <TouchableOpacity
-          style={styles.backdrop}
-          activeOpacity={1}
+        <Pressable
+          flex={1}
           onPress={onClose}
+          activeOpacity={1}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.close')}
         />
 
-        <Animated.View
-          style={{ transform: [{ translateY: sheetAnim }] }}
-        >
+        <Animated.View style={translateStyle}>
           <Box
             style={sheetStyle}
             bg={backgroundColor}
@@ -123,8 +138,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             {showHandle && (
               <Box align="center" pt="md" pb="sm">
                 <Box
-                  width={40}
-                  height={4}
+                  width={sizes.sheetHandle.width}
+                  height={sizes.sheetHandle.height}
                   borderRadius="full"
                   bg={colors.navigation.bottomSheet.handle}
                 />
@@ -133,7 +148,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             {children}
             {insets.bottom > 0 && (
               <Box
-                height={insets.bottom + (Platform.OS === 'android' ? 20 : 0)}
+                height={bottomSpacer}
                 bg={muted ? undefined : colors.surface.main}
               />
             )}
@@ -149,5 +164,4 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  backdrop: { flex: 1 },
 });

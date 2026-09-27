@@ -3,10 +3,11 @@ import { Animated, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector, selectNetworkError } from '@/core/store';
-import { useTheme } from '@/core/theme';
+import { moderateScale, motion, useTheme } from '@/core/theme';
 import { Box, Text } from '../primitives';
 
-const HIDDEN_OFFSET = 100;
+// Comfortably taller than the (wrapping) message, so it starts fully off-screen.
+const HIDDEN_OFFSET = moderateScale(100);
 
 export const NetworkSnackbar: React.FC = () => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export const NetworkSnackbar: React.FC = () => {
       setVisible(true);
       Animated.timing(slideAnim, {
         toValue: 1,
-        duration: 300,
+        duration: motion.duration.base,
         useNativeDriver: true,
       }).start();
       return;
@@ -29,7 +30,7 @@ export const NetworkSnackbar: React.FC = () => {
     // Sliding out from 0 is a no-op, so this is safe while already hidden.
     Animated.timing(slideAnim, {
       toValue: 0,
-      duration: 300,
+      duration: motion.duration.base,
       useNativeDriver: true,
     }).start(({ finished }) => {
       if (finished) setVisible(false);

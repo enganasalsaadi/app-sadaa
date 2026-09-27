@@ -6,5 +6,13 @@ export const authPersistConfig: PersistConfig<AuthState> = {
   key: 'auth',
   version: 1,
   storage: mmkvReduxStorage,
-  whitelist: ['user', 'token', 'userType', 'currentStep', 'isOnboardingComplete'],
+  whitelist: [
+    'user',
+    'token',
+    'userType',
+    'currentStep',
+    'isOnboardingComplete',
+    'pendingPhone',
+    'phoneOtpSentAt',
+  ],
 };

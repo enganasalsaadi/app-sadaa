@@ -1,0 +1,1 @@
+export { BrandAccountScreen } from './BrandAccountScreen';

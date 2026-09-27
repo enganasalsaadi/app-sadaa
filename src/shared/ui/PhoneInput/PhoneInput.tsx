@@ -8,6 +8,7 @@ import type {
 import { TextInput, Platform } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import type { CountryCode } from 'libphonenumber-js';
+import { MAX_FONT_SIZE_MULTIPLIER } from '@/core/config';
 import { useTheme } from '@/core/theme';
 import type { SpacingToken, RadiiToken } from '@/core/theme/types';
 import { Box, Text, Pressable } from '../primitives';
@@ -15,6 +16,7 @@ import type { InputSize } from '../CustomInput/styles';
 import {
   getInputColors,
   getInputHeight,
+  getFieldFrameStyle,
   createInputTextStyle,
 } from '../CustomInput/styles';
 import { CountryPickerSheet } from './CountryPickerSheet';
@@ -70,36 +72,19 @@ const PhoneInputInner = React.forwardRef(
     const flag = useMemo(() => getFlagEmoji(countryCode), [countryCode]);
     const isRTL = theme.isRTL;
 
-    const borderColor = isFocused
-      ? ic.focusBorder
-      : error
-      ? theme.colors.form.input.borderError
-      : ic.border;
-    const borderWidth = isFocused
-      ? theme.borderWidths.sm
-      : theme.borderWidths.thin;
-    const backgroundColor = editable ? ic.background : ic.disabledBg;
-
+    const hasError = !!error;
     const wrapperStyle = useMemo<ViewStyle>(
       () => ({
-        flexDirection: isRTL ? 'row-reverse' : 'row',
-        alignItems: 'center',
-        backgroundColor,
-        borderRadius: theme.radii[borderRadius],
-        borderWidth,
-        borderColor,
+        ...getFieldFrameStyle(theme, {
+          focused: isFocused,
+          error: hasError,
+          editable,
+          borderRadius,
+        }),
         height: inputHeight,
         overflow: 'hidden',
       }),
-      [
-        isRTL,
-        backgroundColor,
-        theme,
-        borderRadius,
-        borderWidth,
-        borderColor,
-        inputHeight,
-      ],
+      [theme, isFocused, hasError, editable, borderRadius, inputHeight],
     );
 
     const textInputStyle = useMemo<TextStyle>(
@@ -141,7 +126,7 @@ const PhoneInputInner = React.forwardRef(
     return (
       <Box mb={mb}>
         {label ? (
-          <Text variant="label" color={ic.label} mb="sm">
+          <Text variant="label" color={ic.label} mb="md">
             {label}
           </Text>
         ) : null}
@@ -169,7 +154,7 @@ const PhoneInputInner = React.forwardRef(
                 : '+' + country?.dialCode}
             </Text>
             <ChevronDown
-              size={14}
+              size={theme.sizes.icon.xs}
               color={
                 editable
                   ? theme.colors.icon.secondary
@@ -194,7 +179,7 @@ const PhoneInputInner = React.forwardRef(
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             textContentType="telephoneNumber"
-            maxFontSizeMultiplier={1.3}
+            maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER}
             accessibilityLabel={label}
             returnKeyType={returnKeyType}
             onSubmitEditing={onSubmitEditing}

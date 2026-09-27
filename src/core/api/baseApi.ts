@@ -206,6 +206,8 @@ export const baseApi = createApi({
     'Settings',
     'Preferences',
     'Profile',
+    'Lookups',
+    'OnboardingProgress',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

@@ -1,20 +1,27 @@
 import React, { useRef, useCallback, useMemo } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import type { FlashListProps, FlashListRef } from '@shopify/flash-list';
 import { useTheme } from '@/core/theme';
+import { Box } from '../primitives/Box';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SkeletonList } from './components/SkeletonList';
 import { ListEmptyState } from './components/ListEmptyState';
 import { ListFooterLoader } from './components/ListFooterLoader';
 import { useScrollRestoration } from './hooks/useScrollRestoration';
 import type { SuperListProps } from './types';
-import { BASE_SPACING } from '@/core/theme/tokens/spacing';
 
 // Stable empty-array so FlashList never sees a new reference when data is empty
 const EMPTY: never[] = [];
 
-const ItemSeparator: React.FC = () => <View style={styles.separator} />;
+// A viewable item counts once half of it is on screen (prefetch trigger).
+const VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 50 };
+// Fallback onEndReached when prefetch misses (fast flings): 40% of a viewport from the end.
+const END_REACHED_THRESHOLD = 0.4;
+// Pre-render ~half a screen beyond the viewport so fast scrolls don't flash blanks.
+const DRAW_DISTANCE = 500;
+
+const ItemSeparator: React.FC = () => <Box p="sm" />;
 
 export function SuperList<T>({
   data,
@@ -43,7 +50,7 @@ export function SuperList<T>({
   ListSkeletonComponent,
   testID,
 }: SuperListProps<T>): React.ReactElement {
-  const { colors } = useTheme();
+  const { colors, spacing } = useTheme();
   const listRef = useRef<FlashListRef<T>>(null);
 
   const { onScrollEnd, onListLayout } = useScrollRestoration(
@@ -54,11 +61,6 @@ export function SuperList<T>({
   const numColumns = layout === 'grid-3' ? 3 : layout === 'grid-2' ? 2 : 1;
 
   // ─── Pre-fetch: fires when user is within `prefetchThreshold` items of end ──
-  const viewabilityConfig = useMemo(
-    () => ({ itemVisiblePercentThreshold: 50 }),
-    [],
-  );
-
   const handleViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
       if (
@@ -107,9 +109,9 @@ export function SuperList<T>({
   const resolvedContentStyle = useMemo(() => {
     const flat = StyleSheet.flatten(contentContainerStyle) ?? {};
     return data.length === 0
-      ? { ...flat, flexGrow: 1, paddingTop: BASE_SPACING.xl }
+      ? { ...flat, flexGrow: 1, paddingTop: spacing.xl }
       : flat;
-  }, [contentContainerStyle, data.length]);
+  }, [contentContainerStyle, data.length, spacing.xl]);
 
   // ─── Pull-to-refresh spinner (themed) ────────────────────────────────────────
   const refreshControl = useMemo(
@@ -158,7 +160,7 @@ export function SuperList<T>({
         }
         // ─── Pagination ─────────────────────────────────────────────────────
         onEndReached={hasNextPage ? onEndReached : undefined}
-        onEndReachedThreshold={0.4}
+        onEndReachedThreshold={END_REACHED_THRESHOLD}
         // ─── Refresh ────────────────────────────────────────────────────────
         refreshControl={refreshControl}
         // ─── Slots ──────────────────────────────────────────────────────────
@@ -173,11 +175,11 @@ export function SuperList<T>({
         onLayout={onListLayout}
         // ─── Pre-fetch ──────────────────────────────────────────────────────
         onViewableItemsChanged={handleViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
+        viewabilityConfig={VIEWABILITY_CONFIG}
         // ─── Style ──────────────────────────────────────────────────────────
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
-        drawDistance={500}
+        drawDistance={DRAW_DISTANCE}
         contentContainerStyle={resolvedContentStyle}
         style={style}
         testID={testID}
@@ -187,6 +189,3 @@ export function SuperList<T>({
   );
 }
 
-const styles = StyleSheet.create({
-  separator: { padding: BASE_SPACING.sm },
-});

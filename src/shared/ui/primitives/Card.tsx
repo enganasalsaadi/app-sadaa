@@ -1,19 +1,19 @@
 import React, { useMemo } from 'react';
-import {
-  type DimensionValue,
-  type PressableProps,
-  type ViewStyle,
-  TouchableOpacity,
+import type {
+  DimensionValue,
+  PressableProps,
+  ViewStyle,
 } from 'react-native';
+import { opacity } from '@/core/theme';
 import { useTheme } from '@/core/theme/hooks/useTheme';
-import { Box } from './Box';
 import type {
   SpacingToken,
   RadiiToken,
   BorderWidthToken,
   ShadowToken,
-  Mutable,
 } from '@/core/theme/types';
+import { Box } from './Box';
+import { Pressable } from './Pressable';
 
 export interface CardProps {
   children: React.ReactNode;
@@ -95,13 +95,14 @@ const CardInner: React.FC<CardProps> = ({
   row,
   alignSelf,
   style,
-  activeOpacity = 0.9,
+  activeOpacity = opacity.pressedSubtle,
+  scaleOnPress,
   disabled,
   accessibilityLabel,
   accessibilityHint,
   testID,
 }) => {
-  const { colors, spacing, radii, shadows, borderWidths } = useTheme();
+  const { colors } = useTheme();
   const background =
     bg ?? (selected ? colors.interactive.soft : colors.surface.main);
   const resolvedBorderColor =
@@ -169,120 +170,14 @@ const CardInner: React.FC<CardProps> = ({
     ],
   );
 
-  const touchableStyle = useMemo<ViewStyle>(() => {
-    const s: Mutable<ViewStyle> = {
-      backgroundColor: background,
-      borderRadius: radii[borderRadius],
-      borderWidth: borderWidths[borderWidth],
-      borderColor: resolvedBorderColor,
-    };
-    if (shadow !== undefined) {
-      Object.assign(s, shadows[shadow]);
-    }
-    if (p !== undefined) {
-      s.padding = spacing[p];
-    }
-    if (px !== undefined) {
-      s.paddingHorizontal = spacing[px];
-    }
-    if (py !== undefined) {
-      s.paddingVertical = spacing[py];
-    }
-    if (pt !== undefined) {
-      s.paddingTop = spacing[pt];
-    }
-    if (pb !== undefined) {
-      s.paddingBottom = spacing[pb];
-    }
-    if (ps !== undefined) {
-      s.paddingStart = spacing[ps];
-    }
-    if (pe !== undefined) {
-      s.paddingEnd = spacing[pe];
-    }
-    if (m !== undefined) {
-      s.margin = spacing[m];
-    }
-    if (mx !== undefined) {
-      s.marginHorizontal = spacing[mx];
-    }
-    if (my !== undefined) {
-      s.marginVertical = spacing[my];
-    }
-    if (mt !== undefined) {
-      s.marginTop = spacing[mt];
-    }
-    if (mb !== undefined) {
-      s.marginBottom = spacing[mb];
-    }
-    if (ms !== undefined) {
-      s.marginStart = spacing[ms];
-    }
-    if (me !== undefined) {
-      s.marginEnd = spacing[me];
-    }
-    if (flex !== undefined) {
-      s.flex = flex;
-    }
-    if (width !== undefined) {
-      s.width = width;
-    }
-    if (height !== undefined) {
-      s.height = height;
-    }
-    if (align !== undefined) {
-      s.alignItems = align;
-    }
-    if (justify !== undefined) {
-      s.justifyContent = justify;
-    }
-    if (row) {
-      s.flexDirection = 'row';
-    }
-    if (alignSelf !== undefined) {
-      s.alignSelf = alignSelf;
-    }
-    return s;
-  }, [
-    background,
-    borderRadius,
-    borderWidth,
-    resolvedBorderColor,
-    shadow,
-    p,
-    px,
-    py,
-    pt,
-    pb,
-    ps,
-    pe,
-    m,
-    mx,
-    my,
-    mt,
-    mb,
-    ms,
-    me,
-    flex,
-    width,
-    height,
-    align,
-    justify,
-    row,
-    alignSelf,
-    spacing,
-    radii,
-    shadows,
-    borderWidths,
-  ]);
-
   if (onPress) {
     return (
-      <TouchableOpacity
-        style={[touchableStyle, style]}
+      <Pressable
+        {...layoutProps}
         onPress={onPress}
         disabled={disabled}
         activeOpacity={activeOpacity}
+        scaleOnPress={scaleOnPress}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
@@ -293,7 +188,7 @@ const CardInner: React.FC<CardProps> = ({
         testID={testID}
       >
         {children}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

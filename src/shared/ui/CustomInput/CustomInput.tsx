@@ -8,12 +8,9 @@ import type {
 import { TextInput } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
+import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme/hooks/useTheme';
-import type {
-  SpacingToken,
-  RadiiToken,
-  BorderWidthToken,
-} from '@/core/theme/types';
+import type { SpacingToken, RadiiToken } from '@/core/theme/types';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 import { Pressable } from '../primitives/Pressable';
@@ -21,6 +18,7 @@ import type { InputSize } from './styles';
 import {
   getInputColors,
   getInputHeight,
+  getFieldFrameStyle,
   createInputTextStyle,
   createMultilineContainerStyle,
 } from './styles';
@@ -30,7 +28,7 @@ interface IconProps {
   size?: number;
 }
 
-interface CustomInputProps extends Omit<TextInputProps, 'style'> {
+export interface CustomInputProps extends Omit<TextInputProps, 'style'> {
   label?: string;
   error?: string;
   size?: InputSize;
@@ -42,6 +40,10 @@ interface CustomInputProps extends Omit<TextInputProps, 'style'> {
   inputStyle?: TextStyle;
   multiline?: boolean;
   numberOfLines?: number;
+  /** `value.length / maxLength` under the field (briefs, bios). Needs `maxLength`. */
+  showCount?: boolean;
+  /** Unit at the trailing end (currency code, `%`, `min`). */
+  suffix?: string;
   mb?: SpacingToken;
 }
 
@@ -60,6 +62,8 @@ const CustomInputInner = React.forwardRef(
       editable = true,
       multiline = false,
       numberOfLines = 4,
+      showCount = false,
+      suffix,
       mb: mbProp,
       onFocus,
       onBlur,
@@ -112,14 +116,6 @@ const CustomInputInner = React.forwardRef(
       setSecureEntry(prev => !prev);
     }, []);
 
-    const borderWidthToken: BorderWidthToken = isFocused ? 'sm' : 'thin';
-    const borderColor = isFocused
-      ? ic.focusBorder
-      : error
-      ? theme.colors.form.input.borderError
-      : ic.border;
-    const backgroundColor = editable ? ic.background : ic.disabledBg;
-
     const iconColor = editable
       ? theme.colors.icon.secondary
       : theme.colors.icon.disabled;
@@ -141,31 +137,32 @@ const CustomInputInner = React.forwardRef(
       [rightIcon, iconColor, iconSize],
     );
 
-    const containerRowDirection: ViewStyle['flexDirection'] = isRTL
-      ? 'row-reverse'
-      : 'row';
-
+    const hasError = !!error;
+    const counter =
+      showCount && rest.maxLength !== undefined
+        ? `${formatNumber(rest.value?.length ?? 0)}/${formatNumber(rest.maxLength)}`
+        : undefined;
     const wrapperStyle = useMemo<ViewStyle>(
       () => ({
-        flexDirection: containerRowDirection,
+        ...getFieldFrameStyle(theme, {
+          focused: isFocused,
+          error: hasError,
+          editable,
+          borderRadius,
+        }),
         alignItems: multiline ? 'flex-start' : 'center',
-        backgroundColor,
-        borderRadius: theme.radii[borderRadius],
-        borderWidth: theme.borderWidths[borderWidthToken],
-        borderColor,
         height: multiline ? undefined : inputHeight,
         paddingHorizontal: theme.spacing.md,
         gap: theme.spacing.sm,
         ...(multiline ? multilineStyle : {}),
       }),
       [
-        containerRowDirection,
-        multiline,
-        backgroundColor,
         theme,
+        isFocused,
+        hasError,
+        editable,
         borderRadius,
-        borderWidthToken,
-        borderColor,
+        multiline,
         inputHeight,
         multilineStyle,
       ],
@@ -193,7 +190,7 @@ const CustomInputInner = React.forwardRef(
           {isPassword ? (
             <Pressable
               onPress={toggleSecureEntry}
-              hitSlop={theme.spacing['5xl']}
+              hitSlop={theme.sizes.hitSlop.lg}
               align="center"
               justify="center"
               accessibilityRole="button"
@@ -230,18 +227,32 @@ const CustomInputInner = React.forwardRef(
             {...rest}
           />
 
+          {suffix ? (
+            <Text
+              variant="bodyMedium"
+              color={editable ? theme.colors.text.secondary : theme.colors.text.tertiary}
+            >
+              {suffix}
+            </Text>
+          ) : null}
           {clonedRightIcon}
         </Box>
 
-        {error ? (
-          <Text
-            variant="caption"
-            color={theme.colors.form.input.error}
-            mt="sm"
-            accessibilityRole="alert"
-          >
-            {error}
-          </Text>
+        {error || counter ? (
+          <Box row justify="space-between" gap="md" mt="sm">
+            <Text
+              variant="caption"
+              color={theme.colors.form.input.error}
+              accessibilityRole={error ? 'alert' : undefined}
+            >
+              {error}
+            </Text>
+            {counter ? (
+              <Text variant="caption" color={theme.colors.text.tertiary}>
+                {counter}
+              </Text>
+            ) : null}
+          </Box>
         ) : null}
       </Box>
     );

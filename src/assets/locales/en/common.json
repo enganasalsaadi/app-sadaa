@@ -1,47 +1,48 @@
 {
   "auth": {
-    "login": "Login",
-    "register": "Register",
-    "email": "Email",
+    "phone": "Mobile number",
+    "phonePlaceholder": "e.g. 0944 123 456",
     "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "forgotPassword": "Forgot Password?",
-    "resetPassword": "Reset Password",
-    "fullName": "Full Name",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "firstNamePlaceholder": "Enter first name",
-    "lastNamePlaceholder": "Enter last name",
-    "phone": "Phone Number",
-    "logout": "Logout",
-    "welcomeBack": "Welcome to Sadaa",
-    "loginSubtitle": "Sign in to manage your accounting.",
-    "createAccount": "Create Account",
-    "registerSubtitle": "Join us and create your account to explore amazing experiences",
-    "orContinueWith": "Or continue with",
-    "agreeTerms": "By continuing, you agree to our Terms & Privacy Policy",
-    "emailPlaceholder": "Enter your email",
-    "passwordPlaceholder": "Enter your password",
-    "phonePlaceholder": "Enter phone number ex: 09462401604",
-    "fullNamePlaceholder": "Enter your full name",
-    "signingIn": "Signing in...",
-    "signingUp": "Signing up...",
-    "liveConfigHint": "API base:",
-    "noAccount": "Don't have an account?",
-    "signUp": "Sign up now",
-    "haveAccount": "Already have an account?",
-    "signIn": "Sign in",
-    "continueAsGuest": "Continue as Guest",
-    "verifyPhone": "Verify Your Phone",
-    "verifyPhoneSubtitle": "We sent a verification code to {{phone}}",
-    "didNotReceiveOtp": "Didn't receive the code?",
+    "verifyCode": "Verify Code",
     "resendOtp": "Resend OTP",
-    "resendOtpIn": "Resend in {{count}}s",
-    "verify": "Verify",
-    "verifying": "Verifying...",
-    "forgotPasswordTitle": "Reset Your Password",
-    "forgotPasswordSubtitle": "Enter your phone number and we’ll send you a code to reset your password.",
-    "identifierPlaceholder": "Enter email or phone number",
+    "didNotReceiveOtp": "Didn't receive the code?",
+    "otpResent": "A new verification code has been sent",
+    "otp": {
+      "codeLabel": "{{count}}-digit verification code",
+      "resendIn": "Resend code in {{time}}"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to follow your campaigns and deals.",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "or": "or",
+      "noAccount": "New to Sada?",
+      "createAccount": "Create an account"
+    },
+    "passwordReset": {
+      "phone": {
+        "title": "Forgot your password?",
+        "subtitle": "Enter your mobile number and we’ll send you a code to reset it.",
+        "hint": "We’ll text the code to this number.",
+        "submit": "Send code"
+      },
+      "code": {
+        "title": "Enter the code",
+        "subtitle": "We sent a 4-digit code to {{phone}}",
+        "changeNumber": "Change number"
+      },
+      "password": {
+        "title": "New password",
+        "subtitle": "Pick a strong password you haven’t used before.",
+        "label": "New password",
+        "confirmLabel": "Confirm password",
+        "placeholder": "At least 8 characters",
+        "submit": "Save password"
+      },
+      "success": "Password changed. Sign in with your new password."
+    },
     "accountType": {
       "title": "Choose account type",
       "brand": "Brand / Company account",
@@ -52,30 +53,98 @@
       "agencySubtitle": "Manage campaigns for multiple brands",
       "comingSoon": "Coming soon"
     },
-    "sendResetCode": "Send Reset Code",
-    "sendingCode": "Sending...",
-    "verifyOtpTitle": "Verify Your Code",
-    "verifyOtpSubtitle": "We sent a verification code to {{identifier}}",
-    "enterOtpPlaceholder": "Enter verification code",
-    "verifyCode": "Verify Code",
-    "verifyingCode": "Verifying...",
-    "verifyEmailTitle": "Verify Your Email",
-    "verifyEmailSubtitle": "We sent a 5-digit verification code to {{email}}",
-    "otpResent": "A new verification code has been sent",
-    "newPasswordTitle": "Set New Password",
-    "newPasswordSubtitle": "Create a new password for your account",
-    "newPasswordPlaceholder": "Enter new password",
-    "confirmNewPasswordPlaceholder": "Confirm new password",
-    "passwordMismatch": "Passwords do not match",
-    "updatePassword": "Update Password",
-    "updatingPassword": "Updating...",
-    "passwordUpdated": "Password updated successfully! You can now login with your new password",
-    "loginNow": "Login Now",
-    "sendResetLink": "Send reset link",
-    "sendingLink": "Sending link…",
-    "resetLinkSentTitle": "Check your email",
-    "resetLinkSentSubtitle": "We sent a password reset link to {{email}}. Open it to set a new password.",
-    "backToSignIn": "Back to sign in"
+    "brandOnboarding": {
+      "account": {
+        "title": "Create your brand account",
+        "subtitle": "A few details and you are ready to launch campaigns with creators.",
+        "sections": {
+          "business": "Business",
+          "contact": "Contact",
+          "security": "Security"
+        },
+        "companyName": "Store / company name",
+        "companyNamePlaceholder": "e.g. Damascus Roastery",
+        "phoneHint": "We will text a verification code to this number. It can’t be changed later.",
+        "email": "Email",
+        "emailPlaceholder": "name@company.com",
+        "passwordPlaceholder": "At least 8 characters",
+        "passwordConfirmation": "Confirm password",
+        "submit": "Continue",
+        "confirmPhone": {
+          "title": "Is this your number?",
+          "body": "We’ll send a 4-digit code to it. You won’t be able to change it after your account is created.",
+          "confirm": "Yes, send the code",
+          "edit": "Edit number"
+        }
+      },
+      "phone": {
+        "title": "Verify your phone",
+        "subtitle": "Enter the 4-digit code we sent to {{phone}}",
+        "wrongNumber": {
+          "link": "Wrong number?",
+          "title": "Entered the wrong number?",
+          "body": "Message our support team on WhatsApp and we’ll fix it for you.",
+          "contact": "Contact us on WhatsApp",
+          "message": "Hi Sada team, I registered a brand account with the wrong phone number: {{phone}}",
+          "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+        }
+      },
+      "profile": {
+        "title": "Your business identity",
+        "subtitle": "Helps us match you with the right creators in your city.",
+        "governorate": "Governorate",
+        "governorateHint": "Where most of your customers are.",
+        "businessType": "Business type",
+        "socialLinks": "Social accounts",
+        "socialLinksHint": "Paste a link or type your @handle.",
+        "platforms": {
+          "instagram": "Instagram",
+          "facebook": "Facebook",
+          "tiktok": "TikTok",
+          "youtube": "YouTube",
+          "telegram": "Telegram",
+          "website": "Website"
+        },
+        "morePlatforms": "More platforms",
+        "lookupsError": "Couldn’t load the options. Check your connection and try again.",
+        "submit": "Continue"
+      },
+      "kyc": {
+        "title": "Verify your business",
+        "subtitle": "Optional now — but verified brands close deals faster.",
+        "benefitsTitle": "Why verify?",
+        "benefits": {
+          "badge": "A Verified badge on your brand profile",
+          "visibility": "Creators trust and accept your offers sooner",
+          "review": "Reviewed by our team within 48 hours"
+        },
+        "pickDocument": "Upload commercial register",
+        "pickHint": "PDF, JPG or PNG · up to 10 MB",
+        "documentFallbackName": "Commercial register",
+        "errors": {
+          "size": "This file is larger than 10 MB. Choose a smaller one.",
+          "type": "Only PDF, JPG or PNG files are accepted.",
+          "failed": "Couldn’t open the file. Please try another one."
+        },
+        "submit": "Submit for review",
+        "skip": "Skip for now",
+        "skipHint": "You can verify later from your account settings."
+      },
+      "welcome": {
+        "title": "Welcome to Sada",
+        "titleNamed": "Welcome, {{name}}",
+        "subtitle": "Your brand account is ready. Launch your first campaign and let creators echo your story.",
+        "underReview": "Documents under review",
+        "verifyLater": "Verify anytime from settings",
+        "start": "Start your journey"
+      },
+      "progressError": "Couldn’t load your registration. Check your connection and try again."
+    },
+    "passwordStrength": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "strong": "Strong"
+    }
   },
   "api": {
     "liveConfig": "Live configuration",
@@ -131,8 +200,52 @@
     "reset": "Reset",
     "map": "Map",
     "selected": "Selected",
+    "remove": "Remove",
     "brandName": "Sada",
-    "tagline": "Trust in every deal"
+    "tagline": "Trust in every deal",
+    "optional": "Optional",
+    "replaceFile": "Replace file",
+    "stepOf": "Step {{current}} of {{total}}",
+    "fileSize": {
+      "kb": "{{value}} KB",
+      "mb": "{{value}} MB"
+    },
+    "layoutList": "List view",
+    "layoutGrid2": "Two-column grid",
+    "layoutGrid3": "Three-column grid",
+    "clear": "Clear",
+    "removeItem": "Remove {{label}}",
+    "money": {
+      "approx": "≈ {{amount}}",
+      "estimate": "Estimate"
+    },
+    "timeline": {
+      "done": "Done",
+      "current": "In progress",
+      "upcoming": "Upcoming",
+      "error": "Stopped"
+    },
+    "countdown": {
+      "days": "{{days}}d {{hours}}h",
+      "hours": "{{hours}}h {{minutes}}m",
+      "minutes": "{{minutes}}:{{seconds}}",
+      "expired": "Expired",
+      "withLabel": "{{label}} · {{time}}"
+    },
+    "media": {
+      "uploading": "Uploading",
+      "failed": "Upload failed",
+      "retry": "Retry upload"
+    },
+    "rating": {
+      "rate": "Rate {{value}} of {{max}}",
+      "summary": "Rated {{value}} out of {{max}}",
+      "count": "{{count}} ratings",
+      "countShort": "({{count}})"
+    },
+    "stat": {
+      "change": "{{change}} change"
+    }
   },
   "errors": {
     "generic": "Something went wrong",
@@ -228,20 +341,20 @@
       "title": "Language",
       "saveSuccess": "Language updated successfully",
       "options": {
-        "ar": { "native": "العربية", "name": "Arabic" },
-        "en": { "native": "English", "name": "English" }
+        "ar": {
+          "native": "العربية",
+          "name": "Arabic"
+        },
+        "en": {
+          "native": "English",
+          "name": "English"
+        }
       }
     },
     "maintenance": {
       "title": "Under Maintenance",
       "defaultSubtitle": "We're working on improvements. Please check back soon.",
       "closeApp": "Close App"
-    },
-    "onboardingResume": {
-      "title": "Let's finish setting up your account",
-      "subtitle": "You're logged in — continue where you left off to start using Sada.",
-      "subtitleWithStep": "You're logged in as a {{userType}} account, on step {{currentStep}} of setup.",
-      "logout": "Logout"
     }
   },
   "appUpdate": {
@@ -267,9 +380,7 @@
       }
     }
   },
-
-  
-"onboarding": {
+  "onboarding": {
     "next": "Next",
     "start": "Get Started",
     "skip": "Skip",
@@ -316,9 +427,7 @@
         }
       }
     }
-  }
-
-, 
+  },
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",
@@ -351,13 +460,15 @@
     "maxLength": "Must be no more than {{count}} characters",
     "passwordMismatch": "Passwords do not match",
     "invalidPhone": "Please enter a valid phone number",
-    "invalidOtp": "Enter the 5-digit code",
     "invalidOtpCode": "Enter the {{count}}-digit code",
     "phoneLengthExactly": "Phone number must be exactly {{count}} digits",
     "phoneLengthBetween": "Phone number must be between {{min}} and {{max}} digits",
     "phoneInvalidForCountry": "Invalid phone number for {{country}}",
     "please_select_aplace": "Please select a place",
-    "invalidTaxNumber": "The tax number must be exactly 15 digits"
+    "invalidTaxNumber": "The tax number must be exactly 15 digits",
+    "invalidUrl": "Please enter a valid URL starting with https://",
+    "selectOne": "Please choose one option",
+    "invalidSocialLink": "Enter a valid link for this platform or an @handle"
   },
   "dateRange": {
     "startDate": "Start date",
@@ -365,6 +476,55 @@
     "selectStart": "Select start date",
     "selectEnd": "Select end date",
     "days": "{{count}} days"
+  },
+  "marketplace": {
+    "deal": {
+      "status": {
+        "pendingApproval": "Awaiting acceptance",
+        "awaitingPayment": "Awaiting payment",
+        "inProgress": "In progress",
+        "underReview": "Under review",
+        "readyToPublish": "Ready to publish",
+        "published": "Published",
+        "completed": "Completed",
+        "disputed": "Disputed",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded",
+        "unknown": "Unknown status"
+      },
+      "meta": "{{counterpart}} · {{adType}}"
+    },
+    "draft": {
+      "status": {
+        "pendingReview": "Awaiting review",
+        "approved": "Approved",
+        "changesRequested": "Changes requested"
+      },
+      "version": "Draft v{{version}}",
+      "open": "Open {{title}}",
+      "submittedAt": "Submitted {{date}}",
+      "noteTitle": "Brand feedback",
+      "requestChanges": "Request changes",
+      "approve": "Approve"
+    },
+    "creator": {
+      "verified": "Verified creator",
+      "followers": "{{count}} followers",
+      "priceFrom": "From"
+    }
+  },
+  "finance": {
+    "wallet": {
+      "available": "Available balance",
+      "escrow": "In escrow",
+      "escrowHint": "Held for active deals",
+      "pending": "Pending",
+      "withdraw": "Withdraw",
+      "deposit": "Add funds"
+    },
+    "breakdown": {
+      "estimateNote": "Estimate. The final amount is confirmed at checkout."
+    }
   },
   "devShowcase": {
     "entryLabel": "UI Kit Showcase",
@@ -382,12 +542,56 @@
     },
     "sections": {
       "typography": "Typography",
-      "colors": "Colors & Status",
+      "colors": "Colors & status",
       "buttons": "Buttons",
-      "inputs": "Inputs",
-      "cards": "Cards",
-      "modalsToasts": "Modals & Toasts",
-      "layoutGallery": "Layout Gallery"
+      "inputs": "Text & phone inputs",
+      "cards": "Surfaces & cards",
+      "layoutGallery": "Layout Gallery",
+      "brandLogo": "Brand logo",
+      "socialIcons": "Social platform icons",
+      "chips": "Chips",
+      "otpInput": "OTP input",
+      "formSection": "Form section",
+      "filePicker": "File picker",
+      "images": "Images",
+      "stepProgress": "Step progress",
+      "glass": "Glass on navy",
+      "toasts": "Toasts",
+      "inlineError": "Inline error",
+      "skeleton": "Skeleton",
+      "globalErrors": "Global errors",
+      "bottomSheet": "Bottom sheet & selection",
+      "confirmSheet": "Confirm sheet",
+      "dateRangePicker": "Date range picker",
+      "gallery": "Gallery",
+      "superList": "SuperList",
+      "iconButton": "Icon buttons",
+      "fab": "Floating action button",
+      "segmentedControl": "Segmented control",
+      "tabs": "Tabs",
+      "selectionControls": "Switch, checkbox & radio",
+      "searchBar": "Search bar",
+      "badges": "Badges, pills & tags",
+      "structure": "Headers, dividers & key/value",
+      "progressBar": "Progress bar",
+      "accordion": "Accordion",
+      "avatarGroup": "Avatar group",
+      "notice": "Notice",
+      "emptyStates": "Empty & error states",
+      "listRows": "List rows & groups",
+      "screenHeader": "Screen header",
+      "amountInput": "Amount input",
+      "moneyText": "Money",
+      "statTile": "Stat tile",
+      "timeline": "Timeline",
+      "countdown": "Countdown",
+      "mediaTile": "Media tile",
+      "ratingStars": "Rating",
+      "dealStatus": "Deal status",
+      "dealCard": "Deal card",
+      "creatorCard": "Creator card",
+      "draftReview": "Draft review",
+      "wallet": "Wallet"
     },
     "typography": {
       "h1Label": "H1 · Heading",
@@ -399,7 +603,13 @@
       "bodyMediumLabel": "Body medium",
       "bodySmallLabel": "Body small",
       "captionLabel": "Caption",
-      "taglineLabel": "Brand tagline"
+      "taglineLabel": "Brand tagline",
+      "buttonLabel": "Button label",
+      "buttonSmallLabel": "Small button label",
+      "overlineLabel": "OVERLINE",
+      "labelLabel": "Field label",
+      "amountLabel": "$1,250.00",
+      "amountLargeLabel": "$12,500.00"
     },
     "colors": {
       "brand": "Brand (Navy)",
@@ -424,20 +634,27 @@
       "statesTitle": "States",
       "stateDefault": "Default",
       "stateDisabled": "Disabled",
-      "stateLoading": "Loading"
+      "stateLoading": "Loading",
+      "withLeftIcon": "Leading icon",
+      "withRightIcon": "Trailing icon",
+      "fullWidth": "Full width"
     },
     "inputs": {
       "defaultLabel": "Default",
       "defaultPlaceholder": "Type something",
-      "focusLabel": "Tap to focus",
-      "focusPlaceholder": "Focus style preview",
       "errorLabel": "With error",
       "errorPlaceholder": "Required field",
       "errorMessage": "This field is required",
-      "searchLabel": "Search style",
-      "searchPlaceholder": "Search creators, campaigns...",
       "phoneLabel": "Phone number",
-      "phonePlaceholder": "5XX XXX XXX"
+      "phonePlaceholder": "5XX XXX XXX",
+      "disabledLabel": "Disabled",
+      "disabledValue": "Read-only value",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter password",
+      "multilineLabel": "Multiline",
+      "multilinePlaceholder": "Describe the campaign brief",
+      "counterLabel": "Bio (with counter)",
+      "counterPlaceholder": "Tell brands about your content"
     },
     "cards": {
       "plainTitle": "Plain card",
@@ -445,7 +662,10 @@
       "pressableTitle": "Pressable card",
       "pressableBody": "Tap to toggle selection.",
       "moneyTitle": "Escrow balance",
-      "moneyCaption": "Released to wallet"
+      "moneyCaption": "Released to wallet",
+      "boxTitle": "Box",
+      "boxBody": "Layout primitive: spacing, radius and color tokens only.",
+      "pressablePrimitiveTitle": "Pressable (tap to toggle the card below)"
     },
     "modalsToasts": {
       "toastSuccessLabel": "Success toast",
@@ -468,18 +688,399 @@
     },
     "layoutGallery": {
       "fixedHeaderTitle": "Fixed header",
-      "fixedHeaderDescription": "ScreenHeader with fillStatusBar",
+      "fixedHeaderDescription": "ScreenHeader; divider fades in on scroll",
       "noHeaderScrollTitle": "No header, scroll",
-      "noHeaderScrollDescription": "withScroll, no header",
+      "noHeaderScrollDescription": "scroll mode, no header",
       "darkForcedTitle": "Forced dark surface",
       "darkForcedDescription": "Preview of dark tokens only",
       "ctaButtonTitle": "CTA button",
-      "ctaButtonDescription": "ctaButton with alwaysSolid",
+      "ctaButtonDescription": "footer with LayoutFooter",
       "noScrollWithHandlerTitle": "Manual scroll handler",
-      "noScrollWithHandlerDescription": "withScroll false + useScrollHandler",
+      "noScrollWithHandlerDescription": "static mode + useScrollHandler",
       "noScrollWithHandlerRow": "Row {{index}}",
       "gradientHeroTitle": "Gradient hero",
-      "gradientHeroDescription": "withGradient screen wash"
+      "gradientHeroDescription": "backdrop wash",
+      "listStatesTitle": "List + states",
+      "listStatesDescription": "static Layout + SuperList: data, loading, empty, error, refresh",
+      "heroSheetTitle": "Hero sheet",
+      "heroSheetDescription": "HeroSheet: navy hero + form sheet, compacts with keyboard",
+      "wizardTitle": "Wizard",
+      "wizardDescription": "WizardShell + useWizardHeader, 3 steps",
+      "hideOnScrollTitle": "Header hides on scroll",
+      "hideOnScrollDescription": "headerBehavior=\"hideOnScroll\": slides away scrolling down, returns scrolling up",
+      "collapseTitle": "Large title collapse",
+      "collapseDescription": "headerBehavior=\"collapse\": large title shrinks into the bar",
+      "heroOverlayTitle": "Hero + overlay header",
+      "heroOverlayDescription": "hero: the header fades in as the image scrolls away",
+      "stickyTitle": "Sticky filter",
+      "stickyDescription": "sticky: segmented filter pinned under the header",
+      "footerElevateTitle": "Footer lifts on scroll",
+      "footerElevateDescription": "footerBehavior=\"elevate\": the CTA background changes while content is under it",
+      "fabTitle": "Floating action",
+      "fabDescription": "overlay: FAB clear of the footer and home indicator",
+      "brandHeaderTitle": "Brand header",
+      "brandHeaderDescription": "header variant=\"brand\" with actions and a badge",
+      "scrollHint": "Scroll to see the behaviour.",
+      "heroTitle": "Creator profile",
+      "heroBody": "The hero runs under the status bar. The header background and title fade in as it scrolls away.",
+      "sendOffer": "Send offer",
+      "totalLabel": "Total",
+      "filterLabel": "Campaign filter",
+      "filterAll": "All",
+      "filterOpen": "Open",
+      "filterClosed": "Closed"
+    },
+    "categories": {
+      "foundations": "Foundations",
+      "foundationsDescription": "Type, color, surfaces, logo, icons",
+      "actions": "Actions",
+      "actionsDescription": "Buttons and chips",
+      "inputs": "Inputs",
+      "inputsDescription": "Text, phone, OTP, form groups, files",
+      "display": "Display",
+      "displayDescription": "Images, progress, glass on navy",
+      "feedback": "Feedback",
+      "feedbackDescription": "Toasts, inline errors, skeletons, global errors",
+      "overlays": "Overlays",
+      "overlaysDescription": "Sheets, selection, confirm, dates, gallery",
+      "lists": "Lists",
+      "listsDescription": "SuperList states and layouts",
+      "layouts": "Layouts",
+      "layoutsDescription": "Screen chrome and archetypes",
+      "sada": "Sada",
+      "sadaDescription": "Deals, creators, drafts, wallet"
+    },
+    "chips": {
+      "fashion": "Fashion",
+      "food": "Food",
+      "tech": "Tech",
+      "travel": "Travel",
+      "beauty": "Beauty",
+      "multiTitle": "Chip (multi-select)",
+      "singleTitle": "ChipGroup (single-select)",
+      "disabled": "Disabled",
+      "toggleLoading": "Toggle loading"
+    },
+    "otp": {
+      "hint": "Enter 123456 for success; any other code shakes.",
+      "label": "Verification code",
+      "rejected": "Incorrect code",
+      "reset": "Reset"
+    },
+    "formSection": {
+      "title": "Brand details",
+      "description": "Shown on your public profile.",
+      "nameLabel": "Brand name",
+      "namePlaceholder": "e.g. Sada Coffee",
+      "optionalTitle": "Website",
+      "optionalTag": "Optional",
+      "groupError": "Group-level error message",
+      "websiteLabel": "Website URL",
+      "websitePlaceholder": "https://"
+    },
+    "filePicker": {
+      "title": "Upload commercial register",
+      "hint": "PDF, JPG or PNG · up to 10 MB",
+      "error": "File is too large",
+      "toggleError": "Toggle error",
+      "toggleUpload": "Toggle upload"
+    },
+    "images": {
+      "avatars": "Avatar · sm md lg xl",
+      "thumbnails": "Thumbnail · sm md · skeleton",
+      "banner": "Banner 16:9 with scrim",
+      "contain": "Image · contain"
+    },
+    "stepProgress": {
+      "label": "Step {{current}} of {{total}}"
+    },
+    "glass": {
+      "hint": "HeroBackdrop + GlassCard (Skia). Navy surfaces only."
+    },
+    "inlineError": {
+      "message": "Campaign not found. It may have been closed."
+    },
+    "globalErrors": {
+      "hint": "Mounted once in App.tsx; these buttons only dispatch mock state.",
+      "server500": "Server error 500",
+      "server503": "Unavailable 503",
+      "showOffline": "Show offline",
+      "hideOffline": "Hide offline",
+      "mock500": "Mock server error",
+      "mock503": "Mock maintenance"
+    },
+    "confirmSheet": {
+      "openNeutral": "Confirm action",
+      "openDanger": "Destructive action",
+      "neutralTitle": "Send offer?",
+      "neutralBody": "The creator will be notified and can accept or decline.",
+      "dangerTitle": "Delete draft?",
+      "dangerBody": "This cannot be undone.",
+      "confirmed": "Confirmed (demo)"
+    },
+    "dateRange": {
+      "selected": "{{start}} → {{end}}",
+      "open": "Pick dates"
+    },
+    "gallery": {
+      "open": "Open photo {{index}}"
+    },
+    "superList": {
+      "toggleLabel": "LayoutToggle · {{layout}}"
+    },
+    "wizard": {
+      "step1": "Account",
+      "step2": "Profile",
+      "step3": "Review",
+      "subtitle": "Demo wizard",
+      "body": "Step content sits on the surface sheet; the navy header persists."
+    },
+    "listStates": {
+      "data": "Data",
+      "loading": "Loading",
+      "empty": "Empty",
+      "error": "Error",
+      "stateLabel": "List state",
+      "rowTitle": "Campaign {{index}}",
+      "rowBody": "Mock row",
+      "emptyMessage": "No campaigns yet"
+    },
+    "iconButton": {
+      "sizeTitle": "Size {{size}}",
+      "statesTitle": "Tones & states",
+      "like": "Like",
+      "delete": "Delete",
+      "share": "Share",
+      "notifications": "Notifications",
+      "add": "Add",
+      "onBrandTitle": "On navy & over images"
+    },
+    "screenHeader": {
+      "solidLabel": "solid: back, title, subtitle",
+      "actionsLabel": "Actions + badge",
+      "noBackLabel": "Root screen (no back)",
+      "brandLabel": "brand: navy identity bar",
+      "transparentLabel": "transparent: over imagery",
+      "title": "Campaigns",
+      "subtitle": "12 open",
+      "favorite": "Save"
+    },
+    "fab": {
+      "stageHint": "Pinned to the bottom-end corner of its parent.",
+      "newCampaign": "New campaign"
+    },
+    "segmented": {
+      "active": "Active",
+      "completed": "Completed",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year",
+      "dealsLabel": "Deals view",
+      "periodLabel": "Period"
+    },
+    "tabs": {
+      "offers": "Offers",
+      "drafts": "Drafts",
+      "archive": "Archive",
+      "all": "All",
+      "fixedTitle": "Fixed width",
+      "scrollableTitle": "Scrollable",
+      "inboxLabel": "Inbox sections",
+      "nicheLabel": "Niches"
+    },
+    "selection": {
+      "switchTitle": "Switch",
+      "push": "Push notifications",
+      "email": "Email updates",
+      "checkboxTitle": "Checkbox",
+      "allPlatforms": "All platforms",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "terms": "I accept the deal terms",
+      "termsDescription": "Funds stay in escrow until the content is approved.",
+      "termsError": "Accept the terms to continue",
+      "disabled": "Disabled",
+      "radioTitle": "Payout method",
+      "wallet": "E-wallet",
+      "walletDescription": "Instant, no fees",
+      "cash": "Cash pickup",
+      "cashDescription": "Within 24 hours",
+      "bank": "Bank transfer",
+      "bankDescription": "Coming soon"
+    },
+    "searchBar": {
+      "placeholder": "Search creators or campaigns"
+    },
+    "badges": {
+      "badgeTitle": "Count badge",
+      "pillTitle": "Status pill",
+      "tagTitle": "Tag",
+      "success": "Success",
+      "warning": "Warning",
+      "danger": "Danger",
+      "info": "Info",
+      "neutral": "Neutral",
+      "brand": "Brand",
+      "interactive": "Interactive",
+      "money": "Money",
+      "premium": "Premium",
+      "verified": "Verified",
+      "underReview": "Under review",
+      "noTags": "No tags"
+    },
+    "structure": {
+      "sectionTitle": "Open campaigns",
+      "sectionSubtitle": "Matched to your niche",
+      "dividerTitle": "Dividers",
+      "left": "Views",
+      "right": "Engagement",
+      "summaryTitle": "Deal summary",
+      "budget": "Budget",
+      "commission": "Platform fee",
+      "commissionHint": "10% of the budget",
+      "upfront": "Upfront (30%)",
+      "status": "Status",
+      "payout": "Your payout",
+      "total": "Total"
+    },
+    "progressBar": {
+      "profile": "Profile completeness",
+      "budget": "Budget spent",
+      "advance": "Advance"
+    },
+    "accordion": {
+      "escrowQ": "How does escrow work?",
+      "escrowA": "The brand pays into escrow; funds reach the creator after the content is published.",
+      "payoutQ": "When can I withdraw?",
+      "payoutSubtitle": "Creators only",
+      "payoutA": "As soon as a deal is completed, the amount is in your wallet.",
+      "disputeQ": "What if we disagree?",
+      "disputeA": "Open a dispute from the deal; support reviews the in-app history."
+    },
+    "avatarGroup": {
+      "applicants_one": "{{count}} creator applied",
+      "applicants_other": "{{count}} creators applied"
+    },
+    "notice": {
+      "info": "Your campaign is visible to creators in Damascus.",
+      "success": "Draft approved. The creator can publish now.",
+      "warning": "Payment is due in 2 days.",
+      "danger": "This deal is under dispute.",
+      "premium": "Upgrade to reach top creators first.",
+      "kycTitle": "Verify your identity",
+      "kycMessage": "Withdrawals unlock after verification.",
+      "kycAction": "Verify now",
+      "restore": "Show dismissed notice",
+      "actionPressed": "Action pressed"
+    },
+    "emptyStates": {
+      "campaignsTitle": "No campaigns yet",
+      "campaignsMessage": "Create your first campaign to start receiving offers.",
+      "create": "Create campaign",
+      "createPressed": "Create pressed",
+      "inboxTitle": "Nothing in your inbox",
+      "errorMessage": "Campaign not found."
+    },
+    "listRows": {
+      "groupTitle": "Account",
+      "groupFooter": "Rows take an icon, subtitle, value and any trailing part.",
+      "language": "Language",
+      "languageValue": "Arabic",
+      "wallet": "Wallet",
+      "walletSubtitle": "Available balance",
+      "notifications": "Notifications",
+      "vacation": "Vacation mode",
+      "vacationSubtitle": "Pause new offers",
+      "kyc": "Identity verification",
+      "sync": "Sync social stats",
+      "disabled": "Disabled row",
+      "delete": "Delete account",
+      "pressed": "Row pressed"
+    },
+    "moneyText": {
+      "price": "Price",
+      "muted": "Fee",
+      "earning": "Earning",
+      "charge": "Charge",
+      "estimate": "Preview"
+    },
+    "amountInput": {
+      "budgetLabel": "Campaign budget",
+      "placeholder": "0.00",
+      "withdrawLabel": "Withdraw amount",
+      "error": "Exceeds your available balance",
+      "lockedLabel": "Upfront (locked)",
+      "stored": "Stored: {{amount}} minor units",
+      "storedEmpty": "Stored: empty"
+    },
+    "timeline": {
+      "brief": "Offer accepted",
+      "paid": "Paid into escrow",
+      "draft": "Draft in production",
+      "draftCaption": "Due in 2 days",
+      "publish": "Publish",
+      "failed": "Payment refunded",
+      "errorTitle": "Stopped"
+    },
+    "countdown": {
+      "draftDue": "Draft due",
+      "reviewWindow": "Review window",
+      "offer": "Offer"
+    },
+    "mediaTile": {
+      "label": "Draft media",
+      "approved": "Approved",
+      "changes": "Changes",
+      "reset": "Reset upload"
+    },
+    "ratingStars": {
+      "inputTitle": "Rate the creator"
+    },
+    "statTile": {
+      "period": "vs last 30 days",
+      "views": "Views",
+      "engagement": "Engagement",
+      "followers": "Followers",
+      "earnings": "Earnings"
+    },
+    "dealStatus": {
+      "pillsTitle": "Every status",
+      "progressTitle": "Under review",
+      "completedTitle": "Completed",
+      "disputedTitle": "Disputed during production"
+    },
+    "dealCard": {
+      "pressed": "Opens the deal"
+    },
+    "draftReview": {
+      "note": "Please show the logo in the first 3 seconds.",
+      "approvedToast": "Draft approved",
+      "changesToast": "Changes requested",
+      "openToast": "Opens the viewer",
+      "reset": "Reset review"
+    },
+    "wallet": {
+      "price": "Content price",
+      "fee": "Platform fee",
+      "total": "Creator payout",
+      "creatorTitle": "Creator wallet",
+      "brandTitle": "Brand wallet",
+      "breakdownTitle": "Server figures",
+      "estimateTitle": "Client preview"
+    },
+    "sada": {
+      "campaignTitle": "Summer menu launch",
+      "campaignTitleAlt": "Store opening",
+      "creatorName": "Lina Haddad",
+      "creatorNameAlt": "Omar Khatib",
+      "brandName": "Yasmin Café",
+      "adReel": "Reel",
+      "adStory": "Story",
+      "nicheBeauty": "Beauty",
+      "nicheTech": "Tech",
+      "cityDamascus": "Damascus",
+      "cityAleppo": "Aleppo"
     }
   }
 }

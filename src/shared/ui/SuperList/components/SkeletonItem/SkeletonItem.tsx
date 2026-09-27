@@ -1,74 +1,48 @@
-import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  Easing,
-  interpolate,
-} from 'react-native-reanimated';
+import React from 'react';
 import { useTheme } from '@/core/theme';
 import { Box } from '../../../primitives/Box';
+import { Skeleton } from '../../../Skeleton';
 
 interface SkeletonItemProps {
   /** 'list' renders a tall card; 'grid' renders a compact square card */
   variant?: 'list' | 'grid';
 }
 
+// Text bones are sized to the glyph height (fontSize) of the text they stand in for.
 export const SkeletonItem: React.FC<SkeletonItemProps> = ({ variant = 'list' }) => {
-  const { colors } = useTheme();
-  const shimmer = useSharedValue(0);
-
-  useEffect(() => {
-    shimmer.value = withRepeat(
-      withTiming(1, { duration: 900, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true,
-    );
-  }, [shimmer]);
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(shimmer.value, [0, 1], [0.3, 0.7]),
-  }));
-
-  // Bones use the elevated (skeleton) tone on top of the plain surface card.
-  const bg = colors.surface.elevated;
-  const elevated = colors.surface.main;
+  const { colors, typography, sizes } = useTheme();
 
   if (variant === 'grid') {
     return (
-      <Animated.View style={[shimmerStyle, styles.flex]}>
-        <Box flex={1} m="xs" borderRadius="lg" overflow="hidden" bg={elevated} shadow="sm">
-          <Box height={110} bg={bg} />
-          <Box p="sm" gap="xs">
-            <Box height={13} width="80%" bg={bg} borderRadius="sm" />
-            <Box height={11} width="55%" bg={bg} borderRadius="sm" />
-            <Box height={15} width="40%" bg={bg} borderRadius="sm" mt="xs" />
+      <Box flex={1} m="xs" borderRadius="lg" overflow="hidden" bg={colors.surface.main} shadow="sm">
+        <Skeleton width="100%" height={sizes.thumbnail.lg} borderRadius="none" />
+        <Box p="sm" gap="xs">
+          <Skeleton width="80%" height={typography.bodySmall.fontSize} borderRadius="sm" />
+          <Skeleton width="55%" height={typography.caption.fontSize} borderRadius="sm" />
+          <Box mt="xs">
+            <Skeleton width="40%" height={typography.body.fontSize} borderRadius="sm" />
           </Box>
         </Box>
-      </Animated.View>
+      </Box>
     );
   }
 
   return (
-    <Animated.View style={shimmerStyle}>
-      <Box mb="md" borderRadius="lg" overflow="hidden" bg={elevated} shadow="sm">
-        <Box height={180} bg={bg} />
-        <Box p="lg" gap="sm">
-          <Box height={18} width="70%" bg={bg} borderRadius="sm" />
-          <Box height={14} width="45%" bg={bg} borderRadius="sm" />
-          <Box height={12} width="60%" bg={bg} borderRadius="sm" />
-          <Box row justify="space-between" pt="sm">
-            <Box height={22} width="28%" bg={bg} borderRadius="sm" />
-            <Box height={22} width="28%" bg={bg} borderRadius="sm" />
+    <Box mb="md" borderRadius="lg" overflow="hidden" bg={colors.surface.main} shadow="sm">
+      <Skeleton width="100%" height={sizes.illustration.lg} borderRadius="none" />
+      <Box p="lg" gap="sm">
+        <Skeleton width="70%" height={typography.title.fontSize} borderRadius="sm" />
+        <Skeleton width="45%" height={typography.bodySmall.fontSize} borderRadius="sm" />
+        <Skeleton width="60%" height={typography.caption.fontSize} borderRadius="sm" />
+        <Box row justify="space-between" pt="sm">
+          <Box width="28%">
+            <Skeleton width="100%" height={sizes.icon.md} borderRadius="sm" />
+          </Box>
+          <Box width="28%">
+            <Skeleton width="100%" height={sizes.icon.md} borderRadius="sm" />
           </Box>
         </Box>
       </Box>
-    </Animated.View>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-});

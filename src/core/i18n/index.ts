@@ -45,3 +45,4 @@ syncRTL(currentLang);
 export default i18n;
 export { getValidLanguage } from './language';
 export { formatNumber, formatMoney, formatDate } from './format';
+export type { FormatMoneyOptions } from './format';

@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { ListRenderItem } from 'react-native';
-import { FlatList, Dimensions, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { X, Search } from 'lucide-react-native';
 import type { CountryCode } from 'libphonenumber-js';
-import { useTheme } from '@/core/theme';
+import { moderateScale, useTheme } from '@/core/theme';
 import { Box, Text, Pressable } from '../primitives';
 import { CustomInput } from '../CustomInput';
 import { BottomSheet } from '../BottomSheet';
@@ -15,10 +15,10 @@ import {
   type Country,
 } from './countryData';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const SHEET_HEIGHT = SCREEN_HEIGHT * 0.78;
-const ROW_HEIGHT = 58;
-const SEPARATOR_HEIGHT = 36;
+/** Taller than the default sheet cap so search + a useful list fit. */
+const SHEET_HEIGHT_RATIO = 0.78;
+const ROW_HEIGHT = moderateScale(58);
+const SEPARATOR_HEIGHT = moderateScale(36);
 const PRIORITY_COUNT = PRIORITY_COUNTRIES.length;
 
 type FlatItem = Country | { isSeparator: true };
@@ -45,7 +45,8 @@ export const CountryPickerSheet: React.FC<CountryPickerSheetProps> = ({
   selected,
 }) => {
   const { t } = useTranslation();
-  const { colors, spacing } = useTheme();
+  const { colors, sizes } = useTheme();
+  const { height: windowHeight } = useWindowDimensions();
 
   const [search, setSearch] = useState('');
 
@@ -157,7 +158,7 @@ export const CountryPickerSheet: React.FC<CountryPickerSheetProps> = ({
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      snapHeight={SHEET_HEIGHT}
+      snapHeight={windowHeight * SHEET_HEIGHT_RATIO}
       bg={colors.navigation.bottomSheet.background}
     >
       <Box flex={1}>
@@ -176,12 +177,12 @@ export const CountryPickerSheet: React.FC<CountryPickerSheetProps> = ({
           </Text>
           <Pressable
             onPress={onClose}
-            hitSlop={spacing.sm}
+            hitSlop={sizes.hitSlop.sm}
             p="xs"
             borderRadius="full"
             scaleOnPress={false}
           >
-            <X size={20} color={colors.icon.secondary} />
+            <X size={sizes.icon.sm} color={colors.icon.secondary} />
           </Pressable>
         </Box>
 
@@ -191,7 +192,7 @@ export const CountryPickerSheet: React.FC<CountryPickerSheetProps> = ({
             value={search}
             onChangeText={setSearch}
             placeholder={t('common.searchCountry')}
-            leftIcon={<Search size={16} />}
+            leftIcon={<Search />}
             autoCorrect={false}
             autoCapitalize="none"
             clearButtonMode="while-editing"

@@ -10,20 +10,30 @@ import {
   OnboardingScreen,
   MaintenanceScreen,
   ForceUpdateScreen,
-  OnboardingResumeScreen,
   DevShowcaseScreen,
+  ShowcaseCategoryScreen,
   LayoutFixedHeaderScreen,
   LayoutNoHeaderScrollScreen,
   LayoutDarkForcedScreen,
   LayoutCtaButtonScreen,
   LayoutNoScrollWithHandlerScreen,
   LayoutGradientHeroScreen,
+  LayoutHeroSheetScreen,
+  LayoutWizardScreen,
+  LayoutListStatesScreen,
+  LayoutHideOnScrollScreen,
+  LayoutCollapseHeaderScreen,
+  LayoutHeroOverlayScreen,
+  LayoutStickyScreen,
+  LayoutFooterElevateScreen,
+  LayoutFabScreen,
+  LayoutBrandHeaderScreen,
 } from '@/app/screens';
 import { HomeNavigator } from '@/domains/marketplace';
 import type { RootTabParamList, DevShowcaseStackParamList } from '@/core/navigation';
-import { AuthNavigator } from '@/domains/auth';
+import { AuthNavigator, BrandOnboardingNavigator } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
-import FloatingBottomBar from '@/shared/ui/FloatingBottomBar';
+import { FloatingBottomBar } from '@/shared/ui';
 import { ScrollProvider } from '@/shared/context/ScrollContext';
 import { BottomBarProvider } from '@/shared/context/BottomBarContext';
 
@@ -108,7 +118,9 @@ export const RootNavigator: React.FC<Props> = ({
         <Stack.Screen name="Auth" component={AuthNavigator} />
       )}
       {appStatus === AppStatus.REGISTRATION_INCOMPLETE && (
-        <Stack.Screen name="OnboardingResume" component={OnboardingResumeScreen} />
+        // Only brands register today; the creator wizard branches here on
+        // `selectUserType` when it lands (role branching stays in this file).
+        <Stack.Screen name="OnboardingResume" component={BrandOnboardingNavigator} />
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />
@@ -123,6 +135,7 @@ export const RootNavigator: React.FC<Props> = ({
       {__DEV__ && (
         <Stack.Group>
           <Stack.Screen name="DevShowcase" component={DevShowcaseScreen} />
+          <Stack.Screen name="DevShowcaseCategory" component={ShowcaseCategoryScreen} />
           <Stack.Screen
             name="LayoutFixedHeaderScreen"
             component={LayoutFixedHeaderScreen}
@@ -147,6 +160,16 @@ export const RootNavigator: React.FC<Props> = ({
             name="LayoutGradientHeroScreen"
             component={LayoutGradientHeroScreen}
           />
+          <Stack.Screen name="LayoutHeroSheetScreen" component={LayoutHeroSheetScreen} />
+          <Stack.Screen name="LayoutWizardScreen" component={LayoutWizardScreen} />
+          <Stack.Screen name="LayoutListStatesScreen" component={LayoutListStatesScreen} />
+          <Stack.Screen name="LayoutHideOnScrollScreen" component={LayoutHideOnScrollScreen} />
+          <Stack.Screen name="LayoutCollapseHeaderScreen" component={LayoutCollapseHeaderScreen} />
+          <Stack.Screen name="LayoutHeroOverlayScreen" component={LayoutHeroOverlayScreen} />
+          <Stack.Screen name="LayoutStickyScreen" component={LayoutStickyScreen} />
+          <Stack.Screen name="LayoutFooterElevateScreen" component={LayoutFooterElevateScreen} />
+          <Stack.Screen name="LayoutFabScreen" component={LayoutFabScreen} />
+          <Stack.Screen name="LayoutBrandHeaderScreen" component={LayoutBrandHeaderScreen} />
         </Stack.Group>
       )}
     </Stack.Navigator>

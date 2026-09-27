@@ -1,8 +1,5 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Box } from '../../../primitives/Box';
-import { Text } from '../../../primitives/Text';
-import { CustomButton } from '../../../CustomButton';
+import { ListEmptyState } from '../ListEmptyState';
 
 interface Props {
   children: ReactNode;
@@ -23,7 +20,6 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
     if (__DEV__) {
-       
       console.error('[SuperList ErrorBoundary]', error, info.componentStack);
     }
   }
@@ -37,23 +33,8 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) {
         return this.props.fallback(this.state.error, this.retry);
       }
-      return <DefaultFallback retry={this.retry} />;
+      return <ListEmptyState isError onRetry={this.retry} />;
     }
     return this.props.children;
   }
 }
-
-const DefaultFallback: React.FC<{ retry: () => void }> = ({ retry }) => {
-  const { t } = useTranslation();
-
-  return (
-    <Box flex={1} align="center" justify="center" p="2xl">
-      <Text variant="body" align="center">
-        {t('errors.generic')}
-      </Text>
-      <Box mt="lg" width={160}>
-        <CustomButton title={t('common.retry')} onPress={retry} size="sm" />
-      </Box>
-    </Box>
-  );
-};

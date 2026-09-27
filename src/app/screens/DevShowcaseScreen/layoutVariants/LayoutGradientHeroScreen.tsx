@@ -5,7 +5,7 @@ import { useTheme } from '@/core/theme';
 import { goBack } from '@/core/navigation';
 
 /**
- * Layout gallery variant: `withGradient` — a soft brand-tinted wash at the
+ * Layout gallery variant: `backdrop="wash"` — a soft brand-tinted wash at the
  * top of the screen (`colors.gradients.screenWash`), independent of any
  * hero header.
  */
@@ -14,7 +14,7 @@ const LayoutGradientHeroScreenComponent: React.FC = () => {
   const { colors } = useTheme();
 
   return (
-    <Layout withScroll withGradient>
+    <Layout backdrop="wash">
       <Box gap="lg">
         <CustomButton
           title={t('common.back')}

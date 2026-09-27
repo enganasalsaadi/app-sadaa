@@ -12,6 +12,10 @@ import { useTheme } from '@/core/theme';
 import { Box, Text } from '../primitives';
 import { CustomButton } from '../CustomButton';
 
+/** 503 auto-retry: seconds shown before retrying, ticking once per second. */
+const RETRY_COUNTDOWN_SECONDS = 3;
+const COUNTDOWN_TICK_MS = 1000;
+
 export const GlobalErrorModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -43,7 +47,7 @@ export const GlobalErrorModal: React.FC = () => {
       return;
     }
 
-    setRetryCountdown(3);
+    setRetryCountdown(RETRY_COUNTDOWN_SECONDS);
 
     const timer = setInterval(() => {
       setRetryCountdown(prev => {
@@ -53,7 +57,7 @@ export const GlobalErrorModal: React.FC = () => {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, COUNTDOWN_TICK_MS);
 
     return () => clearInterval(timer);
   }, [isUnavailable, show]);
@@ -94,7 +98,7 @@ export const GlobalErrorModal: React.FC = () => {
           </Text>
         )}
 
-        <Box mt="xl">
+        <Box mt="xl" gap="md">
           <CustomButton
             title={
               isUnavailable && retryCountdown > 0
@@ -104,7 +108,6 @@ export const GlobalErrorModal: React.FC = () => {
             onPress={handleRetry}
             disabled={isUnavailable && retryCountdown > 0}
           />
-          <Box mt="md" />
           <CustomButton
             title={t('common.close')}
             onPress={handleClose}

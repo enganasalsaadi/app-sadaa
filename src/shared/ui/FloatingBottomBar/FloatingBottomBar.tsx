@@ -10,23 +10,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Home, Settings } from 'lucide-react-native';
-import { useTheme, moderateScale } from '@/core/theme';
+import { useTheme, motion } from '@/core/theme';
 import { useScrollContext } from '@/shared/context/ScrollContext';
 import { useBottomBar } from '@/shared/context/BottomBarContext';
 import { Box } from '../primitives';
-import type { TabConfig } from '../BottomBar';
-import { FLOATING_BAR_HEIGHT } from './constants';
+import type { TabConfig } from './types';
+import { BAR_CORNER, BAR_HEIGHT, SCROLL_TOP_THRESHOLD } from './constants';
 import { CurvedBarBackground } from './CurvedBarBackground';
 import { CurvedTabItem } from './CurvedTabItem';
-
-const SPRING = { damping: 22, stiffness: 220 } as const;
-
-/** Visual bar surface height (FAB overhangs above this). */
-const BAR_HEIGHT = moderateScale(66);
-/** Horizontal inset of the floating bar from the screen edges. */
-const H_MARGIN = moderateScale(16);
-/** Outer corner radius of the bar. */
-const CORNER = moderateScale(26);
 
 type TabLabelKey = 'tabs.home' | 'tabs.settings';
 
@@ -44,13 +35,15 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }) => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, spacing } = useTheme();
   const { bottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
   const scrollCtx = useScrollContext();
   const { visible } = useBottomBar();
 
-  const barWidth = screenWidth - H_MARGIN * 2;
+  const barWidth = screenWidth - spacing.lg * 2;
+  // Bar + its bottom margin + room for the md shadow bleed, so hiding clears it fully.
+  const hiddenOffset = BAR_HEIGHT + spacing.sm + spacing.lg + bottom;
 
   // Destructure before worklet capture
   const ctxScrollY = scrollCtx?.scrollY;
@@ -66,15 +59,15 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
   const slideTarget = useDerivedValue(() => {
     'worklet';
     // Explicitly hidden by a screen — slide fully out of view
-    if (isVisible.value === 0) return FLOATING_BAR_HEIGHT + bottom;
+    if (isVisible.value === 0) return hiddenOffset;
     if (ctxScrollY === undefined || ctxScrollDir === undefined) return 0;
     // Always visible when near the top
-    if (ctxScrollY.value < 20) return 0;
-    return ctxScrollDir.value === -1 ? FLOATING_BAR_HEIGHT + bottom : 0;
+    if (ctxScrollY.value < SCROLL_TOP_THRESHOLD) return 0;
+    return ctxScrollDir.value === -1 ? hiddenOffset : 0;
   });
 
   const slideStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: withSpring(slideTarget.value, SPRING) }],
+    transform: [{ translateY: withSpring(slideTarget.value, motion.spring) }],
   }));
 
   // ── Tabs derived from the navigator state ─────────────────────────────────
@@ -119,7 +112,7 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
           width={barWidth}
           height={BAR_HEIGHT}
           cradleRadius={0}
-          corner={CORNER}
+          corner={BAR_CORNER}
           fill={colors.surface.main}
           stroke={colors.border.strong}
         />
@@ -140,5 +133,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default FloatingBottomBar;

@@ -1,10 +1,9 @@
 export { ChooseLanguageScreen } from './ChooseLanguageScreen';
 export { OnboardingScreen } from './OnboardingScreen';
 export { MaintenanceScreen } from './MaintenanceScreen';
-export { OnboardingResumeScreen } from './OnboardingResumeScreen';
 export { ForceUpdateScreen } from './ForceUpdateScreen';
 export { BootScreen } from './BootScreen';
-export { DevShowcaseScreen } from './DevShowcaseScreen';
+export { DevShowcaseScreen, ShowcaseCategoryScreen } from './DevShowcaseScreen';
 export {
   LayoutFixedHeaderScreen,
   LayoutNoHeaderScrollScreen,
@@ -12,4 +11,14 @@ export {
   LayoutCtaButtonScreen,
   LayoutNoScrollWithHandlerScreen,
   LayoutGradientHeroScreen,
+  LayoutHeroSheetScreen,
+  LayoutWizardScreen,
+  LayoutListStatesScreen,
+  LayoutHideOnScrollScreen,
+  LayoutCollapseHeaderScreen,
+  LayoutHeroOverlayScreen,
+  LayoutStickyScreen,
+  LayoutFooterElevateScreen,
+  LayoutFabScreen,
+  LayoutBrandHeaderScreen,
 } from './DevShowcaseScreen/layoutVariants';

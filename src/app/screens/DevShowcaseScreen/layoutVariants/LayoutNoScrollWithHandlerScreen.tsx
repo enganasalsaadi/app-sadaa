@@ -9,7 +9,7 @@ import { useScrollHandler } from '@/shared/context/ScrollContext';
 const ROW_COUNT = 20;
 
 /**
- * Layout gallery variant: `withScroll={false}` opts out of Layout's built-in
+ * Layout gallery variant: `mode="static"` opts out of Layout's built-in
  * scroll view. When a screen needs its own scrollable (e.g. to embed a
  * `SuperList`) it must wire `useScrollHandler()` into that scrollable itself
  * so the shared `ScrollContext` (and anything reacting to it, like
@@ -20,10 +20,13 @@ const LayoutNoScrollWithHandlerScreenComponent: React.FC = () => {
   const { colors } = useTheme();
   const scrollHandler = useScrollHandler();
 
-  const rows = useMemo(() => Array.from({ length: ROW_COUNT }, (_, i) => i), []);
+  const rows = useMemo(
+    () => Array.from({ length: ROW_COUNT }, (_, i) => i),
+    [],
+  );
 
   return (
-    <Layout withScroll={false}>
+    <Layout mode="static">
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={32}

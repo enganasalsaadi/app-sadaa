@@ -37,13 +37,9 @@ const WebViewScreenComponent: React.FC<Props> = ({ route }) => {
 
   return (
     <Layout
-      withGradient={false}
-      withScroll={false}
-      contentPadding={false}
-      screenHeader={{
-        title,
-        fillStatusBar: true,
-      }}
+      mode="static"
+      padding="none"
+      header={{ title }}
     >
       {resolvedUrl ? (
         <>

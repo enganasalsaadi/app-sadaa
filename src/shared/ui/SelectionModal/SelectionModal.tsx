@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react-native';
-import { useTheme } from '@/core/theme';
+import { iconStroke, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 import { Pressable } from '../primitives/Pressable';
@@ -12,7 +12,7 @@ import type { SelectionItem, SelectionModalProps } from './types';
 
 export const SelectionModal: React.FC<SelectionModalProps> = props => {
   const { visible, onClose, title, items, confirmLabel } = props;
-  const { colors, spacing } = useTheme();
+  const { colors, sizes } = useTheme();
   const { t } = useTranslation();
 
   const [internalSelected, setInternalSelected] = useState<
@@ -82,7 +82,7 @@ export const SelectionModal: React.FC<SelectionModalProps> = props => {
         justify="space-between"
         px="2xl"
         py="lg"
-        style={styles.item}
+        borderRadius="none"
       >
         <Text
           variant="bodySmall"
@@ -91,7 +91,11 @@ export const SelectionModal: React.FC<SelectionModalProps> = props => {
           {item.label}
         </Text>
         {selected && (
-          <Check size={18} color={colors.icon.primary} strokeWidth={2.5} />
+          <Check
+            size={sizes.icon.sm}
+            color={colors.icon.primary}
+            strokeWidth={iconStroke.bold}
+          />
         )}
       </Pressable>
     );
@@ -117,7 +121,7 @@ export const SelectionModal: React.FC<SelectionModalProps> = props => {
         bg={colors.surface.main}
       >
         <Text variant="h4">{title}</Text>
-        <Pressable onPress={onClose} hitSlop={spacing['2xl']}>
+        <Pressable onPress={onClose} hitSlop={sizes.hitSlop.lg}>
           <Text variant="body" color={colors.text.secondary}>
             {t('common.cancel')}
           </Text>
@@ -144,8 +148,5 @@ export const SelectionModal: React.FC<SelectionModalProps> = props => {
 const styles = StyleSheet.create({
   list: {
     flexGrow: 0,
-  },
-  item: {
-    borderRadius: 0,
   },
 });

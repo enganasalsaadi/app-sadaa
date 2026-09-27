@@ -14,10 +14,10 @@ Domain screens and components NEVER import `View`, `Text`, `Image`, `Pressable`,
 | `Card` | surface View | Box props + `onPress`, `selected`, `shadow='md'` |
 | `Image` | Image | fast-image backed |
 | `CustomButton`, `CustomInput`, `PhoneInput` | hand-rolled controls | variants/sizes from theme |
-| `Layout` | SafeAreaView/ScrollView wrappers | `withScroll`, `edges`, `ctaButton` |
+| `Layout` | SafeAreaView/ScrollView wrappers | `mode`, `surface`, `padding`, `header`, `footer` (`LayoutFooter`) |
 | `ScreenHeader`, `BottomSheet`, `SelectionModal`, `SuperList`, `InlineError` | ad-hoc versions | see component docs |
 
-Missing a primitive? Build it in `src/shared/ui/<Name>/` first, then use it. Never inline a one-off in a domain.
+Missing a primitive? Build it in `src/shared/ui/<Name>/` first, then use it. Never inline a one-off in a domain. Add its showcase demo in the same change (rule 10).
 
 `Animated.View` is allowed only as a transform wrapper — put `Box` inside it.
 
@@ -61,6 +61,6 @@ src/shared/ui/ComponentName/
 ```
 
 - Props interface exported as `<ComponentName>Props`.
-- Every shared component is exported from `src/shared/ui/index.ts`.
+- Every shared component is exported from `src/shared/ui/index.ts`. Named exports only, `index.ts` barrel per folder.
 - Variants via typed union props (`variant: 'primary' | 'secondary'`), never boolean soup.
 - Accessibility: every pressable has `accessibilityRole` + `accessibilityLabel` (via `t()`); touch target ≥ 44pt (`sizes` tokens).

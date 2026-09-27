@@ -4,7 +4,11 @@ import { Box, Text, CustomButton, Layout } from '@/shared/ui';
 import { LanguageOptionRow } from './components';
 import { useChooseLanguageScreen } from './hooks';
 import { Earth } from 'lucide-react-native';
-import { useTheme, moderateScale } from '@/core/theme';
+import { iconStroke, useTheme, moderateScale } from '@/core/theme';
+
+/** Hero globe badge; no size token this large. */
+const HERO_BADGE_SIZE = moderateScale(112);
+const HERO_ICON_SIZE = moderateScale(60);
 
 export const ChooseLanguageScreen: React.FC = () => {
   const {
@@ -19,11 +23,11 @@ export const ChooseLanguageScreen: React.FC = () => {
   const { colors } = useTheme();
   const { t } = useTranslation();
   return (
-    <Layout withScroll>
+    <Layout>
       <Box flex={1} pt="5xl" align="center" justify="center">
         <Box
-          width={moderateScale(112)}
-          height={moderateScale(112)}
+          width={HERO_BADGE_SIZE}
+          height={HERO_BADGE_SIZE}
           borderRadius="full"
           bg={colors.interactive.soft}
           align="center"
@@ -31,7 +35,7 @@ export const ChooseLanguageScreen: React.FC = () => {
           accessibilityRole="image"
           accessibilityLabel={t('chooseLanguage.heroA11y')}
         >
-          <Earth size={moderateScale(60)} color={colors.interactive.main} strokeWidth={1.5} />
+          <Earth size={HERO_ICON_SIZE} color={colors.interactive.main} strokeWidth={iconStroke.thin} />
         </Box>
       </Box>
 

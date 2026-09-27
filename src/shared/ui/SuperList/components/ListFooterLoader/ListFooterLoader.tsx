@@ -4,6 +4,12 @@ import { moderateScale, useTheme } from '@/core/theme';
 import { Box } from '../../../primitives/Box';
 import LottieView from 'lottie-react-native';
 
+// The Lottie artwork has built-in transparent padding; the negative margins trim
+// it so the footer doesn't add a tall blank band under the last row.
+const LOTTIE_WIDTH = moderateScale(120);
+const LOTTIE_HEIGHT = moderateScale(100);
+const LOTTIE_PADDING_TRIM = moderateScale(-25);
+
 interface ListFooterLoaderProps {
   isVisible: boolean;
 }
@@ -32,9 +38,9 @@ export const ListFooterLoader: React.FC<ListFooterLoaderProps> = ({
 
 const styles = StyleSheet.create({
   lottie: {
-    width: moderateScale(120),
-    height: moderateScale(100),
-    marginTop: moderateScale(-25),
-    marginBottom: moderateScale(-25),
+    width: LOTTIE_WIDTH,
+    height: LOTTIE_HEIGHT,
+    marginTop: LOTTIE_PADDING_TRIM,
+    marginBottom: LOTTIE_PADDING_TRIM,
   },
 });

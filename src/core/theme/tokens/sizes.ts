@@ -31,6 +31,50 @@ const BASE_SIZES = {
     md: 80,
     lg: 120,
   },
+  otpCell: {
+    width: 56,
+    height: 64,
+  },
+  progress: {
+    track: 4,
+    /** ProgressBar `md`. */
+    thick: 8,
+  },
+  /** Checkbox box / radio ring and the radio's inner dot. */
+  control: {
+    md: 20,
+    dot: 10,
+  },
+  /** Count badge min width/height. */
+  badge: {
+    md: 18,
+  },
+  /** Circular icon-only controls (header back, modal close). */
+  iconButton: {
+    sm: 36,
+    md: 44,
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+  },
+  /** Uniform hit slop for small controls (number keeps it RTL-agnostic). */
+  hitSlop: {
+    sm: 8,
+    md: 12,
+    lg: 16,
+  },
+  /** Status dots in pills and legends. */
+  dot: {
+    sm: 6,
+    md: 8,
+  },
+  /** Empty/error state artwork. */
+  illustration: {
+    sm: 72,
+    md: 120,
+    lg: 160,
+  },
 } as const;
 
 export type SizeCategory = keyof typeof BASE_SIZES;

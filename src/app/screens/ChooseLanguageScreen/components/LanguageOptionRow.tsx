@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react-native';
 import { Box, Text, Card } from '@/shared/ui';
-import { useTheme } from '@/core/theme';
+import { iconStroke, useTheme } from '@/core/theme';
 import type { SupportedLanguage } from '@/core/config';
 import type { LanguageCardAlign } from '../data';
 
@@ -57,7 +57,7 @@ export const LanguageOptionRow = React.memo<LanguageOptionRowProps>(
             <Check
               size={sizes.icon.xs}
               color={colors.text.onAccent}
-              strokeWidth={2.5}
+              strokeWidth={iconStroke.bold}
             />
           </Box>
         )}

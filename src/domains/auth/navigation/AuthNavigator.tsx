@@ -1,15 +1,20 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '@/core/navigation';
-import {
-  LoginScreen,
-  RegisterScreen,
-  ForgotPasswordScreen,
-  VerifyOtpScreen,
-  ResetOtpScreen,
-  ResetPasswordScreen,
-} from '../screens';
-import { Platform } from 'react-native';
+import { motion } from '@/core/theme';
+import { WizardShell } from '@/shared/ui';
+import { BRAND_WIZARD_TOTAL_STEPS } from '../constants/brandOnboarding';
+import { BrandAccountScreen, LoginScreen } from '../screens';
+import { PasswordResetNavigator } from './PasswordResetNavigator';
+
+// Step 1 of the brand wizard runs before there's a token, so it lives here;
+// same shell as steps 2–4 so the hand-over to the onboarding branch is seamless.
+const BrandRegisterRoute: React.FC = () => (
+  <WizardShell total={BRAND_WIZARD_TOTAL_STEPS}>
+    <BrandAccountScreen />
+  </WizardShell>
+);
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -19,17 +24,14 @@ export const AuthNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         animation: Platform.OS === 'ios' ? 'default' : 'fade',
-        animationDuration: 500,
+        animationDuration: motion.duration.slow,
         freezeOnBlur: true,
         navigationBarHidden: true,
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Verify" component={VerifyOtpScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-      <Stack.Screen name="ResetOtp" component={ResetOtpScreen} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="ForgotPassword" component={PasswordResetNavigator} />
+      <Stack.Screen name="BrandRegister" component={BrandRegisterRoute} />
     </Stack.Navigator>
   );
 };

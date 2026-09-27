@@ -1,8 +1,4 @@
 export { TopControlBar } from './TopControlBar';
-export { TypographySection } from './TypographySection';
-export { ColorSection } from './ColorSection';
-export { ButtonsSection } from './ButtonsSection';
-export { InputsSection } from './InputsSection';
-export { CardsSection } from './CardsSection';
-export { ModalsToastsSection } from './ModalsToastsSection';
-export { LayoutGallerySection } from './LayoutGallerySection';
+export { ShowcaseSection } from './ShowcaseSection';
+export { ShowcaseLinkRow } from './ShowcaseLinkRow';
+export { DemoScrollRows } from './DemoScrollRows';

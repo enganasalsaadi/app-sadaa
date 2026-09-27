@@ -4,10 +4,13 @@ import type { DateData } from 'react-native-calendars';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import type { SpacingToken } from '@/core/theme';
-import { moderateScale, useTheme } from '@/core/theme';
-import { Box, Text, Pressable } from '../primitives';
+import { useTheme } from '@/core/theme';
+import { formatDate } from '@/core/i18n';
+import { Box, Text } from '../primitives';
 import { CustomButton } from '../CustomButton';
 import { BottomSheet } from '../BottomSheet';
+import { DateTab } from './DateTab';
+import type { DateRangeSelecting } from './DateTab';
 
 // ── Shared types ──────────────────────────────────────────────────────────────
 
@@ -17,7 +20,7 @@ export interface DateRangePickerContentProps {
   checkIn: Date;
   checkOut: Date;
   onConfirm: (checkIn: Date, checkOut: Date) => void;
-  initialSelecting?: 'checkin' | 'checkout';
+  initialSelecting?: DateRangeSelecting;
   mainHeaderButtonsPadding?: SpacingToken;
 }
 
@@ -25,7 +28,8 @@ export type DateRangePickerProps = DateRangePickerContentProps;
 
 // ── Local utils ───────────────────────────────────────────────────────────────
 
-type Selecting = 'checkin' | 'checkout';
+/** Placeholder until a date is picked (typographic, not user copy). */
+const EMPTY_DATE = '—';
 
 const toDateStr = (date: Date): string => {
   const y = date.getFullYear();
@@ -34,8 +38,8 @@ const toDateStr = (date: Date): string => {
   return `${y}-${m}-${d}`;
 };
 
-export const formatShort = (date: Date): string =>
-  date.toLocaleDateString(undefined, { day: '2-digit', month: 'short' });
+const SHORT_DATE: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short' };
+const formatShort = (date: Date): string => formatDate(date, SHORT_DATE);
 
 const nightsBetween = (start: Date, end: Date): number => {
   const a = new Date(start.getFullYear(), start.getMonth(), start.getDate());
@@ -104,9 +108,9 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
   mainHeaderButtonsPadding = 'lg',
 }) => {
   const { t } = useTranslation();
-  const { colors, typography, isRTL } = useTheme();
+  const { colors, typography, sizes, borderWidths, isRTL } = useTheme();
 
-  const [selecting, setSelecting] = useState<Selecting>(initialSelecting);
+  const [selecting, setSelecting] = useState<DateRangeSelecting>(initialSelecting);
   const [tempCheckIn, setTempCheckIn] = useState<Date | null>(null);
   const [tempCheckOut, setTempCheckOut] = useState<Date | null>(null);
 
@@ -179,8 +183,8 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
 
   const calendarTheme = useMemo(
     () => ({
-      backgroundColor: 'transparent',
-      calendarBackground: 'transparent',
+      backgroundColor: colors.layout.transparent,
+      calendarBackground: colors.layout.transparent,
       textSectionTitleColor: colors.calendar.sectionTitle,
       todayTextColor: colors.calendar.todayText,
       todayBackgroundColor: colors.calendar.todayBg,
@@ -190,11 +194,11 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
       textDayFontFamily: typography.bodySmall.fontFamily,
       textMonthFontFamily: typography.title.fontFamily,
       textDayHeaderFontFamily: typography.caption.fontFamily,
-      textDayFontSize: moderateScale(14),
-      textMonthFontSize: moderateScale(15),
-      textDayHeaderFontSize: moderateScale(12),
+      textDayFontSize: typography.bodySmall.fontSize,
+      textMonthFontSize: typography.title.fontSize,
+      textDayHeaderFontSize: typography.caption.fontSize,
     }),
-    [colors.calendar, typography],
+    [colors.calendar, colors.layout.transparent, typography],
   );
 
   const minDate = useMemo(() => {
@@ -219,20 +223,11 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
 
   const renderArrow = useCallback(
     (direction: 'left' | 'right') => {
-      if (isRTL) {
-        return direction === 'left' ? (
-          <ChevronRight size={moderateScale(20)} color={colors.text.primary} />
-        ) : (
-          <ChevronLeft size={moderateScale(20)} color={colors.text.primary} />
-        );
-      }
-      return direction === 'left' ? (
-        <ChevronLeft size={moderateScale(20)} color={colors.text.primary} />
-      ) : (
-        <ChevronRight size={moderateScale(20)} color={colors.text.primary} />
-      );
+      // The calendar's "left" arrow means "previous", which points right in RTL.
+      const Arrow = (direction === 'left') !== isRTL ? ChevronLeft : ChevronRight;
+      return <Arrow size={sizes.icon.sm} color={colors.text.primary} />;
     },
-    [colors.text.primary, isRTL],
+    [colors.text.primary, isRTL, sizes.icon.sm],
   );
 
   return (
@@ -246,80 +241,23 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
         gap="md"
         justify="space-between"
       >
-        <Pressable
-          flex={1}
-          onPress={() => setSelecting('checkin')}
-          py="sm"
-          px="md"
-          borderRadius="md"
-          borderColor={selecting !== 'checkin' ? colors.border.strong : undefined}
-          borderWidth={selecting !== 'checkin' ? 'hairline' : 'none'}
-          bg={
-            selecting === 'checkin' ? colors.interactive.main : undefined
-          }
-          align="center"
-        >
-          <Text
-            variant="caption"
-            color={
-              selecting === 'checkin'
-                ? colors.text.onAccent
-                : colors.text.primary
-            }
-          >
-            {t('dateRange.startDate')}
-          </Text>
-          <Text
-            variant="title"
-            color={
-              selecting === 'checkin'
-                ? colors.text.onAccent
-                : colors.text.primary
-            }
-            mt="xs"
-          >
-            {tempCheckIn ? formatShort(tempCheckIn) : '—'}
-          </Text>
-        </Pressable>
-
-        <Pressable
-          flex={1}
-          onPress={() => setSelecting('checkout')}
-          py="sm"
-          px="md"
-          borderRadius="md"
-          bg={
-            selecting === 'checkout' ? colors.interactive.main : undefined
-          }
-          borderColor={selecting !== 'checkout' ? colors.border.strong : undefined}
-          borderWidth={selecting !== 'checkout' ? 'hairline' : 'none'}
-          align="center"
-        >
-          <Text
-            variant="caption"
-            color={
-              selecting === 'checkout'
-                ? colors.text.onAccent
-                : colors.text.primary
-            }
-          >
-            {t('dateRange.endDate')}
-          </Text>
-          <Text
-            variant="title"
-            color={
-              selecting === 'checkout'
-                ? colors.text.onAccent
-                : colors.text.primary
-            }
-            mt="xs"
-          >
-            {tempCheckOut ? formatShort(tempCheckOut) : '—'}
-          </Text>
-        </Pressable>
+        <DateTab
+          value="checkin"
+          active={selecting === 'checkin'}
+          label={t('dateRange.startDate')}
+          dateLabel={tempCheckIn ? formatShort(tempCheckIn) : EMPTY_DATE}
+          onSelect={setSelecting}
+        />
+        <DateTab
+          value="checkout"
+          active={selecting === 'checkout'}
+          label={t('dateRange.endDate')}
+          dateLabel={tempCheckOut ? formatShort(tempCheckOut) : EMPTY_DATE}
+          onSelect={setSelecting}
+        />
       </Box>
 
-      <Box height={1} bg={colors.border.default} mb="md" />
+      <Box height={borderWidths.thin} bg={colors.border.default} mb="md" />
 
       {/* Instruction + nights badge */}
       <Box

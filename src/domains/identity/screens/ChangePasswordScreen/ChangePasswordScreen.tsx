@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller } from 'react-hook-form';
-import { Layout } from '@/shared/ui/Layout';
+import { Layout, LayoutFooter } from '@/shared/ui/Layout';
 import { Box } from '@/shared/ui/primitives/Box';
 import { CustomInput } from '@/shared/ui/CustomInput';
 import { useChangePassword } from './hooks/useChangePassword';
@@ -25,22 +25,19 @@ const ChangePasswordScreenComponent: React.FC = () => {
 
   return (
     <Layout
-      withGradient={false}
-      withScroll
-      contentPadding={false}
-      screenHeader={{
-        title: t('account.changePassword.title'),
-        fillStatusBar: true,
-      }}
-      ctaButton={{
-        label: t('account.changePassword.changeBtn'),
-        onPress: handleSubmit(onSubmit),
-        isLoading,
-        disabled: isLoading,
-        alwaysSolid: true,
-      }}
+      padding={{ x: '2xl' }}
+      header={{ title: t('account.changePassword.title') }}
+      footer={
+        <LayoutFooter
+          primary={{
+            label: t('account.changePassword.changeBtn'),
+            onPress: handleSubmit(onSubmit),
+            loading: isLoading,
+          }}
+        />
+      }
     >
-      <Box px="2xl" pt="lg" pb="6xl" gap="md">
+      <Box gap="md">
         <Controller
           control={control}
           name="current_password"

@@ -31,13 +31,20 @@ export const formatNumber = (
   lang: string = i18next.language,
 ): string => numberFormat(lang, options).format(value);
 
+export interface FormatMoneyOptions {
+  /** `exceptZero` → `+$50.00` for earnings, `-$50.00` for charges. Default `auto`. */
+  signDisplay?: 'auto' | 'exceptZero';
+}
+
 export const formatMoney = (
   money: Money,
   lang: string = i18next.language,
+  { signDisplay = 'auto' }: FormatMoneyOptions = {},
 ): string => {
   const digits = MINOR_UNIT_DIGITS[money.currency];
   return numberFormat(lang, {
     style: 'currency',
+    signDisplay,
     currency: money.currency,
     currencyDisplay: 'narrowSymbol',
     minimumFractionDigits: digits,

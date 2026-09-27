@@ -15,7 +15,7 @@ import {
 } from 'react-native-reanimated';
 import { GlassCard } from '@/shared/ui';
 import type { GlassCardStyle } from '@/shared/ui';
-import { moderateScale } from '@/core/theme';
+import { iconStroke, moderateScale } from '@/core/theme';
 import { ICON_VIEWBOX, ONBOARDING_ICONS } from '../icons';
 import type { OnboardingIconName } from '../icons';
 import type { SlideIconTone } from '../types';
@@ -35,7 +35,6 @@ interface MotionSpec {
 
 const TILT_SWING = 1;
 const DEG_TO_RAD = Math.PI / 180;
-const ICON_STROKE = 2;
 const ENTER_OFFSET = moderateScale(24);
 const ENTER_SPRING = { damping: 14, stiffness: 120, mass: 1 };
 
@@ -169,7 +168,7 @@ const FloatingCardComponent: React.FC<FloatingCardProps> = ({
               key={d}
               path={d}
               style="stroke"
-              strokeWidth={ICON_STROKE}
+              strokeWidth={iconStroke.regular}
               strokeCap="round"
               strokeJoin="round"
               color={appearance.toneColor[tone]}

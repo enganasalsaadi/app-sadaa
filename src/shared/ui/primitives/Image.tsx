@@ -11,6 +11,7 @@ import type {
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { Box } from './Box';
+import { Skeleton } from '../Skeleton';
 import type { Mutable, RadiiToken } from '@/core/theme/types';
 import { useTheme } from '@/core/theme';
 
@@ -114,19 +115,6 @@ const ImageGradient = memo<{
 });
 
 ImageGradient.displayName = 'ImageGradient';
-
-// ── Skeleton overlay ──────────────────────────────────────────────────────────
-
-const Skeleton = memo<{ style?: StyleProp<ViewStyle> }>(({ style }) => {
-  const { colors } = useTheme();
-  return (
-    <Box
-      style={[StyleSheet.absoluteFill, style]}
-      bg={colors.surface.elevated}
-    />
-  );
-});
-Skeleton.displayName = 'ImageSkeleton';
 
 // ── Main component ────────────────────────────────────────────────────────────
 
@@ -315,7 +303,7 @@ export const Image = memo<ImageProps>(
 
         {/* Skeleton loading */}
         {showSkeleton && isLoading && !hasError && (
-          <Skeleton style={containerRadiusStyle} />
+          <Skeleton fill width="100%" height="100%" borderRadius="none" />
         )}
 
         {/* 🔥 Gradient Layer (overlay on top of image) */}
@@ -337,19 +325,24 @@ Image.displayName = 'Image';
 
 // ── Pre-configured variants ───────────────────────────────────────────────────
 
-export const Avatar: React.FC<Omit<ImageProps, 'circle'>> = props => (
-  <Image priority="high" size={40} {...props} circle />
-);
+export const Avatar: React.FC<Omit<ImageProps, 'circle'>> = props => {
+  const { sizes } = useTheme();
+  return <Image priority="high" size={sizes.avatar.md} {...props} circle />;
+};
 
-export const Thumbnail: React.FC<Omit<ImageProps, 'rounded'>> = props => (
-  <Image size={60} {...props} rounded />
-);
+export const Thumbnail: React.FC<Omit<ImageProps, 'rounded'>> = props => {
+  const { sizes } = useTheme();
+  return <Image size={sizes.thumbnail.sm} {...props} rounded />;
+};
 
 export const Banner: React.FC<Omit<ImageProps, 'aspectRatio'>> = props => (
-  <Image width="100%" aspectRatio={16 / 9} {...props} />
+  <Image width="100%" aspectRatio={BANNER_ASPECT_RATIO} {...props} />
 );
 
 // ── Module-level constants ────────────────────────────────────────────────────
+
+// Widescreen video/social-cover ratio, so banners line up with creator media.
+const BANNER_ASPECT_RATIO = 16 / 9;
 
 const CONTAINER_BASE: ViewStyle = { overflow: 'hidden' };
 

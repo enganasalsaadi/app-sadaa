@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { useTheme } from '@/core/theme';
 
 interface CurvedBarBackgroundProps {
   /** Total bar width (screen width minus horizontal margins). */
@@ -23,12 +24,7 @@ interface CurvedBarBackgroundProps {
  * cubic curves give the cradle soft, tangent-continuous shoulders (no hard
  * corners where the dip meets the top edge).
  */
-const buildPath = (
-  w: number,
-  h: number,
-  r: number,
-  corner: number,
-): string => {
+const buildPath = (w: number, h: number, r: number, corner: number): string => {
   const c = w / 2;
   return [
     `M ${corner} 0`,
@@ -55,6 +51,7 @@ export const CurvedBarBackground: React.FC<CurvedBarBackgroundProps> = ({
   fill,
   stroke,
 }) => {
+  const { borderWidths } = useTheme();
   const d = useMemo(
     () => buildPath(width, height, cradleRadius, corner),
     [width, height, cradleRadius, corner],
@@ -62,7 +59,7 @@ export const CurvedBarBackground: React.FC<CurvedBarBackgroundProps> = ({
 
   return (
     <Svg width={width} height={height} style={styles.svg}>
-      <Path d={d} fill={fill} stroke={stroke} strokeWidth={1} />
+      <Path d={d} fill={fill} stroke={stroke} strokeWidth={borderWidths.thin} />
     </Svg>
   );
 };

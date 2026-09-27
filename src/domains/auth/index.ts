@@ -3,12 +3,12 @@
  * Anything not exported here is private to the domain.
  */
 export { AuthNavigator } from './navigation/AuthNavigator';
-export { useAuth, useLogin, useRegister } from './hooks';
 export { useFcmNotificationToken } from './hooks/useFcmNotificationToken';
 export {
   useGetProfileQuery,
   useLogoutMutation,
   useUpdateProfileMutation,
+  useGetOnboardingProgressQuery,
 } from './api';
 export {
   authReducer,
@@ -27,4 +27,4 @@ export type {
   UpdateProfileRequest,
   RegisterFcmTokenPayload,
 } from './store';
-export type { LoginFormValues, RegisterFormValues } from './hooks';
+export { BrandOnboardingNavigator } from './navigation/BrandOnboardingNavigator';

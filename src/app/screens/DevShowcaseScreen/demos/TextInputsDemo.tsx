@@ -1,91 +1,76 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search } from 'lucide-react-native';
-import type { CountryCode } from 'libphonenumber-js';
-import { Box, Text, Card, CustomInput, PhoneInput } from '@/shared/ui';
-import { useTheme } from '@/core/theme';
+import { Box, CustomInput, PhoneInput } from '@/shared/ui';
+import { useTextInputsDemo } from './hooks/useTextInputsDemo';
 
-interface InputsSectionProps {
-  defaultValue: string;
-  onChangeDefault: (value: string) => void;
-  focusValue: string;
-  onChangeFocus: (value: string) => void;
-  errorValue: string;
-  onChangeError: (value: string) => void;
-  searchValue: string;
-  onChangeSearch: (value: string) => void;
-  phoneValue: string;
-  onChangePhone: (value: string) => void;
-  phoneCountry: CountryCode;
-  onChangePhoneCountry: (code: CountryCode) => void;
-}
+const MULTILINE_LINES = 4;
+const BIO_MAX_LENGTH = 160;
 
-const InputsSectionComponent: React.FC<InputsSectionProps> = ({
-  defaultValue,
-  onChangeDefault,
-  focusValue,
-  onChangeFocus,
-  errorValue,
-  onChangeError,
-  searchValue,
-  onChangeSearch,
-  phoneValue,
-  onChangePhone,
-  phoneCountry,
-  onChangePhoneCountry,
-}) => {
+const TextInputsDemoComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors, sizes } = useTheme();
+  const demo = useTextInputsDemo();
 
   return (
-    <Card>
-      <Box gap="lg">
-        <Text variant="title">{t('devShowcase.sections.inputs')}</Text>
+    <Box gap="lg">
+      <CustomInput
+        label={t('devShowcase.inputs.defaultLabel')}
+        placeholder={t('devShowcase.inputs.defaultPlaceholder')}
+        value={demo.defaultValue}
+        onChangeText={demo.setDefaultValue}
+      />
 
-        <CustomInput
-          label={t('devShowcase.inputs.defaultLabel')}
-          placeholder={t('devShowcase.inputs.defaultPlaceholder')}
-          value={defaultValue}
-          onChangeText={onChangeDefault}
-        />
+      <CustomInput
+        label={t('devShowcase.inputs.errorLabel')}
+        placeholder={t('devShowcase.inputs.errorPlaceholder')}
+        value={demo.errorValue}
+        onChangeText={demo.setErrorValue}
+        error={t('devShowcase.inputs.errorMessage')}
+      />
 
-        <CustomInput
-          label={t('devShowcase.inputs.focusLabel')}
-          placeholder={t('devShowcase.inputs.focusPlaceholder')}
-          value={focusValue}
-          onChangeText={onChangeFocus}
-        />
+      <CustomInput
+        label={t('devShowcase.inputs.disabledLabel')}
+        value={t('devShowcase.inputs.disabledValue')}
+        editable={false}
+      />
 
-        <CustomInput
-          label={t('devShowcase.inputs.errorLabel')}
-          placeholder={t('devShowcase.inputs.errorPlaceholder')}
-          value={errorValue}
-          onChangeText={onChangeError}
-          error={t('devShowcase.inputs.errorMessage')}
-        />
+      <CustomInput
+        label={t('devShowcase.inputs.passwordLabel')}
+        placeholder={t('devShowcase.inputs.passwordPlaceholder')}
+        value={demo.secureValue}
+        onChangeText={demo.setSecureValue}
+        isPassword
+      />
 
-        <CustomInput
-          label={t('devShowcase.inputs.searchLabel')}
-          placeholder={t('devShowcase.inputs.searchPlaceholder')}
-          value={searchValue}
-          onChangeText={onChangeSearch}
-          leftIcon={
-            <Search color={colors.icon.secondary} size={sizes.icon.sm} />
-          }
-          returnKeyType="search"
-        />
+      <CustomInput
+        label={t('devShowcase.inputs.multilineLabel')}
+        placeholder={t('devShowcase.inputs.multilinePlaceholder')}
+        value={demo.multilineValue}
+        onChangeText={demo.setMultilineValue}
+        multiline
+        numberOfLines={MULTILINE_LINES}
+      />
 
-        <PhoneInput
-          label={t('devShowcase.inputs.phoneLabel')}
-          placeholder={t('devShowcase.inputs.phonePlaceholder')}
-          value={phoneValue}
-          onChangeText={onChangePhone}
-          countryCode={phoneCountry}
-          onChangeCountry={onChangePhoneCountry}
-        />
-      </Box>
-    </Card>
+      <CustomInput
+        label={t('devShowcase.inputs.counterLabel')}
+        placeholder={t('devShowcase.inputs.counterPlaceholder')}
+        value={demo.bioValue}
+        onChangeText={demo.setBioValue}
+        multiline
+        numberOfLines={MULTILINE_LINES}
+        maxLength={BIO_MAX_LENGTH}
+        showCount
+      />
+
+      <PhoneInput
+        label={t('devShowcase.inputs.phoneLabel')}
+        placeholder={t('devShowcase.inputs.phonePlaceholder')}
+        value={demo.phoneValue}
+        onChangeText={demo.setPhoneValue}
+        countryCode={demo.phoneCountry}
+        onChangeCountry={demo.setPhoneCountry}
+      />
+    </Box>
   );
 };
 
-export const InputsSection = memo(InputsSectionComponent);
+export const TextInputsDemo = memo(TextInputsDemoComponent);
