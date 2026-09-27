@@ -10,6 +10,7 @@ import {
   OnboardingScreen,
   MaintenanceScreen,
   ForceUpdateScreen,
+  OnboardingResumeScreen,
   DevShowcaseScreen,
   LayoutFixedHeaderScreen,
   LayoutNoHeaderScrollScreen,
@@ -34,6 +35,7 @@ type RootStackParamList = {
   ChooseLanguage: undefined;
   Onboarding: undefined;
   Auth: undefined;
+  OnboardingResume: undefined;
   Main: undefined;
 } & DevShowcaseStackParamList;
 
@@ -104,6 +106,9 @@ export const RootNavigator: React.FC<Props> = ({
       )}
       {appStatus === AppStatus.UNAUTHENTICATED && (
         <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
+      {appStatus === AppStatus.REGISTRATION_INCOMPLETE && (
+        <Stack.Screen name="OnboardingResume" component={OnboardingResumeScreen} />
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />

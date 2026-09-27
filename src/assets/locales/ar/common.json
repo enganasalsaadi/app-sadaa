@@ -22,7 +22,7 @@
     "agreeTerms": "بالمتابعة، فإنك توافق على الشروط وسياسة الخصوصية",
     "emailPlaceholder": "أدخل بريدك الإلكتروني",
     "passwordPlaceholder": "أدخل كلمة المرور",
-    "phonePlaceholder": "أدخل رقم الهاتف",
+    "phonePlaceholder": "أدخل رقم الهاتف مثال: 09462401604",
     "fullNamePlaceholder": "أدخل اسمك الكامل",
     "signingIn": "جارٍ تسجيل الدخول...",
     "signingUp": "جاري إنشاء الحساب...",
@@ -40,8 +40,18 @@
     "verify": "التحقق",
     "verifying": "جاري التحقق...",
     "forgotPasswordTitle": "إعادة تعيين كلمة المرور",
-    "forgotPasswordSubtitle": "أدخل البريد الإلكتروني لحسابك وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+    "forgotPasswordSubtitle": "أدخل رقم هاتفك وسنرسل لك رمزًا لإعادة تعيين كلمة المرور.",
     "identifierPlaceholder": "أدخل البريد الإلكتروني  ",
+    "accountType": {
+      "title": "اختر نوع الحساب",
+      "brand": "حساب شركة / براند",
+      "brandSubtitle": "أطلق حملاتك وتعاون مع صناع المحتوى",
+      "influencer": "حساب صانع محتوى",
+      "influencerSubtitle": "احصل على أجرك من المحتوى والحملات",
+      "agency": "حساب وكالة تسويق",
+      "agencySubtitle": "أدر حملات عدة براندات",
+      "comingSoon": "قريباً"
+    },
     "sendResetCode": "إرسال رمز إعادة التعيين",
     "sendingCode": "جارٍ الإرسال...",
     "verifyOtpTitle": "تحقق من الرمز",
@@ -226,6 +236,12 @@
       "title": "تحت الصيانة",
       "defaultSubtitle": "نحن نعمل على تحسينات. يرجى المحاولة مرة أخرى قريباً.",
       "closeApp": "إغلاق التطبيق"
+    },
+    "onboardingResume": {
+      "title": "لنكمل إعداد حسابك",
+      "subtitle": "تم تسجيل دخولك — أكمل من حيث توقفت لتبدأ استخدام صدى.",
+      "subtitleWithStep": "أنت مسجل بحساب {{userType}}، في الخطوة {{currentStep}} من الإعداد.",
+      "logout": "تسجيل الخروج"
     }
   },
   "appUpdate": {
@@ -334,6 +350,7 @@
     "passwordMismatch": "كلمتا المرور غير متطابقتين",
     "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
     "invalidOtp": "أدخل الرمز المكوّن من 5 أرقام",
+    "invalidOtpCode": "أدخل الرمز المكوّن من {{count}} أرقام",
     "phoneLengthExactly": "رقم الهاتف يجب أن يتكون من {{count}} أرقام بالضبط",
     "phoneLengthBetween": "رقم الهاتف يجب أن يتكون بين {{min}} و {{max}} رقمًا",
     "phoneInvalidForCountry": "رقم الهاتف غير صحيح لدولة {{country}}",

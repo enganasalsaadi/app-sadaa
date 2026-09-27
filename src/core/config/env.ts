@@ -56,7 +56,7 @@ const getBooleanValue = (key: string, fallback: boolean = false): boolean => {
 
 export const env: EnvConfig = {
   APP_ENV: getStringValue('APP_ENV', 'production') as AppEnv,
-  API_BASE_URL: getStringValue('API_BASE_URL', 'https://sanadk.ai/api'),
+  API_BASE_URL: getStringValue('API_BASE_URL', 'http://127.0.0.1:8001/api'),
   API_VERSION: getStringValue('API_VERSION', 'v1'),
 
   SENTRY_DSN: getStringValue('SENTRY_DSN'),

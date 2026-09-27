@@ -10,6 +10,8 @@ export type AuthStackParamList = {
   Register: undefined;
   Verify: { email: string };
   ForgotPassword: undefined;
+  ResetOtp: { phone: string };
+  ResetPassword: { phone: string; code: string };
 };
 
 /** User-account screens hosted inside the Settings tab. */

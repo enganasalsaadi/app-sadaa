@@ -17,6 +17,9 @@ export {
   selectUser,
   selectToken,
   selectIsAuthenticated,
+  selectUserType,
+  selectCurrentStep,
+  selectIsOnboardingComplete,
 } from './store';
 export type {
   User,

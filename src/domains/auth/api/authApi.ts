@@ -1,18 +1,21 @@
 import { authStorage } from '@/core/storage';
 import { replace } from '@/core/navigation';
-import { setCredentials, setUser, clearCredentials } from '../store';
+import { setCredentials, setUser, setToken, clearCredentials } from '../store';
 import type {
   LoginRequest,
+  LoginResponse,
   RegisterRequest,
   RegisterResponse,
   VerifyOtpRequest,
   VerifyOtpResponse,
   ResendOtpRequest,
   ResendOtpResponse,
-  AuthResponse,
   User,
   RegisterFcmTokenPayload,
-  ForgotPasswordRequest,
+  RequestPasswordResetRequest,
+  VerifyPasswordResetOtpRequest,
+  ResendPasswordResetOtpRequest,
+  ResetPasswordRequest,
   UpdateProfileRequest,
   LogoutRequest,
 } from '../store';
@@ -27,17 +30,25 @@ const navigateAfterAuth = () => {
 export const authApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
-    login: builder.mutation<AuthResponse, LoginRequest>({
+    // Phone+password login. No `user` object is returned — `user` is
+    // hydrated separately by GET /auth/me once the token is set (useAuth).
+    // Routing (Main vs the registration-resume gate) follows automatically
+    // from AppStatus once `isOnboardingComplete` is in the store — no
+    // imperative navigation here.
+    login: builder.mutation<LoginResponse, LoginRequest>({
       query: body => ({ url: '/auth/login', method: 'POST', body }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           authStorage.saveToken(data.token);
-          if (data.refresh_token) {
-            authStorage.saveRefreshToken(data.refresh_token);
-          }
-          dispatch(setCredentials({ user: data.user, token: data.token }));
-          navigateAfterAuth();
+          dispatch(
+            setToken({
+              token: data.token,
+              userType: data.user_type,
+              currentStep: data.current_step,
+              isOnboardingComplete: data.is_onboarding_complete,
+            }),
+          );
         } catch {}
       },
     }),
@@ -109,10 +120,21 @@ export const authApi = baseApi.injectEndpoints({
         } catch {}
       },
     }),
-    // Forgot Password (link-based): emails a reset link; user finishes on web.
-    // Always resolves 200 with the same message (no account enumeration).
-    forgotPassword: builder.mutation<void, ForgotPasswordRequest>({
+    // Forgot Password (phone OTP wizard), step 1: sends a 4-digit code.
+    // Enumeration-prevention ("المستخدم غير موجود") is handled by the caller
+    // (useRequestPasswordReset), not here — this endpoint just proxies the
+    // server response as-is.
+    requestPasswordReset: builder.mutation<void, RequestPasswordResetRequest>({
       query: body => ({ url: '/auth/forgot-password', method: 'POST', body }),
+    }),
+    verifyPasswordResetOtp: builder.mutation<void, VerifyPasswordResetOtpRequest>({
+      query: body => ({ url: '/auth/verify-otp', method: 'POST', body }),
+    }),
+    resendPasswordResetOtp: builder.mutation<void, ResendPasswordResetOtpRequest>({
+      query: body => ({ url: '/auth/resend-otp', method: 'POST', body }),
+    }),
+    resetPassword: builder.mutation<void, ResetPasswordRequest>({
+      query: body => ({ url: '/auth/reset-password', method: 'POST', body }),
     }),
   }),
 });
@@ -126,5 +148,8 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useRegisterFcmTokenMutation,
-  useForgotPasswordMutation,
+  useRequestPasswordResetMutation,
+  useVerifyPasswordResetOtpMutation,
+  useResendPasswordResetOtpMutation,
+  useResetPasswordMutation,
 } = authApi;

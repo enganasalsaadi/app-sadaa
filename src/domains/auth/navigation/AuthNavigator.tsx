@@ -6,6 +6,8 @@ import {
   RegisterScreen,
   ForgotPasswordScreen,
   VerifyOtpScreen,
+  ResetOtpScreen,
+  ResetPasswordScreen,
 } from '../screens';
 import { Platform } from 'react-native';
 
@@ -26,6 +28,8 @@ export const AuthNavigator: React.FC = () => {
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Verify" component={VerifyOtpScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="ResetOtp" component={ResetOtpScreen} />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </Stack.Navigator>
   );
 };

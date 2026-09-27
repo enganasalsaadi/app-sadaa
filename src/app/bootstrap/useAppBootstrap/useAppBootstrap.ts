@@ -10,7 +10,8 @@ import { resolveAppStatus } from './utils/resolveAppStatus';
 import { bootstrapLanguage } from './utils/bootstrapLanguage';
 import { loadBootConfig } from './utils/loadBootConfig';
 import { resolveBootGate } from './utils/resolveBootGate';
-import { selectIsAuthenticated } from '@/domains/auth';
+import { resolveDerivedStatus } from './utils/resolveDerivedStatus';
+import { selectIsAuthenticated, selectIsOnboardingComplete } from '@/domains/auth';
 
 // Once per release: remember which latest_version was announced.
 const announceSoftUpdate = (version: string) => {
@@ -28,6 +29,7 @@ const announceSoftUpdate = (version: string) => {
 export const useAppBootstrap = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const isOnboardingComplete = useAppSelector(selectIsOnboardingComplete);
   const prevIsAuthenticatedRef = useRef(isAuthenticated);
   const [state, setState] = useState<BootstrapState>({
     status: AppStatus.LOADING,
@@ -86,22 +88,16 @@ export const useAppBootstrap = () => {
     );
   }, []);
 
-  const status = useMemo(() => {
-    if (!state.isReady) {
-      return AppStatus.LOADING;
-    }
-
-    // Gates win over auth: a logged-in user on an unsupported version still must update.
-    if (state.status === AppStatus.MAINTENANCE || state.status === AppStatus.UPDATE_REQUIRED) {
-      return state.status;
-    }
-
-    if (isAuthenticated) {
-      return AppStatus.AUTHENTICATED;
-    }
-
-    return state.status;
-  }, [isAuthenticated, state.isReady, state.status]);
+  const status = useMemo(
+    () =>
+      resolveDerivedStatus({
+        isReady: state.isReady,
+        bootStatus: state.status,
+        isAuthenticated,
+        isOnboardingComplete,
+      }),
+    [isAuthenticated, isOnboardingComplete, state.isReady, state.status],
+  );
 
   return {
     isReady: state.isReady,

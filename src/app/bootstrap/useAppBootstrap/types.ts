@@ -10,6 +10,8 @@ export enum AppStatus {
   /** First run after language choice: intro slides, shown once per install. */
   ONBOARDING = 'ONBOARDING',
   UNAUTHENTICATED = 'UNAUTHENTICATED',
+  /** Logged in but the server-side registration wizard isn't finished yet. */
+  REGISTRATION_INCOMPLETE = 'REGISTRATION_INCOMPLETE',
   AUTHENTICATED = 'AUTHENTICATED',
 }
 

@@ -49,12 +49,30 @@ export interface User {
 export interface AuthState {
   user: User | null;
   token: string | null;
+  // Cross-device resume flags from POST /auth/login — meaningful only until
+  // the (future) registration-onboarding flow is completed server-side.
+  userType?: string;
+  currentStep?: number;
+  isOnboardingComplete?: boolean;
 }
 
 export interface LoginRequest {
-  email: string;
+  phone: string;
   password: string;
-  device_name?: string;
+}
+
+// POST /auth/login — phone+password. No `user` object is returned; `user`
+// is hydrated separately via GET /auth/me (see useAuth). `status` is an
+// opaque server-defined string (e.g. "pending_kyc"), not a client state
+// machine we own.
+export interface LoginResponse {
+  token: string;
+  token_type: string;
+  user_id: string;
+  user_type: string;
+  status: string;
+  current_step: number;
+  is_onboarding_complete: boolean;
 }
 
 export interface RegisterRequest {
@@ -100,11 +118,32 @@ export interface ResendOtpResponse {
 
 export type { RegisterFcmTokenPayload } from '@/core/notification/notificationTypes';
 
-// Forgot Password (link-based): POST /auth/forgot-password emails a reset link.
-// Always returns 200 with the same message regardless of whether the email
-// exists (no account enumeration); the user completes the reset on the web.
-export interface ForgotPasswordRequest {
-  email: string;
+// Forgot Password (phone OTP wizard): POST /auth/forgot-password.
+// Always returns 200 with the same message regardless of whether the phone
+// exists (no account enumeration) — see useRequestPasswordReset.
+export interface RequestPasswordResetRequest {
+  phone: string;
+}
+
+// POST /auth/verify-otp (reset context) — 4-digit code.
+export interface VerifyPasswordResetOtpRequest {
+  phone: string;
+  code: string;
+  type: 'password_reset';
+}
+
+// POST /auth/resend-otp (reset context), throttled server-side (60s).
+export interface ResendPasswordResetOtpRequest {
+  phone: string;
+  type: 'password_reset';
+}
+
+// POST /auth/reset-password
+export interface ResetPasswordRequest {
+  phone: string;
+  code: string;
+  password: string;
+  password_confirmation: string;
 }
 
 export interface LogoutRequest {

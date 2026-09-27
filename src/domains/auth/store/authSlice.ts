@@ -18,9 +18,26 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    // Phone login returns no `user` object — only the token + resume flags.
+    // `user` is hydrated separately by GET /auth/me (see useAuth).
+    setToken: (
+      state,
+      action: PayloadAction<{
+        token: string;
+        userType: string;
+        currentStep: number;
+        isOnboardingComplete: boolean;
+      }>,
+    ) => {
+      state.token = action.payload.token;
+      state.userType = action.payload.userType;
+      state.currentStep = action.payload.currentStep;
+      state.isOnboardingComplete = action.payload.isOnboardingComplete;
+    },
     clearCredentials: () => initialState,
   },
 });
 
-export const { setCredentials, setUser, clearCredentials } = authSlice.actions;
+export const { setCredentials, setUser, setToken, clearCredentials } =
+  authSlice.actions;
 export const authReducer = authSlice.reducer;

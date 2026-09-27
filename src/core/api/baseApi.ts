@@ -44,7 +44,7 @@ const rawBaseQuery = fetchBaseQuery({
     const token = authStorage.getToken();
     const language = appStorage.get(StorageKeys.LANGUAGE);
     const validLanguage = getValidLanguage(language);
-
+    console.log(validLanguage)
     headers.set('Accept', 'application/json');
     headers.set('Accept-Language', validLanguage);
     headers.set('X-App-Version', getVersion());

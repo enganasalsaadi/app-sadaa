@@ -7,6 +7,9 @@ export {
   useLogoutMutation,
   useGetProfileQuery,
   useRegisterFcmTokenMutation,
-  useForgotPasswordMutation,
+  useRequestPasswordResetMutation,
+  useVerifyPasswordResetOtpMutation,
+  useResendPasswordResetOtpMutation,
+  useResetPasswordMutation,
   useUpdateProfileMutation,
 } from './authApi';

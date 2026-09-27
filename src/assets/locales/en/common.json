@@ -22,7 +22,7 @@
     "agreeTerms": "By continuing, you agree to our Terms & Privacy Policy",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
-    "phonePlaceholder": "Enter phone number",
+    "phonePlaceholder": "Enter phone number ex: 09462401604",
     "fullNamePlaceholder": "Enter your full name",
     "signingIn": "Signing in...",
     "signingUp": "Signing up...",
@@ -40,8 +40,18 @@
     "verify": "Verify",
     "verifying": "Verifying...",
     "forgotPasswordTitle": "Reset Your Password",
-    "forgotPasswordSubtitle": "Enter your account email and we’ll send you a link to reset your password.",
+    "forgotPasswordSubtitle": "Enter your phone number and we’ll send you a code to reset your password.",
     "identifierPlaceholder": "Enter email or phone number",
+    "accountType": {
+      "title": "Choose account type",
+      "brand": "Brand / Company account",
+      "brandSubtitle": "Run campaigns and work with creators",
+      "influencer": "Creator account",
+      "influencerSubtitle": "Get paid for content and campaigns",
+      "agency": "Marketing agency account",
+      "agencySubtitle": "Manage campaigns for multiple brands",
+      "comingSoon": "Coming soon"
+    },
     "sendResetCode": "Send Reset Code",
     "sendingCode": "Sending...",
     "verifyOtpTitle": "Verify Your Code",
@@ -226,6 +236,12 @@
       "title": "Under Maintenance",
       "defaultSubtitle": "We're working on improvements. Please check back soon.",
       "closeApp": "Close App"
+    },
+    "onboardingResume": {
+      "title": "Let's finish setting up your account",
+      "subtitle": "You're logged in — continue where you left off to start using Sada.",
+      "subtitleWithStep": "You're logged in as a {{userType}} account, on step {{currentStep}} of setup.",
+      "logout": "Logout"
     }
   },
   "appUpdate": {
@@ -336,6 +352,7 @@
     "passwordMismatch": "Passwords do not match",
     "invalidPhone": "Please enter a valid phone number",
     "invalidOtp": "Enter the 5-digit code",
+    "invalidOtpCode": "Enter the {{count}}-digit code",
     "phoneLengthExactly": "Phone number must be exactly {{count}} digits",
     "phoneLengthBetween": "Phone number must be between {{min}} and {{max}} digits",
     "phoneInvalidForCountry": "Invalid phone number for {{country}}",

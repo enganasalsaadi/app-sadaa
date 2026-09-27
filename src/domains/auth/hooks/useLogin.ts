@@ -1,18 +1,16 @@
 import { useCallback, useRef } from 'react';
-import { Platform } from 'react-native';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
 import type { SubmitHandler } from 'react-hook-form';
 import { useAuth } from './useAuth';
 
 export interface LoginFormValues {
-  username: string;
+  phone: string;
   password: string;
 }
 
 interface UseLoginOptions {
-  loginType: 'username' | 'phone';
-  countryCode: string;
+  countryCode: CountryCode;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
 }
@@ -26,36 +24,19 @@ export const useLogin = (options: UseLoginOptions) => {
 
   const handleLogin: SubmitHandler<LoginFormValues> = useCallback(
     async data => {
-      const { loginType, countryCode, onSuccess, onError } = optionsRef.current;
-
-      const device_name = Platform.OS === 'ios' ? 'ios-app' : 'android-app';
+      const { countryCode, onSuccess, onError } = optionsRef.current;
 
       try {
-        let result;
-
-        if (loginType === 'phone') {
-          const parsed = parsePhoneNumber(
-            data.username,
-            countryCode as CountryCode,
-          );
-          result = await login({
-            email: parsed.format('E.164'),
-            password: data.password,
-            device_name,
-          });
-        } else {
-          result = await login({
-            email: data.username,
-            password: data.password,
-            device_name,
-          });
-        }
+        const parsed = parsePhoneNumber(data.phone, countryCode);
+        const result = await login({
+          phone: parsed.format('E.164'),
+          password: data.password,
+        });
 
         if (result && 'error' in result) {
           onError?.(result.error);
           return;
         }
-        // await registerToken();
         onSuccess?.();
       } catch (err) {
         onError?.(err);

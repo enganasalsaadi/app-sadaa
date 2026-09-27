@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useForm, Controller } from 'react-hook-form';
+import { isValidPhoneNumber } from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
 import {
   Layout,
   Box,
@@ -12,6 +14,7 @@ import {
   CustomInput,
   InlineError,
   BrandLogo,
+  PhoneInput,
   Pressable,
 } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
@@ -19,16 +22,8 @@ import type { AuthStackParamList } from '@/core/navigation';
 import type { LoginFormValues } from '../../hooks/useLogin';
 import { useLogin } from '../../hooks/useLogin';
 import { percentageOfWidth } from '@/core/theme/utils/responsive';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const emailRules = (t: TFunction) => ({
-  required: t('validation.required'),
-  pattern: {
-    value: EMAIL_REGEX,
-    message: t('validation.invalidEmail'),
-  },
-});
+import { AccountTypeSheet } from '../../components/AccountTypeSheet';
+import type { AccountType } from '../../components/AccountTypeSheet';
 
 const passwordRules = (t: TFunction) => ({
   required: t('validation.required'),
@@ -44,22 +39,30 @@ export const LoginScreen: React.FC = () => {
   const navigation =
     useNavigation<StackNavigationProp<AuthStackParamList, 'Login'>>();
 
+  const [countryCode, setCountryCode] = useState<CountryCode>('SY');
+  const [accountTypeSheetVisible, setAccountTypeSheetVisible] = useState(false);
+
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<LoginFormValues>({
     mode: 'onChange',
-    defaultValues: { username: '', password: '' },
+    defaultValues: { phone: '', password: '' },
   });
 
   const {
     handleLogin,
     isLoading,
     error: apiError,
-  } = useLogin({ loginType: 'username', countryCode: '' });
+  } = useLogin({ countryCode });
 
   const canSubmit = isValid && !isLoading;
+
+  const handleSelectAccountType = (_type: AccountType) => {
+    // TODO: navigate once RegisterScreen is redesigned for role-based registration.
+    setAccountTypeSheetVisible(false);
+  };
 
   return (
     <Layout>
@@ -78,20 +81,23 @@ export const LoginScreen: React.FC = () => {
         <Box gap="2xl">
           <Controller
             control={control}
-            name="username"
-            rules={emailRules(t)}
-            render={({ field: { onChange, onBlur, value } }) => (
+            name="phone"
+            rules={{
+              validate: val => {
+                if (!val) return t('validation.required');
+                return (
+                  isValidPhoneNumber(val, countryCode) ||
+                  t('validation.invalidPhone')
+                );
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
               <CustomInput
-                label={t('auth.email')}
+                label={t('auth.phone')}
+                placeholder={t('auth.phonePlaceholder')}
                 value={value ?? ''}
                 onChangeText={onChange}
-                onBlur={onBlur}
-                placeholder={t('auth.emailPlaceholder')}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="emailAddress"
-                error={errors.username?.message}
+                error={errors.phone?.message}
               />
             )}
           />
@@ -138,7 +144,7 @@ export const LoginScreen: React.FC = () => {
           />
 
           <Pressable
-            onPress={() => navigation.navigate('Register')}
+            onPress={() => setAccountTypeSheetVisible(true)}
             accessibilityRole="link"
             accessibilityLabel={t('auth.signUp')}
           >
@@ -149,6 +155,12 @@ export const LoginScreen: React.FC = () => {
           </Pressable>
         </Box>
       </Box>
+
+      <AccountTypeSheet
+        visible={accountTypeSheetVisible}
+        onClose={() => setAccountTypeSheetVisible(false)}
+        onSelect={handleSelectAccountType}
+      />
     </Layout>
   );
 };

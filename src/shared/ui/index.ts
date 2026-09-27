@@ -33,6 +33,8 @@ export { GlobalErrorModal } from './GlobalErrorModal';
 export { NetworkSnackbar } from './NetworkSnackbar';
 export { PhoneInput } from './PhoneInput';
 export type { PhoneInputProps } from './PhoneInput';
+export { OtpInput } from './OtpInput';
+export type { OtpInputProps } from './OtpInput';
 export { ToastCard, toastConfig } from './ToastCard';
 export type { ToastCardProps, ToastType } from './ToastCard';
 export { SelectionModal } from './SelectionModal';
