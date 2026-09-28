@@ -4,6 +4,8 @@ import { Box, Chip, ChipGroup, CustomButton, Text } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import { useChipsDemo } from './hooks/useChipsDemo';
 
+const CHIPS_DEMO_MAX = 3;
+
 const ChipsDemoComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -13,6 +15,8 @@ const ChipsDemoComponent: React.FC = () => {
     toggleMulti,
     single,
     setSingle,
+    groupMulti,
+    setGroupMulti,
     loading,
     toggleLoading,
   } = useChipsDemo();
@@ -52,6 +56,21 @@ const ChipsDemoComponent: React.FC = () => {
           onChange={setSingle}
           loading={loading}
           accessibilityLabel={t('devShowcase.chips.singleTitle')}
+        />
+      </Box>
+
+      <Box gap="sm">
+        <Text variant="label" color={colors.text.secondary}>
+          {t('devShowcase.chips.groupMultiTitle', { count: CHIPS_DEMO_MAX })}
+        </Text>
+        <ChipGroup
+          multiple
+          max={CHIPS_DEMO_MAX}
+          items={items}
+          value={groupMulti}
+          onChange={setGroupMulti}
+          loading={loading}
+          accessibilityLabel={t('devShowcase.chips.groupMultiTitle', { count: CHIPS_DEMO_MAX })}
         />
         <CustomButton
           title={t('devShowcase.chips.toggleLoading')}

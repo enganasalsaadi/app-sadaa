@@ -15,6 +15,7 @@ export const StorageKeys = {
   PENDING_USER_DATA: 'auth.pending_user_data',
   APP_CONFIG_CACHE: 'app.config_cache',
   UPDATE_PROMPTED_VERSION: 'app.update_prompted_version',
+  INFLUENCER_SOCIALS_DRAFT: 'auth.influencer_socials_draft',
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];
@@ -34,4 +35,6 @@ export interface StorageSchema {
   [StorageKeys.APP_CONFIG_CACHE]: string;
   /** latest_version already announced by the soft-update toast. */
   [StorageKeys.UPDATE_PROMPTED_VERSION]: string;
+  /** Unsaved creator niches + platforms (JSON), keyed to the registering phone. */
+  [StorageKeys.INFLUENCER_SOCIALS_DRAFT]: string;
 }

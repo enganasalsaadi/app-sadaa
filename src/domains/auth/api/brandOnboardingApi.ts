@@ -1,6 +1,6 @@
-import { authStorage } from '@/core/storage';
 import { baseApi } from '@/core/api';
-import { setToken, syncOnboardingStep } from '../store';
+import { syncOnboardingStep } from '../store';
+import { startOnboardingSession } from './onboardingSession';
 import type {
   BrandStep1Request,
   BrandStep1Response,
@@ -22,17 +22,7 @@ export const brandOnboardingApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          authStorage.saveToken(data.token);
-          dispatch(
-            setToken({
-              token: data.token,
-              userType: data.user_type,
-              currentStep: data.current_step,
-              isOnboardingComplete: data.is_onboarding_complete,
-              phone: arg.phone,
-              otpSentAt: Date.now(),
-            }),
-          );
+          startOnboardingSession(dispatch, data, arg.phone);
         } catch {}
       },
     }),
@@ -44,6 +34,8 @@ export const brandOnboardingApi = baseApi.injectEndpoints({
     brandStep3Kyc: builder.mutation<void, FormData>({
       query: body => ({ url: '/onboarding/brand/step-3', method: 'POST', body }),
     }),
+    // The same resource for every role; the influencer shape is read through
+    // influencerOnboardingApi.getInfluencerOnboardingProgress.
     getOnboardingProgress: builder.query<BrandOnboardingProgress, void>({
       query: () => '/onboarding/progress',
       providesTags: ['OnboardingProgress'],

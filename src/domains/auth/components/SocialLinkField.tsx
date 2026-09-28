@@ -6,16 +6,8 @@ import { useTheme } from '@/core/theme';
 import { CustomInput, SocialPlatformIcon } from '@/shared/ui';
 import { SOCIAL_PLACEHOLDER_HOST, normalizeSocialUrl } from '@/shared/utils';
 import type { SocialPlatform } from '@/shared/utils';
+import { PLATFORM_LABEL_KEY } from '../constants/socialPlatforms';
 import type { BrandProfileFormValues } from '../schemas';
-
-const PLATFORM_LABEL_KEY = {
-  instagram: 'auth.brandOnboarding.profile.platforms.instagram',
-  facebook: 'auth.brandOnboarding.profile.platforms.facebook',
-  tiktok: 'auth.brandOnboarding.profile.platforms.tiktok',
-  youtube: 'auth.brandOnboarding.profile.platforms.youtube',
-  telegram: 'auth.brandOnboarding.profile.platforms.telegram',
-  website: 'auth.brandOnboarding.profile.platforms.website',
-} as const satisfies Record<SocialPlatform, string>;
 
 interface SocialLinkFieldProps {
   platform: SocialPlatform;

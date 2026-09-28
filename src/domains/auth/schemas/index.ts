@@ -16,3 +16,21 @@ export type {
   BrandProfileFormValues,
   SocialLinksFormValues,
 } from './brandProfileSchema';
+export { createInfluencerAccountSchema } from './influencerAccountSchema';
+export type { InfluencerAccountFormValues } from './influencerAccountSchema';
+export {
+  createInfluencerSocialsSchema,
+  createPlatformAccountSchema,
+  INFLUENCER_PLATFORMS,
+  isFollowerTier,
+  isInfluencerPlatform,
+  toUsername,
+} from './influencerSocialsSchema';
+export type {
+  InfluencerPlatform,
+  InfluencerSocialsFormValues,
+  PlatformAccountDraft,
+  PlatformAccountFormValues,
+} from './influencerSocialsSchema';
+export { createInfluencerRatesSchema, fromPriceUsd, toPriceUsd } from './influencerRatesSchema';
+export type { InfluencerRatesFormValues, RateRowFormValues } from './influencerRatesSchema';

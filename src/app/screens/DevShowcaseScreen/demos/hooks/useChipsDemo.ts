@@ -20,6 +20,7 @@ export const useChipsDemo = () => {
     () => new Set(['food']),
   );
   const [single, setSingle] = useState<string | null>(null);
+  const [groupMulti, setGroupMulti] = useState<string[]>(['tech']);
   const [loading, setLoading] = useState(false);
 
   const items = useMemo<ChipGroupItem[]>(
@@ -44,6 +45,8 @@ export const useChipsDemo = () => {
     toggleMulti,
     single,
     setSingle,
+    groupMulti,
+    setGroupMulti,
     loading,
     toggleLoading,
   };

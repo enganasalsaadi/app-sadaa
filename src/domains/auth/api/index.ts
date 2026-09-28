@@ -19,3 +19,10 @@ export {
   useBrandStep3KycMutation,
   useGetOnboardingProgressQuery,
 } from './brandOnboardingApi';
+export {
+  influencerOnboardingApi,
+  useInfluencerStep1Mutation,
+  useInfluencerStep2SocialsMutation,
+  useInfluencerStep3RatesMutation,
+  useGetInfluencerOnboardingProgressQuery,
+} from './influencerOnboardingApi';

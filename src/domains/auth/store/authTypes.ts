@@ -183,3 +183,72 @@ export interface BrandOnboardingProgress {
     social_links?: BrandSocialLink[];
   };
 }
+
+// POST /onboarding/influencer/step-1 — email optional, no password confirmation.
+export interface InfluencerStep1Request {
+  full_name: string;
+  phone: string;
+  email?: string;
+  password: string;
+  governorate: string;
+}
+
+export interface InfluencerStep1Response {
+  token: string;
+  token_type: string;
+  user_id: string;
+  user_type: 'influencer';
+  status: string;
+  current_step: number;
+  is_onboarding_complete: boolean;
+}
+
+/** Mirrors backend FollowerTierEnum, ordered smallest → largest. */
+export const FOLLOWER_TIERS = ['NANO', 'MICRO', 'MID_TIER', 'MACRO', 'MEGA'] as const;
+export type FollowerTierId = (typeof FOLLOWER_TIERS)[number];
+
+/** Mirrors backend ServiceTypeEnum. */
+export const SERVICE_TYPES = ['reels', 'story', 'post', 'visit'] as const;
+export type ServiceType = (typeof SERVICE_TYPES)[number];
+
+export interface InfluencerPlatformEntry {
+  platform: string;
+  username: string;
+  follower_tier: FollowerTierId;
+}
+
+// POST /onboarding/influencer/step-2 — replaces every platform on each call.
+export interface InfluencerStep2Request {
+  niches: string[];
+  platforms: InfluencerPlatformEntry[];
+}
+
+export interface RateCardEntry {
+  platform: string;
+  service_type: ServiceType;
+  /** Dollars as the API expects; built from minor units by `toPriceUsd`. */
+  price_usd: number;
+}
+
+// POST /onboarding/influencer/step-3 — `is_skipped: true` completes onboarding without rates.
+export type InfluencerStep3Request =
+  | { is_skipped: true }
+  | { is_skipped: false; rate_cards: RateCardEntry[] };
+
+// GET /onboarding/progress for an influencer account.
+export interface InfluencerOnboardingProgress {
+  is_onboarding_complete: boolean;
+  status?: string;
+  phone?: string;
+  is_phone_verified: boolean;
+  current_step: number;
+  has_rate_card: boolean;
+  calculated_influencer_tier?: FollowerTierId | null;
+  profile: {
+    full_name?: string;
+    governorate?: string | null;
+    niches?: string[];
+    platforms?: InfluencerPlatformEntry[];
+    rate_cards?: RateCardEntry[];
+  } | null;
+}

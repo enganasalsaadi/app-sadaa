@@ -98,6 +98,7 @@ export const useLoginScreen = () => {
     (type: AccountType) => {
       setAccountSheetVisible(false);
       if (type === 'brand') navigation.navigate('BrandRegister');
+      else if (type === 'influencer') navigation.navigate('InfluencerRegister');
     },
     [navigation],
   );

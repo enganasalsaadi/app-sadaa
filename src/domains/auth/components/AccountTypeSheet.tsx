@@ -30,7 +30,7 @@ const OPTIONS: readonly AccountTypeOptionDef[] = [
     icon: Users,
     titleKey: 'auth.accountType.influencer',
     subtitleKey: 'auth.accountType.influencerSubtitle',
-    available: false,
+    available: true,
   },
   {
     type: 'agency',

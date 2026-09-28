@@ -11,6 +11,8 @@ export interface ChipProps {
   /** Receives the chip's `value` — pass one stable handler to every chip so `memo` holds. */
   onSelect: (value: string) => void;
   disabled?: boolean;
+  /** `multiple` = one of several checkable chips (reads as a checkbox). */
+  selectionMode?: 'single' | 'multiple';
   accessibilityLabel?: string;
 }
 
@@ -20,6 +22,7 @@ const ChipComponent: React.FC<ChipProps> = ({
   selected = false,
   onSelect,
   disabled = false,
+  selectionMode = 'single',
   accessibilityLabel,
 }) => {
   const { colors, sizes } = useTheme();
@@ -41,7 +44,7 @@ const ChipComponent: React.FC<ChipProps> = ({
       bg={selected ? colors.interactive.soft : colors.surface.main}
       scaleOnPress
       opacity={disabled ? opacity.disabled : 1}
-      accessibilityRole="radio"
+      accessibilityRole={selectionMode === 'multiple' ? 'checkbox' : 'radio'}
       accessibilityState={{ checked: selected, disabled }}
       accessibilityLabel={accessibilityLabel ?? label}
     >

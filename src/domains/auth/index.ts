@@ -28,3 +28,4 @@ export type {
   RegisterFcmTokenPayload,
 } from './store';
 export { BrandOnboardingNavigator } from './navigation/BrandOnboardingNavigator';
+export { InfluencerOnboardingNavigator } from './navigation/InfluencerOnboardingNavigator';

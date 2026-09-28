@@ -31,7 +31,13 @@ import {
 } from '@/app/screens';
 import { HomeNavigator } from '@/domains/marketplace';
 import type { RootTabParamList, DevShowcaseStackParamList } from '@/core/navigation';
-import { AuthNavigator, BrandOnboardingNavigator } from '@/domains/auth';
+import {
+  AuthNavigator,
+  BrandOnboardingNavigator,
+  InfluencerOnboardingNavigator,
+  selectUserType,
+} from '@/domains/auth';
+import { useAppSelector } from '@/core/store';
 import { SettingsNavigator } from '@/domains/identity';
 import { FloatingBottomBar } from '@/shared/ui';
 import { ScrollProvider } from '@/shared/context/ScrollContext';
@@ -58,6 +64,16 @@ interface Props {
   /** Called when intro slides are finished or skipped. */
   onOnboardingFinish: () => void;
 }
+
+/** Role comes from the server session (step-1 / login response), never a local choice (rule 07). */
+const OnboardingResume: React.FC = () => {
+  const userType = useAppSelector(selectUserType);
+  return userType === 'influencer' ? (
+    <InfluencerOnboardingNavigator />
+  ) : (
+    <BrandOnboardingNavigator />
+  );
+};
 
 const renderTabBar = (props: BottomTabBarProps) => (
   <FloatingBottomBar {...props} />
@@ -118,9 +134,7 @@ export const RootNavigator: React.FC<Props> = ({
         <Stack.Screen name="Auth" component={AuthNavigator} />
       )}
       {appStatus === AppStatus.REGISTRATION_INCOMPLETE && (
-        // Only brands register today; the creator wizard branches here on
-        // `selectUserType` when it lands (role branching stays in this file).
-        <Stack.Screen name="OnboardingResume" component={BrandOnboardingNavigator} />
+        <Stack.Screen name="OnboardingResume" component={OnboardingResume} />
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />

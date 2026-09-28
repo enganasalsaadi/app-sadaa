@@ -77,18 +77,6 @@
           "edit": "Edit number"
         }
       },
-      "phone": {
-        "title": "Verify your phone",
-        "subtitle": "Enter the 4-digit code we sent to {{phone}}",
-        "wrongNumber": {
-          "link": "Wrong number?",
-          "title": "Entered the wrong number?",
-          "body": "Message our support team on WhatsApp and we’ll fix it for you.",
-          "contact": "Contact us on WhatsApp",
-          "message": "Hi Sada team, I registered a brand account with the wrong phone number: {{phone}}",
-          "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
-        }
-      },
       "profile": {
         "title": "Your business identity",
         "subtitle": "Helps us match you with the right creators in your city.",
@@ -137,9 +125,97 @@
         "underReview": "Documents under review",
         "verifyLater": "Verify anytime from settings",
         "start": "Start your journey"
-      },
-      "progressError": "Couldn’t load your registration. Check your connection and try again."
+      }
     },
+    "influencerOnboarding": {
+      "account": {
+        "title": "Create your creator account",
+        "subtitle": "A few details and brands can start finding you.",
+        "sections": {
+          "personal": "About you"
+        },
+        "fullName": "Full name",
+        "fullNamePlaceholder": "e.g. Ahmad Khalil",
+        "phoneSyriaOnly": "Enter a Syrian mobile number (+963 9…)",
+        "email": "Email (optional)",
+        "emailPlaceholder": "name@example.com",
+        "governorate": "Governorate",
+        "governorateHint": "Where you create most of your content.",
+        "submit": "Continue"
+      },
+      "socials": {
+        "title": "Your niches & platforms",
+        "subtitle": "Brands match with creators by niche and audience size.",
+        "niches": "Niches",
+        "nichesCount": "{{count}}/{{max}}",
+        "nichesHint": "Pick up to {{count}} that describe your content.",
+        "platforms": "Your accounts",
+        "platformsHint": "Add at least one account. Pick the follower range that fits today.",
+        "addPlatform": "Add a platform",
+        "editAccount": "Edit {{platform}} account",
+        "removeAccount": "Remove {{platform}} account",
+        "tierA11y": "{{tier}}, {{range}} followers",
+        "sheet": {
+          "addTitle": "Add an account",
+          "editTitle": "Edit account",
+          "platform": "Platform",
+          "username": "Username",
+          "usernamePlaceholder": "@username or profile link",
+          "tier": "Followers",
+          "tierHint": "Approximate is fine — you can update it later.",
+          "add": "Add account",
+          "update": "Save changes"
+        },
+        "errors": {
+          "nichesMin": "Choose at least one niche",
+          "nichesMax": "Choose up to {{count}} niches",
+          "platformsMin": "Add at least one account",
+          "duplicate": "Each platform can be added once",
+          "username": "Use letters, numbers, dots, dashes or underscores",
+          "tier": "Choose your follower range"
+        },
+        "submit": "Continue"
+      },
+      "rates": {
+        "title": "Your rates",
+        "subtitle": "Optional — set a price for each service you offer.",
+        "hint": "Brands see these prices on your profile. You can change them anytime.",
+        "priceLabel": "{{service}} price",
+        "pricePlaceholder": "0.00",
+        "skipNudge": "Adding your rates now increases your chances of brands contacting you.",
+        "errors": {
+          "price": "Enter a price above 0",
+          "tooHigh": "That looks too high — the max is {{max}}. Check the amount.",
+          "minOne": "Tick at least one service, or skip for now"
+        },
+        "submit": "Save & finish",
+        "skip": "Skip for now"
+      },
+      "welcome": {
+        "title": "Welcome to Sada",
+        "titleNamed": "Welcome, {{name}}",
+        "subtitle": "Your creator profile is live. Get discovered by brands and turn your content into income.",
+        "tier": "{{tier}} creator",
+        "ratesSet": "Rates on your profile",
+        "ratesLater": "Add rates anytime from your profile",
+        "hintDiscover": "Brands can find you now",
+        "hintOffers": "Offers will reach you here",
+        "start": "Start your journey"
+      }
+    },
+    "phoneVerify": {
+      "title": "Verify your phone",
+      "subtitle": "Enter the 4-digit code we sent to {{phone}}",
+      "wrongNumber": {
+        "link": "Wrong number?",
+        "title": "Entered the wrong number?",
+        "body": "Message our support team on WhatsApp and we’ll fix it for you.",
+        "contact": "Contact us on WhatsApp",
+        "message": "Hi Sada team, I registered with the wrong phone number: {{phone}}",
+        "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+      }
+    },
+    "onboardingProgressError": "Couldn’t load your registration. Check your connection and try again.",
     "passwordStrength": {
       "weak": "Weak",
       "fair": "Fair",
@@ -758,6 +834,7 @@
       "beauty": "Beauty",
       "multiTitle": "Chip (multi-select)",
       "singleTitle": "ChipGroup (single-select)",
+      "groupMultiTitle": "Multi-select group (up to {{count}})",
       "disabled": "Disabled",
       "toggleLoading": "Toggle loading"
     },

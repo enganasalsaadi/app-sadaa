@@ -11,6 +11,7 @@ export type AuthStackParamList = {
   Login: { phone?: string } | undefined;
   ForgotPassword: NavigatorScreenParams<PasswordResetStackParamList> | undefined;
   BrandRegister: undefined;
+  InfluencerRegister: undefined;
 };
 
 /** Forgot-password wizard (phone → code → new password), inside `ForgotPassword`. */
@@ -33,6 +34,19 @@ export type BrandWizardStackParamList = {
 export type BrandOnboardingStackParamList = {
   BrandWizard: NavigatorScreenParams<BrandWizardStackParamList>;
   BrandWelcome: undefined;
+};
+
+/** Creator registration after the account exists (AppStatus REGISTRATION_INCOMPLETE). */
+export type InfluencerWizardStackParamList = {
+  InfluencerVerifyPhone: undefined;
+  /** `fromBack`: replaced in from rates on resume — animates as a pop. */
+  InfluencerSocials: { fromBack?: boolean } | undefined;
+  InfluencerRates: undefined;
+};
+
+export type InfluencerOnboardingStackParamList = {
+  InfluencerWizard: NavigatorScreenParams<InfluencerWizardStackParamList>;
+  InfluencerWelcome: undefined;
 };
 
 /** User-account screens hosted inside the Settings tab. */

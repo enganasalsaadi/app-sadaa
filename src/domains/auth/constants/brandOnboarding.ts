@@ -15,8 +15,8 @@ export const BRAND_WIZARD_STEPS = {
   },
   phone: {
     index: 2,
-    titleKey: 'auth.brandOnboarding.phone.title',
-    subtitleKey: 'auth.brandOnboarding.phone.subtitle',
+    titleKey: 'auth.phoneVerify.title',
+    subtitleKey: 'auth.phoneVerify.subtitle',
   },
   profile: {
     index: 3,

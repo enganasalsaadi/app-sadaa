@@ -25,7 +25,7 @@ const sameAmount = (a: Money | null, b: Money | null): boolean =>
  * in the form schema, not here.
  */
 const AmountInputInner = forwardRef<TextInputInstance, AmountInputProps>(
-  ({ value, onChangeValue, currency, ...inputProps }, ref) => {
+  ({ value, onChangeValue, currency, onBlur, ...inputProps }, ref) => {
     const [text, setText] = useState(() => (value ? toAmountText(value) : ''));
 
     // Follow external resets (form reset, server prefill) without fighting the user's typing.
@@ -48,12 +48,23 @@ const AmountInputInner = forwardRef<TextInputInstance, AmountInputProps>(
       [currency, onChangeValue],
     );
 
+    // Leaving the field shows the full amount (`50` → `50.00`), so the value
+    // read back is the value saved: a slipped digit is visible, not implied.
+    const handleBlur = useCallback<NonNullable<CustomInputProps['onBlur']>>(
+      event => {
+        if (value) setText(toAmountText(value));
+        onBlur?.(event);
+      },
+      [onBlur, value],
+    );
+
     return (
       <CustomInput
         ref={ref}
         {...inputProps}
         value={text}
         onChangeText={handleChangeText}
+        onBlur={handleBlur}
         keyboardType="decimal-pad"
         inputMode="decimal"
         suffix={currency}

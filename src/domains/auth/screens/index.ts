@@ -7,3 +7,8 @@ export { BrandVerifyPhoneScreen } from './BrandVerifyPhoneScreen/index';
 export { BrandProfileScreen } from './BrandProfileScreen/index';
 export { BrandKycScreen } from './BrandKycScreen/index';
 export { BrandWelcomeScreen } from './BrandWelcomeScreen/index';
+export { InfluencerAccountScreen } from './InfluencerAccountScreen/index';
+export { InfluencerVerifyPhoneScreen } from './InfluencerVerifyPhoneScreen/index';
+export { InfluencerSocialsScreen } from './InfluencerSocialsScreen/index';
+export { InfluencerRatesScreen } from './InfluencerRatesScreen/index';
+export { InfluencerWelcomeScreen } from './InfluencerWelcomeScreen/index';
