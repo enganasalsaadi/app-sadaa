@@ -4,7 +4,7 @@ import type { InfluencerAccountFormValues } from '../influencerAccountSchema';
 import {
   createInfluencerSocialsSchema,
   createPlatformAccountSchema,
-  toUsername,
+  toHandle,
 } from '../influencerSocialsSchema';
 import {
   createInfluencerRatesSchema,
@@ -70,14 +70,14 @@ describe('createInfluencerAccountSchema', () => {
   });
 });
 
-describe('toUsername', () => {
+describe('toHandle', () => {
   it.each([
     ['  @ahmad_k ', 'ahmad_k'],
     ['https://instagram.com/ahmad.k/?hl=ar', 'ahmad.k'],
     ['https://www.tiktok.com/@ahmad', 'ahmad'],
     ['ahmad', 'ahmad'],
   ])('%s → %s', (input, expected) => {
-    expect(toUsername(input)).toBe(expected);
+    expect(toHandle(input)).toBe(expected);
   });
 });
 
@@ -86,19 +86,19 @@ describe('createPlatformAccountSchema', () => {
 
   it('accepts a full account', () => {
     expect(() =>
-      schema.validateSync({ platform: 'instagram', username: '@ahmad', followerTier: 'MICRO' }),
+      schema.validateSync({ platform: 'instagram', handle: '@ahmad', followerTier: 'MICRO' }),
     ).not.toThrow();
   });
 
   it('rejects website (brand-only) and bad handles', () => {
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'website', username: 'x', followerTier: 'NANO' }),
+        schema.validateSync({ platform: 'website', handle: 'x', followerTier: 'NANO' }),
       ),
     ).toBe('validation.selectOne');
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'tiktok', username: 'a b', followerTier: 'NANO' }),
+        schema.validateSync({ platform: 'tiktok', handle: 'a b', followerTier: 'NANO' }),
       ),
     ).toBe('auth.influencerOnboarding.socials.errors.username');
   });
@@ -106,7 +106,7 @@ describe('createPlatformAccountSchema', () => {
   it('needs a follower tier', () => {
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'tiktok', username: 'ahmad', followerTier: '' }),
+        schema.validateSync({ platform: 'tiktok', handle: 'ahmad', followerTier: '' }),
       ),
     ).toBe('auth.influencerOnboarding.socials.errors.tier');
   });
@@ -114,7 +114,13 @@ describe('createPlatformAccountSchema', () => {
 
 describe('createInfluencerSocialsSchema', () => {
   const schema = createInfluencerSocialsSchema(t);
-  const account = { platform: 'instagram' as const, username: 'ahmad', followerTier: 'MICRO' as const };
+  const account = {
+    platform: 'instagram' as const,
+    handle: 'ahmad',
+    followerTier: 'MICRO' as const,
+    tierSource: 'manual' as const,
+    isPrimary: false,
+  };
 
   it('needs 1–3 niches and at least one platform', () => {
     expect(() => schema.validateSync({ niches: ['beauty'], platforms: [account] })).not.toThrow();

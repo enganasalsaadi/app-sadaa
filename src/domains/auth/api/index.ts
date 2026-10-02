@@ -5,7 +5,6 @@ export {
   useGetProfileQuery,
   useRegisterFcmTokenMutation,
   useRequestPasswordResetMutation,
-  useVerifyPasswordResetOtpMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,
   useUpdateProfileMutation,
@@ -27,3 +26,4 @@ export {
   useInfluencerStep4KycMutation,
   useGetInfluencerOnboardingProgressQuery,
 } from './influencerOnboardingApi';
+export { socialLookupApi, useLookupSocialProfileMutation } from './socialLookupApi';

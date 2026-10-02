@@ -5,8 +5,8 @@ import { FOLLOWER_TIERS } from '../store';
 import type { FollowerTierId } from '../store';
 import { INFLUENCER_MAX_NICHES } from '../constants/influencerOnboarding';
 
-const USERNAME_MAX_LENGTH = 255;
-const USERNAME_PATTERN = /^[\p{L}\p{N}._-]+$/u;
+const HANDLE_MAX_LENGTH = 255;
+const HANDLE_PATTERN = /^[\p{L}\p{N}._-]+$/u;
 
 /** Platforms a creator can link — the website entry is brand-only. */
 export const INFLUENCER_PLATFORMS = [
@@ -18,10 +18,16 @@ export const INFLUENCER_PLATFORMS = [
 ] as const satisfies readonly SocialPlatform[];
 export type InfluencerPlatform = (typeof INFLUENCER_PLATFORMS)[number];
 
+/** Where the tier came from: a `found` lookup, or picked by hand (admin reviews it). */
+export type TierSource = 'auto' | 'manual';
+
 export interface PlatformAccountFormValues {
   platform: InfluencerPlatform;
-  username: string;
+  /** Bare handle; the server stores it as `username`. */
+  handle: string;
   followerTier: FollowerTierId;
+  tierSource: TierSource;
+  isPrimary: boolean;
 }
 
 export interface InfluencerSocialsFormValues {
@@ -33,7 +39,7 @@ export interface InfluencerSocialsFormValues {
  * What the user typed → bare handle: trims, drops a leading `@` and, when a
  * profile link was pasted, keeps its last path segment.
  */
-export const toUsername = (input: string): string => {
+export const toHandle = (input: string): string => {
   const trimmed = input.trim();
   const path = trimmed.includes('/')
     ? trimmed.split(/[?#]/)[0]?.split('/').filter(Boolean).pop() ?? ''
@@ -50,7 +56,7 @@ export const isFollowerTier = (value: string | null | undefined): value is Follo
 /** The add/edit sheet while typing: nothing picked yet is allowed until submit. */
 export interface PlatformAccountDraft {
   platform: string;
-  username: string;
+  handle: string;
   followerTier: string;
 }
 
@@ -63,16 +69,16 @@ export const createPlatformAccountSchema = (
       .string()
       .required(t('validation.selectOne'))
       .test('platform', t('validation.selectOne'), value => isInfluencerPlatform(value ?? '')),
-    username: yup
+    handle: yup
       .string()
       .required(t('validation.required'))
-      .test('username', t('auth.influencerOnboarding.socials.errors.username'), value =>
-        USERNAME_PATTERN.test(toUsername(value ?? '')),
+      .test('handle', t('auth.influencerOnboarding.socials.errors.username'), value =>
+        HANDLE_PATTERN.test(toHandle(value ?? '')),
       )
       .test(
-        'username-length',
-        t('validation.maxLength', { count: USERNAME_MAX_LENGTH }),
-        value => toUsername(value ?? '').length <= USERNAME_MAX_LENGTH,
+        'handle-length',
+        t('validation.maxLength', { count: HANDLE_MAX_LENGTH }),
+        value => toHandle(value ?? '').length <= HANDLE_MAX_LENGTH,
       ),
     followerTier: yup
       .string()

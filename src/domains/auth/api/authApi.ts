@@ -11,7 +11,6 @@ import type {
   User,
   RegisterFcmTokenPayload,
   RequestPasswordResetRequest,
-  VerifyPasswordResetOtpRequest,
   ResendPasswordResetOtpRequest,
   ResetPasswordRequest,
   UpdateProfileRequest,
@@ -92,15 +91,11 @@ export const authApi = baseApi.injectEndpoints({
         } catch {}
       },
     }),
-    // Forgot Password (phone OTP wizard), step 1: sends a 4-digit code.
-    // Enumeration-prevention ("المستخدم غير موجود") is handled by the caller
-    // (useForgotPasswordScreen), not here — this endpoint just proxies the
-    // server response as-is.
+    // Forgot password, step 1: always 200 even for unknown phones (no account
+    // enumeration). The code is checked only by reset-password — verify-otp
+    // would consume it (contract §15.12).
     requestPasswordReset: builder.mutation<void, RequestPasswordResetRequest>({
       query: body => ({ url: '/auth/forgot-password', method: 'POST', body }),
-    }),
-    verifyPasswordResetOtp: builder.mutation<void, VerifyPasswordResetOtpRequest>({
-      query: body => ({ url: '/auth/verify-otp', method: 'POST', body }),
     }),
     resendPasswordResetOtp: builder.mutation<void, ResendPasswordResetOtpRequest>({
       query: body => ({ url: '/auth/resend-otp', method: 'POST', body }),
@@ -132,7 +127,6 @@ export const {
   useUpdateProfileMutation,
   useRegisterFcmTokenMutation,
   useRequestPasswordResetMutation,
-  useVerifyPasswordResetOtpMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,
   useVerifyPhoneOtpMutation,

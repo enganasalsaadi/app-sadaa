@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
-import { applyServerFieldErrors, getApiErrorMessage, normalizeApiError } from '@/core/api';
+import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
 import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import type {
@@ -15,13 +15,10 @@ import type {
 } from '@/core/navigation';
 import { useWizardHeader } from '@/shared/ui';
 import { useRequestPasswordResetMutation } from '../../../api';
+import { OTP_RESEND_SECONDS } from '../../../constants/otp';
 import { PASSWORD_RESET_STEPS } from '../../../constants/passwordReset';
 import { createPhoneSchema } from '../../../schemas';
 import type { PhoneFormValues } from '../../../schemas';
-
-// The server should answer 200 whether or not the number exists; if it ever
-// leaks "user not found", treat it as sent so numbers can't be enumerated.
-const USER_NOT_FOUND_MESSAGE = 'المستخدم غير موجود';
 
 const SERVER_FIELD_MAP = { phone: 'phone' } as const satisfies Record<
   string,
@@ -62,19 +59,25 @@ export const useForgotPasswordScreen = () => {
       const parsed = parsePhoneNumberFromString(values.phone, values.countryCode);
       if (!parsed) return;
       const phone = parsed.format('E.164');
-      const goNext = () => navigation.navigate('ResetOtp', { phone, sentAt: Date.now() });
       setApiError(null);
       try {
         await requestReset({ phone }).unwrap();
-        goNext();
+        navigation.navigate('ResetOtp', {
+          phone,
+          resendAvailableAt: Date.now() + OTP_RESEND_SECONDS * 1000,
+        });
       } catch (err) {
-        if (getApiErrorMessage(err) === USER_NOT_FOUND_MESSAGE) {
-          goNext();
+        if (applyServerFieldErrors(err, SERVER_FIELD_MAP, setError)) return;
+        const error = normalizeApiError(err);
+        // A code is already out: go enter it, resend unlocks when the server says.
+        if (error.code === 'otp_cooldown' && error.retryAfter) {
+          navigation.navigate('ResetOtp', {
+            phone,
+            resendAvailableAt: Date.now() + error.retryAfter * 1000,
+          });
           return;
         }
-        if (!applyServerFieldErrors(err, SERVER_FIELD_MAP, setError)) {
-          setApiError(normalizeApiError(err));
-        }
+        setApiError(error);
       }
     })();
   }, [handleSubmit, isLoading, navigation, requestReset, setError]);

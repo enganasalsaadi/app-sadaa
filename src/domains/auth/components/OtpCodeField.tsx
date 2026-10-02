@@ -4,9 +4,7 @@ import { Controller } from 'react-hook-form';
 import { useTheme } from '@/core/theme';
 import { Box, OtpInput, Pressable, Text } from '@/shared/ui';
 import type { OtpCodeForm } from '../hooks/useOtpCodeForm';
-
-const formatCooldown = (seconds: number) =>
-  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+import { formatOtpTimer } from '../utils/otpGuard';
 
 interface OtpCodeFieldProps {
   otp: OtpCodeForm;
@@ -22,7 +20,7 @@ export const OtpCodeField: React.FC<OtpCodeFieldProps> = ({ otp, error, editable
   const canResend = otp.cooldown === 0 && !otp.isResending;
   const resendLabel =
     otp.cooldown > 0
-      ? t('auth.otp.resendIn', { time: formatCooldown(otp.cooldown) })
+      ? t('auth.otp.resendIn', { time: formatOtpTimer(otp.cooldown) })
       : t('auth.resendOtp');
 
   return (
@@ -37,8 +35,8 @@ export const OtpCodeField: React.FC<OtpCodeFieldProps> = ({ otp, error, editable
             value={value}
             onChangeText={otp.onChangeCode}
             onComplete={otp.onSubmit}
-            editable={editable}
-            error={fieldState.error?.message ?? error}
+            editable={editable && !otp.blocked}
+            error={fieldState.error?.message ?? otp.notice ?? error}
             autoFocus
             accessibilityLabel={t('auth.otp.codeLabel', { count: otp.length })}
           />

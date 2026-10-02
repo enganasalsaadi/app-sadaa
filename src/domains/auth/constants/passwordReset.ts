@@ -21,7 +21,3 @@ export const PASSWORD_RESET_STEPS = {
 } as const satisfies Record<PasswordResetStepKey, WizardStepDef>;
 
 export const PASSWORD_RESET_TOTAL_STEPS = Object.keys(PASSWORD_RESET_STEPS).length;
-
-export const RESET_OTP_LENGTH = 4;
-/** Resend throttle, mirrors the server (60s). */
-export const RESET_OTP_RESEND_SECONDS = 60;

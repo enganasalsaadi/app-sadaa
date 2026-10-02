@@ -9,7 +9,9 @@
     "otpResent": "A new verification code has been sent",
     "otp": {
       "codeLabel": "{{count}}-digit verification code",
-      "resendIn": "Resend code in {{time}}"
+      "resendIn": "Resend code in {{time}}",
+      "exhausted": "This code no longer works. Request a new one.",
+      "locked": "Too many attempts. Try again in {{time}}"
     },
     "login": {
       "title": "Welcome back",

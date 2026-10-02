@@ -1,7 +1,13 @@
 import { parseSocialsDraft } from '../socialsDraft';
 
 const PHONE = '+963944123456';
-const account = { platform: 'instagram', username: 'ahmad', followerTier: 'MICRO' };
+const account = {
+  platform: 'instagram',
+  handle: 'ahmad',
+  followerTier: 'MICRO',
+  tierSource: 'auto',
+  isPrimary: true,
+};
 
 describe('parseSocialsDraft', () => {
   it('restores a draft saved for the same phone', () => {
@@ -18,9 +24,17 @@ describe('parseSocialsDraft', () => {
     const raw = JSON.stringify({
       phone: PHONE,
       niches: ['beauty', 3],
-      platforms: [account, { platform: 'website', username: 'x', followerTier: 'NANO' }, null],
+      platforms: [account, { platform: 'website', handle: 'x', followerTier: 'NANO' }, null],
     });
     expect(parseSocialsDraft(raw, PHONE)).toEqual({ niches: ['beauty'], platforms: [account] });
+  });
+
+  it('migrates drafts saved before the handle rename as manual tiers', () => {
+    const legacy = { platform: 'tiktok', username: 'ahmad', followerTier: 'NANO' };
+    const raw = JSON.stringify({ phone: PHONE, niches: [], platforms: [legacy] });
+    expect(parseSocialsDraft(raw, PHONE)?.platforms).toEqual([
+      { platform: 'tiktok', handle: 'ahmad', followerTier: 'NANO', tierSource: 'manual', isPrimary: false },
+    ]);
   });
 
   it('survives corrupt JSON and missing input', () => {

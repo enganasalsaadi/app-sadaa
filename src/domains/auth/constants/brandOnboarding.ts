@@ -49,5 +49,3 @@ export const KYC_ALLOWED_MIME_TYPES = [
   'image/png',
 ] as const;
 
-/** Resend throttle, mirrors the server (60s). */
-export const PHONE_OTP_RESEND_SECONDS = 60;

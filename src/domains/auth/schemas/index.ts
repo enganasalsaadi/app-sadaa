@@ -24,7 +24,7 @@ export {
   INFLUENCER_PLATFORMS,
   isFollowerTier,
   isInfluencerPlatform,
-  toUsername,
+  toHandle,
 } from './influencerSocialsSchema';
 export type {
   InfluencerPlatform,

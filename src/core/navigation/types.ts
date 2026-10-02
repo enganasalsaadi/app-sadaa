@@ -18,9 +18,18 @@ export type AuthStackParamList = {
 export type PasswordResetStackParamList = {
   /** Prefilled from whatever was typed on Login. */
   ResetPhone: { phone?: string; countryCode?: CountryCode } | undefined;
-  /** `sentAt`: epoch ms of the last send, drives the resend cooldown. */
-  ResetOtp: { phone: string; sentAt: number };
-  ResetPassword: { phone: string; code: string };
+  ResetOtp: {
+    phone: string;
+    /** Epoch ms when resend unlocks (60s after a send, or the server's `retry_after`). */
+    resendAvailableAt: number;
+    /**
+     * Set by ResetPassword when reset-password refused the code: the code is
+     * only checked there, never by verify-otp (that consumes it).
+     */
+    codeRejection?: { message: string; at: number };
+  };
+  /** `resendAvailableAt` is carried back to the code step on a rejection. */
+  ResetPassword: { phone: string; code: string; resendAvailableAt: number };
 };
 
 /** Brand registration after the account exists (AppStatus REGISTRATION_INCOMPLETE). */

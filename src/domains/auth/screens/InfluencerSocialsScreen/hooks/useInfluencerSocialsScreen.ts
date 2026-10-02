@@ -36,9 +36,17 @@ const fromServer = (
   profile: InfluencerOnboardingProgress['profile'] | undefined,
 ): InfluencerSocialsFormValues | null => {
   const niches = profile?.niches ?? [];
-  const platforms = (profile?.platforms ?? []).flatMap(entry =>
+  const platforms = (profile?.platforms ?? []).flatMap<PlatformAccountFormValues>(entry =>
     isInfluencerPlatform(entry.platform) && isFollowerTier(entry.follower_tier)
-      ? [{ platform: entry.platform, username: entry.username, followerTier: entry.follower_tier }]
+      ? [
+          {
+            platform: entry.platform,
+            handle: entry.username,
+            followerTier: entry.follower_tier,
+            tierSource: entry.tier_source,
+            isPrimary: entry.is_primary,
+          },
+        ]
       : [],
   );
   return niches.length || platforms.length ? { niches, platforms } : null;
@@ -154,10 +162,13 @@ export const useInfluencerSocialsScreen = () => {
         () =>
           saveSocials({
             niches: values.niches,
+            // The tier is always sent: the server ignores it when it holds
+            // lookup data, and needs it otherwise (contract §5.2).
             platforms: values.platforms.map(account => ({
               platform: account.platform,
-              username: account.username,
+              handle: account.handle,
               follower_tier: account.followerTier,
+              ...(account.isPrimary ? { is_primary: true } : {}),
             })),
           }).unwrap(),
         { onFieldErrors: err => applyServerFieldErrors(err, SERVER_FIELD_MAP, setError) },

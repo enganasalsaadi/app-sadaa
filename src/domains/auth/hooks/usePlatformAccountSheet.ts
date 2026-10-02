@@ -8,7 +8,7 @@ import {
   createPlatformAccountSchema,
   isFollowerTier,
   isInfluencerPlatform,
-  toUsername,
+  toHandle,
 } from '../schemas';
 import type {
   InfluencerPlatform,
@@ -16,7 +16,7 @@ import type {
   PlatformAccountFormValues,
 } from '../schemas';
 
-const EMPTY: PlatformAccountDraft = { platform: '', username: '', followerTier: '' };
+const EMPTY: PlatformAccountDraft = { platform: '', handle: '', followerTier: '' };
 
 interface PlatformAccountSheetConfig {
   visible: boolean;
@@ -46,7 +46,11 @@ export const usePlatformAccountSheet = ({
   useEffect(() => {
     if (!visible) return;
     const only = platforms.length === 1 ? platforms[0] : undefined;
-    reset(initial ?? { ...EMPTY, platform: only ?? '' });
+    reset(
+      initial
+        ? { platform: initial.platform, handle: initial.handle, followerTier: initial.followerTier }
+        : { ...EMPTY, platform: only ?? '' },
+    );
   }, [initial, platforms, reset, visible]);
 
   const platformItems = useMemo<ChipGroupItem[]>(
@@ -58,13 +62,19 @@ export const usePlatformAccountSheet = ({
     handleSubmit(values => {
       // Already enforced by the schema; narrows the draft's strings.
       if (!isInfluencerPlatform(values.platform) || !isFollowerTier(values.followerTier)) return;
+      const handle = toHandle(values.handle);
+      // Untouched rows keep their source; any change is a hand-picked tier.
+      const unchanged =
+        initial?.handle === handle && initial.followerTier === values.followerTier;
       onSave({
         platform: values.platform,
-        username: toUsername(values.username),
+        handle,
         followerTier: values.followerTier,
+        tierSource: unchanged ? initial.tierSource : 'manual',
+        isPrimary: initial?.isPrimary ?? false,
       });
     })();
-  }, [handleSubmit, onSave]);
+  }, [handleSubmit, initial, onSave]);
 
   return { control, setFocus, platformItems, onSubmit, isEditing: initial !== null };
 };

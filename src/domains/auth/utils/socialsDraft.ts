@@ -5,15 +5,26 @@ import type { InfluencerSocialsFormValues, PlatformAccountFormValues } from '../
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
+// Drafts saved before the `handle` rename stored `username` and no tier
+// source: those tiers were all picked by hand.
 const toAccount = (value: unknown): PlatformAccountFormValues[] => {
   if (!isRecord(value)) return [];
-  const { platform, username, followerTier } = value;
+  const { platform, followerTier, tierSource, isPrimary } = value;
+  const handle = value.handle ?? value.username;
   return typeof platform === 'string' &&
     isInfluencerPlatform(platform) &&
-    typeof username === 'string' &&
+    typeof handle === 'string' &&
     typeof followerTier === 'string' &&
     isFollowerTier(followerTier)
-    ? [{ platform, username, followerTier }]
+    ? [
+        {
+          platform,
+          handle,
+          followerTier,
+          tierSource: tierSource === 'auto' ? 'auto' : 'manual',
+          isPrimary: isPrimary === true,
+        },
+      ]
     : [];
 };
 

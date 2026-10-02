@@ -56,7 +56,7 @@ export const PlatformAccountRow: React.FC<PlatformAccountRowProps> = memo(
             {platformLabel}
           </Text>
           <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-            @{account.username}
+            @{account.handle}
           </Text>
         </Box>
         <StatusPill

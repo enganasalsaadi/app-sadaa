@@ -76,7 +76,7 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
 
           <Controller
             control={control}
-            name="username"
+            name="handle"
             render={({ field: { ref, value, onChange, onBlur }, fieldState }) => (
               <CustomInput
                 ref={ref}

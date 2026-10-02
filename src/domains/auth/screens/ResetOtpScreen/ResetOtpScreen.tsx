@@ -10,7 +10,7 @@ import { useResetOtpScreen } from './hooks/useResetOtpScreen';
 export const ResetOtpScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const { otp, isVerifying, error, onChangeNumber } = useResetOtpScreen();
+  const { otp, error, onChangeNumber } = useResetOtpScreen();
 
   return (
     <Layout
@@ -20,13 +20,13 @@ export const ResetOtpScreen: React.FC = () => {
           primary={{
             label: t('auth.verifyCode'),
             onPress: otp.onSubmit,
-            loading: isVerifying,
+            disabled: otp.blocked,
           }}
         />
       }
     >
       <Box gap="3xl">
-        <OtpCodeField otp={otp} error={error?.message} editable={!isVerifying} />
+        <OtpCodeField otp={otp} error={error ?? undefined} />
 
         <Pressable
           onPress={onChangeNumber}

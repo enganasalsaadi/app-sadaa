@@ -35,6 +35,7 @@ export const PhoneVerifyStepView: React.FC<PhoneVerifyStepViewProps> = ({
             label: t('auth.verifyCode'),
             onPress: otp.onSubmit,
             loading: isVerifying,
+            disabled: otp.blocked,
           }}
         />
       }

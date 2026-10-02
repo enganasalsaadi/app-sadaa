@@ -5,6 +5,8 @@ import type { ApiErrorCode, AppApiError } from '@/core/api';
 export interface RunStepOptions {
   /** Return true when the error was shown on form fields (422) — skips the banner. */
   onFieldErrors?: (error: unknown) => boolean;
+  /** The failure this step ends on (not called when it rerouted instead). */
+  onFailure?: (error: AppApiError) => void;
   /**
    * A wrong-step rejection, yet progress still points at this step: return a
    * replacement write, or null to show the error. KYC uses it to resubmit as
@@ -98,7 +100,9 @@ export const useOnboardingFlow = <Step extends string>({
             }
           }
         }
-        if (!options?.onFieldErrors?.(failure)) setError(normalizeApiError(failure));
+        const failureError = normalizeApiError(failure);
+        options?.onFailure?.(failureError);
+        if (!options?.onFieldErrors?.(failure)) setError(failureError);
         return false;
       } finally {
         inFlightRef.current = false;

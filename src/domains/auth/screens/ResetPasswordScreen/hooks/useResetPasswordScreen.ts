@@ -5,7 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
+import {
+  applyServerFieldErrors,
+  extractServerFieldErrors,
+  normalizeApiError,
+} from '@/core/api';
 import type { AppApiError } from '@/core/api';
 import type {
   AuthStackParamList,
@@ -30,7 +34,7 @@ export const useResetPasswordScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
   const { params } = useRoute<RouteProp<PasswordResetStackParamList, 'ResetPassword'>>();
-  const { phone, code } = params;
+  const { phone, code, resendAvailableAt } = params;
   const schema = useMemo(() => createNewPasswordSchema(t), [t]);
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
@@ -66,12 +70,32 @@ export const useResetPasswordScreen = () => {
           .getParent<NativeStackNavigationProp<AuthStackParamList>>()
           ?.popTo('Login', { phone });
       } catch (err) {
+        // Wrong / expired / exhausted code: fix it on the code step.
+        const codeError = extractServerFieldErrors(err)?.code;
+        if (codeError) {
+          navigation.popTo('ResetOtp', {
+            phone,
+            resendAvailableAt,
+            codeRejection: { message: codeError, at: Date.now() },
+          });
+          return;
+        }
         if (!applyServerFieldErrors(err, SERVER_FIELD_MAP, setError)) {
           setApiError(normalizeApiError(err));
         }
       }
     })();
-  }, [code, handleSubmit, isLoading, navigation, phone, resetPassword, setError, t]);
+  }, [
+    code,
+    handleSubmit,
+    isLoading,
+    navigation,
+    phone,
+    resendAvailableAt,
+    resetPassword,
+    setError,
+    t,
+  ]);
 
   return { control, setFocus, onSubmit, isSubmitting: isLoading, apiError };
 };

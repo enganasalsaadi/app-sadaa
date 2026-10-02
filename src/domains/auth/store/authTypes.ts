@@ -102,16 +102,9 @@ export type { RegisterFcmTokenPayload } from '@/core/notification/notificationTy
 
 // Forgot Password (phone OTP wizard): POST /auth/forgot-password.
 // Always returns 200 with the same message regardless of whether the phone
-// exists (no account enumeration) — see useResetPhoneScreen.
+// exists (no account enumeration).
 export interface RequestPasswordResetRequest {
   phone: string;
-}
-
-// POST /auth/verify-otp (reset context) — 4-digit code.
-export interface VerifyPasswordResetOtpRequest {
-  phone: string;
-  code: string;
-  type: 'password_reset';
 }
 
 // POST /auth/resend-otp (reset context), throttled server-side (60s).
@@ -232,16 +225,72 @@ export { FOLLOWER_TIERS } from '@/core/config';
 export const SERVICE_TYPES = ['reels', 'story', 'post', 'visit'] as const;
 export type ServiceType = (typeof SERVICE_TYPES)[number];
 
-export interface InfluencerPlatformEntry {
+/** One row of POST /onboarding/influencer/step-2 (contract §5.2). */
+export interface InfluencerStep2Platform {
   platform: string;
-  username: string;
-  follower_tier: FollowerTierId;
+  /** Username, `@username` or profile URL; the server normalises it. */
+  handle: string;
+  /** Required without lookup data; ignored by the server when a `found` lookup exists. */
+  follower_tier?: FollowerTierId;
+  /** At most one `true`; none → the server picks the biggest account. */
+  is_primary?: boolean;
+  is_available?: boolean;
 }
 
 // POST /onboarding/influencer/step-2 — replaces every platform on each call.
 export interface InfluencerStep2Request {
   niches: string[];
-  platforms: InfluencerPlatformEntry[];
+  platforms: InfluencerStep2Platform[];
+}
+
+/** PlatformResource (contract §5.1): a saved social account. */
+export interface PlatformResource {
+  id: string;
+  platform: string;
+  platform_label: string;
+  username: string;
+  profile_url: string | null;
+  display_name: string | null;
+  /** `null` for manual platforms. */
+  follower_count: number | null;
+  follower_tier: FollowerTierId | null;
+  follower_tier_label: string | null;
+  tier_source: 'auto' | 'manual';
+  verification_status: 'auto_verified' | 'pending_review' | 'approved' | 'rejected';
+  rejection_reason: string | null;
+  is_primary: boolean;
+  is_available: boolean;
+  supports_lookup: boolean;
+  last_synced_at: string | null;
+}
+
+// POST /social/lookup (contract §4) — `refresh: true` only from a Refresh button.
+export interface SocialLookupRequest {
+  platform: string;
+  handle: string;
+  refresh?: boolean;
+}
+
+export interface SocialLookupProfile {
+  platform: string;
+  username: string;
+  display_name: string | null;
+  follower_count: number | null;
+  follower_tier: FollowerTierId | null;
+  is_verified_account: boolean;
+  profile_url: string | null;
+  avatar_url: string | null;
+  fetched_at: string;
+}
+
+/** Always 200 for lookup outcomes — branch on `status`. `profile` only when `found`. */
+export interface SocialLookupResult {
+  status: 'found' | 'not_found' | 'unavailable' | 'manual_required';
+  source: 'cache' | 'live' | null;
+  manual_entry_allowed: boolean;
+  /** Handle linked to another influencer: block adding it. */
+  already_claimed: boolean;
+  profile: SocialLookupProfile | null;
 }
 
 export interface RateCardEntry {
@@ -267,7 +316,7 @@ export interface InfluencerProfileResource {
   area?: string | null;
   niches?: string[];
   has_kyc_id?: boolean;
-  platforms?: InfluencerPlatformEntry[];
+  platforms?: PlatformResource[];
   rate_cards?: RateCardEntry[];
 }
 
