@@ -37,6 +37,7 @@ export type {
   BrandSocialLink,
   BrandStep2Request,
   BrandOnboardingProgress,
+  BrandProfileResource,
   InfluencerStep1Request,
   InfluencerStep1Response,
   FollowerTierId,
@@ -46,5 +47,10 @@ export type {
   RateCardEntry,
   InfluencerStep3Request,
   InfluencerOnboardingProgress,
+  InfluencerProfileResource,
+  AuthResult,
+  UserType,
+  UserStatus,
+  KycStatus,
 } from './authTypes';
 export { FOLLOWER_TIERS, SERVICE_TYPES } from './authTypes';

@@ -41,7 +41,9 @@ export type InfluencerWizardStackParamList = {
   InfluencerVerifyPhone: undefined;
   /** `fromBack`: replaced in from rates on resume — animates as a pop. */
   InfluencerSocials: { fromBack?: boolean } | undefined;
-  InfluencerRates: undefined;
+  /** `fromBack`: replaced in from KYC on resume — animates as a pop. */
+  InfluencerRates: { fromBack?: boolean } | undefined;
+  InfluencerKyc: undefined;
 };
 
 export type InfluencerOnboardingStackParamList = {

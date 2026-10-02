@@ -24,5 +24,6 @@ export {
   useInfluencerStep1Mutation,
   useInfluencerStep2SocialsMutation,
   useInfluencerStep3RatesMutation,
+  useInfluencerStep4KycMutation,
   useGetInfluencerOnboardingProgressQuery,
 } from './influencerOnboardingApi';

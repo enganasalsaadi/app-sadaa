@@ -11,4 +11,5 @@ export { InfluencerAccountScreen } from './InfluencerAccountScreen/index';
 export { InfluencerVerifyPhoneScreen } from './InfluencerVerifyPhoneScreen/index';
 export { InfluencerSocialsScreen } from './InfluencerSocialsScreen/index';
 export { InfluencerRatesScreen } from './InfluencerRatesScreen/index';
+export { InfluencerKycScreen } from './InfluencerKycScreen/index';
 export { InfluencerWelcomeScreen } from './InfluencerWelcomeScreen/index';

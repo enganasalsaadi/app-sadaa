@@ -191,6 +191,29 @@
         "submit": "Save & finish",
         "skip": "Skip for now"
       },
+      "kyc": {
+        "title": "Verify your identity",
+        "subtitle": "Optional now — but verified creators get more offers.",
+        "benefitsTitle": "Why verify?",
+        "benefits": {
+          "badge": "A Verified badge next to your name",
+          "trust": "Brands trust you and reach out sooner",
+          "review": "Reviewed by our team within 48 hours"
+        },
+        "pickFront": "Front of your ID",
+        "pickBack": "Back of your ID",
+        "pickHint": "JPG, PNG, WEBP or PDF · up to 10 MB",
+        "frontFallbackName": "ID front",
+        "backFallbackName": "ID back",
+        "errors": {
+          "size": "This file is larger than 10 MB. Choose a smaller one.",
+          "type": "Only JPG, PNG, WEBP or PDF files are accepted.",
+          "failed": "Couldn’t open the file. Please try another one."
+        },
+        "submit": "Submit for review",
+        "skip": "Skip for now",
+        "skipHint": "You can verify later from your settings."
+      },
       "welcome": {
         "title": "Welcome to Sada",
         "titleNamed": "Welcome, {{name}}",

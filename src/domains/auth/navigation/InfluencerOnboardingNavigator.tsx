@@ -17,6 +17,7 @@ import {
 } from '../hooks/useWizardScreenOptions';
 import { resolveInfluencerOnboardingStep } from '../utils/resolveInfluencerOnboardingStep';
 import {
+  InfluencerKycScreen,
   InfluencerRatesScreen,
   InfluencerSocialsScreen,
   InfluencerVerifyPhoneScreen,
@@ -48,6 +49,14 @@ const InfluencerWizardNavigator: React.FC = () => {
         <Wizard.Screen
           name="InfluencerRates"
           component={InfluencerRatesScreen}
+          options={({ route }) => ({
+            gestureEnabled: true,
+            animationTypeForReplace: route.params?.fromBack ? 'pop' : 'push',
+          })}
+        />
+        <Wizard.Screen
+          name="InfluencerKyc"
+          component={InfluencerKycScreen}
           options={{ gestureEnabled: true }}
         />
       </Wizard.Navigator>

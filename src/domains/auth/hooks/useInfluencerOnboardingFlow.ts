@@ -39,8 +39,8 @@ export const useInfluencerOnboardingFlow = (
         return;
       }
       const route = INFLUENCER_STEP_ROUTE[next];
-      // Forward into rates keeps socials underneath for back-editing.
-      if (next === 'rates') navigation.navigate(route);
+      // Forward into rates / KYC keeps the previous step underneath for back-editing.
+      if (next === 'rates' || next === 'kyc') navigation.navigate(route);
       else navigation.replace(route);
     },
     [navigation],

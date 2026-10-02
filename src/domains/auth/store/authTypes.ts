@@ -78,18 +78,25 @@ export interface LoginRequest {
   password: string;
 }
 
-// POST /auth/login — phone+password. No `user` object is returned; `user`
-// is hydrated separately via GET /user/me. KYC review state lives in
-// `kyc_status`, never in `status`.
-export interface LoginResponse {
+/**
+ * `AuthResource` (contract §15.3): POST /auth/login and both step-1s. Same
+ * routing fields as `/onboarding/progress`, so one resolver serves both.
+ * No `user` object — hydrated via GET /user/me. KYC review state lives in
+ * `kyc_status`, never in `status`.
+ */
+export interface AuthResult {
   token: string;
   token_type: string;
   user_id: string;
   user_type: UserType;
   status: UserStatus;
   current_step: number;
+  is_phone_verified: boolean;
+  /** Active, or suspended after reaching the final step. */
   is_onboarding_complete: boolean;
 }
+
+export type LoginResponse = AuthResult;
 
 export type { RegisterFcmTokenPayload } from '@/core/notification/notificationTypes';
 
@@ -153,14 +160,8 @@ export interface BrandStep1Request {
   password_confirmation: string;
 }
 
-export interface BrandStep1Response {
-  token: string;
-  token_type: string;
-  user_id: string;
+export interface BrandStep1Response extends AuthResult {
   user_type: 'brand';
-  status: UserStatus;
-  current_step: number;
-  is_onboarding_complete: boolean;
 }
 
 export interface BrandSocialLink {
@@ -175,22 +176,41 @@ export interface BrandStep2Request {
   social_links: BrandSocialLink[];
 }
 
-// GET /onboarding/progress
-export interface BrandOnboardingProgress {
-  is_onboarding_complete: boolean;
-  status?: UserStatus;
-  kyc_status?: KycStatus;
-  is_phone_verified: boolean;
+/** Contract §15.9 — brand step-2/3 response and `progress.profile`. */
+export interface BrandProfileResource {
+  company_name?: string;
+  phone?: string;
+  email?: string;
+  governorate?: string | null;
+  governorate_label?: string | null;
+  business_type?: string | null;
+  business_type_label?: string | null;
+  social_links?: BrandSocialLink[];
+  kyc_document_type?: string | null;
+  has_kyc_document?: boolean;
+}
+
+/** GET /onboarding/progress (contract §15.10), fields shared by both roles. */
+interface OnboardingProgressBase {
+  user_id: string;
+  phone: string;
+  email: string | null;
+  status: UserStatus;
   current_step: number;
-  has_kyc_document: boolean;
-  profile: {
-    company_name?: string;
-    phone?: string;
-    email?: string;
-    business_type?: string | null;
-    governorate?: string | null;
-    social_links?: BrandSocialLink[];
-  };
+  is_phone_verified: boolean;
+  is_kyc_approved: boolean;
+  has_kyc_submission: boolean;
+  kyc_status: KycStatus;
+  is_verified: boolean;
+  has_pending_verification: boolean;
+  has_rate_card: boolean;
+  is_onboarding_complete: boolean;
+}
+
+export interface BrandOnboardingProgress extends OnboardingProgressBase {
+  user_type: 'brand';
+  calculated_influencer_tier: null;
+  profile: BrandProfileResource;
 }
 
 // POST /onboarding/influencer/step-1 — email optional, no password confirmation.
@@ -202,14 +222,8 @@ export interface InfluencerStep1Request {
   governorate: string;
 }
 
-export interface InfluencerStep1Response {
-  token: string;
-  token_type: string;
-  user_id: string;
+export interface InfluencerStep1Response extends AuthResult {
   user_type: 'influencer';
-  status: UserStatus;
-  current_step: number;
-  is_onboarding_complete: boolean;
 }
 
 export { FOLLOWER_TIERS } from '@/core/config';
@@ -237,26 +251,28 @@ export interface RateCardEntry {
   price_usd: number;
 }
 
-// POST /onboarding/influencer/step-3 — `is_skipped: true` completes onboarding without rates.
+// POST /onboarding/influencer/step-3 — `is_skipped: true` skips rates; KYC (step-4) still follows.
 export type InfluencerStep3Request =
   | { is_skipped: true }
   | { is_skipped: false; rate_cards: RateCardEntry[] };
 
-// GET /onboarding/progress for an influencer account.
-export interface InfluencerOnboardingProgress {
-  is_onboarding_complete: boolean;
-  status?: UserStatus;
-  kyc_status?: KycStatus;
-  phone?: string;
-  is_phone_verified: boolean;
-  current_step: number;
-  has_rate_card: boolean;
-  calculated_influencer_tier?: FollowerTierId | null;
-  profile: {
-    full_name?: string;
-    governorate?: string | null;
-    niches?: string[];
-    platforms?: InfluencerPlatformEntry[];
-    rate_cards?: RateCardEntry[];
-  } | null;
+/**
+ * Influencer step-2/3/4 response and `progress.profile` (contract §15.6).
+ * Step-3 omits `platforms`; step-4 sends both lists.
+ */
+export interface InfluencerProfileResource {
+  full_name?: string;
+  governorate?: string | null;
+  governorate_label?: string | null;
+  area?: string | null;
+  niches?: string[];
+  has_kyc_id?: boolean;
+  platforms?: InfluencerPlatformEntry[];
+  rate_cards?: RateCardEntry[];
+}
+
+export interface InfluencerOnboardingProgress extends OnboardingProgressBase {
+  user_type: 'influencer';
+  calculated_influencer_tier: FollowerTierId | null;
+  profile: InfluencerProfileResource | null;
 }

@@ -4,17 +4,17 @@ import type { BrandOnboardingProgress } from '../store';
 export type BrandOnboardingStep = 'phone' | 'profile' | 'kyc' | 'complete';
 
 /**
- * Next step purely from server progress. Reads the facts (verified phone,
- * saved profile) rather than `current_step`, whose numbering doesn't match
- * the wizard (phone has no server step).
+ * Contract §15.11 resume resolver. Routes by `current_step` (it never
+ * decreases), not by which profile fields exist. The phone OTP has no server
+ * step: verifying it leaves `current_step` at 1.
  */
 export const resolveBrandOnboardingStep = (
-  progress: BrandOnboardingProgress,
+  progress: Pick<
+    BrandOnboardingProgress,
+    'is_onboarding_complete' | 'is_phone_verified' | 'current_step'
+  >,
 ): BrandOnboardingStep => {
   if (progress.is_onboarding_complete) return 'complete';
   if (!progress.is_phone_verified) return 'phone';
-  if (!progress.profile.business_type || !progress.profile.governorate) {
-    return 'profile';
-  }
-  return 'kyc';
+  return progress.current_step <= 1 ? 'profile' : 'kyc';
 };

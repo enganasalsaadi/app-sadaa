@@ -1,0 +1,1 @@
+export { InfluencerKycScreen } from './InfluencerKycScreen';

@@ -6,6 +6,7 @@ import type {
   BrandStep1Response,
   BrandStep2Request,
   BrandOnboardingProgress,
+  BrandProfileResource,
 } from '../store';
 
 // Wizard step ↔ server step: account = server step-1, phone OTP has no server
@@ -27,11 +28,11 @@ export const brandOnboardingApi = baseApi.injectEndpoints({
       },
     }),
     // Re-submitting overwrites the draft profile (back-navigation from KYC).
-    brandStep2Profile: builder.mutation<void, BrandStep2Request>({
+    brandStep2Profile: builder.mutation<BrandProfileResource, BrandStep2Request>({
       query: body => ({ url: '/onboarding/brand/step-2', method: 'POST', body }),
     }),
     // Multipart. Optional: a FormData without `kyc_document` is the skip.
-    brandStep3Kyc: builder.mutation<void, FormData>({
+    brandStep3Kyc: builder.mutation<BrandProfileResource, FormData>({
       query: body => ({ url: '/onboarding/brand/step-3', method: 'POST', body }),
     }),
     // The same resource for every role; the influencer shape is read through

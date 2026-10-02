@@ -23,8 +23,7 @@ export const useBrandWelcomeScreen = () => {
 
   return {
     companyName: progress?.profile.company_name?.trim() || null,
-    isUnderReview:
-      progress?.kyc_status === 'pending' || progress?.has_kyc_document === true,
+    isUnderReview: progress?.kyc_status === 'pending',
     onStart,
   };
 };

@@ -2,11 +2,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { errorCodes, isErrorWithCode, pick, types } from '@react-native-documents/picker';
 import type { BrandWizardStackParamList } from '@/core/navigation';
 import { useWizardHeader } from '@/shared/ui';
-import type { PickedFile } from '@/shared/ui';
-import { formatFileSize } from '@/shared/utils';
 import { useBrandStep3KycMutation } from '../../../api';
 import {
   BRAND_WIZARD_STEPS,
@@ -15,26 +12,37 @@ import {
   KYC_MAX_FILE_BYTES,
 } from '../../../constants/brandOnboarding';
 import { useBrandOnboardingFlow } from '../../../hooks/useBrandOnboardingFlow';
+import { useKycFilePicker } from '../../../hooks/useKycFilePicker';
+import type { KycPickError } from '../../../hooks/useKycFilePicker';
+import {
+  createKycSkipForm,
+  isKycAlreadySubmitted,
+  toFormDataFile,
+} from '../../../utils/kycSubmission';
 
-type PickError = 'size' | 'type' | 'failed';
 type KycAction = 'upload' | 'skip';
 
 const PICK_ERROR_KEY = {
   size: 'auth.brandOnboarding.kyc.errors.size',
   type: 'auth.brandOnboarding.kyc.errors.type',
   failed: 'auth.brandOnboarding.kyc.errors.failed',
-} as const satisfies Record<PickError, string>;
-
-const isAllowedMime = (mime: string | null): mime is string =>
-  !!mime && (KYC_ALLOWED_MIME_TYPES as readonly string[]).includes(mime);
+} as const satisfies Record<KycPickError, string>;
 
 export const useBrandKycScreen = () => {
   const { t } = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<BrandWizardStackParamList, 'BrandKyc'>>();
-  const [document, setDocument] = useState<PickedFile | null>(null);
-  const [pickError, setPickError] = useState<PickError | null>(null);
   const [action, setAction] = useState<KycAction | null>(null);
+  const {
+    file: document,
+    pickError,
+    onPick,
+    onRemove,
+  } = useKycFilePicker({
+    allowedMimeTypes: KYC_ALLOWED_MIME_TYPES,
+    maxBytes: KYC_MAX_FILE_BYTES,
+    fallbackName: t('auth.brandOnboarding.kyc.documentFallbackName'),
+  });
 
   const [uploadKyc] = useBrandStep3KycMutation();
   const { runStep, isBusy, error } = useBrandOnboardingFlow('kyc');
@@ -54,51 +62,22 @@ export const useBrandKycScreen = () => {
     onBack,
   });
 
-  const onPick = useCallback(async () => {
-    setPickError(null);
-    try {
-      const [result] = await pick({ type: [types.pdf, types.images] });
-      if (!result) return;
-      if (!isAllowedMime(result.type)) {
-        setPickError('type');
-        return;
-      }
-      if ((result.size ?? 0) > KYC_MAX_FILE_BYTES) {
-        setPickError('size');
-        return;
-      }
-      setDocument({
-        uri: result.uri,
-        name: result.name ?? t('auth.brandOnboarding.kyc.documentFallbackName'),
-        type: result.type,
-        sizeLabel: result.size ? formatFileSize(result.size) : undefined,
-      });
-    } catch (err) {
-      if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) return;
-      setPickError('failed');
-    }
-  }, [t]);
-
-  const onRemove = useCallback(() => {
-    setDocument(null);
-    setPickError(null);
-  }, []);
-
   const submit = useCallback(
     async (kind: KycAction) => {
       setAction(kind);
-      const formData = new FormData();
+      let formData = createKycSkipForm();
       if (kind === 'upload' && document) {
+        formData = new FormData();
+        formData.append('is_skipped', '0');
         formData.append('kyc_document_type', KYC_DOCUMENT_TYPE);
-        const file: FormDataValue = {
-          uri: document.uri,
-          name: document.name,
-          type: document.type,
-        };
-        formData.append('kyc_document', file);
+        formData.append('kyc_document', toFormDataFile(document));
       }
-      // Skip = same endpoint without a file; the server then completes onboarding.
-      await runStep(() => uploadKyc(formData).unwrap());
+      // Both outcomes complete onboarding. A retry after a timed-out upload
+      // hits kyc_already_*: the document is in, so finish as a skip.
+      await runStep(() => uploadKyc(formData).unwrap(), {
+        resubmit: err =>
+          isKycAlreadySubmitted(err) ? () => uploadKyc(createKycSkipForm()).unwrap() : null,
+      });
       setAction(null);
     },
     [document, runStep, uploadKyc],

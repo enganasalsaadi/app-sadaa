@@ -1,72 +1,39 @@
 import { resolveBrandOnboardingStep } from '../resolveBrandOnboardingStep';
-import type { BrandOnboardingProgress } from '../../store';
 
-const baseProgress: BrandOnboardingProgress = {
-  is_onboarding_complete: false,
-  is_phone_verified: false,
-  current_step: 1,
-  has_kyc_document: false,
-  profile: {},
-};
-
-const fullProfile = { business_type: 'retail_ecommerce', governorate: 'damascus' };
+const base = { is_onboarding_complete: false, is_phone_verified: false, current_step: 1 };
 
 describe('resolveBrandOnboardingStep', () => {
   it('routes to phone verification when the phone is not verified', () => {
-    expect(resolveBrandOnboardingStep(baseProgress)).toBe('phone');
+    expect(resolveBrandOnboardingStep(base)).toBe('phone');
   });
 
-  it('keeps phone first even if a profile already exists', () => {
-    expect(
-      resolveBrandOnboardingStep({ ...baseProgress, profile: fullProfile }),
-    ).toBe('phone');
+  it('keeps phone first even past step 1', () => {
+    expect(resolveBrandOnboardingStep({ ...base, current_step: 2 })).toBe('phone');
   });
 
-  it('routes to profile once the phone is verified but the profile is missing', () => {
-    expect(
-      resolveBrandOnboardingStep({
-        ...baseProgress,
-        is_phone_verified: true,
-        current_step: 2,
-      }),
-    ).toBe('profile');
+  it('routes to profile once the phone is verified (step stays 1)', () => {
+    expect(resolveBrandOnboardingStep({ ...base, is_phone_verified: true })).toBe('profile');
   });
 
-  it.each([
-    [{ business_type: 'retail_ecommerce' }],
-    [{ governorate: 'damascus' }],
-    [{ business_type: null, governorate: 'damascus' }],
-  ])('routes to profile while it is partial: %p', profile => {
+  it.each([2, 3])('routes to kyc from current_step %p', current_step => {
     expect(
-      resolveBrandOnboardingStep({
-        ...baseProgress,
-        is_phone_verified: true,
-        current_step: 3,
-        profile,
-      }),
-    ).toBe('profile');
-  });
-
-  it('routes to kyc once the profile is saved', () => {
-    expect(
-      resolveBrandOnboardingStep({
-        ...baseProgress,
-        is_phone_verified: true,
-        current_step: 3,
-        profile: fullProfile,
-      }),
+      resolveBrandOnboardingStep({ ...base, is_phone_verified: true, current_step }),
     ).toBe('kyc');
   });
 
   it('is complete when the server says so, KYC skipped or not', () => {
     expect(
       resolveBrandOnboardingStep({
-        ...baseProgress,
         is_onboarding_complete: true,
         is_phone_verified: true,
         current_step: 3,
-        profile: fullProfile,
       }),
     ).toBe('complete');
+  });
+
+  it('trusts completion over an unverified phone', () => {
+    expect(resolveBrandOnboardingStep({ ...base, is_onboarding_complete: true })).toBe(
+      'complete',
+    );
   });
 });
