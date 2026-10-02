@@ -21,3 +21,9 @@ export {
   FONT_SCALE_FACTOR,
   FONT_MAX_SCALE_RATIO,
 } from './layout';
+export {
+  FOLLOWER_TIERS,
+  FOLLOWER_TIER_LEVELS,
+  FOLLOWER_TIER_STYLE,
+} from './followerTiers';
+export type { FollowerTierId } from './followerTiers';

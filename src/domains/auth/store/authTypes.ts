@@ -1,3 +1,7 @@
+import type { FollowerTierId } from '@/core/config';
+
+export type { FollowerTierId };
+
 export interface BillingAddress {
   first_name: string;
   last_name: string;
@@ -203,9 +207,7 @@ export interface InfluencerStep1Response {
   is_onboarding_complete: boolean;
 }
 
-/** Mirrors backend FollowerTierEnum, ordered smallest → largest. */
-export const FOLLOWER_TIERS = ['NANO', 'MICRO', 'MID_TIER', 'MACRO', 'MEGA'] as const;
-export type FollowerTierId = (typeof FOLLOWER_TIERS)[number];
+export { FOLLOWER_TIERS } from '@/core/config';
 
 /** Mirrors backend ServiceTypeEnum. */
 export const SERVICE_TYPES = ['reels', 'story', 'post', 'visit'] as const;

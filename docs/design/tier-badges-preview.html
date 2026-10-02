@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sada — Follower Tier Badges (3 options)</title>
+<style>
+  @font-face { font-family: Tajawal; font-weight: 400; src: url(../../scripts/brand/fonts/Tajawal-Regular.ttf); }
+  @font-face { font-family: Tajawal; font-weight: 500; src: url(../../scripts/brand/fonts/Tajawal-Medium.ttf); }
+  @font-face { font-family: Tajawal; font-weight: 700; src: url(../../scripts/brand/fonts/Tajawal-Bold.ttf); }
+  @font-face { font-family: Tajawal; font-weight: 800; src: url(../../scripts/brand/fonts/Tajawal-ExtraBold.ttf); }
+
+  /* Navy Trust tokens (rule 08) */
+  :root {
+    --bg:#F5F7F9; --surface:#FFFFFF; --surface2:#EDF1F4; --border:#DCE3EA;
+    --t1:#0F1D2B; --t2:#475869; --t3:#8394A5; --onAccent:#FFFFFF;
+    --navy:#1C3349; --brandText:#1C3349; --brandSoft:#E6ECF2;
+    --teal:#397D8C; --tealText:#347482; --tealSoft:#E3F0F2;
+    --mustard:#D9B46A; --mustardText:#8A6A24; --mustardSoft:#FBF3E2; --onMustard:#1C3349;
+    --neutral:#667085; --neutralText:#667085; --neutralSoft:#F2F4F7;
+    --hero: linear-gradient(160deg,#1C3349 0%,#27506A 60%,#397D8C 100%);
+    --glassFill: rgba(255,255,255,.15); --glassBorder: rgba(255,255,255,.28);
+    --onBrand:#FFFFFF; --onBrandMuted:#C9D6E0;
+  }
+  [data-theme="dark"] {
+    --bg:#0B1622; --surface:#122131; --surface2:#182B3D; --border:#22384C;
+    --t1:#EAF0F5; --t2:#A5B5C4; --t3:#6C8093; --onAccent:#06121C;
+    --brandText:#EAF0F5; --brandSoft:#16303A;
+    --teal:#6FC0CF; --tealText:#6FC0CF; --tealSoft:#16303A;
+    --mustard:#E6C47E; --mustardText:#E6C47E; --mustardSoft:#2E2716; --onMustard:#2E2716;
+    --neutral:#98A2B3; --neutralText:#98A2B3; --neutralSoft:#1E2A36;
+    --hero: linear-gradient(160deg,#1C3349 0%,#1F4A5C 60%,#2D6B78 100%);
+    --glassFill: rgba(255,255,255,.07); --glassBorder: rgba(255,255,255,.18);
+    --onBrand:#F5F7F9;
+  }
+
+  /* Tier tones: main (icon/fill) · text · soft (bg) · on (glyph on fill) · bd (border) */
+  .tone-NANO     { --m:var(--neutral); --tx:var(--neutralText); --sf:var(--neutralSoft); --on:var(--onAccent); --bd:transparent; }
+  .tone-MICRO    { --m:var(--teal);    --tx:var(--tealText);    --sf:var(--tealSoft);    --on:var(--onAccent); --bd:transparent; }
+  .tone-MID_TIER { --m:var(--brandText); --tx:var(--brandText); --sf:var(--brandSoft);   --on:var(--onAccent); --bd:transparent; }
+  [data-theme="dark"] .tone-MID_TIER { --on:#0B1622; }
+  .tone-MACRO    { --m:var(--mustard); --tx:var(--mustardText); --sf:var(--mustardSoft); --on:var(--onMustard); --bd:transparent; }
+  .tone-MEGA     { --m:var(--mustard); --tx:#F5F7F9; --sf:linear-gradient(135deg,#1C3349,#27506A); --on:var(--mustard); --bd:var(--mustard); }
+
+  /* On navy hero: glass surface, light icon tints */
+  .on-brand .tone-NANO     { --m:#C9D6E0; }
+  .on-brand .tone-MICRO    { --m:#6FC0CF; }
+  .on-brand .tone-MID_TIER { --m:#F5F7F9; --on:#1C3349; }
+  .on-brand .tone-MACRO    { --m:#E6C47E; --on:#1C3349; }
+  .on-brand .tone-MEGA     { --m:#E6C47E; --sf:rgba(230,196,126,.16); --bd:#E6C47E; }
+  .on-brand [class*="tone-"] { --tx:var(--onBrand); --sf-glass:1; }
+  .on-brand .tone-NANO, .on-brand .tone-MICRO, .on-brand .tone-MID_TIER, .on-brand .tone-MACRO { --sf:var(--glassFill); --bd:var(--glassBorder); }
+
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:Tajawal, system-ui, sans-serif; background:var(--bg); color:var(--t1); transition: background .2s; }
+  .toolbar { position:sticky; top:0; z-index:10; display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    padding:12px 24px; background:var(--surface); border-bottom:1px solid var(--border); }
+  .toolbar h1 { font-size:17px; margin:0; margin-inline-end:auto; font-weight:800; color:var(--brandText); }
+  .toolbar a, .toolbar button { font:inherit; font-size:13px; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface); color:var(--t1); text-decoration:none; }
+  .toolbar button.primary { background:var(--navy); color:#fff; border-color:var(--navy); }
+  [data-theme="dark"] .toolbar button.primary { background:#5FAFBF; color:#06121C; border-color:#5FAFBF; }
+
+  main { max-width:1180px; margin:0 auto; padding:24px; }
+  .intro { color:var(--t2); font-size:14px; line-height:1.7; margin:0 0 24px; }
+  .option { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:32px; scroll-margin-top:72px; }
+  .option-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:4px; }
+  .option-head .letter { font-size:13px; font-weight:800; color:var(--onAccent); background:var(--teal); border-radius:999px; width:28px; height:28px; display:grid; place-items:center; }
+  .option-head h2 { margin:0; font-size:22px; font-weight:800; color:var(--brandText); }
+  .option-head .tag { font-size:12px; color:var(--tealText); background:var(--tealSoft); border-radius:4px; padding:3px 8px; font-weight:700; }
+  .option p.desc { margin:4px 0 20px; color:var(--t2); font-size:14px; line-height:1.7; }
+  .grid { display:grid; grid-template-columns: 1.15fr 1fr; gap:20px; }
+  @media (max-width: 900px) { .grid { grid-template-columns:1fr; } }
+  .panel { border:1px solid var(--border); border-radius:12px; padding:16px; background:var(--bg); }
+  .panel h3 { margin:0 0 12px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--t3); font-weight:700; }
+  .scale { display:grid; grid-template-columns: auto repeat(4, auto); gap:12px 16px; align-items:center; justify-content:start; }
+  .scale .hdr { font-size:11px; color:var(--t3); font-weight:700; }
+
+  /* Badge base */
+  .badge { display:inline-flex; align-items:center; gap:.4em; border-radius:999px; background:var(--sf); color:var(--tx);
+    border:1px solid var(--bd); font-weight:700; white-space:nowrap; line-height:1; vertical-align:middle; }
+  .badge svg { flex:none; display:block; }
+  .badge.sm { height:22px; padding-inline:8px; font-size:11px; }
+  .badge.md { height:28px; padding-inline:10px; font-size:13px; }
+  .badge.lg { height:36px; padding-inline:14px; font-size:15px; }
+  .badge.icon { background:none; border:none; padding:0; height:auto; }
+  .tone-MEGA.badge:not(.icon) { box-shadow: 0 1px 0 rgba(230,196,126,.35) inset, 0 2px 8px rgba(28,51,73,.25); }
+  /* Option C: structured tag (radius md) */
+  .opt-C .badge:not(.icon) { border-radius:8px; }
+  .opt-C .badge.sm { border-radius:4px; }
+  /* Option A: crest overlaps the pill start */
+  .opt-A .badge:not(.icon) { padding-inline-start:0; }
+  .opt-A .badge:not(.icon) svg { margin-block:-4px; margin-inline-start:-2px; }
+
+  /* Near-name context */
+  .row { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+  .row + .row { margin-top:8px; }
+  .avatar { width:44px; height:44px; border-radius:999px; background:var(--surface2); display:grid; place-items:center; font-weight:800; color:var(--t2); flex:none; }
+  .name { font-weight:700; font-size:15px; display:flex; align-items:center; gap:6px; }
+  .sub { font-size:12px; color:var(--t2); margin-top:4px; }
+  .price { margin-inline-start:auto; font-weight:700; font-size:14px; font-variant-numeric: tabular-nums; }
+
+  /* Hero */
+  .hero { background:var(--hero); border-radius:12px; padding:20px; color:var(--onBrand); }
+  .hero .top { display:flex; align-items:center; gap:14px; }
+  .hero .avatar { width:64px; height:64px; background:rgba(255,255,255,.15); color:#fff; border:2px solid rgba(255,255,255,.35); font-size:20px; }
+  .hero .hname { font-size:20px; font-weight:800; }
+  .hero .handle { font-size:13px; color:var(--onBrandMuted); margin-top:2px; }
+  .hero .stats { display:flex; gap:24px; margin-top:16px; }
+  .hero .stat b { display:block; font-size:18px; font-variant-numeric: tabular-nums; }
+  .hero .stat span { font-size:12px; color:var(--onBrandMuted); }
+
+  /* Selection sheet */
+  .sheet { background:var(--surface); border-radius:12px 12px 0 0; border:1px solid var(--border); padding:8px 16px 16px; }
+  .grabber { width:36px; height:4px; background:var(--border); border-radius:999px; margin:0 auto 12px; }
+  .sheet .title { font-weight:800; font-size:16px; display:flex; align-items:center; gap:8px; }
+  .sheet .hint { font-size:12px; color:var(--t2); margin:4px 0 12px; }
+  .opt { display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--border); border-radius:8px; min-height:60px; }
+  .opt + .opt { margin-top:8px; }
+  .opt.selected { border-color:var(--teal); background:var(--tealSoft); }
+  .lead { width:44px; height:44px; display:grid; place-items:center; flex:none; border-radius:999px; background:var(--sf); border:1px solid var(--bd); }
+  .opt-A .lead { background:none; border:none; }
+  .opt-C .lead { border-radius:8px; }
+  .opt .ol { font-weight:700; font-size:14px; }
+  .opt .or { font-size:12px; color:var(--t2); margin-top:3px; font-variant-numeric: tabular-nums; }
+  .radio { margin-inline-start:auto; width:22px; height:22px; border-radius:999px; border:2px solid var(--t3); flex:none; }
+  .opt.selected .radio { border-color:var(--teal); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 11px var(--teal); }
+  .opt.selected .radio { background:var(--tealSoft); }
+
+  /* Round 2 — tier gradients (g1 light stop, g2 dark stop, gt text on fill) */
+  .tone-NANO     { --g1:#AEB8C4; --g2:#5D6B7B; --gt:#FFFFFF; }
+  .tone-MICRO    { --g1:#6FC0CF; --g2:#2D6B78; --gt:#FFFFFF; }
+  .tone-MID_TIER { --g1:#3F6386; --g2:#1C3349; --gt:#FFFFFF; }
+  .tone-MACRO    { --g1:#F2D9A0; --g2:#C19A4B; --gt:#1C3349; }
+  .tone-MEGA     { --g1:#27506A; --g2:#1C3349; --gt:#E6C47E; }
+  .round { margin:48px 0 16px; font-size:15px; font-weight:800; color:var(--tealText); display:flex; align-items:center; gap:12px; }
+  .round::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* D / E: elevated surface pill, emblem overlaps the start edge */
+  .opt-D .badge:not(.icon), .opt-E .badge:not(.icon) { background:var(--surface); border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(15,29,43,.10); padding-inline-start:0; }
+  .opt-D .badge:not(.icon) svg, .opt-E .badge:not(.icon) svg { margin-block:-5px; margin-inline-start:-4px; filter:drop-shadow(0 1px 1.5px rgba(15,29,43,.25)); }
+  .opt-D .tone-MEGA.badge:not(.icon), .opt-E .tone-MEGA.badge:not(.icon) { border-color:var(--mustard); color:var(--mustardText); }
+  .opt-D .on-brand .badge:not(.icon), .opt-E .on-brand .badge:not(.icon) { background:var(--glassFill); border-color:var(--glassBorder); box-shadow:none; color:var(--onBrand); }
+  .opt-D .on-brand .tone-MEGA.badge:not(.icon), .opt-E .on-brand .tone-MEGA.badge:not(.icon) { border-color:#E6C47E; color:#E6C47E; }
+  .opt-D .lead, .opt-E .lead { background:none; border:none; }
+
+  /* F: split reach chip [threshold | label] */
+  .chip { display:inline-flex; align-items:stretch; border-radius:8px; overflow:hidden; border:1px solid var(--border);
+    background:var(--surface); font-weight:700; white-space:nowrap; vertical-align:middle; line-height:1; }
+  .chip .lvl { background:linear-gradient(135deg,var(--g1),var(--g2)); color:var(--gt); display:flex; align-items:center; gap:3px;
+    padding-inline:8px; font-weight:800; font-variant-numeric:tabular-nums; direction:ltr; box-shadow:inset 0 1px 0 rgba(255,255,255,.25); }
+  .chip .lbl { display:flex; align-items:center; padding-inline:8px; color:var(--tx); }
+  .chip.sm { height:22px; font-size:11px; border-radius:4px; }
+  .chip.md { height:28px; font-size:13px; }
+  .chip.lg { height:36px; font-size:15px; }
+  .chip.lg .lvl { padding-inline:12px; } .chip.lg .lbl { padding-inline:12px; }
+  .chip.xs { height:18px; font-size:10px; border-radius:4px; border:none; }
+  .chip.xs .lvl { padding-inline:5px; }
+  .chip.tone-MEGA { border-color:var(--mustard); }
+  .chip.tone-MEGA .lbl { color:var(--mustardText); }
+  .chip.tone-MEGA .lvl { box-shadow:inset 0 0 0 1px rgba(230,196,126,.6); }
+  .on-brand .chip { background:var(--glassFill); border-color:var(--glassBorder); }
+  .on-brand .chip .lbl { color:var(--onBrand); }
+  .on-brand .chip.tone-MEGA { border-color:#E6C47E; } .on-brand .chip.tone-MEGA .lbl { color:#E6C47E; }
+  .lead.fl { border-radius:8px; border:none; background:linear-gradient(135deg,var(--g1),var(--g2)); color:var(--gt);
+    font-weight:800; font-size:12px; direction:ltr; box-shadow:inset 0 1px 0 rgba(255,255,255,.25); }
+  .lead.fl.tone-MEGA { box-shadow:inset 0 0 0 1.5px #E6C47E; }
+
+  .notes { margin:16px 0 0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px; }
+  .notes li { font-size:13px; color:var(--t2); background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; line-height:1.6; }
+  .notes b { color:var(--t1); }
+</style>
+</head>
+<body data-theme="light">
+<div class="toolbar">
+  <h1 data-i="title"></h1>
+  <a href="#A">A</a><a href="#B">B</a><a href="#C">C</a><a href="#D">D</a><a href="#E">E</a><a href="#F">F</a>
+  <button id="theme" class="primary"></button>
+  <button id="lang"></button>
+</div>
+<main>
+  <p class="intro" data-i="intro"></p>
+  <div id="options"></div>
+</main>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="megaHex" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#27506A" /><stop offset="1" stop-color="#1C3349" />
+    </linearGradient>
+    <linearGradient id="g-NANO" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C3CDD7"/><stop offset="1" stop-color="#5D6B7B"/></linearGradient>
+    <linearGradient id="g-MICRO" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FD3DF"/><stop offset="1" stop-color="#2D6B78"/></linearGradient>
+    <linearGradient id="g-MID_TIER" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A6F93"/><stop offset="1" stop-color="#1C3349"/></linearGradient>
+    <linearGradient id="g-MACRO" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E3B4"/><stop offset=".55" stop-color="#D9B46A"/><stop offset="1" stop-color="#A9823A"/></linearGradient>
+    <linearGradient id="g-MEGA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1C3349"/><stop offset=".55" stop-color="#397D8C"/><stop offset="1" stop-color="#D9B46A"/></linearGradient>
+    <linearGradient id="g-MEGA-coin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34597A"/><stop offset="1" stop-color="#0F1D2B"/></linearGradient>
+  </defs>
+</svg>
+
+<script>
+const TIERS = {
+  NANO:     { ar:'نانو',   en:'Nano',     range:'1,000 - 10,000' },
+  MICRO:    { ar:'مايكرو', en:'Micro',    range:'10,000 - 100,000' },
+  MID_TIER: { ar:'متوسط',  en:'Mid-tier', range:'100,000 - 500,000' },
+  MACRO:    { ar:'ماكرو',  en:'Macro',    range:'500,000 - 1,000,000' },
+  MEGA:     { ar:'ميجا',   en:'Mega',     range:'+1,000,000' },
+};
+const KEYS = Object.keys(TIERS);
+
+const STR = {
+  ar: {
+    title:'شارات فئات المؤثرين — 6 خيارات', dark:'الوضع الداكن', light:'الوضع الفاتح', lang:'English',
+    intro:'كل خيار معروض في 4 سياقات: سلّم الأحجام، بجانب الاسم، الهيدر الكحلي، ونافذة اختيار الفئة لكل منصة. الألوان من Navy Trust فقط (بدون ألوان جديدة، والنعناعي ممنوع لأنه للمال فقط). الفئة لا تُعرف باللون وحده: الشكل يتدرّج أيضاً.',
+    scale:'سلّم الأحجام', nearName:'بجانب الاسم', hero:'الهيدر (على الكحلي)', modal:'نافذة الاختيار',
+    iconOnly:'أيقونة', followers:'متابع', pick:'فئة متابعيك على Instagram', pickHint:'اختر النطاق الأقرب لعدد متابعيك الحالي',
+    engagement:'التفاعل', followersStat:'المتابعون', deals:'صفقة', city:'دمشق', city2:'حلب', city3:'حمص',
+    A:{ name:'الشعار (Crest)', tag:'فخم · ترتيب رتب', desc:'سداسي مملوء بلون الفئة + رمز رتبة: شيفرون ×1/×2/×3 ثم نجمة ثم تاج. إحساس "رتبة/إنجاز" قوي، مقروء جداً على الكحلي. الأثقل بصرياً.' },
+    B:{ name:'الصدى (Echo)', tag:'موصى به · من الشعار', desc:'مستوحى مباشرة من شعار «صدى»: نقطة + أقواس صدى. كل فئة تضيف قوساً (1←5)، والأقواس غير المكتسبة تظهر خافتة فيُقرأ التقدّم. الأكثر ارتباطاً بالهوية.' },
+    C:{ name:'الإشارة (Signal)', tag:'هادئ · للقوائم الكثيفة', desc:'وسم مستطيل (زوايا 8) + 5 أعمدة إشارة تصاعدية = قوة الوصول. الأهدأ والأكثر "سوق منظّم"، ممتاز في الجداول وبطاقات المقارنة.' },
+    round1:'الجولة 1', round2:'الجولة 2 — خيارات جديدة',
+    D:{ name:'الجوهرة (Gem)', tag:'فاخر · لامع', desc:'جوهرة مقطّعة بتدرّج لوني وأوجه لامعة؛ كلما كبرت الفئة زادت الأوجه: مثلث ← معيّن ← سداسي ← ثماني ← ماسة كاملة ببريق. ميجا = تدرّج الهوية كحلي ← تركوازي ← ذهبي.' },
+    E:{ name:'الميدالية (Medal)', tag:'إنجاز · مستوى رقمي', desc:'عملة معدنية بشريطين ورقم المستوى 1–5 في الوسط. ماكرو يحصل على غصن غار، وميجا عملة كحلية بإطار ذهبي وغار كامل ونجمة. مفهومة فوراً لأي مستخدم.' },
+    F:{ name:'شريحة الوصول (Reach chip)', tag:'عملي · يعرض الأرقام', desc:'وسم مقسوم: جزء متدرّج يعرض الحد الأدنى للمتابعين (10K+) + اسم الفئة. العلامة التجارية ترى حجم الجمهور مباشرة دون حفظ أسماء الفئات. وضع الأيقونة يعرض الرقم فقط.' },
+    notes:{
+      color:'<b>الألوان:</b> نانو رمادي · مايكرو تركوازي · متوسط كحلي · ماكرو خردلي · ميجا كحلي + حدّ خردلي (الخردلي = تميّز/ترتيب حسب القاعدة 08).',
+      a11y:'<b>الوصول:</b> الشكل يتغيّر مع الفئة (ليس اللون فقط)، والنص بدرجات .text (≥ 4.5:1).',
+      api:'<b>البيانات:</b> نعتمد مفتاح الفئة (NANO…) من /lookups ونعرض الاسم القصير من i18n؛ النطاق من الخادم.',
+      grad:'<b>تقنياً:</b> التدرّجات تحتاج توكن جديد <code>gradients.tier.*</code> (فاتح + داكن)، وتُرسم بـ react-native-svg.',
+    },
+  },
+  en: {
+    title:'Influencer tier badges — 6 options', dark:'Dark mode', light:'Light mode', lang:'العربية',
+    intro:'Each option is shown in 4 contexts: size scale, next to a name, navy hero header, and the per-network tier picker. Navy Trust colors only (no new hues; mint is banned — it means money). Tier is never color-only: the shape escalates too.',
+    scale:'Size scale', nearName:'Next to name', hero:'Hero header (on navy)', modal:'Selection sheet',
+    iconOnly:'Icon', followers:'followers', pick:'Your Instagram follower tier', pickHint:'Pick the range closest to your current follower count',
+    engagement:'Engagement', followersStat:'Followers', deals:'deals', city:'Damascus', city2:'Aleppo', city3:'Homs',
+    A:{ name:'Crest', tag:'Premium · rank insignia', desc:'Hexagon filled in the tier color + rank glyph: chevron ×1/×2/×3, then star, then crown. Strong "rank/achievement" feel, very legible on navy. Visually the heaviest.' },
+    B:{ name:'Echo', tag:'Recommended · from the logo', desc:'Taken straight from the «صدى» logo: dot + echo arcs. Each tier adds an arc (1→5); unearned arcs stay faint so progress reads at a glance. The most on-brand.' },
+    C:{ name:'Signal', tag:'Calm · dense lists', desc:'Rectangular tag (radius 8) + 5 rising signal bars = reach strength. The quietest, most "structured marketplace" look; great in tables and compare cards.' },
+    round1:'Round 1', round2:'Round 2 — new options',
+    D:{ name:'Gem', tag:'Luxury · glossy', desc:'A cut gem with gradient and glossy facets; more facets as the tier grows: triangle → rhombus → hexagon → octagon → full brilliant with sparkle. Mega = the brand gradient navy → teal → gold.' },
+    E:{ name:'Medal', tag:'Achievement · numbered level', desc:'A metal coin with ribbons and the level 1–5 in the center. Macro earns laurel sprigs; Mega is a navy coin with a gold rim, full laurel and a star. Instantly understood by anyone.' },
+    F:{ name:'Reach chip', tag:'Practical · shows numbers', desc:'Split tag: a gradient segment with the follower floor (10K+) + the tier name. Brands read audience size directly without learning tier names. Icon mode shows the number only.' },
+    notes:{
+      color:'<b>Colors:</b> Nano slate · Micro teal · Mid navy · Macro mustard · Mega navy + mustard edge (mustard = distinction/rankings per rule 08).',
+      a11y:'<b>A11y:</b> shape changes with the tier (not color only); labels use .text shades (≥ 4.5:1).',
+      api:'<b>Data:</b> key off the tier code (NANO…) from /lookups, show the short name from i18n; range comes from the server.',
+      grad:'<b>Tech:</b> gradients need a new <code>gradients.tier.*</code> token (light + dark), drawn with react-native-svg.',
+    },
+  },
+};
+
+let lang = 'ar';
+const t = k => k.split('.').reduce((o, p) => o[p], STR[lang]);
+
+/* ---------- Icons ---------- */
+const HEX = '16,2.5 27.7,9.25 27.7,22.75 16,29.5 4.3,22.75 4.3,9.25';
+const GLYPH = {
+  NANO:     '<path d="M7 14.5l5-5 5 5"/>',
+  MICRO:    '<path d="M7 11l5-5 5 5M7 17l5-5 5 5"/>',
+  MID_TIER: '<path d="M7.5 8.5l4.5-4 4.5 4M7.5 13.5l4.5-4 4.5 4M7.5 18.5l4.5-4 4.5 4"/>',
+  MACRO:    '<path fill="var(--on)" stroke-width="1.2" d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+  MEGA:     '<path fill="var(--on)" stroke-width="1.2" d="M4 8l3.5 3.2L12 5l4.5 6.2L20 8l-1.6 9H5.6z"/><path d="M6 19.8h12"/>',
+};
+function crest(tier, px) {
+  const mega = tier === 'MEGA';
+  return `<svg width="${px}" height="${px}" viewBox="0 0 32 32" aria-hidden="true">
+    <polygon points="${HEX}" fill="${mega ? 'url(#megaHex)' : 'var(--m)'}" stroke="${mega ? 'var(--m)' : 'var(--m)'}" stroke-width="${mega ? 1.8 : 3}" stroke-linejoin="round"/>
+    <g transform="translate(6.4 6.6) scale(.8)" fill="none" stroke="var(--on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${GLYPH[tier]}</g>
+  </svg>`;
+}
+function echo(tier, px) {
+  const n = KEYS.indexOf(tier) + 1, cx = 7, cy = 16, a = 42 * Math.PI / 180;
+  let arcs = '';
+  for (let i = 1; i <= 5; i++) {
+    const r = 2 + i * 4.1, x = cx + r * Math.cos(a), dy = r * Math.sin(a);
+    const op = i <= n ? (0.5 + 0.5 * (i / n)).toFixed(2) : 0.16;
+    arcs += `<path d="M${x.toFixed(2)} ${(cy - dy).toFixed(2)}A${r} ${r} 0 0 1 ${x.toFixed(2)} ${(cy + dy).toFixed(2)}" stroke="var(--m)" stroke-opacity="${op}" stroke-width="2.3" stroke-linecap="round" fill="none"/>`;
+  }
+  return `<svg width="${px}" height="${px}" viewBox="0 0 32 32" aria-hidden="true">${arcs}<circle cx="${cx}" cy="${cy}" r="3.3" fill="var(--m)"/></svg>`;
+}
+function signal(tier, px) {
+  const n = KEYS.indexOf(tier) + 1;
+  let bars = '';
+  for (let i = 0; i < 5; i++) {
+    const h = 4 + i * 2.6, x = 1 + i * 3.8;
+    bars += `<rect x="${x}" y="${16 - h}" width="2.6" height="${h}" rx="1" fill="var(--m)" fill-opacity="${i < n ? 1 : 0.2}"/>`;
+  }
+  return `<svg width="${px * 1.2}" height="${px}" viewBox="0 0 20 16.5" aria-hidden="true">${bars}</svg>`;
+}
+/* D — faceted gem: facet count grows with the tier */
+const ring = (n, r, rot, cx = 16, cy = 16) => Array.from({ length: n }, (_, i) => {
+  const a = (rot + i * 360 / n) * Math.PI / 180; return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+});
+const GEMS = {
+  NANO:     { pts: [[16,4],[28.5,26],[3.5,26]], c: [16,18.5] },
+  MICRO:    { pts: [[16,2.5],[28.5,16],[16,29.5],[3.5,16]], c: [16,16] },
+  MID_TIER: { pts: ring(6, 13.5, -90), c: [16,16] },
+  MACRO:    { pts: ring(8, 13.5, -67.5), c: [16,16] },
+  MEGA:     { pts: [[9,5],[23,5],[29.5,12],[16,29],[2.5,12]], c: [16,12], sparkle: true },
+};
+const FACET = [.42, .14, -.14, .06, .28, -.08, .2, .1];
+function gem(tier, px) {
+  const { pts, c, sparkle } = GEMS[tier], P = p => p.map(v => v.toFixed(2)).join(',');
+  const facets = pts.map((p, i) => {
+    const q = pts[(i + 1) % pts.length], o = FACET[i % FACET.length];
+    return `<polygon points="${P(c)} ${P(p)} ${P(q)}" fill="${o >= 0 ? '#FFFFFF' : '#0B1622'}" fill-opacity="${Math.abs(o)}"/>`;
+  }).join('');
+  const table = pts.map(p => [c[0] + (p[0] - c[0]) * .42, c[1] + (p[1] - c[1]) * .42]).map(P).join(' ');
+  const star = sparkle ? `<path d="M27 1.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#E6C47E"/><path d="M4.5 22l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6z" fill="#E6C47E"/>` : '';
+  return `<svg width="${px}" height="${px}" viewBox="0 0 32 32" aria-hidden="true">
+    <polygon points="${pts.map(P).join(' ')}" fill="url(#g-${tier})" stroke="url(#g-${tier})" stroke-width="1.5" stroke-linejoin="round"/>
+    ${facets}<polygon points="${table}" fill="#FFFFFF" fill-opacity=".3"/>
+    <polygon points="${pts.map(P).join(' ')}" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width=".7" stroke-linejoin="round"/>${star}</svg>`;
+}
+
+/* E — medal: numbered coin + ribbons, laurel for the top tiers */
+const RIBBON = { NANO:'#475869', MICRO:'#2D6B78', MID_TIER:'#1C3349', MACRO:'#1C3349', MEGA:'#D9B46A' };
+function laurel(side, count) {
+  let s = '';
+  for (let i = 0; i < count; i++) {
+    const deg = side * (100 + i * 22) + (side < 0 ? 180 : 0), a = deg * Math.PI / 180;
+    const x = 16 + 13.2 * Math.cos(a), y = 13 + 13.2 * Math.sin(a);
+    s += `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="2.1" ry=".95" transform="rotate(${(deg + 90).toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})" fill="#D9B46A"/>`;
+  }
+  return s;
+}
+function medal(tier, px) {
+  const lvl = KEYS.indexOf(tier) + 1, mega = tier === 'MEGA', top = tier === 'MACRO' || mega;
+  const r = top ? 9.6 : 10.8, rb = RIBBON[tier];
+  const leaves = top ? laurel(1, mega ? 5 : 3) + laurel(-1, mega ? 5 : 3) : '';
+  const numColor = tier === 'MACRO' ? '#1C3349' : mega ? '#E6C47E' : '#FFFFFF';
+  return `<svg width="${px}" height="${px}" viewBox="0 0 32 32" aria-hidden="true">
+    <polygon points="11,19 8,31 11.5,29 14,31.5 15.5,21" fill="${rb}"/><polygon points="21,19 24,31 20.5,29 18,31.5 16.5,21" fill="${rb}" fill-opacity=".8"/>
+    ${leaves}
+    <circle cx="16" cy="13" r="${r}" fill="url(#${mega ? 'g-MEGA-coin' : 'g-' + tier})" stroke="${mega ? '#E6C47E' : '#FFFFFF'}" stroke-opacity="${mega ? 1 : .55}" stroke-width="${mega ? 1.6 : .8}"/>
+    <circle cx="16" cy="13" r="${r - 2.3}" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width=".7"/>
+    <path d="M${16 - r + 2} ${13 - 2} A${r - 2} ${r - 2} 0 0 1 ${16 + 1} ${13 - r + 2}" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+    ${mega ? '<path d="M16 -0.5l1.1 2.2 2.4.35-1.75 1.7.4 2.4L16 5l-2.15 1.15.4-2.4-1.75-1.7 2.4-.35z" fill="#E6C47E"/>' : ''}
+    <text x="16" y="16.6" text-anchor="middle" font-family="Tajawal" font-weight="800" font-size="10.5" fill="${numColor}">${lvl}</text></svg>`;
+}
+
+/* F — reach chip threshold */
+const FLOOR = { NANO:'1K+', MICRO:'10K+', MID_TIER:'100K+', MACRO:'500K+', MEGA:'1M+' };
+
+const ICON = { A: crest, B: echo, C: signal, D: gem, E: medal };
+const ICON_PX = { A: { xs:16, sm:22, md:30, lg:40, lead:40 }, B: { xs:16, sm:16, md:20, lg:24, lead:28 }, C: { xs:13, sm:11, md:13, lg:16, lead:20 },
+  D: { xs:18, sm:26, md:34, lg:44, lead:42 }, E: { xs:18, sm:26, md:34, lg:44, lead:44 } };
+
+function lead(opt, k) {
+  if (opt === 'F') return `<span class="lead fl tone-${k}">${FLOOR[k]}</span>`;
+  return `<span class="lead tone-${k}">${ICON[opt](k, ICON_PX[opt].lead)}</span>`;
+}
+
+function badge(opt, tier, size) {
+  const label = TIERS[tier][lang];
+  if (opt === 'F') {
+    const lvl = `<span class="lvl">${FLOOR[tier]}</span>`;
+    return size === 'xs'
+      ? `<span class="chip xs tone-${tier}" role="img" aria-label="${label}">${lvl}</span>`
+      : `<span class="chip ${size} tone-${tier}">${lvl}<span class="lbl">${label}</span></span>`;
+  }
+  if (size === 'xs') return `<span class="badge icon tone-${tier}" role="img" aria-label="${label}">${ICON[opt](tier, ICON_PX[opt].xs)}</span>`;
+  return `<span class="badge ${size} tone-${tier}">${ICON[opt](tier, ICON_PX[opt][size])}<span>${label}</span></span>`;
+}
+
+/* ---------- Contexts ---------- */
+function scale(opt) {
+  const head = `<span></span><span class="hdr">${t('iconOnly')}</span><span class="hdr">sm</span><span class="hdr">md</span><span class="hdr">lg</span>`;
+  const rows = KEYS.map(k => `<span class="hdr">${k}</span>${['xs','sm','md','lg'].map(s => `<span>${badge(opt, k, s)}</span>`).join('')}`).join('');
+  return `<div class="scale">${head}${rows}</div>`;
+}
+function nearName(opt) {
+  const people = [
+    { n: lang === 'ar' ? 'ليان الحسن' : 'Layan Alhassan', h:'@layan.style', c:t('city'), tier:'MACRO', p:'$450' },
+    { n: lang === 'ar' ? 'عمر الخطيب' : 'Omar Alkhatib', h:'@omar.eats', c:t('city2'), tier:'MICRO', p:'$120' },
+    { n: lang === 'ar' ? 'سارة يوسف' : 'Sara Youssef', h:'@sara.fit', c:t('city3'), tier:'MEGA', p:'$1,800' },
+  ];
+  const compact = people.map(x => `<div class="row"><div class="avatar">${x.n[0]}</div><div>
+      <div class="name">${x.n} ${badge(opt, x.tier, 'xs')}</div><div class="sub">${x.h} · ${x.c}</div></div>
+      <div class="price">${x.p}</div></div>`).join('');
+  const labelled = `<div class="row"><div class="avatar">${people[1].n[0]}</div><div>
+      <div class="name">${people[1].n}</div><div class="sub" style="display:flex;gap:6px;align-items:center">${badge(opt, 'NANO', 'sm')} ${badge(opt, 'MID_TIER', 'sm')} · 24 ${t('deals')}</div></div></div>`;
+  return compact + labelled;
+}
+function hero(opt, tier) {
+  return `<div class="hero on-brand"><div class="top"><div class="avatar">${lang === 'ar' ? 'ل' : 'L'}</div><div>
+      <div class="hname">${lang === 'ar' ? 'ليان الحسن' : 'Layan Alhassan'}</div><div class="handle">@layan.style · ${t('city')}</div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">${badge(opt, tier, 'lg')}</div></div></div>
+    <div class="stats"><div class="stat"><b>248K</b><span>${t('followersStat')}</span></div><div class="stat"><b>5.2%</b><span>${t('engagement')}</span></div><div class="stat"><b>31</b><span>${t('deals')}</span></div></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">${KEYS.map(k => badge(opt, k, 'md')).join('')}</div></div>`;
+}
+function sheet(opt) {
+  const rows = KEYS.map((k, i) => `<div class="opt ${i === 2 ? 'selected' : ''}">${lead(opt, k)}
+      <div><div class="ol">${TIERS[k][lang]}</div><div class="or">${TIERS[k].range} ${t('followers')}</div></div><span class="radio"></span></div>`).join('');
+  return `<div class="sheet"><div class="grabber"></div><div class="title">${t('pick')}</div><div class="hint">${t('pickHint')}</div>${rows}</div>`;
+}
+
+function render() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
+  const dark = document.body.dataset.theme === 'dark';
+  document.getElementById('theme').textContent = dark ? t('light') : t('dark');
+  document.getElementById('lang').textContent = t('lang');
+  const heroTier = { A: 'MACRO', B: 'MACRO', C: 'MACRO', D: 'MEGA', E: 'MEGA', F: 'MACRO' };
+  const round = o => o === 'A' ? `<div class="round">${t('round1')}</div>` : o === 'D' ? `<div class="round" id="round2">${t('round2')}</div>` : '';
+  document.getElementById('options').innerHTML = ['D','E','F','A','B','C'].map(o => `${round(o)}
+    <section class="option opt-${o}" id="${o}">
+      <div class="option-head"><span class="letter">${o}</span><h2>${t(o + '.name')}</h2><span class="tag">${t(o + '.tag')}</span></div>
+      <p class="desc">${t(o + '.desc')}</p>
+      <div class="grid">
+        <div style="display:grid;gap:20px">
+          <div class="panel"><h3>${t('scale')}</h3>${scale(o)}</div>
+          <div class="panel"><h3>${t('hero')}</h3>${hero(o, heroTier[o])}</div>
+        </div>
+        <div style="display:grid;gap:20px;align-content:start">
+          <div class="panel"><h3>${t('nearName')}</h3>${nearName(o)}</div>
+          <div class="panel"><h3>${t('modal')}</h3>${sheet(o)}</div>
+        </div>
+      </div>
+      <ul class="notes"><li>${t('notes.color')}</li><li>${t('notes.a11y')}</li><li>${t('notes.api')}</li>${'DEF'.includes(o) ? `<li>${t('notes.grad')}</li>` : ''}</ul>
+    </section>`).join('');
+}
+document.getElementById('theme').onclick = () => { document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark'; render(); };
+document.getElementById('lang').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; render(); };
+render();
+</script>
+</body>
+</html>

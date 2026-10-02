@@ -31,6 +31,7 @@ import { TabsDemo } from '../demos/TabsDemo';
 import { SelectionControlsDemo } from '../demos/SelectionControlsDemo';
 import { SearchBarDemo } from '../demos/SearchBarDemo';
 import { BadgesDemo } from '../demos/BadgesDemo';
+import { TierBadgeDemo } from '../demos/TierBadgeDemo';
 import { StructureDemo } from '../demos/StructureDemo';
 import { ProgressBarDemo } from '../demos/ProgressBarDemo';
 import { AccordionDemo } from '../demos/AccordionDemo';
@@ -86,6 +87,7 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   selectionControls: SelectionControlsDemo,
   searchBar: SearchBarDemo,
   badges: BadgesDemo,
+  tierBadge: TierBadgeDemo,
   structure: StructureDemo,
   progressBar: ProgressBarDemo,
   accordion: AccordionDemo,

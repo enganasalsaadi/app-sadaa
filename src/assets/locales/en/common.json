@@ -648,6 +648,7 @@
       "selectionControls": "Switch, checkbox & radio",
       "searchBar": "Search bar",
       "badges": "Badges, pills & tags",
+      "tierBadge": "Follower tier badge",
       "structure": "Headers, dividers & key/value",
       "progressBar": "Progress bar",
       "accordion": "Accordion",
@@ -1006,6 +1007,12 @@
       "underReview": "Under review",
       "noTags": "No tags"
     },
+    "tierBadge": {
+      "iconTitle": "Icon",
+      "scaleTitle": "Size scale",
+      "sheetTitle": "Selection sheet",
+      "openSheet": "Open follower tier sheet"
+    },
     "structure": {
       "sectionTitle": "Open campaigns",
       "sectionSubtitle": "Matched to your niche",
@@ -1158,6 +1165,24 @@
       "nicheTech": "Tech",
       "cityDamascus": "Damascus",
       "cityAleppo": "Aleppo"
+    }
+  },
+  "followerTier": {
+    "NANO": "Nano",
+    "MICRO": "Micro",
+    "MID_TIER": "Mid-tier",
+    "MACRO": "Macro",
+    "MEGA": "Mega",
+    "sheet": {
+      "title": "Follower tiers",
+      "subtitle": "Tap a creator's tier badge anytime to see what it means."
+    },
+    "descriptions": {
+      "NANO": "An emerging creator building their first audience.",
+      "MICRO": "A creator with an active, highly engaged audience.",
+      "MID_TIER": "A trusted creator with broad reach.",
+      "MACRO": "Wide-reaching influence within their niche.",
+      "MEGA": "The platform's highest reach and influence."
     }
   }
 }

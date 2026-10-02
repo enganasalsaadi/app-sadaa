@@ -1,7 +1,5 @@
 import type { CurrencyCode } from '@/core/money';
-import type { HueTone } from '@/core/theme';
 import type { InfluencerWizardStackParamList } from '@/core/navigation';
-import type { FollowerTierId } from '../store';
 import type { InfluencerOnboardingStep } from '../utils/resolveInfluencerOnboardingStep';
 import type { WizardStepDef } from './wizard';
 
@@ -48,17 +46,4 @@ export const RATE_CURRENCY = 'USD' satisfies CurrencyCode;
 /** Sanity ceiling per service, catches a slipped zero (5000 for 50). */
 export const RATE_MAX_USD_MINOR = 50_000 * 100;
 
-/**
- * Tier ladder inside the brand palette (rule 08): neutral → teal → navy,
- * with mustard kept for MEGA, the only "top creator" tier. `level` fills
- * that many echo arcs so tiers never differ by color alone.
- */
-export const FOLLOWER_TIER_STYLE = {
-  NANO: { tone: 'neutral', level: 1 },
-  MICRO: { tone: 'interactive', level: 2 },
-  MID_TIER: { tone: 'interactive', level: 3 },
-  MACRO: { tone: 'brand', level: 4 },
-  MEGA: { tone: 'premium', level: 5 },
-} as const satisfies Record<FollowerTierId, { tone: HueTone; level: number }>;
-
-export const FOLLOWER_TIER_LEVELS = 5;
+export { FOLLOWER_TIER_STYLE, FOLLOWER_TIER_LEVELS } from '@/core/config';

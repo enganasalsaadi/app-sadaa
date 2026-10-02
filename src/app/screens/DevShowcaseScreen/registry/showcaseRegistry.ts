@@ -187,6 +187,11 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.badges',
     covers: ['Badge', 'StatusPill', 'Tag'],
   },
+  tierBadge: {
+    category: 'display',
+    titleKey: 'devShowcase.sections.tierBadge',
+    covers: ['TierBadge', 'TierInfoSheet'],
+  },
   structure: {
     category: 'display',
     titleKey: 'devShowcase.sections.structure',

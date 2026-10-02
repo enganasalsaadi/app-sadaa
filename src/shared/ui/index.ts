@@ -123,6 +123,8 @@ export { StatusPill } from './StatusPill';
 export type { StatusPillProps, StatusPillSize } from './StatusPill';
 export { Tag } from './Tag';
 export type { TagProps, TagTone } from './Tag';
+export { TierBadge, TierInfoSheet } from './TierBadge';
+export type { TierBadgeProps, TierBadgeSize, TierInfoSheetProps } from './TierBadge';
 export { EmptyState, ErrorState } from './EmptyState';
 export type {
   EmptyStateProps,
