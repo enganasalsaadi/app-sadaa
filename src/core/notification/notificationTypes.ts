@@ -21,10 +21,6 @@ export type NotificationRouteHandler = (
 
 export type NotificationRouteMap = Record<string, NotificationRouteHandler>;
 
-export interface NotificationInitOptions {
-  requestPermissionOnInit?: boolean;
-}
-
 export interface NotificationTokenListener {
   (token: string): void;
 }
@@ -33,8 +29,10 @@ export type NotifeeForegroundEvent = Event & { type: EventType };
 
 export type RemoteMessage = FirebaseMessagingTypes.RemoteMessage;
 
-export interface RegisterFcmTokenPayload {
-  device_token: string;
+/** `POST /user/devices` (contract §11.1); language travels as `Accept-Language`. */
+export interface RegisterDevicePayload {
+  token: string;
   platform: 'android' | 'ios';
   device_id: string;
+  app_version: string;
 }

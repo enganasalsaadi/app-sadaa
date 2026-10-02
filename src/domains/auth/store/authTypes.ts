@@ -98,7 +98,7 @@ export interface AuthResult {
 
 export type LoginResponse = AuthResult;
 
-export type { RegisterFcmTokenPayload } from '@/core/notification/notificationTypes';
+export type { RegisterDevicePayload } from '@/core/notification';
 
 // Forgot Password (phone OTP wizard): POST /auth/forgot-password.
 // Always returns 200 with the same message regardless of whether the phone
@@ -121,8 +121,9 @@ export interface ResetPasswordRequest {
   password_confirmation: string;
 }
 
+// POST /auth/logout (contract §15.13): the FCM token this device stops receiving on.
 export interface LogoutRequest {
-  device_token?: string;
+  fcm_token?: string;
 }
 
 // Update profile: POST /account/profile — only name + phone (email read-only).

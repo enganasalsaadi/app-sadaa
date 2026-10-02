@@ -18,7 +18,7 @@ import { navigationRef, navigate } from '@/core/navigation';
 import { useAppBootstrap, useSlowBoot } from '@/app/bootstrap';
 import { useNetworkMonitor } from '@/core/hooks';
 import { useNotification } from '@/core/hooks';
-import { useFcmNotificationToken } from '@/domains/auth';
+import { useDeviceRegistration } from '@/domains/auth';
 import { useGetProfileQuery } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
@@ -31,8 +31,8 @@ const AppContent: React.FC = () => {
   const { isReady, status, config: appConfig, completeOnboarding } = useAppBootstrap();
   const isSlowBoot = useSlowBoot(isReady);
   const { initialize, setNavigate } = useNotification();
-  const { registerToken } = useFcmNotificationToken();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  useDeviceRegistration(isAuthenticated);
   useNetworkMonitor();
   useGetProfileQuery(undefined, { skip: !isAuthenticated });
 
@@ -51,10 +51,8 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     setNavigate(navigate);
-    initialize({ requestPermissionOnInit: false })
-      .then(() => registerToken())
-      .catch(() => undefined);
-  }, [initialize, setNavigate, registerToken]);
+    initialize().catch(() => undefined);
+  }, [initialize, setNavigate]);
 
   if (!isReady) {
     return isSlowBoot ? <BootScreen /> : null;

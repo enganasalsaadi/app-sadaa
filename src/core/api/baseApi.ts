@@ -98,7 +98,7 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       if (authStorage.getToken() && !isHandlingSessionExpiry) {
         isHandlingSessionExpiry = true;
         try {
-          await authStorage.clearTokens();
+          await authStorage.clearSession();
           api.dispatch({ type: 'auth/clearCredentials' });
           api.dispatch(baseApi.util.resetApiState());
           navigate('Login');

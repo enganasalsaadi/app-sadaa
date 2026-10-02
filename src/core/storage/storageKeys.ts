@@ -16,6 +16,8 @@ export const StorageKeys = {
   APP_CONFIG_CACHE: 'app.config_cache',
   UPDATE_PROMPTED_VERSION: 'app.update_prompted_version',
   INFLUENCER_SOCIALS_DRAFT: 'auth.influencer_socials_draft',
+  PUSH_DEVICE_SYNC: 'auth.push_device_sync',
+  PUSH_PROMPT: 'app.push_prompt',
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];
@@ -37,4 +39,8 @@ export interface StorageSchema {
   [StorageKeys.UPDATE_PROMPTED_VERSION]: string;
   /** Unsaved creator niches + platforms (JSON), keyed to the registering phone. */
   [StorageKeys.INFLUENCER_SOCIALS_DRAFT]: string;
+  /** Last `POST /user/devices` this session sent (JSON token + language + app version). */
+  [StorageKeys.PUSH_DEVICE_SYNC]: string;
+  /** Soft push prompt history (JSON shown count + last dismissal), per install. */
+  [StorageKeys.PUSH_PROMPT]: string;
 }

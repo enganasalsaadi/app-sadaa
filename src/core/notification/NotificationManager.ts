@@ -13,7 +13,6 @@ import { appStorage, StorageKeys } from '@/core/storage';
 import { permissionManager } from '@/core/permissions';
 import type {
   NotificationData,
-  NotificationInitOptions,
   NotificationPressPayload,
   NotificationRouteHandler,
   NotificationRouteMap,
@@ -21,6 +20,8 @@ import type {
   RemoteMessage,
 } from './notificationTypes';
 import { NotificationType } from './notificationTypes';
+import type { PushPermission } from './pushPrompt';
+import { toPushPermission } from './pushPrompt';
 
 const DEFAULT_ANDROID_CHANNEL_ID = 'default';
 const messagingInstance = getMessaging(getApp());
@@ -57,11 +58,17 @@ class NotificationManager {
     this.routes[notificationType] = handler;
   }
 
-  registerTokenListener(listener: NotificationTokenListener): void {
+  /** Called with every token fetched or refreshed; returns the unsubscribe. */
+  registerTokenListener(listener: NotificationTokenListener): () => void {
     this.tokenListener = listener;
+    return () => {
+      if (this.tokenListener === listener) {
+        this.tokenListener = undefined;
+      }
+    };
   }
 
-  async initialize(options?: NotificationInitOptions): Promise<void> {
+  async initialize(): Promise<void> {
     if (this.isInitialized) {
       return;
     }
@@ -70,7 +77,7 @@ class NotificationManager {
       return this.initializePromise;
     }
 
-    this.initializePromise = this.performInitialize(options);
+    this.initializePromise = this.performInitialize();
 
     try {
       await this.initializePromise;
@@ -87,13 +94,20 @@ class NotificationManager {
     return permissionManager.checkPermission('notification');
   }
 
-  async refreshTokenIfPermitted(): Promise<string | undefined> {
-    const permission = await this.getPermission();
-    if (!permission.isGranted) {
-      return undefined;
-    }
+  async getPushPermission(): Promise<PushPermission> {
+    const { status } = await this.getPermission();
+    return toPushPermission(status);
+  }
 
-    return this.syncToken();
+  /** The OS dialog; only call it from the soft prompt or the Settings row. */
+  async requestPushPermission(): Promise<PushPermission> {
+    const { status } = await this.requestPermission();
+    const permission = toPushPermission(status);
+    if (permission === 'enabled' && !this.getSavedToken()) {
+      // The launch fetch failed (offline): a grant is a good moment to retry.
+      this.getToken().catch(() => undefined);
+    }
+    return permission;
   }
 
   getSavedToken(): string | undefined {
@@ -121,9 +135,7 @@ class NotificationManager {
     await this.handlePress(data);
   }
 
-  private async performInitialize(
-    options?: NotificationInitOptions,
-  ): Promise<void> {
+  private async performInitialize(): Promise<void> {
     if (Platform.OS === 'android') {
       await notifee.createChannel({
         id: DEFAULT_ANDROID_CHANNEL_ID,
@@ -134,14 +146,10 @@ class NotificationManager {
 
     this.setupListeners();
 
-    const permission =
-      options?.requestPermissionOnInit === false
-        ? await this.getPermission()
-        : await this.requestPermission();
-
-    if (permission.isGranted) {
-      await this.syncToken();
-    }
+    // FCM issues a token without the display permission, so the device is
+    // registered either way and turning pushes on later needs no extra step.
+    // The permission itself is only ever asked from the soft prompt.
+    await this.getToken().catch(() => undefined);
 
     this.isInitialized = true;
   }
@@ -199,17 +207,10 @@ class NotificationManager {
     ];
   }
 
-  private async syncToken(): Promise<string> {
-    const token = await getToken(messagingInstance);
-    this.persistToken(token);
-    return token;
-  }
-
   private persistToken(token: string): void {
     if (!token) {
       return;
     }
-    console.log('Push Token: ', token);
     appStorage.set(StorageKeys.PUSH_TOKEN, token);
     this.tokenListener?.(token);
   }

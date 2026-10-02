@@ -10,7 +10,6 @@ import {
 } from '../../../api/accountApi';
 import { baseApi, getApiErrorMessage } from '@/core/api';
 import { authStorage } from '@/core/storage';
-import { appStorage, StorageKeys } from '@/core/storage';
 import { toastService } from '@/core/toast';
 
 export const useProfileScreen = () => {
@@ -32,10 +31,9 @@ export const useProfileScreen = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      const deviceToken = appStorage.get(StorageKeys.PUSH_TOKEN) ?? undefined;
-      await logout({ device_token: deviceToken }).unwrap();
+      await logout().unwrap();
     } catch {
-      // onQueryStarted handles credential cleanup regardless of server outcome
+      // The mutation signs out locally whatever the server answered.
     } finally {
       setLogoutSheetVisible(false);
       toastService.success(t('account.profile.logoutSuccess'));
@@ -45,7 +43,7 @@ export const useProfileScreen = () => {
     setDeletePasswordError(undefined);
     try {
       await deleteAccount({ password: deletePassword }).unwrap();
-      await authStorage.clearTokens();
+      await authStorage.clearSession();
       dispatch(clearCredentials());
       dispatch(baseApi.util.resetApiState());
       toastService.success(t('account.profile.deleteSuccess'));

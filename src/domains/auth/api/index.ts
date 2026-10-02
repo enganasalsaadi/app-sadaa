@@ -3,7 +3,7 @@ export {
   useLoginMutation,
   useLogoutMutation,
   useGetProfileQuery,
-  useRegisterFcmTokenMutation,
+  useRegisterDeviceMutation,
   useRequestPasswordResetMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,

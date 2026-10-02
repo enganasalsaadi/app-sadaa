@@ -23,7 +23,7 @@ export type {
   AuthState,
   LoginRequest,
   LoginResponse,
-  RegisterFcmTokenPayload,
+  RegisterDevicePayload,
   RequestPasswordResetRequest,
   ResendPasswordResetOtpRequest,
   ResetPasswordRequest,

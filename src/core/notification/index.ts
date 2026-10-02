@@ -41,10 +41,16 @@ export { notificationManager };
 export { NotificationType } from './notificationTypes';
 export type {
   NotificationData,
-  NotificationInitOptions,
   NotificationPressPayload,
   NotificationRouteHandler,
   NotificationRouteMap,
   NotificationTokenListener,
 } from './notificationTypes';
-export { registerFcmToken, buildFcmTokenPayload } from './fcmTokenService';
+export type { RegisterDevicePayload } from './notificationTypes';
+export { syncDeviceRegistration } from './fcmTokenService';
+export type { PushPermission } from './pushPrompt';
+export {
+  shouldAutoPrompt,
+  recordPushPromptShown,
+  recordPushPromptDismissed,
+} from './pushPrompt';

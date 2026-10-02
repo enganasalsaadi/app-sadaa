@@ -6,6 +6,7 @@ import {
 } from '../../../api/accountApi';
 import { toastService } from '@/core/toast';
 import { goBack } from '@/core/navigation';
+import { usePushPermission } from '@/core/hooks';
 
 export type NotificationToggles = {
   booking_confirmations: boolean;
@@ -18,6 +19,8 @@ export const useNotificationPref = () => {
   const { t } = useTranslation();
   const { data: preferences, isLoading: isFetching } = useGetPreferencesQuery();
   const [updatePreferences, { isLoading: isSaving }] = useUpdatePreferencesMutation();
+  // The OS switch itself: categories below only matter once it is on.
+  const push = usePushPermission();
 
   const [toggles, setToggles] = useState<NotificationToggles>({
     booking_confirmations: true,
@@ -55,5 +58,5 @@ export const useNotificationPref = () => {
     }
   }, [updatePreferences, toggles, t]);
 
-  return { toggles, setToggle, handleSave, isFetching, isSaving };
+  return { toggles, setToggle, handleSave, isFetching, isSaving, push };
 };

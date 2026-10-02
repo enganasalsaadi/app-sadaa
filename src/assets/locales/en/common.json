@@ -261,6 +261,24 @@
       "weak": "Weak",
       "fair": "Fair",
       "strong": "Strong"
+    },
+    "pushPrompt": {
+      "creator": {
+        "title": "Don't miss deal offers",
+        "body": "Brands pick creators with the fastest response.",
+        "offers": "New offers from brands",
+        "kyc": "Your ID verification result",
+        "platforms": "Your account review results"
+      },
+      "brand": {
+        "title": "Know the moment you're verified",
+        "body": "…and when creators apply or content is ready for review.",
+        "verified": "Account verification",
+        "applications": "Creator applications to your campaigns",
+        "content": "Content ready for review"
+      },
+      "enable": "Turn on notifications",
+      "notNow": "Not now"
     }
   },
   "api": {
@@ -447,7 +465,17 @@
       "review_requests": "Review Requests",
       "promotions": "Promotions & Offers",
       "save": "Save Preferences",
-      "saveSuccess": "Preferences saved successfully"
+      "saveSuccess": "Preferences saved successfully",
+      "push": {
+        "title": "Push notifications",
+        "enabled": "You get alerts on this device",
+        "askable": "Turn them on for offers and review results",
+        "blocked": "Turned off in your phone's settings",
+        "unavailable": "Not available on this device",
+        "on": "On",
+        "enable": "Turn on",
+        "openSettings": "Open settings"
+      }
     },
     "language": {
       "title": "Language",

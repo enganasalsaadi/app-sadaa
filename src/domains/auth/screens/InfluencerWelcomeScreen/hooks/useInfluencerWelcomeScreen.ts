@@ -7,6 +7,7 @@ import { useFollowerTierOptions } from '../../../hooks/useFollowerTierOptions';
 import { isFollowerTier, isInfluencerPlatform } from '../../../schemas';
 import type { InfluencerPlatform } from '../../../schemas';
 import { completeOnboarding } from '../../../store';
+import { usePushPrompt } from '../../../hooks/usePushPrompt';
 
 export const useInfluencerWelcomeScreen = () => {
   const dispatch = useAppDispatch();
@@ -22,11 +23,13 @@ export const useInfluencerWelcomeScreen = () => {
     return () => sub.remove();
   }, []);
 
+  const { promptThen, sheet: pushPrompt } = usePushPrompt();
+
   // Server already confirmed completion; this only releases the session into
-  // the main app (AppStatus → AUTHENTICATED).
+  // the main app (AppStatus → AUTHENTICATED), after the push prompt if due.
   const onStart = useCallback(() => {
-    dispatch(completeOnboarding());
-  }, [dispatch]);
+    promptThen(() => dispatch(completeOnboarding()));
+  }, [dispatch, promptThen]);
 
   // One orbit badge per linked platform, in the order the creator added them.
   const platforms = useMemo<InfluencerPlatform[]>(() => {
@@ -57,5 +60,6 @@ export const useInfluencerWelcomeScreen = () => {
     niches,
     hasRates: progress?.has_rate_card === true,
     onStart,
+    pushPrompt,
   };
 };

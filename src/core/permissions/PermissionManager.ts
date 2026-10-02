@@ -36,7 +36,8 @@ class PermissionManager {
 
   async checkPermission(type: PermissionType): Promise<PermissionState> {
     const cached = this.permissionCache.get(type);
-    if (cached) {
+    // Notifications are toggled in OS Settings while the app runs: always re-read.
+    if (cached && type !== 'notification') {
       return createPermissionState(type, cached);
     }
 

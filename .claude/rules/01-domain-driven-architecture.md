@@ -34,7 +34,7 @@ app  →  domains  →  shared  →  core
 | `shared/` | `core` | `domains`, `app` |
 | `core/` | own files, **type-only** from `@/app/store` (RootState) | `shared`, `domains`, runtime `app` |
 
-If `core` needs something from a domain → invert it (callback, registry, or move the type down into `core`). Example: `RegisterFcmTokenPayload` lives in `core/notification/notificationTypes.ts`; auth re-exports it.
+If `core` needs something from a domain → invert it (callback, registry, or move the type down into `core`). Example: `RegisterDevicePayload` lives in `core/notification/notificationTypes.ts`; auth re-exports it.
 
 ## Domain anatomy
 

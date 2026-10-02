@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Clock, ShieldCheck } from 'lucide-react-native';
 import { motion, useTheme } from '@/core/theme';
 import { Box, CustomButton, HeroBackdrop, Layout, Text } from '@/shared/ui';
+import { PushPromptSheet } from '../../components/PushPromptSheet';
 import { WelcomeEchoCanvas } from '../../components/WelcomeEchoCanvas';
 import { useBrandWelcomeScreen } from './hooks/useBrandWelcomeScreen';
 
@@ -18,7 +19,7 @@ export const BrandWelcomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const { width } = useWindowDimensions();
-  const { companyName, isUnderReview, onStart } = useBrandWelcomeScreen();
+  const { companyName, isUnderReview, onStart, pushPrompt } = useBrandWelcomeScreen();
   const StatusIcon = isUnderReview ? Clock : ShieldCheck;
 
   return (
@@ -83,6 +84,7 @@ export const BrandWelcomeScreen: React.FC = () => {
           />
         </Animated.View>
       </Layout>
+      <PushPromptSheet role="brand" {...pushPrompt} />
     </Box>
   );
 };

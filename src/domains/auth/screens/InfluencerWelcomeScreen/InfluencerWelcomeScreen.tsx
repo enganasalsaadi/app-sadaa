@@ -7,6 +7,7 @@ import { motion, useTheme } from '@/core/theme';
 import { Box, CustomButton, HeroBackdrop, Layout, Text } from '@/shared/ui';
 import { CreatorOrbitScene } from '../../components/CreatorOrbitScene';
 import { GlassPill } from '../../components/GlassPill';
+import { PushPromptSheet } from '../../components/PushPromptSheet';
 import { useInfluencerWelcomeScreen } from './hooks/useInfluencerWelcomeScreen';
 
 // Stage is square: width-bound on phones, height-bound on short screens.
@@ -21,7 +22,7 @@ export const InfluencerWelcomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { width, height } = useWindowDimensions();
-  const { name, tierLabel, isTopTier, platforms, niches, hasRates, onStart } =
+  const { name, tierLabel, isTopTier, platforms, niches, hasRates, onStart, pushPrompt } =
     useInfluencerWelcomeScreen();
 
   return (
@@ -86,6 +87,7 @@ export const InfluencerWelcomeScreen: React.FC = () => {
           />
         </Animated.View>
       </Layout>
+      <PushPromptSheet role="creator" {...pushPrompt} />
     </Box>
   );
 };

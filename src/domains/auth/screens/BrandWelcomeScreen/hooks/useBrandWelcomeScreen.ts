@@ -3,6 +3,7 @@ import { BackHandler, Vibration } from 'react-native';
 import { useAppDispatch } from '@/core/store';
 import { useGetOnboardingProgressQuery } from '../../../api';
 import { completeOnboarding } from '../../../store';
+import { usePushPrompt } from '../../../hooks/usePushPrompt';
 
 export const useBrandWelcomeScreen = () => {
   const dispatch = useAppDispatch();
@@ -15,15 +16,18 @@ export const useBrandWelcomeScreen = () => {
     return () => sub.remove();
   }, []);
 
+  const { promptThen, sheet: pushPrompt } = usePushPrompt();
+
   // Server already confirmed completion; this only releases the session into
-  // the main app (AppStatus → AUTHENTICATED).
+  // the main app (AppStatus → AUTHENTICATED), after the push prompt if due.
   const onStart = useCallback(() => {
-    dispatch(completeOnboarding());
-  }, [dispatch]);
+    promptThen(() => dispatch(completeOnboarding()));
+  }, [dispatch, promptThen]);
 
   return {
     companyName: progress?.profile.company_name?.trim() || null,
     isUnderReview: progress?.kyc_status === 'pending',
     onStart,
+    pushPrompt,
   };
 };

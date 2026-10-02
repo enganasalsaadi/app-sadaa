@@ -1,4 +1,5 @@
 import { authStorage } from '@/core/storage';
+import { notificationManager } from '@/core/notification';
 import {
   setUser,
   setToken,
@@ -9,7 +10,7 @@ import type {
   LoginRequest,
   LoginResponse,
   User,
-  RegisterFcmTokenPayload,
+  RegisterDevicePayload,
   RequestPasswordResetRequest,
   ResendPasswordResetOtpRequest,
   ResetPasswordRequest,
@@ -19,6 +20,9 @@ import type {
   ResendPhoneOtpRequest,
 } from '../store';
 import { baseApi } from '@/core/api';
+
+// Logout waits on this before signing out locally; it must never hang the UI.
+const LOGOUT_TIMEOUT_MS = 5000;
 
 export const authApi = baseApi.injectEndpoints({
   overrideExisting: true,
@@ -46,28 +50,30 @@ export const authApi = baseApi.injectEndpoints({
         } catch {}
       },
     }),
-    registerFcmToken: builder.mutation<
-      { success: boolean },
-      RegisterFcmTokenPayload
-    >({
-      query: body => ({
-        url: '/auth/fcm/register',
-        method: 'POST',
-        body,
-      }),
+    // Background sync (contract §11.1), driven by `useDeviceRegistration`.
+    registerDevice: builder.mutation<void, RegisterDevicePayload>({
+      query: body => ({ url: '/user/devices', method: 'POST', body }),
+      extraOptions: { silent: true },
     }),
-    logout: builder.mutation<void, LogoutRequest>({
-      query: body => ({ url: '/auth/logout', method: 'POST', body }),
+    // Works for suspended accounts too (contract §15.13).
+    logout: builder.mutation<void, void>({
+      query: () => {
+        const fcmToken = notificationManager.getSavedToken();
+        // Without it this device keeps receiving the signed-out user's pushes.
+        const body: LogoutRequest = fcmToken ? { fcm_token: fcmToken } : {};
+        return { url: '/auth/logout', method: 'POST', body, timeout: LOGOUT_TIMEOUT_MS };
+      },
+      extraOptions: { silent: true },
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch {
-          // Logout is best-effort: an expired server session (401) still
-          // clears local state below.
+          // Best-effort: offline, timeout or an expired session (401) still
+          // signs out locally below.
         } finally {
-          await authStorage.clearTokens();
-          await authStorage.clearCart();
+          await authStorage.clearSession();
           dispatch(clearCredentials());
+          dispatch(baseApi.util.resetApiState());
         }
       },
     }),
@@ -125,7 +131,7 @@ export const {
   useLogoutMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
-  useRegisterFcmTokenMutation,
+  useRegisterDeviceMutation,
   useRequestPasswordResetMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,
