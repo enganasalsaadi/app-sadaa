@@ -1,11 +1,15 @@
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {FetchBaseQueryError} from '@reduxjs/toolkit/query';
-import type {ApiUnknownRecord} from './types';
+import {API_ERROR_CODES} from './types';
+import type {ApiErrorCode, ApiUnknownRecord} from './types';
 
 export interface AppApiError {
   statusCode: number | null;
   message: string;
-  code: string | null;
+  /** Server `error_code`; `null` for transport failures or unknown codes. */
+  code: ApiErrorCode | null;
+  /** Seconds from `meta.retry_after` (429), else `null`. */
+  retryAfter: number | null;
   details: string | ApiUnknownRecord | unknown[] | null;
   isValidationError: boolean;
   isUnauthorized: boolean;
@@ -112,6 +116,28 @@ const getMessageFromData = (data: unknown): string | null => {
   return null;
 };
 
+const isApiErrorCode = (value: unknown): value is ApiErrorCode =>
+  typeof value === 'string' &&
+  (API_ERROR_CODES as readonly string[]).includes(value);
+
+/** `error_code` from a raw envelope (`error.data`). */
+export const getServerErrorCode = (data: unknown): ApiErrorCode | null => {
+  if (!isRecord(data)) {
+    return null;
+  }
+  return isApiErrorCode(data.error_code) ? data.error_code : null;
+};
+
+const getRetryAfter = (data: unknown): number | null => {
+  if (!isRecord(data) || !isRecord(data.meta)) {
+    return null;
+  }
+  const value = data.meta.retry_after;
+  return typeof value === 'number' && Number.isFinite(value) && value > 0
+    ? value
+    : null;
+};
+
 const getStatusCode = (error: unknown): number | null => {
   if (isFetchBaseQueryError(error)) {
     if (typeof error.status === 'number') {
@@ -154,17 +180,11 @@ export const normalizeApiError = (error: unknown): AppApiError => {
       fallbackTransportMessage ??
       FALLBACK_API_ERROR_MESSAGE;
 
-    const code =
-      typeof error.status === 'string'
-        ? error.status
-        : isRecord(error.data) && typeof error.data.code === 'string'
-          ? error.data.code
-          : null;
-
     return {
       statusCode,
       message,
-      code,
+      code: getServerErrorCode(error.data),
+      retryAfter: getRetryAfter(error.data),
       details: toSerializableDetails(
         error.data ?? fallbackTransportMessage ?? null,
       ),
@@ -179,7 +199,8 @@ export const normalizeApiError = (error: unknown): AppApiError => {
     return {
       statusCode,
       message: error.message ?? FALLBACK_API_ERROR_MESSAGE,
-      code: error.code ?? null,
+      code: isApiErrorCode(error.code) ? error.code : null,
+      retryAfter: null,
       details: toSerializableDetails(error),
       isValidationError: statusCode === 400 || statusCode === 422,
       isUnauthorized: statusCode === 401,
@@ -192,6 +213,7 @@ export const normalizeApiError = (error: unknown): AppApiError => {
     statusCode,
     message: FALLBACK_API_ERROR_MESSAGE,
     code: null,
+    retryAfter: null,
     details: toSerializableDetails(error),
     isValidationError: statusCode === 400 || statusCode === 422,
     isUnauthorized: statusCode === 401,

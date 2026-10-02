@@ -40,16 +40,17 @@ Screen  →  use<Screen>Screen hook  →  domain hook / RTK Query hook  →  api
 
 ## API envelope
 
-Server returns `{ success, message, data, errors, pagination? }`. `baseQuery` unwraps `data`, turns `success:false` into an error. Paginated: `extraOptions: { withPagination: true }` → `{ items, pagination: { total, page, per_page, pages } }`.
+Server returns `{ success, message, data, error_code, errors, meta: { locale, retry_after? } }` (`docs/mobile-contract.md` §1; `errors` is a field map on 422 only, else `null`). `normalizeApiError` → `AppApiError.code` (typed `ApiErrorCode`) + `retryAfter`; branch on `code`, never on `message`. `baseQuery` unwraps `data`, turns `success:false` into an error. Paginated: `extraOptions: { withPagination: true }` → `{ items, pagination: { total, page, per_page, pages } }`.
 
 ## Error routing (centralised in baseQuery — do not re-handle)
 
 | Status | Behaviour |
 |---|---|
-| 401 | silent refresh → retry → on failure clear tokens, redirect Login |
-| 403 | toast + `showForbiddenError` + redirect Home |
+| 401 | clear tokens + credentials + `resetApiState()`, redirect Login (tokens non-refreshable) |
+| 403 | `phone_not_verified` / `account_suspended` → passed through (flow gates route them); others → toast + `showForbiddenError` |
 | 422 | toast + passed through (map `errors` to form fields) |
 | 400/404 | passed through → `<InlineError />` |
+| 409/429 | passed through — screen handles (`otp_cooldown` countdown from `retryAfter`, out-of-order → re-read progress) |
 | 500/503 | `GlobalErrorModal` (503 auto-retry countdown) |
 | no network | `NetworkSnackbar` |
 

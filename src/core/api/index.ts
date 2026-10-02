@@ -1,6 +1,7 @@
 export { baseApi } from './baseApi';
 export { getApiErrorMessage, normalizeApiError } from './errorHandler';
 export type { AppApiError } from './errorHandler';
+export type { ApiErrorCode, ApiFieldErrors } from './types';
 export { configApi, useGetConfigQuery } from './configApi';
 export type { AppConfig } from './configApi';
 export {
@@ -15,6 +16,7 @@ export type {
   LookupItem,
   LookupListKey,
   FollowerTier,
+  SocialPlatformLookup,
 } from './lookupsApi';
 export {
   applyServerFieldErrors,

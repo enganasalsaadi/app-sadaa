@@ -2,6 +2,11 @@ import type { FollowerTierId } from '@/core/config';
 
 export type { FollowerTierId };
 
+/** Mirrors backend enums (contract §2). */
+export type UserType = 'influencer' | 'brand';
+export type UserStatus = 'draft' | 'active' | 'suspended';
+export type KycStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
+
 export interface BillingAddress {
   first_name: string;
   last_name: string;
@@ -28,7 +33,8 @@ export interface GuestProfile {
 }
 
 export interface User {
-  id: number;
+  /** ULID. */
+  id: string;
   full_name: string;
   email: string;
   phone: string;
@@ -73,15 +79,14 @@ export interface LoginRequest {
 }
 
 // POST /auth/login — phone+password. No `user` object is returned; `user`
-// is hydrated separately via GET /user/me. `status` is an
-// opaque server-defined string (e.g. "pending_kyc"), not a client state
-// machine we own.
+// is hydrated separately via GET /user/me. KYC review state lives in
+// `kyc_status`, never in `status`.
 export interface LoginResponse {
   token: string;
   token_type: string;
   user_id: string;
-  user_type: string;
-  status: string;
+  user_type: UserType;
+  status: UserStatus;
   current_step: number;
   is_onboarding_complete: boolean;
 }
@@ -153,7 +158,7 @@ export interface BrandStep1Response {
   token_type: string;
   user_id: string;
   user_type: 'brand';
-  status: string;
+  status: UserStatus;
   current_step: number;
   is_onboarding_complete: boolean;
 }
@@ -173,8 +178,8 @@ export interface BrandStep2Request {
 // GET /onboarding/progress
 export interface BrandOnboardingProgress {
   is_onboarding_complete: boolean;
-  /** Opaque server account status ("active", "pending_kyc"). */
-  status?: string;
+  status?: UserStatus;
+  kyc_status?: KycStatus;
   is_phone_verified: boolean;
   current_step: number;
   has_kyc_document: boolean;
@@ -202,7 +207,7 @@ export interface InfluencerStep1Response {
   token_type: string;
   user_id: string;
   user_type: 'influencer';
-  status: string;
+  status: UserStatus;
   current_step: number;
   is_onboarding_complete: boolean;
 }
@@ -240,7 +245,8 @@ export type InfluencerStep3Request =
 // GET /onboarding/progress for an influencer account.
 export interface InfluencerOnboardingProgress {
   is_onboarding_complete: boolean;
-  status?: string;
+  status?: UserStatus;
+  kyc_status?: KycStatus;
   phone?: string;
   is_phone_verified: boolean;
   current_step: number;

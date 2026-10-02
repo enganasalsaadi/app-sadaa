@@ -5,7 +5,6 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
-import { Alert } from 'react-native';
 import { getVersion } from 'react-native-device-info';
 import { appStorage, StorageKeys } from '@/core/storage';
 import { getValidLanguage } from '@/core/i18n';
@@ -23,7 +22,7 @@ import { retryRegistry } from './retryRegistry';
 import { apiUrl } from '@/core/config';
 import i18n from '@/core/i18n';
 
-// Prevents multiple "session expired" dialogs when several requests fail at once
+// Serialises session teardown when several requests 401 at once.
 let isHandlingSessionExpiry = false;
 const isApiEnvelope = (value: unknown): value is ApiResponse<unknown> => {
   if (typeof value !== 'object' || value === null) return false;
@@ -31,12 +30,8 @@ const isApiEnvelope = (value: unknown): value is ApiResponse<unknown> => {
   return typeof data.success === 'boolean' && 'data' in data;
 };
 
-const getErrorCode = (data: unknown): string | undefined => {
-  if (typeof data !== 'object' || data === null) return undefined;
-  const code = (data as ApiUnknownRecord).code;
-  return typeof code === 'string' ? code : undefined;
-};
-
+// Default per request; slow endpoints (social lookup, 35 s) pass `timeout`
+// in their FetchArgs.
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: apiUrl,
   timeout: 15000,
@@ -44,7 +39,6 @@ const rawBaseQuery = fetchBaseQuery({
     const token = authStorage.getToken();
     const language = appStorage.get(StorageKeys.LANGUAGE);
     const validLanguage = getValidLanguage(language);
-    console.log(validLanguage)
     headers.set('Accept', 'application/json');
     headers.set('Accept-Language', validLanguage);
     headers.set('X-App-Version', getVersion());
@@ -125,59 +119,50 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
     }
 
     if (statusCode === 401) {
-      // Sanadk tokens are non-refreshable — clear session and redirect to Login.
-      await authStorage.clearTokens();
-      api.dispatch({ type: 'auth/clearCredentials' });
-      navigate('Login');
+      // Tokens are non-refreshable (contract §1). Only tear down a session we
+      // actually sent; concurrent 401s from the same session reset once.
+      if (authStorage.getToken() && !isHandlingSessionExpiry) {
+        isHandlingSessionExpiry = true;
+        try {
+          await authStorage.clearTokens();
+          api.dispatch({ type: 'auth/clearCredentials' });
+          api.dispatch(baseApi.util.resetApiState());
+          navigate('Login');
+        } finally {
+          isHandlingSessionExpiry = false;
+        }
+      }
 
       return { error: result.error };
     }
 
     if (statusCode === 403) {
-      const errorCode = getErrorCode(result.error.data);
-
-      if (errorCode === 'jwt_auth_invalid_token') {
-        if (!isHandlingSessionExpiry) {
-          isHandlingSessionExpiry = true;
-          await authStorage.clearTokens();
-          api.dispatch({ type: 'auth/clearCredentials' });
-          Alert.alert(
-            i18n.t('errors.sessionExpired.title'),
-            i18n.t('errors.sessionExpired.message'),
-            [
-              {
-                text: i18n.t('common.cancel'),
-                style: 'cancel',
-                onPress: () => {
-                  isHandlingSessionExpiry = false;
-                },
-              },
-              {
-                text: i18n.t('errors.sessionExpired.loginBtn'),
-                onPress: () => {
-                  isHandlingSessionExpiry = false;
-                  navigate('Login');
-                },
-              },
-            ],
-            { cancelable: false },
-          );
-        }
+      // Flow gates, routed by their owners: the onboarding resolver sends
+      // `phone_not_verified` back to the OTP step, the suspended gate blocks
+      // `account_suspended`. A global redirect would fight both.
+      if (
+        normalizedError.code === 'phone_not_verified' ||
+        normalizedError.code === 'account_suspended'
+      ) {
         return { error: result.error };
       }
 
       toastService.error(normalizedError.message || i18n.t('errors.forbidden'));
       api.dispatch(showForbiddenError(normalizedError));
-      navigate('HomeScreen');
 
       return { error: result.error };
     }
 
-    if (statusCode === 404 || statusCode === 400) {
-      return { error: result.error };
-    }
-
-    if (statusCode === 422) {
+    // 409 conflicts and 429 rate limits carry flow-specific meaning
+    // (`otp_cooldown`, `onboarding_step_out_of_order`…): the calling screen
+    // handles them. 400/404/422 render inline / map onto fields.
+    if (
+      statusCode === 400 ||
+      statusCode === 404 ||
+      statusCode === 409 ||
+      statusCode === 422 ||
+      statusCode === 429
+    ) {
       return { error: result.error };
     }
 

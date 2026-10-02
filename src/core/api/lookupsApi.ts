@@ -1,11 +1,17 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { FollowerTierId } from '@/core/config';
 import { baseApi } from './baseApi';
 
 export interface LookupOption {
   id: string;
   name_ar: string;
   name_en: string;
+}
+
+export interface SocialPlatformLookup extends LookupOption {
+  /** Server-driven (depends on the social driver) — never hardcode. */
+  supports_lookup: boolean;
 }
 
 export interface FollowerTier {
@@ -21,9 +27,10 @@ export interface LookupsResponse {
   governorates: LookupOption[];
   business_types: LookupOption[];
   niches: LookupOption[];
-  social_platforms: LookupOption[];
+  social_platforms: SocialPlatformLookup[];
   service_types: LookupOption[];
-  follower_tiers: Record<string, FollowerTier>;
+  /** Keyed by tier id, not an array. */
+  follower_tiers: Partial<Record<FollowerTierId, FollowerTier>>;
 }
 
 export type LookupListKey = {

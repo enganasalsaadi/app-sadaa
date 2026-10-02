@@ -327,11 +327,6 @@
     "generic": "Something went wrong",
     "forbidden": "You don't have enough permissions",
     "validation": "Invalid data",
-    "sessionExpired": {
-      "title": "Session Expired",
-      "message": "Your session has expired. Please log in again to continue.",
-      "loginBtn": "Log In"
-    },
     "server": {
       "title": "Server Error",
       "defaultMessage": "Something went wrong, please try again later",
