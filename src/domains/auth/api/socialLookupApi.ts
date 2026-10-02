@@ -15,6 +15,8 @@ export const socialLookupApi = baseApi.injectEndpoints({
         body,
         timeout: SOCIAL_LOOKUP_TIMEOUT_MS,
       }),
+      // Every failure falls back to a manual tier in the sheet: no error modal.
+      extraOptions: { silent: true },
     }),
   }),
 });

@@ -6,25 +6,18 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
 // Drafts saved before the `handle` rename stored `username` and no tier
-// source: those tiers were all picked by hand.
+// source: those tiers were all picked by hand. Only a found lookup may lack a tier.
 const toAccount = (value: unknown): PlatformAccountFormValues[] => {
   if (!isRecord(value)) return [];
-  const { platform, followerTier, tierSource, isPrimary } = value;
+  const { platform, followerTier, isPrimary } = value;
   const handle = value.handle ?? value.username;
+  const tierSource = value.tierSource === 'auto' ? 'auto' : 'manual';
+  const tier = typeof followerTier === 'string' && isFollowerTier(followerTier) ? followerTier : null;
   return typeof platform === 'string' &&
     isInfluencerPlatform(platform) &&
     typeof handle === 'string' &&
-    typeof followerTier === 'string' &&
-    isFollowerTier(followerTier)
-    ? [
-        {
-          platform,
-          handle,
-          followerTier,
-          tierSource: tierSource === 'auto' ? 'auto' : 'manual',
-          isPrimary: isPrimary === true,
-        },
-      ]
+    (tier !== null || tierSource === 'auto')
+    ? [{ platform, handle, followerTier: tier, tierSource, isPrimary: isPrimary === true }]
     : [];
 };
 

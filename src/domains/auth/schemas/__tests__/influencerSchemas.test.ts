@@ -83,32 +83,47 @@ describe('toHandle', () => {
 
 describe('createPlatformAccountSchema', () => {
   const schema = createPlatformAccountSchema(t);
+  const draft = { tierSource: 'manual' as const, isPrimary: false };
 
   it('accepts a full account', () => {
     expect(() =>
-      schema.validateSync({ platform: 'instagram', handle: '@ahmad', followerTier: 'MICRO' }),
+      schema.validateSync({
+        ...draft,
+        platform: 'instagram',
+        handle: '@ahmad',
+        followerTier: 'MICRO',
+      }),
     ).not.toThrow();
   });
 
   it('rejects website (brand-only) and bad handles', () => {
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'website', handle: 'x', followerTier: 'NANO' }),
+        schema.validateSync({ ...draft, platform: 'website', handle: 'x', followerTier: 'NANO' }),
       ),
     ).toBe('validation.selectOne');
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'tiktok', handle: 'a b', followerTier: 'NANO' }),
+        schema.validateSync({ ...draft, platform: 'tiktok', handle: 'a b', followerTier: 'NANO' }),
       ),
     ).toBe('auth.influencerOnboarding.socials.errors.username');
   });
 
-  it('needs a follower tier', () => {
+  it('needs a follower tier unless a lookup found the account', () => {
     expect(
       messageOf(() =>
-        schema.validateSync({ platform: 'tiktok', handle: 'ahmad', followerTier: '' }),
+        schema.validateSync({ ...draft, platform: 'tiktok', handle: 'ahmad', followerTier: '' }),
       ),
     ).toBe('auth.influencerOnboarding.socials.errors.tier');
+    expect(() =>
+      schema.validateSync({
+        platform: 'tiktok',
+        handle: 'ahmad',
+        followerTier: '',
+        tierSource: 'auto',
+        isPrimary: true,
+      }),
+    ).not.toThrow();
   });
 });
 

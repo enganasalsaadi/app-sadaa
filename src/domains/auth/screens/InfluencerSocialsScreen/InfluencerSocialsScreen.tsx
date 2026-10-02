@@ -27,7 +27,7 @@ export const InfluencerSocialsScreen: React.FC = () => {
     nichesError,
     platforms,
     platformsError,
-    tierLabel,
+    rowErrors,
     canAddPlatform,
     openAdd,
     onEdit,
@@ -93,7 +93,7 @@ export const InfluencerSocialsScreen: React.FC = () => {
               <PlatformAccountRow
                 key={account.platform}
                 account={account}
-                tierLabel={tierLabel(account.followerTier)}
+                error={rowErrors[account.platform]}
                 onEdit={onEdit}
                 onRemove={onRemove}
               />

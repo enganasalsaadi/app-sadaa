@@ -37,6 +37,13 @@ describe('parseSocialsDraft', () => {
     ]);
   });
 
+  it('keeps a tierless account only when a lookup found it', () => {
+    const found = { platform: 'youtube', handle: 'ahmad', followerTier: null, tierSource: 'auto', isPrimary: false };
+    const manual = { ...found, platform: 'tiktok', tierSource: 'manual' };
+    const raw = JSON.stringify({ phone: PHONE, niches: [], platforms: [found, manual] });
+    expect(parseSocialsDraft(raw, PHONE)?.platforms).toEqual([found]);
+  });
+
   it('survives corrupt JSON and missing input', () => {
     expect(parseSocialsDraft('{oops', PHONE)).toBeNull();
     expect(parseSocialsDraft(undefined, PHONE)).toBeNull();

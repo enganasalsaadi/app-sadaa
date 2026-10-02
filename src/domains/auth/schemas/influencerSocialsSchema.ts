@@ -25,7 +25,8 @@ export interface PlatformAccountFormValues {
   platform: InfluencerPlatform;
   /** Bare handle; the server stores it as `username`. */
   handle: string;
-  followerTier: FollowerTierId;
+  /** `null` only for a `found` lookup under the lowest tier: the server holds the data. */
+  followerTier: FollowerTierId | null;
   tierSource: TierSource;
   isPrimary: boolean;
 }
@@ -58,6 +59,9 @@ export interface PlatformAccountDraft {
   platform: string;
   handle: string;
   followerTier: string;
+  /** `auto` while a `found` lookup backs the handle; the tier is then locked. */
+  tierSource: TierSource;
+  isPrimary: boolean;
 }
 
 /** One platform account, validated in the sheet before it joins the list. */
@@ -82,10 +86,14 @@ export const createPlatformAccountSchema = (
       ),
     followerTier: yup
       .string()
-      .required(t('auth.influencerOnboarding.socials.errors.tier'))
-      .test('tier', t('auth.influencerOnboarding.socials.errors.tier'), value =>
-        isFollowerTier(value),
+      .defined()
+      .test(
+        'tier',
+        t('auth.influencerOnboarding.socials.errors.tier'),
+        (value, context) => context.parent.tierSource === 'auto' || isFollowerTier(value),
       ),
+    tierSource: yup.mixed<TierSource>().oneOf(['auto', 'manual']).required(),
+    isPrimary: yup.boolean().required(),
   });
 
 export const createInfluencerSocialsSchema = (

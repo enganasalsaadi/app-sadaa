@@ -42,7 +42,3 @@ export const cooldownFromSendError = (error: OtpError, now: number): number | nu
   (error.code === 'otp_cooldown' || error.code === 'too_many_requests') && error.retryAfter
     ? now + error.retryAfter * 1000
     : null;
-
-/** `m:ss` for OTP timers. */
-export const formatOtpTimer = (seconds: number): string =>
-  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;

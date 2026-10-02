@@ -13,9 +13,9 @@ import {
   OTP_GUARD_INITIAL,
   applyOtpRejection,
   cooldownFromSendError,
-  formatOtpTimer,
   isOtpExhausted,
 } from '../utils/otpGuard';
+import { formatClock } from '../utils/formatClock';
 
 export type OtpRejection = Pick<AppApiError, 'statusCode' | 'code' | 'retryAfter'>;
 
@@ -131,7 +131,7 @@ export const useOtpCodeForm = ({
   const notice = exhausted
     ? t('auth.otp.exhausted')
     : lockSeconds > 0
-      ? t('auth.otp.locked', { time: formatOtpTimer(lockSeconds) })
+      ? t('auth.otp.locked', { time: formatClock(lockSeconds) })
       : undefined;
 
   return {

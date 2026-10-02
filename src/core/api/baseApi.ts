@@ -92,6 +92,25 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
     const statusCode = result.error.status;
     const normalizedError = normalizeApiError(result.error);
 
+    if (statusCode === 401) {
+      // Tokens are non-refreshable (contract §1). Only tear down a session we
+      // actually sent; concurrent 401s from the same session reset once.
+      if (authStorage.getToken() && !isHandlingSessionExpiry) {
+        isHandlingSessionExpiry = true;
+        try {
+          await authStorage.clearTokens();
+          api.dispatch({ type: 'auth/clearCredentials' });
+          api.dispatch(baseApi.util.resetApiState());
+          navigate('Login');
+        } finally {
+          isHandlingSessionExpiry = false;
+        }
+      }
+
+      return { error: result.error };
+    }
+
+    // Silent skips the error UI only; an expired session is torn down regardless.
     if (extraOptions?.silent) {
       return { error: result.error };
     }
@@ -115,24 +134,6 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       });
 
       api.dispatch(showServerError({ error: normalizedError, retryKey }));
-      return { error: result.error };
-    }
-
-    if (statusCode === 401) {
-      // Tokens are non-refreshable (contract §1). Only tear down a session we
-      // actually sent; concurrent 401s from the same session reset once.
-      if (authStorage.getToken() && !isHandlingSessionExpiry) {
-        isHandlingSessionExpiry = true;
-        try {
-          await authStorage.clearTokens();
-          api.dispatch({ type: 'auth/clearCredentials' });
-          api.dispatch(baseApi.util.resetApiState());
-          navigate('Login');
-        } finally {
-          isHandlingSessionExpiry = false;
-        }
-      }
-
       return { error: result.error };
     }
 

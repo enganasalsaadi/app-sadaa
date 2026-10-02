@@ -2,10 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
-import { applyServerFieldErrors, useLookupItems } from '@/core/api';
+import {
+  applyServerFieldErrors,
+  extractServerFieldErrors,
+  useGetLookupsQuery,
+  useLookupItems,
+} from '@/core/api';
 import { useAppSelector } from '@/core/store';
 import { useWizardHeader } from '@/shared/ui';
-import { useGetInfluencerOnboardingProgressQuery, useInfluencerStep2SocialsMutation } from '../../../api';
+import {
+  useGetInfluencerOnboardingProgressQuery,
+  useInfluencerStep2SocialsMutation,
+} from '../../../api';
 import {
   INFLUENCER_MAX_NICHES,
   INFLUENCER_WIZARD_STEPS,
@@ -25,6 +33,7 @@ import type {
 } from '../../../schemas';
 import { selectPendingPhone } from '../../../store';
 import type { InfluencerOnboardingProgress } from '../../../store';
+import { platformRowErrors } from '../../../utils/socialLookup';
 import { socialsDraftStorage } from '../../../utils/socialsDraft';
 
 const SERVER_FIELD_MAP = {
@@ -36,19 +45,21 @@ const fromServer = (
   profile: InfluencerOnboardingProgress['profile'] | undefined,
 ): InfluencerSocialsFormValues | null => {
   const niches = profile?.niches ?? [];
-  const platforms = (profile?.platforms ?? []).flatMap<PlatformAccountFormValues>(entry =>
-    isInfluencerPlatform(entry.platform) && isFollowerTier(entry.follower_tier)
+  const platforms = (profile?.platforms ?? []).flatMap<PlatformAccountFormValues>(entry => {
+    const tier = isFollowerTier(entry.follower_tier) ? entry.follower_tier : null;
+    // Only a looked-up account may lack a tier (under the lowest one).
+    return isInfluencerPlatform(entry.platform) && (tier !== null || entry.tier_source === 'auto')
       ? [
           {
             platform: entry.platform,
             handle: entry.username,
-            followerTier: entry.follower_tier,
+            followerTier: tier,
             tierSource: entry.tier_source,
             isPrimary: entry.is_primary,
           },
         ]
-      : [],
-  );
+      : [];
+  });
   return niches.length || platforms.length ? { niches, platforms } : null;
 };
 
@@ -87,6 +98,24 @@ export const useInfluencerSocialsScreen = () => {
 
   const nicheItems = useLookupItems('niches');
   const tiers = useFollowerTierOptions();
+  const { data: lookups } = useGetLookupsQuery();
+  const lookupPlatforms = lookups?.social_platforms;
+  const supportsLookup = useCallback(
+    (platform: InfluencerPlatform) =>
+      lookupPlatforms?.find(entry => entry.id === platform)?.supports_lookup ?? false,
+    [lookupPlatforms],
+  );
+  const [rowErrors, setRowErrors] = useState<Partial<Record<InfluencerPlatform, string>>>({});
+  const clearRowError = useCallback(
+    (platform: InfluencerPlatform) =>
+      setRowErrors(prev => {
+        if (prev[platform] === undefined) return prev;
+        const next = { ...prev };
+        delete next[platform];
+        return next;
+      }),
+    [],
+  );
 
   const [saveSocials] = useInfluencerStep2SocialsMutation();
   const { runStep, isBusy, error } = useInfluencerOnboardingFlow('socials');
@@ -98,7 +127,10 @@ export const useInfluencerSocialsScreen = () => {
     subtitle: t(step.subtitleKey),
   });
 
-  const [sheet, setSheet] = useState<SheetState>({ visible: false, editing: null });
+  const [sheet, setSheet] = useState<SheetState>({
+    visible: false,
+    editing: null,
+  });
 
   const availablePlatforms = useMemo<InfluencerPlatform[]>(
     () =>
@@ -132,46 +164,67 @@ export const useInfluencerSocialsScreen = () => {
   );
 
   const onRemove = useCallback(
-    (platform: InfluencerPlatform) =>
-      setPlatforms(platforms.filter(account => account.platform !== platform)),
-    [platforms, setPlatforms],
+    (platform: InfluencerPlatform) => {
+      setPlatforms(platforms.filter(account => account.platform !== platform));
+      clearRowError(platform);
+    },
+    [clearRowError, platforms, setPlatforms],
   );
 
   const onSaveAccount = useCallback(
     (account: PlatformAccountFormValues) => {
       const exists = platforms.some(item => item.platform === account.platform);
+      // At most one primary (contract §5.2): choosing one demotes the rest.
+      const others = account.isPrimary
+        ? platforms.map(item => (item.isPrimary ? { ...item, isPrimary: false } : item))
+        : platforms;
       setPlatforms(
         exists
-          ? platforms.map(item => (item.platform === account.platform ? account : item))
-          : [...platforms, account],
+          ? others.map(item => (item.platform === account.platform ? account : item))
+          : [...others, account],
       );
+      clearRowError(account.platform);
       setSheet(prev => ({ ...prev, visible: false }));
     },
-    [platforms, setPlatforms],
+    [clearRowError, platforms, setPlatforms],
   );
 
   const onChangeNiches = useCallback(
     (next: string[]) =>
-      setValue('niches', next, { shouldDirty: true, shouldValidate: formState.isSubmitted }),
+      setValue('niches', next, {
+        shouldDirty: true,
+        shouldValidate: formState.isSubmitted,
+      }),
     [formState.isSubmitted, setValue],
   );
 
   const onSubmit = useCallback(() => {
     handleSubmit(async values => {
+      setRowErrors({});
       const ok = await runStep(
         () =>
           saveSocials({
             niches: values.niches,
-            // The tier is always sent: the server ignores it when it holds
+            // Any known tier is sent: the server ignores it when it holds
             // lookup data, and needs it otherwise (contract §5.2).
             platforms: values.platforms.map(account => ({
               platform: account.platform,
               handle: account.handle,
-              follower_tier: account.followerTier,
+              ...(account.followerTier ? { follower_tier: account.followerTier } : {}),
               ...(account.isPrimary ? { is_primary: true } : {}),
             })),
           }).unwrap(),
-        { onFieldErrors: err => applyServerFieldErrors(err, SERVER_FIELD_MAP, setError) },
+        {
+          onFieldErrors: err => {
+            const rows = platformRowErrors(
+              extractServerFieldErrors(err),
+              values.platforms.map(account => account.platform),
+            );
+            setRowErrors(rows);
+            const applied = applyServerFieldErrors(err, SERVER_FIELD_MAP, setError);
+            return applied || Object.keys(rows).length > 0;
+          },
+        },
       );
       if (ok) socialsDraftStorage.clear();
     })();
@@ -185,7 +238,7 @@ export const useInfluencerSocialsScreen = () => {
     nichesError: formState.errors.niches?.message,
     platforms,
     platformsError: formState.errors.platforms?.message,
-    tierLabel: tiers.labelOf,
+    rowErrors,
     canAddPlatform: platforms.length < INFLUENCER_PLATFORMS.length,
     openAdd,
     onEdit,
@@ -194,6 +247,7 @@ export const useInfluencerSocialsScreen = () => {
       visible: sheet.visible,
       initial: sheet.editing,
       platforms: availablePlatforms,
+      supportsLookup,
       tiers: tiers.options,
       tiersLoading: tiers.isLoading,
       onSave: onSaveAccount,

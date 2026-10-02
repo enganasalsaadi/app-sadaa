@@ -2,7 +2,6 @@ import {
   OTP_GUARD_INITIAL,
   applyOtpRejection,
   cooldownFromSendError,
-  formatOtpTimer,
   isOtpExhausted,
 } from '../otpGuard';
 
@@ -42,13 +41,5 @@ describe('cooldownFromSendError', () => {
 
   it('returns null for other errors', () => {
     expect(cooldownFromSendError(wrongCode, NOW)).toBeNull();
-  });
-});
-
-describe('formatOtpTimer', () => {
-  it('formats m:ss', () => {
-    expect(formatOtpTimer(0)).toBe('0:00');
-    expect(formatOtpTimer(42)).toBe('0:42');
-    expect(formatOtpTimer(1800)).toBe('30:00');
   });
 });

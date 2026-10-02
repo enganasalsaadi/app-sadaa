@@ -164,10 +164,26 @@
           "username": "Username",
           "usernamePlaceholder": "@username or profile link",
           "tier": "Followers",
-          "tierHint": "Approximate is fine — you can update it later.",
           "add": "Add account",
-          "update": "Save changes"
+          "update": "Save changes",
+          "primary": "Main account",
+          "primaryHint": "If you don't choose one, we use your biggest account."
         },
+        "lookup": {
+          "check": "Check account",
+          "checkIn": "Check again in {{time}}",
+          "checking": "Checking your account… this can take up to 30 seconds.",
+          "followers": "{{value}} followers",
+          "verifiedAccount": "Verified account",
+          "claimed": "This account is already linked to another creator.",
+          "notFound": "Account not found. Check the username, or choose your followers below.",
+          "unavailable": "We couldn't verify the account automatically. Choose your followers and our team will review them.",
+          "throttled": "Too many checks. Try again in {{time}}, or choose your followers below.",
+          "tierLocked": "Set automatically from your account.",
+          "manualHint": "Our team reviews follower ranges you choose."
+        },
+        "underReview": "Under review",
+        "primary": "Main",
         "errors": {
           "nichesMin": "Choose at least one niche",
           "nichesMax": "Choose up to {{count}} niches",
