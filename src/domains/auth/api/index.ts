@@ -2,6 +2,7 @@ export {
   authApi,
   useLoginMutation,
   useLogoutMutation,
+  useDeleteAccountMutation,
   useGetProfileQuery,
   useRegisterDeviceMutation,
   useRequestPasswordResetMutation,

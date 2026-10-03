@@ -4,6 +4,7 @@ import type { BrandAccountFormValues } from '../brandAccountSchema';
 import { createOtpSchema } from '../otpSchema';
 import { createLoginSchema, createPhoneSchema } from '../loginSchema';
 import { createNewPasswordSchema } from '../passwordFields';
+import { createDeleteAccountSchema } from '../deleteAccountSchema';
 import {
   createBrandProfileSchema,
   EMPTY_SOCIAL_LINKS,
@@ -177,5 +178,20 @@ describe('newPasswordSchema', () => {
     ],
   ] as const)('%s → %s', (path, values, message) => {
     expect(messageOf(() => schema.validateSyncAt(path, values))).toBe(message);
+  });
+});
+
+describe('deleteAccountSchema', () => {
+  const schema = createDeleteAccountSchema(t);
+
+  it('requires the current password', () => {
+    expect(messageOf(() => schema.validateSync({ currentPassword: '' }))).toBe(
+      'validation.required',
+    );
+  });
+
+  // Length and strength are the server's call: older passwords may predate the rules.
+  it('accepts any non-empty password', () => {
+    expect(schema.isValidSync({ currentPassword: 'a' })).toBe(true);
   });
 });

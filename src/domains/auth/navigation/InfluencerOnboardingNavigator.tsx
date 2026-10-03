@@ -6,7 +6,9 @@ import type {
 } from '@/core/navigation';
 import { WizardShell } from '@/shared/ui';
 import { useGetInfluencerOnboardingProgressQuery } from '../api';
+import { DeleteAccountSheet } from '../components/DeleteAccountSheet';
 import { OnboardingProgressGate } from '../components/OnboardingProgressGate';
+import { useDeleteAccountEntry } from '../hooks/useDeleteAccountEntry';
 import {
   INFLUENCER_STEP_ROUTE,
   INFLUENCER_WIZARD_TOTAL_STEPS,
@@ -30,37 +32,41 @@ const Wizard = createNativeStackNavigator<InfluencerWizardStackParamList>();
 /** Steps slide inside the WizardShell sheet; the navy header stays put. */
 const InfluencerWizardNavigator: React.FC = () => {
   const screenOptions = useWizardScreenOptions();
+  const deleteEntry = useDeleteAccountEntry();
   // Cache hit: InfluencerOnboardingNavigator only mounts this once progress loaded.
   const { data: progress } = useGetInfluencerOnboardingProgressQuery();
   const step = progress ? resolveInfluencerOnboardingStep(progress) : 'phone';
   const initialRoute = step === 'complete' ? INFLUENCER_STEP_ROUTE.rates : INFLUENCER_STEP_ROUTE[step];
 
   return (
-    <WizardShell total={INFLUENCER_WIZARD_TOTAL_STEPS}>
-      <Wizard.Navigator initialRouteName={initialRoute} screenOptions={screenOptions}>
-        <Wizard.Screen name="InfluencerVerifyPhone" component={InfluencerVerifyPhoneScreen} />
-        <Wizard.Screen
-          name="InfluencerSocials"
-          component={InfluencerSocialsScreen}
-          options={({ route }) => ({
-            animationTypeForReplace: route.params?.fromBack ? 'pop' : 'push',
-          })}
-        />
-        <Wizard.Screen
-          name="InfluencerRates"
-          component={InfluencerRatesScreen}
-          options={({ route }) => ({
-            gestureEnabled: true,
-            animationTypeForReplace: route.params?.fromBack ? 'pop' : 'push',
-          })}
-        />
-        <Wizard.Screen
-          name="InfluencerKyc"
-          component={InfluencerKycScreen}
-          options={{ gestureEnabled: true }}
-        />
-      </Wizard.Navigator>
-    </WizardShell>
+    <>
+      <WizardShell total={INFLUENCER_WIZARD_TOTAL_STEPS} action={deleteEntry.action}>
+        <Wizard.Navigator initialRouteName={initialRoute} screenOptions={screenOptions}>
+          <Wizard.Screen name="InfluencerVerifyPhone" component={InfluencerVerifyPhoneScreen} />
+          <Wizard.Screen
+            name="InfluencerSocials"
+            component={InfluencerSocialsScreen}
+            options={({ route }) => ({
+              animationTypeForReplace: route.params?.fromBack ? 'pop' : 'push',
+            })}
+          />
+          <Wizard.Screen
+            name="InfluencerRates"
+            component={InfluencerRatesScreen}
+            options={({ route }) => ({
+              gestureEnabled: true,
+              animationTypeForReplace: route.params?.fromBack ? 'pop' : 'push',
+            })}
+          />
+          <Wizard.Screen
+            name="InfluencerKyc"
+            component={InfluencerKycScreen}
+            options={{ gestureEnabled: true }}
+          />
+        </Wizard.Navigator>
+      </WizardShell>
+      <DeleteAccountSheet visible={deleteEntry.sheetVisible} onClose={deleteEntry.closeSheet} />
+    </>
   );
 };
 

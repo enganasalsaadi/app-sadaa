@@ -267,6 +267,16 @@
       "supportMessage": "Hi Sada team, my account is suspended and I need help.",
       "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
     },
+    "deleteAccount": {
+      "entry": "Delete my account",
+      "title": "Delete your account permanently",
+      "body": "We’ll delete your profile, verification documents, photo and linked accounts, and your phone number becomes free to sign up again. This can’t be undone.",
+      "passwordLabel": "Current password",
+      "passwordPlaceholder": "Enter your current password",
+      "confirm": "Delete my account",
+      "success": "Your account has been deleted",
+      "locked": "Too many attempts. Try again in {{time}}"
+    },
     "onboardingProgressError": "Couldn’t load your registration. Check your connection and try again.",
     "passwordStrength": {
       "weak": "Weak",
@@ -437,17 +447,10 @@
       "terms": "Terms & Conditions",
       "privacy": "Privacy Policy",
       "logout": "Logout",
-      "deleteAccount": "Delete Account",
       "logoutConfirmTitle": "Logout",
       "logoutConfirmSubtitle": "Are you sure you want to logout?",
       "logoutConfirmBtn": "Logout",
-      "deleteConfirmTitle": "Delete Account",
-      "deleteConfirmSubtitle": "This action is permanent and cannot be undone. All your data will be deleted.",
-      "deleteConfirmPasswordLabel": "Enter your password to confirm",
-      "deleteConfirmPasswordPlaceholder": "Current password",
-      "deleteConfirmBtn": "Delete Account",
       "logoutSuccess": "Logged out successfully",
-      "deleteSuccess": "Account deleted successfully",
       "guestTitle": "Welcome to MyHomenia",
       "guestSubtitle": "Sign in to manage your bookings, reviews, and personal settings.",
       "loginBtn": "Sign In"
@@ -592,16 +595,6 @@
     "termsConditions": "Terms & Conditions",
     "privacyPolicy": "Privacy Policy",
     "version": "Version"
-  },
-  "notificationEnable": {
-    "title": "Enable Notifications",
-    "description": "Used for booking confirmations and reminders.",
-    "enable": "Enable Notifications",
-    "disable": "Disable Notifications",
-    "skip": "Not Now",
-    "notification_declined": "Notification declined",
-    "you_can_enable_notification_later": "You can enable notifications later from device settings",
-    "settings": "Settings"
   },
   "permissions": {
     "openSettings": "Open settings",
@@ -1003,7 +996,9 @@
       "step2": "Profile",
       "step3": "Review",
       "subtitle": "Demo wizard",
-      "body": "Step content sits on the surface sheet; the navy header persists."
+      "body": "Step content sits on the surface sheet; the navy header persists.",
+      "action": "Header action",
+      "actionPressed": "Header action pressed"
     },
     "listStates": {
       "data": "Data",

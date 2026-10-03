@@ -129,6 +129,11 @@ export interface LogoutRequest {
   fcm_token?: string;
 }
 
+// DELETE /auth/account — works for draft, active and suspended accounts.
+export interface DeleteAccountRequest {
+  current_password: string;
+}
+
 // Update profile: POST /account/profile — only name + phone (email read-only).
 export interface UpdateProfileRequest {
   full_name: string;

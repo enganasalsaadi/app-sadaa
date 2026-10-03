@@ -1,33 +1,23 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { useAppSelector, useAppDispatch } from '@/core/store';
-import { selectUser, selectIsAuthenticated, clearCredentials } from '@/domains/auth';
+import { useAppSelector } from '@/core/store';
+import { selectUser, selectIsAuthenticated } from '@/domains/auth';
 import { useLogoutMutation } from '@/domains/auth';
-import {
-  useDeleteAccountMutation,
-  useUpdateAvatarMutation,
-} from '../../../api/accountApi';
-import { baseApi, getApiErrorMessage } from '@/core/api';
-import { authStorage } from '@/core/storage';
+import { useUpdateAvatarMutation } from '../../../api/accountApi';
 import { toastService } from '@/core/toast';
 
 export const useProfileScreen = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const [deleteAccount, { isLoading: isDeletingAccount }] =
-    useDeleteAccountMutation();
   const [updateAvatar, { isLoading: isUploadingAvatar }] =
     useUpdateAvatarMutation();
 
   const [logoutSheetVisible, setLogoutSheetVisible] = useState(false);
   const [deleteSheetVisible, setDeleteSheetVisible] = useState(false);
-  const [deletePassword, setDeletePassword] = useState('');
-  const [deletePasswordError, setDeletePasswordError] = useState<string | undefined>();
 
   const handleLogout = useCallback(async () => {
     try {
@@ -39,20 +29,9 @@ export const useProfileScreen = () => {
       toastService.success(t('account.profile.logoutSuccess'));
     }
   }, [logout, t]);
-  const handleDeleteAccount = useCallback(async () => {
-    setDeletePasswordError(undefined);
-    try {
-      await deleteAccount({ password: deletePassword }).unwrap();
-      await authStorage.clearSession();
-      dispatch(clearCredentials());
-      dispatch(baseApi.util.resetApiState());
-      toastService.success(t('account.profile.deleteSuccess'));
-      setDeleteSheetVisible(false);
-      setDeletePassword('');
-    } catch (err) {
-      setDeletePasswordError(getApiErrorMessage(err));
-    }
-  }, [deleteAccount, deletePassword, dispatch, t]);
+
+  const openDeleteSheet = useCallback(() => setDeleteSheetVisible(true), []);
+  const closeDeleteSheet = useCallback(() => setDeleteSheetVisible(false), []);
 
   const uploadAvatar = useCallback(
     async (asset: { uri?: string; fileName?: string; type?: string }) => {
@@ -86,18 +65,13 @@ export const useProfileScreen = () => {
     user,
     isAuthenticated,
     isLoggingOut,
-    isDeletingAccount,
     isUploadingAvatar,
     logoutSheetVisible,
     deleteSheetVisible,
-    deletePassword,
-    deletePasswordError,
     setLogoutSheetVisible,
-    setDeleteSheetVisible,
-    setDeletePassword,
-    setDeletePasswordError,
+    openDeleteSheet,
+    closeDeleteSheet,
     handleLogout,
-    handleDeleteAccount,
     handleChangePhoto,
   };
 };

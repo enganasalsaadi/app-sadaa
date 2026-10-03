@@ -5,6 +5,7 @@
 export { AuthNavigator } from './navigation/AuthNavigator';
 export { useDeviceRegistration } from './hooks/useDeviceRegistration';
 export { usePushRefresh } from './hooks/usePushRefresh';
+export { DeleteAccountSheet } from './components/DeleteAccountSheet';
 export {
   useGetProfileQuery,
   useLogoutMutation,

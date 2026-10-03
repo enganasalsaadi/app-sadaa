@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { baseApi, normalizeApiError, useGetConfigQuery } from '@/core/api';
 import { SUPPORT_WHATSAPP_NUMBER } from '@/core/config';
@@ -14,6 +14,7 @@ export const useSuspendedScreen = () => {
   const { data: config } = useGetConfigQuery();
   const [fetchProgress, { isFetching: isChecking }] = useLazyGetOnboardingProgressQuery();
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const [deleteSheetVisible, setDeleteSheetVisible] = useState(false);
   const supportNumber = config?.support.whatsapp || SUPPORT_WHATSAPP_NUMBER;
 
   const onContactSupport = useCallback(() => {
@@ -51,5 +52,18 @@ export const useSuspendedScreen = () => {
     }
   }, [logout]);
 
-  return { onContactSupport, onCheckAgain, isChecking, onLogout, isLoggingOut };
+  // Deletion skips the account.active gate, so a suspended user can still leave.
+  const openDeleteSheet = useCallback(() => setDeleteSheetVisible(true), []);
+  const closeDeleteSheet = useCallback(() => setDeleteSheetVisible(false), []);
+
+  return {
+    onContactSupport,
+    onCheckAgain,
+    isChecking,
+    onLogout,
+    isLoggingOut,
+    deleteSheetVisible,
+    openDeleteSheet,
+    closeDeleteSheet,
+  };
 };

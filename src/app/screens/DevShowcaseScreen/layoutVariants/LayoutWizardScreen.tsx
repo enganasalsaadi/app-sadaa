@@ -13,6 +13,7 @@ import {
 import { useTheme } from '@/core/theme';
 import {
   WIZARD_DEMO_TOTAL,
+  useLayoutWizardAction,
   useLayoutWizardStep,
 } from './hooks/useLayoutWizardStep';
 
@@ -58,10 +59,13 @@ const WizardDemoStep: React.FC = memo(() => {
 });
 
 /** Wizard archetype (rule 09): `WizardShell` header persists while the step content changes. */
-const LayoutWizardScreenComponent: React.FC = () => (
-  <WizardShell total={WIZARD_DEMO_TOTAL}>
-    <WizardDemoStep />
-  </WizardShell>
-);
+const LayoutWizardScreenComponent: React.FC = () => {
+  const action = useLayoutWizardAction();
+  return (
+    <WizardShell total={WIZARD_DEMO_TOTAL} action={action}>
+      <WizardDemoStep />
+    </WizardShell>
+  );
+};
 
 export const LayoutWizardScreen = memo(LayoutWizardScreenComponent);

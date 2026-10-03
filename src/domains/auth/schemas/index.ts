@@ -34,3 +34,5 @@ export type {
 } from './influencerSocialsSchema';
 export { createInfluencerRatesSchema, fromPriceUsd, toPriceUsd } from './influencerRatesSchema';
 export type { InfluencerRatesFormValues, RateRowFormValues } from './influencerRatesSchema';
+export { createDeleteAccountSchema } from './deleteAccountSchema';
+export type { DeleteAccountFormValues } from './deleteAccountSchema';

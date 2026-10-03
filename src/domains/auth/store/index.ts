@@ -31,6 +31,7 @@ export type {
   ResetPasswordRequest,
   UpdateProfileRequest,
   LogoutRequest,
+  DeleteAccountRequest,
   VerifyPhoneOtpRequest,
   ResendPhoneOtpRequest,
   BrandStep1Request,

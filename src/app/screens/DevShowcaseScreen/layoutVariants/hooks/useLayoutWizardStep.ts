@@ -1,5 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { UserRoundX } from 'lucide-react-native';
 import { goBack } from '@/core/navigation';
+import { toastService } from '@/core/toast';
+import type { WizardShellAction } from '@/shared/ui';
 
 export const WIZARD_DEMO_TOTAL = 3;
 
@@ -19,4 +23,17 @@ export const useLayoutWizardStep = () => {
   }, [isLast]);
 
   return { step, isLast, onBack, onNext };
+};
+
+/** Header `action` slot: a flow-level escape shown on every step. */
+export const useLayoutWizardAction = (): WizardShellAction => {
+  const { t } = useTranslation();
+  return useMemo(
+    () => ({
+      icon: UserRoundX,
+      label: t('devShowcase.wizard.action'),
+      onPress: () => toastService.info(t('devShowcase.wizard.actionPressed')),
+    }),
+    [t],
+  );
 };

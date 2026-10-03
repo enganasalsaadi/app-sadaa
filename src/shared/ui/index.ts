@@ -85,7 +85,7 @@ export type { StepProgressProps, StepProgressTone } from './StepProgress';
 export { HeroSheet, useHeroCompact } from './HeroSheet';
 export type { HeroSheetProps } from './HeroSheet';
 export { WizardShell, useWizardHeader } from './WizardShell';
-export type { WizardShellProps, WizardHeaderConfig } from './WizardShell';
+export type { WizardShellProps, WizardShellAction, WizardHeaderConfig } from './WizardShell';
 export { ConfirmSheet } from './ConfirmSheet';
 export type { ConfirmSheetProps } from './ConfirmSheet';
 export { FilePickerCard } from './FilePickerCard';

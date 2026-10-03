@@ -21,7 +21,6 @@ import {
   BottomSheet,
   Box,
   CustomButton,
-  CustomInput,
   IconButton,
   Image,
   Layout,
@@ -31,7 +30,7 @@ import {
   Text,
 } from '@/shared/ui';
 import { useDispatch } from 'react-redux';
-import { clearCredentials } from '@/domains/auth';
+import { clearCredentials, DeleteAccountSheet } from '@/domains/auth';
 
 type Props = SettingsStackScreenProps<'ProfileScreen'>;
 
@@ -61,18 +60,13 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
     user,
     isAuthenticated,
     isLoggingOut,
-    isDeletingAccount,
     isUploadingAvatar,
     logoutSheetVisible,
     deleteSheetVisible,
-    deletePassword,
-    deletePasswordError,
     setLogoutSheetVisible,
-    setDeleteSheetVisible,
-    setDeletePassword,
-    setDeletePasswordError,
+    openDeleteSheet,
+    closeDeleteSheet,
     handleLogout,
-    handleDeleteAccount,
     handleChangePhoto,
   } = useProfileScreen();
 
@@ -131,12 +125,6 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
   const settingsItems = isAuthenticated
     ? [...privateSettingsItems, ...publicSettingsItems, ...devSettingsItems]
     : [...publicSettingsItems, ...devSettingsItems];
-
-  const closeDeleteSheet = () => {
-    setDeleteSheetVisible(false);
-    setDeletePassword('');
-    setDeletePasswordError(undefined);
-  };
 
   const navigateToLogin = () => {
     dispatch(clearCredentials());
@@ -300,8 +288,8 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
                 <ListRow
                   icon={Trash2}
                   tone="danger"
-                  title={t('account.profile.deleteAccount')}
-                  onPress={() => setDeleteSheetVisible(true)}
+                  title={t('auth.deleteAccount.entry')}
+                  onPress={openDeleteSheet}
                 />
               </ListGroup>
             </>
@@ -359,74 +347,10 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
         </Box>
       </BottomSheet>
 
-      {/* Delete account confirmation */}
-      <BottomSheet
+      <DeleteAccountSheet
         visible={deleteSheetVisible}
         onClose={closeDeleteSheet}
-        muted
-      >
-        <Box px="2xl" pt="lg" pb="3xl" align="center">
-          <Box
-            width={moderateScale(56)}
-            height={moderateScale(56)}
-            borderRadius="full"
-            bg={colors.status.danger.soft}
-            align="center"
-            justify="center"
-            mb="lg"
-          >
-            <Trash2
-              size={moderateScale(24)}
-              color={colors.status.danger.main}
-            />
-          </Box>
-          <Text variant="h4" color={colors.text.primary} mb="sm" align="center">
-            {t('account.profile.deleteConfirmTitle')}
-          </Text>
-          <Text
-            variant="body"
-            color={colors.text.secondary}
-            mb="2xl"
-            align="center"
-          >
-            {t('account.profile.deleteConfirmSubtitle')}
-          </Text>
-          <Box width="100%" mb="xl">
-            <CustomInput
-              label={t('account.profile.deleteConfirmPasswordLabel')}
-              placeholder={t(
-                'account.profile.deleteConfirmPasswordPlaceholder',
-              )}
-              value={deletePassword}
-              onChangeText={text => {
-                setDeletePassword(text);
-                setDeletePasswordError(undefined);
-              }}
-              secureTextEntry
-              autoCapitalize="none"
-              error={deletePasswordError}
-            />
-          </Box>
-          <Box row gap="xl" width="100%" justify="center">
-            <CustomButton
-              onPress={closeDeleteSheet}
-              title={t('common.cancel')}
-              variant="outline"
-              fullWidth
-              style={styles.halfButton}
-            />
-            <CustomButton
-              onPress={handleDeleteAccount}
-              title={t('account.profile.deleteConfirmBtn')}
-              disabled={isDeletingAccount || !deletePassword.trim()}
-              loading={isDeletingAccount}
-              variant="danger"
-              fullWidth
-              style={styles.halfButton}
-            />
-          </Box>
-        </Box>
-      </BottomSheet>
+      />
     </>
   );
 };

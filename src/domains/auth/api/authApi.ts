@@ -17,10 +17,12 @@ import type {
   ResetPasswordRequest,
   UpdateProfileRequest,
   LogoutRequest,
+  DeleteAccountRequest,
   VerifyPhoneOtpRequest,
   ResendPhoneOtpRequest,
 } from '../store';
 import { baseApi } from '@/core/api';
+import { socialsDraftStorage } from '../utils/socialsDraft';
 
 // Logout waits on this before signing out locally; it must never hang the UI.
 const LOGOUT_TIMEOUT_MS = 5000;
@@ -78,6 +80,25 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
+    // No account.active gate: draft, active and suspended accounts can all
+    // delete. The server purges KYC files, avatar, devices and every token, and
+    // frees the phone number.
+    deleteAccount: builder.mutation<void, DeleteAccountRequest>({
+      query: body => ({ url: '/auth/account', method: 'DELETE', body }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch {
+          // Wrong password or throttled: the session stays, the sheet shows why.
+          return;
+        }
+        await authStorage.clearSession();
+        // Nothing of the deleted user may stay on the device.
+        socialsDraftStorage.clear();
+        dispatch(clearCredentials());
+        dispatch(baseApi.util.resetApiState());
+      },
+    }),
     getProfile: builder.query<User, void>({
       query: () => '/user/me',
       providesTags: ['User'],
@@ -132,6 +153,7 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useLoginMutation,
   useLogoutMutation,
+  useDeleteAccountMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useRegisterDeviceMutation,

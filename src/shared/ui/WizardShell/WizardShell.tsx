@@ -13,6 +13,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight } from 'lucide-react-native';
+import type { LucideIcon } from 'lucide-react-native';
 import { motion, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
@@ -36,8 +37,17 @@ interface WizardShellContextValue {
 
 const WizardShellContext = createContext<WizardShellContextValue | null>(null);
 
+/** Flow-level escape shown on every step (e.g. account deletion during registration). */
+export interface WizardShellAction {
+  icon: LucideIcon;
+  label: string;
+  onPress: () => void;
+}
+
 export interface WizardShellProps {
   total: number;
+  /** Glass icon button beside the step pill, on every step. */
+  action?: WizardShellAction;
   /** Usually a stack navigator: its screens slide inside the sheet while the header stays put. */
   children: React.ReactNode;
 }
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
  * Compact mode (keyboard open, or short screens): the title moves into the
  * back/step row and the subtitle drops, so the form keeps most of the height.
  */
-const WizardShellComponent: React.FC<WizardShellProps> = ({ total, children }) => {
+const WizardShellComponent: React.FC<WizardShellProps> = ({ total, action, children }) => {
   const { t } = useTranslation();
   const { colors, sizes, isRTL } = useTheme();
   const compact = useHeroCompact();
@@ -120,6 +130,22 @@ const WizardShellComponent: React.FC<WizardShellProps> = ({ total, children }) =
         )}
 
         {compact ? title : <Box flex={1} />}
+
+        {action ? (
+          <Pressable
+            onPress={action.onPress}
+            width={sizes.button.md}
+            height={sizes.button.md}
+            align="center"
+            justify="center"
+            borderRadius="full"
+            bg={colors.glass.badge}
+            accessibilityRole="button"
+            accessibilityLabel={action.label}
+          >
+            <action.icon size={sizes.icon.sm} color={colors.text.onBrand} />
+          </Pressable>
+        ) : null}
 
         <Box
           px="md"

@@ -290,11 +290,11 @@ APP LAUNCH
 │   ├── Register as Brand  ────────┐                             ✅
 │   └── Register as Creator ───────┤                             ✅
 │                                  ▼
-├── REGISTRATION WIZARD (signed in, not finished)
+├── REGISTRATION WIZARD (signed in, not finished; "Delete my account" on every step)   ✅
 │   ├── Brand:   Verify phone → Business profile → Business document (optional) → Welcome   ✅
 │   └── Creator: Verify phone → Niches & platforms → Prices (optional) → ID check (optional) → Welcome   ✅
 │
-├── SUSPENDED (blocking: contact support, re-check status, log out)                   ✅
+├── SUSPENDED (blocking: contact support, re-check status, log out, delete account)   ✅
 │
 └── MAIN APP (bottom tab bar)
     ├── Home tab                                                 🟡 placeholder today
@@ -305,7 +305,8 @@ APP LAUNCH
           ├── Change password                                    ✅
           ├── Notification preferences                           🟡 (categories to be updated for Sada)
           ├── Language                                           ✅
-          └── Terms & Privacy (in-app web pages)                 ✅
+          ├── Terms & Privacy (in-app web pages)                 ✅
+          └── Delete my account (password-confirmed)             ✅
 ```
 
 **Planned tabs 🔜:** brands and creators will get **separate tab sets** suited to their jobs, for example *Home · Campaigns · Deals · Wallet · Profile* for brands and *Home · Opportunities · Deals · Wallet · Profile* for creators. Tabs for analytics, messages and notifications follow as those features arrive.
@@ -351,7 +352,7 @@ If someone closes the app halfway through, the next launch (or login) asks the s
 #### Journey E: Login, forgot password and suspension ✅
 - **Login:** phone and password. Too many attempts show a "please wait" message.
 - **Forgot password:** phone → SMS code → new password → back to Login with the phone number already filled in.
-- **Suspension:** if the platform suspends an account, the app switches immediately to the Suspended screen, wherever the user was. From there they can contact support on WhatsApp (for account support only, never for deal actions), re-check whether the suspension has been lifted, or log out.
+- **Suspension:** if the platform suspends an account, the app switches immediately to the Suspended screen, wherever the user was. From there they can contact support on WhatsApp (for account support only, never for deal actions), re-check whether the suspension has been lifted, log out, or delete their account.
 
 #### Journey F: The deal lifecycle 🟡 components ready · 🔜 live service
 The visual building blocks are already designed and built (deal cards, status pills, a progress timeline, draft review cards, creator cards, wallet balance card, payment breakdown). They will be connected once the marketplace service is ready:
@@ -365,6 +366,13 @@ The visual building blocks are already designed and built (deal cards, status pi
 7. Either side can raise a *Dispute* at any time. Breaches lead to *Refunded*.
 
 Each stage always shows text and an icon, never colour alone. The app only offers the actions that role is allowed to take at that stage, and the server re-checks every action.
+
+#### Journey G: Deleting an account ✅
+- **Where:** "Delete my account" is in Settings, on the Suspended screen, and in the header of every registration step. Anyone who can create an account can delete it, even halfway through registration or while suspended (an Apple requirement).
+- **Confirmation:** a sheet explains exactly what happens: Sada deletes the profile, verification documents, photo and linked accounts, and the phone number becomes free to sign up again. It cannot be undone. The user confirms with their current password.
+- **Protection:** a wrong password shows under the field. After too many tries (5 per minute) the sheet says "Try again in m:ss".
+- **After deletion:** the app signs out, wipes everything it kept on the phone for that user (session, cached data, unsaved registration drafts), shows "Your account has been deleted" and returns to Login.
+- **Money (when the wallet goes live):** the server decides whether an account can be deleted. If an active deal or money held in escrow blocks deletion, the sheet shows the server's reason.
 
 ---
 
@@ -428,6 +436,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 
 - **Phone-based identity** with SMS verification. The user's role (brand or creator) always comes from the server, never from a choice made only on the phone.
 - **Session safety.** If a session expires or is revoked, the app signs out and wipes every piece of cached personal data.
+- **Right to leave.** Users can delete their account themselves at any stage, confirmed by password. The server removes their documents, photo and devices and frees their phone number; the phone keeps nothing (see Journey G).
 - **No secrets in the app.** Sensitive keys (AI services, analytics) are only ever used on the server.
 - **No personal data in logs.** Phone numbers, tokens, wallet data and amounts are never logged.
 - **Link safety.** Social links and proof-of-publishing links are only accepted from approved social networks. In-app web pages only open approved addresses.
@@ -456,7 +465,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 
 | Requirement | Status | Notes |
 |---|---|---|
-| **In-app account deletion** (Apple requirement) | 🟡 | A "Delete account" option exists in Settings (password-confirmed). Its connection to the new Sada backend must be confirmed. |
+| **In-app account deletion** (Apple requirement) | ✅ | "Delete my account" is in Settings, on the Suspended screen and on every registration step, password-confirmed and connected to the Sada service. It works for unfinished, active and suspended accounts. |
 | **Privacy policy and terms** reachable in the app | ✅ | Opened as in-app pages from Settings. Final legal text and addresses still needed. |
 | **Clear permission explanations** | ✅ | The camera and photo explanations say exactly what Sada uses them for, in Arabic and English. Unused permissions (location, and camera on Android) were removed, so the store listings only show what the app really uses. |
 | **Secure connections only** | ✅ | Store builds on iOS and Android connect only over encrypted HTTPS and trust only the phone's built-in certificates. Insecure connections are allowed only in developer builds on a local network. |
@@ -520,7 +529,7 @@ These must be solved before a public store release. Ordered by severity.
 | 5 | **Login sessions are stored on the device without encryption.** | Security gap for a money app. Sessions must move to encrypted secure storage. | Mobile |
 | 6 | ✅ **Resolved 2026-10-03.** ~~Generic permission explanations, plus an unused location permission on Android.~~ Explanations rewritten in Arabic and English. Location and the Android camera permission were removed. | | Mobile |
 | 7 | **Leftover text from the previous project** in the profile area (booking wording and the old app name), and old notification-settings fields. | Confusing for users and unprofessional in review. | Mobile |
-| 8 | **Account deletion is not confirmed** against the new backend. | Mandatory Apple requirement. | Mobile + backend |
+| 8 | ✅ **Resolved 2026-10-03.** ~~Account deletion is not confirmed against the new backend.~~ Deletion is connected to the Sada service and reachable from Settings, the Suspended screen and registration. | | Mobile + backend |
 | 9 | **App Store listing ID not set yet**, so the forced-update button opens the App Store home page instead of Sada's page. | Poor update experience until the first release. Set it right after the listing is created. | Mobile |
 | 10 | **Not yet verified on real devices** after the visual redesign: some text fields in right-to-left, and card shadows. | Visual polish and right-to-left correctness. | Mobile QA |
 | 11 | **Payment partner and legal framework** for escrow with local e-wallets, plus contract templates. | Escrow can't launch without them. | Business + legal |
@@ -534,5 +543,6 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-03 | Launch blocker 8 resolved. Account deletion is connected to the Sada service, confirmed by password, and reachable from Settings, the Suspended screen and every registration step. Deleting signs out and wipes everything the phone kept for that user. | 5.2, 5.3 (Journeys E, G), 6.5, 7.2, 7.4 |
 | 2026-10-03 | Launch blockers 4 and 6 resolved. Store builds connect over HTTPS only. Location and the unused Android camera permission were removed. The camera and photo explanations are now specific and available in Arabic and English. The "permission turned off" message is translated and explains why each permission is needed. | 7.1, 7.2, 7.4 |
 | 2026-10-03 | First version of the living guide, written from the current app: onboarding for both roles, social lookup, KYC, suspension, push permission strategy, device registration, and launch blockers. | All |

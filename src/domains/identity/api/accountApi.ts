@@ -53,9 +53,6 @@ export const accountApi = baseApi.injectEndpoints({
     changePassword: builder.mutation<void, ChangePasswordRequest>({
       query: body => ({ url: '/account/password', method: 'POST', body }),
     }),
-    deleteAccount: builder.mutation<void, { password: string }>({
-      query: body => ({ url: '/account', method: 'DELETE', body }),
-    }),
   }),
 });
 
@@ -64,5 +61,4 @@ export const {
   useUpdatePreferencesMutation,
   useUpdateAvatarMutation,
   useChangePasswordMutation,
-  useDeleteAccountMutation,
 } = accountApi;
