@@ -6,7 +6,7 @@ import { goBack } from '@/core/navigation';
 
 /**
  * Layout gallery variant: `footer` with `LayoutFooter` — the primary action
- * pinned below the content and above the keyboard.
+ * (plus optional secondary + tertiary) pinned below the content and above the keyboard.
  */
 const LayoutCtaButtonScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -15,7 +15,15 @@ const LayoutCtaButtonScreenComponent: React.FC = () => {
   return (
     <Layout
       footer={
-        <LayoutFooter primary={{ label: t('common.back'), onPress: goBack }} />
+        <LayoutFooter
+          primary={{ label: t('common.back'), onPress: goBack }}
+          secondary={{
+            label: t('devShowcase.layoutGallery.ctaSecondary'),
+            onPress: goBack,
+            variant: 'secondary',
+          }}
+          tertiary={{ label: t('devShowcase.layoutGallery.ctaTertiary'), onPress: goBack }}
+        />
       }
     >
       <Box gap="sm">

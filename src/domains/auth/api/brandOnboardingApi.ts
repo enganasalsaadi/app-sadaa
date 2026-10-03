@@ -1,5 +1,5 @@
 import { baseApi } from '@/core/api';
-import { syncOnboardingStep } from '../store';
+import { setAccountSuspended, syncOnboardingStep } from '../store';
 import { startOnboardingSession } from './onboardingSession';
 import type {
   BrandStep1Request,
@@ -44,6 +44,7 @@ export const brandOnboardingApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(syncOnboardingStep(data.current_step));
+          dispatch(setAccountSuspended(data.status === 'suspended'));
         } catch {}
       },
     }),
@@ -55,4 +56,5 @@ export const {
   useBrandStep2ProfileMutation,
   useBrandStep3KycMutation,
   useGetOnboardingProgressQuery,
+  useLazyGetOnboardingProgressQuery,
 } = brandOnboardingApi;

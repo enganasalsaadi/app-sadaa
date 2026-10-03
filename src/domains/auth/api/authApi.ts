@@ -5,6 +5,7 @@ import {
   setToken,
   clearCredentials,
   phoneOtpSent,
+  setAccountSuspended,
 } from '../store';
 import type {
   LoginRequest,
@@ -84,6 +85,8 @@ export const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
+          // `/user/me` answers 403 while suspended: a success means reinstated.
+          dispatch(setAccountSuspended(false));
         } catch {}
       },
     }),

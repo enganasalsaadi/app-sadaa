@@ -256,6 +256,17 @@
         "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
       }
     },
+    "suspended": {
+      "title": "حسابك موقوف",
+      "body": "أوقفنا حسابك مؤقتاً، ولا يمكن استخدام التطبيق حالياً. تواصل مع الدعم لمعرفة السبب.",
+      "notice": "بعد رفع الإيقاف اضغط «تحقّق مجدداً» لتكمل من حيث توقفت.",
+      "contactSupport": "تواصل مع الدعم",
+      "checkAgain": "تحقّق مجدداً",
+      "logout": "تسجيل الخروج",
+      "stillSuspended": "لا يزال الحساب موقوفاً",
+      "supportMessage": "مرحباً فريق صدى، حسابي موقوف وأحتاج المساعدة.",
+      "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
+    },
     "onboardingProgressError": "تعذّر تحميل حالة تسجيلك. تحقق من اتصالك وحاول مرة أخرى.",
     "passwordStrength": {
       "weak": "ضعيفة",
@@ -835,7 +846,9 @@
       "darkForcedTitle": "سطح داكن إجباري",
       "darkForcedDescription": "معاينة رموز الوضع الداكن فقط",
       "ctaButtonTitle": "زر دعوة لاتخاذ إجراء",
-      "ctaButtonDescription": "footer مع LayoutFooter",
+      "ctaButtonDescription": "footer مع LayoutFooter: أساسي، ثانوي، ثالث",
+      "ctaSecondary": "إجراء ثانوي",
+      "ctaTertiary": "إجراء ثالث",
       "noScrollWithHandlerTitle": "معالج تمرير يدوي",
       "noScrollWithHandlerDescription": "الوضع الثابت مع useScrollHandler",
       "noScrollWithHandlerRow": "الصف {{index}}",

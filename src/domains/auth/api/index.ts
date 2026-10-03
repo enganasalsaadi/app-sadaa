@@ -17,6 +17,7 @@ export {
   useBrandStep2ProfileMutation,
   useBrandStep3KycMutation,
   useGetOnboardingProgressQuery,
+  useLazyGetOnboardingProgressQuery,
 } from './brandOnboardingApi';
 export {
   influencerOnboardingApi,

@@ -1,5 +1,5 @@
 import { baseApi } from '@/core/api';
-import { syncOnboardingStep } from '../store';
+import { setAccountSuspended, syncOnboardingStep } from '../store';
 import type {
   InfluencerOnboardingProgress,
   InfluencerProfileResource,
@@ -44,6 +44,7 @@ export const influencerOnboardingApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(syncOnboardingStep(data.current_step));
+          dispatch(setAccountSuspended(data.status === 'suspended'));
         } catch {}
       },
     }),

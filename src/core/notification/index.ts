@@ -4,7 +4,6 @@ import {
   setBackgroundMessageHandler,
 } from '@react-native-firebase/messaging';
 import { notificationManager } from './NotificationManager';
-import { NotificationType } from './notificationTypes';
 
 let backgroundHandlersRegistered = false;
 
@@ -18,34 +17,15 @@ export const registerNotificationBackgroundHandlers = () => {
   });
 
   notifee.onBackgroundEvent(async event => {
-    if (event.type !== EventType.PRESS) {
-      return;
+    if (event.type === EventType.PRESS) {
+      notificationManager.onBackgroundPress(event.detail.notification?.data);
     }
-
-    const data = (event.detail.notification?.data ?? {}) as Record<
-      string,
-      string
-    >;
-
-    await notificationManager.onBackgroundEvent({
-      type: data.type ?? NotificationType.DEFAULT,
-      data,
-      source: 'background',
-    });
   });
 
   backgroundHandlersRegistered = true;
 };
 
 export { notificationManager };
-export { NotificationType } from './notificationTypes';
-export type {
-  NotificationData,
-  NotificationPressPayload,
-  NotificationRouteHandler,
-  NotificationRouteMap,
-  NotificationTokenListener,
-} from './notificationTypes';
 export type { RegisterDevicePayload } from './notificationTypes';
 export { syncDeviceRegistration } from './fcmTokenService';
 export type { PushPermission } from './pushPrompt';

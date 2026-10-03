@@ -12,6 +12,8 @@ export enum AppStatus {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
   /** Logged in but the server-side registration wizard isn't finished yet. */
   REGISTRATION_INCOMPLETE = 'REGISTRATION_INCOMPLETE',
+  /** Logged in, account suspended by an admin: only support and logout work. */
+  SUSPENDED = 'SUSPENDED',
   AUTHENTICATED = 'AUTHENTICATED',
 }
 

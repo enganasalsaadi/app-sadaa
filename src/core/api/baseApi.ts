@@ -110,6 +110,18 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       return { error: result.error };
     }
 
+    // Any `/user/*`, `/social/*`… call of a suspended account (contract H19),
+    // silent ones included. Token check: a late response after logout must
+    // not flag the next session.
+    if (
+      statusCode === 403 &&
+      normalizedError.code === 'account_suspended' &&
+      authStorage.getToken()
+    ) {
+      api.dispatch({ type: 'auth/setAccountSuspended', payload: true });
+      return { error: result.error };
+    }
+
     // Silent skips the error UI only; an expired session is torn down regardless.
     if (extraOptions?.silent) {
       return { error: result.error };
@@ -139,8 +151,8 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
 
     if (statusCode === 403) {
       // Flow gates, routed by their owners: the onboarding resolver sends
-      // `phone_not_verified` back to the OTP step, the suspended gate blocks
-      // `account_suspended`. A global redirect would fight both.
+      // `phone_not_verified` back to the OTP step; `account_suspended` without
+      // a session (nothing to gate) stays with the caller.
       if (
         normalizedError.code === 'phone_not_verified' ||
         normalizedError.code === 'account_suspended'

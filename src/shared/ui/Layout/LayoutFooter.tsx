@@ -15,14 +15,21 @@ export interface LayoutFooterAction {
 export interface LayoutFooterProps {
   /** The screen's single primary action (rule 09). `onBrand` over navy. */
   primary: LayoutFooterAction & { variant?: Extract<ButtonVariant, 'primary' | 'onBrand' | 'danger'> };
-  /** Optional low-emphasis action under the primary (skip, cancel). */
-  secondary?: LayoutFooterAction;
+  /** Optional action under the primary: `ghost` (default) for skip/cancel, `secondary` for a real alternative. */
+  secondary?: LayoutFooterAction & { variant?: Extract<ButtonVariant, 'secondary' | 'ghost'> };
+  /** Optional third, lowest-emphasis action (always `ghost`); pair it with a `secondary` one. */
+  tertiary?: LayoutFooterAction;
   /** Content above the buttons (totals row, terms note). */
   top?: React.ReactNode;
 }
 
 /** Standard content for `Layout`'s `footer` slot. Aligns with the screen's horizontal padding. */
-const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({ primary, secondary, top }) => {
+const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({
+  primary,
+  secondary,
+  tertiary,
+  top,
+}) => {
   const { paddingX } = useLayoutContext();
 
   return (
@@ -41,6 +48,15 @@ const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({ primary, secondary
           onPress={secondary.onPress}
           loading={secondary.loading}
           disabled={secondary.disabled}
+          variant={secondary.variant ?? 'ghost'}
+        />
+      ) : null}
+      {tertiary ? (
+        <CustomButton
+          title={tertiary.label}
+          onPress={tertiary.onPress}
+          loading={tertiary.loading}
+          disabled={tertiary.disabled}
           variant="ghost"
         />
       ) : null}

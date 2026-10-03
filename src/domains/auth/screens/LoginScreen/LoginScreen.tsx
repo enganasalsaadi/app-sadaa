@@ -1,11 +1,9 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller, useWatch } from 'react-hook-form';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { moderateScale, motion, useTheme } from '@/core/theme';
+import { useTheme } from '@/core/theme';
 import {
   Box,
-  BrandLogo,
   CustomButton,
   CustomInput,
   HeroSheet,
@@ -14,41 +12,10 @@ import {
   PhoneInput,
   Pressable,
   Text,
-  useHeroCompact,
 } from '@/shared/ui';
 import { AccountTypeSheet } from '../../components/AccountTypeSheet';
+import { AuthLogoHero } from '../../components/AuthLogoHero';
 import { useLoginScreen } from './hooks/useLoginScreen';
-
-const LOGO_HEIGHT = moderateScale(44);
-const heroEntering = FadeIn.duration(motion.duration.base);
-const heroExiting = FadeOut.duration(motion.duration.fast);
-
-// Own component so keyboard show/hide re-renders only the hero, not the form.
-// Compact (keyboard open / short screen): symbol only, tight padding.
-const LoginHero: React.FC = memo(() => {
-  const { t } = useTranslation();
-  const { colors, sizes } = useTheme();
-  const compact = useHeroCompact();
-
-  return (
-    <Box px="xl" pt={compact ? 'xs' : 'xl'} pb={compact ? 'lg' : '3xl'} align="center" gap="md">
-      <Animated.View key={compact ? 'symbol' : 'full'} entering={heroEntering}>
-        {compact ? (
-          <BrandLogo variant="symbol" height={sizes.icon.lg} surface="brand" />
-        ) : (
-          <BrandLogo variant="full" height={LOGO_HEIGHT} surface="brand" />
-        )}
-      </Animated.View>
-      {compact ? null : (
-        <Animated.View entering={heroEntering} exiting={heroExiting}>
-          <Text variant="body" align="center" color={colors.text.onBrandMuted}>
-            {t('common.tagline')}
-          </Text>
-        </Animated.View>
-      )}
-    </Box>
-  );
-});
 
 const OrDivider: React.FC = memo(() => {
   const { t } = useTranslation();
@@ -83,7 +50,7 @@ export const LoginScreen: React.FC = () => {
   const countryCode = useWatch({ control, name: 'countryCode' });
 
   return (
-    <HeroSheet header={<LoginHero />}>
+    <HeroSheet header={<AuthLogoHero showTagline />}>
       <Layout
         padding={{ y: '2xl' }}
       >

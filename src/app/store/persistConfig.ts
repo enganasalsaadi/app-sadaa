@@ -14,5 +14,6 @@ export const authPersistConfig: PersistConfig<AuthState> = {
     'isOnboardingComplete',
     'pendingPhone',
     'phoneOtpSentAt',
+    'isSuspended',
   ],
 };

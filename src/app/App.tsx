@@ -14,11 +14,11 @@ import { ThemeProvider, useTheme } from '@/core/theme';
 import { FONT_FAMILY } from '@/core/theme/tokens/typography';
 import { store, persistor } from '@/app/store';
 import { RootNavigator } from '@/app/navigation/RootNavigator';
-import { navigationRef, navigate } from '@/core/navigation';
+import { navigationRef } from '@/core/navigation';
 import { useAppBootstrap, useSlowBoot } from '@/app/bootstrap';
 import { useNetworkMonitor } from '@/core/hooks';
 import { useNotification } from '@/core/hooks';
-import { useDeviceRegistration } from '@/domains/auth';
+import { useDeviceRegistration, usePushRefresh } from '@/domains/auth';
 import { useGetProfileQuery } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
@@ -30,9 +30,10 @@ const AppContent: React.FC = () => {
   const { isDark, colors } = useTheme();
   const { isReady, status, config: appConfig, completeOnboarding } = useAppBootstrap();
   const isSlowBoot = useSlowBoot(isReady);
-  const { initialize, setNavigate } = useNotification();
+  const { initialize } = useNotification();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   useDeviceRegistration(isAuthenticated);
+  usePushRefresh(isAuthenticated);
   useNetworkMonitor();
   useGetProfileQuery(undefined, { skip: !isAuthenticated });
 
@@ -50,9 +51,8 @@ const AppContent: React.FC = () => {
   }, [appConfig]);
 
   useEffect(() => {
-    setNavigate(navigate);
     initialize().catch(() => undefined);
-  }, [initialize, setNavigate]);
+  }, [initialize]);
 
   if (!isReady) {
     return isSlowBoot ? <BootScreen /> : null;

@@ -6,11 +6,13 @@ interface ResolveDerivedStatusParams {
   bootStatus: AppStatus;
   isAuthenticated: boolean;
   isOnboardingComplete: boolean;
+  isSuspended: boolean;
 }
 
 /**
- * Final AppStatus for a render: gates win over auth, and a logged-in user
- * whose server-side registration wizard isn't finished lands on
+ * Final AppStatus for a render: gates win over auth, a suspended account is
+ * blocked before anything else (contract §15.11), and a logged-in user whose
+ * server-side registration wizard isn't finished lands on
  * REGISTRATION_INCOMPLETE instead of AUTHENTICATED.
  */
 export const resolveDerivedStatus = ({
@@ -18,6 +20,7 @@ export const resolveDerivedStatus = ({
   bootStatus,
   isAuthenticated,
   isOnboardingComplete,
+  isSuspended,
 }: ResolveDerivedStatusParams): AppStatus => {
   if (!isReady) {
     return AppStatus.LOADING;
@@ -31,6 +34,9 @@ export const resolveDerivedStatus = ({
   }
 
   if (isAuthenticated) {
+    if (isSuspended) {
+      return AppStatus.SUSPENDED;
+    }
     return isOnboardingComplete
       ? AppStatus.AUTHENTICATED
       : AppStatus.REGISTRATION_INCOMPLETE;

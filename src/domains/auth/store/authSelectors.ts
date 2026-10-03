@@ -11,5 +11,6 @@ export const selectIsOnboardingComplete = (state: RootState) =>
   state.auth.isOnboardingComplete ?? true;
 export const selectPendingPhone = (state: RootState) =>
   state.auth.pendingPhone ?? '';
+export const selectIsSuspended = (state: RootState) => state.auth.isSuspended ?? false;
 export const selectPhoneOtpSentAt = (state: RootState) =>
   state.auth.phoneOtpSentAt ?? null;

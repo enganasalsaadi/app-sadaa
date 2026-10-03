@@ -9,6 +9,7 @@ describe('resolveDerivedStatus', () => {
         bootStatus: AppStatus.UNAUTHENTICATED,
         isAuthenticated: false,
         isOnboardingComplete: true,
+        isSuspended: false,
       }),
     ).toBe(AppStatus.LOADING);
   });
@@ -20,6 +21,7 @@ describe('resolveDerivedStatus', () => {
         bootStatus: AppStatus.UPDATE_REQUIRED,
         isAuthenticated: true,
         isOnboardingComplete: true,
+        isSuspended: false,
       }),
     ).toBe(AppStatus.UPDATE_REQUIRED);
   });
@@ -31,6 +33,7 @@ describe('resolveDerivedStatus', () => {
         bootStatus: AppStatus.AUTHENTICATED,
         isAuthenticated: true,
         isOnboardingComplete: true,
+        isSuspended: false,
       }),
     ).toBe(AppStatus.AUTHENTICATED);
   });
@@ -42,8 +45,45 @@ describe('resolveDerivedStatus', () => {
         bootStatus: AppStatus.AUTHENTICATED,
         isAuthenticated: true,
         isOnboardingComplete: false,
+        isSuspended: false,
       }),
     ).toBe(AppStatus.REGISTRATION_INCOMPLETE);
+  });
+
+  it('blocks a suspended session before the registration wizard', () => {
+    expect(
+      resolveDerivedStatus({
+        isReady: true,
+        bootStatus: AppStatus.AUTHENTICATED,
+        isAuthenticated: true,
+        isOnboardingComplete: false,
+        isSuspended: true,
+      }),
+    ).toBe(AppStatus.SUSPENDED);
+  });
+
+  it('lets maintenance win over a suspended session', () => {
+    expect(
+      resolveDerivedStatus({
+        isReady: true,
+        bootStatus: AppStatus.MAINTENANCE,
+        isAuthenticated: true,
+        isOnboardingComplete: true,
+        isSuspended: true,
+      }),
+    ).toBe(AppStatus.MAINTENANCE);
+  });
+
+  it('ignores a stale suspended flag without a session', () => {
+    expect(
+      resolveDerivedStatus({
+        isReady: true,
+        bootStatus: AppStatus.UNAUTHENTICATED,
+        isAuthenticated: false,
+        isOnboardingComplete: true,
+        isSuspended: true,
+      }),
+    ).toBe(AppStatus.UNAUTHENTICATED);
   });
 
   it('falls back to the boot-resolved status when unauthenticated', () => {
@@ -53,6 +93,7 @@ describe('resolveDerivedStatus', () => {
         bootStatus: AppStatus.ONBOARDING,
         isAuthenticated: false,
         isOnboardingComplete: false,
+        isSuspended: false,
       }),
     ).toBe(AppStatus.ONBOARDING);
   });

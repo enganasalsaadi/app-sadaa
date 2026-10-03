@@ -71,6 +71,9 @@ export interface AuthState {
   // When the last phone-verification OTP was sent (epoch ms) — drives the
   // resend countdown across restarts. Unset after login: nothing was sent.
   phoneOtpSentAt?: number;
+  // Persisted so a relaunch lands on the Suspended gate, not a flash of Main.
+  // Set by any `account_suspended` 403 or a `suspended` progress status.
+  isSuspended?: boolean;
 }
 
 export interface LoginRequest {

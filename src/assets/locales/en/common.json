@@ -256,6 +256,17 @@
         "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
       }
     },
+    "suspended": {
+      "title": "Your account is suspended",
+      "body": "We’ve temporarily suspended your account, so the app can’t be used right now. Contact support to find out why.",
+      "notice": "Once the suspension is lifted, tap “Check again” to pick up where you left off.",
+      "contactSupport": "Contact support",
+      "checkAgain": "Check again",
+      "logout": "Log out",
+      "stillSuspended": "Your account is still suspended",
+      "supportMessage": "Hi Sada team, my account is suspended and I need help.",
+      "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+    },
     "onboardingProgressError": "Couldn’t load your registration. Check your connection and try again.",
     "passwordStrength": {
       "weak": "Weak",
@@ -835,7 +846,9 @@
       "darkForcedTitle": "Forced dark surface",
       "darkForcedDescription": "Preview of dark tokens only",
       "ctaButtonTitle": "CTA button",
-      "ctaButtonDescription": "footer with LayoutFooter",
+      "ctaButtonDescription": "footer with LayoutFooter: primary, secondary, tertiary",
+      "ctaSecondary": "Secondary action",
+      "ctaTertiary": "Tertiary action",
       "noScrollWithHandlerTitle": "Manual scroll handler",
       "noScrollWithHandlerDescription": "static mode + useScrollHandler",
       "noScrollWithHandlerRow": "Row {{index}}",

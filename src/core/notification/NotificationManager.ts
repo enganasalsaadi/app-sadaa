@@ -12,14 +12,11 @@ import {
 import { appStorage, StorageKeys } from '@/core/storage';
 import { permissionManager } from '@/core/permissions';
 import type {
-  NotificationData,
-  NotificationPressPayload,
-  NotificationRouteHandler,
-  NotificationRouteMap,
   NotificationTokenListener,
+  PushListener,
   RemoteMessage,
 } from './notificationTypes';
-import { NotificationType } from './notificationTypes';
+import { parsePushPayload } from './pushPayload';
 import type { PushPermission } from './pushPrompt';
 import { toPushPermission } from './pushPrompt';
 
@@ -30,9 +27,8 @@ class NotificationManager {
   private static instance: NotificationManager;
   private isInitialized = false;
   private initializePromise?: Promise<void>;
-  private routes: NotificationRouteMap = {};
   private tokenListener?: NotificationTokenListener;
-  private navigate?: (screen: string, params?: Record<string, unknown>) => void;
+  private pushListener?: PushListener;
   private unsubscribeListeners: Array<() => void> = [];
 
   private constructor() {}
@@ -45,25 +41,25 @@ class NotificationManager {
     return NotificationManager.instance;
   }
 
-  setNavigate(
-    navigate: (screen: string, params?: Record<string, unknown>) => void,
-  ): void {
-    this.navigate = navigate;
-  }
-
-  registerRoute(
-    notificationType: string,
-    handler: NotificationRouteHandler,
-  ): void {
-    this.routes[notificationType] = handler;
-  }
-
   /** Called with every token fetched or refreshed; returns the unsubscribe. */
   registerTokenListener(listener: NotificationTokenListener): () => void {
     this.tokenListener = listener;
     return () => {
       if (this.tokenListener === listener) {
         this.tokenListener = undefined;
+      }
+    };
+  }
+
+  /**
+   * Called with every push received (any app state the JS runtime is alive
+   * in) or tapped; returns the unsubscribe.
+   */
+  registerPushListener(listener: PushListener): () => void {
+    this.pushListener = listener;
+    return () => {
+      if (this.pushListener === listener) {
+        this.pushListener = undefined;
       }
     };
   }
@@ -128,11 +124,13 @@ class NotificationManager {
   }
 
   async onBackgroundMessage(message: RemoteMessage): Promise<void> {
+    this.emitPush(message.data);
     await this.displayFromRemoteMessage(message);
   }
 
-  async onBackgroundEvent(data: NotificationPressPayload): Promise<void> {
-    await this.handlePress(data);
+  /** A tap on a notifee notification while the app was in the background. */
+  onBackgroundPress(data: Readonly<Record<string, unknown>> | undefined): void {
+    this.emitPush(data);
   }
 
   private async performInitialize(): Promise<void> {
@@ -166,35 +164,28 @@ class NotificationManager {
     const unsubscribeForegroundMessage = onMessage(
       messagingInstance,
       async message => {
-        await this.displayFromRemoteMessage(message as RemoteMessage);
+        this.emitPush(message.data);
+        await this.displayFromRemoteMessage(message);
       },
     );
 
     const unsubscribeOpenedApp = onNotificationOpenedApp(
       messagingInstance,
       message => {
-        this.processRemotePress(message as RemoteMessage, 'background');
+        this.emitPush(message.data);
       },
     );
 
-    const unsubscribeForegroundEvent = notifee.onForegroundEvent(
-      async event => {
-        if (event.type === EventType.PRESS) {
-          const data = (event.detail.notification?.data ??
-            {}) as NotificationData;
-          await this.handlePress({
-            type: data.type ?? NotificationType.DEFAULT,
-            data,
-            source: 'foreground',
-          });
-        }
-      },
-    );
+    const unsubscribeForegroundEvent = notifee.onForegroundEvent(event => {
+      if (event.type === EventType.PRESS) {
+        this.emitPush(event.detail.notification?.data);
+      }
+    });
 
     getInitialNotification(messagingInstance)
       .then(message => {
         if (message) {
-          this.processRemotePress(message as RemoteMessage, 'initial');
+          this.emitPush(message.data);
         }
       })
       .catch(() => undefined);
@@ -235,30 +226,9 @@ class NotificationManager {
     });
   }
 
-  private processRemotePress(
-    message: RemoteMessage,
-    source: NotificationPressPayload['source'],
-  ): void {
-    const data = (message.data ?? {}) as NotificationData;
-
-    this.handlePress({
-      type: data.type ?? NotificationType.DEFAULT,
-      data,
-      source,
-    }).catch(() => undefined);
-  }
-
-  private async handlePress(payload: NotificationPressPayload): Promise<void> {
-    const handler = this.routes[payload.type];
-    if (handler) {
-      await handler(payload);
-      return;
-    }
-
-    const fallbackScreen = payload.data.screen;
-    if (fallbackScreen && this.navigate) {
-      this.navigate(fallbackScreen, payload.data);
-    }
+  // Payloads are parsed here, so nothing downstream ever sees raw FCM data.
+  private emitPush(data: Readonly<Record<string, unknown>> | undefined): void {
+    this.pushListener?.(parsePushPayload(data));
   }
 }
 

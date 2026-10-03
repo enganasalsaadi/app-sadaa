@@ -5,6 +5,7 @@ export {
   syncOnboardingStep,
   phoneOtpSent,
   completeOnboarding,
+  setAccountSuspended,
   clearCredentials,
 } from './authSlice';
 export {
@@ -16,6 +17,7 @@ export {
   selectIsOnboardingComplete,
   selectPendingPhone,
   selectPhoneOtpSentAt,
+  selectIsSuspended,
 } from './authSelectors';
 export type {
   BillingAddress,

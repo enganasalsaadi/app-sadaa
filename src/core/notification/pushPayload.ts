@@ -1,0 +1,57 @@
+/** FCM `data.type` values (contract §11.2). */
+export const PUSH_TYPES = [
+  'kyc_approved',
+  'kyc_rejected',
+  'platform_approved',
+  'platform_rejected',
+  'test',
+] as const;
+export type PushType = (typeof PUSH_TYPES)[number];
+
+/** Where a tapped push leads, parsed from `data.deep_link`. */
+export type PushTarget =
+  | { kind: 'kyc' }
+  | { kind: 'platform'; platformId: string }
+  | { kind: 'notifications' };
+
+export interface ParsedPush {
+  /** `null` for a type this build doesn't know yet. */
+  type: PushType | null;
+  /** `null` when the link is missing, foreign or malformed: just open the app. */
+  target: PushTarget | null;
+}
+
+const DEEP_LINK_SCHEME = 'sada://';
+// ULIDs and numeric ids only: nothing that could smuggle a path or a query.
+const ENTITY_ID = /^[A-Za-z0-9]{1,64}$/;
+
+const isPushType = (value: unknown): value is PushType =>
+  typeof value === 'string' && (PUSH_TYPES as readonly string[]).includes(value);
+
+const parseDeepLink = (link: unknown): PushTarget | null => {
+  if (typeof link !== 'string' || !link.startsWith(DEEP_LINK_SCHEME)) return null;
+  const segments = link.slice(DEEP_LINK_SCHEME.length).split('/');
+  const [route, id, ...rest] = segments;
+  if (rest.length > 0) return null;
+
+  if (route === 'kyc' && id === undefined) return { kind: 'kyc' };
+  if (route === 'notifications' && id === undefined) return { kind: 'notifications' };
+  if (route === 'platforms' && id !== undefined && ENTITY_ID.test(id)) {
+    return { kind: 'platform', platformId: id };
+  }
+  return null;
+};
+
+/**
+ * Typed view of an FCM `data` payload (rule 07): only known types and
+ * allow-listed `sada://` links survive; screen names are never read from it.
+ */
+export const parsePushPayload = (
+  data: Readonly<Record<string, unknown>> | undefined,
+): ParsedPush => {
+  const type = data?.type;
+  return {
+    type: isPushType(type) ? type : null,
+    target: parseDeepLink(data?.deep_link),
+  };
+};

@@ -13,3 +13,4 @@ export { InfluencerSocialsScreen } from './InfluencerSocialsScreen/index';
 export { InfluencerRatesScreen } from './InfluencerRatesScreen/index';
 export { InfluencerKycScreen } from './InfluencerKycScreen/index';
 export { InfluencerWelcomeScreen } from './InfluencerWelcomeScreen/index';
+export { SuspendedScreen } from './SuspendedScreen/index';

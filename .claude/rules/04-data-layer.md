@@ -47,7 +47,7 @@ Server returns `{ success, message, data, error_code, errors, meta: { locale, re
 | Status | Behaviour |
 |---|---|
 | 401 | clear tokens + credentials + `resetApiState()`, redirect Login (tokens non-refreshable) |
-| 403 | `phone_not_verified` / `account_suspended` → passed through (flow gates route them); others → toast + `showForbiddenError` |
+| 403 | `account_suspended` (with a session) → `auth/setAccountSuspended` → `AppStatus.SUSPENDED` gate, even for silent calls · `phone_not_verified` → passed through (onboarding resolver routes it) · others → toast + `showForbiddenError` |
 | 422 | toast + passed through (map `errors` to form fields) |
 | 400/404 | passed through → `<InlineError />` |
 | 409/429 | passed through — screen handles (`otp_cooldown` countdown from `retryAfter`, out-of-order → re-read progress) |

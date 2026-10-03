@@ -31,6 +31,8 @@ const authSlice = createSlice({
       state.isOnboardingComplete = action.payload.isOnboardingComplete;
       if (action.payload.phone) state.pendingPhone = action.payload.phone;
       state.phoneOtpSentAt = action.payload.otpSentAt;
+      // A suspended account can't log in (422), so a new session is active.
+      state.isSuspended = false;
     },
     // Mirrors GET /onboarding/progress; the server owns the step.
     syncOnboardingStep: (state, action: PayloadAction<number>) => {
@@ -46,6 +48,11 @@ const authSlice = createSlice({
       state.pendingPhone = undefined;
       state.phoneOtpSentAt = undefined;
     },
+    // From any `account_suspended` 403 (baseApi), `/onboarding/progress`
+    // (readable while suspended) and `/me` (403s while suspended).
+    setAccountSuspended: (state, action: PayloadAction<boolean>) => {
+      state.isSuspended = action.payload;
+    },
     clearCredentials: () => initialState,
   },
 });
@@ -56,6 +63,7 @@ export const {
   syncOnboardingStep,
   phoneOtpSent,
   completeOnboarding,
+  setAccountSuspended,
   clearCredentials,
 } = authSlice.actions;
 export const authReducer = authSlice.reducer;

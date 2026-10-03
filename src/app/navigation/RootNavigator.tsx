@@ -35,6 +35,7 @@ import {
   AuthNavigator,
   BrandOnboardingNavigator,
   InfluencerOnboardingNavigator,
+  SuspendedScreen,
   selectUserType,
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
@@ -52,6 +53,7 @@ type RootStackParamList = {
   Onboarding: undefined;
   Auth: undefined;
   OnboardingResume: undefined;
+  Suspended: undefined;
   Main: undefined;
 } & DevShowcaseStackParamList;
 
@@ -135,6 +137,9 @@ export const RootNavigator: React.FC<Props> = ({
       )}
       {appStatus === AppStatus.REGISTRATION_INCOMPLETE && (
         <Stack.Screen name="OnboardingResume" component={OnboardingResume} />
+      )}
+      {appStatus === AppStatus.SUSPENDED && (
+        <Stack.Screen name="Suspended" component={SuspendedScreen} />
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />

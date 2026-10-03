@@ -1,31 +1,11 @@
-import type { Event, EventType } from '@notifee/react-native';
 import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
-
-export enum NotificationType {
-  DEFAULT = 'default',
-}
-
-export type NotificationData = Record<string, string>;
-
-export type NotificationPressSource = 'foreground' | 'background' | 'initial';
-
-export interface NotificationPressPayload {
-  type: string;
-  data: NotificationData;
-  source: NotificationPressSource;
-}
-
-export type NotificationRouteHandler = (
-  payload: NotificationPressPayload,
-) => void | Promise<void>;
-
-export type NotificationRouteMap = Record<string, NotificationRouteHandler>;
+import type { ParsedPush } from './pushPayload';
 
 export interface NotificationTokenListener {
   (token: string): void;
 }
 
-export type NotifeeForegroundEvent = Event & { type: EventType };
+export type PushListener = (push: ParsedPush) => void;
 
 export type RemoteMessage = FirebaseMessagingTypes.RemoteMessage;
 
