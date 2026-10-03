@@ -51,7 +51,6 @@ export interface User {
   is_phone_verified?: boolean;
   country?: string;
   member_since?: string;
-  total_bookings?: number;
   billing_address?: BillingAddress;
   guest_profile?: GuestProfile;
 }

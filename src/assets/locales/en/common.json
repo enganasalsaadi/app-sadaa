@@ -343,18 +343,11 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "city": "City",
-    "guests": "Guests",
-    "rooms": "Rooms",
-    "listingMode": "Listing mode",
-    "serviceMode": "Service mode",
     "selectCountry": "Select Country",
     "searchCountry": "Search country...",
     "allCountries": "All Countries",
-    "favorites": "Favorites",
-    "bookings": "Bookings",
     "profile": "Profile",
     "reset": "Reset",
-    "map": "Map",
     "selected": "Selected",
     "remove": "Remove",
     "brandName": "Sada",
@@ -435,14 +428,9 @@
       "title": "Profile",
       "settings": "Settings",
       "memberSince": "Member since {{date}}",
-      "totalBookings": "{{count}} booking",
-      "totalBookings_plural": "{{count}} bookings",
       "changePhoto": "Change Photo",
       "security": "Security",
       "changePassword": "Change Password",
-      "billingAddress": "Billing Address",
-      "notificationPreferences": "Notification Preferences",
-      "myReviews": "My Reviews",
       "language": "Language",
       "terms": "Terms & Conditions",
       "privacy": "Privacy Policy",
@@ -450,10 +438,7 @@
       "logoutConfirmTitle": "Logout",
       "logoutConfirmSubtitle": "Are you sure you want to logout?",
       "logoutConfirmBtn": "Logout",
-      "logoutSuccess": "Logged out successfully",
-      "guestTitle": "Welcome to MyHomenia",
-      "guestSubtitle": "Sign in to manage your bookings, reviews, and personal settings.",
-      "loginBtn": "Sign In"
+      "logoutSuccess": "Logged out successfully"
     },
     "editAccount": {
       "title": "Edit Profile",
@@ -471,25 +456,6 @@
       "confirmPassword": "Confirm New Password",
       "changeBtn": "Change Password",
       "success": "Password changed successfully"
-    },
-    "notificationPref": {
-      "title": "Notification Preferences",
-      "booking_confirmations": "Booking Confirmations",
-      "booking_reminders": "Booking Reminders",
-      "review_requests": "Review Requests",
-      "promotions": "Promotions & Offers",
-      "save": "Save Preferences",
-      "saveSuccess": "Preferences saved successfully",
-      "push": {
-        "title": "Push notifications",
-        "enabled": "You get alerts on this device",
-        "askable": "Turn them on for offers and review results",
-        "blocked": "Turned off in your phone's settings",
-        "unavailable": "Not available on this device",
-        "on": "On",
-        "enable": "Turn on",
-        "openSettings": "Open settings"
-      }
     },
     "language": {
       "title": "Language",
@@ -582,20 +548,6 @@
       }
     }
   },
-  "profile": {
-    "title": "Profile",
-    "editProfile": "Edit Profile",
-    "settings": "Settings",
-    "language": "Language",
-    "theme": "Theme",
-    "darkMode": "Dark Mode",
-    "notifications": "Notifications",
-    "helpSupport": "Help & Support",
-    "aboutUs": "About Us",
-    "termsConditions": "Terms & Conditions",
-    "privacyPolicy": "Privacy Policy",
-    "version": "Version"
-  },
   "permissions": {
     "openSettings": "Open settings",
     "notification": {
@@ -623,8 +575,6 @@
     "phoneLengthExactly": "Phone number must be exactly {{count}} digits",
     "phoneLengthBetween": "Phone number must be between {{min}} and {{max}} digits",
     "phoneInvalidForCountry": "Invalid phone number for {{country}}",
-    "please_select_aplace": "Please select a place",
-    "invalidTaxNumber": "The tax number must be exactly 15 digits",
     "invalidUrl": "Please enter a valid URL starting with https://",
     "selectOne": "Please choose one option",
     "invalidSocialLink": "Enter a valid link for this platform or an @handle"

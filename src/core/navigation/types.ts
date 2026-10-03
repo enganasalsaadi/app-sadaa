@@ -65,7 +65,6 @@ type AccountScreens = {
   ProfileScreen: undefined;
   EditAccountScreen: undefined;
   ChangePasswordScreen: undefined;
-  NotificationPrefScreen: undefined;
   LanguageScreen: undefined;
   WebViewScreen: { title: string; url: string };
 };

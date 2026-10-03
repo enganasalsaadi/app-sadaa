@@ -343,18 +343,11 @@
     "enabled": "مفعل",
     "disabled": "غير مفعل",
     "city": "المدينة",
-    "guests": "الضيوف",
-    "rooms": "الغرف",
-    "listingMode": "نوع العرض",
-    "serviceMode": "نوع الخدمة",
     "selectCountry": "اختر الدولة",
     "searchCountry": "ابحث عن دولة...",
     "allCountries": "جميع الدول",
-    "favorites": "المفضلة",
-    "bookings": "الحجوزات",
     "profile": "شخصي",
     "reset": "إعادة تعيين",
-    "map": "الخريطة",
     "selected": "محدد",
     "remove": "إزالة",
     "brandName": "صدى",
@@ -435,14 +428,9 @@
       "title": "الملف الشخصي",
       "settings": "الإعدادات",
       "memberSince": "عضو منذ {{date}}",
-      "totalBookings": "{{count}} حجز",
-      "totalBookings_plural": "{{count}} حجوزات",
       "changePhoto": "تغيير الصورة",
       "security": "الأمان",
       "changePassword": "تغيير كلمة المرور",
-      "billingAddress": "عنوان الفوترة",
-      "notificationPreferences": "تفضيلات الإشعارات",
-      "myReviews": "تقييماتي",
       "language": "اللغة",
       "terms": "الشروط والأحكام",
       "privacy": "سياسة الخصوصية",
@@ -450,10 +438,7 @@
       "logoutConfirmTitle": "تسجيل الخروج",
       "logoutConfirmSubtitle": "هل أنت متأكد من تسجيل الخروج؟",
       "logoutConfirmBtn": "تسجيل الخروج",
-      "logoutSuccess": "تم تسجيل الخروج بنجاح",
-      "guestTitle": "مرحباً بك في ماي هومينيا",
-      "guestSubtitle": "سجّل دخولك لإدارة حجوزاتك وتقييماتك وإعداداتك الشخصية.",
-      "loginBtn": "تسجيل الدخول"
+      "logoutSuccess": "تم تسجيل الخروج بنجاح"
     },
     "editAccount": {
       "title": "تعديل الملف الشخصي",
@@ -471,25 +456,6 @@
       "confirmPassword": "تأكيد كلمة المرور الجديدة",
       "changeBtn": "تغيير كلمة المرور",
       "success": "تم تغيير كلمة المرور بنجاح"
-    },
-    "notificationPref": {
-      "title": "تفضيلات الإشعارات",
-      "booking_confirmations": "تأكيدات الحجز",
-      "booking_reminders": "تذكيرات الحجز",
-      "review_requests": "طلبات التقييم",
-      "promotions": "العروض والترقيات",
-      "save": "حفظ التفضيلات",
-      "saveSuccess": "تم حفظ التفضيلات بنجاح",
-      "push": {
-        "title": "إشعارات الجهاز",
-        "enabled": "تصلك التنبيهات على هذا الجهاز",
-        "askable": "فعّلها لتصلك العروض ونتائج المراجعة",
-        "blocked": "متوقفة من إعدادات الجهاز",
-        "unavailable": "غير متاحة على هذا الجهاز",
-        "on": "مفعّلة",
-        "enable": "تفعيل",
-        "openSettings": "فتح الإعدادات"
-      }
     },
     "language": {
       "title": "اللغة",
@@ -582,20 +548,6 @@
       }
     }
   },
-  "profile": {
-    "title": "الملف الشخصي",
-    "editProfile": "تعديل الملف الشخصي",
-    "settings": "الإعدادات",
-    "language": "اللغة",
-    "theme": "المظهر",
-    "darkMode": "الوضع المظلم",
-    "notifications": "الإشعارات",
-    "helpSupport": "المساعدة والدعم",
-    "aboutUs": "عنّا",
-    "termsConditions": "الشروط والأحكام",
-    "privacyPolicy": "سياسة الخصوصية",
-    "version": "الإصدار"
-  },
   "permissions": {
     "openSettings": "فتح الإعدادات",
     "notification": {
@@ -623,8 +575,6 @@
     "phoneLengthExactly": "رقم الهاتف يجب أن يتكون من {{count}} أرقام بالضبط",
     "phoneLengthBetween": "رقم الهاتف يجب أن يتكون بين {{min}} و {{max}} رقمًا",
     "phoneInvalidForCountry": "رقم الهاتف غير صحيح لدولة {{country}}",
-    "please_select_aplace": "يرجى اختيار مكان",
-    "invalidTaxNumber": "الرقم الضريبي يجب أن يكون 15 رقمًا بالضبط",
     "invalidUrl": "يرجى إدخال رابط صحيح يبدأ بـ https://",
     "selectOne": "يرجى اختيار خيار واحد",
     "invalidSocialLink": "أدخل رابطاً صحيحاً لهذه المنصة أو اسم مستخدم @"

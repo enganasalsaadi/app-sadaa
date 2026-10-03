@@ -303,7 +303,6 @@ APP LAUNCH
           ├── Profile & account menu                             ✅
           ├── Edit account                                       ✅
           ├── Change password                                    ✅
-          ├── Notification preferences                           🟡 (categories to be updated for Sada)
           ├── Language                                           ✅
           ├── Terms & Privacy (in-app web pages)                 ✅
           └── Delete my account (password-confirmed)             ✅
@@ -426,11 +425,11 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - **Never on first launch.** A cold permission request on day one is the top cause of permanent "Don't allow".
 - **Ask at moments of value.** The app first shows its own friendly explanation (for example, at the end of registration: "Get notified the moment a brand sends you an offer"). Only if the user agrees does the system permission prompt appear.
 - **Respect "Not now".** After a decline, the app waits at least 48 hours before asking again, and asks at most 3 times per installation. If the phone can no longer show the system prompt, the app stops asking.
-- **Always in control.** Settings shows the live permission status, which updates when the user returns from phone settings.
+- **Always in control.** The user can change the permission at any time in the phone's settings. A notifications screen in Settings, showing the live status and Sada's notification categories, comes with the notification inbox.
 - **Fresh data on every notification.** When a notification arrives or is tapped, the app refreshes the user's data so the screen matches what the notification said.
 - **Safe notification links.** Notification content is checked against an approved list before it is acted on. A notification can never send the user to an arbitrary screen. Today the links cover identity verification, a specific social platform and the notifications inbox, and tapping will navigate there once those screens are live.
 - **Device registration.** The app registers the device for notifications when the user signs in, when the notification token changes, and when the language changes (so notifications arrive in the right language). On logout the device is unregistered and all local data is cleared.
-- **Planned:** a notification inbox, notification categories in Settings that fit Sada's events, and **city alerts** for creators when a local brand posts a campaign.
+- **Planned:** a notification inbox, a notifications screen in Settings with the live permission status and categories that fit Sada's events, and **city alerts** for creators when a local brand posts a campaign.
 
 ### 6.5 Security and privacy by design
 
@@ -495,7 +494,6 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - Manage social platforms after registration (add, edit, refresh, set primary).
 - Edit price lists, and verify identity later from Settings.
 - Notification inbox and Sada-specific notification categories.
-- Remove leftover copy from the previous project (see blockers).
 
 **🔜 Then: marketplace core (the revenue engine)**
 - Campaign Brief Builder, open campaigns, applications and direct offers.
@@ -529,7 +527,7 @@ These must be solved before a public store release. Ordered by severity.
 | 4 | ✅ **Resolved 2026-10-03.** ~~The iOS build allows insecure connections.~~ Store builds now use HTTPS only on both platforms, and Android no longer trusts user-installed certificates. | | Mobile |
 | 5 | ✅ **Resolved 2026-10-03.** ~~Login sessions are stored on the device without encryption.~~ Sessions and personal data are now stored encrypted, with the key in Keychain (iPhone) or Keystore (Android). Existing users stay logged in after updating. | | Mobile |
 | 6 | ✅ **Resolved 2026-10-03.** ~~Generic permission explanations, plus an unused location permission on Android.~~ Explanations rewritten in Arabic and English. Location and the Android camera permission were removed. | | Mobile |
-| 7 | **Leftover text from the previous project** in the profile area (booking wording and the old app name), and old notification-settings fields. | Confusing for users and unprofessional in review. | Mobile |
+| 7 | ✅ **Resolved 2026-10-03.** ~~Leftover text from the previous project in the profile area, and old notification-settings fields.~~ The booking counter, the old app name and the old notification settings screen were removed. The phone home screen now shows «صدى» in Arabic and "Sada" in English. | | Mobile |
 | 8 | ✅ **Resolved 2026-10-03.** ~~Account deletion is not confirmed against the new backend.~~ Deletion is connected to the Sada service and reachable from Settings, the Suspended screen and registration. | | Mobile + backend |
 | 9 | **App Store listing ID not set yet**, so the forced-update button opens the App Store home page instead of Sada's page. | Poor update experience until the first release. Set it right after the listing is created. | Mobile |
 | 10 | **Not yet verified on real devices** after the visual redesign: some text fields in right-to-left, and card shadows. | Visual polish and right-to-left correctness. | Mobile QA |
@@ -544,6 +542,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-03 | Launch blocker 7 resolved. Leftover booking wording and the old app name were removed from the profile. The old notification settings screen (booking categories, never reachable) was removed until Sada's categories exist. The home screen name is now «صدى» / "Sada". | 5.2, 6.4, 7.3, 7.4 |
 | 2026-10-03 | Launch blocker 5 resolved. The login session and personal data are stored encrypted, with the key in the phone's secure key store. Users updating keep their session. If the key is lost, the user is asked to log in again. | 6.5, 7.4 |
 | 2026-10-03 | Launch blocker 8 resolved. Account deletion is connected to the Sada service, confirmed by password, and reachable from Settings, the Suspended screen and every registration step. Deleting signs out and wipes everything the phone kept for that user. | 5.2, 5.3 (Journeys E, G), 6.5, 7.2, 7.4 |
 | 2026-10-03 | Launch blockers 4 and 6 resolved. Store builds connect over HTTPS only. Location and the unused Android camera permission were removed. The camera and photo explanations are now specific and available in Arabic and English. The "permission turned off" message is translated and explains why each permission is needed. | 7.1, 7.2, 7.4 |

@@ -5,7 +5,6 @@ import type { SettingsStackParamList } from '@/core/navigation';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditAccountScreen } from '../screens/EditAccountScreen';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
-import { NotificationPrefScreen } from '../screens/NotificationPrefScreen';
 import { LanguageScreen } from '../screens/LanguageScreen';
 import { WebViewScreen } from '../screens/WebViewScreen';
 
@@ -23,10 +22,6 @@ export const SettingsNavigator: React.FC = () => (
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     <Stack.Screen name="EditAccountScreen" component={EditAccountScreen} />
     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
-    <Stack.Screen
-      name="NotificationPrefScreen"
-      component={NotificationPrefScreen}
-    />
     <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
     <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
   </Stack.Navigator>

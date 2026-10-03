@@ -1,20 +1,6 @@
 import { baseApi } from '@/core/api';
 import type { User } from '@/domains/auth';
 
-export type NotificationSettings = {
-  booking_confirmations: boolean;
-  booking_reminders: boolean;
-  review_requests: boolean;
-  promotions: boolean;
-};
-
-export interface AccountPreferences {
-  language: string;
-  currency: string;
-  notifications: NotificationSettings;
-  car_notifications?: NotificationSettings;
-}
-
 export interface ChangePasswordRequest {
   current_password: string;
   password: string;
@@ -22,25 +8,14 @@ export interface ChangePasswordRequest {
 }
 
 export interface UpdatePreferencesRequest {
-  language?: string;
-  currency?: string;
-  notifications?: Partial<NotificationSettings>;
-  car_notifications?: Partial<NotificationSettings>;
+  language: string;
 }
 
 export const accountApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
-    getPreferences: builder.query<AccountPreferences, void>({
-      query: () => '/account/preferences',
-      providesTags: ['Preferences'],
-    }),
-    updatePreferences: builder.mutation<
-      AccountPreferences,
-      UpdatePreferencesRequest
-    >({
+    updatePreferences: builder.mutation<void, UpdatePreferencesRequest>({
       query: body => ({ url: '/account/preferences', method: 'PUT', body }),
-      invalidatesTags: ['Preferences'],
     }),
     updateAvatar: builder.mutation<User, FormData>({
       query: body => ({
@@ -57,7 +32,6 @@ export const accountApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetPreferencesQuery,
   useUpdatePreferencesMutation,
   useUpdateAvatarMutation,
   useChangePasswordMutation,

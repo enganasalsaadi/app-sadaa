@@ -1,3 +1,4 @@
 /* Permission purpose strings shown by iOS. Keep in sync with Info.plist. */
+"CFBundleDisplayName" = "Sada";
 "NSCameraUsageDescription" = "Sada uses your camera so you can take a profile photo or photograph your ID or business documents for account verification.";
 "NSPhotoLibraryUsageDescription" = "Sada uses your photo library so you can choose a profile photo and upload verification documents or campaign content.";

@@ -29,8 +29,7 @@ import {
   Pressable,
   Text,
 } from '@/shared/ui';
-import { useDispatch } from 'react-redux';
-import { clearCredentials, DeleteAccountSheet } from '@/domains/auth';
+import { DeleteAccountSheet } from '@/domains/auth';
 
 type Props = SettingsStackScreenProps<'ProfileScreen'>;
 
@@ -58,7 +57,6 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
 
   const {
     user,
-    isAuthenticated,
     isLoggingOut,
     isUploadingAvatar,
     logoutSheetVisible,
@@ -70,8 +68,7 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
     handleChangePhoto,
   } = useProfileScreen();
 
-  const dispatch = useDispatch();
-  const privateSettingsItems = [
+  const accountSettingsItems = [
     {
       key: 'security',
       icon: Shield,
@@ -80,7 +77,7 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
     },
   ];
 
-  const publicSettingsItems = [
+  const appSettingsItems = [
     {
       key: 'language',
       icon: Globe,
@@ -122,145 +119,77 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
       ]
     : [];
 
-  const settingsItems = isAuthenticated
-    ? [...privateSettingsItems, ...publicSettingsItems, ...devSettingsItems]
-    : [...publicSettingsItems, ...devSettingsItems];
+  const settingsItems = [
+    ...accountSettingsItems,
+    ...appSettingsItems,
+    ...devSettingsItems,
+  ];
 
-  const navigateToLogin = () => {
-    dispatch(clearCredentials());
-  };
   return (
     <>
       <Layout
         padding="none"
         header={{ title: t('account.profile.title'), showBackButton: false }}
       >
-        {isAuthenticated ? (
-          <>
-            {/* Authenticated hero */}
-            <Box align="center" pt="3xl" pb="2xl" px="2xl">
-              <Box position="relative">
-                {user?.avatar_url ? (
-                  <Image uri={user.avatar_url} size={AVATAR_SIZE} circle />
-                ) : (
-                  <Box
-                    width={AVATAR_SIZE}
-                    height={AVATAR_SIZE}
-                    borderRadius="full"
-                    bg={colors.surface.elevated}
-                    align="center"
-                    justify="center"
-                  >
-                    <User
-                      size={moderateScale(40)}
-                      color={colors.text.tertiary}
-                    />
-                  </Box>
-                )}
-                <Pressable
-                  style={styles.cameraBtn}
-                  onPress={handleChangePhoto}
-                  activeOpacity={0.8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('account.profile.changePhoto')}
-                >
-                  {isUploadingAvatar ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={colors.text.onAccent}
-                    />
-                  ) : (
-                    <Camera
-                      size={moderateScale(14)}
-                      color={colors.text.onAccent}
-                    />
-                  )}
-                </Pressable>
+        {/* Hero */}
+        <Box align="center" pt="3xl" pb="2xl" px="2xl">
+          <Box position="relative">
+            {user?.avatar_url ? (
+              <Image uri={user.avatar_url} size={AVATAR_SIZE} circle />
+            ) : (
+              <Box
+                width={AVATAR_SIZE}
+                height={AVATAR_SIZE}
+                borderRadius="full"
+                bg={colors.surface.elevated}
+                align="center"
+                justify="center"
+              >
+                <User size={moderateScale(40)} color={colors.text.tertiary} />
               </Box>
-
-              <Box row align="center" mt="lg" gap="sm">
-                <Text variant="h3" color={colors.text.primary} align="center">
-                  {[user?.first_name, user?.last_name]
-                    .filter(Boolean)
-                    .join(' ') || '—'}
-                </Text>
-                <IconButton
-                  icon={UserRoundPen}
-                  size="sm"
-                  onPress={() => navigation.navigate('EditAccountScreen')}
-                  accessibilityLabel={t('account.editAccount.title')}
-                />
-              </Box>
-
-              <Box row align="center" mt="xs" gap="xs">
-                <Text variant="bodySmall" color={colors.text.secondary}>
-                  {user?.phone || '—'}
-                </Text>
-              </Box>
-
-              {user?.member_since && (
-                <Text variant="caption" color={colors.text.tertiary} mt="xs">
-                  {t('account.profile.memberSince', {
-                    date: user.member_since,
-                  })}
-                </Text>
+            )}
+            <Pressable
+              style={styles.cameraBtn}
+              onPress={handleChangePhoto}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={t('account.profile.changePhoto')}
+            >
+              {isUploadingAvatar ? (
+                <ActivityIndicator size="small" color={colors.text.onAccent} />
+              ) : (
+                <Camera size={moderateScale(14)} color={colors.text.onAccent} />
               )}
+            </Pressable>
+          </Box>
 
-              {(user?.total_bookings ?? 0) > 0 && (
-                <Box
-                  mt="md"
-                  px="lg"
-                  py="sm"
-                  borderRadius="full"
-                  bg={colors.surface.elevated}
-                >
-                  <Text variant="bodySmall" color={colors.text.secondary}>
-                    {t('account.profile.totalBookings', {
-                      count: user?.total_bookings ?? 0,
-                    })}
-                  </Text>
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          /* Guest hero */
-          <Box align="center" pt="3xl" pb="2xl" px="2xl">
-            <Box
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              borderRadius="full"
-              bg={colors.surface.elevated}
-              align="center"
-              justify="center"
-              mb="lg"
-            >
-              <User size={moderateScale(40)} color={colors.text.tertiary} />
-            </Box>
-            <Text
-              variant="h3"
-              color={colors.text.primary}
-              align="center"
-              mb="sm"
-            >
-              {t('account.profile.guestTitle')}
+          <Box row align="center" mt="lg" gap="sm">
+            <Text variant="h3" color={colors.text.primary} align="center">
+              {[user?.first_name, user?.last_name].filter(Boolean).join(' ') ||
+                '—'}
             </Text>
-            <Text
-              variant="body"
-              color={colors.text.secondary}
-              align="center"
-              mb="2xl"
-            >
-              {t('account.profile.guestSubtitle')}
-            </Text>
-            <CustomButton
-              title={t('account.profile.loginBtn')}
-              onPress={navigateToLogin}
-              variant="primary"
-              fullWidth
+            <IconButton
+              icon={UserRoundPen}
+              size="sm"
+              onPress={() => navigation.navigate('EditAccountScreen')}
+              accessibilityLabel={t('account.editAccount.title')}
             />
           </Box>
-        )}
+
+          <Box row align="center" mt="xs" gap="xs">
+            <Text variant="bodySmall" color={colors.text.secondary}>
+              {user?.phone || '—'}
+            </Text>
+          </Box>
+
+          {user?.member_since && (
+            <Text variant="caption" color={colors.text.tertiary} mt="xs">
+              {t('account.profile.memberSince', {
+                date: user.member_since,
+              })}
+            </Text>
+          )}
+        </Box>
 
         {/* Settings section */}
         <Box px="2xl" pb="5xl" gap="lg">
@@ -275,25 +204,21 @@ const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
             ))}
           </ListGroup>
 
-          {isAuthenticated && (
-            <>
-              <ListGroup>
-                <ListRow
-                  icon={LogOut}
-                  title={t('account.profile.logout')}
-                  onPress={() => setLogoutSheetVisible(true)}
-                />
-              </ListGroup>
-              <ListGroup tone="danger">
-                <ListRow
-                  icon={Trash2}
-                  tone="danger"
-                  title={t('auth.deleteAccount.entry')}
-                  onPress={openDeleteSheet}
-                />
-              </ListGroup>
-            </>
-          )}
+          <ListGroup>
+            <ListRow
+              icon={LogOut}
+              title={t('account.profile.logout')}
+              onPress={() => setLogoutSheetVisible(true)}
+            />
+          </ListGroup>
+          <ListGroup tone="danger">
+            <ListRow
+              icon={Trash2}
+              tone="danger"
+              title={t('auth.deleteAccount.entry')}
+              onPress={openDeleteSheet}
+            />
+          </ListGroup>
         </Box>
       </Layout>
 

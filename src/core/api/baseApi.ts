@@ -202,7 +202,6 @@ export const baseApi = createApi({
     'AppConfig',
     'User',
     'Settings',
-    'Preferences',
     'Profile',
     'Lookups',
     'OnboardingProgress',

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useAppSelector } from '@/core/store';
-import { selectUser, selectIsAuthenticated } from '@/domains/auth';
+import { selectUser } from '@/domains/auth';
 import { useLogoutMutation } from '@/domains/auth';
 import { useUpdateAvatarMutation } from '../../../api/accountApi';
 import { toastService } from '@/core/toast';
@@ -10,7 +10,6 @@ import { toastService } from '@/core/toast';
 export const useProfileScreen = () => {
   const { t } = useTranslation();
   const user = useAppSelector(selectUser);
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [updateAvatar, { isLoading: isUploadingAvatar }] =
@@ -63,7 +62,6 @@ export const useProfileScreen = () => {
 
   return {
     user,
-    isAuthenticated,
     isLoggingOut,
     isUploadingAvatar,
     logoutSheetVisible,
