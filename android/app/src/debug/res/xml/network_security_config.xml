@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug only: Metro and the local API run over plain HTTP (localhost, 10.0.2.2, LAN IP),
+     and user CAs let Proxyman/Charles inspect traffic. Never shipped in release. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -443,13 +443,14 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 | Permission | Platform | Why we need it (user-facing reason) | When it's asked | Status |
 |---|---|---|---|---|
 | **Notifications** | iOS, Android 13+ | "So you hear the moment a brand sends an offer, a payment is secured, or your money is released." | Only after a friendly in-app explanation at a moment of value; never on first launch | ✅ |
-| **Photo library** | iOS, Android | "To choose a profile photo and upload your ID or business documents." | When the user taps to choose a photo | ✅ (the iOS explanation text needs rewording, see blockers) |
-| **Camera** | iOS, Android | "To photograph your ID or business document, and later to capture content drafts." | When the user chooses to take a photo | 🟡 declared, and the explanation text needs rewording |
+| **Photo library** | iOS (Android uses the system photo picker, which needs no permission) | "Sada uses your photo library so you can choose a profile photo and upload verification documents or campaign content." Shown in Arabic or English to match the phone's language. | When the user taps to choose a photo | ✅ |
+| **Camera** | iOS only (Android opens the phone's own camera app, which needs no permission) | "Sada uses your camera so you can take a profile photo or photograph your ID or business documents for account verification." Shown in Arabic or English. | When the user chooses to take a photo. No screen takes photos yet; it's ready for ID capture and content drafts | 🟡 explanation ready, not used by any screen yet |
 | **Internet / network state** | Android | Needed to connect to Sada and to show the offline banner | Automatic (no prompt) | ✅ |
 | **Vibration** | Android | Gentle feedback on notifications and errors | Automatic (no prompt) | ✅ |
-| **Location (precise and approximate)** | Android only today | *Intended:* hyper-local features such as nearby campaigns and city alerts | Not used by any screen yet | ⚠️ declared but unused, so remove it until the feature ships, or add the iOS explanation and wire it to a real feature |
 
-**Principles:** ask at the point of use, always with a plain-language explanation in the user's language, and never request anything at app start except notifications after onboarding.
+**Not requested:** location. It was removed because no feature uses it. City-based matching will use the city the user picks in their profile. If a future feature needs the phone's location, it gets added back with its own explanation.
+
+**Principles:** ask at the point of use, always with a plain-language explanation in the user's language, and never request anything at app start except notifications after onboarding. If the user has turned a permission off for good, Sada explains in their language why it's needed and offers a button that opens the phone's Settings.
 
 ### 7.2 App Store and Google Play compliance checklist
 
@@ -457,8 +458,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 |---|---|---|
 | **In-app account deletion** (Apple requirement) | 🟡 | A "Delete account" option exists in Settings (password-confirmed). Its connection to the new Sada backend must be confirmed. |
 | **Privacy policy and terms** reachable in the app | ✅ | Opened as in-app pages from Settings. Final legal text and addresses still needed. |
-| **Clear permission explanations** | ⚠️ | The current iOS camera and photo texts are generic ("This app requires access…"). Apple rejects vague reasons. Rewrite them in plain language and localise to Arabic and English. |
-| **Secure connections only** | ⚠️ | The iOS build currently allows insecure (non-HTTPS) connections, a holdover from development. This must be restricted to HTTPS before submission. |
+| **Clear permission explanations** | ✅ | The camera and photo explanations say exactly what Sada uses them for, in Arabic and English. Unused permissions (location, and camera on Android) were removed, so the store listings only show what the app really uses. |
+| **Secure connections only** | ✅ | Store builds on iOS and Android connect only over encrypted HTTPS and trust only the phone's built-in certificates. Insecure connections are allowed only in developer builds on a local network. |
 | **Privacy "nutrition label" (Apple) and Data Safety form (Google)** | 🔜 | Must declare: phone number, name, identity and business documents, social account handles, device notification token, and usage data. |
 | **Sign in with Apple** | ✅ not required | We use only phone and password, with no third-party social login. |
 | **Payments and wallet** | 🔜 | Deals pay for real-world advertising services, not digital goods, so app-store in-app purchase rules should not apply to escrow. This needs confirming during review. Premium subscriptions, if added, need a separate review. |
@@ -514,10 +515,10 @@ These must be solved before a public store release. Ordered by severity.
 |---|---|---|---|
 | 1 | **Marketplace and finance are not yet live.** Home is a placeholder, and campaigns, deals and wallet are not connected to the service. | No core value for users yet. A store reviewer may reject the app for minimal functionality. | Mobile + backend |
 | 2 | **Notification service is set up for the previous project**, and app identifiers don't match across iOS, Android and the notification service. | Push notifications will not arrive. Store identity is inconsistent. | Mobile + DevOps |
-| 3 | **The server address and network security settings still point to the old domain.** | The production app can't reach the Sada service. | Mobile + DevOps |
-| 4 | **The iOS build allows insecure connections.** | App Store review risk and a security risk. | Mobile |
+| 3 | **The server address still points to the old domain.** | The production app can't reach the Sada service. | Mobile + DevOps |
+| 4 | ✅ **Resolved 2026-10-03.** ~~The iOS build allows insecure connections.~~ Store builds now use HTTPS only on both platforms, and Android no longer trusts user-installed certificates. | | Mobile |
 | 5 | **Login sessions are stored on the device without encryption.** | Security gap for a money app. Sessions must move to encrypted secure storage. | Mobile |
-| 6 | **Generic permission explanations, plus an unused location permission** on Android. | Likely store rejection or a policy warning. | Mobile |
+| 6 | ✅ **Resolved 2026-10-03.** ~~Generic permission explanations, plus an unused location permission on Android.~~ Explanations rewritten in Arabic and English. Location and the Android camera permission were removed. | | Mobile |
 | 7 | **Leftover text from the previous project** in the profile area (booking wording and the old app name), and old notification-settings fields. | Confusing for users and unprofessional in review. | Mobile |
 | 8 | **Account deletion is not confirmed** against the new backend. | Mandatory Apple requirement. | Mobile + backend |
 | 9 | **App Store listing ID not set yet**, so the forced-update button opens the App Store home page instead of Sada's page. | Poor update experience until the first release. Set it right after the listing is created. | Mobile |
@@ -533,4 +534,5 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-03 | Launch blockers 4 and 6 resolved. Store builds connect over HTTPS only. Location and the unused Android camera permission were removed. The camera and photo explanations are now specific and available in Arabic and English. The "permission turned off" message is translated and explains why each permission is needed. | 7.1, 7.2, 7.4 |
 | 2026-10-03 | First version of the living guide, written from the current app: onboarding for both roles, social lookup, KYC, suspension, push permission strategy, device registration, and launch blockers. | All |

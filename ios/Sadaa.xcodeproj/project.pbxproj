@@ -11,6 +11,7 @@
 		09F818C3DA55820DD1250681 /* libPods-Sadaa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FEF9D9C7965B8D8E92B21EC /* libPods-Sadaa.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		658E31AD17D94230A8FA9FAF /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1DFCFAFC8EBA43E0811AE0B0 /* BootSplash.storyboard */; };
+		65BF9BE1E3C283708096E7B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3F2DB9D71C2CA3683F813F09 /* InfoPlist.strings */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		7A3791A82F943AD1004701B8 /* Tajawal-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A3791A72F943AD1004701B8 /* Tajawal-Regular.ttf */; };
 		7A3791A92F943AD1004701B8 /* Tajawal-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A3791A42F943AD1004701B8 /* Tajawal-Bold.ttf */; };
@@ -29,6 +30,8 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Sadaa/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1DFCFAFC8EBA43E0811AE0B0 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = Sadaa/BootSplash.storyboard; sourceTree = "<group>"; };
 		3FEF9D9C7965B8D8E92B21EC /* libPods-Sadaa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Sadaa.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4265D65A121DEBF9C55D2C0E /* ar */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = ar; path = Sadaa/ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		448AD538CA9669BF59352A91 /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = Sadaa/en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Sadaa/AppDelegate.swift; sourceTree = "<group>"; };
 		7A3791A42F943AD1004701B8 /* Tajawal-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tajawal-Bold.ttf"; sourceTree = "<group>"; };
 		7A3791A52F943AD1004701B8 /* Tajawal-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tajawal-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -68,6 +71,7 @@
 				1DFCFAFC8EBA43E0811AE0B0 /* BootSplash.storyboard */,
 				A2A76829F98A48C2889F5C06 /* Colors.xcassets */,
 				7AC03A9F2F9272FD00D4796F /* GoogleService-Info.plist */,
+				3F2DB9D71C2CA3683F813F09 /* InfoPlist.strings */,
 			);
 			name = Sadaa;
 			sourceTree = "<group>";
@@ -197,6 +201,7 @@
 				7A3791AB2F943AD1004701B8 /* Tajawal-Light.ttf in Resources */,
 				810A0030EA3960BBC661D978 /* Tajawal-Medium.ttf in Resources */,
 				7AC03AA02F9272FD00D4796F /* GoogleService-Info.plist in Resources */,
+				65BF9BE1E3C283708096E7B8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +305,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3F2DB9D71C2CA3683F813F09 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				448AD538CA9669BF59352A91 /* en */,
+				4265D65A121DEBF9C55D2C0E /* ar */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {

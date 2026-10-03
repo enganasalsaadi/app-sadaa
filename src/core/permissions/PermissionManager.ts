@@ -7,6 +7,7 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import { Alert } from 'react-native';
+import i18n from '@/core/i18n';
 import type {
   NotificationPermissionOptions,
   PermissionType,
@@ -16,6 +17,7 @@ import type {
 import {
   DEFAULT_PERMISSION_STATUS,
   getSystemPermission,
+  PERMISSION_BLOCKED_COPY,
 } from './permissionTypes';
 import { createPermissionState } from './permissionUtils';
 
@@ -97,7 +99,6 @@ class PermissionManager {
 
   async requestPermissionWithExplanation(
     type: PermissionType,
-    customMessage?: { title: string; message: string },
     config?: NotificationPermissionOptions,
   ): Promise<PermissionState> {
     const current = await this.checkPermission(type);
@@ -136,11 +137,7 @@ class PermissionManager {
         async type =>
           [
             type,
-            await this.requestPermissionWithExplanation(
-              type,
-              undefined,
-              config,
-            ),
+            await this.requestPermissionWithExplanation(type, config),
           ] as const,
       ),
     );
@@ -159,14 +156,19 @@ class PermissionManager {
   }
 
   private showSettingsAlert(type: PermissionType): Promise<void> {
+    const copy = PERMISSION_BLOCKED_COPY[type];
     return new Promise(resolve => {
       Alert.alert(
-        'Permission blocked',
-        `Enable ${type} permission from app settings.`,
+        i18n.t(copy.title),
+        i18n.t(copy.message),
         [
-          { text: 'Cancel', style: 'cancel', onPress: () => resolve() },
           {
-            text: 'Open settings',
+            text: i18n.t('common.cancel'),
+            style: 'cancel',
+            onPress: () => resolve(),
+          },
+          {
+            text: i18n.t('permissions.openSettings'),
             onPress: () => {
               this.openAppSettings().finally(() => resolve());
             },

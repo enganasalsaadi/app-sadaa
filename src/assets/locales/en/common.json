@@ -603,6 +603,21 @@
     "you_can_enable_notification_later": "You can enable notifications later from device settings",
     "settings": "Settings"
   },
+  "permissions": {
+    "openSettings": "Open settings",
+    "notification": {
+      "title": "Notifications are off",
+      "message": "Turn on notifications in Settings to hear about new offers, deal updates, and payments as they happen."
+    },
+    "camera": {
+      "title": "Camera access is off",
+      "message": "Sada uses your camera to take a profile photo or photograph your ID for account verification. Turn it on in Settings."
+    },
+    "gallery": {
+      "title": "Photo access is off",
+      "message": "Sada uses your photos so you can choose a profile photo and upload verification documents or campaign content. Turn it on in Settings."
+    }
+  },
   "validation": {
     "required": "This field is required",
     "email": "Please enter a valid email",

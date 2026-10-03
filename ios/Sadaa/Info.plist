@@ -37,21 +37,14 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<!-- Camera Permission -->
-<key>NSCameraUsageDescription</key>
-<string>This app requires access to the camera to take photos.</string>
-
-<!-- Photo Library Permission -->
-<key>NSPhotoLibraryUsageDescription</key>
-<string>This app requires access to your photo library to select photos.</string>
-<key>RCTNewArchEnabled</key>
+	<key>NSCameraUsageDescription</key>
+	<string>Sada uses your camera so you can take a profile photo or photograph your ID or business documents for account verification.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Sada uses your photo library so you can choose a profile photo and upload verification documents or campaign content.</string>
+	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIAppFonts</key>
 	<array>

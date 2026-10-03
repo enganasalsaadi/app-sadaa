@@ -1,3 +1,4 @@
+import type { ParseKeys } from 'i18next';
 import { Platform } from 'react-native';
 import {
   PERMISSIONS,
@@ -7,13 +8,8 @@ import {
   type PermissionStatus,
 } from 'react-native-permissions';
 
-export type PermissionType =
-  | 'location'
-  | 'notification'
-  | 'camera'
-  | 'gallery'
-  | 'microphone'
-  | 'storage';
+// Only what the app requests: iOS via Podfile setup_permissions, Android notifications only.
+export type PermissionType = 'notification' | 'camera' | 'gallery';
 
 export type UnifiedPermissionStatus = PermissionStatus;
 
@@ -31,35 +27,18 @@ export interface NotificationPermissionOptions {
 export const getSystemPermission = (
   type: Exclude<PermissionType, 'notification'>,
 ): Permission | null => {
+  // Android declares neither CAMERA nor READ_MEDIA_*: the system photo picker and
+  // the camera-app intent need no runtime permission, so nothing to request.
   if (Platform.OS === 'android') {
-    switch (type) {
-      case 'location':
-        return PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-      case 'camera':
-        return PERMISSIONS.ANDROID.CAMERA;
-      case 'gallery':
-        return PERMISSIONS.ANDROID.READ_MEDIA_IMAGES;
-      case 'microphone':
-        return PERMISSIONS.ANDROID.RECORD_AUDIO;
-      case 'storage':
-        return PERMISSIONS.ANDROID.READ_MEDIA_IMAGES;
-      default:
-        return null;
-    }
+    return null;
   }
 
   if (Platform.OS === 'ios') {
     switch (type) {
-      case 'location':
-        return PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
       case 'camera':
         return PERMISSIONS.IOS.CAMERA;
       case 'gallery':
         return PERMISSIONS.IOS.PHOTO_LIBRARY;
-      case 'microphone':
-        return PERMISSIONS.IOS.MICROPHONE;
-      case 'storage':
-        return PERMISSIONS.IOS.MEDIA_LIBRARY;
       default:
         return null;
     }
@@ -68,34 +47,23 @@ export const getSystemPermission = (
   return null;
 };
 
-export const permissionMessages: Record<
-  PermissionType,
-  { title: string; message: string }
-> = {
-  location: {
-    title: 'Need your location',
-    message: 'Used to show nearby hotels and restaurants.',
-  },
+// Shown when the OS will no longer prompt (blocked) and the user must go to Settings.
+export const PERMISSION_BLOCKED_COPY = {
   notification: {
-    title: 'Enable notifications',
-    message: 'Used for booking confirmations and reminders.',
+    title: 'permissions.notification.title',
+    message: 'permissions.notification.message',
   },
   camera: {
-    title: 'Camera access',
-    message: 'Used to capture photos for reviews and listings.',
+    title: 'permissions.camera.title',
+    message: 'permissions.camera.message',
   },
   gallery: {
-    title: 'Gallery access',
-    message: 'Used to upload photos for reviews and listings.',
+    title: 'permissions.gallery.title',
+    message: 'permissions.gallery.message',
   },
-  microphone: {
-    title: 'Microphone access',
-    message: 'Used for voice search features.',
-  },
-  storage: {
-    title: 'Storage access',
-    message: 'Used to save and read booking files and photos.',
-  },
-};
+} as const satisfies Record<
+  PermissionType,
+  { title: ParseKeys; message: ParseKeys }
+>;
 
 export const DEFAULT_PERMISSION_STATUS = RESULTS.DENIED as UnifiedPermissionStatus;
