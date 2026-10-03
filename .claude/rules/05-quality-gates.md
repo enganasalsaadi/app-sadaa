@@ -8,6 +8,8 @@ npm run lint
 npm test
 ```
 
+plus `docs/mobile-architecture.md` updated when a screen, flow, permission, or business rule changed (rule `11-mobile-docs.md`).
+
 ## Strict TypeScript
 
 `tsconfig.json`: `strict`, `noImplicitAny`, `noUncheckedIndexedAccess`, `noImplicitReturns`, `noFallthroughCasesInSwitch`.

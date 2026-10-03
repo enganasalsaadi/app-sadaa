@@ -28,6 +28,7 @@ B2B influencer marketplace (Creator Economy), Syria-first, Arabic-first. One pla
 | `.claude/rules/08-brand-identity.md` | Navy Trust palette & color roles, status colors, mode, Tajawal font, 8–12 radius, logo, currency |
 | `.claude/rules/09-screen-playbook.md` | screen archetypes, mockup-before-code, required states, form rules, banned patterns. Procedure: `/sada-screen` skill |
 | `.claude/rules/10-component-reuse.md` | reuse-first, no one-offs, every kit export demoed in DevShowcase (registry test) |
+| `.claude/rules/11-mobile-docs.md` | **MANDATORY:** screen/flow/permission/business-rule change → update `docs/mobile-architecture.md` (plain English, Pitch sections, Change Log). Part of Definition of Done |
 
 Most rules are lint-enforced (`.eslintrc.js`). If a rule blocks you, stop and ask — never disable a lint rule inline to get past it.
 
@@ -95,6 +96,7 @@ src/
 4. i18n keys in **both** `ar` and `en`.
 5. Register route in `core/navigation/types.ts` + domain navigator; export from domain `index.ts` if others need it.
 6. `npx tsc --noEmit && npm run lint && npm test`.
+7. Update `docs/mobile-architecture.md` + its Change Log (rule `11-mobile-docs.md`).
 
 ## Known gaps / TODO
 

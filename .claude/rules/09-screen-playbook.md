@@ -67,4 +67,4 @@ screens/<Name>Screen/
 
 ## 8. Definition of done
 
-Mockup approved → built from shared parts → all states from §4 → `npx tsc --noEmit && npm run lint && npm test` → self-review against §3–§7 → tell the user what was **not** verified on device (RTL, dark, small screen, reduced motion).
+Mockup approved → built from shared parts → all states from §4 → `npx tsc --noEmit && npm run lint && npm test` → `docs/mobile-architecture.md` + Change Log updated (rule `11-mobile-docs.md`) → self-review against §3–§7 → tell the user what was **not** verified on device (RTL, dark, small screen, reduced motion).
