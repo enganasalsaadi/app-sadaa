@@ -3,7 +3,10 @@
 ## Secrets & tokens
 
 - Access/refresh tokens go through `authStorage` only (`@/core/storage`). Never read/write tokens elsewhere.
-- **TODO:** MMKV `sadaa-storage` is currently unencrypted. Before production: encrypt the auth instance (`createMMKV({ id, encryptionKey })` with key from Keychain/Keystore via `react-native-keychain`) or move tokens to Keychain.
+- Encrypted at rest: `sadaa-secure` (keys in `SECURE_STORAGE_KEYS`: tokens, PII drafts, device sync) and `sadaa-redux-persist` (user object) use AES-256 with a key from `react-native-keychain` (`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`, Android `AES_GCM_NO_AUTH`). `sadaa-storage` stays plain — only non-identifying preferences go there.
+- A new key that identifies the user or grants access → add it to `SECURE_STORAGE_KEYS`. Moving an existing key needs a `STORAGE_VERSION` bump + migration in `secureStorage.ts`.
+- Secure keys are readable only after `initSecureStorage()` (boot awaits it). Never read them from code that can run before boot (background handlers, module scope).
+- Never persist the token in Redux (`restoreToken` hydrates it from `authStorage`).
 - No secrets in the JS bundle. `.env` holds only public config (API URL, flags). API keys for AI/analytics are called server-side.
 - Never commit `.env*` values that are private; `.env.example` documents keys.
 

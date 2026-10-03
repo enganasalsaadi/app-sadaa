@@ -1,34 +1,37 @@
-import {createMMKV} from 'react-native-mmkv';
-import {MMKV_IDS, StorageKeys} from './storageKeys';
-import type {StorageKey, StorageSchema} from './storageKeys';
-
-const mmkv = createMMKV({
-  id: MMKV_IDS.APP,
-});
+import type { MMKV } from 'react-native-mmkv';
+import { plainMMKV } from './plainMMKV';
+import { getSecureMMKV } from './secureStorage';
+import { isSecureStorageKey, StorageKeys } from './storageKeys';
+import type { StorageKey, StorageSchema } from './storageKeys';
 
 type ValueOf<K extends StorageKey> = StorageSchema[K];
 
+// Session + PII keys resolve to the encrypted store; callers never choose.
+const storeFor = (key: StorageKey): MMKV | null =>
+  isSecureStorageKey(key) ? getSecureMMKV() : plainMMKV;
+
 export const appStorage = {
   get<K extends StorageKey>(key: K): ValueOf<K> | undefined {
-    return mmkv.getString(key) as ValueOf<K> | undefined;
+    return storeFor(key)?.getString(key) as ValueOf<K> | undefined;
   },
 
   set<K extends StorageKey>(key: K, value: ValueOf<K>): void {
-    mmkv.set(key, value as string);
+    storeFor(key)?.set(key, value as string);
   },
 
   delete(key: StorageKey): void {
-    mmkv.remove(key);
+    storeFor(key)?.remove(key);
   },
 
   contains(key: StorageKey): boolean {
-    return mmkv.contains(key);
+    return storeFor(key)?.contains(key) ?? false;
   },
 
   clearAll(): void {
-    mmkv.clearAll();
+    plainMMKV.clearAll();
+    getSecureMMKV()?.clearAll();
   },
 };
 
-export {StorageKeys};
-export type {StorageKey, StorageSchema};
+export { StorageKeys };
+export type { StorageKey, StorageSchema };

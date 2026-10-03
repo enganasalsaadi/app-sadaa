@@ -1,5 +1,11 @@
 import type { AuthState } from '../authTypes';
-import { authReducer, clearCredentials, setAccountSuspended, setToken } from '../authSlice';
+import {
+  authReducer,
+  clearCredentials,
+  restoreToken,
+  setAccountSuspended,
+  setToken,
+} from '../authSlice';
 
 const SESSION: AuthState = { user: null, token: 'token' };
 
@@ -20,5 +26,13 @@ describe('authSlice suspension', () => {
       ).isSuspended,
     ).toBe(false);
     expect(authReducer(suspended, clearCredentials()).isSuspended).toBeUndefined();
+  });
+});
+
+describe('authSlice restoreToken', () => {
+  it('restores the session token read from secure storage at boot', () => {
+    const empty: AuthState = { user: null, token: null };
+    expect(authReducer(empty, restoreToken('token')).token).toBe('token');
+    expect(authReducer(SESSION, restoreToken(null)).token).toBeNull();
   });
 });

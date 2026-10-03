@@ -1,4 +1,4 @@
-import { appStorage, authStorage, StorageKeys } from '@/core/storage';
+import { appStorage, authStorage, initSecureStorage, StorageKeys } from '@/core/storage';
 import { syncDeviceRegistration } from '../fcmTokenService';
 
 jest.mock('react-native-device-info', () => ({
@@ -7,6 +7,8 @@ jest.mock('react-native-device-info', () => ({
 }));
 
 describe('syncDeviceRegistration', () => {
+  beforeAll(() => initSecureStorage());
+
   beforeEach(async () => {
     await authStorage.clearSession();
     appStorage.set(StorageKeys.LANGUAGE, 'ar');

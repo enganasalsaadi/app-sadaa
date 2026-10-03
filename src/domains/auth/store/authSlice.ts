@@ -34,6 +34,10 @@ const authSlice = createSlice({
       // A suspended account can't log in (422), so a new session is active.
       state.isSuspended = false;
     },
+    // Boot: the token is persisted only in the encrypted `authStorage`.
+    restoreToken: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload;
+    },
     // Mirrors GET /onboarding/progress; the server owns the step.
     syncOnboardingStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
@@ -60,6 +64,7 @@ const authSlice = createSlice({
 export const {
   setUser,
   setToken,
+  restoreToken,
   syncOnboardingStep,
   phoneOtpSent,
   completeOnboarding,

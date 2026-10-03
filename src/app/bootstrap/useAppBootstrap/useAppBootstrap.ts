@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getVersion } from 'react-native-device-info';
 import i18n from '@/core/i18n';
-import { appStorage, StorageKeys } from '@/core/storage';
+import { appStorage, authStorage, initSecureStorage, StorageKeys } from '@/core/storage';
 import { toastService } from '@/core/toast';
 import { useAppDispatch, useAppSelector } from '@/core/store';
 import type { BootstrapState } from './types';
@@ -12,6 +12,7 @@ import { loadBootConfig } from './utils/loadBootConfig';
 import { resolveBootGate } from './utils/resolveBootGate';
 import { resolveDerivedStatus } from './utils/resolveDerivedStatus';
 import {
+  restoreToken,
   selectIsAuthenticated,
   selectIsOnboardingComplete,
   selectIsSuspended,
@@ -28,7 +29,8 @@ const announceSoftUpdate = (version: string) => {
 
 /**
  * Boot pipeline (native splash stays up until isReady):
- * language → GET /config (fail-open) → maintenance / version gate → onboarding → auth status.
+ * language → Keychain key + encrypted stores → GET /config (fail-open)
+ * → maintenance / version gate → onboarding → auth status.
  */
 export const useAppBootstrap = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +49,9 @@ export const useAppBootstrap = () => {
 
     const bootstrap = async () => {
       bootstrapLanguage();
+      // Before any request: prepareHeaders reads the token synchronously.
+      await initSecureStorage();
+      dispatch(restoreToken(authStorage.getToken() ?? null));
       const { config, isFresh } = await loadBootConfig(dispatch);
       const gate = resolveBootGate(config, isFresh, getVersion());
       if (!isMounted) return;

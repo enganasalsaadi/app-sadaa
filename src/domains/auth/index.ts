@@ -15,6 +15,7 @@ export {
 export {
   authReducer,
   setUser,
+  restoreToken,
   clearCredentials,
   selectUser,
   selectToken,

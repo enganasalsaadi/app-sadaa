@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { baseApi } from '@/core/api';
-import { authStorage } from '@/core/storage';
+import { authStorage, initSecureStorage } from '@/core/storage';
 import { authReducer, setToken } from '../../store';
 import { socialsDraftStorage } from '../../utils/socialsDraft';
 import { authApi } from '../authApi';
@@ -38,6 +38,8 @@ const signIn = (store: ReturnType<typeof makeStore>) =>
 describe('authApi.deleteAccount', () => {
   let clearSession: jest.SpyInstance;
   let clearDraft: jest.SpyInstance;
+
+  beforeAll(() => initSecureStorage());
 
   beforeEach(() => {
     // Request timeouts and cache timers would outlive the test; promises stay real.

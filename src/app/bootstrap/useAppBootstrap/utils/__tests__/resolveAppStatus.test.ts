@@ -1,8 +1,9 @@
-import { appStorage, authStorage, StorageKeys } from '@/core/storage';
+import { appStorage, authStorage, initSecureStorage, StorageKeys } from '@/core/storage';
 import { AppStatus } from '../../types';
 import { resolveAppStatus } from '../resolveAppStatus';
 
 describe('resolveAppStatus', () => {
+  beforeAll(() => initSecureStorage());
   beforeEach(() => appStorage.clearAll());
 
   it('asks for language first', () => {

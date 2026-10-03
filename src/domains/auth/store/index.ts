@@ -2,6 +2,7 @@ export { authReducer } from './authSlice';
 export {
   setUser,
   setToken,
+  restoreToken,
   syncOnboardingStep,
   phoneOtpSent,
   completeOnboarding,

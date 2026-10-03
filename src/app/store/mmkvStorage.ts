@@ -1,22 +1,14 @@
-import {createMMKV} from 'react-native-mmkv';
-import {MMKV_IDS} from '@/core/storage';
-import type {Storage} from 'redux-persist';
+import { getReduxPersistMMKV } from '@/core/storage';
+import type { Storage } from 'redux-persist';
 
-const persistMMKV = createMMKV({
-  id: MMKV_IDS.REDUX_PERSIST,
-});
-
+// Encrypted with the Keychain key: every call waits for it (PersistGate holds the UI meanwhile).
 export const mmkvReduxStorage: Storage = {
-  setItem: (key: string, value: string): Promise<void> => {
-    persistMMKV.set(key, value);
-    return Promise.resolve();
+  setItem: async (key: string, value: string): Promise<void> => {
+    (await getReduxPersistMMKV()).set(key, value);
   },
-  getItem: (key: string): Promise<string | null> => {
-    const value = persistMMKV.getString(key);
-    return Promise.resolve(value ?? null);
-  },
-  removeItem: (key: string): Promise<void> => {
-    persistMMKV.remove(key);
-    return Promise.resolve();
+  getItem: async (key: string): Promise<string | null> =>
+    (await getReduxPersistMMKV()).getString(key) ?? null,
+  removeItem: async (key: string): Promise<void> => {
+    (await getReduxPersistMMKV()).remove(key);
   },
 };

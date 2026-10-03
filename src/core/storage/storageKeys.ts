@@ -1,6 +1,8 @@
 export const MMKV_IDS = {
   APP: 'sadaa-storage',
   REDUX_PERSIST: 'sadaa-redux-persist',
+  /** Encrypted (AES-256, key in Keychain/Keystore): session + PII keys. */
+  SECURE: 'sadaa-secure',
 } as const;
 
 export const StorageKeys = {
@@ -18,6 +20,7 @@ export const StorageKeys = {
   INFLUENCER_SOCIALS_DRAFT: 'auth.influencer_socials_draft',
   PUSH_DEVICE_SYNC: 'auth.push_device_sync',
   PUSH_PROMPT: 'app.push_prompt',
+  STORAGE_VERSION: 'app.storage_version',
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];
@@ -43,4 +46,24 @@ export interface StorageSchema {
   [StorageKeys.PUSH_DEVICE_SYNC]: string;
   /** Soft push prompt history (JSON shown count + last dismissal), per install. */
   [StorageKeys.PUSH_PROMPT]: string;
+  /** Layout of the on-disk stores; '2' once session + PII moved to the encrypted store. */
+  [StorageKeys.STORAGE_VERSION]: string;
 }
+
+/**
+ * Keys that identify the user or grant access: stored only in the encrypted
+ * `sadaa-secure` instance. Everything else stays plain because it is read
+ * before the Keychain key is loaded (language, theme) or identifies no one.
+ */
+export const SECURE_STORAGE_KEYS = [
+  StorageKeys.USER_TOKEN,
+  StorageKeys.REFRESH_TOKEN,
+  StorageKeys.PENDING_USER_DATA,
+  StorageKeys.INFLUENCER_SOCIALS_DRAFT,
+  StorageKeys.PUSH_DEVICE_SYNC,
+] as const satisfies readonly StorageKey[];
+
+export type SecureStorageKey = (typeof SECURE_STORAGE_KEYS)[number];
+
+export const isSecureStorageKey = (key: StorageKey): key is SecureStorageKey =>
+  (SECURE_STORAGE_KEYS as readonly StorageKey[]).includes(key);

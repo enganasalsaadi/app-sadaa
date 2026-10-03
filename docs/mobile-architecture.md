@@ -436,6 +436,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 
 - **Phone-based identity** with SMS verification. The user's role (brand or creator) always comes from the server, never from a choice made only on the phone.
 - **Session safety.** If a session expires or is revoked, the app signs out and wipes every piece of cached personal data.
+- **Encrypted on the phone.** The login session, the saved profile, unsaved registration drafts and device-registration details are stored encrypted. The key is kept in the phone's secure key store (Keychain on iPhone, Keystore on Android). It never leaves the device, and it isn't included in backups or synced to other devices. Only non-personal settings such as language and theme stay unencrypted. If the key is ever lost, the app throws away the unreadable data and asks the user to log in again instead of crashing. Users updating from an older version keep their session: their data is moved into encrypted storage silently on first launch.
 - **Right to leave.** Users can delete their account themselves at any stage, confirmed by password. The server removes their documents, photo and devices and frees their phone number; the phone keeps nothing (see Journey G).
 - **No secrets in the app.** Sensitive keys (AI services, analytics) are only ever used on the server.
 - **No personal data in logs.** Phone numbers, tokens, wallet data and amounts are never logged.
@@ -526,7 +527,7 @@ These must be solved before a public store release. Ordered by severity.
 | 2 | **Notification service is set up for the previous project**, and app identifiers don't match across iOS, Android and the notification service. | Push notifications will not arrive. Store identity is inconsistent. | Mobile + DevOps |
 | 3 | **The server address still points to the old domain.** | The production app can't reach the Sada service. | Mobile + DevOps |
 | 4 | ✅ **Resolved 2026-10-03.** ~~The iOS build allows insecure connections.~~ Store builds now use HTTPS only on both platforms, and Android no longer trusts user-installed certificates. | | Mobile |
-| 5 | **Login sessions are stored on the device without encryption.** | Security gap for a money app. Sessions must move to encrypted secure storage. | Mobile |
+| 5 | ✅ **Resolved 2026-10-03.** ~~Login sessions are stored on the device without encryption.~~ Sessions and personal data are now stored encrypted, with the key in Keychain (iPhone) or Keystore (Android). Existing users stay logged in after updating. | | Mobile |
 | 6 | ✅ **Resolved 2026-10-03.** ~~Generic permission explanations, plus an unused location permission on Android.~~ Explanations rewritten in Arabic and English. Location and the Android camera permission were removed. | | Mobile |
 | 7 | **Leftover text from the previous project** in the profile area (booking wording and the old app name), and old notification-settings fields. | Confusing for users and unprofessional in review. | Mobile |
 | 8 | ✅ **Resolved 2026-10-03.** ~~Account deletion is not confirmed against the new backend.~~ Deletion is connected to the Sada service and reachable from Settings, the Suspended screen and registration. | | Mobile + backend |
@@ -543,6 +544,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-03 | Launch blocker 5 resolved. The login session and personal data are stored encrypted, with the key in the phone's secure key store. Users updating keep their session. If the key is lost, the user is asked to log in again. | 6.5, 7.4 |
 | 2026-10-03 | Launch blocker 8 resolved. Account deletion is connected to the Sada service, confirmed by password, and reachable from Settings, the Suspended screen and every registration step. Deleting signs out and wipes everything the phone kept for that user. | 5.2, 5.3 (Journeys E, G), 6.5, 7.2, 7.4 |
 | 2026-10-03 | Launch blockers 4 and 6 resolved. Store builds connect over HTTPS only. Location and the unused Android camera permission were removed. The camera and photo explanations are now specific and available in Arabic and English. The "permission turned off" message is translated and explains why each permission is needed. | 7.1, 7.2, 7.4 |
 | 2026-10-03 | First version of the living guide, written from the current app: onboarding for both roles, social lookup, KYC, suspension, push permission strategy, device registration, and launch blockers. | All |
