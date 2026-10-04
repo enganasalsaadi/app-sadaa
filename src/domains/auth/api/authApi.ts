@@ -15,7 +15,6 @@ import type {
   RequestPasswordResetRequest,
   ResendPasswordResetOtpRequest,
   ResetPasswordRequest,
-  UpdateProfileRequest,
   LogoutRequest,
   DeleteAccountRequest,
   VerifyPhoneOtpRequest,
@@ -111,16 +110,6 @@ export const authApi = baseApi.injectEndpoints({
         } catch {}
       },
     }),
-    updateProfile: builder.mutation<User, UpdateProfileRequest>({
-      query: body => ({ url: '/account/profile', method: 'POST', body }),
-      invalidatesTags: ['User'],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setUser(data));
-        } catch {}
-      },
-    }),
     // Forgot password, step 1: always 200 even for unknown phones (no account
     // enumeration). The code is checked only by reset-password — verify-otp
     // would consume it (contract §15.12).
@@ -155,7 +144,6 @@ export const {
   useLogoutMutation,
   useDeleteAccountMutation,
   useGetProfileQuery,
-  useUpdateProfileMutation,
   useRegisterDeviceMutation,
   useRequestPasswordResetMutation,
   useResendPasswordResetOtpMutation,

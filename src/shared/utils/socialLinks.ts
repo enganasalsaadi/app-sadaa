@@ -13,6 +13,9 @@ export const SOCIAL_PLATFORMS = [
 
 export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number];
 
+export const isSocialPlatform = (value: string): value is SocialPlatform =>
+  (SOCIAL_PLATFORMS as readonly string[]).includes(value);
+
 type ProfilePlatform = Exclude<SocialPlatform, 'website'>;
 
 interface PlatformRule {

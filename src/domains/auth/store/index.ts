@@ -30,7 +30,6 @@ export type {
   RequestPasswordResetRequest,
   ResendPasswordResetOtpRequest,
   ResetPasswordRequest,
-  UpdateProfileRequest,
   LogoutRequest,
   DeleteAccountRequest,
   VerifyPhoneOtpRequest,
@@ -59,5 +58,11 @@ export type {
   UserType,
   UserStatus,
   KycStatus,
+  ProfileStepKey,
+  ProfileCompletion,
+  ProfileCompletionStep,
+  UserKyc,
+  PrimaryPlatformSummary,
+  PlatformsReviewStatus,
 } from './authTypes';
-export { FOLLOWER_TIERS, SERVICE_TYPES } from './authTypes';
+export { FOLLOWER_TIERS, SERVICE_TYPES, PROFILE_STEP_KEYS } from './authTypes';

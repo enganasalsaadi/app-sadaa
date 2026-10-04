@@ -1,0 +1,1 @@
+export { KycScreen } from './KycScreen';

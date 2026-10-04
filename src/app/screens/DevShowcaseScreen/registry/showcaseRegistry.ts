@@ -1,6 +1,7 @@
 import type { ParseKeys } from 'i18next';
 import type { DevShowcaseCategoryId } from '@/core/navigation';
 import type * as UiKit from '@/shared/ui';
+import type * as AuthDomain from '@/domains/auth';
 import type * as FinanceDomain from '@/domains/finance';
 import type * as MarketplaceDomain from '@/domains/marketplace';
 
@@ -8,7 +9,10 @@ import type * as MarketplaceDomain from '@/domains/marketplace';
 export type UiExportName = keyof typeof UiKit;
 
 /** Runtime exports of the domains whose public components get a demo in the `sada` category. */
-export type DomainExportName = keyof typeof MarketplaceDomain | keyof typeof FinanceDomain;
+export type DomainExportName =
+  | keyof typeof MarketplaceDomain
+  | keyof typeof FinanceDomain
+  | keyof typeof AuthDomain;
 
 interface ShowcaseCategoryDef {
   titleKey: ParseKeys;
@@ -182,6 +186,11 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.glass',
     covers: ['HeroBackdrop', 'GlassCard', 'useGlassCardStyle'],
   },
+  gradientSurface: {
+    category: 'display',
+    titleKey: 'devShowcase.sections.gradientSurface',
+    covers: ['GradientSurface'],
+  },
   badges: {
     category: 'display',
     titleKey: 'devShowcase.sections.badges',
@@ -348,6 +357,12 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.wallet',
     covers: [],
     domainCovers: ['BalanceCard', 'PaymentBreakdown'],
+  },
+  platformEditing: {
+    category: 'sada',
+    titleKey: 'devShowcase.sections.platformEditing',
+    covers: [],
+    domainCovers: ['RatePlatformCard', 'PlatformAccountSheet', 'SocialLinkInput'],
   },
 } as const satisfies Record<string, ShowcaseEntryDef>;
 

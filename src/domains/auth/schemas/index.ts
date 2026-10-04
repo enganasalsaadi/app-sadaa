@@ -9,7 +9,9 @@ export { createOtpSchema, PHONE_OTP_LENGTH } from './otpSchema';
 export type { OtpFormValues } from './otpSchema';
 export {
   createBrandProfileSchema,
+  createSocialLinksSchema,
   toSocialLinksForm,
+  toSocialLinksPayload,
   EMPTY_SOCIAL_LINKS,
 } from './brandProfileSchema';
 export type {

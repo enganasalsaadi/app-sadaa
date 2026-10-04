@@ -1,0 +1,1 @@
+export { PlatformDetailScreen } from './PlatformDetailScreen';

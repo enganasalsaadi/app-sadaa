@@ -74,45 +74,49 @@ interface RatePlatformCardProps {
   username: string;
   rows: readonly { index: number; service: ServiceType }[];
   serviceLabel: (service: ServiceType) => string;
+  /** `rowsOnly` when the screen already shows the platform (in-app platform page). */
+  variant?: 'card' | 'rowsOnly';
 }
 
 /** One linked platform with a price per service the creator offers there. */
 export const RatePlatformCard: React.FC<RatePlatformCardProps> = memo(
-  ({ control, platform, username, rows, serviceLabel }) => {
+  ({ control, platform, username, rows, serviceLabel, variant = 'card' }) => {
     const { t } = useTranslation();
     const { colors, sizes } = useTheme();
 
     return (
       <Card p="lg" shadow="none">
         <Box gap="lg">
-          <Box row align="center" gap="md">
-            <Box
-              width={sizes.button.md}
-              height={sizes.button.md}
-              borderRadius="md"
-              bg={colors.interactive.soft}
-              align="center"
-              justify="center"
-            >
-              <SocialPlatformIcon
-                platform={platform}
-                size={sizes.icon.md}
-                color={colors.interactive.main}
-              />
-            </Box>
-            <Box flex={1} gap="xs">
-              <Text variant="bodyMedium">
-                {t(PLATFORM_LABEL_KEY[platform])}
-              </Text>
-              <Text
-                variant="caption"
-                color={colors.text.secondary}
-                numberOfLines={1}
+          {variant === 'card' ? (
+            <Box row align="center" gap="md">
+              <Box
+                width={sizes.button.md}
+                height={sizes.button.md}
+                borderRadius="md"
+                bg={colors.interactive.soft}
+                align="center"
+                justify="center"
               >
-                @{username}
-              </Text>
+                <SocialPlatformIcon
+                  platform={platform}
+                  size={sizes.icon.md}
+                  color={colors.interactive.main}
+                />
+              </Box>
+              <Box flex={1} gap="xs">
+                <Text variant="bodyMedium">
+                  {t(PLATFORM_LABEL_KEY[platform])}
+                </Text>
+                <Text
+                  variant="caption"
+                  color={colors.text.secondary}
+                  numberOfLines={1}
+                >
+                  @{username}
+                </Text>
+              </Box>
             </Box>
-          </Box>
+          ) : null}
           {rows.map(row => (
             <RateServiceRow
               key={row.service}

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, CustomButton, ProgressBar } from '@/shared/ui';
+import { Box, CustomButton, GradientSurface, ProgressBar } from '@/shared/ui';
 import type { ProgressBarTone } from '@/shared/ui';
 import { formatMoney, formatNumber } from '@/core/i18n';
 import { MOCK_DEAL_SUMMARY } from './mockData';
@@ -41,6 +41,15 @@ const ProgressBarDemoComponent: React.FC = () => {
           accessibilityLabel={t('devShowcase.progressBar.profile')}
         />
       ))}
+      <GradientSurface variant="brand" borderRadius="lg" p="lg">
+        <ProgressBar
+          value={demo.value}
+          surface="brand"
+          label={t('devShowcase.progressBar.profile')}
+          valueLabel={percent}
+          accessibilityLabel={t('devShowcase.progressBar.profile')}
+        />
+      </GradientSurface>
       <CustomButton
         title={t('devShowcase.progressBar.advance')}
         variant="secondary"

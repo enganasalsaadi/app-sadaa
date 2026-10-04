@@ -34,6 +34,10 @@ interface PlatformAccountSheetProps {
   tiers: readonly FollowerTierOption[];
   tiersLoading: boolean;
   onSave: (account: PlatformAccountFormValues) => void;
+  /** A server write is in flight (in-app management); the sheet stays open until it settles. */
+  saving?: boolean;
+  /** The primary toggle; in-app edits change it on the platform screen instead. */
+  showPrimary?: boolean;
 }
 
 /**
@@ -41,7 +45,18 @@ interface PlatformAccountSheetProps {
  * lookup fills the follower tier, or the user picks it (reviewed by admin).
  */
 export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
-  ({ visible, onClose, initial, platforms, supportsLookup, tiers, tiersLoading, onSave }) => {
+  ({
+    visible,
+    onClose,
+    initial,
+    platforms,
+    supportsLookup,
+    tiers,
+    tiersLoading,
+    onSave,
+    saving = false,
+    showPrimary = true,
+  }) => {
     const { t } = useTranslation();
     const { colors, sizes } = useTheme();
     const sheet = usePlatformAccountSheet({
@@ -86,7 +101,9 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
                   value={value || null}
                   onChange={sheet.onPlatformChange}
                   disabled={sheet.isEditing || sheet.isChecking}
-                  accessibilityLabel={t('auth.influencerOnboarding.socials.sheet.platform')}
+                  accessibilityLabel={t(
+                    'auth.influencerOnboarding.socials.sheet.platform',
+                  )}
                 />
               </FormSection>
             )}
@@ -96,11 +113,16 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
             <Controller
               control={control}
               name="handle"
-              render={({ field: { ref, value, onChange, onBlur }, fieldState }) => (
+              render={({
+                field: { ref, value, onChange, onBlur },
+                fieldState,
+              }) => (
                 <CustomInput
                   ref={ref}
                   label={t('auth.influencerOnboarding.socials.sheet.username')}
-                  placeholder={t('auth.influencerOnboarding.socials.sheet.usernamePlaceholder')}
+                  placeholder={t(
+                    'auth.influencerOnboarding.socials.sheet.usernamePlaceholder',
+                  )}
                   value={value}
                   onChangeText={text => {
                     onChange(text);
@@ -131,19 +153,28 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
                 size="md"
                 loading={sheet.isChecking}
                 disabled={throttleSeconds > 0}
-                leftIcon={<Search size={sizes.icon.sm} color={colors.interactive.main} />}
+                leftIcon={
+                  <Search
+                    size={sizes.icon.sm}
+                    color={colors.interactive.main}
+                  />
+                }
                 fullWidth
               />
             ) : null}
           </Box>
 
           {sheet.isChecking ? <SocialProfileCard loading /> : null}
-          {sheet.foundProfile ? <SocialProfileCard profile={sheet.foundProfile} /> : null}
+          {sheet.foundProfile ? (
+            <SocialProfileCard profile={sheet.foundProfile} />
+          ) : null}
 
           {lookupKind === 'unavailable' ? (
             <Notice
               tone="info"
-              message={t('auth.influencerOnboarding.socials.lookup.unavailable')}
+              message={t(
+                'auth.influencerOnboarding.socials.lookup.unavailable',
+              )}
             />
           ) : null}
           {lookupKind === 'throttled' && throttleSeconds > 0 ? (
@@ -159,9 +190,15 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
           {tierMode === 'locked' && !sheet.foundProfile && sheet.lockedTier ? (
             <FormSection
               title={t('auth.influencerOnboarding.socials.sheet.tier')}
-              description={t('auth.influencerOnboarding.socials.lookup.tierLocked')}
+              description={t(
+                'auth.influencerOnboarding.socials.lookup.tierLocked',
+              )}
             >
-              <TierBadge tier={sheet.lockedTier} size="md" interactive={false} />
+              <TierBadge
+                tier={sheet.lockedTier}
+                size="md"
+                interactive={false}
+              />
             </FormSection>
           ) : null}
 
@@ -172,7 +209,9 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
               render={({ field: { value, onChange }, fieldState }) => (
                 <FormSection
                   title={t('auth.influencerOnboarding.socials.sheet.tier')}
-                  description={t('auth.influencerOnboarding.socials.lookup.manualHint')}
+                  description={t(
+                    'auth.influencerOnboarding.socials.lookup.manualHint',
+                  )}
                   error={fieldState.error?.message}
                 >
                   <FollowerTierPicker
@@ -180,30 +219,38 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
                     value={isFollowerTier(value) ? value : null}
                     onChange={onChange}
                     loading={tiersLoading}
-                    accessibilityLabel={t('auth.influencerOnboarding.socials.sheet.tier')}
+                    accessibilityLabel={t(
+                      'auth.influencerOnboarding.socials.sheet.tier',
+                    )}
                   />
                 </FormSection>
               )}
             />
           ) : null}
 
-          <Controller
-            control={control}
-            name="isPrimary"
-            render={({ field: { value, onChange } }) => (
-              <ListRow
-                title={t('auth.influencerOnboarding.socials.sheet.primary')}
-                subtitle={t('auth.influencerOnboarding.socials.sheet.primaryHint')}
-                trailing={
-                  <Switch
-                    value={value}
-                    onValueChange={onChange}
-                    accessibilityLabel={t('auth.influencerOnboarding.socials.sheet.primary')}
-                  />
-                }
-              />
-            )}
-          />
+          {showPrimary ? (
+            <Controller
+              control={control}
+              name="isPrimary"
+              render={({ field: { value, onChange } }) => (
+                <ListRow
+                  title={t('auth.influencerOnboarding.socials.sheet.primary')}
+                  subtitle={t(
+                    'auth.influencerOnboarding.socials.sheet.primaryHint',
+                  )}
+                  trailing={
+                    <Switch
+                      value={value}
+                      onValueChange={onChange}
+                      accessibilityLabel={t(
+                        'auth.influencerOnboarding.socials.sheet.primary',
+                      )}
+                    />
+                  }
+                />
+              )}
+            />
+          ) : null}
 
           <Box gap="sm">
             <CustomButton
@@ -213,9 +260,16 @@ export const PlatformAccountSheet: React.FC<PlatformAccountSheetProps> = memo(
                   : t('auth.influencerOnboarding.socials.sheet.add')
               }
               onPress={sheet.onSubmit}
+              loading={saving}
               fullWidth
             />
-            <CustomButton title={t('common.cancel')} onPress={onClose} variant="ghost" fullWidth />
+            <CustomButton
+              title={t('common.cancel')}
+              onPress={onClose}
+              variant="ghost"
+              disabled={saving}
+              fullWidth
+            />
           </Box>
         </ScrollView>
       </BottomSheet>

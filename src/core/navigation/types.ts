@@ -63,10 +63,17 @@ export type InfluencerOnboardingStackParamList = {
 /** User-account screens hosted inside the Settings tab. */
 type AccountScreens = {
   ProfileScreen: undefined;
-  EditAccountScreen: undefined;
+  PersonalInfoScreen: undefined;
+  CompanyInfoScreen: undefined;
+  KycScreen: undefined;
   ChangePasswordScreen: undefined;
   LanguageScreen: undefined;
   WebViewScreen: { title: string; url: string };
+  PlatformsScreen: undefined;
+  PlatformDetailScreen: { platformId: string };
+  NichesScreen: undefined;
+  /** Inbox (notifications domain), opened from the Profile bell or a push. */
+  NotificationsScreen: undefined;
 };
 
 export type HomeStackParamList = {

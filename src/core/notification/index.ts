@@ -27,6 +27,8 @@ export const registerNotificationBackgroundHandlers = () => {
 
 export { notificationManager };
 export type { RegisterDevicePayload } from './notificationTypes';
+export { parsePushPayload } from './pushPayload';
+export type { ParsedPush, PushTarget, PushType } from './pushPayload';
 export { syncDeviceRegistration } from './fcmTokenService';
 export type { PushPermission } from './pushPrompt';
 export {

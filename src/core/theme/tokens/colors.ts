@@ -119,6 +119,8 @@ export interface ThemeColors {
     screenWash: { colors: string[]; locations: number[] };
     /** Full-screen onboarding backdrop. */
     onboarding: string[];
+    /** Soft mustard wash for verified / premium highlight cards (rule 08: never text-bearing mustard). */
+    premium: string[];
   };
   overlay: string;
   /** Full-screen photo/video viewer backdrop — black in both modes. */
@@ -276,6 +278,7 @@ export const lightColors: ThemeColors = {
       locations: [0, 0.3],
     },
     onboarding: [NAVY, '#27506A', '#397D8C'],
+    premium: ['#FDF8EE', '#F6E6C3'],
   },
   overlay: 'rgba(11, 22, 34, 0.5)',
   mediaBackdrop: '#000000',
@@ -383,6 +386,7 @@ export const darkColors: ThemeColors = {
       locations: [0, 0.3],
     },
     onboarding: [NAVY_DEEP, NAVY, '#1F4A5C', '#2D6B78'],
+    premium: ['#2E2716', '#3B321C'],
   },
   overlay: 'rgba(0, 0, 0, 0.7)',
   mediaBackdrop: '#000000',

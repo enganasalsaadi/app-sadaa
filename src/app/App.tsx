@@ -15,13 +15,14 @@ import { FONT_FAMILY } from '@/core/theme/tokens/typography';
 import { store, persistor } from '@/app/store';
 import { RootNavigator } from '@/app/navigation/RootNavigator';
 import { navigationRef } from '@/core/navigation';
-import { useAppBootstrap, useSlowBoot } from '@/app/bootstrap';
+import { AppStatus, useAppBootstrap, useSlowBoot } from '@/app/bootstrap';
 import { useNetworkMonitor } from '@/core/hooks';
 import { useNotification } from '@/core/hooks';
 import { useDeviceRegistration, usePushRefresh } from '@/domains/auth';
 import { useGetProfileQuery } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
+import { usePushNavigation } from '@/domains/notifications';
 import { GlobalErrorModal } from '@/shared/ui/GlobalErrorModal';
 import { NetworkSnackbar } from '@/shared/ui/NetworkSnackbar';
 import { BootScreen } from '@/app/screens/BootScreen';
@@ -34,6 +35,8 @@ const AppContent: React.FC = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   useDeviceRegistration(isAuthenticated);
   usePushRefresh(isAuthenticated);
+  // Taps route only into the signed-in tabs; a launch tap waits for them.
+  usePushNavigation(status === AppStatus.AUTHENTICATED);
   useNetworkMonitor();
   useGetProfileQuery(undefined, { skip: !isAuthenticated });
 

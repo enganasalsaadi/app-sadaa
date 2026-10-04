@@ -62,11 +62,12 @@ Create sub-folders only when needed; never put code outside this shape.
 |---|---|
 | `auth` | login/register/OTP/forgot password, tokens, auth slice, FCM token registration |
 | `identity` | user account, profile edit, password, preferences, language. **Next:** creator/brand profiles, social account linking (Meta Business/Creator), AI portfolio & bio, vacation mode, rate cards |
+| `notifications` | in-app inbox, push tap routing (typed route map). **Next:** notification preferences |
 | `marketplace` | campaigns, brief builder, matchmaking, offers/negotiation, deal pipeline, draft/content review, barter catalog, UGC, offline event booking |
 | `finance` | wallet, deposits (brands), withdrawals (creators), escrow holds/releases, refunds, contracts, invoices |
 
 Planned — add when first feature lands, do not pre-create:
-`analytics` (ROI dashboards, affiliate links, discount codes, QR visit tracking), `reputation` (multi-tier ratings, badges, rankings, anonymous brand reviews), `messaging` (in-app negotiation/chat — all agreements must stay in-app for dispute audit), `notifications` (inbox, prefs).
+`analytics` (ROI dashboards, affiliate links, discount codes, QR visit tracking), `reputation` (multi-tier ratings, badges, rankings, anonymous brand reviews), `messaging` (in-app negotiation/chat — all agreements must stay in-app for dispute audit).
 
 A new domain = new folder + `index.ts` + tab/stack registered in `app/navigation`. Route param types go in `core/navigation/types.ts`.
 

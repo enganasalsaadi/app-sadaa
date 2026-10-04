@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-03 |
+| **Last updated** | 2026-10-04 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -300,8 +300,13 @@ APP LAUNCH
     ├── Home tab                                                 🟡 placeholder today
     │     (will become: brand dashboard / creator opportunities, campaigns, deals)       🔜
     └── Settings tab
-          ├── Profile & account menu                             ✅
-          ├── Edit account                                       ✅
+          ├── Profile (navy header + cards, different per role)  🟡 built, awaiting device testing
+          │     ├── Notifications inbox (bell with unread count in the header)   🟡 built, awaiting device and live-server testing
+          │     ├── Verification: creator ID (front + back) or brand company document   🟡 built, awaiting device and live-server testing
+          │     ├── Creator: My platforms → one platform (switches, prices)  🟡 built, awaiting device and live-server testing
+          │     ├── Creator: My niches                           🟡 built, awaiting device and live-server testing
+          │     ├── Creator: Personal info (name, email, city, area)   🟡 built, awaiting device and live-server testing
+          │     └── Brand: Company info (name, email, activity, city, links)   🟡 built, awaiting device and live-server testing
           ├── Change password                                    ✅
           ├── Language                                           ✅
           ├── Terms & Privacy (in-app web pages)                 ✅
@@ -331,6 +336,25 @@ APP LAUNCH
 4. **Set prices (optional).** A price per service type (reel, story, post, visit). They can skip this and add prices later.
 5. **Verify identity (optional).** They upload the front and back of their national ID (photo or PDF, up to 10 MB). Skipping is allowed and registration still completes. Verification raises trust with brands.
 6. **Welcome.** A celebration screen. At this natural moment, the app may *offer* to turn on notifications (see §6.4).
+
+#### Journey A2: Managing platforms, prices and niches after registration 🟡
+- **Entry points:** the platforms and niches cards on the Profile, and the "complete your profile" cards for linking platforms, getting them verified and setting prices.
+- **My platforms:** a calm list, one card per account (username, tier badge, and small labels for primary, under review, rejected or not available). Tapping a card opens that platform; adding uses the same username + automatic lookup sheet as registration. Only platforms not linked yet can be added (one account per platform).
+- **One platform:** the account (username, followers or "tier picked by you", last update) with a refresh button (the server allows two refreshes per hour; the app shows when the next one is possible). Two switches save immediately: **available for requests** (when off, brands can't send requests on that platform; the creator's overall tier is recalculated from the available, non-rejected accounts) and **primary account** (hidden for rejected accounts; there is always exactly one primary, so it changes by making another platform primary). A rejected account shows the reason and an edit button; a manual tier shows that the team is reviewing it. Editing the username or tier re-runs the lookup.
+- **Prices per platform:** the app defines the services (reel, story, post, visit); the creator ticks what they offer and sets a price for each. Saving keeps the prices of every other platform unchanged. "Save prices" is the only main button on the page.
+- **Removing a platform** asks for confirmation and warns that its prices are removed too. The last remaining platform can't be removed; the app explains why.
+- **My niches:** pick 1 to 3 niches and save.
+- **Unsaved edits:** leaving the prices or niches page with unsaved changes asks before discarding them.
+
+#### Journey A3: Editing your own details (different for creators and brands) 🟡
+- **Creators and brands edit different things.** The edit button in the Profile header, and the matching "complete your profile" cards, open the right page for the role.
+- **Creator, "Personal info":** full name, email (optional), governorate and area (optional). Everything opens filled in with what is saved.
+- **Brand, "Company info":** company name, email, business type, governorate and social links (Instagram, Facebook, TikTok first, the rest behind "More links"). Links are checked against each platform's real addresses, like at registration. Email changes apply at once.
+- **The phone number can't be changed in the app**, because it is the account's identity. It is shown locked, with a "contact support to change your number" link that opens WhatsApp with a ready message.
+- Only what changed is saved. Leaving with unsaved changes asks first. Server errors appear next to the field they concern.
+- **Verification after registration:** the verification card on the Profile opens the upload page when an upload is possible (never sent, or rejected; a rejection shows the reason and an "Upload again" button). Creators upload the front and back of their national ID (photo or PDF, up to 10 MB). Brands choose the document type (commercial register, industrial register or trade license) and upload one document (JPG, PNG or PDF, up to 10 MB). Files are checked on the phone before sending. While a request is under review, or once verified, the page shows only the status and its date. Sending is limited to 5 tries per hour (shared with registration); when reached, the button shows a countdown. The result arrives as a notification and refreshes the status.
+- **Completion adds up to 100%.** Every step the server counts has its own "complete your profile" card, verification included (35% for brands, 20% for creators), so the cards always add up to what is missing. The verification card opens the upload page; while a request is under review it only says so; after a rejection it asks to upload again.
+- **The brand Profile is lighter than the creator's:** the header shows the company logo (tap to change), name, business type and city; below come the completion cards (the photo step reads "add your company logo"), notifications, business verification and a company card (business type, city, links). Platforms, niches and prices are creator-only and never appear for brands.
 
 #### Journey B: Brand registration ✅
 1. **Create account** (name, phone, password) → SMS code is sent.
@@ -425,11 +449,12 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - **Never on first launch.** A cold permission request on day one is the top cause of permanent "Don't allow".
 - **Ask at moments of value.** The app first shows its own friendly explanation (for example, at the end of registration: "Get notified the moment a brand sends you an offer"). Only if the user agrees does the system permission prompt appear.
 - **Respect "Not now".** After a decline, the app waits at least 48 hours before asking again, and asks at most 3 times per installation. If the phone can no longer show the system prompt, the app stops asking.
-- **Always in control.** The user can change the permission at any time in the phone's settings. A notifications screen in Settings, showing the live status and Sada's notification categories, comes with the notification inbox.
+- **Always in control.** The user can change the permission at any time in the phone's settings. The Profile screen shows the live status: while notifications are off, a card explains that campaigns may be missed and offers to turn them on (or opens the phone's settings if the system can no longer ask). Once on, it shows a calm confirmation. A notifications screen with Sada's categories comes with the notification inbox.
 - **Fresh data on every notification.** When a notification arrives or is tapped, the app refreshes the user's data so the screen matches what the notification said.
-- **Safe notification links.** Notification content is checked against an approved list before it is acted on. A notification can never send the user to an arbitrary screen. Today the links cover identity verification, a specific social platform and the notifications inbox, and tapping will navigate there once those screens are live.
+- **Safe notification links.** Notification content is checked against an approved list before it is acted on. A notification can never send the user to an arbitrary screen. Tapping a notification opens its screen: verification results open the verification page, platform results open that platform (creators only; brands land in the inbox), anything else opens the inbox. If the tap launched the app, it waits until sign-in has finished, then opens the screen, with the Profile underneath so Back always works.
+- **Notification inbox.** A bell in the Profile header shows the unread count. The inbox lists notifications newest first, with an unread dot and bold title, how long ago each arrived, and more as the user scrolls. Tapping one marks it read and opens its screen; one header button marks everything read. An empty inbox says so plainly.
 - **Device registration.** The app registers the device for notifications when the user signs in, when the notification token changes, and when the language changes (so notifications arrive in the right language). On logout the device is unregistered and all local data is cleared.
-- **Planned:** a notification inbox, a notifications screen in Settings with the live permission status and categories that fit Sada's events, and **city alerts** for creators when a local brand posts a campaign.
+- **Planned:** a notifications screen in Settings with the live permission status and categories that fit Sada's events, and **city alerts** for creators when a local brand posts a campaign.
 
 ### 6.5 Security and privacy by design
 
@@ -490,10 +515,10 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 
 **🔜 Next: profile and account (immediate)**
 - New "Me" home data and a full profile screen for both roles.
-- Edit creator and brand profiles, change avatar or logo, change password on the new service.
-- Manage social platforms after registration (add, edit, refresh, set primary).
-- Edit price lists, and verify identity later from Settings.
-- Notification inbox and Sada-specific notification categories.
+- 🟡 Edit creator and brand profiles (separate pages per role) and change avatar or logo: built, awaiting testing. Change password on the new service.
+- 🟡 Manage social platforms after registration (add, edit, refresh, set primary, availability, remove) and edit prices per platform: built, awaiting testing.
+- 🟡 Verify identity (creators) or the business (brands) later from the Profile: built, awaiting testing.
+- 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
 
 **🔜 Then: marketplace core (the revenue engine)**
 - Campaign Brief Builder, open campaigns, applications and direct offers.
@@ -542,6 +567,11 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-04 | Notification inbox added: a bell with the unread count in the Profile header, a list with unread markers and "how long ago", tap to mark read and open the related screen, and "mark all as read". Tapping a phone notification now opens its screen too, even when it launched the app. The "complete your profile" cards now include verification, so they add up to the missing percentage. | 5.2, 5.3 (Journey A3), 6.4, 7.3 |
+| 2026-10-04 | Verification can now be done after registration from the Profile card: creators upload both sides of their ID, brands pick the document type and upload one company document. The page shows the current status (under review, verified with date, rejected with reason), allows uploading only when the server does, and counts down when the hourly limit is reached. The verification card wording now differs for brands. | 5.2, 5.3 (Journey A3), 7.3 |
+| 2026-10-04 | Editing details is now separate per role. Creators get "Personal info" (name, email, governorate, area) and brands get "Company info" (company name, email, business type, governorate, social links), both opening filled in with the saved values. The old edit page (empty name, a phone field that could never be saved) was removed. The phone number is shown locked, with a WhatsApp link to support for changing it. The brand Profile now shows the company logo, business type and city in the header and a company card, with no creator sections. | 5.2, 5.3 (Journey A3), 7.3 |
+| 2026-10-04 | Creators can now manage their platforms after registration: a "My platforms" list, a page per platform (refresh followers, available-for-requests and primary switches, rejection or review notice, edit, remove with a warning) with that platform's prices, and a "My niches" page (1 to 3). The Profile cards and the matching "complete your profile" steps open these pages. Leaving with unsaved prices or niches asks first. | 5.2, 5.3 (Journey A2), 7.3 |
+| 2026-10-04 | Profile redesigned. A short navy header shows the photo (tap to change), name, city and area, email and profile completion; the completion bar disappears at 100% and the header shrinks into a slim bar on scroll. Below: swipeable "complete your profile" cards with the percentage each step adds, the notification status card, identity verification in four states (verified shows a soft gold card), a platforms summary, niches, settings as tiles with an in-place light/dark/system choice, logout and delete account. Detailed screens (platform management, niche editing, ID upload, notification inbox) follow. | 5.2, 6.4 |
 | 2026-10-03 | Launch blocker 7 resolved. Leftover booking wording and the old app name were removed from the profile. The old notification settings screen (booking categories, never reachable) was removed until Sada's categories exist. The home screen name is now «صدى» / "Sada". | 5.2, 6.4, 7.3, 7.4 |
 | 2026-10-03 | Launch blocker 5 resolved. The login session and personal data are stored encrypted, with the key in the phone's secure key store. Users updating keep their session. If the key is lost, the user is asked to log in again. | 6.5, 7.4 |
 | 2026-10-03 | Launch blocker 8 resolved. Account deletion is connected to the Sada service, confirmed by password, and reachable from Settings, the Suspended screen and every registration step. Deleting signs out and wipes everything the phone kept for that user. | 5.2, 5.3 (Journeys E, G), 6.5, 7.2, 7.4 |

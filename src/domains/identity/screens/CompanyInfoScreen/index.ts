@@ -1,0 +1,1 @@
+export { CompanyInfoScreen } from './CompanyInfoScreen';

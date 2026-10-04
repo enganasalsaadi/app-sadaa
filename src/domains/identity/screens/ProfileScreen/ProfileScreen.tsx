@@ -1,281 +1,162 @@
 import React, { memo } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import {
-  User,
-  Shield,
-  Globe,
-  FileText,
-  Lock,
-  LogOut,
-  Trash2,
-  Camera,
-  UserRoundPen,
-  Palette,
-} from 'lucide-react-native';
-import { useTheme, useStyles, moderateScale } from '@/core/theme';
-import { useProfileScreen } from './hooks/useProfileScreen';
-import type { SettingsStackScreenProps } from '@/core/navigation';
-import { navigate } from '@/core/navigation';
-import {
-  BottomSheet,
-  Box,
-  CustomButton,
-  IconButton,
-  Image,
-  Layout,
-  ListGroup,
-  ListRow,
-  Pressable,
-  Text,
-} from '@/shared/ui';
+import { Bell, Building2, LogOut, UserRoundPen } from 'lucide-react-native';
+import { useTheme } from '@/core/theme';
+import { Box, ConfirmSheet, Layout } from '@/shared/ui';
 import { DeleteAccountSheet } from '@/domains/auth';
+import type { ProfileSectionKey } from '../../constants/profileSections';
+import { useProfileScreen, type ProfileScreenModel } from './hooks/useProfileScreen';
+import { ProfileHero } from './components/ProfileHero';
+import { MissingStepsRail } from './components/MissingStepsRail';
+import { PushCard } from './components/PushCard';
+import { KycCard } from '../../components/KycCard';
+import { PlatformsSummaryCard } from './components/PlatformsSummaryCard';
+import { NichesCard } from './components/NichesCard';
+import { CompanyInfoCard } from './components/CompanyInfoCard';
+import { SettingsGrid } from './components/SettingsGrid';
+import { AccountFooter } from './components/AccountFooter';
 
-type Props = SettingsStackScreenProps<'ProfileScreen'>;
+interface SectionProps {
+  section: ProfileSectionKey;
+  vm: ProfileScreenModel;
+}
 
-const AVATAR_SIZE = moderateScale(88);
+/** One card per registry key; the rail runs edge to edge, the rest sit in the screen gutter. */
+const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
+  switch (section) {
+    case 'completion':
+      return <MissingStepsRail steps={vm.missingSteps} onStepPress={vm.onStepPress} />;
+    case 'push':
+      return <PushCard permission={vm.push.permission} onEnable={vm.push.enable} />;
+    case 'kyc':
+      return (
+        <KycCard
+          kyc={vm.kyc}
+          userType={vm.userType}
+          onOpen={vm.kyc.canSubmit ? vm.openKyc : undefined}
+        />
+      );
+    case 'platforms':
+      return (
+        <PlatformsSummaryCard
+          summary={vm.platformsSummary}
+          details={vm.details}
+          onPress={vm.openPlatforms}
+        />
+      );
+    case 'niches':
+      return (
+        <NichesCard
+          labels={vm.nicheLabels}
+          isLoading={vm.details.isLoading}
+          onPress={vm.openNiches}
+        />
+      );
+    case 'company':
+      return (
+        <CompanyInfoCard
+          company={vm.company}
+          isLoading={vm.details.isLoading}
+          onPress={vm.openEditInfo}
+        />
+      );
+    case 'settings':
+      return (
+        <SettingsGrid
+          themeMode={vm.themeMode}
+          onThemeModeChange={vm.changeThemeMode}
+          onPassword={vm.openPassword}
+          onLanguage={vm.openLanguage}
+          onTerms={vm.openTerms}
+          onPrivacy={vm.openPrivacy}
+          onDevShowcase={vm.openDevShowcase}
+        />
+      );
+    case 'account':
+      return (
+        <AccountFooter
+          appVersion={vm.appVersion}
+          onLogout={vm.openLogoutSheet}
+          onDeleteAccount={vm.openDeleteSheet}
+        />
+      );
+    default: {
+      const _exhaustive: never = section;
+      return _exhaustive;
+    }
+  }
+};
 
-const ProfileScreenComponent: React.FC<Props> = ({ navigation }) => {
+const ProfileScreenComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
-  const styles = useStyles(({ colors: c, radii }) => ({
-    cameraBtn: {
-      position: 'absolute' as const,
-      bottom: 0,
-      end: 0,
-      width: moderateScale(28),
-      height: moderateScale(28),
-      borderRadius: radii.full,
-      alignItems: 'center' as const,
-      justifyContent: 'center' as const,
-      backgroundColor: c.interactive.main,
-    },
-    halfButton: {
-      flex: 1,
-    },
-  }));
-
-  const {
-    user,
-    isLoggingOut,
-    isUploadingAvatar,
-    logoutSheetVisible,
-    deleteSheetVisible,
-    setLogoutSheetVisible,
-    openDeleteSheet,
-    closeDeleteSheet,
-    handleLogout,
-    handleChangePhoto,
-  } = useProfileScreen();
-
-  const accountSettingsItems = [
-    {
-      key: 'security',
-      icon: Shield,
-      label: t('account.profile.changePassword'),
-      onPress: () => navigation.navigate('ChangePasswordScreen'),
-    },
-  ];
-
-  const appSettingsItems = [
-    {
-      key: 'language',
-      icon: Globe,
-      label: t('account.profile.language'),
-      onPress: () => navigation.navigate('LanguageScreen'),
-    },
-    {
-      key: 'terms',
-      icon: FileText,
-      label: t('account.profile.terms'),
-      onPress: () =>
-        navigation.navigate('WebViewScreen', {
-          title: t('account.profile.terms'),
-          url: '__terms__',
-        }),
-    },
-    {
-      key: 'privacy',
-      icon: Lock,
-      label: t('account.profile.privacy'),
-      onPress: () =>
-        navigation.navigate('WebViewScreen', {
-          title: t('account.profile.privacy'),
-          url: '__privacy__',
-        }),
-    },
-  ];
-
-  // Dev-only entry into the Design System Showcase — stripped from production
-  // builds by dead-code elimination on the `__DEV__` constant.
-  const devSettingsItems = __DEV__
-    ? [
-        {
-          key: 'devShowcase',
-          icon: Palette,
-          label: t('devShowcase.entryLabel'),
-          onPress: () => navigate('DevShowcase'),
-        },
-      ]
-    : [];
-
-  const settingsItems = [
-    ...accountSettingsItems,
-    ...appSettingsItems,
-    ...devSettingsItems,
-  ];
+  const { colors, sizes } = useTheme();
+  const vm = useProfileScreen();
 
   return (
     <>
       <Layout
         padding="none"
-        header={{ title: t('account.profile.title'), showBackButton: false }}
+        statusBar="light"
+        headerBehavior="overlay"
+        header={{
+          title: vm.hero.displayName || t('account.profile.title'),
+          variant: 'brand',
+          showBackButton: false,
+          actions: [
+            {
+              icon: Bell,
+              accessibilityLabel: vm.unreadNotifications
+                ? t('notifications.inbox.openUnread', { count: vm.unreadNotifications })
+                : t('notifications.inbox.title'),
+              badge: vm.unreadNotifications,
+              onPress: vm.openNotifications,
+            },
+            {
+              icon: vm.isBrand ? Building2 : UserRoundPen,
+              accessibilityLabel: t(
+                vm.isBrand ? 'account.companyInfo.title' : 'account.personalInfo.title',
+              ),
+              onPress: vm.openEditInfo,
+            },
+          ],
+        }}
+        hero={<ProfileHero hero={vm.hero} onChangePhoto={vm.changePhoto} />}
+        scrollProps={{
+          refreshControl: (
+            <RefreshControl
+              refreshing={vm.refreshing}
+              onRefresh={vm.onRefresh}
+              tintColor={colors.interactive.main}
+            />
+          ),
+        }}
       >
-        {/* Hero */}
-        <Box align="center" pt="3xl" pb="2xl" px="2xl">
-          <Box position="relative">
-            {user?.avatar_url ? (
-              <Image uri={user.avatar_url} size={AVATAR_SIZE} circle />
+        <Box gap="2xl" pt="xl" pb="5xl">
+          {vm.sections.map(section =>
+            section === 'completion' ? (
+              <ProfileSection key={section} section={section} vm={vm} />
             ) : (
-              <Box
-                width={AVATAR_SIZE}
-                height={AVATAR_SIZE}
-                borderRadius="full"
-                bg={colors.surface.elevated}
-                align="center"
-                justify="center"
-              >
-                <User size={moderateScale(40)} color={colors.text.tertiary} />
+              <Box key={section} px="xl">
+                <ProfileSection section={section} vm={vm} />
               </Box>
-            )}
-            <Pressable
-              style={styles.cameraBtn}
-              onPress={handleChangePhoto}
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityLabel={t('account.profile.changePhoto')}
-            >
-              {isUploadingAvatar ? (
-                <ActivityIndicator size="small" color={colors.text.onAccent} />
-              ) : (
-                <Camera size={moderateScale(14)} color={colors.text.onAccent} />
-              )}
-            </Pressable>
-          </Box>
-
-          <Box row align="center" mt="lg" gap="sm">
-            <Text variant="h3" color={colors.text.primary} align="center">
-              {[user?.first_name, user?.last_name].filter(Boolean).join(' ') ||
-                '—'}
-            </Text>
-            <IconButton
-              icon={UserRoundPen}
-              size="sm"
-              onPress={() => navigation.navigate('EditAccountScreen')}
-              accessibilityLabel={t('account.editAccount.title')}
-            />
-          </Box>
-
-          <Box row align="center" mt="xs" gap="xs">
-            <Text variant="bodySmall" color={colors.text.secondary}>
-              {user?.phone || '—'}
-            </Text>
-          </Box>
-
-          {user?.member_since && (
-            <Text variant="caption" color={colors.text.tertiary} mt="xs">
-              {t('account.profile.memberSince', {
-                date: user.member_since,
-              })}
-            </Text>
+            ),
           )}
-        </Box>
-
-        {/* Settings section */}
-        <Box px="2xl" pb="5xl" gap="lg">
-          <ListGroup title={t('account.profile.settings')}>
-            {settingsItems.map(item => (
-              <ListRow
-                key={item.key}
-                icon={item.icon}
-                title={item.label}
-                onPress={item.onPress}
-              />
-            ))}
-          </ListGroup>
-
-          <ListGroup>
-            <ListRow
-              icon={LogOut}
-              title={t('account.profile.logout')}
-              onPress={() => setLogoutSheetVisible(true)}
-            />
-          </ListGroup>
-          <ListGroup tone="danger">
-            <ListRow
-              icon={Trash2}
-              tone="danger"
-              title={t('auth.deleteAccount.entry')}
-              onPress={openDeleteSheet}
-            />
-          </ListGroup>
         </Box>
       </Layout>
 
-      {/* Logout confirmation */}
-      <BottomSheet
-        visible={logoutSheetVisible}
-        onClose={() => setLogoutSheetVisible(false)}
-        muted
-      >
-        <Box px="2xl" pt="lg" pb="3xl" align="center">
-          <Box
-            width={moderateScale(56)}
-            height={moderateScale(56)}
-            borderRadius="full"
-            bg={colors.surface.elevated}
-            align="center"
-            justify="center"
-            mb="lg"
-          >
-            <LogOut size={moderateScale(24)} color={colors.text.secondary} />
-          </Box>
-          <Text variant="h4" color={colors.text.primary} mb="sm" align="center">
-            {t('account.profile.logoutConfirmTitle')}
-          </Text>
-          <Text
-            variant="body"
-            color={colors.text.secondary}
-            mb="2xl"
-            align="center"
-          >
-            {t('account.profile.logoutConfirmSubtitle')}
-          </Text>
-          <Box row gap="xl" width="100%" justify="center">
-            <CustomButton
-              onPress={() => setLogoutSheetVisible(false)}
-              title={t('common.cancel')}
-              variant="outline"
-              fullWidth
-              style={styles.halfButton}
-            />
-            <CustomButton
-              onPress={handleLogout}
-              title={t('account.profile.logoutConfirmBtn')}
-              disabled={isLoggingOut}
-              loading={isLoggingOut}
-              variant="primary"
-              fullWidth
-              style={styles.halfButton}
-            />
-          </Box>
-        </Box>
-      </BottomSheet>
-
-      <DeleteAccountSheet
-        visible={deleteSheetVisible}
-        onClose={closeDeleteSheet}
+      <ConfirmSheet
+        visible={vm.logoutSheetVisible}
+        onClose={vm.closeLogoutSheet}
+        icon={<LogOut size={sizes.icon.lg} color={colors.text.secondary} />}
+        title={t('account.profile.logoutConfirmTitle')}
+        body={t('account.profile.logoutConfirmSubtitle')}
+        confirmLabel={t('account.profile.logoutConfirmBtn')}
+        onConfirm={vm.handleLogout}
+        confirmLoading={vm.isLoggingOut}
+        cancelLabel={t('common.cancel')}
       />
+      <DeleteAccountSheet visible={vm.deleteSheetVisible} onClose={vm.closeDeleteSheet} />
     </>
   );
 };

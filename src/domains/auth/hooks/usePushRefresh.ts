@@ -4,9 +4,9 @@ import { notificationManager } from '@/core/notification';
 import { useAppDispatch } from '@/core/store';
 
 /**
- * Every push reflects a change `/me` reports (KYC, platforms, unread count),
- * so receiving or tapping one refetches it (contract §11.2). Taps don't
- * navigate yet: none of the deep-link screens exist.
+ * Every push reflects a change `/me` reports (KYC, platforms, unread count)
+ * and adds an inbox entry, so receiving or tapping one refetches both
+ * (contract §11.2). Tap routing lives in the notifications domain.
  */
 export const usePushRefresh = (isAuthenticated: boolean) => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export const usePushRefresh = (isAuthenticated: boolean) => {
   useEffect(() => {
     if (!isAuthenticated) return undefined;
     return notificationManager.registerPushListener(() => {
-      dispatch(baseApi.util.invalidateTags(['User']));
+      dispatch(baseApi.util.invalidateTags(['User', 'Kyc', 'Notification']));
     });
   }, [dispatch, isAuthenticated]);
 };

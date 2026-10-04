@@ -2,11 +2,17 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
 import type { SettingsStackParamList } from '@/core/navigation';
+import { NotificationsScreen } from '@/domains/notifications';
 import { ProfileScreen } from '../screens/ProfileScreen';
-import { EditAccountScreen } from '../screens/EditAccountScreen';
+import { PersonalInfoScreen } from '../screens/PersonalInfoScreen';
+import { CompanyInfoScreen } from '../screens/CompanyInfoScreen';
+import { KycScreen } from '../screens/KycScreen';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
 import { LanguageScreen } from '../screens/LanguageScreen';
 import { WebViewScreen } from '../screens/WebViewScreen';
+import { PlatformsScreen } from '../screens/PlatformsScreen';
+import { PlatformDetailScreen } from '../screens/PlatformDetailScreen';
+import { NichesScreen } from '../screens/NichesScreen';
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
@@ -20,9 +26,15 @@ export const SettingsNavigator: React.FC = () => (
     }}
   >
     <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-    <Stack.Screen name="EditAccountScreen" component={EditAccountScreen} />
+    <Stack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
+    <Stack.Screen name="CompanyInfoScreen" component={CompanyInfoScreen} />
+    <Stack.Screen name="KycScreen" component={KycScreen} />
     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
     <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
     <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+    <Stack.Screen name="PlatformsScreen" component={PlatformsScreen} />
+    <Stack.Screen name="PlatformDetailScreen" component={PlatformDetailScreen} />
+    <Stack.Screen name="NichesScreen" component={NichesScreen} />
+    <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
   </Stack.Navigator>
 );

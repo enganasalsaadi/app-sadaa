@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>صدى — معاينة تصميم صفحة الحساب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Navy Trust tokens (rule 08) */
+:root{--navy:#1C3349;--navyD:#0B1622;--mid:#27506A;--teal:#397D8C;--tealL:#6FC0CF;--must:#D9B46A;--mustL:#E6C47E;--onB:#fff;--onBM:#C9D6E0}
+.light{--bg:#F5F7F9;--sf:#fff;--sf2:#EDF1F4;--bd:#DCE3EA;--bd2:#C3CDD7;--t1:#0F1D2B;--t2:#475869;--t3:#8394A5;--it:#347482;--im:#397D8C;--is:#E3F0F2;--bs:#E6ECF2;--bt:#1C3349;--pt:#8A6A24;--ps:#FBF3E2;--ok:#12A150;--okt:#067647;--oks:#E7F6EC;--wn:#DC6803;--wnt:#B54708;--wns:#FEF0E6;--dg:#D92D20;--dgt:#B42318;--dgs:#FDECEA;--inf:#1570EF;--inft:#175CD3;--infs:#E8F1FE;--cta:#1C3349;--onCta:#fff;--skA:#EDF1F4;--skB:#DCE3EA}
+.dark{--bg:#0B1622;--sf:#122131;--sf2:#182B3D;--bd:#22384C;--bd2:#30495F;--t1:#EAF0F5;--t2:#A5B5C4;--t3:#6C8093;--it:#6FC0CF;--im:#6FC0CF;--is:#16303A;--bs:#16303A;--bt:#EAF0F5;--pt:#E6C47E;--ps:#2E2716;--ok:#47CD89;--okt:#47CD89;--oks:#0F2A1D;--wn:#FDB022;--wnt:#FDB022;--wns:#2E2210;--dg:#F97066;--dgt:#F97066;--dgs:#2E1719;--inf:#6CA6FF;--inft:#6CA6FF;--infs:#12233D;--cta:#5FAFBF;--onCta:#06121C;--skA:#182B3D;--skB:#22384C}
+.navyc{--t1:#fff;--t2:#C9D6E0;--t3:#8FA6B8;--skA:rgba(255,255,255,.06);--skB:rgba(255,255,255,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tajawal,system-ui;background:#E4E9EE;color:#0F1D2B;padding:24px 16px 80px}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+h1{font-size:26px;font-weight:800;color:#1C3349}
+.lead{color:#475869;margin:4px 0 16px;font-size:15px}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px;background:rgba(228,233,238,.92);backdrop-filter:blur(8px);padding:10px 0;margin-bottom:16px}
+.ctl{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid #DCE3EA;border-radius:10px;padding:4px}
+.ctl b{font-size:12px;color:#475869;padding:0 6px}
+.ctl button{padding:6px 10px;border-radius:8px;font-size:13px;color:#475869}
+.ctl button.on{background:#1C3349;color:#fff}
+.stage{display:flex;flex-wrap:wrap;gap:40px;justify-content:center}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.col>h2{font-size:18px;color:#1C3349}.col>p{font-size:13px;color:#475869;max-width:375px;text-align:center}
+/* phone */
+.phone{width:375px;height:800px;border-radius:46px;border:10px solid #0d141c;position:relative;overflow:hidden;background:var(--bg);color:var(--t1);box-shadow:0 30px 60px rgba(15,29,43,.25)}
+.scroll{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding-bottom:110px}
+.scroll::-webkit-scrollbar{display:none}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:20px;background:#000;z-index:30}
+/* aurora */
+.aurora{position:absolute;inset:0;background:linear-gradient(165deg,#0B1622 0%,#1C3349 45%,#1F4A5C 100%);overflow:hidden}
+.aurora .shift{position:absolute;inset:0;background:linear-gradient(200deg,#0B1622,#16303A 50%,#2D6B78);opacity:var(--p,0)}
+.blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;animation:drift 16s ease-in-out infinite alternate}
+.b1{width:260px;height:260px;background:#397D8C;top:-60px;right:-80px}
+.b2{width:220px;height:220px;background:#6FC0CF;top:260px;left:-110px;opacity:.28;animation-duration:20s}
+.b3{width:240px;height:240px;background:#27506A;top:560px;right:-60px;animation-duration:24s}
+@keyframes drift{to{transform:translate(40px,60px) scale(1.15)}}
+/* header */
+.hdr{position:sticky;top:0;z-index:20;height:96px;padding:46px 16px 0;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.hdr .bgl{position:absolute;inset:0;background:rgba(11,22,34,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.12);opacity:var(--p,0);z-index:-1}
+.hdr .big{font-size:24px;font-weight:800;color:#fff;opacity:calc(1 - var(--p,0)*1.6)}
+.hdr .mini{position:absolute;inset-inline-start:16px;top:50px;display:flex;align-items:center;gap:8px;opacity:calc(var(--p,0)*1.4 - .3);transform:translateY(calc((1 - var(--p,0))*12px));color:#fff;font-weight:700;font-size:15px}
+.hdr .mini small{font-size:12px;color:var(--tealL);font-weight:700}
+.hbtns{display:flex;gap:8px}
+.gbtn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);position:relative;flex:none}
+.badge{position:absolute;top:-4px;inset-inline-end:-4px;min-width:20px;height:20px;border-radius:10px;background:#D92D20;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;border:2px solid #1C3349;padding:0 4px}
+/* glass family */
+.glass{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;backdrop-filter:blur(18px);box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16)}
+.liquid{position:relative;overflow:hidden;border-radius:12px;background:linear-gradient(140deg,rgba(255,255,255,.22),rgba(255,255,255,.04) 55%,rgba(111,192,207,.14));border:1px solid rgba(255,255,255,.34);box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -10px 24px rgba(111,192,207,.18),0 14px 32px rgba(0,0,0,.3)}
+.liquid::before{content:"";position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 35%,rgba(230,196,126,.35) 45%,rgba(255,255,255,.5) 50%,rgba(111,192,207,.35) 55%,transparent 65%);animation:holo 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes holo{0%{transform:translateX(60%)}60%,100%{transform:translateX(-60%)}}
+.wave{position:relative;overflow:hidden}
+.wave::after{content:"";position:absolute;inset:-50%;background:radial-gradient(circle at 30% 30%,rgba(111,192,207,.32),transparent 40%),radial-gradient(circle at 70% 60%,rgba(57,125,140,.38),transparent 45%),radial-gradient(circle at 40% 80%,rgba(39,80,106,.5),transparent 40%);animation:wav 12s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+.light .wave.soft::after{background:radial-gradient(circle at 30% 30%,#E3F0F2,transparent 45%),radial-gradient(circle at 75% 65%,#E6ECF2,transparent 45%),radial-gradient(circle at 40% 85%,#E3F0F2,transparent 40%)}
+.dark .wave.soft::after{background:radial-gradient(circle at 30% 30%,#16303A,transparent 45%),radial-gradient(circle at 75% 65%,#1C3349,transparent 45%)}
+@keyframes wav{to{transform:rotate(25deg) scale(1.2)}}
+.wave>*{position:relative;z-index:1}
+.flat{background:var(--sf);border:1px solid var(--bd);border-radius:12px}
+/* basics */
+.ic{fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic .f{fill:currentColor;fill-opacity:.2}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+.pad{padding:16px}.wrap{padding:0 16px;display:flex;flex-direction:column;gap:16px}
+.nm{font-size:19px;font-weight:800;display:flex;align-items:center;gap:6px}
+.meta{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:5px;margin-top:3px}
+.mut{font-size:13px;color:var(--t2)}.tiny{font-size:12px;color:var(--t3)}
+h3{font-size:16px;font-weight:700}.sec-h p{font-size:12.5px;color:var(--t2);margin-top:1px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.gl{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+.gl.teal{background:var(--is);color:var(--im)}.gl.navy{background:var(--bs);color:var(--bt)}
+.gl.prem{background:var(--ps);color:var(--must)}.gl.dg{background:var(--dgs);color:var(--dg)}
+.gl.wn{background:var(--wns);color:var(--wn)}.gl.inf{background:var(--infs);color:var(--inf)}.gl.ok{background:var(--oks);color:var(--ok)}
+.navyc .gl.teal{background:linear-gradient(140deg,rgba(111,192,207,.4),rgba(57,125,140,.15));color:#6FC0CF;border:1px solid rgba(111,192,207,.35)}
+.pill{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px;border-radius:12px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.inf{background:var(--infs);color:var(--inft)}.pill.ok{background:var(--oks);color:var(--okt)}.pill.wn{background:var(--wns);color:var(--wnt)}
+.pill.dg{background:var(--dgs);color:var(--dgt)}.pill.prem{background:var(--ps);color:var(--pt)}.pill.teal{background:var(--is);color:var(--it)}.pill.neu{background:var(--sf2);color:var(--t2)}
+.navyc .pill.neu{background:rgba(255,255,255,.1);color:#C9D6E0}
+.btn{height:48px;border-radius:8px;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn.pri{background:var(--cta);color:var(--onCta)}.btn.onb{background:#F5F7F9;color:#1C3349}
+.btn.sec{background:var(--is);color:var(--it)}.btn.gh{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22)}
+.lnk{color:var(--it);font-weight:700;font-size:13.5px;min-height:44px;display:inline-flex;align-items:center;gap:4px}
+.navyc .lnk{color:#6FC0CF}
+.chrome{background:linear-gradient(180deg,#fff 0%,#C9D6E0 45%,#6FC0CF 55%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.num{font-variant-numeric:tabular-nums}
+/* avatar */
+.avw{position:relative;width:88px;height:88px;flex:none}
+.avw svg.ring{position:absolute;inset:0}
+.av{position:absolute;inset:8px;border-radius:50%;background:linear-gradient(140deg,#397D8C,#1C3349);display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px;border:2px solid rgba(255,255,255,.25)}
+.cam{position:absolute;bottom:2px;inset-inline-end:0;width:30px;height:30px;border-radius:50%;background:#F5F7F9;color:#1C3349;display:grid;place-items:center;border:2px solid #1C3349;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.pct-in{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;background:#6FC0CF;color:#06121C;padding:1px 7px;border-radius:9px}
+.tick{width:20px;height:20px;border-radius:50%;background:linear-gradient(140deg,#E6C47E,#D9B46A);display:grid;place-items:center;color:#1C3349}
+/* hero A */
+.heroA{margin:6px 16px 20px;padding:16px;transform:scale(calc(1 - var(--p,0)*.08));opacity:calc(1 - var(--p,0)*.5);transform-origin:top center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{padding:10px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-align:center}
+.stat b{font-size:18px;display:block}.stat span{font-size:11.5px;color:var(--t2)}
+/* quests */
+.segs{display:flex;gap:4px;margin:-2px 0 12px}.segs i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+.light .segs i{background:var(--sf2)}
+.segs i.on{background:linear-gradient(90deg,#397D8C,#6FC0CF)}.segs i.wait{background:repeating-linear-gradient(45deg,#6CA6FF 0 4px,transparent 4px 8px)}
+.hs{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.hs::-webkit-scrollbar{display:none}
+.quest{flex:none;width:210px;padding:14px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+.quest .t{font-weight:700;font-size:14.5px}.quest .s{font-size:12.5px;color:var(--t2);min-height:34px}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:36px;padding:0 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:500;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.light .chip,.dark .chip{background:var(--is);color:var(--it);border-color:transparent}
+.chip.add{background:none!important;border:1.5px dashed var(--bd2);color:var(--t2)}
+.navyc .chip.add{border-color:rgba(255,255,255,.3)}
+/* platforms */
+.pfi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(140deg,#397D8C,#1C3349);color:#fff;flex:none;border:1px solid rgba(255,255,255,.2)}
+.rates{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.light .rates,.dark .rates{border-color:var(--bd)}
+.rate{height:30px;padding:0 10px;border-radius:8px;font-size:12.5px;background:rgba(255,255,255,.07);display:inline-flex;align-items:center;gap:6px}
+.light .rate,.dark .rate{background:var(--sf2)}
+.rate b{font-variant-numeric:tabular-nums}
+.addrate{width:100%;min-height:44px;border-radius:8px;border:1.5px dashed rgba(111,192,207,.5);color:#6FC0CF;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:13.5px}
+.light .addrate{border-color:#397D8C;color:#347482}
+.sw{width:42px;height:24px;border-radius:12px;background:rgba(255,255,255,.2);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:#397D8C}.sw.on::after{inset-inline-start:21px}
+.light .sw{background:var(--bd2)}.light .sw.on{background:#397D8C}
+.off{opacity:.55}
+.addtile{min-height:64px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;gap:8px;color:#6FC0CF;font-weight:700}
+.light .addtile{border-color:var(--bd2);color:var(--it)}
+/* bento settings */
+.grpt{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--t3);letter-spacing:.3px;margin:6px 0 10px}
+.grpt::before,.grpt::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:.5}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{padding:14px;min-height:96px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;text-align:start}
+.tile.w2{grid-column:span 2}
+.tile .l{font-weight:700;font-size:14px}.tile .v{font-size:12px;color:var(--t2)}
+.seg{display:flex;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;gap:3px}
+.light .seg{background:var(--sf2)}.dark .seg{background:var(--sf2)}
+.seg span{flex:1;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12.5px;color:var(--t2)}
+.seg span.on{background:#F5F7F9;color:#1C3349;font-weight:700}
+.light .seg span.on{background:var(--sf);color:var(--bt);box-shadow:0 1px 3px rgba(15,29,43,.12)}
+.dark .seg span.on{background:var(--is);color:var(--it)}
+.danger{display:flex;align-items:center;gap:10px;padding:14px;border-radius:12px;border:1px solid rgba(249,112,102,.35);background:rgba(249,112,102,.08);color:#F97066;font-weight:700;width:100%}
+.light .danger{border-color:#F3C5C1;background:var(--dgs);color:var(--dgt)}
+.foot{text-align:center;padding:10px 0 4px}
+/* bottom bar */
+.tabbar{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;padding:6px;border-radius:28px;background:rgba(11,22,34,.82);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);z-index:25}
+.tabbar span{height:44px;padding:0 18px;border-radius:22px;display:flex;align-items:center;gap:6px;color:#A5B5C4;font-size:13px}
+.tabbar span.on{background:rgba(111,192,207,.18);color:#6FC0CF;font-weight:700}
+/* KYC parts */
+.benef{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 14px}
+.benef div{padding:10px 6px;border-radius:10px;text-align:center;font-size:11.5px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.light .benef div{background:var(--sf);border-color:var(--bd)}.dark .benef div{background:var(--sf2);border-color:var(--bd)}
+.scan{position:relative;overflow:hidden}
+.scan::after{content:"";position:absolute;inset-inline:0;height:3px;top:0;background:linear-gradient(90deg,transparent,#6FC0CF,transparent);box-shadow:0 0 12px #6FC0CF;animation:scan 2.2s ease-in-out infinite}
+@keyframes scan{50%{top:calc(100% - 3px)}}
+.reason{margin:10px 0 14px;padding:10px 12px;border-radius:8px;background:var(--dgs);color:var(--dgt);font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.spark{position:absolute;color:#E6C47E;animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2;transform:scale(.6)}}
+/* skeleton */
+.sk{background:linear-gradient(90deg,var(--skA) 25%,var(--skB) 50%,var(--skA) 75%);background-size:200% 100%;animation:shim 1.3s linear infinite;border-radius:8px}
+@keyframes shim{to{background-position:-200% 0}}
+/* Option B */
+.heroB{position:relative;height:330px;overflow:hidden;color:#fff}
+.heroB .in{position:relative;padding:96px 16px 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;transform:translateY(calc(var(--p,0)*-30px)) scale(calc(1 - var(--p,0)*.12));opacity:calc(1 - var(--p,0)*1.3)}
+.heroB .in .meta{color:#C9D6E0;justify-content:center}
+.hdrB{position:absolute;top:0;inset-inline:0;height:96px;padding:46px 16px 0;display:flex;justify-content:space-between;align-items:center;z-index:20}
+.stickyB{position:sticky;top:0;z-index:22;height:0}
+.stickyB .bar2{height:96px;padding:46px 16px 0;display:flex;align-items:center;gap:10px;background:linear-gradient(165deg,#0B1622,#1C3349);opacity:calc(var(--p,0)*2 - 1);color:#fff;font-weight:700;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sheet{position:relative;margin-top:-28px;border-radius:12px 12px 0 0;background:var(--bg);padding-top:18px;z-index:3}
+.wallet{flex:none;width:272px;height:168px;border-radius:12px;padding:14px;scroll-snap-align:start;color:#fff;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14)}
+.wallet.w1{background:linear-gradient(135deg,#1C3349,#27506A 55%,#397D8C)}
+.wallet.w2{background:linear-gradient(135deg,#0B1622,#1C3349 60%,#27506A)}
+.wallet.w3{background:linear-gradient(135deg,#27506A,#1C3349)}
+.wallet::before{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(111,192,207,.45),transparent 65%);top:-80px;inset-inline-end:-60px}
+.wallet>*{position:relative}
+.wallet .big{font-size:26px}
+.launch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lt{padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-height:104px}
+.lt .l{font-size:13px;font-weight:700}.lt .v{font-size:11.5px;color:var(--t2);margin-top:-4px}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots span{height:28px;padding:0 8px;border-radius:14px;font-size:11.5px;display:inline-flex;align-items:center;gap:4px;background:var(--sf2);color:var(--t2)}
+.dots span.done{background:var(--oks);color:var(--okt)}.dots span.wait{background:var(--infs);color:var(--inft)}
+/* gallery */
+.gal{max-width:1100px;margin:56px auto 0}
+.gal h2{font-size:20px;color:#1C3349;margin-bottom:4px}.gal>p{color:#475869;font-size:14px;margin-bottom:16px}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.panel{border-radius:16px;padding:20px;position:relative;overflow:hidden;color:var(--t1)}
+.panel.nv{background:linear-gradient(165deg,#0B1622,#1C3349 60%,#1F4A5C)}
+.panel.lt2{background:var(--bg);border:1px solid var(--bd)}
+.panel h4{font-size:14px;color:var(--t2);margin:18px 0 10px;font-weight:700}.panel h4:first-child{margin-top:0}
+.dv1{height:1px;background:linear-gradient(90deg,transparent,rgba(111,192,207,.7),transparent)}
+.light .dv1{background:linear-gradient(90deg,transparent,#C3CDD7,transparent)}
+.dv3 svg{display:block;width:100%;height:18px}
+.dv4{display:flex;justify-content:center;gap:6px}.dv4 i{width:6px;height:6px;border-radius:50%;background:#6FC0CF;opacity:.3}.dv4 i:nth-child(3){opacity:1;width:18px;border-radius:3px}
+.sheetmock{border-radius:12px 12px 0 0;padding:10px 14px 16px}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.3);margin:0 auto 12px}
+.light .grab{background:var(--bd2)}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act{padding:12px 6px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:500;text-align:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.light .act{background:var(--sf);border-color:var(--bd)}
+.act.dz{color:#F97066;border-color:rgba(249,112,102,.35)}
+.light .act.dz{color:var(--dgt);border-color:#F3C5C1}
+.note{font-size:11.5px;color:var(--t3);margin-top:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<h1>صدى — إعادة تصميم صفحة الحساب (معاينة)</h1>
+<p class="lead">خياران للتخطيط + معرض بطاقات وفواصل. مرّر داخل كل هاتف لرؤية حركة التمرير (الهيدر المصغّر، تحوّل التدرّج، تصغير البطاقة). بدّل الحالات من الشريط.</p>
+
+<div class="bar" id="bar"></div>
+
+<div class="stage">
+  <div class="col"><h2>الخيار A — «Aurora Glass» (لوحة كحلية كاملة)</h2><p>كل الصفحة فوق تدرّج كحلي متحرك، كل البطاقات زجاجية. متوافق مع قاعدة «الزجاج فوق الكحلي فقط». شعور فخم/ليلي ثابت.</p><div class="phone dark navyc" id="pA"></div></div>
+  <div class="col"><h2>الخيار B — «Aurora Hero + Bento»</h2><p>هيرو كحلي زجاجي، ثم ورقة سطح فاتحة/داكنة ببطاقات مسطحة + بطاقات تموّج. يتبع وضع النظام، أوضح للقراءة الطويلة.</p><div class="phone light" id="pB"></div></div>
+</div>
+
+<div class="gal">
+  <h2>معرض البطاقات والفواصل</h2>
+  <p>نسخ بديلة لكل بطاقة على الخلفيتين. اختر ما يعجبك لكل قسم (يمكن خلط A وB).</p>
+  <div class="panels" id="gal"></div>
+</div>
+
+<script>
+const S={kyc:'unverified',push:'off',sk:false,full:false,themeB:'light'};
+const I={
+user:'<circle class="f" cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+shield:'<path class="f" d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+mail:'<rect class="f" x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>',
+pin:'<path class="f" d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+spark:'<path class="f" d="M11 2c.6 4.8 2.2 6.4 7 7-4.8.6-6.4 2.2-7 7-.6-4.8-2.2-6.4-7-7 4.8-.6 6.4-2.2 7-7z"/><path d="M19 14c.3 2 .9 2.7 3 3-2.1.3-2.7 1-3 3-.3-2-1-2.7-3-3 2-.3 2.7-1 3-3z"/>',
+layers:'<path class="f" d="M12 3l9 5-9 5-9-5z"/><path d="M3 12.5l9 5 9-5M3 16.5l9 5 9-5"/>',
+tag:'<path class="f" d="M3 12V4a1 1 0 011-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/>',
+bell:'<path class="f" d="M6 16v-5a6 6 0 0112 0v5l2 2H4z"/><path d="M10 21h4"/>',
+lock:'<rect class="f" x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3M12 14v3"/>',
+globe:'<circle class="f" cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+theme:'<circle class="f" cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 000 16z" fill="currentColor"/>',
+sun:'<circle class="f" cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+moon:'<path class="f" d="M20 14A8 8 0 1110 4a6 6 0 0010 10z"/>',
+doc:'<path class="f" d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+eye:'<path class="f" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+chat:'<path class="f" d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/>',
+info:'<circle class="f" cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+logout:'<path class="f" d="M4 4h9v16H4z"/><path d="M15 12h6M18 9l3 3-3 3"/>',
+camera:'<path class="f" d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+image:'<rect class="f" x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',
+pencil:'<path class="f" d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/>',
+star:'<path class="f" d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+refresh:'<path d="M20 11a8 8 0 00-14-5L4 8M4 4v4h4M4 13a8 8 0 0014 5l2-2M20 20v-4h-4"/>',
+trash:'<path class="f" d="M6 7h12l-1 14H7z"/><path d="M4 7h16M9 7V4h6v3"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',check:'<path d="M5 12l5 5L20 7"/>',
+more:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
+clock:'<circle class="f" cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+alert:'<path class="f" d="M12 3l10 18H2z"/><path d="M12 10v4M12 17h.01"/>',
+rocket:'<path class="f" d="M12 2c4 3 5 8 3 13H9C7 10 8 5 12 2z"/><path d="M9 15l-3 3 1 3 3-2M15 15l3 3-1 3-3-2"/><circle cx="12" cy="9" r="1.5"/>',
+idcard:'<rect class="f" x="2" y="5" width="20" height="14" rx="3"/><circle cx="8" cy="12" r="2.5"/><path d="M13 10h5M13 14h4"/>',
+trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
+wallet:'<rect class="f" x="3" y="6" width="18" height="13" rx="3"/><path d="M16 12.5h2M3 9.5h18"/>',
+bolt:'<path class="f" d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+pause:'<circle class="f" cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>',
+at:'<circle cx="12" cy="12" r="4"/><path class="f" d="M16 12v1.5a2.5 2.5 0 005 0V12a9 9 0 10-3.5 7.1"/>',
+food:'<path class="f" d="M5 3v8a3 3 0 003 3v7M8 3v6M11 3v8a3 3 0 01-3 3"/><path d="M17 21V3c-2 1-3 4-3 7s1 4 3 4"/>',
+shirt:'<path class="f" d="M8 3l-5 3 2 5 3-1v11h8V10l3 1 2-5-5-3a4 4 0 01-8 0z"/>',
+ig:'<rect class="f" x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>',
+tt:'<path class="f" d="M14 3v11a4 4 0 11-4-4"/><path d="M14 3c.5 3 2.5 5 6 5"/>',
+tg:'<path class="f" d="M21 4L3 11l6 2 2 7 3-4 5 4z"/><path d="M9 13l8-6"/>'
+};
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24">${I[n]}</svg>`;
+let gid=0;
+function ring(pct,size,w){const r=(size-w)/2,c=2*Math.PI*r,id='g'+(gid++);
+ return `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)"><defs><linearGradient id="${id}"><stop offset="0" stop-color="#6FC0CF"/><stop offset="1" stop-color="#397D8C"/></linearGradient></defs><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="${w}"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct/100)}"/></svg>`}
+const TIER={NANO:['#98A2B3',1,'نانو'],MICRO:['#397D8C',2,'مايكرو'],MID:['#397D8C',3,'متوسط'],MACRO:['#1C3349',0,'ماكرو'],MEGA:['#D9B46A',-1,'ميغا']};
+function crest(t,s=22){const[c,n]=TIER[t];const g=n===1?'<path d="M8 13l4-3 4 3"/>':n===2?'<path d="M8 11l4-3 4 3M8 15l4-3 4 3"/>':'<path d="M8 9l4-3 4 3M8 13l4-3 4 3M8 17l4-3 4 3"/>';
+ return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" style="flex:none"><path d="M12 1.5l9 5.2v10.6L12 22.5l-9-5.2V6.7z" fill="${c}" stroke="rgba(255,255,255,.45)" stroke-width="1"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${g}</g></svg>`}
+
+/* data */
+const D=()=>{const kyc=S.kyc,full=S.full;
+ const steps=[['account_created',10,1],['basic_info',10,full],['avatar',10,1],['email',5,1],['platforms',15,1],['platforms_verified',10,full?1:'wait'],['rate_cards',20,full],['kyc',20,full||kyc==='verified'?1:kyc==='pending'?'wait':0]];
+ const pct=steps.reduce((a,s)=>a+(s[2]===1||s[2]===true?s[1]:0),0);
+ return{pct,steps,verified:kyc==='verified'}};
+const QUEST={
+ rate_cards:['tag','أضف أسعار خدماتك','بدونها لا تصلك طلبات مباشرة من العلامات','أضف الأسعار'],
+ kyc:['shield','وثّق هويتك','شارة موثّق + قبول العروض والدفع','ابدأ التوثيق'],
+ basic_info:['pin','أكمل المدينة والحي','العلامات تبحث بالمدينة أولاً','أكمل'],
+ platforms_verified:['layers','منصّاتك قيد المراجعة','سنُعلمك فور قبولها',null]};
+const PLAT=[
+ {i:'ig',h:'@anas.saadi',n:'إنستغرام',f:'45.2K',t:'MICRO',pr:1,av:1,v:['ok','موثّقة تلقائياً','check'],r:[['ريلز','$50'],['ستوري','$30'],['منشور','$40']]},
+ {i:'tt',h:'@anas',n:'تيك توك',f:'12.8K',t:'MICRO',pr:0,av:1,v:['inf','قيد المراجعة','clock'],r:[]},
+ {i:'tg',h:'@anas_channel',n:'تيليغرام',f:'—',t:'NANO',pr:0,av:0,v:['neu','فئة يدوية','user'],r:[]}];
+
+/* shared blocks */
+const sk=(w,h,extra='')=>`<div class="sk" style="width:${w};height:${h}px;${extra}"></div>`;
+function questCards(cls){const d=D();if(S.full)return'';
+ return d.steps.filter(s=>s[2]!==1&&s[2]!==true&&QUEST[s[0]]).map(s=>{const[icn,t,sub,cta]=QUEST[s[0]];const wait=s[2]==='wait';
+  return `<div class="quest ${cls}"><div class="row"><div class="gl ${wait?'inf':'teal'}">${ic(icn)}</div><span class="pill ${wait?'inf':'teal'} num" style="margin-inline-start:auto">+${s[1]} نقطة</span></div>
+  <div class="t">${wait&&s[0]==='kyc'?'التوثيق قيد المراجعة':t}</div><div class="s">${wait&&s[0]==='kyc'?'نراجع صور هويتك الآن':sub}</div>
+  ${wait?`<span class="pill inf" style="align-self:flex-start">${ic('clock',14)} قيد المراجعة</span>`:`<button class="lnk">${cta} ${ic('plus',16)}</button>`}</div>`}).join('')}
+function segs(){return `<div class="segs">${D().steps.map(s=>`<i class="${s[2]===1||s[2]===true?'on':s[2]==='wait'?'wait':''}"></i>`).join('')}</div>`}
+function celebrate(cls){return `<div class="${cls} pad" style="position:relative;overflow:hidden"><span class="spark" style="top:10px;inset-inline-end:18px">${ic('spark',16)}</span><span class="spark" style="bottom:12px;inset-inline-end:60px;animation-delay:.8s">${ic('spark',12)}</span>
+ <div class="row"><div class="gl prem">${ic('star')}</div><div><h3>ملفك مكتمل 100%</h3><p class="mut">أنت الآن في أفضل وضع للظهور أمام العلامات</p></div></div></div>`}
+
+function kycCard(v){const navy=v==='A';const base=navy?'glass':'flat';
+ if(S.kyc==='verified')return `<div class="liquid pad" style="color:#fff;${navy?'':'background-color:#1C3349;background-image:linear-gradient(140deg,#1C3349,#27506A 60%,#397D8C)'}">
+  <span class="spark" style="top:14px;inset-inline-end:20px">${ic('spark',16)}</span><span class="spark" style="top:52px;inset-inline-end:64px;animation-delay:1s">${ic('spark',10)}</span>
+  <div class="row"><div class="gl" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(140deg,#E6C47E,#D9B46A);color:#1C3349">${ic('shield',30)}</div>
+  <div class="grow"><h3 style="font-size:18px">حساب موثّق</h3><p style="font-size:13px;color:#C9D6E0">شارة التوثيق ظاهرة على ملفك للعلامات</p></div></div>
+  <div class="row" style="margin-top:12px;justify-content:space-between"><span class="pill" style="background:rgba(230,196,126,.18);color:#E6C47E">${ic('check',14)} هوية وطنية</span><span style="font-size:12px;color:#C9D6E0">وُثّق في 2 أكتوبر 2026</span></div></div>`;
+ if(S.kyc==='pending')return `<div class="${base} pad"><div class="row"><div class="gl inf scan">${ic('idcard')}</div><div class="grow"><h3>نراجع هويتك الآن</h3><p class="mut">أُرسلت في 1 أكتوبر · سنُعلمك بإشعار فور الانتهاء</p></div></div>
+  <div class="row" style="margin-top:12px"><span class="pill inf">${ic('clock',14)} قيد المراجعة</span><span class="tiny">لا حاجة لأي إجراء الآن</span></div></div>`;
+ if(S.kyc==='rejected')return `<div class="${base} pad" style="border-color:${navy?'rgba(249,112,102,.4)':'#F3C5C1'}"><div class="row"><div class="gl dg">${ic('alert')}</div><div class="grow"><h3>لم نتمكن من توثيق هويتك</h3><p class="mut">صحّح الصور وأعد الإرسال</p></div><span class="pill dg">مرفوض</span></div>
+  <div class="reason">${ic('info',16)}<span><b>السبب:</b> الصورة غير واضحة</span></div><button class="btn ${navy?'gh':'sec'}">${ic('camera',18)} أعد رفع الهوية</button></div>`;
+ return `<div class="${navy?'glass':'flat'} wave ${navy?'':'soft'} pad"><div><div class="row"><div class="gl prem">${ic('shield')}</div><div class="grow"><h3>وثّق هويتك وابنِ الثقة</h3><p class="mut">خطوة واحدة تفتح لك كل شيء</p></div></div>
+  <div class="benef"><div>${ic('star',18)}شارة موثّق</div><div>${ic('wallet',18)}قبول العروض والدفع</div><div>${ic('trend',18)}أولوية في الظهور</div></div>
+  <button class="btn ${navy?'onb':'pri'}">${ic('idcard',18)} ابدأ التوثيق</button><p class="tiny" style="text-align:center;margin-top:8px">صورة الوجه والخلف · JPG/PNG/PDF حتى 10MB</p></div></div>`}
+
+function pushCard(v){const navy=v==='A';
+ if(S.push==='on')return `<div class="${navy?'glass':'flat'} pad row"><div class="gl ok">${ic('check')}</div><div class="grow"><h3>تم تفعيل الإشعارات</h3><p class="mut">ستصلك أقوى الحملات فور نشرها</p></div></div>`;
+ return `<div class="${navy?'glass':'flat'} wave ${navy?'':'soft'} pad"><div><div class="row"><div class="gl wn">${ic('bell')}</div><div class="grow"><h3>ربما فاتتك حملات تناسبك</h3><p class="mut">فعّل الإشعارات لتصلك الحملات والعروض قبل غيرك</p></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn ${navy?'gh':'sec'}" style="height:44px">${ic('bolt',18)} فعّل الإشعارات</button></div><p class="tiny" style="margin-top:6px">إذا رفضت سابقاً نأخذك لإعدادات الجهاز</p></div></div>`}
+
+function nicheCard(v){const navy=v==='A';
+ return `<div class="${navy?'glass':'flat'} pad"><div class="sec-h"><div class="gl teal">${ic('spark')}</div><div class="grow"><h3>تخصصاتي</h3><p>2 من 3 · تُستخدم في المطابقة</p></div><button class="gbtn" style="${navy?'':'background:var(--is);color:var(--it);border:0'}" aria-label="تعديل">${ic('pencil',18)}</button></div>
+ <div class="chips"><span class="chip">${ic('shirt',16)} أزياء</span><span class="chip">${ic('food',16)} طبخ وطعام</span><span class="chip add">${ic('plus',16)} أضف تخصصاً</span></div></div>`}
+
+function platCardA(p){return `<div class="glass pad"><div class="row ${p.av?'':'off'}"><div class="pfi">${ic(p.i,22)}</div><div class="grow"><div class="row" style="gap:6px"><b style="font-size:15px">${p.h}</b>${p.pr?`<span class="pill prem">${ic('star',12)} أساسية</span>`:''}</div><div class="mut num">${p.n} · ${p.f} متابع</div></div>${crest(p.t,26)}<button class="gbtn" style="width:36px;height:36px" aria-label="خيارات">${ic('more',18)}</button></div>
+ <div class="row" style="margin-top:10px;justify-content:space-between"><span class="pill ${p.v[0]}">${ic(p.v[2],13)} ${p.v[1]}</span><span class="row" style="gap:8px;font-size:12.5px;color:var(--t2)">${p.av?'متاحة للطلبات':'غير متاحة'}<i class="sw ${p.av?'on':''}"></i></span></div>
+ <div class="rates">${p.r.length?p.r.map(r=>`<span class="rate">${r[0]} <b>${r[1]}</b></span>`).join('')+`<button class="lnk" style="margin-inline-start:auto;min-height:30px">إدارة ${ic('tag',14)}</button>`:`<button class="addrate">${ic('plus',16)} أضف أسعار هذه المنصة</button>`}</div></div>`}
+
+function settings(v){const navy=v==='A';const card=navy?'glass':'flat';
+ const T=(icn,tone,l,val,w)=>v==='A'?`<button class="${card} tile ${w||''}"><div class="gl ${tone}">${ic(icn)}</div><div><div class="l">${l}</div><div class="v">${val}</div></div></button>`
+  :`<button class="${card} lt"><div class="gl ${tone}">${ic(icn)}</div><div class="l">${l}</div><div class="v">${val}</div></button>`;
+ const theme=`<div class="${card} tile w2" style="${v==='B'?'grid-column:span 3;min-height:0':''}"><div class="row"><div class="gl navy">${ic('theme')}</div><div class="grow"><div class="l">المظهر</div><div class="v">يتبع النظام افتراضياً</div></div></div><div class="seg"><span>${ic('sun',15)} فاتح</span><span>${ic('moon',15)} داكن</span><span class="on">${ic('theme',15)} تلقائي</span></div></div>`;
+ const grid=v==='A'?'bento':'launch';
+ return `<div><div class="grpt">${ic('spark',12)} الحساب والأمان</div><div class="${grid}">${T('user','teal','المعلومات الشخصية','الاسم، المدينة، البريد')}${T('lock','navy','كلمة المرور','تغيير')}${v==='B'?T('bell','wn','الإشعارات',S.push==='on'?'مفعّلة':'معطّلة'):''}</div></div>
+ <div><div class="grpt">${ic('spark',12)} التفضيلات</div><div class="${grid}">${T('globe','teal','اللغة','العربية')}${v==='A'?T('bell','wn','الإشعارات',S.push==='on'?'مفعّلة':'معطّلة'):''}${theme}</div></div>
+ <div><div class="grpt">${ic('spark',12)} الدعم والقانوني</div><div class="${grid}">${T('chat','ok','الدعم','تواصل معنا')}${T('doc','navy','الشروط والأحكام','')}${T('eye','navy','الخصوصية','')}${v==='A'?T('info','teal','عن صدى','الإصدار 1.0.0'):''}</div></div>
+ <button class="danger">${ic('logout')} تسجيل الخروج</button>
+ <div class="foot"><button class="lnk" style="color:var(--dgt)">${ic('trash',16)} حذف الحساب</button><div class="tiny">صدى 1.0.0 · ثقة في كل صفقة</div></div>`}
+
+const tabbar=`<div class="tabbar"><span>${ic('layers',18)} الرئيسية</span><span class="on">${ic('user',18)} حسابي</span></div>`;
+
+/* ===== Option A ===== */
+function renderA(){const d=D();
+ const head=`<div class="hdr"><div class="bgl"></div><span class="big">حسابي</span>
+  <div class="mini"><div style="position:relative;width:32px;height:32px">${ring(d.pct,32,3)}<div class="av" style="inset:4px;font-size:10px;border-width:1px">أس</div></div>أنس السعدي <small class="num">${d.pct}%</small></div>
+  <div class="hbtns"><button class="gbtn" aria-label="الإشعارات">${ic('bell')}<span class="badge">2</span></button></div></div>`;
+ if(S.sk)return `<div class="aurora"><div class="shift"></div></div><div class="scroll">${head}
+  <div class="glass heroA"><div class="row">${sk('88px',88,'border-radius:50%')}<div class="grow">${sk('60%',18)}${sk('40%',12,'margin-top:10px')}${sk('70%',12,'margin-top:8px')}</div></div><div class="stats">${sk('100%',52)}${sk('100%',52)}${sk('100%',52)}</div></div>
+  <div class="wrap">${sk('50%',18)}<div class="hs">${sk('210px',150,'flex:none;border-radius:12px')}${sk('210px',150,'flex:none;border-radius:12px')}</div>${sk('100%',200,'border-radius:12px')}${sk('100%',120,'border-radius:12px')}</div></div>${tabbar}`;
+ return `<div class="aurora"><div class="shift"></div><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div><div class="notch"></div>
+ <div class="scroll">${head}
+  <div class="glass heroA"><div class="row" style="align-items:flex-start">
+   <div class="avw">${ring(d.pct,88,4)}<div class="av">أس</div><button class="cam" aria-label="تغيير الصورة">${ic('camera',15)}</button></div>
+   <div class="grow"><div class="nm">أنس السعدي ${d.verified?`<span class="tick">${ic('check',13)}</span>`:''}</div>
+    <div class="row" style="gap:6px;margin-top:4px">${crest('MICRO')}<span class="mut">مايكرو</span></div>
+    <div class="meta">${ic('pin',14)} دمشق · المزة</div><div class="meta">${ic('mail',14)} a@b.com</div></div>
+   <button class="gbtn" aria-label="تعديل الملف">${ic('pencil',18)}</button></div>
+   <div class="stats"><div class="stat"><b class="chrome num">${d.pct}%</b><span>اكتمال الملف</span></div><div class="stat"><b class="num">45.2K</b><span>متابع (أساسية)</span></div><div class="stat"><b class="num">3</b><span>منصات</span></div></div></div>
+  <div class="wrap">
+   ${S.full?celebrate('glass'):`<div><div class="sec-h"><div class="gl teal">${ic('rocket')}</div><div class="grow"><h3>عزّز ملفك</h3><p>كل خطوة ترفعك في نتائج العلامات</p></div><b class="chrome num" style="font-size:20px">${d.pct}%</b></div>${segs()}<div class="hs">${questCards('glass')}</div></div>`}
+   ${kycCard('A')}
+   ${pushCard('A')}
+   ${nicheCard('A')}
+   <div><div class="sec-h"><div class="gl teal">${ic('layers')}</div><div class="grow"><h3>منصّاتي وأسعاري</h3><p>الأسعار مرتبطة بكل منصة</p></div><button class="lnk">${ic('plus',16)} إضافة</button></div>
+    <div style="display:flex;flex-direction:column;gap:10px">${PLAT.map(platCardA).join('')}<button class="addtile">${ic('plus')} أضف منصة جديدة</button></div></div>
+   ${settings('A')}
+  </div></div>${tabbar}`}
+
+/* ===== Option B ===== */
+function walletCard(p,k){return `<div class="wallet w${k+1}"><div class="row"><div class="pfi" style="background:rgba(255,255,255,.12)">${ic(p.i,22)}</div><div class="grow"><b>${p.h}</b><div style="font-size:12px;color:#C9D6E0">${p.n}${p.pr?' · ★ أساسية':''}</div></div><button class="gbtn" style="width:36px;height:36px" aria-label="خيارات">${ic('more',18)}</button></div>
+ <div class="row" style="align-items:flex-end"><div class="grow"><div class="big chrome num">${p.f}</div><div style="font-size:12px;color:#C9D6E0">${p.r.length?`${p.r.length} أسعار · يبدأ من ${p.r[1]?p.r[1][1]:p.r[0][1]}`:'لا أسعار بعد — أضفها'}</div></div>${crest(p.t,30)}</div>
+ <div class="row" style="justify-content:space-between"><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">${ic(p.v[2],13)} ${p.v[1]}</span><span class="row" style="gap:6px;font-size:12px;color:#C9D6E0">${p.av?'متاحة':'غير متاحة'}<i class="sw ${p.av?'on':''}"></i></span></div></div>`}
+function nextStep(){const d=D();if(S.full)return celebrate('flat');
+ const nx=d.steps.find(s=>s[2]!==1&&s[2]!==true&&s[2]!=='wait'&&QUEST[s[0]]);
+ const NAMES={account_created:'الحساب',basic_info:'المعلومات',avatar:'الصورة',email:'البريد',platforms:'المنصات',platforms_verified:'توثيق المنصات',rate_cards:'الأسعار',kyc:'الهوية'};
+ return `<div class="flat wave soft pad"><div><div class="row"><div style="position:relative;width:72px;height:72px;flex:none">${ring(d.pct,72,6).replace('rgba(255,255,255,.15)','var(--sf2)')}<b class="num" style="position:absolute;inset:0;display:grid;place-items:center;font-size:17px;color:var(--bt)">${d.pct}%</b></div>
+ <div class="grow">${nx?`<div class="tiny" style="font-weight:700">الخطوة التالية · +${nx[1]} نقطة</div><h3>${QUEST[nx[0]][1]}</h3><p class="mut">${QUEST[nx[0]][2]}</p>`:'<h3>بقيت خطوات قيد المراجعة</h3>'}</div></div>
+ ${nx?`<button class="btn sec" style="height:44px;margin-top:12px">${ic(QUEST[nx[0]][0],18)} ${QUEST[nx[0]][3]}</button>`:''}
+ <div class="dots">${d.steps.map(s=>`<span class="${s[2]===1||s[2]===true?'done':s[2]==='wait'?'wait':''}">${ic(s[2]===1||s[2]===true?'check':s[2]==='wait'?'clock':'plus',12)} ${NAMES[s[0]]}</span>`).join('')}</div></div></div>`}
+function renderB(){const d=D();
+ const sticky=`<div class="stickyB"><div class="bar2"><div style="position:relative;width:32px;height:32px">${ring(d.pct,32,3)}<div class="av" style="inset:4px;font-size:10px;border-width:1px">أس</div></div>أنس السعدي <span style="color:#6FC0CF;font-size:12px" class="num">${d.pct}%</span></div></div>`;
+ const hero=`<div class="heroB"><div class="aurora"><div class="shift"></div><i class="blob b1"></i><i class="blob b2" style="top:120px"></i></div>
+  <div class="hdrB"><button class="gbtn" aria-label="تعديل الملف">${ic('pencil',18)}</button><button class="gbtn" aria-label="الإشعارات">${ic('bell')}<span class="badge">2</span></button></div>
+  <div class="in">${S.sk?`${sk('96px',96,'border-radius:50%')}${sk('140px',18,'margin-top:12px')}${sk('180px',12,'margin-top:8px')}`:`<div class="avw" style="width:100px;height:100px">${ring(d.pct,100,4)}<div class="av" style="font-size:28px">أس</div><button class="cam" aria-label="تغيير الصورة">${ic('camera',15)}</button><span class="pct-in num">${d.pct}%</span></div>
+   <div class="nm" style="margin-top:12px">أنس السعدي ${d.verified?`<span class="tick">${ic('check',13)}</span>`:''}${crest('MICRO')}</div>
+   <div class="meta">${ic('pin',14)} دمشق · المزة <span style="opacity:.5">|</span> ${ic('mail',14)} a@b.com</div>
+   <div class="meta">${ic('ig',14)} 45.2K · مايكرو · 3 منصات</div>`}</div></div>`;
+ const body=S.sk?`<div class="wrap">${sk('100%',170,'border-radius:12px')}<div class="hs">${sk('272px',168,'flex:none;border-radius:12px')}${sk('272px',168,'flex:none;border-radius:12px')}</div>${sk('100%',120,'border-radius:12px')}</div>`
+ :`<div class="wrap">${nextStep()}
+   <div><div class="sec-h"><div class="gl teal">${ic('layers')}</div><div class="grow"><h3>منصّاتي وأسعاري</h3><p>اسحب للتنقل · اضغط ⋯ للإدارة</p></div><button class="lnk">${ic('plus',16)} إضافة</button></div><div class="hs">${PLAT.map(walletCard).join('')}</div></div>
+   ${kycCard('B')}${nicheCard('B')}${pushCard('B')}${settings('B')}</div>`;
+ return `<div class="notch"></div><div class="scroll">${sticky}${hero}<div class="sheet">${body}</div></div>${tabbar}`}
+
+/* ===== Gallery ===== */
+function renderGal(){
+ const dividers=`<h4>الفواصل</h4><div style="display:flex;flex-direction:column;gap:18px">
+  <div class="dv1"></div><div class="grpt" style="margin:0">${ic('spark',12)} عنوان مجموعة</div>
+  <div class="dv3"><svg viewBox="0 0 300 18" preserveAspectRatio="none"><path d="M0 9 Q 25 0 50 9 T 100 9 T 150 9 T 200 9 T 250 9 T 300 9" fill="none" stroke="#6FC0CF" stroke-opacity=".6" stroke-width="1.5"/></svg></div>
+  <div class="dv4"><i></i><i></i><i></i><i></i><i></i></div></div>`;
+ const pact=(g)=>`<div class="${g} sheetmock"><div class="grab"></div><div class="row" style="margin-bottom:12px"><div class="pfi">${ic('tt',22)}</div><div class="grow"><b>@anas</b><div class="mut">تيك توك · 12.8K</div></div></div>
+  <div class="acts"><div class="act">${ic('star')}اجعلها أساسية</div><div class="act">${ic('pause')}إيقاف التوفّر</div><div class="act">${ic('refresh')}تحديث الفئة<span class="tiny">مرتان/ساعة</span></div><div class="act">${ic('at')}تعديل المعرّف</div><div class="act">${ic('tag')}الأسعار</div><div class="act dz">${ic('trash')}حذف المنصة</div></div>
+  <p class="note">الحذف يحذف أسعار المنصة أيضاً — تأكيد إلزامي. «اجعلها أساسية» مخفي للمنصة المرفوضة.</p></div>`;
+ const avs=(g)=>`<div class="${g} sheetmock"><div class="grab"></div><h3 style="margin-bottom:10px">صورة الملف</h3><div class="acts"><div class="act">${ic('camera')}الكاميرا</div><div class="act">${ic('image')}المعرض</div><div class="act dz">${ic('trash')}إزالة</div></div><p class="note">قص 1:1 على الجهاز قبل الرفع (حتى 5MB).</p></div>`;
+ const kycs=v=>['unverified','pending','rejected','verified'].map(k=>{const o=S.kyc;S.kyc=k;const h=kycCard(v);S.kyc=o;return h}).join('<div style="height:10px"></div>');
+ const pushs=v=>['off','on'].map(k=>{const o=S.push;S.push=k;const h=pushCard(v);S.push=o;return h}).join('<div style="height:10px"></div>');
+ return `<div class="panel nv dark navyc">${dividers}<h4>KYC — الحالات الأربع (A)</h4>${kycs('A')}<h4>الإشعارات (A)</h4>${pushs('A')}<h4>إدارة منصة (sheet)</h4>${pact('glass')}<h4>تغيير الصورة</h4>${avs('glass')}</div>
+ <div class="panel lt2 ${S.themeB}">${dividers}<h4>KYC — الحالات الأربع (B)</h4>${kycs('B')}<h4>الإشعارات (B)</h4>${pushs('B')}<h4>إدارة منصة (sheet)</h4>${pact('flat')}<h4>تغيير الصورة</h4>${avs('flat')}</div>`}
+
+/* ===== controls ===== */
+const CTL=[['حالة KYC','kyc',[['unverified','غير موثّق'],['pending','قيد المراجعة'],['rejected','مرفوض'],['verified','موثّق']]],
+ ['الإشعارات','push',[['off','معطّلة'],['on','مفعّلة']]],['التحميل','sk',[[false,'محتوى'],[true,'Skeleton']]],
+ ['الملف','full',[[false,'55%'],[true,'100%']]],['وضع B','themeB',[['light','فاتح'],['dark','داكن']]]];
+function render(){
+ document.getElementById('bar').innerHTML=CTL.map(([l,k,o])=>`<div class="ctl"><b>${l}</b>${o.map(([v,t])=>`<button class="${S[k]===v?'on':''}" onclick='S["${k}"]=${JSON.stringify(v)};render()'>${t}</button>`).join('')}</div>`).join('');
+ const A=document.getElementById('pA'),B=document.getElementById('pB');
+ B.className='phone '+S.themeB;A.innerHTML=renderA();B.innerHTML=renderB();
+ document.getElementById('gal').innerHTML=renderGal();
+ [A,B].forEach(ph=>{const sc=ph.querySelector('.scroll');ph.style.setProperty('--p',0);sc.addEventListener('scroll',()=>ph.style.setProperty('--p',Math.min(1,sc.scrollTop/160).toFixed(3)),{passive:true})});
+}
+render();
+</script>
+</body>
+</html>

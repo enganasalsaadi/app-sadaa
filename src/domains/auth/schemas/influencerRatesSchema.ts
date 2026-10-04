@@ -26,8 +26,10 @@ export const fromPriceUsd = (priceUsd: number): Money | null =>
     ? parseAmountText(priceUsd.toFixed(2), RATE_CURRENCY)
     : null;
 
+/** `requireOne: false` in-app, where clearing every price of one platform is allowed. */
 export const createInfluencerRatesSchema = (
   t: TFunction,
+  { requireOne = true }: { requireOne?: boolean } = {},
 ): yup.ObjectSchema<InfluencerRatesFormValues> =>
   yup.object({
     rates: yup
@@ -58,7 +60,7 @@ export const createInfluencerRatesSchema = (
       .test(
         'at-least-one',
         t('auth.influencerOnboarding.rates.errors.minOne'),
-        rows => !!rows?.some(row => row.enabled),
+        rows => !requireOne || !!rows?.some(row => row.enabled),
       )
       .required(),
   });

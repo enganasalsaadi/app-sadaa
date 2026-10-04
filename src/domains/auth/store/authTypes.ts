@@ -32,6 +32,57 @@ export interface GuestProfile {
   notes: string;
 }
 
+/** `profile_completion.steps[].key` (contract §3.1); influencer + brand keys. */
+export const PROFILE_STEP_KEYS = [
+  'account_created',
+  'basic_info',
+  'avatar',
+  'email',
+  'platforms',
+  'platforms_verified',
+  'rate_cards',
+  'kyc',
+  'company_info',
+  'social_links',
+] as const;
+export type ProfileStepKey = (typeof PROFILE_STEP_KEYS)[number];
+
+export interface ProfileCompletionStep {
+  /** Kept as `string`: an unknown key from a newer server must not break the screen. */
+  key: string;
+  points: number;
+  completed: boolean;
+  /** `platforms_verified` → review status, `kyc` → KYC status; else null. */
+  status: string | null;
+}
+
+export interface ProfileCompletion {
+  percentage: number;
+  earned_points: number;
+  total_points: number;
+  steps: ProfileCompletionStep[];
+}
+
+export interface UserKyc {
+  status: KycStatus;
+  rejection_reason: string | null;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+}
+
+/** `/me` `primary_platform` — the lean slice of a PlatformResource. */
+export interface PrimaryPlatformSummary {
+  id: string;
+  platform: string;
+  username: string;
+  follower_count: number | null;
+  follower_tier: FollowerTierId | null;
+  is_available: boolean;
+  verification_status: 'auto_verified' | 'pending_review' | 'approved' | 'rejected';
+}
+
+export type PlatformsReviewStatus = 'verified' | 'under_review' | 'action_required';
+
 export interface User {
   /** ULID. */
   id: string;
@@ -41,6 +92,19 @@ export interface User {
   roles: string[];
   is_verified: boolean;
   created_at?: string;
+
+  // --- GET /user/me (contract §3.1) ---
+  user_type?: UserType;
+  status?: UserStatus;
+  kyc_status?: KycStatus;
+  /** Influencer full name or brand company name. */
+  display_name?: string;
+  influencer_tier?: FollowerTierId | null;
+  primary_platform?: PrimaryPlatformSummary | null;
+  platforms_review_status?: PlatformsReviewStatus | null;
+  kyc?: UserKyc | null;
+  profile_completion?: ProfileCompletion;
+  unread_notifications_count?: number;
 
   // --- legacy fields (travel template) kept optional for back-compat ---
   user_id?: number;
@@ -131,12 +195,6 @@ export interface LogoutRequest {
 // DELETE /auth/account — works for draft, active and suspended accounts.
 export interface DeleteAccountRequest {
   current_password: string;
-}
-
-// Update profile: POST /account/profile — only name + phone (email read-only).
-export interface UpdateProfileRequest {
-  full_name: string;
-  phone: string;
 }
 
 // POST /auth/verify-otp (brand phone-verification context) — 4-digit code.

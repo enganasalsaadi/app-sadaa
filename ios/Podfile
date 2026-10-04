@@ -76,5 +76,15 @@ target 'Sadaa' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
     )
+
+    # Xcode GUI runs script phases without LANG, so Ruby/rsync fall back to ASCII
+    # and choke on the non-ASCII project path (react-native-config, Skia xcframeworks).
+    utf8_locale = "export LANG=en_US.UTF-8\nexport LC_ALL=en_US.UTF-8\n"
+    installer.pods_project.targets.each do |target|
+      target.shell_script_build_phases.each do |phase|
+        next if phase.shell_script.start_with?(utf8_locale)
+        phase.shell_script = utf8_locale + phase.shell_script
+      end
+    end
   end
 end

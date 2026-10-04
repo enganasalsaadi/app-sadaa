@@ -24,6 +24,8 @@ export type {
 } from './BrandLogo';
 export { GlassCard, useGlassCardStyle } from './GlassCard';
 export type { GlassCardProps, GlassCardStyle } from './GlassCard';
+export { GradientSurface } from './GradientSurface';
+export type { GradientSurfaceProps, GradientSurfaceVariant } from './GradientSurface';
 export { HeroBackdrop } from './HeroBackdrop';
 export { CustomButton } from './CustomButton';
 export type { ButtonVariant, ButtonSize } from './CustomButton';
@@ -141,7 +143,12 @@ export type { SegmentedControlProps, SegmentedOption } from './SegmentedControl'
 export { Tabs } from './Tabs';
 export type { TabsProps, TabItem } from './Tabs';
 export { ProgressBar } from './ProgressBar';
-export type { ProgressBarProps, ProgressBarTone, ProgressBarSize } from './ProgressBar';
+export type {
+  ProgressBarProps,
+  ProgressBarTone,
+  ProgressBarSize,
+  ProgressBarSurface,
+} from './ProgressBar';
 export { Accordion } from './Accordion';
 export type { AccordionProps } from './Accordion';
 export { KeyValueRow } from './KeyValueRow';

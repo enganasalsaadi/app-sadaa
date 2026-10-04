@@ -427,9 +427,8 @@
     "profile": {
       "title": "الملف الشخصي",
       "settings": "الإعدادات",
-      "memberSince": "عضو منذ {{date}}",
       "changePhoto": "تغيير الصورة",
-      "security": "الأمان",
+      "changeLogo": "تغيير شعار الشركة",
       "changePassword": "تغيير كلمة المرور",
       "language": "اللغة",
       "terms": "الشروط والأحكام",
@@ -438,16 +437,156 @@
       "logoutConfirmTitle": "تسجيل الخروج",
       "logoutConfirmSubtitle": "هل أنت متأكد من تسجيل الخروج؟",
       "logoutConfirmBtn": "تسجيل الخروج",
-      "logoutSuccess": "تم تسجيل الخروج بنجاح"
+      "logoutSuccess": "تم تسجيل الخروج بنجاح",
+      "avatarInvalid": "استخدم صورة JPG أو PNG أو WebP بحجم أقل من 5 ميغابايت.",
+      "avatarUpdated": "تم تحديث الصورة الشخصية",
+      "completion": "اكتمال الملف",
+      "completeTitle": "أكمل ملفك",
+      "completeSubtitle": "كل خطوة تسهّل على العلامات التجارية الوصول إليك",
+      "steps": {
+        "basicInfo": "أضف معلوماتك الأساسية",
+        "avatar": "أضف صورة شخصية",
+        "logo": "أضف شعار شركتك",
+        "email": "أضف بريدك الإلكتروني",
+        "platforms": "اربط منصاتك",
+        "platformsVerified": "وثّق منصاتك",
+        "rateCards": "حدّد أسعارك",
+        "companyInfo": "أكمل معلومات الشركة",
+        "socialLinks": "أضف روابط حساباتك",
+        "kyc": "وثّق هويتك",
+        "kycBrand": "وثّق شركتك",
+        "kycPending": "التوثيق قيد المراجعة",
+        "kycRejected": "أعد رفع وثائق التوثيق"
+      },
+      "push": {
+        "onTitle": "الإشعارات مفعّلة",
+        "onBody": "ستصلك أقوى الحملات أولاً بأول.",
+        "offTitle": "الإشعارات متوقفة",
+        "offBody": "ربما فاتتك حملات وعروض كثيرة. فعّلها لتصلك أولاً.",
+        "enable": "تفعيل",
+        "openSettings": "فتح الإعدادات"
+      },
+      "kyc": {
+        "verifiedTitle": "حسابك موثّق",
+        "verifiedPill": "موثّق",
+        "verifiedBody": "تظهر شارة التوثيق للعلامات التجارية، وكل العروض متاحة لك.",
+        "pendingTitle": "التوثيق قيد المراجعة",
+        "pendingBody": "نراجع هويتك الآن وسنخبرك بالنتيجة.",
+        "rejectedTitle": "تم رفض التوثيق",
+        "rejectedBody": "يرجى رفع صورة أوضح لهويتك.",
+        "unverifiedTitle": "وثّق هويتك",
+        "unverifiedBody": "التوثيق يتيح لك قبول العروض واستلام أرباحك.",
+        "reupload": "إعادة الرفع",
+        "brand": {
+          "verifiedBody": "يرى المؤثرون شارة التوثيق، فتزيد ثقتهم بعروضك.",
+          "pendingBody": "نراجع وثيقة شركتك الآن وسنخبرك بالنتيجة.",
+          "rejectedBody": "يرجى رفع نسخة أوضح من وثيقة شركتك.",
+          "unverifiedTitle": "وثّق شركتك",
+          "unverifiedBody": "التوثيق يزيد ثقة المؤثرين بعروضك."
+        }
+      },
+      "platforms": {
+        "title": "منصاتي",
+        "summary": "المنصات: {{platforms}} · الأسعار: {{rates}}",
+        "primary": "الحساب الأساسي",
+        "empty": "لم تربط أي منصة بعد.",
+        "underReview": "قيد المراجعة",
+        "actionRequired": "يحتاج إجراء"
+      },
+      "niches": {
+        "title": "اهتماماتي",
+        "empty": "لم تحدد اهتماماتك بعد."
+      },
+      "company": {
+        "title": "الشركة",
+        "businessType": "نوع النشاط",
+        "governorate": "المحافظة",
+        "links": "الروابط",
+        "linksCount_zero": "لا روابط",
+        "linksCount_one": "رابط واحد",
+        "linksCount_two": "رابطان",
+        "linksCount_few": "{{count}} روابط",
+        "linksCount_many": "{{count}} رابطاً",
+        "linksCount_other": "{{count}} رابط",
+        "noLinks": "لم تُضف روابط بعد",
+        "notSet": "غير محدد"
+      },
+      "detailsError": "تعذّر تحميل تفاصيل ملفك.",
+      "appearance": {
+        "title": "المظهر",
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "حسب النظام"
+      },
+      "footer": "صدى · {{tagline}} · الإصدار {{version}}"
     },
-    "editAccount": {
-      "title": "تعديل الملف الشخصي",
-      "firstName": "الاسم الأول",
-      "lastName": "اسم العائلة",
+    "personalInfo": {
+      "title": "معلوماتي الشخصية",
+      "basicSection": "معلوماتك",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "اسمك كما ستراه الشركات",
+      "email": "البريد الإلكتروني (اختياري)",
+      "emailPlaceholder": "name@example.com",
+      "locationSection": "الموقع",
+      "governorate": "المحافظة",
+      "area": "المنطقة (اختياري)",
+      "areaPlaceholder": "مثلاً: المزة",
+      "saved": "تم حفظ معلوماتك"
+    },
+    "companyInfo": {
+      "title": "معلومات الشركة",
+      "basicSection": "بيانات الشركة",
+      "companyName": "اسم الشركة",
+      "companyNamePlaceholder": "اسم شركتك أو متجرك",
       "email": "البريد الإلكتروني",
-      "phone": "رقم الهاتف",
-      "saveSuccess": "تم تحديث الملف الشخصي بنجاح",
-      "fullName": "الاسم الكامل"
+      "emailPlaceholder": "info@company.com",
+      "businessType": "نوع النشاط",
+      "governorate": "المحافظة",
+      "socialLinks": "روابط التواصل",
+      "socialLinksHint": "تساعد المؤثرين على التعرّف على علامتك قبل قبول العرض.",
+      "morePlatforms": "روابط أخرى",
+      "saved": "تم حفظ معلومات الشركة"
+    },
+    "phoneLocked": {
+      "label": "رقم الهاتف",
+      "hint": "رقم هاتفك هو هوية حسابك ولا يمكن تغييره من التطبيق.",
+      "contactSupport": "لتغيير الرقم تواصل مع الدعم",
+      "supportMessage": "مرحباً، أريد تغيير رقم الهاتف المرتبط بحسابي في صدى.",
+      "openFailed": "تعذّر فتح واتساب. راسلنا على {{number}}"
+    },
+    "kyc": {
+      "influencerTitle": "توثيق الهوية",
+      "brandTitle": "توثيق الشركة",
+      "influencerIntro": "ارفع صورة واضحة لوجهي هويتك الشخصية. التوثيق يتيح لك قبول العروض واستلام أرباحك.",
+      "brandIntro": "اختر نوع وثيقة شركتك وارفع نسخة واضحة منها. التوثيق يزيد ثقة المؤثرين بعروضك.",
+      "idFront": "الوجه الأمامي للهوية",
+      "idBack": "الوجه الخلفي للهوية",
+      "idHint": "PDF أو JPG أو PNG أو WEBP · حتى 10 ميغابايت",
+      "documentType": "نوع الوثيقة",
+      "document": "وثيقة الشركة",
+      "documentHint": "PDF أو JPG أو PNG · حتى 10 ميغابايت",
+      "documentTypes": {
+        "commercialRegister": "سجل تجاري",
+        "industrialRegister": "سجل صناعي",
+        "tradeLicense": "رخصة تجارية"
+      },
+      "idFrontFallbackName": "هوية-أمامي",
+      "idBackFallbackName": "هوية-خلفي",
+      "documentFallbackName": "وثيقة-الشركة",
+      "privacy": "لا يطّلع على ملفاتك إلا فريق التوثيق في صدى.",
+      "submit": "إرسال للتوثيق",
+      "resubmit": "إعادة الإرسال",
+      "retryIn": "حاول بعد {{time}}",
+      "submitted": "تم إرسال وثائقك. سنخبرك بالنتيجة بإشعار.",
+      "alreadySubmitted": "لديك طلب توثيق سابق، وهذه حالته الحالية.",
+      "submittedAt": "أُرسل في {{date}}",
+      "reviewedAt": "رُوجع في {{date}}",
+      "errors": {
+        "required": "اختر الملف أولاً",
+        "size": "الملف أكبر من 10 ميغابايت",
+        "type": "نوع الملف غير مدعوم",
+        "failed": "تعذّر فتح الملف، حاول مرة أخرى"
+      }
     },
     "changePassword": {
       "title": "تغيير كلمة المرور",
@@ -475,6 +614,97 @@
       "title": "تحت الصيانة",
       "defaultSubtitle": "نحن نعمل على تحسينات. يرجى المحاولة مرة أخرى قريباً.",
       "closeApp": "إغلاق التطبيق"
+    },
+    "platforms": {
+      "title": "منصاتي",
+      "add": "إضافة منصة",
+      "empty": "لم تربط أي منصة بعد. اضغط + لإضافة منصة.",
+      "primary": "أساسي",
+      "unavailable": "غير متاح",
+      "status": {
+        "pendingReview": "قيد المراجعة",
+        "rejected": "مرفوض"
+      },
+      "added": "تمت إضافة المنصة",
+      "updated": "تم تحديث المنصة",
+      "deleted": "تم حذف المنصة",
+      "followers": "{{value}} متابع",
+      "manualTier": "مستوى اخترته بنفسك ويراجعه فريقنا",
+      "lastSynced": "آخر تحديث {{date}}",
+      "neverSynced": "لم يُحدَّث بعد",
+      "refresh": "تحديث المتابعين",
+      "refreshed": "تم تحديث المتابعين",
+      "refreshIn": "يمكنك التحديث مجدداً بعد {{time}}",
+      "available": "متاح لاستقبال الطلبات",
+      "availableHint": "عند الإيقاف لن تتمكن العلامات التجارية من إرسال طلبات لك على هذه المنصة.",
+      "makePrimary": "الحساب الأساسي",
+      "makePrimaryHint": "يظهر أولاً في ملفك.",
+      "isPrimaryHint": "يظهر أولاً في ملفك. لتغييره اجعل منصة أخرى أساسية.",
+      "rejectedTitle": "تم رفض هذا الحساب",
+      "rejectedFallback": "عدّل اسم المستخدم أو المستوى لإعادة إرساله للمراجعة.",
+      "pendingReview": "يراجع فريقنا المستوى الذي اخترته.",
+      "ratesTitle": "أسعاري على {{platform}}",
+      "ratesHint": "حدّد الخدمات التي تقدمها وضع سعراً لكل منها.",
+      "ratesSave": "حفظ الأسعار",
+      "ratesSaved": "تم حفظ الأسعار",
+      "delete": "حذف المنصة",
+      "deleteTitle": "حذف {{platform}}؟",
+      "deleteBody": "ستُحذف أسعارها أيضاً. يمكنك ربطها مجدداً لاحقاً.",
+      "errors": {
+        "alreadyExists": "هذه المنصة مربوطة مسبقاً.",
+        "lastPlatform": "تحتاج منصة واحدة على الأقل. أضف منصة أخرى قبل حذف هذه.",
+        "notEligibleForPrimary": "لا يمكن أن يكون الحساب المرفوض حساباً أساسياً.",
+        "lookupUnavailable": "لا يمكننا الوصول إلى هذه المنصة حالياً. حاول لاحقاً.",
+        "notFound": "هذه المنصة لم تعد مربوطة."
+      }
+    },
+    "niches": {
+      "title": "اهتماماتي",
+      "subtitle": "اختر حتى {{count}}. تستخدمها العلامات التجارية للعثور عليك.",
+      "label": "الاهتمامات",
+      "counter": "{{selected}}/{{max}}",
+      "saved": "تم حفظ اهتماماتك",
+      "errors": {
+        "min": "اختر اهتماماً واحداً على الأقل",
+        "max": "اختر حتى {{count}} اهتمامات"
+      }
+    },
+    "discard": {
+      "title": "تجاهل التغييرات؟",
+      "body": "لن تُحفظ التعديلات التي أجريتها في هذه الصفحة.",
+      "confirm": "تجاهل",
+      "stay": "متابعة التعديل"
+    }
+  },
+  "notifications": {
+    "inbox": {
+      "title": "الإشعارات",
+      "markAllRead": "تعليم الكل كمقروء",
+      "empty": "لا توجد إشعارات بعد",
+      "unread": "غير مقروء",
+      "labelSeparator": "، ",
+      "openUnread_zero": "الإشعارات",
+      "openUnread_one": "الإشعارات، إشعار واحد غير مقروء",
+      "openUnread_two": "الإشعارات، إشعاران غير مقروءين",
+      "openUnread_few": "الإشعارات، {{count}} إشعارات غير مقروءة",
+      "openUnread_many": "الإشعارات، {{count}} إشعاراً غير مقروء",
+      "openUnread_other": "الإشعارات، {{count}} إشعار غير مقروء"
+    },
+    "time": {
+      "now": "الآن",
+      "minutes_zero": "الآن",
+      "minutes_one": "منذ دقيقة",
+      "minutes_two": "منذ دقيقتين",
+      "minutes_few": "منذ {{count}} دقائق",
+      "minutes_many": "منذ {{count}} دقيقة",
+      "minutes_other": "منذ {{count}} دقيقة",
+      "hours_zero": "الآن",
+      "hours_one": "منذ ساعة",
+      "hours_two": "منذ ساعتين",
+      "hours_few": "منذ {{count}} ساعات",
+      "hours_many": "منذ {{count}} ساعة",
+      "hours_other": "منذ {{count}} ساعة",
+      "yesterday": "أمس"
     }
   },
   "appUpdate": {
@@ -701,7 +931,9 @@
       "dealCard": "بطاقة الصفقة",
       "creatorCard": "بطاقة صانع المحتوى",
       "draftReview": "مراجعة المسودة",
-      "wallet": "المحفظة"
+      "wallet": "المحفظة",
+      "gradientSurface": "سطح متدرّج",
+      "platformEditing": "تعديل المنصات والأسعار"
     },
     "typography": {
       "h1Label": "H1 · عنوان",
@@ -1205,7 +1437,15 @@
       "nicheBeauty": "تجميل",
       "nicheTech": "تقنية",
       "cityDamascus": "دمشق",
-      "cityAleppo": "حلب"
+      "cityAleppo": "حلب",
+      "openPlatformSheet": "فتح نافذة إضافة منصة"
+    },
+    "gradientSurface": {
+      "brandTitle": "سطح الهوية",
+      "brandBody": "تدرّج كحلي لرؤوس صفحات الهوية.",
+      "premiumTitle": "تمييز مميز",
+      "premiumPill": "موثّق",
+      "premiumBody": "تدرّج خردلي هادئ للموثّقين وكبار المبدعين. النص يبقى محايداً."
     }
   },
   "followerTier": {

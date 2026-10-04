@@ -4,36 +4,29 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { applyServerFieldErrors, useLookupItems } from '@/core/api';
 import { useWizardHeader } from '@/shared/ui';
-import { SOCIAL_PLATFORMS, normalizeSocialUrl } from '@/shared/utils';
-import type { SocialPlatform } from '@/shared/utils';
+import { SOCIAL_PLATFORMS } from '@/shared/utils';
 import {
   useBrandStep2ProfileMutation,
   useGetOnboardingProgressQuery,
 } from '../../../api';
 import { BRAND_WIZARD_STEPS } from '../../../constants/brandOnboarding';
+import {
+  PRIMARY_SOCIAL_PLATFORMS,
+  SECONDARY_SOCIAL_PLATFORMS,
+} from '../../../constants/socialPlatforms';
 import { useBrandOnboardingFlow } from '../../../hooks/useBrandOnboardingFlow';
-import { createBrandProfileSchema, toSocialLinksForm } from '../../../schemas';
+import {
+  createBrandProfileSchema,
+  toSocialLinksForm,
+  toSocialLinksPayload,
+} from '../../../schemas';
 import type { BrandProfileFormValues } from '../../../schemas';
-import type { BrandSocialLink } from '../../../store';
 
-/** Shown up front; the rest sit behind "More platforms" (progressive disclosure). */
-const PRIMARY_PLATFORMS: readonly SocialPlatform[] = ['instagram', 'facebook', 'tiktok'];
-const SECONDARY_PLATFORMS = SOCIAL_PLATFORMS.filter(
-  platform => !PRIMARY_PLATFORMS.includes(platform),
-);
 
 const SERVER_FIELD_MAP = {
   governorate: 'governorate',
   business_type: 'businessType',
 } as const satisfies Record<string, keyof BrandProfileFormValues>;
-
-const toSocialLinksPayload = (
-  links: BrandProfileFormValues['socialLinks'],
-): BrandSocialLink[] =>
-  SOCIAL_PLATFORMS.flatMap(platform => {
-    const url = normalizeSocialUrl(platform, links[platform]);
-    return url ? [{ platform, url }] : [];
-  });
 
 export const useBrandProfileScreen = () => {
   const { t } = useTranslation();
@@ -47,7 +40,7 @@ export const useBrandProfileScreen = () => {
     socialLinks: toSocialLinksForm(progress?.profile.social_links),
   }));
   const [showAllPlatforms, setShowAllPlatforms] = useState(() =>
-    SECONDARY_PLATFORMS.some(platform => defaultValues.socialLinks[platform]),
+    SECONDARY_SOCIAL_PLATFORMS.some(platform => defaultValues.socialLinks[platform]),
   );
 
   const governorates = useLookupItems('governorates');
@@ -95,7 +88,7 @@ export const useBrandProfileScreen = () => {
     businessTypes,
     lookupsFailed: governorates.isError || businessTypes.isError,
     retryLookups,
-    visiblePlatforms: showAllPlatforms ? SOCIAL_PLATFORMS : PRIMARY_PLATFORMS,
+    visiblePlatforms: showAllPlatforms ? SOCIAL_PLATFORMS : PRIMARY_SOCIAL_PLATFORMS,
     canShowMorePlatforms: !showAllPlatforms,
     showMorePlatforms,
     onSubmit,

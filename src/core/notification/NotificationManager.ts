@@ -14,13 +14,16 @@ import { permissionManager } from '@/core/permissions';
 import type {
   NotificationTokenListener,
   PushListener,
+  PushOpenHandler,
   RemoteMessage,
 } from './notificationTypes';
-import { parsePushPayload } from './pushPayload';
+import { parsePushPayload, type ParsedPush } from './pushPayload';
 import type { PushPermission } from './pushPrompt';
 import { toPushPermission } from './pushPrompt';
 
 const DEFAULT_ANDROID_CHANNEL_ID = 'default';
+/** A tap kept for a handler that isn't there yet (cold start, boot still running). */
+const PENDING_OPEN_TTL_MS = 30_000;
 const messagingInstance = getMessaging(getApp());
 
 class NotificationManager {
@@ -28,7 +31,9 @@ class NotificationManager {
   private isInitialized = false;
   private initializePromise?: Promise<void>;
   private tokenListener?: NotificationTokenListener;
-  private pushListener?: PushListener;
+  private pushListeners = new Set<PushListener>();
+  private openHandler?: PushOpenHandler;
+  private pendingOpen?: { push: ParsedPush; at: number };
   private unsubscribeListeners: Array<() => void> = [];
 
   private constructor() {}
@@ -56,10 +61,27 @@ class NotificationManager {
    * in) or tapped; returns the unsubscribe.
    */
   registerPushListener(listener: PushListener): () => void {
-    this.pushListener = listener;
+    this.pushListeners.add(listener);
     return () => {
-      if (this.pushListener === listener) {
-        this.pushListener = undefined;
+      this.pushListeners.delete(listener);
+    };
+  }
+
+  /**
+   * One handler routes taps. A tap that arrived before it was registered
+   * (the launch tap lands while boot is still running) is delivered on
+   * registration if it is recent; returns the unsubscribe.
+   */
+  registerOpenHandler(handler: PushOpenHandler): () => void {
+    this.openHandler = handler;
+    const pending = this.pendingOpen;
+    this.pendingOpen = undefined;
+    if (pending && Date.now() - pending.at < PENDING_OPEN_TTL_MS) {
+      handler(pending.push);
+    }
+    return () => {
+      if (this.openHandler === handler) {
+        this.openHandler = undefined;
       }
     };
   }
@@ -124,13 +146,13 @@ class NotificationManager {
   }
 
   async onBackgroundMessage(message: RemoteMessage): Promise<void> {
-    this.emitPush(message.data);
+    this.emitPush(message.data, false);
     await this.displayFromRemoteMessage(message);
   }
 
   /** A tap on a notifee notification while the app was in the background. */
   onBackgroundPress(data: Readonly<Record<string, unknown>> | undefined): void {
-    this.emitPush(data);
+    this.emitPush(data, true);
   }
 
   private async performInitialize(): Promise<void> {
@@ -164,7 +186,7 @@ class NotificationManager {
     const unsubscribeForegroundMessage = onMessage(
       messagingInstance,
       async message => {
-        this.emitPush(message.data);
+        this.emitPush(message.data, false);
         await this.displayFromRemoteMessage(message);
       },
     );
@@ -172,20 +194,20 @@ class NotificationManager {
     const unsubscribeOpenedApp = onNotificationOpenedApp(
       messagingInstance,
       message => {
-        this.emitPush(message.data);
+        this.emitPush(message.data, true);
       },
     );
 
     const unsubscribeForegroundEvent = notifee.onForegroundEvent(event => {
       if (event.type === EventType.PRESS) {
-        this.emitPush(event.detail.notification?.data);
+        this.emitPush(event.detail.notification?.data, true);
       }
     });
 
     getInitialNotification(messagingInstance)
       .then(message => {
         if (message) {
-          this.emitPush(message.data);
+          this.emitPush(message.data, true);
         }
       })
       .catch(() => undefined);
@@ -227,8 +249,15 @@ class NotificationManager {
   }
 
   // Payloads are parsed here, so nothing downstream ever sees raw FCM data.
-  private emitPush(data: Readonly<Record<string, unknown>> | undefined): void {
-    this.pushListener?.(parsePushPayload(data));
+  private emitPush(data: Readonly<Record<string, unknown>> | undefined, opened: boolean): void {
+    const push = parsePushPayload(data);
+    this.pushListeners.forEach(listener => listener(push));
+    if (!opened) return;
+    if (this.openHandler) {
+      this.openHandler(push);
+    } else {
+      this.pendingOpen = { push, at: Date.now() };
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ListRenderItemInfo } from '@shopify/flash-list';
+import { Inbox } from 'lucide-react-native';
 import {
   Box,
   Card,
@@ -85,6 +86,7 @@ const LayoutListStatesScreenComponent: React.FC = () => {
         onRefresh={onRefresh}
         onRetry={onRetry}
         emptyMessage={t('devShowcase.listStates.emptyMessage')}
+        emptyIcon={Inbox}
         onScroll={onScroll}
       />
     </Layout>

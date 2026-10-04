@@ -8,7 +8,6 @@ export {
   useRequestPasswordResetMutation,
   useResendPasswordResetOtpMutation,
   useResetPasswordMutation,
-  useUpdateProfileMutation,
   useVerifyPhoneOtpMutation,
   useResendPhoneOtpMutation,
 } from './authApi';

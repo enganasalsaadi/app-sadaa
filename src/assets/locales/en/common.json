@@ -427,9 +427,8 @@
     "profile": {
       "title": "Profile",
       "settings": "Settings",
-      "memberSince": "Member since {{date}}",
       "changePhoto": "Change Photo",
-      "security": "Security",
+      "changeLogo": "Change company logo",
       "changePassword": "Change Password",
       "language": "Language",
       "terms": "Terms & Conditions",
@@ -438,16 +437,152 @@
       "logoutConfirmTitle": "Logout",
       "logoutConfirmSubtitle": "Are you sure you want to logout?",
       "logoutConfirmBtn": "Logout",
-      "logoutSuccess": "Logged out successfully"
+      "logoutSuccess": "Logged out successfully",
+      "avatarInvalid": "Use a JPG, PNG or WebP photo under 5 MB.",
+      "avatarUpdated": "Profile photo updated",
+      "completion": "Profile completion",
+      "completeTitle": "Complete your profile",
+      "completeSubtitle": "Each step makes you easier for brands to find",
+      "steps": {
+        "basicInfo": "Add your basic info",
+        "avatar": "Add a profile photo",
+        "logo": "Add your company logo",
+        "email": "Add your email",
+        "platforms": "Link your platforms",
+        "platformsVerified": "Get your platforms verified",
+        "rateCards": "Set your prices",
+        "companyInfo": "Complete company info",
+        "socialLinks": "Add your social links",
+        "kyc": "Verify your identity",
+        "kycBrand": "Verify your company",
+        "kycPending": "Verification under review",
+        "kycRejected": "Re-upload your documents"
+      },
+      "push": {
+        "onTitle": "Notifications are on",
+        "onBody": "You'll hear about the best campaigns first.",
+        "offTitle": "Notifications are off",
+        "offBody": "You may be missing campaigns and offers. Turn them on to hear first.",
+        "enable": "Turn on",
+        "openSettings": "Open settings"
+      },
+      "kyc": {
+        "verifiedTitle": "Your account is verified",
+        "verifiedPill": "Verified",
+        "verifiedBody": "Brands see your verified badge, and every offer is open to you.",
+        "pendingTitle": "Verification under review",
+        "pendingBody": "We're reviewing your ID and will notify you of the result.",
+        "rejectedTitle": "Verification was rejected",
+        "rejectedBody": "Please upload a clearer photo of your ID.",
+        "unverifiedTitle": "Verify your identity",
+        "unverifiedBody": "Verification lets you accept offers and receive your earnings.",
+        "reupload": "Upload again",
+        "brand": {
+          "verifiedBody": "Creators see your verified badge, which builds trust in your offers.",
+          "pendingBody": "We’re reviewing your company document and will let you know.",
+          "rejectedBody": "Please upload a clearer copy of your company document.",
+          "unverifiedTitle": "Verify your business",
+          "unverifiedBody": "Verification builds creators’ trust in your offers."
+        }
+      },
+      "platforms": {
+        "title": "My platforms",
+        "summary": "Platforms: {{platforms}} · Prices: {{rates}}",
+        "primary": "Primary account",
+        "empty": "You haven't linked a platform yet.",
+        "underReview": "Under review",
+        "actionRequired": "Action required"
+      },
+      "niches": {
+        "title": "My niches",
+        "empty": "You haven't picked your niches yet."
+      },
+      "company": {
+        "title": "Company",
+        "businessType": "Business type",
+        "governorate": "Governorate",
+        "links": "Links",
+        "linksCount_one": "{{count}} link",
+        "linksCount_other": "{{count}} links",
+        "noLinks": "No links yet",
+        "notSet": "Not set"
+      },
+      "detailsError": "We couldn't load your profile details.",
+      "appearance": {
+        "title": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "footer": "Sada · {{tagline}} · v{{version}}"
     },
-    "editAccount": {
-      "title": "Edit Profile",
-      "firstName": "First Name",
-      "lastName": "Last Name",
+    "personalInfo": {
+      "title": "Personal info",
+      "basicSection": "Your details",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Your name as brands will see it",
+      "email": "Email (optional)",
+      "emailPlaceholder": "name@example.com",
+      "locationSection": "Location",
+      "governorate": "Governorate",
+      "area": "Area (optional)",
+      "areaPlaceholder": "e.g. Mezzeh",
+      "saved": "Your info was saved"
+    },
+    "companyInfo": {
+      "title": "Company info",
+      "basicSection": "Company details",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "Your company or store name",
       "email": "Email",
-      "phone": "Phone Number",
-      "saveSuccess": "Profile updated successfully",
-      "fullName": "Full name"
+      "emailPlaceholder": "info@company.com",
+      "businessType": "Business type",
+      "governorate": "Governorate",
+      "socialLinks": "Social links",
+      "socialLinksHint": "Help creators know your brand before they accept an offer.",
+      "morePlatforms": "More links",
+      "saved": "Company info was saved"
+    },
+    "phoneLocked": {
+      "label": "Phone number",
+      "hint": "Your phone number is your account identity and can’t be changed in the app.",
+      "contactSupport": "Contact support to change your number",
+      "supportMessage": "Hello, I would like to change the phone number linked to my Sada account.",
+      "openFailed": "Couldn't open WhatsApp. Message us at {{number}}"
+    },
+    "kyc": {
+      "influencerTitle": "Identity verification",
+      "brandTitle": "Business verification",
+      "influencerIntro": "Upload a clear photo of both sides of your national ID. Verification lets you accept offers and receive your earnings.",
+      "brandIntro": "Choose your company document type and upload a clear copy. Verification builds creators’ trust in your offers.",
+      "idFront": "Front of your ID",
+      "idBack": "Back of your ID",
+      "idHint": "PDF, JPG, PNG or WEBP · up to 10 MB",
+      "documentType": "Document type",
+      "document": "Company document",
+      "documentHint": "PDF, JPG or PNG · up to 10 MB",
+      "documentTypes": {
+        "commercialRegister": "Commercial register",
+        "industrialRegister": "Industrial register",
+        "tradeLicense": "Trade license"
+      },
+      "idFrontFallbackName": "id-front",
+      "idBackFallbackName": "id-back",
+      "documentFallbackName": "company-document",
+      "privacy": "Only Sada’s verification team can see your files.",
+      "submit": "Send for verification",
+      "resubmit": "Send again",
+      "retryIn": "Try again in {{time}}",
+      "submitted": "Your documents were sent. We’ll notify you of the result.",
+      "alreadySubmitted": "You already have a verification request. Here is its current status.",
+      "submittedAt": "Sent on {{date}}",
+      "reviewedAt": "Reviewed on {{date}}",
+      "errors": {
+        "required": "Choose the file first",
+        "size": "The file is larger than 10 MB",
+        "type": "This file type isn’t supported",
+        "failed": "Couldn’t open the file, try again"
+      }
     },
     "changePassword": {
       "title": "Change Password",
@@ -475,6 +610,85 @@
       "title": "Under Maintenance",
       "defaultSubtitle": "We're working on improvements. Please check back soon.",
       "closeApp": "Close App"
+    },
+    "platforms": {
+      "title": "My platforms",
+      "add": "Add platform",
+      "empty": "No platforms linked yet. Tap + to add one.",
+      "primary": "Primary",
+      "unavailable": "Not available",
+      "status": {
+        "pendingReview": "Under review",
+        "rejected": "Rejected"
+      },
+      "added": "Platform added",
+      "updated": "Platform updated",
+      "deleted": "Platform removed",
+      "followers": "{{value}} followers",
+      "manualTier": "Tier picked by you, checked by our team",
+      "lastSynced": "Last updated {{date}}",
+      "neverSynced": "Not updated yet",
+      "refresh": "Refresh followers",
+      "refreshed": "Followers updated",
+      "refreshIn": "You can refresh again in {{time}}",
+      "available": "Available for requests",
+      "availableHint": "When off, brands can't send you requests on this platform.",
+      "makePrimary": "Primary account",
+      "makePrimaryHint": "Shown first on your profile.",
+      "isPrimaryHint": "Shown first on your profile. Make another platform primary to change it.",
+      "rejectedTitle": "This account was rejected",
+      "rejectedFallback": "Edit the username or tier to send it for review again.",
+      "pendingReview": "Our team is checking the tier you picked.",
+      "ratesTitle": "My prices on {{platform}}",
+      "ratesHint": "Tick the services you offer and set a price for each.",
+      "ratesSave": "Save prices",
+      "ratesSaved": "Prices saved",
+      "delete": "Remove platform",
+      "deleteTitle": "Remove {{platform}}?",
+      "deleteBody": "Its prices will be removed too. You can link it again later.",
+      "errors": {
+        "alreadyExists": "This platform is already linked.",
+        "lastPlatform": "You need at least one platform. Add another one before removing this one.",
+        "notEligibleForPrimary": "A rejected account can't be your primary account.",
+        "lookupUnavailable": "We can't reach this platform right now. Try again later.",
+        "notFound": "This platform isn't linked anymore."
+      }
+    },
+    "niches": {
+      "title": "My niches",
+      "subtitle": "Pick up to {{count}}. Brands use them to find you.",
+      "label": "Niches",
+      "counter": "{{selected}}/{{max}}",
+      "saved": "Your niches were saved",
+      "errors": {
+        "min": "Pick at least one niche",
+        "max": "Pick up to {{count}} niches"
+      }
+    },
+    "discard": {
+      "title": "Discard your changes?",
+      "body": "Your edits on this page won't be saved.",
+      "confirm": "Discard",
+      "stay": "Keep editing"
+    }
+  },
+  "notifications": {
+    "inbox": {
+      "title": "Notifications",
+      "markAllRead": "Mark all as read",
+      "empty": "No notifications yet",
+      "unread": "Unread",
+      "labelSeparator": ", ",
+      "openUnread_one": "Notifications, {{count}} unread",
+      "openUnread_other": "Notifications, {{count}} unread"
+    },
+    "time": {
+      "now": "Just now",
+      "minutes_one": "{{count}} min ago",
+      "minutes_other": "{{count}} min ago",
+      "hours_one": "{{count}} hour ago",
+      "hours_other": "{{count}} hours ago",
+      "yesterday": "Yesterday"
     }
   },
   "appUpdate": {
@@ -701,7 +915,9 @@
       "dealCard": "Deal card",
       "creatorCard": "Creator card",
       "draftReview": "Draft review",
-      "wallet": "Wallet"
+      "wallet": "Wallet",
+      "gradientSurface": "Gradient surface",
+      "platformEditing": "Platform & prices editing"
     },
     "typography": {
       "h1Label": "H1 · Heading",
@@ -1201,7 +1417,15 @@
       "nicheBeauty": "Beauty",
       "nicheTech": "Tech",
       "cityDamascus": "Damascus",
-      "cityAleppo": "Aleppo"
+      "cityAleppo": "Aleppo",
+      "openPlatformSheet": "Open add-platform sheet"
+    },
+    "gradientSurface": {
+      "brandTitle": "Brand surface",
+      "brandBody": "Navy hero gradient for identity headers.",
+      "premiumTitle": "Premium highlight",
+      "premiumPill": "Verified",
+      "premiumBody": "Soft mustard wash for verified or top creators. Text stays neutral."
     }
   },
   "followerTier": {

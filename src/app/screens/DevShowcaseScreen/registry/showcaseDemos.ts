@@ -34,6 +34,7 @@ import { BadgesDemo } from '../demos/BadgesDemo';
 import { TierBadgeDemo } from '../demos/TierBadgeDemo';
 import { StructureDemo } from '../demos/StructureDemo';
 import { ProgressBarDemo } from '../demos/ProgressBarDemo';
+import { GradientSurfaceDemo } from '../demos/GradientSurfaceDemo';
 import { AccordionDemo } from '../demos/AccordionDemo';
 import { AvatarGroupDemo } from '../demos/AvatarGroupDemo';
 import { NoticeDemo } from '../demos/NoticeDemo';
@@ -49,6 +50,7 @@ import { StatTileDemo } from '../demos/StatTileDemo';
 import { DealStatusDemo } from '../demos/DealStatusDemo';
 import { DealCardDemo } from '../demos/DealCardDemo';
 import { CreatorCardDemo } from '../demos/CreatorCardDemo';
+import { PlatformEditingDemo } from '../demos/PlatformEditingDemo';
 import { DraftReviewDemo } from '../demos/DraftReviewDemo';
 import { WalletDemo } from '../demos/WalletDemo';
 import type { ShowcaseEntryId } from './showcaseRegistry';
@@ -90,6 +92,7 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   tierBadge: TierBadgeDemo,
   structure: StructureDemo,
   progressBar: ProgressBarDemo,
+  gradientSurface: GradientSurfaceDemo,
   accordion: AccordionDemo,
   avatarGroup: AvatarGroupDemo,
   notice: NoticeDemo,
@@ -105,6 +108,7 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   dealStatus: DealStatusDemo,
   dealCard: DealCardDemo,
   creatorCard: CreatorCardDemo,
+  platformEditing: PlatformEditingDemo,
   draftReview: DraftReviewDemo,
   wallet: WalletDemo,
 };

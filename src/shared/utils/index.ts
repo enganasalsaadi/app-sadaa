@@ -6,6 +6,7 @@ export {
   SOCIAL_PLACEHOLDER_HOST,
   normalizeSocialUrl,
   isValidSocialUrl,
+  isSocialPlatform,
 } from './socialLinks';
 export type { SocialPlatform } from './socialLinks';
 export { buildWhatsAppUrl, openWhatsApp } from './whatsapp';

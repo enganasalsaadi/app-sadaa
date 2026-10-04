@@ -185,6 +185,11 @@ describe('rates', () => {
     );
   });
 
+  it('allows clearing every price in-app (requireOne: false)', () => {
+    const inApp = createInfluencerRatesSchema(t, { requireOne: false });
+    expect(() => inApp.validateSync({ rates: [row({})] })).not.toThrow();
+  });
+
   it('requires a positive price on enabled rows only', () => {
     expect(messageOf(() => schema.validateSync({ rates: [row({ enabled: true })] }))).toBe(
       'auth.influencerOnboarding.rates.errors.price',

@@ -6,6 +6,7 @@ import type {
   NativeScrollEvent,
 } from 'react-native';
 import type { FlashListProps } from '@shopify/flash-list';
+import type { LucideIcon } from 'lucide-react-native';
 
 export type ListLayout = 'list' | 'grid-2' | 'grid-3';
 
@@ -33,6 +34,8 @@ export interface SuperListProps<T> {
   // ─── Empty / Error UI ──────────────────────────────────────────────────
   onRetry?: () => void;
   emptyMessage?: string;
+  /** Empty-state icon; default a "no results" search icon. */
+  emptyIcon?: LucideIcon;
   errorMessage?: string;
 
   // ─── Layout ────────────────────────────────────────────────────────────
