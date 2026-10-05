@@ -421,7 +421,17 @@
   },
   "tabs": {
     "home": "Home",
-    "settings": "Settings"
+    "explore": "Explore",
+    "campaigns": "Campaigns",
+    "deals": "Deals",
+    "messages": "Messages",
+    "wallet": "Wallet",
+    "account": "Account",
+    "myProfile": "Profile",
+    "comingSoon": {
+      "title": "Coming soon",
+      "message": "We're building this section. It's on its way."
+    }
   },
   "account": {
     "profile": {

@@ -120,6 +120,12 @@ export type DevShowcaseStackParamList = {
 
 export type RootTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
+  /** Brand: my campaigns · creator: my deals. Placeholder until marketplace ships it. */
+  DealsTab: undefined;
+  /** Placeholder until the messaging domain lands. */
+  MessagesTab: undefined;
+  /** Placeholder until finance ships the wallet screen. */
+  WalletTab: undefined;
   SettingsTab: NavigatorScreenParams<SettingsStackParamList>;
 };
 

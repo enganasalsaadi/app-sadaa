@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>صدى — الشريط السفلي B (بدون محتوى خلفه)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ── Navy Trust tokens (rule 08) — no new tokens needed ── */
+  :root {
+    --bg: #F5F7F9; --surface: #FFFFFF; --surface2: #EDF1F4; --border: #DCE3EA; --borderStrong: #C3CDD7;
+    --t1: #0F1D2B; --t2: #475869; --t3: #8394A5;
+    --navy: #1C3349; --brandText: #1C3349; --onBrand: #FFFFFF; --onBrandMuted: #C9D6E0;
+    --teal: #397D8C; --tealText: #347482; --tealSoft: #E3F0F2;
+    --mintText: #087F5B;
+    --premium: #D9B46A; --premiumText: #8A6A24; --premiumSoft: #FBF3E2;
+    --danger: #D92D20; --onAccent: #FFFFFF;
+    --cta: #1C3349; --onCta: #FFFFFF;
+    --hero: linear-gradient(160deg, #1C3349 0%, #27506A 70%, #397D8C 130%);
+    --shadowMd: 0 6px 18px rgba(15,29,43,.10), 0 1px 3px rgba(15,29,43,.06);
+    --homeInd: #0F1D2B;
+  }
+  [data-theme="dark"] {
+    --bg: #0B1622; --surface: #122131; --surface2: #182B3D; --border: #22384C; --borderStrong: #30495F;
+    --t1: #EAF0F5; --t2: #A5B5C4; --t3: #6C8093;
+    --brandText: #EAF0F5; --onBrand: #F5F7F9;
+    --teal: #6FC0CF; --tealText: #6FC0CF; --tealSoft: #16303A;
+    --mintText: #3DDBA5;
+    --premium: #E6C47E; --premiumText: #E6C47E; --premiumSoft: #2E2716;
+    --danger: #F97066; --onAccent: #06121C;
+    --cta: #5FAFBF; --onCta: #06121C;
+    --hero: linear-gradient(160deg, #0B1622 0%, #1C3349 60%, #1F4A5C 130%);
+    --shadowMd: 0 6px 18px rgba(0,0,0,.40);
+    --homeInd: #EAF0F5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Tajawal", system-ui, sans-serif; background: var(--bg); color: var(--t1); transition: background .3s, color .3s; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .top h1 { font-size: 28px; font-weight: 800; color: var(--brandText); }
+  .top p { color: var(--t2); margin-top: 6px; font-size: 15px; max-width: 720px; line-height: 1.7; }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; }
+  .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+  .seg button { padding: 8px 14px; border-radius: 6px; font-weight: 500; color: var(--t2); font-size: 14px; }
+  .seg button.on { background: var(--cta); color: var(--onCta); font-weight: 700; }
+  h2.section { font-size: 20px; font-weight: 800; color: var(--brandText); margin: 40px 0 14px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .why { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .why h4 { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--tealText); }
+  .why p, .why li { font-size: 13.5px; color: var(--t2); line-height: 1.8; }
+  .why ul { padding-inline-start: 18px; }
+
+  .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 28px 20px; margin-top: 18px; }
+  .opt { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .opt-h { width: 100%; max-width: 360px; display: flex; align-items: center; gap: 10px; }
+  .opt-h .letter { min-width: 38px; height: 32px; padding: 0 6px; border-radius: 8px; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 800; }
+  .opt-h h3 { font-size: 17px; font-weight: 800; }
+  .opt-h small { display: block; color: var(--t3); font-size: 12px; font-weight: 500; }
+  .rec { margin-inline-start: auto; font-size: 11.5px; font-weight: 700; color: var(--premiumText); background: var(--premiumSoft); border: 1px solid var(--premium); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+  .notes { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.75; color: var(--t2); }
+  .notes dt { font-weight: 800; color: var(--t1); margin-top: 8px; font-size: 13px; }
+  .notes dt:first-child { margin-top: 0; }
+  .notes .pro::before { content: "＋ "; color: #12A150; font-weight: 800; }
+  .notes .con::before { content: "－ "; color: var(--danger); font-weight: 800; }
+  .rule { display: inline-block; margin-top: 10px; font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 999px; }
+  .rule.ok { background: #E7F6EC; color: #067647; }
+  .rule.chg { background: var(--premiumSoft); color: var(--premiumText); }
+  [data-theme="dark"] .rule.ok { background: #0F2A1D; color: #47CD89; }
+
+  /* ── phone ── */
+  .phone { width: 340px; height: 700px; border-radius: 48px; padding: 10px; background: #0A0E13; box-shadow: 0 30px 60px rgba(15,29,43,.25), inset 0 0 0 2px #2A3340; flex: none; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden; background: var(--bg); isolation: isolate; display: flex; flex-direction: column; }
+  .island { position: absolute; top: 10px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; z-index: 30; }
+  .status { position: absolute; top: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; color: #fff; font-weight: 700; font-size: 14px; z-index: 20; direction: ltr; pointer-events: none; }
+  .status .sig { display: flex; gap: 5px; align-items: center; }
+  .status .bat { width: 22px; height: 11px; border: 1.5px solid #fff; border-radius: 3px; position: relative; }
+  .status .bat::after { content: ""; position: absolute; inset: 1.5px; right: 5px; background: #fff; border-radius: 1px; }
+  .home-ind { position: absolute; bottom: 7px; left: 50%; width: 120px; margin-left: -60px; height: 4.5px; border-radius: 3px; background: var(--homeInd); opacity: .85; z-index: 40; pointer-events: none; }
+
+  /* The key change: the scene ENDS above the bar. Nothing scrolls under it. */
+  .scene { position: relative; flex: 1; min-height: 0; }
+  .content { position: absolute; inset: 0; overflow-y: auto; padding-bottom: 16px; scrollbar-width: none; overscroll-behavior: contain; }
+  .content::-webkit-scrollbar { display: none; }
+  /* scroll-edge hint inside the scene (not under the bar) */
+  .edge { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; opacity: 1; transition: opacity .2s; }
+  .edge.hide { opacity: 0; }
+  .dock { flex: none; position: relative; }
+
+  /* fake app content */
+  .hdr { background: var(--hero); color: var(--onBrand); padding: 56px 18px 18px; border-radius: 0 0 12px 12px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .between { justify-content: space-between; }
+  .hello { font-size: 13px; color: var(--onBrandMuted); }
+  .uname { font-size: 20px; font-weight: 800; }
+  .bell { position: relative; width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); }
+  .bell i { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: #F97066; border: 1.5px solid #1C3349; }
+  .search { margin-top: 14px; height: 44px; border-radius: 8px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); display: flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--onBrandMuted); font-size: 13.5px; }
+  .chips { display: flex; gap: 8px; padding: 14px 18px 4px; overflow: hidden; }
+  .chip { flex: none; font-size: 13px; padding: 7px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--t2); }
+  .chip.on { background: var(--tealSoft); border-color: var(--teal); color: var(--tealText); font-weight: 700; }
+  .sec { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 18px 10px; }
+  .sec h4 { font-size: 16px; font-weight: 800; }
+  .sec a { font-size: 13px; color: var(--tealText); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
+  .ccard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .ccard .ph { height: 128px; position: relative; }
+  .ccard .ph::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, rgba(255,255,255,.55) 0 16%, transparent 17%), radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.45) 0 34%, transparent 35%); }
+  .ccard .cb { padding: 9px 10px 11px; }
+  .ccard b { font-size: 14px; display: block; }
+  .ccard small { font-size: 12px; color: var(--t3); }
+  .ccard .meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12.5px; font-weight: 700; color: var(--t2); }
+  .tier { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--tealSoft); color: var(--tealText); font-weight: 700; }
+  .bal { margin-top: 16px; padding: 14px; border-radius: 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.24); }
+  .bal small { font-size: 12.5px; color: var(--onBrandMuted); }
+  .bal .amt { font-size: 28px; font-weight: 800; color: #3DDBA5; direction: ltr; text-align: end; font-variant-numeric: tabular-nums; }
+  .bal .pend { font-size: 12.5px; color: var(--onBrandMuted); margin-top: 4px; }
+  .pcard { margin: 14px 18px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .pcard b { font-size: 14px; }
+  .pcard small { color: var(--t3); font-size: 12px; }
+  .pbar { height: 6px; border-radius: 3px; background: var(--surface2); margin-top: 10px; overflow: hidden; }
+  .pbar i { display: block; width: 70%; height: 100%; background: var(--teal); border-radius: 3px; }
+  .ocard { margin: 0 18px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 12px; padding: 10px; }
+  .ocard .th { width: 76px; height: 76px; border-radius: 8px; flex: none; }
+  .ocard b { font-size: 14px; display: block; }
+  .ocard small { font-size: 12px; color: var(--t3); }
+  .ocard .money { font-weight: 800; color: var(--mintText); font-size: 14px; direction: ltr; font-variant-numeric: tabular-nums; }
+  .ocard .dl { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, #DC6803 14%, transparent); color: #B54708; }
+  [data-theme="dark"] .ocard .dl { color: #FDB022; }
+  .ocard .row { margin-top: 8px; justify-content: space-between; }
+
+  /* ── bar parts (shared by all B variants) ── */
+  .ic { position: relative; display: grid; place-items: center; transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .badge { position: absolute; top: -6px; inset-inline-end: -10px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--danger); color: var(--onAccent); font-size: 10.5px; font-weight: 800; display: grid; place-items: center; line-height: 1; box-shadow: 0 0 0 2px var(--surface); font-style: normal; }
+  .bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); }
+  .tab { flex: none; height: 46px; min-width: 44px; padding: 0 11px; display: flex; align-items: center; justify-content: center; gap: 0; color: var(--t3);
+         transition: background .4s, gap .4s, padding .45s cubic-bezier(.34,1.4,.5,1), color .25s; }
+  .tab .lbl { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: 800; transition: max-width .45s cubic-bezier(.34,1.3,.5,1), opacity .25s .05s; }
+  .tab.active { background: var(--tealSoft); color: var(--tealText); gap: 6px; padding: 0 14px; }
+  .tab.active .lbl { max-width: 90px; opacity: 1; }
+  .tab.active .badge { display: none; }
+  .tab:active .ic { transform: scale(.88); }
+
+  /* B1 — floating card, strict 8–12 radius */
+  .v1 .dock { padding: 8px 12px 26px; }
+  .v1 .bar { height: 62px; border-radius: 12px; padding: 0 6px; box-shadow: var(--shadowMd); }
+  .v1 .tab { border-radius: 8px; }
+
+  /* B2 — floating capsule (rule-08 amendment: radius full for the bar + its active pill) */
+  .v2 .dock { padding: 8px 14px 26px; }
+  .v2 .bar { height: 62px; border-radius: 999px; padding: 0 7px; box-shadow: var(--shadowMd); }
+  .v2 .tab { border-radius: 999px; }
+
+  /* B3 — docked to the edge, no float */
+  .v3 .dock { padding: 0; }
+  .v3 .bar { height: 88px; border-radius: 0; border-width: 1px 0 0; padding: 0 10px 26px; }
+  .v3 .tab { border-radius: 8px; }
+
+  .foot { margin-top: 48px; color: var(--t3); font-size: 12.5px; }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0s !important; animation-duration: 0s !important; } }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <h1>الشريط B — المحتوى لا يمرّ خلف الشريط</h1>
+      <p>الصفحة تنتهي فوق الشريط، والشريط يجلس في مساحته الخاصة. بما أنه لا شيء خلفه، لم يعد للزجاج معنى، فصار الشريط سطحاً مصمتاً بألوان Navy Trust الحالية. مرّر المحتوى لترى أين ينتهي، واضغط التبويبات لترى التمدّد.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" id="roleSeg"><button data-v="brand" class="on">شركة</button><button data-v="creator">مؤثر</button></div>
+      <div class="seg" id="themeSeg"><button data-v="light" class="on">فاتح</button><button data-v="dark">داكن</button></div>
+    </div>
+  </div>
+
+  <div class="opts" id="opts"></div>
+
+  <h2 class="section">ما الذي تغيّر عن B الأول</h2>
+  <div class="why">
+    <div class="panel">
+      <h4>بدون زجاج — والقاعدة 08 تبقى كما هي في الألوان</h4>
+      <ul>
+        <li>الشريط سطح أبيض (داكن: <span dir="ltr">#122131</span>) بحد 1px وظل <span dir="ltr">md</span> — كما تقول القاعدة للعناصر العائمة.</li>
+        <li>التبويب النشط بخلفية <b>تيل خفيف</b> + اسم بلون التيل: «المحدَّد» دوره تيل في القاعدة.</li>
+        <li>لا ألوان جديدة، ولا Blur، ولا استثناء للزجاج.</li>
+        <li>نفس الشكل تماماً على iOS وأندرويد، وأخفّ على الأجهزة الضعيفة.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>الشريط لا يختفي مع التمرير</h4>
+      <ul>
+        <li>الشريط الحالي يختفي عند النزول. بعد هذا التغيير، اختفاؤه سيترك فراغاً فارغاً أسفل الشاشة.</li>
+        <li>الاقتراح: يبقى ثابتاً دائماً. ويختفي فقط في الشاشات الداخلية (تفاصيل صفقة، محادثة) كما هو الآن.</li>
+        <li>تدرّج خفيف (18px) في آخر المحتوى يوحي بوجود المزيد — داخل الصفحة، وليس خلف الشريط.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>الزوايا — القرار الوحيد</h4>
+      <ul>
+        <li><b>B1</b> و<b>B3</b> داخل مدى 8–12 تماماً.</li>
+        <li><b>B2</b> (توصيتي) كبسولة كاملة. يحتاج سطراً واحداً في القاعدة 08: «الشريط السفلي العائم وحبّته النشطة = دائري كامل»، مثل الحبوب والصور الشخصية المسموح لها. يحذف أيضاً استثناء الزاوية 26 المؤقت الموجود الآن.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>علاج عيب B: أيقونات بلا أسماء</h4>
+      <ul>
+        <li>اسم التبويب النشط ظاهر دائماً، والباقي له اسم صوتي لقارئ الشاشة.</li>
+        <li>أول دخول: الأسماء ظاهرة كلها لثانيتين، ثم تنكمش، فيتعلّم المستخدم مرة واحدة.</li>
+        <li>الأيقونات تنزلق بنابض ناعم عند التمدّد، فلا تقفز تحت الإصبع.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="foot">معاينة تصميم فقط — ألوان Navy Trust، خط Tajawal، أرقام غربية.</p>
+</div>
+
+<script>
+const ICONS = {
+  compass: '<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
+  megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  circleUser: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>',
+  house: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  idCard: '<path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/>',
+  bell: '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+};
+const svg = (n, s = 22, w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+const ROLES = {
+  brand: [
+    { icon: 'compass', label: 'استكشاف' }, { icon: 'megaphone', label: 'حملاتي', badge: 3 },
+    { icon: 'message', label: 'الرسائل', badge: 2 }, { icon: 'wallet', label: 'المحفظة' }, { icon: 'circleUser', label: 'حسابي' },
+  ],
+  creator: [
+    { icon: 'house', label: 'الرئيسية' }, { icon: 'briefcase', label: 'الصفقات', badge: 4 },
+    { icon: 'message', label: 'الرسائل', badge: 1 }, { icon: 'wallet', label: 'المحفظة' }, { icon: 'idCard', label: 'ملفي' },
+  ],
+};
+
+const PHOTOS = [
+  'linear-gradient(135deg,#f6a5c0,#f9d29d)', 'linear-gradient(135deg,#84fab0,#8fd3f4)',
+  'linear-gradient(135deg,#a18cd1,#fbc2eb)', 'linear-gradient(135deg,#fccb90,#d57eeb)',
+  'linear-gradient(135deg,#ff9a9e,#fecfef)', 'linear-gradient(135deg,#43e97b,#38f9d7)',
+  'linear-gradient(135deg,#fa709a,#fee140)', 'linear-gradient(135deg,#30cfd0,#330867)',
+  'linear-gradient(135deg,#f093fb,#f5576c)', 'linear-gradient(135deg,#4facfe,#00f2fe)',
+];
+const CREATORS = [
+  ['ليان الأحمد', 'موضة · دمشق', '48K', 'Micro'], ['عمر الحلبي', 'طبخ · حلب', '210K', 'Macro'],
+  ['رهف سليمان', 'جمال · اللاذقية', '12K', 'Micro'], ['كريم داود', 'تقنية · دمشق', '95K', 'Mid'],
+  ['نور خليل', 'سفر · حمص', '6K', 'Nano'], ['سامر يوسف', 'رياضة · دمشق', '1.2M', 'Mega'],
+];
+const OFFERS = [
+  ['إطلاق عطر صيفي', 'عطور الشام · ريل إنستغرام', '$180.00', '3 أيام'],
+  ['افتتاح فرع جديد', 'مطعم ياسمين · زيارة + ستوري', '$90.00', '5 أيام'],
+  ['مراجعة هاتف', 'تك ستور · فيديو تيك توك', '$250.00', 'يومان'],
+  ['تشكيلة الشتاء', 'دار الأناقة · منشور', '$120.00', '6 أيام'],
+  ['حملة رمضانية', 'حلويات الصفا · ريل', '$300.00', '9 أيام'],
+];
+
+const brandContent = () => `
+  <div class="hdr">
+    <div class="row between"><div><div class="hello">صباح الخير</div><div class="uname">متجر ورد</div></div><span class="bell">${svg('bell', 20)}<i></i></span></div>
+    <div class="search">${svg('search', 18)}<span>ابحث عن مؤثر، تخصص، مدينة…</span></div>
+  </div>
+  <div class="chips"><span class="chip on">الكل</span><span class="chip">إنستغرام</span><span class="chip">تيك توك</span><span class="chip">دمشق</span></div>
+  <div class="sec"><h4>مؤثرون مقترحون</h4><a>عرض الكل</a></div>
+  <div class="grid2">${CREATORS.map((c, i) => `
+    <div class="ccard"><div class="ph" style="background:${PHOTOS[i % PHOTOS.length]}"></div>
+      <div class="cb"><b>${c[0]}</b><small>${c[1]}</small><div class="meta"><span dir="ltr">${c[2]}</span><span class="tier">${c[3]}</span></div></div></div>`).join('')}
+  </div>`;
+const creatorContent = () => `
+  <div class="hdr">
+    <div class="row between"><div><div class="hello">أهلاً بعودتك</div><div class="uname">سارة</div></div><span class="bell">${svg('bell', 20)}<i></i></span></div>
+    <div class="bal"><small>الرصيد المتاح للسحب</small><div class="amt">$1,250.00</div><div class="pend">معلّق في الضمان: <span dir="ltr">$320.00</span></div></div>
+  </div>
+  <div class="pcard"><div class="row between"><b>أكمل ملفك</b><small dir="ltr">70%</small></div><small>أضف بطاقة أسعار لتظهر في البحث أكثر</small><div class="pbar"><i></i></div></div>
+  <div class="sec"><h4>فرص تناسبك</h4><a>عرض الكل</a></div>
+  ${OFFERS.map((o, i) => `
+    <div class="ocard"><div class="th" style="background:${PHOTOS[(i * 3 + 1) % PHOTOS.length]}"></div>
+      <div style="flex:1"><b>${o[0]}</b><small>${o[1]}</small><div class="row"><span class="money">${o[2]}</span><span class="dl">${o[3]}</span></div></div></div>`).join('')}`;
+
+const VARIANTS = [
+  { key: 'B2', cls: 'v2', name: 'كبسولة عائمة', en: 'Floating capsule', rec: true,
+    idea: 'كبسولة مصمتة تطفو فوق خلفية الصفحة، والحبّة النشطة دائرية كاملة.',
+    pros: ['الأحدث شكلاً — لغة تطبيقات 2026', 'تطفو فعلاً بدون أن تغطي أي محتوى', 'الحبّة الدائرية تتمدّد بشكل طبيعي'],
+    cons: ['تحتاج سطر استثناء للزوايا في القاعدة 08'],
+    rule: ['chg', 'يحتاج تعديل سطر في 08 (الزوايا)'] },
+  { key: 'B1', cls: 'v1', name: 'بطاقة عائمة', en: 'Floating card (12)',
+    idea: 'نفس الفكرة، لكن الشريط بزاوية 12 والحبّة بزاوية 8 — مثل باقي بطاقات وأزرار التطبيق.',
+    pros: ['متوافق مع 08 بلا أي تعديل', 'ينسجم مع البطاقات والأزرار'],
+    cons: ['أقل نعومة؛ يبدو «بطاقة» أكثر منه شريط تنقّل'],
+    rule: ['ok', 'متوافق مع 08 كما هي'] },
+  { key: 'B3', cls: 'v3', name: 'ملتصق بالحافة', en: 'Docked',
+    idea: 'الشريط ملتصق بأسفل الشاشة بعرضها، بحد علوي رفيع، والحبّة النشطة تتمدّد داخله.',
+    pros: ['أكبر مساحة للمحتوى', 'متوافق مع 08 بلا أي تعديل', 'مألوف جداً'],
+    cons: ['الأقل «مودرن» — لا إحساس بالطفو'],
+    rule: ['ok', 'متوافق مع 08 كما هي'] },
+];
+
+const state = { role: 'brand' };
+
+function buildBar(host, role) {
+  const tabs = ROLES[role];
+  host.innerHTML = `<nav class="bar" role="tablist">${tabs.map((t, i) =>
+    `<button class="tab${i === 0 ? ' active' : ''}" role="tab" aria-label="${t.label}"><span class="ic">${svg(t.icon)}${t.badge ? `<i class="badge">${t.badge}</i>` : ''}</span><span class="lbl">${t.label}</span></button>`).join('')}</nav>`;
+  const btns = [...host.querySelectorAll('.tab')];
+  btns.forEach((b, i) => b.onclick = () => btns.forEach((x, j) => x.classList.toggle('active', j === i)));
+}
+
+function render() {
+  const root = document.getElementById('opts');
+  root.innerHTML = VARIANTS.map(v => `
+    <section class="opt">
+      <div class="opt-h"><span class="letter">${v.key}</span><div><h3>${v.name}</h3><small>${v.en}</small></div>${v.rec ? '<span class="rec">توصيتي</span>' : ''}</div>
+      <div class="phone ${v.cls}"><div class="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span class="sig"><span>●●●</span><span class="bat"></span></span></div>
+        <div class="scene"><div class="content">${state.role === 'brand' ? brandContent() : creatorContent()}</div><div class="edge"></div></div>
+        <div class="dock"></div>
+        <div class="home-ind"></div>
+      </div></div>
+      <dl class="notes">
+        <dt>الفكرة</dt><dd>${v.idea}</dd>
+        <dt>مزايا</dt>${v.pros.map(p => `<dd class="pro">${p}</dd>`).join('')}
+        <dt>عيوب</dt>${v.cons.map(c => `<dd class="con">${c}</dd>`).join('')}
+        <span class="rule ${v.rule[0]}">${v.rule[1]}</span>
+      </dl>
+    </section>`).join('');
+  root.querySelectorAll('.phone').forEach(p => {
+    buildBar(p.querySelector('.dock'), state.role);
+    const c = p.querySelector('.content'), e = p.querySelector('.edge');
+    c.addEventListener('scroll', () => e.classList.toggle('hide', c.scrollTop + c.clientHeight >= c.scrollHeight - 2), { passive: true });
+  });
+}
+
+function bindSeg(id, fn) {
+  const seg = document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+    seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    fn(b.dataset.v);
+  });
+}
+bindSeg('roleSeg', v => { state.role = v; render(); });
+bindSeg('themeSeg', v => { document.body.dataset.theme = v; });
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(render);
+</script>
+</body>
+</html>

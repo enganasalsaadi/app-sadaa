@@ -88,7 +88,25 @@ export interface ThemeColors {
   };
 
   navigation: {
-    tabBar: { active: string; inactive: string; background: string };
+    tabBar: {
+      /** Icon + label on the navy glass capsule (≥ 4.5:1 on the tint in both modes). */
+      active: string;
+      inactive: string;
+      background: string;
+      /** Floating navy-glass bar (approved 2026-10-06): native blur material per mode (iOS only). */
+      blurMaterial: 'light' | 'dark';
+      /** Navy tint over the blur, so labels keep contrast over any content. */
+      glassTint: string;
+      /** Opaque navy when the OS reduces transparency. */
+      glassFallback: string;
+      /** Specular rim: bright top edge fading to a faint bottom edge. */
+      glassRim: string;
+      glassRimFaint: string;
+      /** Hairline outline so the capsule separates from white content (light) and navy (dark). */
+      glassBorder: string;
+      /** Drop shadow, drawn only outside the capsule so it never tints the glass. */
+      glassShadow: string;
+    };
     bottomSheet: { background: string; handle: string };
   };
   form: {
@@ -239,9 +257,16 @@ export const lightColors: ThemeColors = {
 
   navigation: {
     tabBar: {
-      active: lightInteractive.main,
-      inactive: lightText.tertiary,
+      active: '#6FC0CF',
+      inactive: '#A5B5C4',
       background: WHITE,
+      blurMaterial: 'dark',
+      glassTint: 'rgba(28, 51, 73, 0.96)',
+      glassFallback: '#1C3349',
+      glassRim: 'rgba(255, 255, 255, 0.30)',
+      glassRimFaint: 'rgba(255, 255, 255, 0.04)',
+      glassBorder: 'rgba(11, 22, 34, 0.30)',
+      glassShadow: 'rgba(15, 29, 43, 0.18)',
     },
     bottomSheet: { background: WHITE, handle: '#C3CDD7' },
   },
@@ -347,9 +372,16 @@ export const darkColors: ThemeColors = {
 
   navigation: {
     tabBar: {
-      active: darkInteractive.main,
-      inactive: darkText.tertiary,
+      active: '#6FC0CF',
+      inactive: '#A5B5C4',
       background: '#122131',
+      blurMaterial: 'dark',
+      glassTint: 'rgba(28, 51, 73, 0.92)',
+      glassFallback: '#1C3349',
+      glassRim: 'rgba(255, 255, 255, 0.22)',
+      glassRimFaint: 'rgba(255, 255, 255, 0.04)',
+      glassBorder: 'rgba(255, 255, 255, 0.10)',
+      glassShadow: 'rgba(0, 0, 0, 0.55)',
     },
     bottomSheet: { background: '#122131', handle: '#30495F' },
   },

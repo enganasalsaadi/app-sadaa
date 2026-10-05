@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-04 |
+| **Last updated** | 2026-10-06 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -296,10 +296,18 @@ APP LAUNCH
 │
 ├── SUSPENDED (blocking: contact support, re-check status, log out, delete account)   ✅
 │
-└── MAIN APP (bottom tab bar)
-    ├── Home tab                                                 🟡 placeholder today
-    │     (will become: brand dashboard / creator opportunities, campaigns, deals)       🔜
-    └── Settings tab
+└── MAIN APP (bottom tab bar: floating rounded glass capsule; page content
+    │   shows blurred through it; slides away on scroll down, back on scroll up;
+    │   hidden on inner screens; active tab shown in teal)                           ✅
+    │   Five tabs, different per role:
+    │     brand:   Explore · My campaigns · Messages · Wallet · Account
+    │     creator: Home · Deals · Messages · Wallet · My profile
+    ├── Home / Explore tab                                       🟡 placeholder today
+    │     (will become: brand dashboard / creator opportunities)                         🔜
+    ├── My campaigns (brand) / Deals (creator) tab               🟡 "coming soon" page   🔜
+    ├── Messages tab                                             🟡 "coming soon" page   🔜
+    ├── Wallet tab                                               🟡 "coming soon" page   🔜
+    └── Account (brand) / My profile (creator) tab
           ├── Profile (navy header + cards, different per role)  🟡 built, awaiting device testing
           │     ├── Notifications inbox (bell with unread count in the header)   🟡 built, awaiting device and live-server testing
           │     ├── Verification: creator ID (front + back) or brand company document   🟡 built, awaiting device and live-server testing
@@ -567,6 +575,10 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-06 | Bottom bar: the active tab is now shown only by its teal icon and name, with no highlight shape behind it. | 5.2 |
+| 2026-10-06 | The bottom bar is a floating, rounded capsule again, now made of frosted "liquid" glass: the page shows blurred through it, and a soft droplet glides and stretches to the tapped tab. Every tab shows its icon and name. It slides away while scrolling down and returns on scroll up. Replaces the docked bar from 2026-10-04. | 5.2 |
+| 2026-10-04 | The bottom bar now shows the full five-tab set for each role (brand: Explore, My campaigns, Messages, Wallet, Account; creator: Home, Deals, Messages, Wallet, My profile), with larger tabs, icons and labels. Tabs that aren't built yet open a "coming soon" page. | 5.2 |
+| 2026-10-04 | New bottom tab bar: a solid bar docked to the bottom edge instead of a floating one. Pages now end above it, so nothing is hidden behind it, and it no longer slides away while scrolling. The active tab grows into a soft teal pill with its name. | 5.2 |
 | 2026-10-04 | Notification inbox added: a bell with the unread count in the Profile header, a list with unread markers and "how long ago", tap to mark read and open the related screen, and "mark all as read". Tapping a phone notification now opens its screen too, even when it launched the app. The "complete your profile" cards now include verification, so they add up to the missing percentage. | 5.2, 5.3 (Journey A3), 6.4, 7.3 |
 | 2026-10-04 | Verification can now be done after registration from the Profile card: creators upload both sides of their ID, brands pick the document type and upload one company document. The page shows the current status (under review, verified with date, rejected with reason), allows uploading only when the server does, and counts down when the hourly limit is reached. The verification card wording now differs for brands. | 5.2, 5.3 (Journey A3), 7.3 |
 | 2026-10-04 | Editing details is now separate per role. Creators get "Personal info" (name, email, governorate, area) and brands get "Company info" (company name, email, business type, governorate, social links), both opening filled in with the saved values. The old edit page (empty name, a phone field that could never be saved) was removed. The phone number is shown locked, with a WhatsApp link to support for changing it. The brand Profile now shows the company logo, business type and city in the header and a company card, with no creator sections. | 5.2, 5.3 (Journey A3), 7.3 |

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>صدى — خيارات الشريط السفلي (زجاج / سائل)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ── Navy Trust tokens (rule 08) ─────────────────────────────── */
+  :root {
+    --bg: #F5F7F9; --surface: #FFFFFF; --surface2: #EDF1F4; --border: #DCE3EA; --borderStrong: #C3CDD7;
+    --t1: #0F1D2B; --t2: #475869; --t3: #8394A5;
+    --navy: #1C3349; --brandText: #1C3349; --onBrand: #FFFFFF; --onBrandMuted: #C9D6E0;
+    --teal: #397D8C; --tealText: #347482; --tealSoft: #E3F0F2;
+    --mint: #12B886; --mintText: #087F5B; --mintSoft: #E3F8F0;
+    --premium: #D9B46A; --premiumText: #8A6A24; --premiumSoft: #FBF3E2;
+    --danger: #D92D20; --onAccent: #FFFFFF;
+    --cta: #1C3349; --onCta: #FFFFFF;
+    --hero: linear-gradient(160deg, #1C3349 0%, #27506A 70%, #397D8C 130%);
+    /* new tokens the bar would need (colors.glass.bar*) */
+    --glassFill: rgba(255,255,255,.62);
+    --glassBorder: rgba(255,255,255,.80);
+    --glassHi: rgba(255,255,255,.90);
+    --glassEdge: rgba(15,29,43,.10);
+    --glassShadow: 0 12px 32px rgba(15,29,43,.16), 0 2px 6px rgba(15,29,43,.06);
+    --lensTop: rgba(255,255,255,.95); --lensBottom: rgba(255,255,255,.55); --lensBorder: rgba(255,255,255,.95);
+    --lensShadow: 0 4px 14px rgba(28,51,73,.14);
+    --tealGlass: rgba(57,125,140,.14);
+    --homeInd: #0F1D2B;
+  }
+  [data-theme="dark"] {
+    --bg: #0B1622; --surface: #122131; --surface2: #182B3D; --border: #22384C; --borderStrong: #30495F;
+    --t1: #EAF0F5; --t2: #A5B5C4; --t3: #6C8093;
+    --brandText: #EAF0F5; --onBrand: #F5F7F9;
+    --teal: #6FC0CF; --tealText: #6FC0CF; --tealSoft: #16303A;
+    --mint: #3DDBA5; --mintText: #3DDBA5; --mintSoft: #0F2E2A;
+    --premium: #E6C47E; --premiumText: #E6C47E; --premiumSoft: #2E2716;
+    --danger: #F97066; --onAccent: #06121C;
+    --cta: #5FAFBF; --onCta: #06121C;
+    --hero: linear-gradient(160deg, #0B1622 0%, #1C3349 60%, #1F4A5C 130%);
+    --glassFill: rgba(18,33,49,.58);
+    --glassBorder: rgba(255,255,255,.12);
+    --glassHi: rgba(255,255,255,.10);
+    --glassEdge: rgba(255,255,255,.10);
+    --glassShadow: 0 12px 32px rgba(0,0,0,.50);
+    --lensTop: rgba(255,255,255,.16); --lensBottom: rgba(255,255,255,.05); --lensBorder: rgba(255,255,255,.16);
+    --lensShadow: 0 4px 14px rgba(0,0,0,.35);
+    --tealGlass: rgba(111,192,207,.16);
+    --homeInd: #EAF0F5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Tajawal", system-ui, sans-serif; background: var(--bg); color: var(--t1); transition: background .3s, color .3s; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .wrap { max-width: 1520px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* ── page chrome ── */
+  .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+  .top h1 { font-size: 28px; font-weight: 800; color: var(--brandText); }
+  .top p { color: var(--t2); margin-top: 6px; font-size: 15px; }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; }
+  .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+  .seg button { padding: 8px 14px; border-radius: 6px; font-weight: 500; color: var(--t2); font-size: 14px; }
+  .seg button.on { background: var(--cta); color: var(--onCta); font-weight: 700; }
+  h2.section { font-size: 20px; font-weight: 800; color: var(--brandText); margin: 40px 0 14px; }
+  .lead { color: var(--t2); font-size: 15px; line-height: 1.8; max-width: 900px; }
+
+  /* ── IA section ── */
+  .ia { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; margin-top: 14px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .panel h3 { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .panel .sub { color: var(--t2); font-size: 13px; margin-bottom: 14px; }
+  .slot { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); }
+  .slot:first-of-type { border-top: 0; }
+  .slot .si { width: 34px; height: 34px; border-radius: 8px; background: var(--tealSoft); color: var(--tealText); display: grid; place-items: center; }
+  .slot b { font-size: 15px; }
+  .slot .n { font-size: 12px; color: var(--t3); margin-inline-start: 6px; font-weight: 500; }
+  .slot p { font-size: 13px; color: var(--t2); line-height: 1.7; margin-top: 2px; }
+  .slot .bdg { display: inline-block; font-size: 11px; font-weight: 700; color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); border-radius: 999px; padding: 1px 8px; margin-inline-start: 6px; }
+  .why { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+  .why .panel { padding: 16px 18px; }
+  .why h4 { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--tealText); }
+  .why p, .why li { font-size: 13.5px; color: var(--t2); line-height: 1.8; }
+  .why ul { padding-inline-start: 18px; }
+  .tbl { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  .tbl th, .tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: start; }
+  .tbl th { color: var(--t3); font-weight: 500; font-size: 12.5px; }
+  .tbl td:first-child { color: var(--t3); font-weight: 500; }
+
+  /* ── option grid ── */
+  .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 28px 20px; margin-top: 18px; }
+  .opt { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .opt-h { width: 100%; max-width: 360px; display: flex; align-items: center; gap: 10px; }
+  .opt-h .letter { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 800; }
+  .opt-h h3 { font-size: 17px; font-weight: 800; }
+  .opt-h small { display: block; color: var(--t3); font-size: 12px; font-weight: 500; }
+  .rec { margin-inline-start: auto; font-size: 11.5px; font-weight: 700; color: var(--premiumText); background: var(--premiumSoft); border: 1px solid var(--premium); border-radius: 999px; padding: 3px 10px; }
+  .notes { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.75; color: var(--t2); }
+  .notes dt { font-weight: 800; color: var(--t1); margin-top: 8px; font-size: 13px; }
+  .notes dt:first-child { margin-top: 0; }
+  .notes .pro::before { content: "＋ "; color: #12A150; font-weight: 800; }
+  .notes .con::before { content: "－ "; color: var(--danger); font-weight: 800; }
+  .effort { display: inline-block; margin-top: 10px; font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--tealSoft); color: var(--tealText); }
+
+  /* ── phone ── */
+  .phone { width: 340px; height: 700px; border-radius: 48px; padding: 10px; background: #0A0E13; box-shadow: 0 30px 60px rgba(15,29,43,.25), inset 0 0 0 2px #2A3340; flex: none; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden; background: var(--bg); isolation: isolate; }
+  .island { position: absolute; top: 10px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; z-index: 30; }
+  .status { position: absolute; top: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; color: #fff; font-weight: 700; font-size: 14px; z-index: 20; direction: ltr; }
+  .status .sig { display: flex; gap: 5px; align-items: center; }
+  .status .bat { width: 22px; height: 11px; border: 1.5px solid #fff; border-radius: 3px; position: relative; }
+  .status .bat::after { content: ""; position: absolute; inset: 1.5px; right: 5px; background: #fff; border-radius: 1px; }
+  .home-ind { position: absolute; bottom: 7px; left: 50%; width: 120px; margin-left: -60px; height: 4.5px; border-radius: 3px; background: var(--homeInd); opacity: .85; z-index: 40; pointer-events: none; }
+  .content { position: absolute; inset: 0; overflow-y: auto; padding-bottom: 140px; scrollbar-width: none; }
+  .content::-webkit-scrollbar { display: none; }
+
+  /* fake app content */
+  .hdr { background: var(--hero); color: var(--onBrand); padding: 56px 18px 18px; border-radius: 0 0 12px 12px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .between { justify-content: space-between; }
+  .hello { font-size: 13px; color: var(--onBrandMuted); }
+  .uname { font-size: 20px; font-weight: 800; }
+  .bell { position: relative; width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); }
+  .bell i { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: #F97066; border: 1.5px solid #1C3349; }
+  .search { margin-top: 14px; height: 44px; border-radius: 8px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); display: flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--onBrandMuted); font-size: 13.5px; }
+  .chips { display: flex; gap: 8px; padding: 14px 18px 4px; overflow: hidden; }
+  .chip { flex: none; font-size: 13px; padding: 7px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--t2); }
+  .chip.on { background: var(--tealSoft); border-color: var(--teal); color: var(--tealText); font-weight: 700; }
+  .sec { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 18px 10px; }
+  .sec h4 { font-size: 16px; font-weight: 800; }
+  .sec a { font-size: 13px; color: var(--tealText); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
+  .ccard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .ccard .ph { height: 128px; position: relative; }
+  .ccard .ph::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, rgba(255,255,255,.55) 0 16%, transparent 17%), radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.45) 0 34%, transparent 35%); }
+  .ccard .cb { padding: 9px 10px 11px; }
+  .ccard b { font-size: 14px; display: block; }
+  .ccard small { font-size: 12px; color: var(--t3); }
+  .ccard .meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12.5px; font-weight: 700; color: var(--t2); direction: rtl; }
+  .tier { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--tealSoft); color: var(--tealText); font-weight: 700; }
+  .bal { margin-top: 16px; padding: 14px; border-radius: 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.24); }
+  .bal small { font-size: 12.5px; color: var(--onBrandMuted); }
+  .bal .amt { font-size: 28px; font-weight: 800; color: #3DDBA5; direction: ltr; text-align: end; font-variant-numeric: tabular-nums; }
+  .bal .pend { font-size: 12.5px; color: var(--onBrandMuted); margin-top: 4px; }
+  .pcard { margin: 14px 18px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .pcard b { font-size: 14px; }
+  .pcard small { color: var(--t3); font-size: 12px; }
+  .pbar { height: 6px; border-radius: 3px; background: var(--surface2); margin-top: 10px; overflow: hidden; }
+  .pbar i { display: block; width: 70%; height: 100%; background: var(--teal); border-radius: 3px; }
+  .ocard { margin: 0 18px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 12px; padding: 10px; }
+  .ocard .th { width: 76px; height: 76px; border-radius: 8px; flex: none; }
+  .ocard b { font-size: 14px; display: block; }
+  .ocard small { font-size: 12px; color: var(--t3); }
+  .ocard .money { font-weight: 800; color: var(--mintText); font-size: 14px; direction: ltr; font-variant-numeric: tabular-nums; }
+  .ocard .dl { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, #DC6803 14%, transparent); color: #B54708; }
+  [data-theme="dark"] .ocard .dl { color: #FDB022; }
+  .ocard .row { margin-top: 8px; justify-content: space-between; }
+
+  /* ── shared bar parts ── */
+  .glass { background: var(--glassFill); -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%); border: 1px solid var(--glassBorder); box-shadow: var(--glassShadow), inset 0 1px 0 var(--glassHi); }
+  .ic { position: relative; display: grid; place-items: center; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s, color .25s; }
+  .badge { position: absolute; top: -6px; inset-inline-end: -10px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--danger); color: var(--onAccent); font-size: 10.5px; font-weight: 800; display: grid; place-items: center; line-height: 1; box-shadow: 0 0 0 2px var(--surface); font-style: normal; }
+  .lbl { font-size: 11px; font-weight: 500; white-space: nowrap; transition: color .25s; }
+
+  /* ── A · Liquid Lens ── */
+  .barA { position: absolute; left: 12px; right: 12px; bottom: 24px; height: 66px; border-radius: 33px; display: flex; padding: 0 3px; z-index: 10; }
+  .lensA { position: absolute; top: 5px; bottom: 5px; left: 0; transition: transform .6s cubic-bezier(.34,1.45,.5,1), width .3s; pointer-events: none; }
+  .lensA i { display: block; width: 100%; height: 100%; border-radius: 28px; background: linear-gradient(180deg, var(--lensTop), var(--lensBottom)); border: 1px solid var(--lensBorder); box-shadow: var(--lensShadow), inset 0 1px 1px var(--glassHi), inset 0 -6px 12px var(--tealGlass); }
+  .lensA.squish i { animation: squish .6s cubic-bezier(.3,.9,.4,1); }
+  @keyframes squish { 0% { transform: scale(1); } 30% { transform: scaleX(1.38) scaleY(.82); } 62% { transform: scaleX(.94) scaleY(1.05); } 100% { transform: scale(1); } }
+  .tabA { flex: 1; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--t3); }
+  .tabA.active { color: var(--tealText); }
+  .tabA.active .lbl { font-weight: 800; }
+  .tabA.active .ic { transform: translateY(-1px) scale(1.08); }
+  .tabA:active .ic { transform: scale(.88); }
+
+  /* ── B · Morphing Capsule ── */
+  .barB { position: absolute; left: 12px; right: 12px; bottom: 24px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; z-index: 10; }
+  .tabB { flex: none; height: 46px; min-width: 44px; padding: 0 11px; border-radius: 23px; display: flex; align-items: center; justify-content: center; gap: 0; color: var(--t3); transition: background .45s, gap .45s, padding .45s cubic-bezier(.34,1.4,.5,1), color .3s; }
+  .tabB .lbl { max-width: 0; opacity: 0; overflow: hidden; font-size: 13px; font-weight: 800; transition: max-width .5s cubic-bezier(.34,1.3,.5,1), opacity .3s .05s; }
+  .tabB.active { background: var(--tealGlass); color: var(--tealText); gap: 6px; padding: 0 13px; box-shadow: inset 0 1px 0 var(--glassHi), inset 0 0 0 1px color-mix(in srgb, var(--teal) 24%, transparent); }
+  .tabB.active .lbl { max-width: 90px; opacity: 1; }
+  .tabB.active .badge { display: none; }
+  .tabB:active .ic { transform: scale(.88); }
+
+  /* ── C · Liquid Notch ── */
+  .barC { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; z-index: 10; }
+  .barC .gC { position: absolute; inset: 0; background: var(--glassFill); -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%); }
+  .barC svg.edge { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+  .barC svg.edge path { fill: none; stroke: var(--glassEdge); stroke-width: 1; }
+  .tabsC { position: absolute; left: 0; right: 0; top: 0; height: 66px; display: flex; }
+  .tabC { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding-bottom: 6px; color: var(--t3); }
+  .tabC .ic { margin-bottom: 2px; }
+  .tabC.active .ic { opacity: 0; transform: translateY(14px) scale(.6); }
+  .tabC.active .lbl { color: var(--tealText); font-weight: 800; }
+  .bubC { position: absolute; top: -25px; left: 0; width: 54px; height: 54px; border-radius: 50%; background: var(--cta); color: var(--onCta); display: grid; place-items: center; box-shadow: 0 10px 22px rgba(28,51,73,.35), inset 0 1px 0 rgba(255,255,255,.25); will-change: transform; pointer-events: none; }
+  .bubC .in { display: grid; place-items: center; }
+  .bubC .in.pop { animation: pop .5s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes pop { 0% { transform: translateY(16px) scale(.5); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+  /* ── D · Split Navy Glass ── */
+  .barD { position: absolute; left: 12px; right: 12px; bottom: 24px; display: flex; gap: 10px; align-items: center; z-index: 10; }
+  .navyGlass { background: rgba(28,51,73,.76); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 12px 30px rgba(11,22,34,.34), inset 0 1px 0 rgba(255,255,255,.16); }
+  [data-theme="dark"] .navyGlass { background: rgba(28,51,73,.62); border-color: rgba(255,255,255,.14); box-shadow: 0 12px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12); }
+  .pillD { flex: 1; height: 64px; border-radius: 32px; position: relative; display: flex; padding: 0 4px; }
+  .lensD { position: absolute; top: 6px; bottom: 6px; left: 0; border-radius: 26px; background: linear-gradient(180deg, rgba(111,192,207,.30), rgba(111,192,207,.12)); border: 1px solid rgba(111,192,207,.40); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 18px rgba(111,192,207,.22); transition: transform .55s cubic-bezier(.34,1.4,.5,1), opacity .3s, width .3s; pointer-events: none; }
+  .lensD.off { opacity: 0; }
+  .tabD { flex: 1; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #C9D6E0; }
+  .tabD.active { color: #F5F7F9; }
+  .tabD.active .lbl { font-weight: 800; }
+  .tabD .badge { box-shadow: 0 0 0 2px #1C3349; background: #F04438; color: #fff; }
+  .tabD:active .ic { transform: scale(.88); }
+  .avD { width: 64px; height: 64px; border-radius: 50%; flex: none; display: grid; place-items: center; }
+  .avD .av { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 18px; color: #1C3349; box-shadow: 0 0 0 2px rgba(255,255,255,.22); transition: box-shadow .3s, transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .avD.active .av { box-shadow: 0 0 0 2.5px #6FC0CF, 0 0 16px rgba(111,192,207,.6); transform: scale(1.05); }
+  .avD:active .av { transform: scale(.9); }
+
+  .foot { margin-top: 48px; color: var(--t3); font-size: 12.5px; }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0s !important; animation-duration: 0s !important; } }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <h1>الشريط السفلي — ٤ خيارات زجاج / سائل</h1>
+      <p>اضغط التبويبات داخل كل هاتف لرؤية الحركة، ومرّر المحتوى لرؤية الزجاج فوق الصور. بدّل الدور والوضع من الأعلى.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" id="roleSeg"><button data-v="brand" class="on">شركة</button><button data-v="creator">مؤثر</button></div>
+      <div class="seg" id="themeSeg"><button data-v="light" class="on">فاتح</button><button data-v="dark">داكن</button></div>
+    </div>
+  </div>
+
+  <!-- ─────────────── IA recommendation ─────────────── -->
+  <h2 class="section">١. ماذا يكون في الشريط — اقتراحي</h2>
+  <p class="lead">خمس خانات بنفس الترتيب للدورين: <b>البداية · العمل · التواصل · المال · أنا</b>. المحتوى يختلف حسب الدور، لكن مكان كل شيء ثابت — مكوّن شريط واحد، وشرح ودعم أسهل.</p>
+
+  <div class="ia">
+    <div class="panel">
+      <h3>الشركة</h3>
+      <div class="sub">الهدف: اكتشف ← تعاقد ← راجع ← ادفع</div>
+      <div id="iaBrand"></div>
+    </div>
+    <div class="panel">
+      <h3>المؤثر</h3>
+      <div class="sub">الهدف: استقبل ← نفّذ ← سلّم ← اسحب</div>
+      <div id="iaCreator"></div>
+    </div>
+  </div>
+
+  <div class="why">
+    <div class="panel">
+      <h4>ما الذي غيّرته في قائمتك</h4>
+      <ul>
+        <li><b>المؤثر: «الملف / Media Kit» من الوسط إلى آخر خانة.</b> يُجهَّز مرة ويُشارَك أحياناً — ليس يومياً. الخانة الأخيرة هي مكان «أنا» المعتاد، والإعدادات تدخل فيه (أيقونة ترس في الهيدر)؛ قائمتك للمؤثر لم يكن فيها مكان للإعدادات أصلاً.</li>
+        <li><b>الرسائل في الوسط للدورين.</b> أكثر تبويب يُفتح بين الخطوات، والتفاوض كله يجب أن يبقى داخل التطبيق (دليل في حال النزاع).</li>
+        <li><b>الإشعارات تبقى جرساً في الهيدر</b>، وليست تبويباً.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>لماذا لا يوجد زر «+» في الوسط للشركة</h4>
+      <ul>
+        <li>إنشاء حملة يحدث أسبوعياً، لا يومياً — لا يستحق أقوى مكان في التطبيق.</li>
+        <li>يكسر تطابق الخانات مع المؤثر، و٦ أزرار تزدحم على شاشة 375.</li>
+        <li>البديل: زر عائم «حملة جديدة» داخل «حملاتي» + دعوة واضحة في حالة الفراغ داخل «استكشاف».</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>الشارات (العدّاد الأحمر)</h4>
+      <ul>
+        <li><b>حملاتي:</b> ما يحتاج تصرّفك — متقدّمون جدد، مسودات للمراجعة، صفقات بانتظار الدفع.</li>
+        <li><b>الصفقات (مؤثر):</b> عروض جديدة + تعديلات مطلوبة.</li>
+        <li><b>الرسائل:</b> غير المقروء.</li>
+        <li><b>المحفظة:</b> بدون شارة — لا نضغط على المستخدم في المال.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:12px">
+    <h4 style="font-size:15px;font-weight:800;color:var(--tealText);margin-bottom:4px">ما داخل كل تبويب (أقسام علوية)</h4>
+    <table class="tbl">
+      <tr><th>الخانة</th><th>الشركة</th><th>المؤثر</th></tr>
+      <tr><td>١ البداية</td><td>بحث + فلاتر (منصة، الفئة، التخصص، المدينة) + مقارنة حتى ٣</td><td>بطاقة إكمال الملف · أرباح وعروض معلّقة · فرص مقترحة</td></tr>
+      <tr><td>٢ العمل</td><td>حملات · صفقات ← (تحتاج إجراء · جارية · مكتملة)</td><td>واردة · السوق · قيد التنفيذ · مكتملة (رفع الإثبات من داخل الصفقة)</td></tr>
+      <tr><td>٣ التواصل</td><td colspan="2">محادثة مرتبطة بكل صفقة/حملة — لا محادثات «حرة» خارج صفقة</td></tr>
+      <tr><td>٤ المال</td><td>شحن · مبالغ محجوزة (ضمان) · فواتير</td><td>معلّق · متاح للسحب · سجل الأرباح · طرق السحب</td></tr>
+      <tr><td>٥ أنا</td><td>بيانات الشركة · التوثيق · الفريق · الإعدادات</td><td>الحسابات المربوطة · الأسعار · رابط Media Kit · الإعدادات</td></tr>
+    </table>
+  </div>
+
+  <!-- ─────────────── options ─────────────── -->
+  <h2 class="section">٢. أربعة أشكال للشريط</h2>
+  <div class="opts" id="opts"></div>
+
+  <!-- ─────────────── tech notes ─────────────── -->
+  <h2 class="section">٣. ملاحظات قبل التنفيذ</h2>
+  <div class="why">
+    <div class="panel">
+      <h4>تعارض مع قاعدة الهوية (08)</h4>
+      <p>القاعدة تقول: الزجاج فوق الكحلي فقط، وبدون Blur أصلي (كان سبب التقطيع مع الحركة). الشريط حالة مختلفة: يطفو فوق محتوى يتحرّك، والـ Blur نفسه ثابت (الشريط يتحرك فقط عند الإخفاء أثناء التمرير). يحتاج موافقتك على استثناء مكتوب في القاعدة + ألوان زجاج جديدة للوضعين.</p>
+    </div>
+    <div class="panel">
+      <h4>أندرويد</h4>
+      <p>مكتبة الـ Blur موجودة في المشروع، لكن أداؤها على أندرويد أضعف. الخطة: Blur حقيقي على iOS، وتعبئة شبه معتمة (~90%) بدون Blur على أندرويد — نفس الشكل تقريباً بلا تكلفة.</p>
+    </div>
+    <div class="panel">
+      <h4>الزوايا</h4>
+      <p>الشريط الحالي بزاوية 26 خارج مدى 8–12. الأشكال A وB وD كبسولة كاملة (مثل الحبوب والصور الشخصية المسموح لها بالدائري). C ملتصق بالحافة فلا مشكلة. نوثّق الاستثناء في القاعدة مع القرار.</p>
+    </div>
+    <div class="panel">
+      <h4>الرسائل غير مبنية بعد</h4>
+      <p>قسم المحادثات مخطّط ولم يبدأ. حتى يُبنى: نُطلق بـ٤ خانات، ونضيف «الرسائل» في الوسط عند جاهزيتها — الترتيب المقترح يسمح بذلك بدون إعادة تعليم المستخدم.</p>
+    </div>
+  </div>
+
+  <p class="foot">معاينة تصميم فقط — ألوان Navy Trust، خط Tajawal، أرقام غربية. الصور ملوّنة وهمية لاختبار الزجاج.</p>
+</div>
+
+<script>
+/* lucide icon paths (subset) */
+const ICONS = {
+  compass: '<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
+  megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  circleUser: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>',
+  house: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  idCard: '<path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/>',
+  bell: '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+};
+const svg = (n, s = 22, w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+const ROLES = {
+  brand: {
+    tabs: [
+      { icon: 'compass', label: 'استكشاف', slot: 'البداية', desc: 'تصفّح وبحث وفلترة المؤثرين: المنصة، الفئة (Nano، Micro…)، التخصص، المدينة. مقارنة حتى ٣.' },
+      { icon: 'megaphone', label: 'حملاتي', slot: 'العمل', badge: 3, desc: 'الحملات والعروض المباشرة + مسار الصفقة: المتقدمون، مراجعة المحتوى، الجارية، المكتملة.' },
+      { icon: 'message', label: 'الرسائل', slot: 'التواصل', badge: 2, desc: 'التفاوض مع المؤثرين — كل محادثة مرتبطة بحملة أو صفقة.' },
+      { icon: 'wallet', label: 'المحفظة', slot: 'المال', desc: 'شحن الرصيد، المبالغ المحجوزة في الضمان، الفواتير والمدفوعات.' },
+      { icon: 'circleUser', label: 'حسابي', slot: 'أنا', desc: 'بيانات الشركة، التوثيق (KYC)، الفريق، الإعدادات والتنبيهات.' },
+    ],
+    avatar: { letter: 'و', bg: 'linear-gradient(135deg,#ffd3a5,#fd6585)' },
+  },
+  creator: {
+    tabs: [
+      { icon: 'house', label: 'الرئيسية', slot: 'البداية', desc: 'بطاقة إكمال الملف، أرباح وعروض معلّقة باختصار، فرص مقترحة للتقديم.' },
+      { icon: 'briefcase', label: 'الصفقات', slot: 'العمل', badge: 4, desc: 'عروض واردة للموافقة، فرص السوق للتقديم، رفع المسودات وروابط الإثبات.' },
+      { icon: 'message', label: 'الرسائل', slot: 'التواصل', badge: 1, desc: 'التواصل مع العلامات التجارية حول التعديلات والتفاصيل.' },
+      { icon: 'wallet', label: 'المحفظة', slot: 'المال', desc: 'الرصيد المعلّق والمتاح للسحب، سجل الأرباح، طرق السحب.' },
+      { icon: 'idCard', label: 'ملفي', slot: 'أنا', desc: 'الحسابات المربوطة، بطاقات الأسعار، رابط Media Kit للبايو، والإعدادات (ترس في الهيدر).' },
+    ],
+    avatar: { letter: 'س', bg: 'linear-gradient(135deg,#a18cd1,#fbc2eb)' },
+  },
+};
+
+const PHOTOS = [
+  'linear-gradient(135deg,#f6a5c0,#f9d29d)', 'linear-gradient(135deg,#84fab0,#8fd3f4)',
+  'linear-gradient(135deg,#a18cd1,#fbc2eb)', 'linear-gradient(135deg,#fccb90,#d57eeb)',
+  'linear-gradient(135deg,#ff9a9e,#fecfef)', 'linear-gradient(135deg,#43e97b,#38f9d7)',
+  'linear-gradient(135deg,#fa709a,#fee140)', 'linear-gradient(135deg,#30cfd0,#330867)',
+  'linear-gradient(135deg,#f093fb,#f5576c)', 'linear-gradient(135deg,#4facfe,#00f2fe)',
+];
+const CREATORS = [
+  ['ليان الأحمد', 'موضة · دمشق', '48K', 'Micro'], ['عمر الحلبي', 'طبخ · حلب', '210K', 'Macro'],
+  ['رهف سليمان', 'جمال · اللاذقية', '12K', 'Micro'], ['كريم داود', 'تقنية · دمشق', '95K', 'Mid'],
+  ['نور خليل', 'سفر · حمص', '6K', 'Nano'], ['سامر يوسف', 'رياضة · دمشق', '1.2M', 'Mega'],
+  ['جود العلي', 'أطفال · طرطوس', '33K', 'Micro'], ['تيم منصور', 'ألعاب · حلب', '150K', 'Macro'],
+];
+const OFFERS = [
+  ['إطلاق عطر صيفي', 'عطور الشام · ريل إنستغرام', '$180.00', '3 أيام'],
+  ['افتتاح فرع جديد', 'مطعم ياسمين · زيارة + ستوري', '$90.00', '5 أيام'],
+  ['مراجعة هاتف', 'تك ستور · فيديو تيك توك', '$250.00', 'يومان'],
+  ['تشكيلة الشتاء', 'دار الأناقة · منشور', '$120.00', '6 أيام'],
+  ['حملة رمضانية', 'حلويات الصفا · ريل', '$300.00', '9 أيام'],
+  ['تطبيق توصيل', 'سريع · UGC', '$75.00', '4 أيام'],
+];
+
+function brandContent() {
+  return `
+  <div class="hdr">
+    <div class="row between"><div><div class="hello">صباح الخير</div><div class="uname">متجر ورد</div></div><span class="bell">${svg('bell', 20)}<i></i></span></div>
+    <div class="search">${svg('search', 18)}<span>ابحث عن مؤثر، تخصص، مدينة…</span></div>
+  </div>
+  <div class="chips"><span class="chip on">الكل</span><span class="chip">إنستغرام</span><span class="chip">تيك توك</span><span class="chip">دمشق</span><span class="chip">Micro</span></div>
+  <div class="sec"><h4>مؤثرون مقترحون</h4><a>عرض الكل</a></div>
+  <div class="grid2">${CREATORS.map((c, i) => `
+    <div class="ccard"><div class="ph" style="background:${PHOTOS[i % PHOTOS.length]}"></div>
+      <div class="cb"><b>${c[0]}</b><small>${c[1]}</small><div class="meta"><span dir="ltr">${c[2]}</span><span class="tier">${c[3]}</span></div></div></div>`).join('')}
+  </div>`;
+}
+function creatorContent() {
+  return `
+  <div class="hdr">
+    <div class="row between"><div><div class="hello">أهلاً بعودتك</div><div class="uname">سارة</div></div><span class="bell">${svg('bell', 20)}<i></i></span></div>
+    <div class="bal"><small>الرصيد المتاح للسحب</small><div class="amt">$1,250.00</div><div class="pend">معلّق في الضمان: <span dir="ltr">$320.00</span></div></div>
+  </div>
+  <div class="pcard"><div class="row between"><b>أكمل ملفك</b><small dir="ltr">70%</small></div><small>أضف بطاقة أسعار لتظهر في البحث أكثر</small><div class="pbar"><i></i></div></div>
+  <div class="sec"><h4>فرص تناسبك</h4><a>عرض الكل</a></div>
+  ${OFFERS.map((o, i) => `
+    <div class="ocard"><div class="th" style="background:${PHOTOS[(i * 3 + 1) % PHOTOS.length]}"></div>
+      <div style="flex:1"><b>${o[0]}</b><small>${o[1]}</small><div class="row"><span class="money">${o[2]}</span><span class="dl">${o[3]}</span></div></div></div>`).join('')}`;
+}
+
+const icWrap = (t, s = 22) => `<span class="ic">${svg(t.icon, s)}${t.badge ? `<i class="badge">${t.badge}</i>` : ''}</span>`;
+
+/* A — Liquid Lens */
+function buildA(host, role) {
+  const tabs = ROLES[role].tabs;
+  host.innerHTML = `<nav class="barA glass" role="tablist"><span class="lensA"><i></i></span>${tabs.map(t =>
+    `<button class="tabA" role="tab" aria-label="${t.label}">${icWrap(t)}<span class="lbl">${t.label}</span></button>`).join('')}</nav>`;
+  const lens = host.querySelector('.lensA'), btns = [...host.querySelectorAll('.tabA')];
+  let cur = 0;
+  const place = (i, anim) => {
+    const b = btns[i];
+    lens.style.width = (b.offsetWidth - 4) + 'px';
+    if (anim) { lens.classList.remove('squish'); void lens.offsetWidth; lens.classList.add('squish'); }
+    lens.style.transform = `translateX(${b.offsetLeft + 2}px)`;
+    btns.forEach((x, j) => x.classList.toggle('active', j === i));
+  };
+  btns.forEach((b, i) => b.onclick = () => { if (i !== cur) { cur = i; place(i, true); } });
+  lens.style.transition = 'none'; place(0, false);
+  requestAnimationFrame(() => requestAnimationFrame(() => { lens.style.transition = ''; }));
+}
+
+/* B — Morphing Capsule */
+function buildB(host, role) {
+  const tabs = ROLES[role].tabs;
+  host.innerHTML = `<nav class="barB glass" role="tablist">${tabs.map((t, i) =>
+    `<button class="tabB${i === 0 ? ' active' : ''}" role="tab" aria-label="${t.label}">${icWrap(t)}<span class="lbl">${t.label}</span></button>`).join('')}</nav>`;
+  const btns = [...host.querySelectorAll('.tabB')];
+  btns.forEach((b, i) => b.onclick = () => btns.forEach((x, j) => x.classList.toggle('active', j === i)));
+}
+
+/* C — Liquid Notch */
+function buildC(host, role) {
+  const tabs = ROLES[role].tabs;
+  host.innerHTML = `<nav class="barC" role="tablist"><div class="gC"></div><svg class="edge"><path/></svg>
+    <span class="bubC"><span class="in"></span></span>
+    <div class="tabsC">${tabs.map(t => `<button class="tabC" role="tab" aria-label="${t.label}">${icWrap(t)}<span class="lbl">${t.label}</span></button>`).join('')}</div></nav>`;
+  const bar = host.querySelector('.barC'), g = host.querySelector('.gC'), edge = host.querySelector('.edge path'),
+    edgeSvg = host.querySelector('.edge'), bub = host.querySelector('.bubC'), inner = host.querySelector('.bubC .in'),
+    btns = [...host.querySelectorAll('.tabC')];
+  const W = bar.offsetWidth, H = bar.offsetHeight;
+  edgeSvg.setAttribute('viewBox', `0 0 ${W} ${H}`); edgeSvg.setAttribute('width', W); edgeSvg.setAttribute('height', H);
+  const notch = cx => {
+    const w = 38, s = 14, d = 34;
+    return `M0,0 H${cx - w - s} C${cx - w},0 ${cx - w + 4},${d} ${cx},${d} C${cx + w - 4},${d} ${cx + w},0 ${cx + w + s},0 H${W} V${H} H0 Z`;
+  };
+  const centerOf = i => btns[i].offsetLeft + btns[i].offsetWidth / 2;
+  let cx = centerOf(0), raf = 0, cur = 0;
+  const draw = () => {
+    const d = notch(cx);
+    g.style.clipPath = `path('${d}')`; g.style.webkitClipPath = `path('${d}')`;
+    edge.setAttribute('d', d);
+    bub.style.transform = `translateX(${cx - 27}px)`;
+  };
+  const setActive = i => {
+    btns.forEach((x, j) => x.classList.toggle('active', j === i));
+    const t = tabs[i];
+    inner.innerHTML = svg(t.icon, 24, 2.2);
+    inner.classList.remove('pop'); void inner.offsetWidth; inner.classList.add('pop');
+  };
+  const easeOutBack = p => { const c1 = 1.25, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+  const go = i => {
+    const from = cx, to = centerOf(i), t0 = performance.now(), dur = 560;
+    cancelAnimationFrame(raf);
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      cx = from + (to - from) * easeOutBack(p); draw();
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  };
+  btns.forEach((b, i) => b.onclick = () => { if (i !== cur) { cur = i; setActive(i); go(i); } });
+  setActive(0); draw();
+}
+
+/* D — Split Navy Glass */
+function buildD(host, role) {
+  const { tabs, avatar } = ROLES[role];
+  const work = tabs.slice(0, 4), me = tabs[4];
+  host.innerHTML = `<div class="barD">
+    <nav class="pillD navyGlass" role="tablist"><span class="lensD"></span>${work.map(t =>
+      `<button class="tabD" role="tab" aria-label="${t.label}">${icWrap(t)}<span class="lbl">${t.label}</span></button>`).join('')}</nav>
+    <button class="avD navyGlass" role="tab" aria-label="${me.label}"><span class="av" style="background:${avatar.bg}">${avatar.letter}</span></button></div>`;
+  const lens = host.querySelector('.lensD'), btns = [...host.querySelectorAll('.tabD')], av = host.querySelector('.avD');
+  const place = i => {
+    const b = btns[i];
+    lens.classList.remove('off');
+    lens.style.width = (b.offsetWidth - 2) + 'px';
+    lens.style.transform = `translateX(${b.offsetLeft + 1}px)`;
+    btns.forEach((x, j) => x.classList.toggle('active', j === i));
+    av.classList.remove('active');
+  };
+  btns.forEach((b, i) => b.onclick = () => place(i));
+  av.onclick = () => { btns.forEach(x => x.classList.remove('active')); lens.classList.add('off'); av.classList.add('active'); };
+  lens.style.transition = 'none'; place(0);
+  requestAnimationFrame(() => requestAnimationFrame(() => { lens.style.transition = ''; }));
+}
+
+const OPTIONS = [
+  { key: 'A', name: 'العدسة السائلة', en: 'Liquid Lens — iOS 26 feel', rec: true, build: buildA,
+    idea: 'كبسولة زجاجية عائمة، وعدسة زجاجية تنزلق إلى التبويب النشط وتتمدّد كالسائل أثناء الحركة.',
+    pros: ['كل الأسماء ظاهرة — أوضح لمستخدم جديد وأريح للعربية', '٥ تبويبات مريحة حتى على الشاشات الصغيرة', 'أقرب لغة لتصميم iOS الجديد (Liquid Glass)'],
+    cons: ['فوق صور ملوّنة جداً يقل التباين — لا ننزل بالتعبئة عن ~60%'],
+    tech: 'Blur ثابت + عدسة بحركة نابضية وتمدد أفقي. لا يمسّ التنقل.', effort: 'جهد: منخفض – متوسط' },
+  { key: 'B', name: 'الكبسولة المتمددة', en: 'Morphing Capsule', build: buildB,
+    idea: 'أيقونات فقط، والتبويب النشط يتمدّد إلى كبسولة زجاجية ملوّنة مع اسمه.',
+    pros: ['الأنظف والأحدث شكلاً', 'يركّز العين على مكانك الحالي'],
+    cons: ['أيقونات بلا أسماء = تخمين (الصفقات/المحفظة/ملفي) لمستخدم جديد', 'تغيّر العرض يحرّك الأزرار تحت الإصبع'],
+    tech: 'انتقالات تخطيط للعرض والتسمية.', effort: 'جهد: متوسط' },
+  { key: 'C', name: 'القطرة', en: 'Liquid Notch — docked', build: buildC,
+    idea: 'شريط زجاجي ملتصق بالأسفل، فيه تجويف سائل ينزلق، والتبويب النشط دائرة كحلية تطفو فوقه.',
+    pros: ['أوضح حركة «سائلة» وممتعة', 'التبويب النشط بارز جداً'],
+    cons: ['شكل مستهلك منذ سنوات', 'الدائرة الكحلية تبدو زراً أساسياً ثانياً — يخالف «زر أساسي واحد»', 'رسم المسار + قص الـ Blur أثقل على الأجهزة الضعيفة'],
+    tech: 'مسار Skia متحرّك + Blur مقصوص بالمسار.', effort: 'جهد: مرتفع' },
+  { key: 'D', name: 'الزجاج الكحلي المنفصل', en: 'Split Navy Glass', build: buildD,
+    idea: 'كبسولة زجاج كحلي لأربعة تبويبات عمل، وصورتك الشخصية في دائرة زجاجية منفصلة = «أنا».',
+    pros: ['هوية Navy Trust الأقوى، تنسجم مع الهيدر الكحلي', 'تباين ثابت فوق أي محتوى وفي الوضعين', 'صورة الحساب تعطي إحساس «هذا مكاني»'],
+    cons: ['كتلة كحلية أسفل الشاشة ترفع نسبة الكحلي', 'فصل «أنا» قد لا يُلاحظ أنه تبويب'],
+    tech: 'مثل A + زر دائري للصورة.', effort: 'جهد: منخفض – متوسط' },
+];
+
+const state = { role: 'brand' };
+
+function renderIA() {
+  for (const role of ['brand', 'creator']) {
+    const el = document.getElementById(role === 'brand' ? 'iaBrand' : 'iaCreator');
+    el.innerHTML = ROLES[role].tabs.map((t, i) => `
+      <div class="slot"><span class="si">${svg(t.icon, 18)}</span>
+        <div><b>${i + 1}. ${t.label}</b><span class="n">${t.slot}</span>${t.badge ? `<span class="bdg">شارة</span>` : ''}<p>${t.desc}</p></div></div>`).join('');
+  }
+}
+
+function renderOptions() {
+  const root = document.getElementById('opts');
+  root.innerHTML = OPTIONS.map(o => `
+    <section class="opt">
+      <div class="opt-h"><span class="letter">${o.key}</span><div><h3>${o.name}</h3><small>${o.en}</small></div>${o.rec ? '<span class="rec">توصيتي</span>' : ''}</div>
+      <div class="phone"><div class="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span class="sig"><span>●●●</span><span class="bat"></span></span></div>
+        <div class="content">${state.role === 'brand' ? brandContent() : creatorContent()}</div>
+        <div class="host" data-k="${o.key}"></div>
+        <div class="home-ind"></div>
+      </div></div>
+      <dl class="notes">
+        <dt>الفكرة</dt><dd>${o.idea}</dd>
+        <dt>مزايا</dt>${o.pros.map(p => `<dd class="pro">${p}</dd>`).join('')}
+        <dt>عيوب</dt>${o.cons.map(c => `<dd class="con">${c}</dd>`).join('')}
+        <dt>التنفيذ</dt><dd>${o.tech}</dd>
+        <span class="effort">${o.effort}</span>
+      </dl>
+    </section>`).join('');
+  OPTIONS.forEach(o => o.build(root.querySelector(`.host[data-k="${o.key}"]`), state.role));
+}
+
+function bindSeg(id, fn) {
+  const seg = document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+    seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    fn(b.dataset.v);
+  });
+}
+bindSeg('roleSeg', v => { state.role = v; renderOptions(); });
+bindSeg('themeSeg', v => { document.body.dataset.theme = v; });
+
+renderIA();
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(renderOptions);
+</script>
+</body>
+</html>

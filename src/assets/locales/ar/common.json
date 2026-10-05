@@ -421,7 +421,17 @@
   },
   "tabs": {
     "home": "الرئيسية",
-    "settings": "الإعدادات"
+    "explore": "استكشاف",
+    "campaigns": "حملاتي",
+    "deals": "الصفقات",
+    "messages": "الرسائل",
+    "wallet": "المحفظة",
+    "account": "حسابي",
+    "myProfile": "ملفي",
+    "comingSoon": {
+      "title": "قريباً",
+      "message": "نعمل على هذا القسم، وسيصلك قريباً."
+    }
   },
   "account": {
     "profile": {

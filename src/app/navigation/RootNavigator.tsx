@@ -1,9 +1,5 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  createBottomTabNavigator,
-  type BottomTabBarProps,
-} from '@react-navigation/bottom-tabs';
 import { AppStatus } from '@/app/bootstrap';
 import {
   ChooseLanguageScreen,
@@ -29,8 +25,7 @@ import {
   LayoutFabScreen,
   LayoutBrandHeaderScreen,
 } from '@/app/screens';
-import { HomeNavigator } from '@/domains/marketplace';
-import type { RootTabParamList, DevShowcaseStackParamList } from '@/core/navigation';
+import type { DevShowcaseStackParamList } from '@/core/navigation';
 import {
   AuthNavigator,
   BrandOnboardingNavigator,
@@ -39,12 +34,7 @@ import {
   selectUserType,
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
-import { SettingsNavigator } from '@/domains/identity';
-import { FloatingBottomBar } from '@/shared/ui';
-import { ScrollProvider } from '@/shared/context/ScrollContext';
-import { BottomBarProvider } from '@/shared/context/BottomBarContext';
-
-const Tab = createBottomTabNavigator<RootTabParamList>();
+import { MainTabs } from './MainTabs';
 
 type RootStackParamList = {
   Maintenance: undefined;
@@ -74,30 +64,6 @@ const OnboardingResume: React.FC = () => {
     <InfluencerOnboardingNavigator />
   ) : (
     <BrandOnboardingNavigator />
-  );
-};
-
-const renderTabBar = (props: BottomTabBarProps) => (
-  <FloatingBottomBar {...props} />
-);
-
-const MainTabs: React.FC = () => {
-  return (
-    <ScrollProvider>
-      <BottomBarProvider>
-        <Tab.Navigator
-          initialRouteName="HomeTab"
-          tabBar={renderTabBar}
-          // `animation: 'fade'` here races freezeOnBlur (rn-screens 4.24 + React 19):
-          // the cross-fade can finish before the thawed tab commits its first frame,
-          // leaving an intermittent blank screen. Instant switch avoids the race.
-          screenOptions={{ headerShown: false, animation: 'none' }}
-        >
-          <Tab.Screen name="HomeTab" component={HomeNavigator} />
-          <Tab.Screen name="SettingsTab" component={SettingsNavigator} />
-        </Tab.Navigator>
-      </BottomBarProvider>
-    </ScrollProvider>
   );
 };
 

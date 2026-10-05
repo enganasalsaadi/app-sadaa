@@ -2,40 +2,33 @@ import React, { useEffect } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
-  useDerivedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { Home, Settings } from 'lucide-react-native';
-import { useTheme, motion } from '@/core/theme';
+import { motion, useTheme } from '@/core/theme';
 import { useScrollContext } from '@/shared/context/ScrollContext';
 import { useBottomBar } from '@/shared/context/BottomBarContext';
 import { Box } from '../primitives';
-import type { TabConfig } from './types';
 import { BAR_CORNER, BAR_HEIGHT, SCROLL_TOP_THRESHOLD } from './constants';
-import { CurvedBarBackground } from './CurvedBarBackground';
-import { CurvedTabItem } from './CurvedTabItem';
+import { GlassBarBackground } from './GlassBarBackground';
+import { TabItem } from './TabItem';
 
-type TabLabelKey = 'tabs.home' | 'tabs.settings';
-
-/** Per-tab visuals keyed by the tab navigator route name. */
-const TAB_META: Record<
-  string,
-  { icon: TabConfig['icon']; labelKey: TabLabelKey } | undefined
-> = {
-  HomeTab: { icon: Home, labelKey: 'tabs.home' },
-  SettingsTab: { icon: Settings, labelKey: 'tabs.settings' },
-};
-
+/**
+ * Floating navy liquid-glass capsule (rule 08, approved 2026-10-06). Content scrolls
+ * behind it and shows through the blur; it slides away on scroll-down and
+ * returns on scroll-up. Label and icon come from each screen's `title` /
+ * `tabBarIcon` options, so the navigator owns the role-specific tab set.
+ * Inner screens remove it with `useHideBottomBar()`.
+ */
 export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
   state,
+  descriptors,
   navigation,
 }) => {
-  const { t } = useTranslation();
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, sizes } = useTheme();
   const { bottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
   const scrollCtx = useScrollContext();
@@ -55,13 +48,10 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
     isVisible.value = visible ? 1 : 0;
   }, [visible, isVisible]);
 
-  // ── Scroll-aware + screen-driven slide ───────────────────────────────────
   const slideTarget = useDerivedValue(() => {
     'worklet';
-    // Explicitly hidden by a screen — slide fully out of view
     if (isVisible.value === 0) return hiddenOffset;
     if (ctxScrollY === undefined || ctxScrollDir === undefined) return 0;
-    // Always visible when near the top
     if (ctxScrollY.value < SCROLL_TOP_THRESHOLD) return 0;
     return ctxScrollDir.value === -1 ? hiddenOffset : 0;
   });
@@ -70,54 +60,53 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
     transform: [{ translateY: withSpring(slideTarget.value, motion.spring) }],
   }));
 
-  // ── Tabs derived from the navigator state ─────────────────────────────────
-  const tabs: TabConfig[] = state.routes.map((route, index) => {
-    const meta = TAB_META[route.name];
-    const isFocused = state.index === index;
-
-    return {
-      id: index,
-      label: meta ? t(meta.labelKey) : route.name,
-      icon: meta?.icon ?? Home,
-      onPress: () => {
-        const event = navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true,
-        });
-        if (!isFocused && !event.defaultPrevented) {
-          navigation.navigate(route.name);
-        }
-      },
-    };
-  });
-
-  const renderTab = (tab: TabConfig) => (
-    <CurvedTabItem
-      key={tab.id}
-      isActive={state.index === tab.id}
-      label={tab.label}
-      icon={tab.icon}
-      onPress={tab.onPress}
-    />
-  );
-
   return (
     <Animated.View
       style={[styles.container, { paddingBottom: bottom }, slideStyle]}
       pointerEvents="box-none"
     >
-      <Box width={barWidth} height={BAR_HEIGHT} mb="sm" shadow="md">
-        <CurvedBarBackground
+      <Box width={barWidth} height={BAR_HEIGHT} mb="sm">
+        <GlassBarBackground
           width={barWidth}
           height={BAR_HEIGHT}
-          cradleRadius={0}
           corner={BAR_CORNER}
-          fill={colors.surface.main}
-          stroke={colors.border.strong}
         />
-        <Box row align="center" style={StyleSheet.absoluteFill}>
-          {tabs.map(renderTab)}
+        <Box
+          row
+          align="center"
+          accessibilityRole="tablist"
+          style={StyleSheet.absoluteFill}
+        >
+          {state.routes.map((route, index) => {
+            const { options } = descriptors[route.key] ?? {};
+            const isFocused = state.index === index;
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            };
+
+            return (
+              <TabItem
+                key={route.key}
+                isActive={isFocused}
+                label={options?.title ?? route.name}
+                icon={options?.tabBarIcon?.({
+                  focused: isFocused,
+                  color: isFocused
+                    ? colors.navigation.tabBar.active
+                    : colors.navigation.tabBar.inactive,
+                  size: sizes.icon.md,
+                })}
+                onPress={onPress}
+              />
+            );
+          })}
         </Box>
       </Box>
     </Animated.View>

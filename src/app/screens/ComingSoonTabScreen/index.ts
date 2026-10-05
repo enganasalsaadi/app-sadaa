@@ -1,0 +1,1 @@
+export { ComingSoonTabScreen } from './ComingSoonTabScreen';

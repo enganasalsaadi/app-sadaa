@@ -48,7 +48,6 @@ export type { ToastCardProps, ToastType } from './ToastCard';
 export { SelectionModal } from './SelectionModal';
 export type { SelectionItem, SelectionModalProps } from './SelectionModal';
 export { FloatingBottomBar } from './FloatingBottomBar';
-export type { TabConfig } from './FloatingBottomBar';
 export { GalleryModal } from './GalleryModal';
 export type { GalleryModalProps } from './GalleryModal';
 export { BottomSheet } from './BottomSheet';
