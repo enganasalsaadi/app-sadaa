@@ -45,6 +45,10 @@ const ROWS = {
     titleKey: 'devShowcase.layoutGallery.brandHeaderTitle',
     descriptionKey: 'devShowcase.layoutGallery.brandHeaderDescription',
   },
+  LayoutDashboardScreen: {
+    titleKey: 'devShowcase.layoutGallery.dashboardTitle',
+    descriptionKey: 'devShowcase.layoutGallery.dashboardDescription',
+  },
   LayoutNoHeaderScrollScreen: {
     titleKey: 'devShowcase.layoutGallery.noHeaderScrollTitle',
     descriptionKey: 'devShowcase.layoutGallery.noHeaderScrollDescription',

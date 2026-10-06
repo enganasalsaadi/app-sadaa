@@ -14,8 +14,8 @@ export interface StatTileProps {
   label: string;
   /** Pre-formatted (`formatNumber` compact, `formatMoney`). */
   value: string;
-  /** Change vs the previous period as a fraction: `0.08` = +8%. */
-  change?: number;
+  /** Change vs the previous period as a fraction (`0.08` = +8%); `'new'` when there is no previous period to compare. */
+  change?: number | 'new';
   /** Period the change is measured over ("vs last 30 days"). */
   caption?: string;
   icon?: LucideIcon;
@@ -37,14 +37,17 @@ const StatTileComponent: React.FC<StatTileProps> = ({
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
 
-  const trend = change === undefined ? null : change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+  const isNew = change === 'new';
+  const delta = typeof change === 'number' ? change : undefined;
+  const trend = delta === undefined ? null : delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';
   const trendHue =
     trend === 'up' ? colors.status.success : trend === 'down' ? colors.status.danger : colors.status.neutral;
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
-  const changeLabel =
-    change === undefined
+  const changeLabel = isNew
+    ? t('common.stat.new')
+    : delta === undefined
       ? null
-      : formatNumber(change, { style: 'percent', maximumFractionDigits: 1, signDisplay: 'exceptZero' });
+      : formatNumber(delta, { style: 'percent', maximumFractionDigits: 1, signDisplay: 'exceptZero' });
 
   return (
     <Box
@@ -59,7 +62,12 @@ const StatTileComponent: React.FC<StatTileProps> = ({
       accessibilityLabel={
         loading
           ? label
-          : [label, value, changeLabel ? t('common.stat.change', { change: changeLabel }) : null, caption]
+          : [
+              label,
+              value,
+              isNew ? changeLabel : changeLabel ? t('common.stat.change', { change: changeLabel }) : null,
+              caption,
+            ]
               .filter(Boolean)
               .join(', ')
       }
@@ -83,8 +91,10 @@ const StatTileComponent: React.FC<StatTileProps> = ({
         <Box row align="center" gap="xs" wrap>
           {changeLabel ? (
             <Box row align="center" gap="xs">
-              <TrendIcon size={sizes.icon.xs} color={trendHue.main} strokeWidth={iconStroke.bold} />
-              <Text variant="caption" color={trendHue.text}>
+              {isNew ? null : (
+                <TrendIcon size={sizes.icon.xs} color={trendHue.main} strokeWidth={iconStroke.bold} />
+              )}
+              <Text variant="caption" color={isNew ? colors.text.secondary : trendHue.text}>
                 {changeLabel}
               </Text>
             </Box>

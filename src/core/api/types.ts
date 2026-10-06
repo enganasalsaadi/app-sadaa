@@ -42,6 +42,9 @@ export const API_ERROR_CODES = [
   'validation_failed',
   'too_many_requests',
   'otp_cooldown',
+  'slug_unavailable',
+  'slug_change_cooldown',
+  'media_kit_private',
   'server_error',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];
@@ -51,10 +54,22 @@ export type ApiFieldErrors = Record<string, string[]>;
 
 export interface ApiMeta {
   locale?: string;
-  /** Seconds — set on 429 `too_many_requests` / `otp_cooldown`. */
+  /** Seconds — set on 429 `too_many_requests` / `otp_cooldown`, 409 `slug_change_cooldown`. */
   retry_after?: number;
+  /** ISO time the blocked action opens again (409 `slug_change_cooldown`). */
+  available_at?: string;
+  /** Machine sub-code of an error (`slug_unavailable`: `invalid_length` | `taken`…). */
+  reason?: string;
+  /** Success only: the slug an old media-kit slug resolved to (contract §17.4). */
+  canonical_slug?: string;
   pagination?: PaginationMeta;
 }
+
+/** Response of an endpoint called with `extraOptions: { withMeta: true }`. */
+export type WithMeta<TData> = {
+  data: TData;
+  meta: ApiMeta;
+};
 
 export interface ApiResponse<TData> {
   success: boolean;

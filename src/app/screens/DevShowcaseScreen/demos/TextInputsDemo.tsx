@@ -28,6 +28,22 @@ const TextInputsDemoComponent: React.FC = () => {
       />
 
       <CustomInput
+        label={t('devShowcase.inputs.hintLabel')}
+        placeholder={t('devShowcase.inputs.hintPlaceholder')}
+        value={demo.hintValue}
+        onChangeText={demo.setHintValue}
+        hint={t('devShowcase.inputs.hintText')}
+      />
+
+      <CustomInput
+        label={t('devShowcase.inputs.hintSuccessLabel')}
+        value={t('devShowcase.inputs.hintSuccessValue')}
+        hint={t('devShowcase.inputs.hintSuccessText')}
+        hintTone="success"
+        editable={false}
+      />
+
+      <CustomInput
         label={t('devShowcase.inputs.disabledLabel')}
         value={t('devShowcase.inputs.disabledValue')}
         editable={false}

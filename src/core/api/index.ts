@@ -1,7 +1,8 @@
 export { baseApi } from './baseApi';
 export { getApiErrorMessage, normalizeApiError } from './errorHandler';
 export type { AppApiError } from './errorHandler';
-export type { ApiErrorCode, ApiFieldErrors } from './types';
+export type { ApiErrorCode, ApiFieldErrors, ApiMeta, WithMeta } from './types';
+export { createIdempotencyKey, IDEMPOTENCY_HEADER } from './idempotency';
 export { configApi, useGetConfigQuery } from './configApi';
 export type { AppConfig } from './configApi';
 export {

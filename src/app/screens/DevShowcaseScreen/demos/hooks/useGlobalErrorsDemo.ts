@@ -16,6 +16,8 @@ const mockServerError = (
   message,
   code: null,
   retryAfter: null,
+  reason: null,
+  availableAt: null,
   details: null,
   isValidationError: false,
   isUnauthorized: false,

@@ -393,7 +393,8 @@
       "countShort": "({{count}})"
     },
     "stat": {
-      "change": "{{change}} change"
+      "change": "{{change}} change",
+      "new": "New"
     }
   },
   "errors": {
@@ -506,6 +507,10 @@
       "niches": {
         "title": "My niches",
         "empty": "You haven't picked your niches yet."
+      },
+      "mediaKit": {
+        "title": "Media kit",
+        "subtitle": "Your link and who can see it"
       },
       "company": {
         "title": "Company",
@@ -673,6 +678,125 @@
       "errors": {
         "min": "Pick at least one niche",
         "max": "Pick up to {{count}} niches"
+      }
+    },
+    "mediaKit": {
+      "title": "Your media kit",
+      "loadFailed": "Couldn't load your media kit",
+      "statsFailed": "Couldn't load your stats",
+      "retry": "Retry",
+      "period": "Last 30 days",
+      "priceFrom": "From",
+      "followers": "{{count}} followers",
+      "verifiedFollowers": "Verified follower count",
+      "verifiedCreator": "Verified creator",
+      "linkLabel": "Your media kit link",
+      "noActivity": "Share your link to get your first views",
+      "insights": "All insights",
+      "insightsScreen": {
+        "title": "Media kit insights",
+        "periodLabel": "Period",
+        "periods": {
+          "7d": "7 days",
+          "30d": "30 days",
+          "90d": "90 days"
+        },
+        "range": "{{from}} – {{to}}",
+        "compare": {
+          "7d": "Compared with the previous 7 days",
+          "30d": "Compared with the previous 30 days",
+          "90d": "Compared with the previous 90 days"
+        },
+        "loadFailed": "Couldn't load your insights",
+        "daily": {
+          "title": "Daily profile views",
+          "a11y": "Daily profile views: {{total}} in total, best day {{peak}}"
+        },
+        "locations": {
+          "title": "Where brands view you from",
+          "subtitle": "Brands that opened your media kit, by city",
+          "row": "{{count}} · {{share}}",
+          "a11y": "{{city}}: {{share}} of brands ({{count}})"
+        },
+        "topWork": {
+          "title": "Most-viewed work",
+          "clicks": "Clicks: {{count}}"
+        }
+      },
+      "preview": "Preview",
+      "previewScreen": {
+        "title": "Media kit preview",
+        "intro": "This is how brands see your media kit.",
+        "platforms": "Platforms",
+        "rates": "Rates",
+        "rateRow": "{{platform}} · {{service}}",
+        "username": "@{{username}}"
+      },
+      "publicScreen": {
+        "title": "Creator profile",
+        "notFoundTitle": "Profile not available",
+        "notFoundBody": "The link may be old, or the creator has hidden their profile.",
+        "back": "Go back",
+        "loadFailed": "Couldn't load this profile"
+      },
+      "settingsScreen": {
+        "title": "Media kit settings",
+        "link": {
+          "section": "Your link",
+          "label": "Link name",
+          "placeholder": "e.g. anas.style",
+          "current": "This is your current link",
+          "checking": "Checking availability…",
+          "available": "{{link}} is available",
+          "checkFailed": "Couldn't check this name. You can still try to save it.",
+          "save": "Save link",
+          "saved": "Your link is updated",
+          "saveFailed": "Couldn't save your link"
+        },
+        "reasons": {
+          "invalidLength": "Use 3 to 30 characters",
+          "invalidFormat": "Use lowercase letters, numbers, dots or underscores, starting and ending with a letter or number",
+          "reserved": "This name is reserved. Try another one.",
+          "taken": "This name is taken. Try another one."
+        },
+        "cooldown": {
+          "title": "You changed your link recently",
+          "message": "You can pick a new link on {{date}}. Going back to your previous link is allowed any time.",
+          "saveBlocked": "You can change your link again on {{date}}",
+          "saveBlockedNoDate": "You changed your link recently. Try again later."
+        },
+        "rateLimited": "Too many changes. Try again later.",
+        "visibility": {
+          "section": "Visibility",
+          "label": "Show my media kit to brands",
+          "onHint": "Brands can open your media kit and your link.",
+          "offHint": "Hidden: your link shows \"Profile not available\" and you can't share it.",
+          "madeHidden": "Your media kit is hidden",
+          "failed": "Couldn't update visibility",
+          "confirmTitle": "Hide your media kit?",
+          "confirmBody": "Brands won't be able to open your profile, and your link will show \"Profile not available\". You can make it public again any time.",
+          "confirm": "Hide media kit"
+        }
+      },
+      "tiles": {
+        "views": "Profile views",
+        "brands": "Brands",
+        "linkOpens": "Link opens",
+        "offers": "Offers",
+        "shares": "Shares",
+        "searchImpressions": "Search impressions"
+      },
+      "share": {
+        "cta": "Share your media kit",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "privateTitle": "Your media kit is hidden",
+        "privateBody": "Brands can't see it until you make it public.",
+        "makePublic": "Make public",
+        "madePublic": "Your media kit is public",
+        "makePublicFailed": "Couldn't make your media kit public",
+        "rateLimited": "Too many shares. Try again in a while.",
+        "failed": "Couldn't record the share."
       }
     },
     "discard": {
@@ -844,6 +968,39 @@
       "verified": "Verified creator",
       "followers": "{{count}} followers",
       "priceFrom": "From"
+    },
+    "creatorHome": {
+      "greeting": "Hi, {{name}}",
+      "greetingFallback": "Welcome",
+      "openProfile": "Open my profile",
+      "notice": {
+        "platformsActionRequired": {
+          "title": "A platform needs your attention",
+          "message": "Fix the flagged account so brands can book you on it.",
+          "action": "Review platforms"
+        },
+        "platformsUnderReview": {
+          "title": "Platforms under review",
+          "message": "Our team is checking your accounts. We'll notify you when it's done."
+        }
+      },
+      "strength": {
+        "title": "Profile strength",
+        "nextStep": "Next step"
+      },
+      "platforms": {
+        "manage": "Manage",
+        "loadFailed": "Couldn't load your platforms",
+        "open": "Open {{platform}} @{{username}}"
+      },
+      "rates": {
+        "title": "My rates",
+        "edit": "Edit",
+        "empty": "Add rates so brands can book you",
+        "add": "Add rates",
+        "loadFailed": "Couldn't load your rates",
+        "row": "{{platform}} · {{service}}"
+      }
     }
   },
   "finance": {
@@ -917,6 +1074,7 @@
       "amountInput": "Amount input",
       "moneyText": "Money",
       "statTile": "Stat tile",
+      "sparkline": "Sparkline",
       "timeline": "Timeline",
       "countdown": "Countdown",
       "mediaTile": "Media tile",
@@ -927,7 +1085,8 @@
       "draftReview": "Draft review",
       "wallet": "Wallet",
       "gradientSurface": "Gradient surface",
-      "platformEditing": "Platform & prices editing"
+      "platformEditing": "Platform & prices editing",
+      "mediaKitCard": "Media kit card"
     },
     "typography": {
       "h1Label": "H1 · Heading",
@@ -990,7 +1149,13 @@
       "multilineLabel": "Multiline",
       "multilinePlaceholder": "Describe the campaign brief",
       "counterLabel": "Bio (with counter)",
-      "counterPlaceholder": "Tell brands about your content"
+      "counterPlaceholder": "Tell brands about your content",
+      "hintLabel": "With hint",
+      "hintPlaceholder": "Pick a link name",
+      "hintText": "3 to 30 characters",
+      "hintSuccessLabel": "Hint (success)",
+      "hintSuccessValue": "anas.style",
+      "hintSuccessText": "sada.app/c/anas.style is available"
     },
     "cards": {
       "plainTitle": "Plain card",
@@ -1058,6 +1223,12 @@
       "fabDescription": "overlay: FAB clear of the footer and home indicator",
       "brandHeaderTitle": "Brand header",
       "brandHeaderDescription": "header variant=\"brand\" with actions and a badge",
+      "dashboardTitle": "Dashboard",
+      "dashboardDescription": "greeting band hero + overlay header, one notice, stacked card sections",
+      "dashboardGreeting": "Hi, Leila",
+      "dashboardNotice": "One notice at a time: the highest-priority blocker.",
+      "dashboardSection": "Section",
+      "dashboardManage": "Manage",
       "scrollHint": "Scroll to see the behaviour.",
       "heroTitle": "Creator profile",
       "heroBody": "The hero runs under the status bar. The header background and title fade in as it scrolls away.",
@@ -1390,6 +1561,28 @@
       "engagement": "Engagement",
       "followers": "Followers",
       "earnings": "Earnings"
+    },
+    "sparkline": {
+      "views": "Daily views (30 days)",
+      "earnings": "Daily earnings (money tone)",
+      "zeros": "No activity (all zeros)",
+      "single": "Single day",
+      "loading": "Loading"
+    },
+    "mediaKitCard": {
+      "default": "Default",
+      "offersLive": "Offers live (4 tiles)",
+      "noActivity": "No activity yet",
+      "minimal": "Minimal profile",
+      "loading": "Loading",
+      "statsLoading": "Stats loading",
+      "statsError": "Stats failed",
+      "loadError": "Kit failed to load",
+      "sharing": "Share in progress",
+      "shareHidden": "Share: kit hidden",
+      "shareFailed": "Share: failed",
+      "shareRateLimited": "Share: rate limited",
+      "displayName": "Anas Style"
     },
     "dealStatus": {
       "pillsTitle": "Every status",

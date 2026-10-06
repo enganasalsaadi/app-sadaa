@@ -21,7 +21,7 @@ import { iconStroke } from '@/core/theme';
 import type { RootTabParamList } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { ComingSoonTabScreen } from '@/app/screens';
-import { HomeNavigator } from '@/domains/marketplace';
+import { CreatorHomeNavigator, HomeNavigator } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
 import { FloatingBottomBar } from '@/shared/ui';
@@ -67,7 +67,7 @@ const BRAND_TABS: readonly MainTabDef[] = [
 ];
 
 const CREATOR_TABS: readonly MainTabDef[] = [
-  { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: HomeNavigator },
+  { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: CreatorHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: DealsPlaceholder },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: WalletPlaceholder },

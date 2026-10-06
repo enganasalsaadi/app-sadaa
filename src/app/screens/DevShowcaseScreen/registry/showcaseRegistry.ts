@@ -3,6 +3,7 @@ import type { DevShowcaseCategoryId } from '@/core/navigation';
 import type * as UiKit from '@/shared/ui';
 import type * as AuthDomain from '@/domains/auth';
 import type * as FinanceDomain from '@/domains/finance';
+import type * as IdentityDomain from '@/domains/identity';
 import type * as MarketplaceDomain from '@/domains/marketplace';
 
 /** Every runtime export of `@/shared/ui`. */
@@ -12,6 +13,7 @@ export type UiExportName = keyof typeof UiKit;
 export type DomainExportName =
   | keyof typeof MarketplaceDomain
   | keyof typeof FinanceDomain
+  | keyof typeof IdentityDomain
   | keyof typeof AuthDomain;
 
 interface ShowcaseCategoryDef {
@@ -231,6 +233,11 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.statTile',
     covers: ['StatTile'],
   },
+  sparkline: {
+    category: 'display',
+    titleKey: 'devShowcase.sections.sparkline',
+    covers: ['Sparkline'],
+  },
   timeline: {
     category: 'display',
     titleKey: 'devShowcase.sections.timeline',
@@ -363,6 +370,12 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.platformEditing',
     covers: [],
     domainCovers: ['RatePlatformCard', 'PlatformAccountSheet', 'SocialLinkInput'],
+  },
+  mediaKitCard: {
+    category: 'sada',
+    titleKey: 'devShowcase.sections.mediaKitCard',
+    covers: [],
+    domainCovers: ['MediaKitCard'],
   },
 } as const satisfies Record<string, ShowcaseEntryDef>;
 

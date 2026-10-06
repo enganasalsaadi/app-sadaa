@@ -24,8 +24,9 @@ import {
   LayoutFooterElevateScreen,
   LayoutFabScreen,
   LayoutBrandHeaderScreen,
+  LayoutDashboardScreen,
 } from '@/app/screens';
-import type { DevShowcaseStackParamList } from '@/core/navigation';
+import type { DevShowcaseStackParamList, PublicStackParamList } from '@/core/navigation';
 import {
   AuthNavigator,
   BrandOnboardingNavigator,
@@ -34,6 +35,7 @@ import {
   selectUserType,
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
+import { MediaKitPublicScreen } from '@/domains/identity';
 import { MainTabs } from './MainTabs';
 
 type RootStackParamList = {
@@ -45,7 +47,8 @@ type RootStackParamList = {
   OnboardingResume: undefined;
   Suspended: undefined;
   Main: undefined;
-} & DevShowcaseStackParamList;
+} & PublicStackParamList &
+  DevShowcaseStackParamList;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -110,6 +113,18 @@ export const RootNavigator: React.FC<Props> = ({
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />
       )}
+      {/*
+        Public creator profile (opened links, contract §17.8) over the tabs or
+        Login. `navigationKey` drops it when the session branch changes.
+      */}
+      {(appStatus === AppStatus.AUTHENTICATED || appStatus === AppStatus.UNAUTHENTICATED) && (
+        <Stack.Screen
+          name="MediaKitPublic"
+          component={MediaKitPublicScreen}
+          navigationKey={appStatus}
+          options={{ animation: 'default' }}
+        />
+      )}
 
       {/*
         Dev-only screens layered on top of the Main branch, not an alternate
@@ -155,6 +170,7 @@ export const RootNavigator: React.FC<Props> = ({
           <Stack.Screen name="LayoutFooterElevateScreen" component={LayoutFooterElevateScreen} />
           <Stack.Screen name="LayoutFabScreen" component={LayoutFabScreen} />
           <Stack.Screen name="LayoutBrandHeaderScreen" component={LayoutBrandHeaderScreen} />
+          <Stack.Screen name="LayoutDashboardScreen" component={LayoutDashboardScreen} />
         </Stack.Group>
       )}
     </Stack.Navigator>

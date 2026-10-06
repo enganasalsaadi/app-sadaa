@@ -57,6 +57,8 @@ const rawBaseQuery = fetchBaseQuery({
 
 type ExtraOptions = {
   withPagination?: boolean;
+  /** Return `{ data, meta }` (`WithMeta`) instead of `data` — for success meta like `canonical_slug`. */
+  withMeta?: boolean;
   /** Skip global error UI (modal/snackbar) — caller handles failure itself, e.g. boot config (fail-open). */
   silent?: boolean;
 };
@@ -84,6 +86,9 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       return {
         data: { items: result.data.data, pagination },
       };
+    }
+    if (extraOptions?.withMeta) {
+      return { data: { data: result.data.data, meta: result.data.meta ?? {} } };
     }
     return { data: result.data.data };
   }
@@ -208,6 +213,9 @@ export const baseApi = createApi({
     'Notification',
     'Lookups',
     'OnboardingProgress',
+    'MediaKit',
+    'MediaKitStats',
+    'PublicMediaKit',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

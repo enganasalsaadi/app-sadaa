@@ -8,8 +8,12 @@ export interface AppApiError {
   message: string;
   /** Server `error_code`; `null` for transport failures or unknown codes. */
   code: ApiErrorCode | null;
-  /** Seconds from `meta.retry_after` (429), else `null`. */
+  /** Seconds from `meta.retry_after` (429, cooldown 409), else `null`. */
   retryAfter: number | null;
+  /** `meta.reason` sub-code (e.g. `slug_unavailable` → `taken`); the domain narrows it. */
+  reason: string | null;
+  /** ISO `meta.available_at` (cooldown 409), else `null`. */
+  availableAt: string | null;
   details: string | ApiUnknownRecord | unknown[] | null;
   isValidationError: boolean;
   isUnauthorized: boolean;
@@ -128,14 +132,19 @@ export const getServerErrorCode = (data: unknown): ApiErrorCode | null => {
   return isApiErrorCode(data.error_code) ? data.error_code : null;
 };
 
+const getMetaValue = (data: unknown, key: string): unknown =>
+  isRecord(data) && isRecord(data.meta) ? data.meta[key] : undefined;
+
 const getRetryAfter = (data: unknown): number | null => {
-  if (!isRecord(data) || !isRecord(data.meta)) {
-    return null;
-  }
-  const value = data.meta.retry_after;
+  const value = getMetaValue(data, 'retry_after');
   return typeof value === 'number' && Number.isFinite(value) && value > 0
     ? value
     : null;
+};
+
+const getMetaString = (data: unknown, key: string): string | null => {
+  const value = getMetaValue(data, key);
+  return typeof value === 'string' && value.trim() ? value : null;
 };
 
 const getStatusCode = (error: unknown): number | null => {
@@ -185,6 +194,8 @@ export const normalizeApiError = (error: unknown): AppApiError => {
       message,
       code: getServerErrorCode(error.data),
       retryAfter: getRetryAfter(error.data),
+      reason: getMetaString(error.data, 'reason'),
+      availableAt: getMetaString(error.data, 'available_at'),
       details: toSerializableDetails(
         error.data ?? fallbackTransportMessage ?? null,
       ),
@@ -201,6 +212,8 @@ export const normalizeApiError = (error: unknown): AppApiError => {
       message: error.message ?? FALLBACK_API_ERROR_MESSAGE,
       code: isApiErrorCode(error.code) ? error.code : null,
       retryAfter: null,
+      reason: null,
+      availableAt: null,
       details: toSerializableDetails(error),
       isValidationError: statusCode === 400 || statusCode === 422,
       isUnauthorized: statusCode === 401,
@@ -214,6 +227,8 @@ export const normalizeApiError = (error: unknown): AppApiError => {
     message: FALLBACK_API_ERROR_MESSAGE,
     code: null,
     retryAfter: null,
+    reason: null,
+    availableAt: null,
     details: toSerializableDetails(error),
     isValidationError: statusCode === 400 || statusCode === 422,
     isUnauthorized: statusCode === 401,

@@ -44,8 +44,14 @@ export interface CustomInputProps extends Omit<TextInputProps, 'style'> {
   showCount?: boolean;
   /** Unit at the trailing end (currency code, `%`, `min`). */
   suffix?: string;
+  /** Helper line under the field (live check result, format help). `error` replaces it. */
+  hint?: string;
+  /** `success` = a positive check result (available, verified); default neutral. */
+  hintTone?: CustomInputHintTone;
   mb?: SpacingToken;
 }
+
+export type CustomInputHintTone = 'neutral' | 'success';
 
 const CustomInputInner = React.forwardRef(
   (
@@ -64,6 +70,8 @@ const CustomInputInner = React.forwardRef(
       numberOfLines = 4,
       showCount = false,
       suffix,
+      hint,
+      hintTone = 'neutral',
       mb: mbProp,
       onFocus,
       onBlur,
@@ -238,15 +246,31 @@ const CustomInputInner = React.forwardRef(
           {clonedRightIcon}
         </Box>
 
-        {error || counter ? (
+        {error || hint || counter ? (
           <Box row justify="space-between" gap="md" mt="sm">
-            <Text
-              variant="caption"
-              color={theme.colors.form.input.error}
-              accessibilityRole={error ? 'alert' : undefined}
-            >
-              {error}
-            </Text>
+            <Box flex={1}>
+              {error ? (
+                <Text
+                  variant="caption"
+                  color={theme.colors.form.input.error}
+                  accessibilityRole="alert"
+                >
+                  {error}
+                </Text>
+              ) : hint ? (
+                <Text
+                  variant="caption"
+                  color={
+                    hintTone === 'success'
+                      ? theme.colors.status.success.text
+                      : theme.colors.text.secondary
+                  }
+                  accessibilityLiveRegion="polite"
+                >
+                  {hint}
+                </Text>
+              ) : null}
+            </Box>
             {counter ? (
               <Text variant="caption" color={theme.colors.text.tertiary}>
                 {counter}

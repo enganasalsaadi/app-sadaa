@@ -16,6 +16,7 @@ Before writing any screen code: show the user a text mockup (ASCII layout, AR/RT
 | **List** | `Layout mode="static" header={…}` + `SuperList` + skeleton/empty/error | — (use `SuperList` docs) |
 | **Detail** | `Layout header={…}` + `Card` sections + `footer={<LayoutFooter primary />}` | — |
 | **Settings / menu** | `Layout` + `ScreenHeader` + grouped `Card` rows | `identity/screens/ProfileScreen` |
+| **Dashboard** (tab root) | `Layout padding="none" headerBehavior="overlay"` + compact navy greeting `hero` (`GradientSurface brand`, `useHeroCompact()`) + ≤ 2 header icon actions + stacked sections (`gap="2xl"`, `px="xl"`, rails edge to edge) + pull-to-refresh. ≤ 1 `Notice` (highest-priority blocker); each section owns its skeleton/error/retry | `marketplace/screens/CreatorHomeScreen` |
 
 New archetype → propose it to the user, add it here, then build.
 

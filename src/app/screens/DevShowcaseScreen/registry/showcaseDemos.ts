@@ -47,12 +47,14 @@ import { CountdownDemo } from '../demos/CountdownDemo';
 import { MediaTileDemo } from '../demos/MediaTileDemo';
 import { RatingStarsDemo } from '../demos/RatingStarsDemo';
 import { StatTileDemo } from '../demos/StatTileDemo';
+import { SparklineDemo } from '../demos/SparklineDemo';
 import { DealStatusDemo } from '../demos/DealStatusDemo';
 import { DealCardDemo } from '../demos/DealCardDemo';
 import { CreatorCardDemo } from '../demos/CreatorCardDemo';
 import { PlatformEditingDemo } from '../demos/PlatformEditingDemo';
 import { DraftReviewDemo } from '../demos/DraftReviewDemo';
 import { WalletDemo } from '../demos/WalletDemo';
+import { MediaKitCardDemo } from '../demos/MediaKitCardDemo';
 import type { ShowcaseEntryId } from './showcaseRegistry';
 
 /** Kept apart from the registry so its jest test never loads native modules. */
@@ -105,10 +107,12 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   mediaTile: MediaTileDemo,
   ratingStars: RatingStarsDemo,
   statTile: StatTileDemo,
+  sparkline: SparklineDemo,
   dealStatus: DealStatusDemo,
   dealCard: DealCardDemo,
   creatorCard: CreatorCardDemo,
   platformEditing: PlatformEditingDemo,
   draftReview: DraftReviewDemo,
   wallet: WalletDemo,
+  mediaKitCard: MediaKitCardDemo,
 };

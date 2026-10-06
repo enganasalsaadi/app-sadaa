@@ -1,0 +1,156 @@
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import type { HomeStackScreenProps, SettingsStackParamList } from '@/core/navigation';
+import {
+  useCreatorOverview,
+  useMediaKitCard,
+  type ProfileStepTarget,
+} from '@/domains/identity';
+import {
+  HOME_NOTICE_DEF,
+  resolveHomeNotice,
+  type HomeNoticeAction,
+} from '../utils/resolveHomeNotice';
+
+type Navigation = HomeStackScreenProps<'CreatorHomeScreen'>['navigation'];
+
+const STEP_SCREEN = {
+  editInfo: 'PersonalInfoScreen',
+  avatar: 'ProfileScreen',
+  platforms: 'PlatformsScreen',
+  kyc: 'KycScreen',
+} as const satisfies Record<ProfileStepTarget, keyof SettingsStackParamList>;
+
+export const useCreatorHomeScreen = () => {
+  const { t } = useTranslation();
+  const navigation = useNavigation<Navigation>();
+  const overview = useCreatorOverview();
+  const mediaKit = useMediaKitCard();
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Account screens live in the Settings tab; `initial: false` keeps Profile underneath.
+  const openProfile = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'ProfileScreen' }),
+    [navigation],
+  );
+  const openNotifications = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'NotificationsScreen', initial: false }),
+    [navigation],
+  );
+  const openPlatforms = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'PlatformsScreen', initial: false }),
+    [navigation],
+  );
+  const openPlatform = useCallback(
+    (platformId: string) =>
+      navigation.navigate('SettingsTab', {
+        screen: 'PlatformDetailScreen',
+        params: { platformId },
+        initial: false,
+      }),
+    [navigation],
+  );
+  const openKyc = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'KycScreen', initial: false }),
+    [navigation],
+  );
+
+  // Prices are edited per platform: go straight to the primary one when it is known.
+  const primaryPlatformId =
+    overview.platforms.items.find(p => p.is_primary)?.id ?? overview.platforms.items[0]?.id ?? null;
+  const openRates = useCallback(
+    () => (primaryPlatformId ? openPlatform(primaryPlatformId) : openPlatforms()),
+    [openPlatform, openPlatforms, primaryPlatformId],
+  );
+
+  const onStepPress = useCallback(
+    (target: ProfileStepTarget) => {
+      const screen = STEP_SCREEN[target];
+      navigation.navigate('SettingsTab', { screen, initial: screen === 'ProfileScreen' });
+    },
+    [navigation],
+  );
+
+  const openInsights = useCallback(() => navigation.navigate('MediaKitInsights'), [navigation]);
+  const openPreview = useCallback(() => navigation.navigate('MediaKitPreview'), [navigation]);
+
+  const { onMakePublic, isMakingPublic } = mediaKit.share;
+  const runNoticeAction = useCallback(
+    (action: HomeNoticeAction) => {
+      switch (action) {
+        case 'openPlatforms':
+          openPlatforms();
+          return;
+        case 'openKyc':
+          openKyc();
+          return;
+        case 'makePublic':
+          if (!isMakingPublic) onMakePublic();
+          return;
+        default: {
+          const _exhaustive: never = action;
+          return _exhaustive;
+        }
+      }
+    },
+    [isMakingPublic, onMakePublic, openKyc, openPlatforms],
+  );
+
+  const noticeKey = resolveHomeNotice({
+    platformsReviewStatus: overview.platformsReviewStatus,
+    kycStatus: overview.kycStatus,
+    isKitPublic: overview.isKitPublic,
+  });
+  const notice = useMemo(() => {
+    if (!noticeKey) return null;
+    const def = HOME_NOTICE_DEF[noticeKey];
+    const action = def.action;
+    return {
+      key: noticeKey,
+      tone: def.tone,
+      title: t(def.titleKey),
+      message: t(def.messageKey),
+      action: action
+        ? { label: t(action.labelKey), onPress: () => runNoticeAction(action.run) }
+        : undefined,
+    };
+  }, [noticeKey, runNoticeAction, t]);
+
+  const { refresh } = overview;
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refresh();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refresh]);
+
+  return {
+    hero: {
+      displayName: overview.displayName,
+      avatarUrl: overview.avatarUrl,
+      tier: overview.tier,
+      primaryPlatform: overview.primaryPlatform,
+    },
+    unreadNotifications: overview.unreadNotifications,
+    notice,
+    mediaKit,
+    completion: overview.completion,
+    platforms: overview.platforms,
+    rates: overview.rates,
+    refreshing,
+    onRefresh,
+    openProfile,
+    openNotifications,
+    openPlatforms,
+    openPlatform,
+    openRates,
+    onStepPress,
+    openInsights,
+    openPreview,
+  };
+};
+
+export type CreatorHomeScreenModel = ReturnType<typeof useCreatorHomeScreen>;

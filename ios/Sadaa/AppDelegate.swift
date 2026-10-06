@@ -41,6 +41,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+  // sada://c/{slug} (the web page's "Open in app" button) → JS `Linking`.
+  func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
+    RCTLinkingManager.application(app, open: url, options: options)
+  }
+
+  // Universal links https://<PUBLIC_WEB_HOST>/c/{slug} → JS `Linking`.
+  func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    RCTLinkingManager.application(
+      application,
+      continue: userActivity,
+      restorationHandler: restorationHandler
+    )
+  }
+
   func application(
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data

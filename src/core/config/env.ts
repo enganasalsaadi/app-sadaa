@@ -15,6 +15,9 @@ interface EnvConfig {
 
   /** Numeric App Store id for the force-update link; empty until the app is published. */
   IOS_APP_STORE_ID: string;
+
+  /** Host of the public media kit pages (`https://<host>/c/{slug}`); empty = universal links off. */
+  PUBLIC_WEB_HOST: string;
 }
 
 const trimSlashes = (
@@ -66,6 +69,8 @@ export const env: EnvConfig = {
   ENABLE_MOCK_DATA: getBooleanValue('ENABLE_MOCK_DATA', false),
 
   IOS_APP_STORE_ID: getStringValue('IOS_APP_STORE_ID'),
+
+  PUBLIC_WEB_HOST: getStringValue('PUBLIC_WEB_HOST').trim().toLowerCase(),
 };
 
 export const isDev = env.APP_ENV === 'development';

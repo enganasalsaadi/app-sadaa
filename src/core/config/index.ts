@@ -27,3 +27,9 @@ export {
   FOLLOWER_TIER_STYLE,
 } from './followerTiers';
 export type { FollowerTierId } from './followerTiers';
+export {
+  CREATOR_SLUG_MIN_LENGTH,
+  CREATOR_SLUG_MAX_LENGTH,
+  isCreatorSlugLength,
+  isCreatorSlugFormat,
+} from './creatorSlug';

@@ -69,3 +69,8 @@ jest.mock('react-native-device-info', () => ({
   getVersion: () => '1.0.0',
   getBundleId: () => 'com.getsadaapp',
 }));
+
+jest.mock('@react-native-clipboard/clipboard', () => ({
+  __esModule: true,
+  default: { setString: jest.fn(), getString: jest.fn() },
+}));

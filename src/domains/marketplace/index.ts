@@ -3,6 +3,7 @@
  * content review. Public API only.
  */
 export { HomeNavigator } from './navigation/HomeNavigator';
+export { CreatorHomeNavigator } from './navigation/CreatorHomeNavigator';
 export {
   DealStatusPill,
   DealProgress,

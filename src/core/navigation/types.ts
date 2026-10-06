@@ -74,13 +74,29 @@ type AccountScreens = {
   NichesScreen: undefined;
   /** Inbox (notifications domain), opened from the Profile bell or a push. */
   NotificationsScreen: undefined;
+  /** Creator media kit link + visibility; also registered in the creator Home stack. */
+  MediaKitSettings: undefined;
 };
 
+/** `HomeTab` stack. Brand registers `HomeScreen` (Explore); creator registers the rest. */
 export type HomeStackParamList = {
   HomeScreen: undefined;
+  CreatorHomeScreen: undefined;
+  MediaKitInsights: undefined;
+  MediaKitPreview: undefined;
+  MediaKitSettings: undefined;
 };
 
 export type SettingsStackParamList = AccountScreens;
+
+/** How a public creator profile was opened; sent as the views beacon `src` (contract §17.5). */
+export type CreatorProfileSource = 'link' | 'app' | 'search';
+
+/** Root-stack screens shared by the signed-in and signed-out branches, above the tabs / Login. */
+export type PublicStackParamList = {
+  /** Public media kit (contract §17.4), from a `/c/{slug}` link or in-app. */
+  MediaKitPublic: { slug: string; source: CreatorProfileSource };
+};
 
 /**
  * Dev-only screens layered on top of the root stack (see RootNavigator,
@@ -115,6 +131,7 @@ export type DevShowcaseStackParamList = {
   LayoutStickyScreen: undefined;
   LayoutFooterElevateScreen: undefined;
   LayoutFabScreen: undefined;
+  LayoutDashboardScreen: undefined;
   LayoutBrandHeaderScreen: undefined;
 };
 
@@ -149,6 +166,9 @@ export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
     NativeStackScreenProps<SettingsStackParamList, T>,
     BottomTabScreenProps<RootTabParamList>
   >;
+
+export type PublicStackScreenProps<T extends keyof PublicStackParamList> =
+  NativeStackScreenProps<PublicStackParamList, T>;
 
 export type DevShowcaseStackScreenProps<T extends keyof DevShowcaseStackParamList> =
   NativeStackScreenProps<DevShowcaseStackParamList, T>;

@@ -46,7 +46,11 @@ const StatTileDemoComponent: React.FC = () => {
       </Box>
       <Box row gap="sm">
         <StatTile label={t('devShowcase.statTile.views')} value="" loading />
-        <StatTile label={t('devShowcase.statTile.followers')} value={formatNumber(MOCK_STATS.followers, COMPACT)} />
+        <StatTile
+          label={t('devShowcase.statTile.followers')}
+          value={formatNumber(MOCK_STATS.followers, COMPACT)}
+          change="new"
+        />
       </Box>
     </Box>
   );

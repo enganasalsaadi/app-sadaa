@@ -13,6 +13,7 @@ import { WebViewScreen } from '../screens/WebViewScreen';
 import { PlatformsScreen } from '../screens/PlatformsScreen';
 import { PlatformDetailScreen } from '../screens/PlatformDetailScreen';
 import { NichesScreen } from '../screens/NichesScreen';
+import { MediaKitSettingsScreen } from '../screens/MediaKitSettingsScreen';
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
@@ -36,5 +37,6 @@ export const SettingsNavigator: React.FC = () => (
     <Stack.Screen name="PlatformDetailScreen" component={PlatformDetailScreen} />
     <Stack.Screen name="NichesScreen" component={NichesScreen} />
     <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+    <Stack.Screen name="MediaKitSettings" component={MediaKitSettingsScreen} />
   </Stack.Navigator>
 );

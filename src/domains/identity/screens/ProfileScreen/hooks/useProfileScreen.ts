@@ -10,21 +10,16 @@ import { useTheme, type ThemeMode } from '@/core/theme';
 import { toastService } from '@/core/toast';
 import { navigate, type SettingsStackParamList } from '@/core/navigation';
 import {
-  PROFILE_STEP_KEYS,
   selectUser,
   useGetProfileQuery,
   useLogoutMutation,
   type KycStatus,
-  type ProfileStepKey,
 } from '@/domains/auth';
 import { useGetUserProfileQuery, useUpdateAvatarMutation } from '../../../api/accountApi';
 import { PROFILE_SECTIONS, type ProfileSectionKey } from '../../../constants/profileSections';
-import {
-  PROFILE_STEP_META,
-  type ProfileStepMeta,
-  type ProfileStepTarget,
-} from '../../../constants/profileSteps';
+import type { ProfileStepTarget } from '../../../constants/profileSteps';
 import { usePushPermissionStatus } from '../../../hooks/usePushPermissionStatus';
+import { buildMissingSteps } from '../../../utils/profileCompletion';
 
 type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'ProfileScreen'>;
 
@@ -32,27 +27,6 @@ type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'ProfileScre
 const AVATAR_TYPES: readonly string[] = ['image/jpeg', 'image/png', 'image/webp','image/jpg'];
 const AVATAR_MAX_BYTES = 5 * 1024 * 1024;
 const AVATAR_MAX_EDGE = 2048;
-
-export interface MissingStep {
-  key: ProfileStepKey;
-  points: number;
-  meta: ProfileStepMeta;
-}
-
-const isProfileStepKey = (key: string): key is ProfileStepKey =>
-  (PROFILE_STEP_KEYS as readonly string[]).includes(key);
-
-/** Contract §3.1: `pending` = under review, no CTA; `rejected` = re-upload. */
-const kycStepMeta = (meta: ProfileStepMeta, status: KycStatus, isBrand: boolean): ProfileStepMeta => {
-  switch (status) {
-    case 'pending':
-      return { ...meta, titleKey: 'account.profile.steps.kycPending', target: null };
-    case 'rejected':
-      return { ...meta, titleKey: 'account.profile.steps.kycRejected' };
-    default:
-      return { ...meta, titleKey: isBrand && meta.brandTitleKey ? meta.brandTitleKey : meta.titleKey };
-  }
-};
 
 export const useProfileScreen = () => {
   const { t } = useTranslation();
@@ -97,21 +71,10 @@ export const useProfileScreen = () => {
   const percentage = completion?.percentage ?? 0;
   const isComplete = completion != null && percentage >= 100;
 
-  const missingSteps = useMemo<MissingStep[]>(() => {
-    const result: MissingStep[] = [];
-    for (const step of completion?.steps ?? []) {
-      if (step.completed || !isProfileStepKey(step.key)) continue;
-      const meta: ProfileStepMeta | null = PROFILE_STEP_META[step.key];
-      if (!meta) continue;
-      if (step.key === 'kyc') {
-        result.push({ key: step.key, points: step.points, meta: kycStepMeta(meta, kycStatus, isBrand) });
-        continue;
-      }
-      const titleKey = isBrand && meta.brandTitleKey ? meta.brandTitleKey : meta.titleKey;
-      result.push({ key: step.key, points: step.points, meta: { ...meta, titleKey } });
-    }
-    return result;
-  }, [completion?.steps, isBrand, kycStatus]);
+  const missingSteps = useMemo(
+    () => buildMissingSteps(completion?.steps ?? [], kycStatus, isBrand),
+    [completion?.steps, isBrand, kycStatus],
+  );
 
   const platforms = profile?.platforms ?? [];
   const primaryPlatform = platforms.find(p => p.is_primary) ?? platforms[0] ?? null;
@@ -173,9 +136,6 @@ export const useProfileScreen = () => {
     async (asset: Asset) => {
       if (!asset.uri) return;
       const type = asset.type ?? 'image/jpeg';
-      console.log(type)
-      console.log(asset.fileSize)
-      console.log(AVATAR_MAX_BYTES)
       if (!AVATAR_TYPES.includes(type) || (asset.fileSize ?? 0) > AVATAR_MAX_BYTES) {
         toastService.error(t('account.profile.avatarInvalid'));
         return;
@@ -214,6 +174,7 @@ export const useProfileScreen = () => {
   const openLanguage = useCallback(() => navigation.navigate('LanguageScreen'), [navigation]);
   const openPlatforms = useCallback(() => navigation.navigate('PlatformsScreen'), [navigation]);
   const openNiches = useCallback(() => navigation.navigate('NichesScreen'), [navigation]);
+  const openMediaKitSettings = useCallback(() => navigation.navigate('MediaKitSettings'), [navigation]);
   const openKyc = useCallback(() => navigation.navigate('KycScreen'), [navigation]);
   const openNotifications = useCallback(
     () => navigation.navigate('NotificationsScreen'),
@@ -323,6 +284,7 @@ export const useProfileScreen = () => {
     openLanguage,
     openPlatforms,
     openNiches,
+    openMediaKitSettings,
     openKyc,
     openNotifications,
     openTerms,

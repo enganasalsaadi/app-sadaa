@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Bell, Building2, LogOut, UserRoundPen } from 'lucide-react-native';
+import { Bell, Building2, Link2, LogOut, UserRoundPen } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, ConfirmSheet, Layout } from '@/shared/ui';
+import { Box, ConfirmSheet, Layout, ListGroup, ListRow } from '@/shared/ui';
 import { DeleteAccountSheet } from '@/domains/auth';
 import type { ProfileSectionKey } from '../../constants/profileSections';
 import { useProfileScreen, type ProfileScreenModel } from './hooks/useProfileScreen';
@@ -24,6 +24,7 @@ interface SectionProps {
 
 /** One card per registry key; the rail runs edge to edge, the rest sit in the screen gutter. */
 const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
+  const { t } = useTranslation();
   switch (section) {
     case 'completion':
       return <MissingStepsRail steps={vm.missingSteps} onStepPress={vm.onStepPress} />;
@@ -52,6 +53,17 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
           isLoading={vm.details.isLoading}
           onPress={vm.openNiches}
         />
+      );
+    case 'mediaKit':
+      return (
+        <ListGroup>
+          <ListRow
+            icon={Link2}
+            title={t('account.profile.mediaKit.title')}
+            subtitle={t('account.profile.mediaKit.subtitle')}
+            onPress={vm.openMediaKitSettings}
+          />
+        </ListGroup>
       );
     case 'company':
       return (

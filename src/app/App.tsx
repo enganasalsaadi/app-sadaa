@@ -23,6 +23,8 @@ import { useGetProfileQuery } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
 import { usePushNavigation } from '@/domains/notifications';
+import { useAppLinkNavigation } from '@/domains/identity';
+import { appLinkManager } from '@/core/linking';
 import { GlobalErrorModal } from '@/shared/ui/GlobalErrorModal';
 import { NetworkSnackbar } from '@/shared/ui/NetworkSnackbar';
 import { BootScreen } from '@/app/screens/BootScreen';
@@ -37,6 +39,10 @@ const AppContent: React.FC = () => {
   usePushRefresh(isAuthenticated);
   // Taps route only into the signed-in tabs; a launch tap waits for them.
   usePushNavigation(status === AppStatus.AUTHENTICATED);
+  // `/c/{slug}` links open over the tabs or Login; other gates keep the link ≤ 30 s.
+  useAppLinkNavigation(
+    status === AppStatus.AUTHENTICATED || status === AppStatus.UNAUTHENTICATED,
+  );
   useNetworkMonitor();
   useGetProfileQuery(undefined, { skip: !isAuthenticated });
 
@@ -56,6 +62,10 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     initialize().catch(() => undefined);
   }, [initialize]);
+
+  useEffect(() => {
+    appLinkManager.start();
+  }, []);
 
   if (!isReady) {
     return isSlowBoot ? <BootScreen /> : null;

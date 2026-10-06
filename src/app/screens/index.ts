@@ -22,4 +22,5 @@ export {
   LayoutFooterElevateScreen,
   LayoutFabScreen,
   LayoutBrandHeaderScreen,
+  LayoutDashboardScreen,
 } from './DevShowcaseScreen/layoutVariants';

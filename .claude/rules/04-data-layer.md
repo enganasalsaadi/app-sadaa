@@ -40,7 +40,7 @@ Screen  →  use<Screen>Screen hook  →  domain hook / RTK Query hook  →  api
 
 ## API envelope
 
-Server returns `{ success, message, data, error_code, errors, meta: { locale, retry_after? } }` (`docs/mobile-contract.md` §1; `errors` is a field map on 422 only, else `null`). `normalizeApiError` → `AppApiError.code` (typed `ApiErrorCode`) + `retryAfter`; branch on `code`, never on `message`. `baseQuery` unwraps `data`, turns `success:false` into an error. Paginated: `extraOptions: { withPagination: true }` → `{ items, pagination: { total, page, per_page, pages } }`.
+Server returns `{ success, message, data, error_code, errors, meta: { locale, retry_after? } }` (`docs/mobile-contract.md` §1; `errors` is a field map on 422 only, else `null`). `normalizeApiError` → `AppApiError.code` (typed `ApiErrorCode`) + `retryAfter` + `reason` + `availableAt` (top-level `meta`); branch on `code`, never on `message`. Success meta needed by a screen → `extraOptions: { withMeta: true }` → `WithMeta<T>`. `baseQuery` unwraps `data`, turns `success:false` into an error. Paginated: `extraOptions: { withPagination: true }` → `{ items, pagination: { total, page, per_page, pages } }`.
 
 ## Error routing (centralised in baseQuery — do not re-handle)
 

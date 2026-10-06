@@ -27,6 +27,23 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+      <!-- Media kit app links https://<PUBLIC_WEB_HOST>/c/{slug} (contract §17.8); host from .env. -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data
+          android:scheme="https"
+          android:host="${publicWebHost}"
+          android:pathPrefix="/c/" />
+      </intent-filter>
+      <!-- sada://c/{slug}: the web page's "Open in app" button. -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="sada" android:host="c" />
+      </intent-filter>
     </activity>
     <meta-data
       android:name="com.google.firebase.messaging.default_notification_color"

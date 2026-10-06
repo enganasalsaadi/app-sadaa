@@ -5,6 +5,7 @@ import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 export const useTextInputsDemo = () => {
   const [defaultValue, setDefaultValue] = useState('');
   const [errorValue, setErrorValue] = useState('');
+  const [hintValue, setHintValue] = useState('');
   const [bioValue, setBioValue] = useState('');
   const [secureValue, setSecureValue] = useState('');
   const [multilineValue, setMultilineValue] = useState('');
@@ -18,6 +19,8 @@ export const useTextInputsDemo = () => {
     setDefaultValue,
     errorValue,
     setErrorValue,
+    hintValue,
+    setHintValue,
     bioValue,
     setBioValue,
     secureValue,

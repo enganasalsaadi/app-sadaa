@@ -393,7 +393,8 @@
       "countShort": "({{count}})"
     },
     "stat": {
-      "change": "تغيّر {{change}}"
+      "change": "تغيّر {{change}}",
+      "new": "جديد"
     }
   },
   "errors": {
@@ -506,6 +507,10 @@
       "niches": {
         "title": "اهتماماتي",
         "empty": "لم تحدد اهتماماتك بعد."
+      },
+      "mediaKit": {
+        "title": "الملف الإعلامي",
+        "subtitle": "رابطك ومن يمكنه رؤيته"
       },
       "company": {
         "title": "الشركة",
@@ -677,6 +682,125 @@
       "errors": {
         "min": "اختر اهتماماً واحداً على الأقل",
         "max": "اختر حتى {{count}} اهتمامات"
+      }
+    },
+    "mediaKit": {
+      "title": "ملفك الإعلامي",
+      "loadFailed": "تعذّر تحميل ملفك الإعلامي",
+      "statsFailed": "تعذّر تحميل الإحصائيات",
+      "retry": "إعادة المحاولة",
+      "period": "آخر 30 يوماً",
+      "priceFrom": "يبدأ من",
+      "followers": "{{count}} متابع",
+      "verifiedFollowers": "عدد متابعين موثّق",
+      "verifiedCreator": "صانع محتوى موثّق",
+      "linkLabel": "رابط ملفك الإعلامي",
+      "noActivity": "شارك رابطك لتحصل على أول مشاهداتك",
+      "insights": "كل الإحصائيات",
+      "insightsScreen": {
+        "title": "إحصائيات ملفك الإعلامي",
+        "periodLabel": "الفترة",
+        "periods": {
+          "7d": "7 أيام",
+          "30d": "30 يوماً",
+          "90d": "90 يوماً"
+        },
+        "range": "{{from}} – {{to}}",
+        "compare": {
+          "7d": "مقارنةً بالأيام السبعة السابقة",
+          "30d": "مقارنةً بالـ 30 يوماً السابقة",
+          "90d": "مقارنةً بالـ 90 يوماً السابقة"
+        },
+        "loadFailed": "تعذّر تحميل الإحصائيات",
+        "daily": {
+          "title": "مشاهدات الملف يومياً",
+          "a11y": "مشاهدات الملف يومياً: {{total}} إجمالاً، وأفضل يوم {{peak}}"
+        },
+        "locations": {
+          "title": "من أين تشاهدك العلامات التجارية",
+          "subtitle": "العلامات التجارية التي فتحت ملفك، حسب المدينة",
+          "row": "{{count}} · {{share}}",
+          "a11y": "{{city}}: {{share}} من العلامات التجارية ({{count}})"
+        },
+        "topWork": {
+          "title": "الأعمال الأكثر مشاهدة",
+          "clicks": "النقرات: {{count}}"
+        }
+      },
+      "preview": "معاينة",
+      "previewScreen": {
+        "title": "معاينة الملف الإعلامي",
+        "intro": "هكذا تراك العلامات التجارية.",
+        "platforms": "المنصات",
+        "rates": "الأسعار",
+        "rateRow": "{{platform}} · {{service}}",
+        "username": "@{{username}}"
+      },
+      "publicScreen": {
+        "title": "ملف صانع المحتوى",
+        "notFoundTitle": "الملف غير متاح",
+        "notFoundBody": "قد يكون الرابط قديماً، أو أن صانع المحتوى أخفى ملفه.",
+        "back": "رجوع",
+        "loadFailed": "تعذّر تحميل هذا الملف"
+      },
+      "settingsScreen": {
+        "title": "إعدادات الملف الإعلامي",
+        "link": {
+          "section": "رابطك",
+          "label": "اسم الرابط",
+          "placeholder": "مثال: anas.style",
+          "current": "هذا رابطك الحالي",
+          "checking": "جارٍ التحقق من التوفر…",
+          "available": "{{link}} متاح",
+          "checkFailed": "تعذّر التحقق من هذا الاسم. يمكنك محاولة حفظه.",
+          "save": "حفظ الرابط",
+          "saved": "تم تحديث رابطك",
+          "saveFailed": "تعذّر حفظ رابطك"
+        },
+        "reasons": {
+          "invalidLength": "استخدم من 3 إلى 30 حرفاً",
+          "invalidFormat": "استخدم أحرفاً إنجليزية صغيرة أو أرقاماً أو نقاطاً أو شرطات سفلية، على أن يبدأ وينتهي بحرف أو رقم",
+          "reserved": "هذا الاسم محجوز. جرّب اسماً آخر.",
+          "taken": "هذا الاسم مستخدم. جرّب اسماً آخر."
+        },
+        "cooldown": {
+          "title": "غيّرت رابطك مؤخراً",
+          "message": "يمكنك اختيار رابط جديد في {{date}}. العودة إلى رابطك السابق متاحة في أي وقت.",
+          "saveBlocked": "يمكنك تغيير رابطك مجدداً في {{date}}",
+          "saveBlockedNoDate": "غيّرت رابطك مؤخراً. حاول لاحقاً."
+        },
+        "rateLimited": "تغييرات كثيرة. حاول لاحقاً.",
+        "visibility": {
+          "section": "الظهور",
+          "label": "إظهار ملفي للعلامات التجارية",
+          "onHint": "يمكن للعلامات التجارية فتح ملفك الإعلامي ورابطك.",
+          "offHint": "مخفي: يظهر رابطك «الملف غير متاح» ولا يمكنك مشاركته.",
+          "madeHidden": "تم إخفاء ملفك الإعلامي",
+          "failed": "تعذّر تحديث الظهور",
+          "confirmTitle": "إخفاء ملفك الإعلامي؟",
+          "confirmBody": "لن تتمكن العلامات التجارية من فتح ملفك، وسيظهر رابطك «الملف غير متاح». يمكنك إظهاره مجدداً في أي وقت.",
+          "confirm": "إخفاء الملف"
+        }
+      },
+      "tiles": {
+        "views": "مشاهدات الملف",
+        "brands": "العلامات التجارية",
+        "linkOpens": "فتح الرابط",
+        "offers": "العروض",
+        "shares": "المشاركات",
+        "searchImpressions": "الظهور في البحث"
+      },
+      "share": {
+        "cta": "شارك ملفك الإعلامي",
+        "copy": "نسخ الرابط",
+        "copied": "تم نسخ الرابط",
+        "privateTitle": "ملفك الإعلامي مخفي",
+        "privateBody": "لا تستطيع العلامات التجارية رؤيته حتى تجعله عاماً.",
+        "makePublic": "اجعله عاماً",
+        "madePublic": "أصبح ملفك الإعلامي عاماً",
+        "makePublicFailed": "تعذّر جعل ملفك الإعلامي عاماً",
+        "rateLimited": "مشاركات كثيرة. حاول لاحقاً.",
+        "failed": "تعذّر تسجيل المشاركة."
       }
     },
     "discard": {
@@ -860,6 +984,39 @@
       "verified": "صانع محتوى موثّق",
       "followers": "{{count}} متابع",
       "priceFrom": "يبدأ من"
+    },
+    "creatorHome": {
+      "greeting": "أهلاً، {{name}}",
+      "greetingFallback": "أهلاً بك",
+      "openProfile": "افتح ملفي",
+      "notice": {
+        "platformsActionRequired": {
+          "title": "إحدى منصاتك تحتاج انتباهك",
+          "message": "عدّل الحساب المشار إليه ليتمكن المعلنون من حجزك عليه.",
+          "action": "راجع منصاتك"
+        },
+        "platformsUnderReview": {
+          "title": "منصاتك قيد المراجعة",
+          "message": "يتحقق فريقنا من حساباتك، وسنخبرك عند الانتهاء."
+        }
+      },
+      "strength": {
+        "title": "قوة ملفك",
+        "nextStep": "الخطوة التالية"
+      },
+      "platforms": {
+        "manage": "إدارة",
+        "loadFailed": "تعذّر تحميل منصاتك",
+        "open": "افتح {{platform}} @{{username}}"
+      },
+      "rates": {
+        "title": "أسعاري",
+        "edit": "تعديل",
+        "empty": "أضف أسعارك ليتمكن المعلنون من حجزك",
+        "add": "أضف أسعارك",
+        "loadFailed": "تعذّر تحميل أسعارك",
+        "row": "{{platform}} · {{service}}"
+      }
     }
   },
   "finance": {
@@ -933,6 +1090,7 @@
       "amountInput": "حقل المبلغ",
       "moneyText": "المبالغ",
       "statTile": "بطاقة إحصائية",
+      "sparkline": "خط الاتجاه",
       "timeline": "الخط الزمني",
       "countdown": "العد التنازلي",
       "mediaTile": "عنصر الوسائط",
@@ -943,7 +1101,8 @@
       "draftReview": "مراجعة المسودة",
       "wallet": "المحفظة",
       "gradientSurface": "سطح متدرّج",
-      "platformEditing": "تعديل المنصات والأسعار"
+      "platformEditing": "تعديل المنصات والأسعار",
+      "mediaKitCard": "بطاقة الملف الإعلامي"
     },
     "typography": {
       "h1Label": "H1 · عنوان",
@@ -1006,7 +1165,13 @@
       "multilineLabel": "متعدد الأسطر",
       "multilinePlaceholder": "اكتب وصف الحملة",
       "counterLabel": "النبذة (مع عداد)",
-      "counterPlaceholder": "عرّف العلامات التجارية بمحتواك"
+      "counterPlaceholder": "عرّف العلامات التجارية بمحتواك",
+      "hintLabel": "مع تلميح",
+      "hintPlaceholder": "اختر اسماً للرابط",
+      "hintText": "من 3 إلى 30 حرفاً",
+      "hintSuccessLabel": "تلميح (نجاح)",
+      "hintSuccessValue": "anas.style",
+      "hintSuccessText": "sada.app/c/anas.style متاح"
     },
     "cards": {
       "plainTitle": "بطاقة ثابتة",
@@ -1074,6 +1239,12 @@
       "fabDescription": "overlay: زر عائم بعيد عن التذييل ومؤشر الشاشة الرئيسية",
       "brandHeaderTitle": "رأس بلون الهوية",
       "brandHeaderDescription": "header variant=\"brand\" مع إجراءات وشارة",
+      "dashboardTitle": "لوحة المتابعة",
+      "dashboardDescription": "شريط ترحيب بخلفية كحلية + ترويسة متراكبة، تنبيه واحد، أقسام بطاقات متتالية",
+      "dashboardGreeting": "أهلاً، ليلى",
+      "dashboardNotice": "تنبيه واحد فقط: العائق الأعلى أولوية.",
+      "dashboardSection": "قسم",
+      "dashboardManage": "إدارة",
       "scrollHint": "مرّر لرؤية السلوك.",
       "heroTitle": "ملف صانع المحتوى",
       "heroBody": "تمتد الصورة تحت شريط الحالة، وتظهر خلفية الرأس وعنوانه تدريجياً مع تمريرها.",
@@ -1410,6 +1581,28 @@
       "engagement": "التفاعل",
       "followers": "المتابعون",
       "earnings": "الأرباح"
+    },
+    "sparkline": {
+      "views": "المشاهدات اليومية (30 يوماً)",
+      "earnings": "الأرباح اليومية (لون المال)",
+      "zeros": "لا نشاط (كلها أصفار)",
+      "single": "يوم واحد",
+      "loading": "جارٍ التحميل"
+    },
+    "mediaKitCard": {
+      "default": "الافتراضي",
+      "offersLive": "العروض مفعّلة (4 بطاقات)",
+      "noActivity": "لا نشاط بعد",
+      "minimal": "ملف مختصر",
+      "loading": "جارٍ التحميل",
+      "statsLoading": "جارٍ تحميل الإحصائيات",
+      "statsError": "فشل تحميل الإحصائيات",
+      "loadError": "فشل تحميل الملف",
+      "sharing": "المشاركة جارية",
+      "shareHidden": "المشاركة: الملف مخفي",
+      "shareFailed": "المشاركة: فشلت",
+      "shareRateLimited": "المشاركة: تجاوز الحد",
+      "displayName": "أنس ستايل"
     },
     "dealStatus": {
       "pillsTitle": "كل الحالات",

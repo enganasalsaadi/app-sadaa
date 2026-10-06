@@ -296,14 +296,26 @@ APP LAUNCH
 │
 ├── SUSPENDED (blocking: contact support, re-check status, log out, delete account)   ✅
 │
+├── CREATOR PUBLIC PROFILE (opened from a shared Sada link; over Login or the main app)   🟡 built, awaiting device and live-server testing
+│     profile card · platforms · prices · "Profile not available" for any hidden or unknown link
+│
 └── MAIN APP (bottom tab bar: floating rounded glass capsule; page content
     │   shows blurred through it; slides away on scroll down, back on scroll up;
     │   hidden on inner screens; active tab shown in teal)                           ✅
     │   Five tabs, different per role:
     │     brand:   Explore · My campaigns · Messages · Wallet · Account
     │     creator: Home · Deals · Messages · Wallet · My profile
-    ├── Home / Explore tab                                       🟡 placeholder today
-    │     (will become: brand dashboard / creator opportunities)                         🔜
+    ├── Home (creator) dashboard                                 🟡 built, awaiting device and live-server testing
+    │     greeting + tier · one blocker notice · media kit card (stats, link, Share)
+    │     · profile strength + next step · my platforms · my prices
+    │     ├── Media kit: all insights                                🟡 built, awaiting device and live-server testing
+    │     │     period switch (7 / 30 / 90 days) · numbers vs the previous period
+    │     │     · daily views line · cities brands view from · most-viewed work · Share
+    │     └── Media kit: preview as brands see it                    🟡 built, awaiting device and live-server testing
+    │           hidden-kit warning · profile card · platforms · prices · Share
+    │           └── Media kit settings (gear in the header)          🟡 built, awaiting device and live-server testing
+    │                 link name with a live availability check · show / hide from brands
+    ├── Explore (brand) tab                                      🟡 placeholder today    🔜
     ├── My campaigns (brand) / Deals (creator) tab               🟡 "coming soon" page   🔜
     ├── Messages tab                                             🟡 "coming soon" page   🔜
     ├── Wallet tab                                               🟡 "coming soon" page   🔜
@@ -314,6 +326,7 @@ APP LAUNCH
           │     ├── Creator: My platforms → one platform (switches, prices)  🟡 built, awaiting device and live-server testing
           │     ├── Creator: My niches                           🟡 built, awaiting device and live-server testing
           │     ├── Creator: Personal info (name, email, city, area)   🟡 built, awaiting device and live-server testing
+          │     ├── Creator: Media kit settings (same page as from Home)   🟡 built, awaiting device and live-server testing
           │     └── Brand: Company info (name, email, activity, city, links)   🟡 built, awaiting device and live-server testing
           ├── Change password                                    ✅
           ├── Language                                           ✅
@@ -363,6 +376,28 @@ APP LAUNCH
 - **Verification after registration:** the verification card on the Profile opens the upload page when an upload is possible (never sent, or rejected; a rejection shows the reason and an "Upload again" button). Creators upload the front and back of their national ID (photo or PDF, up to 10 MB). Brands choose the document type (commercial register, industrial register or trade license) and upload one document (JPG, PNG or PDF, up to 10 MB). Files are checked on the phone before sending. While a request is under review, or once verified, the page shows only the status and its date. Sending is limited to 5 tries per hour (shared with registration); when reached, the button shows a countdown. The result arrives as a notification and refreshes the status.
 - **Completion adds up to 100%.** Every step the server counts has its own "complete your profile" card, verification included (35% for brands, 20% for creators), so the cards always add up to what is missing. The verification card opens the upload page; while a request is under review it only says so; after a rejection it asks to upload again.
 - **The brand Profile is lighter than the creator's:** the header shows the company logo (tap to change), name, business type and city; below come the completion cards (the photo step reads "add your company logo"), notifications, business verification and a company card (business type, city, links). Platforms, niches and prices are creator-only and never appear for brands.
+
+#### Journey A4: The creator Home 🟡
+- **What it is:** the first tab a creator lands on. A short navy band greets them by name with their tier badge and primary account; the bell in the corner opens the notification inbox with the unread count. Tapping the photo opens the Profile.
+- **One notice at a time:** if something blocks bookings, a single notice explains it, in this order: a platform needs fixing (opens My platforms) → identity verification was rejected (upload again) → platforms under review (information only) → the media kit is hidden (make it public in one tap). Nothing blocking means no notice.
+- **Media kit card:** how brands see the creator (photo, verified badge, tier, primary platform and followers, up to three niches, lowest price), the last 30 days of profile views, brands that looked and link opens (a number the service doesn't report yet is hidden, never shown as zero), the public link with a copy button, and **Share**, the only main button on the screen. "All insights" opens the insights page below; "Preview" opens the preview page.
+- **Media kit insights (🟡):** the creator picks the last 7, 30 or 90 days (today included). Each number (profile views, brands that looked, link opens, shares) shows its change against the same length of time just before, or "New" when there was nothing to compare to; numbers the service doesn't report yet stay hidden. Below come a small line of daily profile views, the cities the viewing brands are based in (only once at least three brands have looked, so no single brand can be identified), and the most-viewed portfolio work once portfolios exist. With no activity yet, the page invites the creator to share their link. **Share** is the page's one main button, and a hidden kit asks to be made public first. Pull down to refresh; a failed load shows a retry.
+- **Media kit preview (🟡):** the creator sees their kit exactly as brands do: photo, verified badge, tier, every niche and the lowest price, each linked platform with its followers (a check mark only when the count is verified) and tier, and their prices. Parts with nothing to show stay hidden. A note says "this is how brands see you", or, when the kit is hidden, a warning with "Make public". Opening the preview never counts as a profile view. **Share** is the one main button; the gear opens the settings.
+- **Media kit settings (🟡, from the preview or from My profile):** the creator picks the name in their link (for example `anas.style`). While they type, the app says whether the name is free, already taken or reserved, after a short pause so it doesn't ask on every letter; shape problems (length, allowed characters) are explained straight away without asking the server. A link name can change **once every 30 days**: during that time a note gives the date the next change opens, and going back to the previous name is still allowed (the old link keeps working for 30 days and nobody else can take it). If the server refuses on save (name just taken, still in the waiting period), the reason shows under the field with the date where relevant. A switch shows or hides the kit from brands; hiding asks for confirmation first, because the link then shows "Profile not available" and sharing stops. Leaving with an unsaved name asks before discarding it.
+- **Profile strength:** the completion bar and the single next useful step (for example "Add a profile photo +10%"), which opens the right page. It disappears at 100%; the full list of steps stays on the Profile.
+- **My platforms:** one swipeable tile per linked account with followers, tier, and labels for under review, rejected or not available; tapping a tile opens that platform, "Manage" opens the list.
+- **My prices:** one line per saved price (platform · service · amount). "Edit" opens the primary platform's page, where prices are set. With no prices yet, the card invites the creator to add them so brands can book them.
+- **Refresh and errors:** pulling down refreshes everything on the page. Each section loads and fails on its own, with its own retry, so one slow answer never blanks the whole screen. Wallet, offers and deals stay off Home until those services exist.
+- **Brands** still see the Explore placeholder on this tab; their dashboard is a separate design.
+
+#### Journey A5: Opening a creator's shared link 🟡
+- **What it is:** a creator shares their media kit link (on WhatsApp, Telegram or anywhere). When someone with Sada installed taps it, the app opens straight on that creator's public profile instead of the web page. The web page's "Open in app" button does the same.
+- **Who sees it:** signed-in brands and creators open it over their tabs; people who aren't signed in see it over Login, since the profile is public. If the app is still on another screen that must come first (language choice, intro slides, maintenance, an unfinished registration, a suspended account), the link waits up to 30 seconds and is then dropped, so nobody is thrown into a profile minutes later.
+- **What it shows:** the same profile brands see in the creator's own preview: photo, verified badge, tier, niches, each platform with its followers and the prices. Pull down to refresh.
+- **Counting views:** each opening counts one profile view for the creator's insights (a brand who is signed in also counts toward "brands that looked"). Counting happens quietly in the background and never slows down or blocks the page; the creator's own visits and quick repeats are not counted by the service.
+- **Old links keep working:** if the creator changed their link name in the last 30 days, the old link still opens their profile, and the app switches to the new name behind the scenes.
+- **Safety:** only links on Sada's own web address in the form "/c/name" (or the app's own link type) are accepted, and the name must follow the link-name rules; anything else just opens the app normally. A profile that is hidden, suspended, deleted or simply doesn't exist always shows the same "Profile not available" message, so a link never reveals which one it is.
+- **Not live yet:** links on the web address open the app only once Sada's permanent public web address is set and the app is registered with it; until then only the "Open in app" button works.
 
 #### Journey B: Brand registration ✅
 1. **Create account** (name, phone, password) → SMS code is sent.
@@ -472,7 +507,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - **Right to leave.** Users can delete their account themselves at any stage, confirmed by password. The server removes their documents, photo and devices and frees their phone number; the phone keeps nothing (see Journey G).
 - **No secrets in the app.** Sensitive keys (AI services, analytics) are only ever used on the server.
 - **No personal data in logs.** Phone numbers, tokens, wallet data and amounts are never logged.
-- **Link safety.** Social links and proof-of-publishing links are only accepted from approved social networks. In-app web pages only open approved addresses.
+- **Link safety.** Social links and proof-of-publishing links are only accepted from approved social networks. In-app web pages only open approved addresses. Links that open the app (a creator's shared profile) are accepted only from Sada's own web address in one exact form; anything else is ignored and the app simply opens.
 - **Uploads.** File type and size are checked before upload, and drafts are kept at original quality.
 - **Permissions are requested only when needed**, with an explanation (see §7.1).
 
@@ -527,6 +562,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - 🟡 Manage social platforms after registration (add, edit, refresh, set primary, availability, remove) and edit prices per platform: built, awaiting testing.
 - 🟡 Verify identity (creators) or the business (brands) later from the Profile: built, awaiting testing.
 - 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
+- 🟡 Creator Home dashboard with the shareable media kit, its insights page (7 / 30 / 90 days), the "preview as brands see it" page and the link and visibility settings: built, awaiting testing.
+- 🟡 Opening a creator's shared link inside the app (their public profile, with a counted view): built, awaiting testing. Web links need Sada's permanent public web address and the app's identity registered with it.
 
 **🔜 Then: marketplace core (the revenue engine)**
 - Campaign Brief Builder, open campaigns, applications and direct offers.
@@ -554,8 +591,8 @@ These must be solved before a public store release. Ordered by severity.
 
 | # | Blocker | Impact | Owner |
 |---|---|---|---|
-| 1 | **Marketplace and finance are not yet live.** Home is a placeholder, and campaigns, deals and wallet are not connected to the service. | No core value for users yet. A store reviewer may reject the app for minimal functionality. | Mobile + backend |
-| 2 | **Notification service is set up for the previous project**, and app identifiers don't match across iOS, Android and the notification service. | Push notifications will not arrive. Store identity is inconsistent. | Mobile + DevOps |
+| 1 | **Marketplace and finance are not yet live.** The brand Explore tab is a placeholder, and campaigns, deals and wallet are not connected to the service. | No core value for users yet. A store reviewer may reject the app for minimal functionality. | Mobile + backend |
+| 2 | **Notification service is set up for the previous project.** iOS and Android now share one app identity (aligned 2026-10-06), but the notification service still expects the old one. | Push notifications will not arrive until the notification service is set up again for the new identity. | Mobile + DevOps |
 | 3 | **The server address still points to the old domain.** | The production app can't reach the Sada service. | Mobile + DevOps |
 | 4 | ✅ **Resolved 2026-10-03.** ~~The iOS build allows insecure connections.~~ Store builds now use HTTPS only on both platforms, and Android no longer trusts user-installed certificates. | | Mobile |
 | 5 | ✅ **Resolved 2026-10-03.** ~~Login sessions are stored on the device without encryption.~~ Sessions and personal data are now stored encrypted, with the key in Keychain (iPhone) or Keystore (Android). Existing users stay logged in after updating. | | Mobile |
@@ -563,6 +600,7 @@ These must be solved before a public store release. Ordered by severity.
 | 7 | ✅ **Resolved 2026-10-03.** ~~Leftover text from the previous project in the profile area, and old notification-settings fields.~~ The booking counter, the old app name and the old notification settings screen were removed. The phone home screen now shows «صدى» in Arabic and "Sada" in English. | | Mobile |
 | 8 | ✅ **Resolved 2026-10-03.** ~~Account deletion is not confirmed against the new backend.~~ Deletion is connected to the Sada service and reachable from Settings, the Suspended screen and registration. | | Mobile + backend |
 | 9 | **App Store listing ID not set yet**, so the forced-update button opens the App Store home page instead of Sada's page. | Poor update experience until the first release. Set it right after the listing is created. | Mobile |
+| 9b | **Shared-link verification is waiting on two inputs.** The app's identity details (Apple team, app ids, Android signing fingerprints, link scheme) are ready and handed to the backend team; still missing are Sada's permanent public web address and the App Store listing id. The Google Play signing fingerprint can only be read once the app is uploaded to Play. | Links on the web address won't open the app until the backend registers the identity and the web address is set. The "Open in app" button works meanwhile. | Mobile + backend + DevOps |
 | 10 | **Not yet verified on real devices** after the visual redesign: some text fields in right-to-left, and card shadows. | Visual polish and right-to-left correctness. | Mobile QA |
 | 11 | **Payment partner and legal framework** for escrow with local e-wallets, plus contract templates. | Escrow can't launch without them. | Business + legal |
 | 12 | **Privacy label, Data Safety form, final legal pages, store screenshots.** | Required for submission. | Product + legal |
@@ -575,6 +613,12 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-06 | App identity details for shared links collected and handed to the backend team (Apple team and app ids, Android signing fingerprints for debug and release, link scheme). Still open: permanent public web address, App Store listing id, Google Play signing fingerprint. No screen changed. | 7.4 |
+| 2026-10-06 | Creator public profile from a shared link built (🟡 awaiting device and live-server testing): tapping a creator's link opens their profile in the app for signed-in users and over Login for everyone else, counts one view in the background, follows a renamed link to the new name, and shows "Profile not available" for any hidden or unknown creator. Only Sada's own link form is accepted. iOS and Android now share one app identity. Web links start working once the permanent public web address is set. | 5.2, 5.3 (Journey A5), 6.5, 7.3, 7.4 |
+| 2026-10-06 | Media kit preview and settings built (🟡 awaiting device and live-server testing). Preview (from "Preview" on the creator Home) shows the kit exactly as brands see it, with a hidden-kit warning and Share. Settings (gear on the preview, or the new "Media kit" row in My profile) checks the link name live as the creator types, explains the once-per-30-days change limit with its date while still allowing a return to the previous name, and shows / hides the kit from brands after a confirmation. | 5.2, 5.3 (Journey A4), 7.3 |
+| 2026-10-06 | Media kit insights page built (🟡 awaiting device and live-server testing), opened from "All insights" on the creator Home: 7 / 30 / 90-day switch, every reported number with its change vs the previous period ("New" when there is nothing to compare), a daily views line, brand cities (shown from three brands up), most-viewed work once portfolios exist, and Share as the one main button. | 5.2, 5.3 (Journey A4), 7.3 |
+| 2026-10-06 | Creator Home built (🟡 awaiting device and live-server testing): greeting band with tier and bell, one blocker notice at a time, the media kit card with Share, profile strength with the next step, swipeable platform tiles and a prices card. "All insights" and "Preview" show "coming soon" until their screens ship. Brands keep the Explore placeholder. | 5.2, 5.3 (Journey A4), 7.3, 7.4 |
+| 2026-10-06 | Creator media kit card built (🟡 not on a screen yet, arrives with the creator Home): shows how brands see the creator, last-30-days views, brands and link opens (a number that isn't live yet is hidden, and a figure with nothing to compare to is marked "New"), the public link with a copy button, and one Share button. A hidden kit asks the creator to make it public before sharing. | none yet (journey and screen map update when Home ships) |
 | 2026-10-06 | Bottom bar: the active tab is now shown only by its teal icon and name, with no highlight shape behind it. | 5.2 |
 | 2026-10-06 | The bottom bar is a floating, rounded capsule again, now made of frosted "liquid" glass: the page shows blurred through it, and a soft droplet glides and stretches to the tapped tab. Every tab shows its icon and name. It slides away while scrolling down and returns on scroll up. Replaces the docked bar from 2026-10-04. | 5.2 |
 | 2026-10-04 | The bottom bar now shows the full five-tab set for each role (brand: Explore, My campaigns, Messages, Wallet, Account; creator: Home, Deals, Messages, Wallet, My profile), with larger tabs, icons and labels. Tabs that aren't built yet open a "coming soon" page. | 5.2 |

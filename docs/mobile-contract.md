@@ -4,6 +4,7 @@ Audience: Sadaa React Native app (`mobile/sadaa/src`).
 Backend source of truth: `api/docs/plans/profile-account/backend-plan.md`.
 Base URL: `/api/v1`. All requests send `Authorization: Bearer <token>` (except public ones) and `Accept-Language: ar|en`.
 Status: LOCKED (2026-10-01), revised by the hardening pass (§0.1, backend-plan §16). Any change must be mirrored in `backend-plan.md`.
+**§17 Media Kit is LOCKED (2026-10-06, implemented in the backend).** Source: `docs/mobile-handoff.md` Appendix.
 Wire order for mobile: §0.1 changelog → §1 errors → §15 Registration & Auth → §16 edge cases → rest.
 
 ---
@@ -750,3 +751,168 @@ Body optional `{ "fcm_token": "<current FCM token>" }` (nullable string ≤ 512)
 - [ ] **Logout**: send `fcm_token`, clear storage regardless of result.
 - [ ] **Rejected platform**: hide "make primary"; 409 `platform_not_eligible_for_primary` → toast.
 - [ ] **Error codes are lowercase** — update any `PHONE_NOT_VERIFIED` checks.
+
+---
+
+## 17. Media Kit — LOCKED (2026-10-06, implemented)
+
+The creator's public profile: what brands see, shared as a link, with view stats on the creator Home.
+Backend plan: `api/docs/plans/media-kit/backend-plan.md` (§2 lists every change from the mobile proposal, C1–C10).
+
+Guards for `/influencer/media-kit*`: `auth` + `account.active` + `phone.verified` + `user.type:influencer` (same 403s as §5.3). Public routes (§17.4, §17.5) need no auth; a bearer token is optional and never fails the request.
+
+**Changes from the 2026-10-05 proposal (mobile must follow these):**
+| # | Proposal | Final |
+|---|---|---|
+| C1 | `GET /public/creators/{slug}` counts a view | GET is **read-only**. Count with `POST /public/creators/{slug}/views { src }` (§17.5) when the screen opens |
+| C2 | Old slug → 301 | API returns **200** with the canonical body + `meta.canonical_slug`. Only the web page 301s |
+| C3 | Cooldown → 429 | **409 `slug_change_cooldown`** + `meta.retry_after` (seconds) + `meta.available_at` |
+| C4 | Range ends today 00:00 | Range ends **now** (today counts) |
+| C5 | `src=search` feeds `search_impressions` | Server-side only; `search_impressions` is `null` until search ships |
+| C6 | Kit created lazily | Created when onboarding completes; lazy creation is only a backfill |
+| C7 | — | **New** `GET /influencer/media-kit/slug-check` |
+| C8 | — | Going back to your own previous slug (within 30 days) is allowed even during the cooldown |
+| C9 | — | `platforms[].follower_count_verified` |
+| C10 | — | Share while private → **409 `media_kit_private`** |
+| — | Share channels `copy \| share_sheet`, 200 `null` | Channels `whatsapp \| telegram \| copy_link \| other`; 201 first time / 200 on retry, body `{ channel, occurred_at }` |
+| — | `influencer_tier`, `governorate`, niches as `{id,label}` | `tier` + `tier_label`; no `governorate`; `niches` = string keys (same as profile) |
+
+### 17.1 `GET /influencer/media-kit` — own media kit
+```json
+{
+  "id": "01J…", "slug": "anas", "public_url": "https://<PUBLIC_WEB_URL>/c/anas", "is_public": true,
+  "slug_changed_at": null, "can_change_slug_at": null,
+  "created_at": "2026-10-05T09:00:00+00:00", "updated_at": "2026-10-05T09:00:00+00:00",
+  "preview": PublicMediaKit
+}
+```
+- `preview` is exactly what §17.4 returns to the public ("Preview as brand"). One shape.
+- `can_change_slug_at`: `null` = can change now; otherwise ISO time when the cooldown ends. Use it to disable the slug field in advance.
+- `public_url` is on the public web host (`PUBLIC_WEB_URL`), not the API host. Share this URL + `?src=link`.
+
+### 17.2 `PATCH /influencer/media-kit` — partial
+Body `{ "slug"?: "anas.style", "is_public"?: false }` → 200 same shape as §17.1. Throttle 10/h → 429.
+- Slug is lowercased. Rules: 3–30 chars, `^[a-z0-9][a-z0-9._]*[a-z0-9]$`, no `..`, not ULID-shaped, not reserved (`admin`, `api`, `app`, `c`, `help`, `support`, `www`, `login`, `brand`, `influencer`, …, and anything starting with `sada`), not taken.
+
+| Error | Status | `meta` |
+|---|---|---|
+| `slug_unavailable` (invalid length / format / reserved) | 422 | `reason`: `invalid_length` \| `invalid_format` \| `reserved` |
+| `slug_unavailable` (taken, incl. held by someone for 30 days) | 409 | `reason`: `taken` |
+| `slug_change_cooldown` (1 change per 30 days) | 409 | `retry_after` (seconds), `available_at` (ISO) |
+
+- After a change the old slug keeps resolving to you for 30 days (API: 200 + `canonical_slug`; web: 301), and nobody else can claim it.
+- `is_public=false`: every public route returns 404 `not_found` (never reveals the creator exists). Shares → 409 `media_kit_private`.
+
+### 17.3 `GET /influencer/media-kit/slug-check?slug=` — live availability
+→ 200 `{ "available": true, "reason": null }` or `{ "available": false, "reason": "taken" }`. Reasons as in §17.2. Your own current/held slug counts as available. Throttle 30/min → 429. Debounce input (~400 ms).
+
+### 17.4 Public — `GET /public/creators/{slug}` (no auth; bearer optional)
+```json
+{
+  "slug": "anas", "display_name": "Anas Style", "avatar_url": "https://…",
+  "tier": "MICRO", "tier_label": "مايكرو", "is_verified": true,
+  "niches": ["fashion", "beauty"],
+  "platforms": [ { "platform": "instagram", "platform_label": "إنستغرام", "username": "anas",
+                   "profile_url": "https://instagram.com/anas", "display_name": "Anas Style",
+                   "follower_count": 45210, "follower_count_verified": true,
+                   "follower_tier": "MICRO", "follower_tier_label": "مايكرو", "is_primary": true } ],
+  "rate_cards": [ { "platform": "instagram", "service_type": "reels", "price_usd": 50.0 } ],
+  "price_from_usd": 30.0,
+  "bio": null, "top_portfolio_items": [], "offers_from_profile": null
+}
+```
+- **Read-only** — opening it does not count a view (call §17.5).
+- `display_name` = primary platform `display_name`, else the user's name. `avatar_url` `null` → show initials.
+- `is_verified` = KYC verified. `platforms` exclude `rejected`, primary first then followers desc. `follower_count_verified` = auto-verified or admin-approved (self-declared counts are `false`).
+- `rate_cards` only for available, non-rejected platforms; `price_from_usd` = their min or `null`. `bio` `null` until AI bio ships.
+- **Never returned:** phone, email, `full_name`, `area`, KYC data, `rejection_reason`, user `id`.
+- Old slug (≤ 30 days) → **200** with the new `slug` in the body + `meta.canonical_slug`. Replace the stored slug if `meta.canonical_slug` is present.
+- Unknown / private / suspended / deleted → 404 `not_found`. Rate limit 60/min per IP. `ETag` + `Cache-Control: public, max-age=60` (`If-None-Match` → 304).
+
+### 17.5 `POST /public/creators/{slug}/views` — count a view
+Body `{ "src": "app" | "link" | "search" | "web" }` → 202 `null`. Send once when the creator screen opens, with the bearer token if logged in.
+- Not counted (still 202): the creator's own views, admins, bots / empty user agents, and repeats by the same viewer within 30 min.
+- A logged-in brand also counts toward `unique_brand_views` (once per day).
+- Unknown / hidden slug → 404. Invalid `src` → 422. Rate limit 30/min per IP.
+
+### 17.6 `POST /influencer/media-kit/share`
+Body `{ "channel": "whatsapp" | "telegram" | "copy_link" | "other" }`, header **`X-Idempotency-Key: <uuid per tap>`** (required, UUID → else 422).
+- 201 `{ "channel": "whatsapp", "occurred_at": "…" }` first time; **200** same body on a retry with the same key (counted once).
+- Kit private → 409 `media_kit_private`. Rate limit 30/h per user → 429. Bumps the stats cache, so the Home tile updates immediately.
+
+### 17.7 `GET /influencer/media-kit/stats?period=7d|30d|90d` (default `30d`)
+```json
+{
+  "period": "30d",
+  "range": { "from": "2026-09-07T00:00:00+03:00", "to": "2026-10-06T11:40:00+03:00" },
+  "generated_at": "2026-10-06T08:40:00Z",
+  "profile_views":      { "value": 1240, "previous": 1107, "change_pct": 12.0,
+                          "series": [ { "date": "2026-09-07", "value": 31 } ] },
+  "unique_brand_views": { "value": 38, "previous": 30, "change_pct": 26.7 },
+  "link_opens":         { "value": 96, "previous": 0,  "change_pct": null },
+  "shares":             { "value": 14, "previous": 9,  "change_pct": 55.6 },
+  "search_impressions": null,
+  "offers_from_profile": null,
+  "top_portfolio_items": [],
+  "brand_locations": [
+    { "key": "damascus", "label": "دمشق", "count": 21, "share_pct": 55.3 },
+    { "key": "other",    "label": "أخرى", "count": 8,  "share_pct": 21.0 }
+  ]
+}
+```
+- Range: from start of day (today − N + 1) **to now**, in `Asia/Damascus`. Previous period = same length shifted back.
+- `change_pct` = `null` when `previous = 0`, 1 decimal. A metric that is **`null`** = feature not live → hide the tile (not 0).
+- `profile_views.series`: one point per Damascus day in the range (zeros included) — for a sparkline.
+- `brand_locations`: by brand governorate, top 5 + `other`, count desc, `share_pct` sums to 100. Buckets with < 3 brands merge into `other`; `[]` when `unique_brand_views < 3`. Brand identities are never returned.
+- Cached up to 10 min (`generated_at` = when computed); a share refreshes it. Invalid `period` → 422.
+
+### 17.8 Web page & universal links
+- `https://<PUBLIC_WEB_URL>/c/{slug}` — server-rendered page from the same data as §17.4: OpenGraph/Twitter tags (avatar, name, tier) for link previews, Arabic RTL by default (`?lang=en` or an English browser → English), `noindex`.
+- The page counts its own view via JS (`src` from `?src=`; anything other than `link|search|web` → `web`), so link-preview bots never count.
+- Old slug / different case → **301** to the canonical URL (query kept). Hidden / unknown → friendly 404 page.
+- App links: `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` match `/c/*`. Values come from backend env — **mobile must send us:** iOS Team ID + bundle IDs, App Store ID, Android package + SHA-256 signing fingerprints (debug + release), and the custom URL scheme (for the page's "Open in app" button).
+- App setup: iOS associated domain `applinks:<host>` (`?mode=developer` while on a tunnel); Android `autoVerify` intent filter for `https://<host>/c/*`. Use a **stable** tunnel hostname (named Cloudflare Tunnel), not rotating ngrok URLs.
+- App parses `/c/{slug}` into a typed route `{ slug }` (validate with the §17.2 regex, case-insensitive) — never navigate to a raw path. Then `GET` §17.4 + `POST` §17.5 with `src=link`.
+
+### 17.9 TS types
+```ts
+type StatMetric = { value: number; previous: number; change_pct: number | null };
+type StatsPeriod = '7d' | '30d' | '90d';
+type ViewSource = 'app' | 'link' | 'search' | 'web';
+type ShareChannel = 'whatsapp' | 'telegram' | 'copy_link' | 'other';
+type SlugReason = 'invalid_length' | 'invalid_format' | 'reserved' | 'taken';
+interface PublicMediaKit {
+  slug: string; display_name: string | null; avatar_url: string | null;
+  tier: FollowerTier | null; tier_label: string | null; is_verified: boolean;
+  niches: string[];
+  platforms: { platform: Platform; platform_label: string; username: string; profile_url: string | null;
+               display_name: string | null; follower_count: number; follower_count_verified: boolean;
+               follower_tier: FollowerTier | null; follower_tier_label: string | null; is_primary: boolean }[];
+  rate_cards: { platform: Platform; service_type: ServiceType; price_usd: number }[];
+  price_from_usd: number | null;
+  bio: null; top_portfolio_items: []; offers_from_profile: null;
+}
+interface MediaKit {
+  id: string; slug: string; public_url: string; is_public: boolean;
+  slug_changed_at: string | null; can_change_slug_at: string | null;
+  created_at: string; updated_at: string;
+  preview: PublicMediaKit;
+}
+interface SlugCheck { available: boolean; reason: SlugReason | null }
+interface MediaKitStats {
+  period: StatsPeriod; range: { from: string; to: string }; generated_at: string;
+  profile_views: StatMetric & { series: { date: string; value: number }[] };
+  unique_brand_views: StatMetric; link_opens: StatMetric; shares: StatMetric;
+  search_impressions: StatMetric | null; offers_from_profile: StatMetric | null;
+  top_portfolio_items: { id: string; title: string; thumbnail_url: string; clicks: number }[];
+  brand_locations: { key: string; label: string; count: number; share_pct: number }[];
+}
+```
+
+### 17.10 Media Kit edge-case checklist
+- [ ] **Slug field**: debounce slug-check; on PATCH 409 `slug_change_cooldown` show `meta.available_at`; disable the field while `can_change_slug_at` is in the future (except reverting to the previous slug).
+- [ ] **409 `slug_unavailable` / `taken`** after a green slug-check (race) → show the error, re-check.
+- [ ] **Deep link with an old slug** → GET returns `meta.canonical_slug`; use it for the share sheet and cache keys.
+- [ ] **Share**: new UUID per tap, same UUID on retry; private kit → 409 → prompt "make public".
+- [ ] **View beacon**: fire-and-forget, never block the UI, ignore errors; don't re-send on re-render (backend dedups 30 min anyway).
+- [ ] **Stats tiles**: `null` metric → hide; `change_pct: null` → show "new" / no arrow; `brand_locations: []` → hide the chart.

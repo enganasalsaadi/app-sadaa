@@ -86,6 +86,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // App-link host (PUBLIC_WEB_HOST in .env*). An https filter without a host would claim
+        // every https link, so an unset host falls back to the never-resolving `.invalid` TLD.
+        def publicWebHost = (project.env.get("PUBLIC_WEB_HOST") ?: "").trim()
+        manifestPlaceholders += [publicWebHost: publicWebHost ?: "links.invalid"]
     }
     signingConfigs {
         debug {

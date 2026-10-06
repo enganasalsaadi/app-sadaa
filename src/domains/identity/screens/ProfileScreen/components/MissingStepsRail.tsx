@@ -5,7 +5,7 @@ import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { formatNumber } from '@/core/i18n';
 import { Box, Card, SectionHeader, StatusPill, Text } from '@/shared/ui';
 import type { ProfileStepTarget } from '../../../constants/profileSteps';
-import type { MissingStep } from '../hooks/useProfileScreen';
+import type { MissingStep } from '../../../utils/profileCompletion';
 
 const CARD_WIDTH = moderateScale(148);
 const ICON_BOX = moderateScale(36);
