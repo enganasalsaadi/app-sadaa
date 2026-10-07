@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import { Box, Skeleton } from '@/shared/ui';
+import { Box, GradientSurface, Skeleton } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 
-/** A list-row placeholder: avatar + two text lines, then a media block. */
+/** A list-row placeholder: avatar + two text lines, then a media block; `brand` on a navy hero. */
 const SkeletonDemoComponent: React.FC = () => {
   const { sizes, typography } = useTheme();
 
@@ -20,6 +20,10 @@ const SkeletonDemoComponent: React.FC = () => {
         </Box>
       </Box>
       <Skeleton width="100%" height={sizes.illustration.md} borderRadius="lg" />
+      <GradientSurface variant="brand" p="lg" gap="sm" borderRadius="lg">
+        <Skeleton width="50%" height={typography.h3.lineHeight} surface="brand" />
+        <Skeleton width="30%" height={typography.caption.lineHeight} surface="brand" />
+      </GradientSurface>
     </Box>
   );
 };

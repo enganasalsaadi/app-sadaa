@@ -452,6 +452,7 @@
       "avatarInvalid": "استخدم صورة JPG أو PNG أو WebP بحجم أقل من 5 ميغابايت.",
       "avatarUpdated": "تم تحديث الصورة الشخصية",
       "completion": "اكتمال الملف",
+      "completed": "ملفك مكتمل",
       "completeTitle": "أكمل ملفك",
       "completeSubtitle": "كل خطوة تسهّل على العلامات التجارية الوصول إليك",
       "steps": {
@@ -686,17 +687,19 @@
     },
     "mediaKit": {
       "title": "ملفك الإعلامي",
+      "subtitle": "يراه المعلنون عند البحث عنك",
       "loadFailed": "تعذّر تحميل ملفك الإعلامي",
-      "statsFailed": "تعذّر تحميل الإحصائيات",
       "retry": "إعادة المحاولة",
-      "period": "آخر 30 يوماً",
       "priceFrom": "يبدأ من",
       "followers": "{{count}} متابع",
       "verifiedFollowers": "عدد متابعين موثّق",
       "verifiedCreator": "صانع محتوى موثّق",
       "linkLabel": "رابط ملفك الإعلامي",
+      "visibility": {
+        "public": "ظاهر",
+        "hidden": "مخفي"
+      },
       "noActivity": "شارك رابطك لتحصل على أول مشاهداتك",
-      "insights": "كل الإحصائيات",
       "insightsScreen": {
         "title": "إحصائيات ملفك الإعلامي",
         "periodLabel": "الفترة",
@@ -986,9 +989,23 @@
       "priceFrom": "يبدأ من"
     },
     "creatorHome": {
-      "greeting": "أهلاً، {{name}}",
+      "greetingTime": {
+        "morning": "صباح الخير",
+        "evening": "مساء الخير"
+      },
       "greetingFallback": "أهلاً بك",
       "openProfile": "افتح ملفي",
+      "verified": "حساب موثّق",
+      "kpi": {
+        "period": "آخر 30 يوماً",
+        "reach": "وصولك",
+        "views": "زيارات ملفك",
+        "brands": "معلنون شاهدوك",
+        "new": "جديد",
+        "failed": "تعذّر تحميل الإحصائيات، اضغط لإعادة المحاولة",
+        "a11y": "آخر 30 يوماً: وصولك {{reach}}، زيارات ملفك {{views}}، معلنون شاهدوك {{brands}}. افتح كل الإحصائيات",
+        "retry": "تعذّر تحميل الإحصائيات. إعادة المحاولة"
+      },
       "notice": {
         "platformsActionRequired": {
           "title": "إحدى منصاتك تحتاج انتباهك",
@@ -1002,20 +1019,24 @@
       },
       "strength": {
         "title": "قوة ملفك",
+        "benefit": "كلما اكتمل ملفك، زادت فرص ظهورك أمام الشركات.",
         "nextStep": "الخطوة التالية"
       },
       "platforms": {
         "manage": "إدارة",
         "loadFailed": "تعذّر تحميل منصاتك",
-        "open": "افتح {{platform}} @{{username}}"
+        "open": "افتح {{platform}} @{{username}}",
+        "add": "أضف منصة",
+        "addHint": "اربط حساباتك ليصل إليك المعلنون",
+        "followers": "متابع",
+        "openPrimary": "افتح منصتك الأساسية {{platform}} @{{username}}"
       },
       "rates": {
         "title": "أسعاري",
         "edit": "تعديل",
         "empty": "أضف أسعارك ليتمكن المعلنون من حجزك",
         "add": "أضف أسعارك",
-        "loadFailed": "تعذّر تحميل أسعارك",
-        "row": "{{platform}} · {{service}}"
+        "loadFailed": "تعذّر تحميل أسعارك"
       }
     }
   },
@@ -1240,7 +1261,7 @@
       "brandHeaderTitle": "رأس بلون الهوية",
       "brandHeaderDescription": "header variant=\"brand\" مع إجراءات وشارة",
       "dashboardTitle": "لوحة المتابعة",
-      "dashboardDescription": "شريط ترحيب بخلفية كحلية + ترويسة متراكبة، تنبيه واحد، أقسام بطاقات متتالية",
+      "dashboardDescription": "ترحيب فوق خلفية كحلية بحركة parallax تتمدد عند السحب + ترويسة متراكبة، تنبيه واحد، أقسام بطاقات متتالية",
       "dashboardGreeting": "أهلاً، ليلى",
       "dashboardNotice": "تنبيه واحد فقط: العائق الأعلى أولوية.",
       "dashboardSection": "قسم",
@@ -1388,6 +1409,7 @@
       "actionsLabel": "إجراءات مع شارة",
       "noBackLabel": "شاشة رئيسية (بدون رجوع)",
       "brandLabel": "brand: شريط الهوية الكحلي",
+      "leadingLabel": "leading: هوية بمحاذاة البداية (الشريط المثبّت في الرئيسية)",
       "transparentLabel": "transparent: فوق الصور",
       "title": "الحملات",
       "subtitle": "12 حملة مفتوحة",
@@ -1591,18 +1613,15 @@
     },
     "mediaKitCard": {
       "default": "الافتراضي",
-      "offersLive": "العروض مفعّلة (4 بطاقات)",
+      "hidden": "الملف مخفي",
       "noActivity": "لا نشاط بعد",
-      "minimal": "ملف مختصر",
+      "noPreview": "بدون معاينة",
       "loading": "جارٍ التحميل",
-      "statsLoading": "جارٍ تحميل الإحصائيات",
-      "statsError": "فشل تحميل الإحصائيات",
       "loadError": "فشل تحميل الملف",
       "sharing": "المشاركة جارية",
       "shareHidden": "المشاركة: الملف مخفي",
       "shareFailed": "المشاركة: فشلت",
-      "shareRateLimited": "المشاركة: تجاوز الحد",
-      "displayName": "أنس ستايل"
+      "shareRateLimited": "المشاركة: تجاوز الحد"
     },
     "dealStatus": {
       "pillsTitle": "كل الحالات",
@@ -1648,7 +1667,9 @@
       "brandBody": "تدرّج كحلي لرؤوس صفحات الهوية.",
       "premiumTitle": "تمييز مميز",
       "premiumPill": "موثّق",
-      "premiumBody": "تدرّج خردلي هادئ للموثّقين وكبار المبدعين. النص يبقى محايداً."
+      "premiumBody": "تدرّج خردلي هادئ للموثّقين وكبار المبدعين. النص يبقى محايداً.",
+      "glowTitle": "سطح العلامة + GlowOrbs",
+      "glowBody": "إضاءة خافتة جداً في زاويتين، لواجهة الرئيسية."
     }
   },
   "followerTier": {

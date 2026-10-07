@@ -26,6 +26,8 @@ interface LayoutScrollBodyProps extends Pick<ScrollViewProps, 'refreshControl'> 
   bg: string;
   /** Room left for a header floating over the top of the scroll view. */
   topOffset: number;
+  /** The body is an opaque sheet with rounded top corners overlapping the hero's backdrop. */
+  sheet: boolean;
 }
 
 const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
@@ -41,6 +43,7 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
   sticky,
   bg,
   topOffset,
+  sheet,
 }) => {
   const { bottom } = useSafeAreaInsets();
 
@@ -51,11 +54,23 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
       return {
         scroll: { flex: 1 },
         content: { flexGrow: 1, paddingTop: topOffset, paddingBottom: clearBottomInset ? bottom : 0 },
-        body: { flexGrow: 1, paddingHorizontal: px, paddingVertical: py },
+        body: {
+          flexGrow: 1,
+          paddingHorizontal: px,
+          paddingVertical: py,
+          ...(sheet
+            ? {
+                backgroundColor: bg,
+                borderTopStartRadius: theme.radii.lg,
+                borderTopEndRadius: theme.radii.lg,
+                marginTop: -theme.radii.lg,
+              }
+            : null),
+        },
         sticky: { backgroundColor: bg, paddingHorizontal: px, paddingVertical: theme.spacing.sm },
       };
     },
-    [paddingX, paddingY, clearBottomInset, bottom, bg, topOffset],
+    [paddingX, paddingY, clearBottomInset, bottom, bg, topOffset, sheet],
   );
 
   const hasSticky = sticky != null;

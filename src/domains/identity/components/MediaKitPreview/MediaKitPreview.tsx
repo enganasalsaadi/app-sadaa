@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Box, Card, Divider, KeyValueRow, MoneyText, SectionHeader } from '@/shared/ui';
 import type { PublicMediaKit } from '../../types/mediaKit';
 import type { RateRow } from '../../utils/rateRows';
-import { MediaKitCardIdentity } from '../MediaKitCard/MediaKitCardIdentity';
+import { MediaKitPreviewIdentity } from './MediaKitPreviewIdentity';
 import { MediaKitPreviewPlatformRow } from './MediaKitPreviewPlatformRow';
 
 export interface MediaKitPreviewProps {
@@ -28,7 +28,7 @@ const MediaKitPreviewComponent: React.FC<MediaKitPreviewProps> = ({
   return (
     <Box gap="2xl">
       <Card shadow="none" p="lg">
-        <MediaKitCardIdentity preview={preview} nicheLabels={nicheLabels} />
+        <MediaKitPreviewIdentity preview={preview} nicheLabels={nicheLabels} />
       </Card>
 
       {preview.platforms.length > 0 ? (

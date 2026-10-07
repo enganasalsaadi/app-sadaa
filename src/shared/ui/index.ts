@@ -7,6 +7,8 @@ export type {
   LayoutSurface,
   LayoutKeyboard,
   LayoutBackdrop,
+  LayoutHeroBackdrop,
+  LayoutHeroBehavior,
   LayoutStatusBar,
   LayoutHeaderBehavior,
   LayoutFooterBehavior,
@@ -26,6 +28,7 @@ export { GlassCard, useGlassCardStyle } from './GlassCard';
 export type { GlassCardProps, GlassCardStyle } from './GlassCard';
 export { GradientSurface } from './GradientSurface';
 export type { GradientSurfaceProps, GradientSurfaceVariant } from './GradientSurface';
+export { GlowOrbs } from './GlowOrbs';
 export { HeroBackdrop } from './HeroBackdrop';
 export { CustomButton } from './CustomButton';
 export type { ButtonVariant, ButtonSize } from './CustomButton';
@@ -92,7 +95,7 @@ export type { ConfirmSheetProps } from './ConfirmSheet';
 export { FilePickerCard } from './FilePickerCard';
 export type { FilePickerCardProps, PickedFile } from './FilePickerCard';
 export { Skeleton } from './Skeleton';
-export type { SkeletonProps } from './Skeleton';
+export type { SkeletonProps, SkeletonSurface } from './Skeleton';
 export { SocialPlatformIcon } from './SocialPlatformIcon';
 export type { SocialPlatformIconProps } from './SocialPlatformIcon';
 export { SKIA_ICON_PATHS, ICON_VIEWBOX } from './SkiaIcons';
@@ -117,7 +120,7 @@ export type { RadioProps, RadioGroupItem, RadioGroupProps } from './Radio';
 export { Divider } from './Divider';
 export type { DividerProps, DividerVariant } from './Divider';
 export { SectionHeader } from './SectionHeader';
-export type { SectionHeaderProps, SectionHeaderAction } from './SectionHeader';
+export type { SectionHeaderProps, SectionHeaderAction, SectionHeaderEmphasis } from './SectionHeader';
 export { Badge } from './Badge';
 export type { BadgeProps, BadgeTone, BadgeVariant } from './Badge';
 export { StatusPill } from './StatusPill';

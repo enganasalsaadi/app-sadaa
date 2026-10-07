@@ -1,12 +1,6 @@
 import type { MediaKitShareError } from '../../utils/mediaKitShare';
-import type { MediaKitTile } from '../../utils/mediaKitCard';
 
 export type MediaKitCardStatus = 'loading' | 'error' | 'ready';
-
-export interface MediaKitCardStats {
-  status: MediaKitCardStatus;
-  tiles: readonly MediaKitTile[];
-}
 
 /** Share / copy triggers and their outcome, as `useMediaKitCard` wires them. */
 export interface MediaKitCardShare {

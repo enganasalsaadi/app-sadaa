@@ -18,6 +18,11 @@ const StructureDemoComponent: React.FC = () => {
           subtitle={t('devShowcase.structure.sectionSubtitle')}
           action={{ label: t('common.seeAll'), onPress: noop }}
         />
+        <SectionHeader
+          title={t('devShowcase.structure.sectionTitle')}
+          emphasis="strong"
+          action={{ label: t('common.seeAll'), onPress: noop }}
+        />
       </Box>
 
       <Box gap="sm">

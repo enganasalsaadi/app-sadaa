@@ -1,7 +1,6 @@
 import { DEFAULT_CURRENCY } from '@/core/config';
 import type { Money } from '@/core/money';
 import type { PickedFile } from '@/shared/ui';
-import type { MediaKitTile, PublicMediaKit } from '@/domains/identity';
 
 /** Dev-only placeholder photos (network required); real screens use sized thumbnails from the API. */
 export const MOCK_IMAGE_URIS = [
@@ -91,44 +90,4 @@ export const MOCK_DAILY_EARNINGS: readonly number[] = [
 
 export const MOCK_CREATOR_PRICE = usd(8000);
 
-/** Dev-only public media kit (server shape, §17.4); the demo injects the display name from i18n. */
-export const MOCK_MEDIA_KIT_PREVIEW: PublicMediaKit = {
-  slug: 'anas',
-  display_name: null,
-  avatar_url: MOCK_AVATAR_URI,
-  tier: 'MICRO',
-  tier_label: 'Micro',
-  is_verified: true,
-  niches: ['fashion', 'beauty', 'food', 'travel'],
-  platforms: [
-    {
-      platform: 'instagram',
-      platform_label: 'Instagram',
-      username: 'anas',
-      profile_url: 'https://instagram.com/anas',
-      display_name: null,
-      follower_count: 45210,
-      follower_count_verified: true,
-      follower_tier: 'MICRO',
-      follower_tier_label: 'Micro',
-      is_primary: true,
-    },
-  ],
-  rate_cards: [{ platform: 'instagram', service_type: 'reels', price_usd: 50 }],
-  price_from_usd: 30,
-  bio: null,
-  top_portfolio_items: [],
-  offers_from_profile: null,
-};
-
-/** Dev-only niche labels as the lookup would return them for the keys above. */
-export const MOCK_MEDIA_KIT_NICHE_LABELS = ['Fashion', 'Beauty', 'Food'];
-
 export const MOCK_MEDIA_KIT_LINK = 'https://sada.app/c/anas';
-
-/** Dev-only home tiles (change as a fraction; `'new'` = no previous period). */
-export const MOCK_MEDIA_KIT_TILES: MediaKitTile[] = [
-  { key: 'profile_views', value: 1240, change: 0.12 },
-  { key: 'unique_brand_views', value: 38, change: 0.267 },
-  { key: 'link_opens', value: 96, change: 'new' },
-];

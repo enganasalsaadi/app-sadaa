@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import {
+  Avatar,
   Box,
   Card,
-  GradientSurface,
   Layout,
   Notice,
   ProgressBar,
@@ -15,6 +15,7 @@ import {
   useHeroCompact,
 } from '@/shared/ui';
 import { DemoScrollRows } from '../components';
+import { MOCK_IMAGE_URIS } from '../demos/mockData';
 
 const noop = () => {};
 const UNREAD_COUNT = 3;
@@ -30,21 +31,38 @@ const DashboardHero = memo(() => {
     [top, spacing.sm, sizes.iconButton.md],
   );
 
+  // Transparent: Layout paints the navy gradient behind it (`heroBackdrop="brandGlow"`).
   return (
-    <GradientSurface variant="brand" style={styles.container} px="xl" pb="xl" gap="xs">
+    <Box style={styles.container} px="xl" pb="2xl" gap="xs">
       <Text variant={compact ? 'h4' : 'h3'} color={colors.text.onBrand}>
         {t('devShowcase.layoutGallery.dashboardGreeting')}
       </Text>
       <Text variant="bodySmall" color={colors.text.onBrandMuted}>
         {t('devShowcase.layoutGallery.dashboardDescription')}
       </Text>
-    </GradientSurface>
+    </Box>
+  );
+});
+
+/** What stays pinned once the hero scrolls away: identity, not a generic title. */
+const DashboardBarIdentity = memo(() => {
+  const { t } = useTranslation();
+  const { colors, sizes } = useTheme();
+  return (
+    <Box row align="center" gap="sm">
+      <Avatar uri={MOCK_IMAGE_URIS[0]} size={sizes.avatar.sm} />
+      <Text variant="title" color={colors.text.onBrand} numberOfLines={1}>
+        {t('devShowcase.layoutGallery.dashboardGreeting')}
+      </Text>
+    </Box>
   );
 });
 
 /**
- * Layout gallery variant: the Dashboard archetype (creator Home). Compact navy greeting
- * band as `hero` under an overlay header, one notice, then stacked card sections.
+ * Layout gallery variant: the Dashboard archetype (creator Home). Compact greeting band
+ * as `hero` over the brand backdrop (parallax, stretches on pull-down, body slides over
+ * it as a rounded sheet) under an overlay header whose `leading` identity fades in once
+ * the hero scrolls away, one notice, then stacked sections.
  */
 const LayoutDashboardScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -54,9 +72,12 @@ const LayoutDashboardScreenComponent: React.FC = () => {
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
+      heroBackdrop="brandGlow"
+      heroBehavior="parallax"
       header={{
         title: t('devShowcase.layoutGallery.dashboardTitle'),
         variant: 'brand',
+        leading: <DashboardBarIdentity />,
         actions: [
           {
             icon: Bell,
@@ -80,6 +101,7 @@ const LayoutDashboardScreenComponent: React.FC = () => {
         <Box gap="md">
           <SectionHeader
             title={t('devShowcase.layoutGallery.dashboardSection')}
+            emphasis="strong"
             action={{ label: t('devShowcase.layoutGallery.dashboardManage'), onPress: noop }}
           />
           <DemoScrollRows />

@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { MediaKitCardProps } from '@/domains/identity';
-import {
-  MOCK_MEDIA_KIT_LINK,
-  MOCK_MEDIA_KIT_NICHE_LABELS,
-  MOCK_MEDIA_KIT_PREVIEW,
-  MOCK_MEDIA_KIT_TILES,
-} from '../mockData';
+import { MOCK_MEDIA_KIT_LINK } from '../mockData';
 
 const MOCK_LATENCY_MS = 1200;
 
@@ -36,10 +31,7 @@ export const useMediaKitCardDemo = (): MediaKitCardVariant[] => {
     timer.current = setTimeout(() => setSharing(false), MOCK_LATENCY_MS);
   }, []);
 
-  const displayName = t('devShowcase.mediaKitCard.displayName');
-
   return useMemo(() => {
-    const preview = { ...MOCK_MEDIA_KIT_PREVIEW, display_name: displayName };
     const share = {
       isReady: true,
       isSharing: sharing,
@@ -54,14 +46,11 @@ export const useMediaKitCardDemo = (): MediaKitCardVariant[] => {
     } satisfies MediaKitCardProps['share'];
     const base = {
       status: 'ready',
-      preview,
       link: MOCK_MEDIA_KIT_LINK,
-      nicheLabels: MOCK_MEDIA_KIT_NICHE_LABELS,
-      stats: { status: 'ready', tiles: MOCK_MEDIA_KIT_TILES },
+      isPublic: true,
+      noActivity: false,
       share,
       onRetry: noop,
-      onRetryStats: noop,
-      onOpenInsights: noop,
       onOpenPreview: noop,
     } satisfies MediaKitCardProps;
     const withShareError = (error: 'private' | 'rate_limited' | 'failed'): MediaKitCardProps => ({
@@ -72,43 +61,19 @@ export const useMediaKitCardDemo = (): MediaKitCardVariant[] => {
     return [
       { id: 'default', title: t('devShowcase.mediaKitCard.default'), props: base },
       {
-        id: 'offersLive',
-        title: t('devShowcase.mediaKitCard.offersLive'),
-        props: {
-          ...base,
-          stats: {
-            status: 'ready',
-            tiles: [...MOCK_MEDIA_KIT_TILES, { key: 'offers_from_profile', value: 4, change: -0.2 }],
-          },
-        },
+        id: 'hidden',
+        title: t('devShowcase.mediaKitCard.hidden'),
+        props: { ...base, isPublic: false },
       },
       {
         id: 'noActivity',
         title: t('devShowcase.mediaKitCard.noActivity'),
-        props: {
-          ...base,
-          stats: { status: 'ready', tiles: MOCK_MEDIA_KIT_TILES.map(tile => ({ ...tile, value: 0, change: undefined })) },
-        },
+        props: { ...base, noActivity: true },
       },
       {
-        id: 'minimal',
-        title: t('devShowcase.mediaKitCard.minimal'),
-        props: {
-          ...base,
-          preview: {
-            ...MOCK_MEDIA_KIT_PREVIEW,
-            display_name: null,
-            avatar_url: null,
-            tier: null,
-            is_verified: false,
-            niches: [],
-            platforms: [],
-            price_from_usd: null,
-          },
-          nicheLabels: [],
-          onOpenInsights: undefined,
-          onOpenPreview: undefined,
-        },
+        id: 'noPreview',
+        title: t('devShowcase.mediaKitCard.noPreview'),
+        props: { ...base, onOpenPreview: undefined },
       },
       {
         id: 'sharing',
@@ -123,25 +88,21 @@ export const useMediaKitCardDemo = (): MediaKitCardVariant[] => {
         props: withShareError('rate_limited'),
       },
       {
-        id: 'statsLoading',
-        title: t('devShowcase.mediaKitCard.statsLoading'),
-        props: { ...base, stats: { status: 'loading', tiles: [] } },
-      },
-      {
-        id: 'statsError',
-        title: t('devShowcase.mediaKitCard.statsError'),
-        props: { ...base, stats: { status: 'error', tiles: [] } },
-      },
-      {
         id: 'loading',
         title: t('devShowcase.mediaKitCard.loading'),
-        props: { ...base, status: 'loading', preview: undefined, link: undefined },
+        props: {
+          ...base,
+          status: 'loading',
+          link: undefined,
+          isPublic: null,
+          share: { ...share, isReady: false },
+        },
       },
       {
         id: 'loadError',
         title: t('devShowcase.mediaKitCard.loadError'),
-        props: { ...base, status: 'error', preview: undefined, link: undefined },
+        props: { ...base, status: 'error', link: undefined, isPublic: null },
       },
     ];
-  }, [displayName, onShare, sharing, t]);
+  }, [onShare, sharing, t]);
 };

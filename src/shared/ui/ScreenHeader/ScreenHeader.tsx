@@ -1,6 +1,10 @@
 import React, { memo } from 'react';
 import { StyleSheet, type LayoutChangeEvent, type ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, type DerivedValue } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedProps,
+  useAnimatedStyle,
+  type DerivedValue,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, type LucideIcon } from 'lucide-react-native';
@@ -34,8 +38,15 @@ export interface ScreenHeaderMotion {
 }
 
 export interface ScreenHeaderProps {
+  /** Shown centred; with `leading` it only names the bar for screen readers. */
   title: string;
   subtitle?: string;
+  /**
+   * Start-aligned content in place of the centred title (a dashboard's identity row).
+   * The bar then lines up with the screen gutter (`xl`) on both sides.
+   * Fades with the title and takes touches only once it is visible.
+   */
+  leading?: React.ReactNode;
   /** Default `solid`. */
   variant?: ScreenHeaderVariant;
   /** Default true. */
@@ -77,6 +88,9 @@ const HeaderActionButton = memo<{ action: ScreenHeaderAction; variant: ScreenHea
   },
 );
 
+/** Leading content takes touches once it is mostly faded in. */
+const LEADING_TOUCHABLE = 0.5;
+
 /**
  * Top bar: back button, centred title, up to two icon actions. Side slots share
  * one width so the title stays centred whatever sits beside it.
@@ -84,6 +98,7 @@ const HeaderActionButton = memo<{ action: ScreenHeaderAction; variant: ScreenHea
 const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
   title,
   subtitle,
+  leading,
   variant = 'solid',
   showBackButton = true,
   onBackPress,
@@ -104,19 +119,33 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
   const titleColor = onFaded ? colors.text.primary : palette.title;
   const subtitleColor = onFaded ? colors.text.secondary : palette.subtitle;
 
+  const hasLeading = leading != null;
   const slots = Math.max(showBackButton ? 1 : 0, actions?.length ?? 0);
-  const sideWidth = slots * sizes.iconButton.md + Math.max(slots - 1, 0) * spacing.xs;
+  // Equal sides keep a centred title centred; start-aligned content needs no mirror slot.
+  const sideWidth = hasLeading
+    ? undefined
+    : slots * sizes.iconButton.md + Math.max(slots - 1, 0) * spacing.xs;
+  // With leading content the bar lines up with the screen gutter: the identity starts
+  // and the last icon's glyph ends on `xl`, like the hero and body under it.
+  const gutter = hasLeading
+    ? Math.max(spacing.xl - (sizes.iconButton.md - sizes.icon.md) / 2, 0)
+    : spacing.sm;
 
   const styles = useStyles(
-    (theme): Record<'container' | 'side' | 'title' | 'divider', ViewStyle> => ({
+    (theme): Record<'container' | 'side' | 'title' | 'leading' | 'divider', ViewStyle> => ({
       container: {
         paddingTop: (withSafeArea ? top : 0) + theme.spacing.sm,
         paddingBottom: theme.spacing.sm,
-        paddingHorizontal: theme.spacing.sm,
+        paddingHorizontal: gutter,
         backgroundColor: fades ? theme.colors.layout.transparent : palette.bg,
       },
       side: { width: sideWidth, flexDirection: 'row', gap: theme.spacing.xs },
       title: { flex: 1, alignItems: 'center', paddingHorizontal: theme.spacing.xs },
+      leading: {
+        flex: 1,
+        paddingStart: theme.spacing.xl - gutter,
+        paddingEnd: theme.spacing.sm,
+      },
       divider: {
         position: 'absolute',
         start: 0,
@@ -126,7 +155,7 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
         backgroundColor: theme.colors.border.default,
       },
     }),
-    [withSafeArea, top, fades, palette.bg, sideWidth],
+    [withSafeArea, top, fades, palette.bg, sideWidth, gutter],
   );
 
   const backgroundProgress = motion?.background;
@@ -141,6 +170,12 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
   }));
   const dividerStyle = useAnimatedStyle(() => ({
     opacity: dividerProgress ? dividerProgress.value : 0,
+  }));
+  // Faded-out leading content must not catch taps meant for the hero under it.
+  const leadingProps = useAnimatedProps(() => ({
+    pointerEvents: (!titleProgress || titleProgress.value > LEADING_TOUCHABLE
+      ? 'box-none'
+      : 'none') as 'box-none' | 'none',
   }));
 
   return (
@@ -165,22 +200,33 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
           ) : null}
         </Box>
 
-        <Animated.View style={[styles.title, titleStyle]}>
-          <Text
-            variant="title"
-            color={titleColor}
-            align="center"
-            numberOfLines={1}
+        {hasLeading ? (
+          <Animated.View
+            style={[styles.leading, titleStyle]}
+            animatedProps={leadingProps}
             accessibilityRole="header"
+            accessibilityLabel={title}
           >
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text variant="caption" color={subtitleColor} align="center" numberOfLines={1}>
-              {subtitle}
+            {leading}
+          </Animated.View>
+        ) : (
+          <Animated.View style={[styles.title, titleStyle]}>
+            <Text
+              variant="title"
+              color={titleColor}
+              align="center"
+              numberOfLines={1}
+              accessibilityRole="header"
+            >
+              {title}
             </Text>
-          ) : null}
-        </Animated.View>
+            {subtitle ? (
+              <Text variant="caption" color={subtitleColor} align="center" numberOfLines={1}>
+                {subtitle}
+              </Text>
+            ) : null}
+          </Animated.View>
+        )}
 
         <Box style={styles.side} justify="flex-end">
           {actions?.map(action => (

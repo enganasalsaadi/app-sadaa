@@ -191,7 +191,7 @@ export const SHOWCASE_ENTRIES = {
   gradientSurface: {
     category: 'display',
     titleKey: 'devShowcase.sections.gradientSurface',
-    covers: ['GradientSurface'],
+    covers: ['GradientSurface', 'GlowOrbs'],
   },
   badges: {
     category: 'display',

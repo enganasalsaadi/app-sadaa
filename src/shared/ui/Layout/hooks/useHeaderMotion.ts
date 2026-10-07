@@ -53,9 +53,12 @@ export const useHeaderMotion = ({
   const background = useDerivedValue(() => {
     if (behavior !== 'overlay') return 1;
     // Not measured yet: stay transparent rather than flash a solid bar over the hero.
-    if (heroHeight.value === 0) return 0;
-    const end = heroHeight.value - headerHeight.value;
-    return interpolate(scrollY.value, [end - headerHeight.value, end], [0, 1], Extrapolation.CLAMP);
+    if (heroHeight.value === 0 || headerHeight.value === 0) return 0;
+    // Solid once the hero has scrolled out from under the bar. The fade never starts
+    // before the first px of scroll, even when the hero is barely taller than the bar.
+    const end = Math.max(heroHeight.value - headerHeight.value, SCROLL_EPSILON);
+    const start = Math.max(end - headerHeight.value, 0);
+    return interpolate(scrollY.value, [start, end], [0, 1], Extrapolation.CLAMP);
   });
 
   const title = useDerivedValue(() => {

@@ -66,22 +66,6 @@ export const hasNoActivity = (
   tiles: readonly MediaKitTile<MediaKitMetricKey>[],
 ): boolean => tiles.length > 0 && tiles.every(tile => tile.value === 0);
 
-const MAX_TILES_PER_ROW = 3;
-
-/** Three tiles fit one row; a fourth (offers, once live) makes it 2 × 2. */
-export const splitTileRows = (
-  tiles: readonly MediaKitTile[],
-): MediaKitTile[][] => {
-  if (tiles.length <= MAX_TILES_PER_ROW) {
-    return tiles.length > 0 ? [[...tiles]] : [];
-  }
-  const rows: MediaKitTile[][] = [];
-  for (let i = 0; i < tiles.length; i += 2) {
-    rows.push(tiles.slice(i, i + 2));
-  }
-  return rows;
-};
-
 /** Server sorts the primary first; fall back to the first platform when none is flagged. */
 export const pickPrimaryPlatform = (
   platforms: readonly MediaKitPlatform[],

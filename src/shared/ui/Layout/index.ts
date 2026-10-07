@@ -6,6 +6,8 @@ export type {
   LayoutSurface,
   LayoutKeyboard,
   LayoutBackdrop,
+  LayoutHeroBackdrop,
+  LayoutHeroBehavior,
   LayoutStatusBar,
   LayoutHeaderBehavior,
   LayoutFooterBehavior,

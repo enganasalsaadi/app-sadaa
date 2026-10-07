@@ -11,6 +11,16 @@ export type LayoutSurface = 'base' | 'surface' | 'transparent';
 /** `avoid`: inputs and the footer stay above the keyboard. */
 export type LayoutKeyboard = 'avoid' | 'none';
 export type LayoutBackdrop = 'none' | 'wash';
+/**
+ * Paint behind `hero`. `brand`: the navy hero gradient, drawn by Layout behind the
+ * scroll view. It follows the hero, stretches when the user pulls down (the screen
+ * background never shows above the hero) and the body slides over it as a sheet with
+ * rounded top corners. The hero itself stays transparent. `brandGlow`: the same plus
+ * faint `GlowOrbs` light washes in the corners (dashboards); the orbs move with the hero but never stretch.
+ */
+export type LayoutHeroBackdrop = 'none' | 'brand' | 'brandGlow';
+/** `parallax`: the hero scrolls slower than the body (off under reduced motion). */
+export type LayoutHeroBehavior = 'static' | 'parallax';
 export type LayoutStatusBar = 'auto' | 'light' | 'dark';
 /**
  * How a config `header` reacts to scrolling. Scroll mode only; `static` and element
@@ -52,6 +62,10 @@ export interface LayoutProps {
   headerBehavior?: LayoutHeaderBehavior;
   /** Scroll mode only. Edge-to-edge content above the body (cover image, profile banner); runs under the status bar. */
   hero?: React.ReactNode;
+  /** Default `none`. */
+  heroBackdrop?: LayoutHeroBackdrop;
+  /** Default `static`. */
+  heroBehavior?: LayoutHeroBehavior;
   /** Scroll mode only. Sticks under the header once scrolled to (tabs, segmented filter). Not sticky under a floating header. */
   sticky?: React.ReactNode;
   /** Pinned below the body, above the keyboard; usually `<LayoutFooter />`. Bottom inset handled by Layout. */

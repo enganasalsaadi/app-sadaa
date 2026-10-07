@@ -1,6 +1,6 @@
 import React, { isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, type LayoutChangeEvent, type ViewStyle } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import { useReducedMotion, useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -12,12 +12,17 @@ import { useInHeroSheet } from '../HeroSheet/HeroSheetContext';
 import { LayoutContext } from './LayoutContext';
 import { LayoutFooterSlot } from './LayoutFooterSlot';
 import { LayoutHeaderSlot } from './LayoutHeaderSlot';
+import { LayoutHero } from './LayoutHero';
+import { LayoutHeroBackdrop } from './LayoutHeroBackdrop';
 import { LayoutLargeTitle } from './LayoutLargeTitle';
 import { LayoutScrollBody } from './LayoutScrollBody';
 import { useHeaderMotion } from './hooks/useHeaderMotion';
 import { useLayoutScroll } from './hooks/useLayoutScroll';
 import { LAYOUT_DEFAULT_PADDING, resolveLayout } from './resolveLayout';
 import type { LayoutHeaderConfig, LayoutProps, LayoutSurface } from './types';
+
+/** `heroBehavior="parallax"`: the hero moves at 60% of the scroll speed. */
+const HERO_PARALLAX = 0.4;
 
 const surfaceColor = (colors: Theme['colors'], surface: LayoutSurface): string => {
   switch (surface) {
@@ -48,6 +53,8 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   header,
   headerBehavior,
   hero,
+  heroBackdrop = 'none',
+  heroBehavior = 'static',
   sticky,
   footer,
   footerBehavior = 'divider',
@@ -61,9 +68,11 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   const { colors, spacing, isDark } = useTheme();
   const { top, bottom } = useSafeAreaInsets();
   const inHeroSheet = useInHeroSheet();
+  const reduceMotion = useReducedMotion();
   const scroll = useLayoutScroll();
   const [footerHeight, setFooterHeight] = useState(0);
   const [floatingHeaderHeight, setFloatingHeaderHeight] = useState(0);
+  const [backdropHeight, setBackdropHeight] = useState(0);
   const headerHeight = useSharedValue(0);
   const heroHeight = useSharedValue(0);
   const largeTitleHeight = useSharedValue(0);
@@ -90,6 +99,8 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   });
   const bg = surfaceColor(colors, resolved.surface);
   const { paddingX, paddingY, headerBehavior: behavior, headerVariant, headerFloats } = resolved;
+  const parallax = resolved.hero && heroBehavior === 'parallax' && !reduceMotion ? HERO_PARALLAX : 0;
+  const brandBackdrop = resolved.hero && heroBackdrop !== 'none';
 
   const headerMotion = useHeaderMotion({
     behavior,
@@ -128,7 +139,9 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   );
   const onHeroLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      heroHeight.value = event.nativeEvent.layout.height;
+      const { height } = event.nativeEvent.layout;
+      heroHeight.value = height;
+      setBackdropHeight(height);
     },
     [heroHeight],
   );
@@ -154,7 +167,9 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   ) : null;
 
   const leading = resolved.hero ? (
-    <Box onLayout={onHeroLayout}>{hero}</Box>
+    <LayoutHero scrollY={scroll.scrollY} parallax={parallax} onLayout={onHeroLayout}>
+      {hero}
+    </LayoutHero>
   ) : behavior === 'collapse' && headerConfig ? (
     <LayoutLargeTitle
       title={headerConfig.title}
@@ -181,6 +196,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
       bg={bg}
       // Overlay headers float over the hero on purpose; a hiding one needs room at rest.
       topOffset={behavior === 'hideOnScroll' && headerFloats ? floatingHeaderHeight : 0}
+      sheet={brandBackdrop}
     >
       {!resolved.sticky && sticky != null ? sticky : null}
       {children}
@@ -248,6 +264,14 @@ const LayoutComponent: React.FC<LayoutProps> = ({
             colors={colors.gradients.screenWash.colors}
             locations={colors.gradients.screenWash.locations}
             style={StyleSheet.absoluteFill}
+          />
+        ) : null}
+        {brandBackdrop ? (
+          <LayoutHeroBackdrop
+            scrollY={scroll.scrollY}
+            height={backdropHeight}
+            parallax={parallax}
+            glow={heroBackdrop === 'brandGlow'}
           />
         ) : null}
         {headerFloats ? null : headerNode}

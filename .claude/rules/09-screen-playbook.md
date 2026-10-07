@@ -15,14 +15,14 @@ Before writing any screen code: show the user a text mockup (ASCII layout, AR/RT
 | **Celebration / milestone** | `HeroBackdrop` + one Skia canvas + staggered `FadeInDown` + `CustomButton variant="onBrand"` | `BrandWelcomeScreen` |
 | **List** | `Layout mode="static" header={…}` + `SuperList` + skeleton/empty/error | — (use `SuperList` docs) |
 | **Detail** | `Layout header={…}` + `Card` sections + `footer={<LayoutFooter primary />}` | — |
-| **Settings / menu** | `Layout` + `ScreenHeader` + grouped `Card` rows | `identity/screens/ProfileScreen` |
-| **Dashboard** (tab root) | `Layout padding="none" headerBehavior="overlay"` + compact navy greeting `hero` (`GradientSurface brand`, `useHeroCompact()`) + ≤ 2 header icon actions + stacked sections (`gap="2xl"`, `px="xl"`, rails edge to edge) + pull-to-refresh. ≤ 1 `Notice` (highest-priority blocker); each section owns its skeleton/error/retry | `marketplace/screens/CreatorHomeScreen` |
+| **Settings / menu** | `Layout` + `ScreenHeader` + grouped `Card` rows. Profile (tab root) uses the Dashboard chrome: same hero height/structure as Home (glass completion card in the KPI slot), `brandGlow`, header `leading` identity | `identity/screens/ProfileScreen` |
+| **Dashboard** (tab root) | `Layout padding="none" headerBehavior="overlay" heroBackdrop="brandGlow" heroBehavior="parallax"` + transparent greeting `hero` (greeting beside the bell, identity block full width below, glass KPI strip, `useHeroCompact()`) + header `leading` pinning the identity once the hero scrolls away (no generic title) + ≤ 2 header icon actions + stacked sections (`gap="2xl"`, `px="xl"`, rails edge to edge) + pull-to-refresh. ≤ 1 `Notice` (highest-priority blocker); each section owns its skeleton/error/retry | `marketplace/screens/CreatorHomeScreen` |
 
 New archetype → propose it to the user, add it here, then build.
 
 ## 3. Composition rules
 
-- Navy = identity surfaces only (hero, header). Forms/content always sit on `surface.main`. Glass only over navy (rule 08).
+- Navy = identity surfaces only (hero, header). Forms/content always sit on `surface.main`. Glass only over navy (rule 08). One exception (approved 2026-10-07): a dashboard may have **one** navy highlight card in its body (`GradientSurface variant="brand"` + glass rows, no `GlowOrbs`: the decoration stays in the hero) for the action that matters most, e.g. Home profile strength.
 - Exactly **one primary** button per screen. Other actions: `secondary`, `ghost`, or teal text links (`interactive.text`, ≥ 44pt tall `Pressable`).
 - Hierarchy: `h2` screen title → `body` secondary subtitle → `FormSection` groups (title `label`, fields `gap="lg"`). Sections `gap="2xl"`–`"3xl"`.
 - Hero budget: a navy hero takes **≤ ~25% of the screen** expanded, and must have a **compact** layout (one row + progress, no subtitle/tagline) driven by `useHeroCompact()` (keyboard open, or window height < `COMPACT_HERO_MAX_HEIGHT`). New hero headers call `useHeroCompact()` inside their own memo component; never trim the hero with `useKeyboardVisible()` directly.

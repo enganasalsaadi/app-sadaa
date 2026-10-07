@@ -9,6 +9,8 @@ import {
 
 export interface RateRow {
   key: string;
+  /** Server platform key, for the icon. */
+  platform: string;
   platformLabel: string;
   serviceLabel: string;
   price: Money;
@@ -44,6 +46,7 @@ export const buildRateRows = (
       return [
         {
           key: `${card.platform}:${card.service_type}`,
+          platform: card.platform,
           platformLabel:
             platforms.find(p => p.platform === card.platform)?.platform_label ?? card.platform,
           serviceLabel: serviceLabel(card.service_type),

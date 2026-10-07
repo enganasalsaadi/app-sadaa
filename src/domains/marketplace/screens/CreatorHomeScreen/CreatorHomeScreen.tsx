@@ -6,13 +6,15 @@ import { useTheme } from '@/core/theme';
 import { Box, Layout, Notice } from '@/shared/ui';
 import { MediaKitCard } from '@/domains/identity';
 import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
+import { CreatorHomeBar } from './components/CreatorHomeBar';
 import { CreatorHomeHero } from './components/CreatorHomeHero';
 import { ProfileStrengthCard } from './components/ProfileStrengthCard';
-import { PlatformsStrip } from './components/PlatformsStrip';
+import { PlatformsSection } from './components/PlatformsSection';
 import { RatesCard } from './components/RatesCard';
 
 /**
- * Creator dashboard: greeting, the one blocker, the media kit (Share is the screen's
+ * Creator dashboard: navy hero (identity + 30-day KPIs, tap → Insights) behind a
+ * transparent header that pins the creator's identity once the hero scrolls away, then the one blocker, the media kit (Share is the screen's
  * only primary), profile strength, platforms and prices. Sections without an API
  * (wallet, offers, deals) stay out until the API exists (plan §Decisions).
  */
@@ -26,10 +28,13 @@ const CreatorHomeScreenComponent: React.FC = () => {
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
+      heroBackdrop="brandGlow"
+      heroBehavior="parallax"
       header={{
         title: t('tabs.home'),
         variant: 'brand',
         showBackButton: false,
+        leading: <CreatorHomeBar hero={vm.hero} onOpenProfile={vm.openProfile} />,
         actions: [
           {
             icon: Bell,
@@ -41,13 +46,21 @@ const CreatorHomeScreenComponent: React.FC = () => {
           },
         ],
       }}
-      hero={<CreatorHomeHero hero={vm.hero} onOpenProfile={vm.openProfile} />}
+      hero={
+        <CreatorHomeHero
+          hero={vm.hero}
+          kpis={vm.kpis}
+          onOpenProfile={vm.openProfile}
+          onOpenInsights={vm.openInsights}
+        />
+      }
       scrollProps={{
         refreshControl: (
           <RefreshControl
             refreshing={vm.refreshing}
             onRefresh={vm.onRefresh}
-            tintColor={colors.interactive.main}
+            // The spinner sits over the navy backdrop.
+            tintColor={colors.text.onBrand}
           />
         ),
       }}
@@ -66,11 +79,7 @@ const CreatorHomeScreenComponent: React.FC = () => {
         ) : null}
 
         <Box px="xl">
-          <MediaKitCard
-            {...vm.mediaKit}
-            onOpenInsights={vm.openInsights}
-            onOpenPreview={vm.openPreview}
-          />
+          <MediaKitCard {...vm.mediaKit} onOpenPreview={vm.openPreview} />
         </Box>
 
         {vm.completion.isVisible ? (
@@ -79,7 +88,7 @@ const CreatorHomeScreenComponent: React.FC = () => {
           </Box>
         ) : null}
 
-        <PlatformsStrip
+        <PlatformsSection
           platforms={vm.platforms}
           onOpenPlatform={vm.openPlatform}
           onManage={vm.openPlatforms}

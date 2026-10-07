@@ -5,9 +5,18 @@ import { selectUser, useGetProfileQuery, type KycStatus, type ServiceType } from
 import { useGetUserProfileQuery } from '../api/accountApi';
 import { useGetMediaKitQuery, useGetMediaKitStatsQuery } from '../api/mediaKitApi';
 import { useGetPlatformsQuery } from '../api/platformsApi';
+import { buildMetricTiles } from '../utils/mediaKitCard';
 import { buildMissingSteps, pickNextStep } from '../utils/profileCompletion';
 import { buildRateRows } from '../utils/rateRows';
 import { HOME_STATS_PERIOD } from './useMediaKitCard';
+
+/** The hero's 30-day KPIs, in display order after reach. */
+const HERO_METRICS = ['profile_views', 'unique_brand_views'] as const;
+type KpiStatus = 'loading' | 'error' | 'ready';
+
+/** Followers across every linked account; `null` while none reports a count. */
+const sumFollowers = (counts: readonly (number | null)[]): number | null =>
+  counts.reduce<number | null>((sum, count) => (count == null ? sum : (sum ?? 0) + count), null);
 
 /**
  * The creator's account at a glance for Home: who they are, what blocks them,
@@ -34,6 +43,18 @@ export const useCreatorOverview = () => {
   );
 
   const platforms = useMemo(() => platformsQuery.data ?? [], [platformsQuery.data]);
+  const reach = useMemo(() => sumFollowers(platforms.map(p => p.follower_count)), [platforms]);
+
+  const metrics = useMemo(() => {
+    const byKey = new Map(
+      statsQuery.data ? buildMetricTiles(statsQuery.data, HERO_METRICS).map(tile => [tile.key, tile]) : [],
+    );
+    return {
+      views: byKey.get('profile_views') ?? null,
+      brandViews: byKey.get('unique_brand_views') ?? null,
+    };
+  }, [statsQuery.data]);
+  const kpiStatus: KpiStatus = statsQuery.data ? 'ready' : statsQuery.isError ? 'error' : 'loading';
 
   const serviceLabel = useCallback(
     (service: ServiceType) => serviceOptions.find(item => item.value === service)?.label ?? service,
@@ -66,6 +87,16 @@ export const useCreatorOverview = () => {
   const retryRates = useCallback(() => {
     refetchDetails();
   }, [refetchDetails]);
+  const retryStats = useCallback(() => {
+    refetchStats();
+  }, [refetchStats]);
+
+  // Reach comes from platforms, the rest from the 30-day media kit stats.
+  const reachLoading = platformsQuery.isLoading;
+  const kpis = useMemo(
+    () => ({ reach, reachLoading, ...metrics, status: kpiStatus, retry: retryStats }),
+    [kpiStatus, metrics, reach, reachLoading, retryStats],
+  );
 
   return {
     displayName: user?.display_name || user?.full_name || '',
@@ -74,6 +105,7 @@ export const useCreatorOverview = () => {
     primaryPlatform: user?.primary_platform ?? null,
     unreadNotifications: user?.unread_notifications_count ?? 0,
     kycStatus,
+    isVerified: kycStatus === 'verified',
     platformsReviewStatus: user?.platforms_review_status ?? null,
     /** `null` until the kit has loaded: no "hidden" notice on a guess. */
     isKitPublic: kitQuery.data ? kitQuery.data.is_public : null,
@@ -89,6 +121,7 @@ export const useCreatorOverview = () => {
       isError: platformsQuery.isError && !platformsQuery.data,
       retry: retryPlatforms,
     },
+    kpis,
     rates: {
       rows: rateRows,
       isLoading: details.isLoading,

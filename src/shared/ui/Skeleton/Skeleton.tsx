@@ -14,12 +14,16 @@ import { motion, useTheme } from '@/core/theme';
 import type { RadiiToken } from '@/core/theme';
 import { Box } from '../primitives/Box';
 
+/** `brand`: on navy surfaces (hero), where the neutral block would glare. */
+export type SkeletonSurface = 'default' | 'brand';
+
 export interface SkeletonProps {
   width: DimensionValue;
   height: DimensionValue;
   borderRadius?: RadiiToken;
   /** Stretch absolutely over the parent (e.g. an image loading overlay). */
   fill?: boolean;
+  surface?: SkeletonSurface;
 }
 
 /** Placeholder block with a soft opacity pulse (UI thread, stops under reduced motion). */
@@ -28,6 +32,7 @@ const SkeletonComponent: React.FC<SkeletonProps> = ({
   height,
   borderRadius = 'md',
   fill = false,
+  surface = 'default',
 }) => {
   const { colors } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -51,7 +56,7 @@ const SkeletonComponent: React.FC<SkeletonProps> = ({
         width={width}
         height={height}
         borderRadius={borderRadius}
-        bg={colors.surface.elevated}
+        bg={surface === 'brand' ? colors.glass.badge : colors.surface.elevated}
       />
     </Animated.View>
   );

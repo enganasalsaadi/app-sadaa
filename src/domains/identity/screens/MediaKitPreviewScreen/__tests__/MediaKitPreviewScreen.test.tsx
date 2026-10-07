@@ -148,6 +148,7 @@ const model = (overrides: Partial<MediaKitPreviewScreenModel> = {}): MediaKitPre
   rateRows: [
     {
       key: 'instagram:reels',
+      platform: 'instagram',
       platformLabel: 'Instagram',
       serviceLabel: 'Reels',
       price: { amount: 5000, currency: 'USD' },

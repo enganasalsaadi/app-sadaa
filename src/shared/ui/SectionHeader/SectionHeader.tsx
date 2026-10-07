@@ -9,8 +9,12 @@ export interface SectionHeaderAction {
   onPress: () => void;
 }
 
+/** `subtle` (default): grouped settings/forms · `strong`: dashboard sections that lead a card or rail. */
+export type SectionHeaderEmphasis = 'subtle' | 'strong';
+
 export interface SectionHeaderProps {
   title: string;
+  emphasis?: SectionHeaderEmphasis;
   subtitle?: string;
   /** Teal text link at the reading-end edge ("See all", "Edit"). */
   action?: SectionHeaderAction;
@@ -18,6 +22,7 @@ export interface SectionHeaderProps {
 
 const SectionHeaderComponent: React.FC<SectionHeaderProps> = ({
   title,
+  emphasis = 'subtle',
   subtitle,
   action,
 }) => {
@@ -26,7 +31,11 @@ const SectionHeaderComponent: React.FC<SectionHeaderProps> = ({
   return (
     <Box row align="center" gap="md" minHeight={action ? sizes.button.md : undefined}>
       <Box flex={1} gap="xs">
-        <Text variant="label" color={colors.text.secondary} accessibilityRole="header">
+        <Text
+          variant={emphasis === 'strong' ? 'title' : 'label'}
+          color={emphasis === 'strong' ? colors.text.primary : colors.text.secondary}
+          accessibilityRole="header"
+        >
           {title}
         </Text>
         {subtitle ? (

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck } from 'lucide-react-native';
-import { Box, GradientSurface, StatusPill, Text } from '@/shared/ui';
+import { Box, GlowOrbs, GradientSurface, StatusPill, Text } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 
 const GradientSurfaceDemoComponent: React.FC = () => {
@@ -16,6 +16,15 @@ const GradientSurfaceDemoComponent: React.FC = () => {
         </Text>
         <Text variant="bodySmall" color={colors.text.onBrandMuted}>
           {t('devShowcase.gradientSurface.brandBody')}
+        </Text>
+      </GradientSurface>
+      <GradientSurface variant="brand" borderRadius="lg" p="lg" gap="xs">
+        <GlowOrbs />
+        <Text variant="title" color={colors.text.onBrand}>
+          {t('devShowcase.gradientSurface.glowTitle')}
+        </Text>
+        <Text variant="bodySmall" color={colors.text.onBrandMuted}>
+          {t('devShowcase.gradientSurface.glowBody')}
         </Text>
       </GradientSurface>
       <GradientSurface variant="premium" p="lg" gap="sm">

@@ -6,7 +6,6 @@ import {
   labelNiches,
   pickPrimaryPlatform,
   resolveStatChange,
-  splitTileRows,
   toPriceFrom,
 } from '../mediaKitCard';
 import type { MediaKitTile } from '../mediaKitCard';
@@ -108,29 +107,6 @@ describe('hasNoActivity', () => {
 
   it('is false with no tiles at all', () => {
     expect(hasNoActivity([])).toBe(false);
-  });
-});
-
-describe('splitTileRows', () => {
-  it('keeps up to three tiles on one row', () => {
-    expect(splitTileRows([tile('profile_views'), tile('link_opens')])).toHaveLength(1);
-    expect(
-      splitTileRows([tile('profile_views'), tile('unique_brand_views'), tile('link_opens')]),
-    ).toHaveLength(1);
-  });
-
-  it('lays four tiles out 2 × 2', () => {
-    const rows = splitTileRows([
-      tile('profile_views'),
-      tile('unique_brand_views'),
-      tile('link_opens'),
-      tile('offers_from_profile'),
-    ]);
-    expect(rows.map(r => r.length)).toEqual([2, 2]);
-  });
-
-  it('returns no rows for no tiles', () => {
-    expect(splitTileRows([])).toEqual([]);
   });
 });
 

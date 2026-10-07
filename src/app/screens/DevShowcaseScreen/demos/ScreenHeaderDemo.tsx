@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bell, Heart, Search, Share2 } from 'lucide-react-native';
-import { Banner, Box, ScreenHeader, SectionHeader } from '@/shared/ui';
+import { Avatar, Banner, Box, ScreenHeader, SectionHeader, Text } from '@/shared/ui';
 import type { ScreenHeaderAction } from '@/shared/ui';
 import { useStyles, useTheme } from '@/core/theme';
 import { MOCK_IMAGE_URIS } from './mockData';
@@ -12,7 +12,7 @@ const UNREAD_COUNT = 3;
 /** Headers in place, without the status-bar inset. Scroll behaviours live in the layout gallery. */
 const ScreenHeaderDemoComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, sizes } = useTheme();
   const styles = useStyles(() => ({
     overImage: { position: 'absolute' as const, top: 0, start: 0, end: 0 },
   }));
@@ -80,6 +80,27 @@ const ScreenHeaderDemoComponent: React.FC = () => {
             onBackPress={noop}
             actions={inboxActions}
             withSafeArea={false}
+          />
+        </Box>
+      </Box>
+
+      <Box gap="sm">
+        <SectionHeader title={t('devShowcase.screenHeader.leadingLabel')} />
+        <Box {...frame}>
+          <ScreenHeader
+            title={t('devShowcase.screenHeader.title')}
+            variant="brand"
+            showBackButton={false}
+            actions={[inboxActions[1]]}
+            withSafeArea={false}
+            leading={
+              <Box row align="center" gap="sm">
+                <Avatar uri={MOCK_IMAGE_URIS[0]} size={sizes.avatar.sm} />
+                <Text variant="title" color={colors.text.onBrand} numberOfLines={1}>
+                  {t('devShowcase.screenHeader.title')}
+                </Text>
+              </Box>
+            }
           />
         </Box>
       </Box>

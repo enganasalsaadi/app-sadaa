@@ -1,9 +1,7 @@
 import React from 'react';
 import { act, create } from 'react-test-renderer';
 import type { ReactTestInstance } from 'react-test-renderer';
-import { CustomButton, IconButton, Notice, StatTile, Tag } from '@/shared/ui';
-import type { PublicMediaKit } from '../../../types/mediaKit';
-import type { MediaKitTile } from '../../../utils/mediaKitCard';
+import { CustomButton, IconButton, Notice, StatusPill } from '@/shared/ui';
 import { MediaKitCard } from '../MediaKitCard';
 import type { MediaKitCardProps } from '../MediaKitCard';
 
@@ -56,56 +54,20 @@ jest.mock('@/shared/ui', () => {
     Pressable: stub('Pressable'),
     Skeleton: stub('Skeleton'),
     SocialPlatformIcon: stub('SocialPlatformIcon'),
-    StatTile: stub('StatTile'),
+    StatusPill: stub('StatusPill'),
     Tag: stub('Tag'),
     TierBadge: stub('TierBadge'),
     Text: stub('Text'),
   };
 });
 
-const preview: PublicMediaKit = {
-  slug: 'anas',
-  display_name: 'Anas Style',
-  avatar_url: null,
-  tier: 'MICRO',
-  tier_label: 'Micro',
-  is_verified: true,
-  niches: ['fashion', 'beauty'],
-  platforms: [
-    {
-      platform: 'instagram',
-      platform_label: 'Instagram',
-      username: 'anas',
-      profile_url: null,
-      display_name: null,
-      follower_count: 45210,
-      follower_count_verified: true,
-      follower_tier: 'MICRO',
-      follower_tier_label: 'Micro',
-      is_primary: true,
-    },
-  ],
-  rate_cards: [],
-  price_from_usd: 30,
-  bio: null,
-  top_portfolio_items: [],
-  offers_from_profile: null,
-};
-
-const tiles: MediaKitTile[] = [
-  { key: 'profile_views', value: 1240, change: 0.12 },
-  { key: 'unique_brand_views', value: 38, change: 0.267 },
-  { key: 'link_opens', value: 96, change: 'new' },
-];
-
 const fn = () => jest.fn();
 
 const baseProps = (): MediaKitCardProps => ({
   status: 'ready',
-  preview,
   link: 'https://sada.app/c/anas',
-  nicheLabels: ['Fashion', 'Beauty'],
-  stats: { status: 'ready', tiles },
+  isPublic: true,
+  noActivity: false,
   share: {
     isReady: true,
     isSharing: false,
@@ -119,7 +81,6 @@ const baseProps = (): MediaKitCardProps => ({
     onMakePublic: fn(),
   },
   onRetry: fn(),
-  onRetryStats: fn(),
 });
 
 const render = (overrides: Partial<MediaKitCardProps> = {}) => {
@@ -140,73 +101,23 @@ const textOf = (node: ReactTestInstance): string =>
     .filter((c): c is string => typeof c === 'string')
     .join('|');
 
-const icons = (root: ReactTestInstance, name: string) =>
-  root.findAll(n => isHost(n, 'Icon') && n.props.name === name);
+const primary = (root: ReactTestInstance) =>
+  root.findAllByType(CustomButton).find(b => b.props.title === 'account.mediaKit.share.cta');
 
-describe('MediaKitCard — stat tiles', () => {
-  it('renders one tile per metric it was given', () => {
-    const root = render();
-    const rendered = root.findAllByType(StatTile);
-    expect(rendered.map(t => t.props.label)).toEqual([
-      'account.mediaKit.tiles.views',
-      'account.mediaKit.tiles.brands',
-      'account.mediaKit.tiles.linkOpens',
-    ]);
+describe('MediaKitCard — header', () => {
+  it('says what the kit is for, and nudges a first share when nobody opened it', () => {
+    expect(textOf(render())).toContain('account.mediaKit.subtitle');
+    const quiet = render({ noActivity: true });
+    expect(textOf(quiet)).toContain('account.mediaKit.noActivity');
+    expect(textOf(quiet)).not.toContain('account.mediaKit.subtitle');
   });
 
-  it('hides tiles that are absent (a metric that is not live yet)', () => {
-    const root = render();
-    expect(
-      root.findAllByType(StatTile).some(t => t.props.label === 'account.mediaKit.tiles.offers'),
-    ).toBe(false);
-  });
-
-  it('shows a fourth tile once offers ship, laid out 2 × 2', () => {
-    const root = render({
-      stats: {
-        status: 'ready',
-        tiles: [...tiles, { key: 'offers_from_profile', value: 4, change: -0.2 }],
-      },
-    });
-    const rendered = root.findAllByType(StatTile);
-    expect(rendered).toHaveLength(4);
-    expect(new Set(rendered.map(t => t.parent)).size).toBe(2);
-  });
-
-  it('passes "new" through when there is no previous period, and fractions otherwise', () => {
-    const root = render();
-    const changes = root.findAllByType(StatTile).map(t => t.props.change);
-    expect(changes).toEqual([0.12, 0.267, 'new']);
-  });
-
-  it('swaps the tiles for a "share your link" prompt when there is no activity yet', () => {
-    const root = render({
-      stats: {
-        status: 'ready',
-        tiles: tiles.map(tile => ({ ...tile, value: 0, change: undefined })),
-      },
-    });
-    expect(root.findAllByType(StatTile)).toHaveLength(0);
-    expect(textOf(root)).toContain('account.mediaKit.noActivity');
-  });
-
-  it('shows placeholder tiles while stats load', () => {
-    const root = render({ stats: { status: 'loading', tiles: [] } });
-    const rendered = root.findAllByType(StatTile);
-    expect(rendered).toHaveLength(3);
-    expect(rendered.every(t => t.props.loading === true)).toBe(true);
-  });
-
-  it('keeps a stats failure inside the card, with a retry', () => {
-    const onRetryStats = jest.fn();
-    const root = render({ stats: { status: 'error', tiles: [] }, onRetryStats });
-    expect(root.findAllByType(StatTile)).toHaveLength(0);
-    const notice = root.findByType(Notice);
-    expect(notice.props.message).toBe('account.mediaKit.statsFailed');
-    act(() => notice.props.action.onPress());
-    expect(onRetryStats).toHaveBeenCalledTimes(1);
-    // the rest of the card is still usable
-    expect(root.findAllByType(CustomButton)).toHaveLength(1);
+  it('shows visibility as a pill with text, and none before the kit loads', () => {
+    expect(render().findByType(StatusPill).props.label).toBe('account.mediaKit.visibility.public');
+    const hidden = render({ isPublic: false }).findByType(StatusPill);
+    expect(hidden.props.label).toBe('account.mediaKit.visibility.hidden');
+    expect(hidden.props.tone).toBe('neutral');
+    expect(render({ isPublic: null }).findAllByType(StatusPill)).toHaveLength(0);
   });
 });
 
@@ -215,7 +126,8 @@ describe('MediaKitCard — share and copy triggers', () => {
     const props = baseProps();
     const onShare = props.share.onShare;
     const root = render(props);
-    const button = root.findByType(CustomButton);
+    const button = primary(root);
+    if (!button) throw new Error('no share button');
     expect(button.props.title).toBe('account.mediaKit.share.cta');
     act(() => button.props.onPress());
     expect(onShare).toHaveBeenCalledTimes(1);
@@ -238,21 +150,21 @@ describe('MediaKitCard — share and copy triggers', () => {
   it('shows the button loading while sharing and locks copy', () => {
     const props = baseProps();
     const root = render({ share: { ...props.share, isSharing: true } });
-    expect(root.findByType(CustomButton).props.loading).toBe(true);
+    expect(primary(root)?.props.loading).toBe(true);
     expect(root.findByType(IconButton).props.disabled).toBe(true);
   });
 
   it('disables both triggers until the share URL is known', () => {
     const props = baseProps();
     const root = render({ share: { ...props.share, isReady: false } });
-    expect(root.findByType(CustomButton).props.disabled).toBe(true);
+    expect(primary(root)?.props.disabled).toBe(true);
     expect(root.findByType(IconButton).props.disabled).toBe(true);
   });
 
   it('disables Share while the kit is being made public', () => {
     const props = baseProps();
     const root = render({ share: { ...props.share, isMakingPublic: true } });
-    expect(root.findByType(CustomButton).props.disabled).toBe(true);
+    expect(primary(root)?.props.disabled).toBe(true);
   });
 });
 
@@ -292,80 +204,36 @@ describe('MediaKitCard — share errors', () => {
   });
 });
 
-describe('MediaKitCard — states', () => {
-  it('reserves space with skeletons while the kit loads', () => {
-    const root = render({ status: 'loading', preview: undefined, link: undefined });
-    expect(root.findAllByType(CustomButton)).toHaveLength(0);
-    expect(root.findAll(n => isHost(n, 'Skeleton')).length).toBeGreaterThan(0);
-  });
-
-  it('shows a retryable error when the kit fails to load', () => {
-    const onRetry = jest.fn();
-    const root = render({ status: 'error', preview: undefined, link: undefined, onRetry });
-    const notice = root.findByType(Notice);
-    expect(notice.props.message).toBe('account.mediaKit.loadFailed');
-    act(() => notice.props.action.onPress());
-    expect(onRetry).toHaveBeenCalledTimes(1);
-  });
-
-  it('shows Insights / Preview links only when their screens are wired', () => {
+describe('MediaKitCard — preview', () => {
+  it('offers Preview as a secondary action only when its screen is wired', () => {
     const none = render();
-    expect(none.findAll(n => isHost(n, 'Pressable'))).toHaveLength(0);
+    expect(none.findAllByType(CustomButton)).toHaveLength(1);
 
-    const onOpenInsights = jest.fn();
     const onOpenPreview = jest.fn();
-    const both = render({ onOpenInsights, onOpenPreview });
-    const links = both.findAll(n => isHost(n, 'Pressable'));
-    expect(links.map(l => l.props.accessibilityLabel)).toEqual([
-      'account.mediaKit.insights',
-      'account.mediaKit.preview',
-    ]);
-    act(() => links[0]?.props.onPress());
-    act(() => links[1]?.props.onPress());
-    expect(onOpenInsights).toHaveBeenCalledTimes(1);
+    const root = render({ onOpenPreview });
+    const preview = root
+      .findAllByType(CustomButton)
+      .find(b => b.props.title === 'account.mediaKit.preview');
+    expect(preview?.props.variant).toBe('secondary');
+    act(() => preview?.props.onPress());
     expect(onOpenPreview).toHaveBeenCalledTimes(1);
   });
 });
 
-describe('MediaKitCard — identity', () => {
-  it('shows name, niches and the lowest price', () => {
-    const root = render();
-    expect(textOf(root)).toContain('Anas Style');
-    expect(root.findAllByType(Tag).map(t => t.props.label)).toEqual(['Fashion', 'Beauty']);
-    const price = root.findAll(n => isHost(n, 'MoneyText'));
-    expect(price[0]?.props.value).toEqual({ amount: 3000, currency: 'USD' });
+describe('MediaKitCard — states', () => {
+  it('keeps its shape while the kit loads, with Share locked', () => {
+    const root = render({ status: 'loading', link: undefined, isPublic: null });
+    expect(root.findAll(n => isHost(n, 'Skeleton')).length).toBeGreaterThan(0);
+    expect(primary(root)?.props.disabled).toBe(true);
+    expect(root.findAllByType(IconButton)).toHaveLength(0);
   });
 
-  it('ticks the follower count only when it is verified', () => {
-    expect(icons(render(), 'CheckCircle2')).toHaveLength(1);
-    const [first] = preview.platforms;
-    if (!first) {
-      throw new Error('fixture needs a platform');
-    }
-    const unverified = render({
-      preview: { ...preview, platforms: [{ ...first, follower_count_verified: false }] },
-    });
-    expect(icons(unverified, 'CheckCircle2')).toHaveLength(0);
-  });
-
-  it('marks a KYC-verified creator, and omits tier, price and niches when absent', () => {
-    expect(icons(render(), 'BadgeCheck')).toHaveLength(1);
-    const root = render({
-      preview: {
-        ...preview,
-        display_name: null,
-        is_verified: false,
-        tier: null,
-        platforms: [],
-        price_from_usd: null,
-      },
-      nicheLabels: [],
-    });
-    expect(icons(root, 'BadgeCheck')).toHaveLength(0);
-    expect(root.findAll(n => isHost(n, 'TierBadge'))).toHaveLength(0);
-    expect(root.findAll(n => isHost(n, 'MoneyText'))).toHaveLength(0);
-    expect(root.findAllByType(Tag)).toHaveLength(0);
-    // no display name → the slug stands in
-    expect(textOf(root)).toContain('anas');
+  it('shows a retryable error when the kit fails to load', () => {
+    const onRetry = jest.fn();
+    const root = render({ status: 'error', link: undefined, isPublic: null, onRetry });
+    const notice = root.findByType(Notice);
+    expect(notice.props.message).toBe('account.mediaKit.loadFailed');
+    act(() => notice.props.action.onPress());
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

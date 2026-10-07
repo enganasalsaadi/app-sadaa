@@ -7,6 +7,7 @@ import {
   useMediaKitCard,
   type ProfileStepTarget,
 } from '@/domains/identity';
+import { DAY_PART_GREETING, resolveDayPart } from '../utils/dayPart';
 import {
   HOME_NOTICE_DEF,
   resolveHomeNotice,
@@ -28,6 +29,8 @@ export const useCreatorHomeScreen = () => {
   const overview = useCreatorOverview();
   const mediaKit = useMediaKitCard();
   const [refreshing, setRefreshing] = useState(false);
+  // Read once per mount: Home is a tab root, remounted often enough for a greeting.
+  const [dayPart] = useState(() => resolveDayPart(new Date().getHours()));
 
   // Account screens live in the Settings tab; `initial: false` keeps Profile underneath.
   const openProfile = useCallback(
@@ -117,6 +120,19 @@ export const useCreatorHomeScreen = () => {
     };
   }, [noticeKey, runNoticeAction, t]);
 
+  const { displayName, avatarUrl, tier, isVerified, primaryPlatform } = overview;
+  const hero = useMemo(
+    () => ({
+      greeting: t(DAY_PART_GREETING[dayPart]),
+      displayName,
+      avatarUrl,
+      tier,
+      isVerified,
+      primaryPlatform,
+    }),
+    [avatarUrl, dayPart, displayName, isVerified, primaryPlatform, t, tier],
+  );
+
   const { refresh } = overview;
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -128,12 +144,8 @@ export const useCreatorHomeScreen = () => {
   }, [refresh]);
 
   return {
-    hero: {
-      displayName: overview.displayName,
-      avatarUrl: overview.avatarUrl,
-      tier: overview.tier,
-      primaryPlatform: overview.primaryPlatform,
-    },
+    hero,
+    kpis: overview.kpis,
     unreadNotifications: overview.unreadNotifications,
     notice,
     mediaKit,

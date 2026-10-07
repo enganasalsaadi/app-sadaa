@@ -8,6 +8,7 @@ import { DeleteAccountSheet } from '@/domains/auth';
 import type { ProfileSectionKey } from '../../constants/profileSections';
 import { useProfileScreen, type ProfileScreenModel } from './hooks/useProfileScreen';
 import { ProfileHero } from './components/ProfileHero';
+import { ProfileBar } from './components/ProfileBar';
 import { MissingStepsRail } from './components/MissingStepsRail';
 import { PushCard } from './components/PushCard';
 import { KycCard } from '../../components/KycCard';
@@ -111,10 +112,13 @@ const ProfileScreenComponent: React.FC = () => {
         padding="none"
         statusBar="light"
         headerBehavior="overlay"
+        heroBackdrop="brandGlow"
+        heroBehavior="parallax"
         header={{
           title: vm.hero.displayName || t('account.profile.title'),
           variant: 'brand',
           showBackButton: false,
+          leading: <ProfileBar hero={vm.hero} />,
           actions: [
             {
               icon: Bell,
@@ -139,7 +143,7 @@ const ProfileScreenComponent: React.FC = () => {
             <RefreshControl
               refreshing={vm.refreshing}
               onRefresh={vm.onRefresh}
-              tintColor={colors.interactive.main}
+              tintColor={colors.text.onBrand}
             />
           ),
         }}

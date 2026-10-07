@@ -7,14 +7,14 @@ import { Avatar, Box, MoneyText, SocialPlatformIcon, Tag, TierBadge, Text } from
 import type { PublicMediaKit } from '../../types/mediaKit';
 import { pickPrimaryPlatform, toPriceFrom } from '../../utils/mediaKitCard';
 
-interface MediaKitCardIdentityProps {
+interface MediaKitPreviewIdentityProps {
   preview: PublicMediaKit;
   /** Already localised from the niche lookup, capped by the caller. */
   nicheLabels: readonly string[];
 }
 
 /** What a brand sees first: who, how big, what about, from what price. */
-const MediaKitCardIdentityComponent: React.FC<MediaKitCardIdentityProps> = ({
+const MediaKitPreviewIdentityComponent: React.FC<MediaKitPreviewIdentityProps> = ({
   preview,
   nicheLabels,
 }) => {
@@ -89,4 +89,4 @@ const MediaKitCardIdentityComponent: React.FC<MediaKitCardIdentityProps> = ({
   );
 };
 
-export const MediaKitCardIdentity = memo(MediaKitCardIdentityComponent);
+export const MediaKitPreviewIdentity = memo(MediaKitPreviewIdentityComponent);

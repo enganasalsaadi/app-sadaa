@@ -452,6 +452,7 @@
       "avatarInvalid": "Use a JPG, PNG or WebP photo under 5 MB.",
       "avatarUpdated": "Profile photo updated",
       "completion": "Profile completion",
+      "completed": "Your profile is complete",
       "completeTitle": "Complete your profile",
       "completeSubtitle": "Each step makes you easier for brands to find",
       "steps": {
@@ -682,17 +683,19 @@
     },
     "mediaKit": {
       "title": "Your media kit",
+      "subtitle": "What brands see when they find you",
       "loadFailed": "Couldn't load your media kit",
-      "statsFailed": "Couldn't load your stats",
       "retry": "Retry",
-      "period": "Last 30 days",
       "priceFrom": "From",
       "followers": "{{count}} followers",
       "verifiedFollowers": "Verified follower count",
       "verifiedCreator": "Verified creator",
       "linkLabel": "Your media kit link",
+      "visibility": {
+        "public": "Visible",
+        "hidden": "Hidden"
+      },
       "noActivity": "Share your link to get your first views",
-      "insights": "All insights",
       "insightsScreen": {
         "title": "Media kit insights",
         "periodLabel": "Period",
@@ -970,9 +973,23 @@
       "priceFrom": "From"
     },
     "creatorHome": {
-      "greeting": "Hi, {{name}}",
+      "greetingTime": {
+        "morning": "Good morning",
+        "evening": "Good evening"
+      },
       "greetingFallback": "Welcome",
       "openProfile": "Open my profile",
+      "verified": "Verified account",
+      "kpi": {
+        "period": "Last 30 days",
+        "reach": "Your reach",
+        "views": "Profile views",
+        "brands": "Brands viewed",
+        "new": "New",
+        "failed": "Couldn't load stats. Tap to retry",
+        "a11y": "Last 30 days: reach {{reach}}, profile views {{views}}, brands viewed {{brands}}. Open all insights",
+        "retry": "Couldn't load stats. Retry"
+      },
       "notice": {
         "platformsActionRequired": {
           "title": "A platform needs your attention",
@@ -986,20 +1003,24 @@
       },
       "strength": {
         "title": "Profile strength",
+        "benefit": "The more complete your profile, the more brands get to see you.",
         "nextStep": "Next step"
       },
       "platforms": {
         "manage": "Manage",
         "loadFailed": "Couldn't load your platforms",
-        "open": "Open {{platform}} @{{username}}"
+        "open": "Open {{platform}} @{{username}}",
+        "add": "Add platform",
+        "addHint": "Link your accounts so brands can reach you",
+        "followers": "followers",
+        "openPrimary": "Open your primary platform {{platform}} @{{username}}"
       },
       "rates": {
         "title": "My rates",
         "edit": "Edit",
         "empty": "Add rates so brands can book you",
         "add": "Add rates",
-        "loadFailed": "Couldn't load your rates",
-        "row": "{{platform}} · {{service}}"
+        "loadFailed": "Couldn't load your rates"
       }
     }
   },
@@ -1224,7 +1245,7 @@
       "brandHeaderTitle": "Brand header",
       "brandHeaderDescription": "header variant=\"brand\" with actions and a badge",
       "dashboardTitle": "Dashboard",
-      "dashboardDescription": "greeting band hero + overlay header, one notice, stacked card sections",
+      "dashboardDescription": "greeting hero on a parallax navy backdrop that stretches on pull-down + overlay header, one notice, stacked card sections",
       "dashboardGreeting": "Hi, Leila",
       "dashboardNotice": "One notice at a time: the highest-priority blocker.",
       "dashboardSection": "Section",
@@ -1372,6 +1393,7 @@
       "actionsLabel": "Actions + badge",
       "noBackLabel": "Root screen (no back)",
       "brandLabel": "brand: navy identity bar",
+      "leadingLabel": "leading: start-aligned identity (dashboard pinned bar)",
       "transparentLabel": "transparent: over imagery",
       "title": "Campaigns",
       "subtitle": "12 open",
@@ -1571,18 +1593,15 @@
     },
     "mediaKitCard": {
       "default": "Default",
-      "offersLive": "Offers live (4 tiles)",
+      "hidden": "Kit hidden",
       "noActivity": "No activity yet",
-      "minimal": "Minimal profile",
+      "noPreview": "Without preview",
       "loading": "Loading",
-      "statsLoading": "Stats loading",
-      "statsError": "Stats failed",
       "loadError": "Kit failed to load",
       "sharing": "Share in progress",
       "shareHidden": "Share: kit hidden",
       "shareFailed": "Share: failed",
-      "shareRateLimited": "Share: rate limited",
-      "displayName": "Anas Style"
+      "shareRateLimited": "Share: rate limited"
     },
     "dealStatus": {
       "pillsTitle": "Every status",
@@ -1628,7 +1647,9 @@
       "brandBody": "Navy hero gradient for identity headers.",
       "premiumTitle": "Premium highlight",
       "premiumPill": "Verified",
-      "premiumBody": "Soft mustard wash for verified or top creators. Text stays neutral."
+      "premiumBody": "Soft mustard wash for verified or top creators. Text stays neutral.",
+      "glowTitle": "Brand + GlowOrbs",
+      "glowBody": "Faint light washes in two corners, for the dashboard hero."
     }
   },
   "followerTier": {
