@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link2, Plus } from 'lucide-react-native';
+import { Link2, MapPin, Plus } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
 import {
@@ -21,7 +21,11 @@ import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 const SKELETON_ROWS = ['a', 'b', 'c'] as const;
 
 const RateLine = memo<{ row: RateRow }>(({ row }) => {
+  const { t } = useTranslation();
   const { colors, sizes } = useTheme();
+  const where = row.platformLabel ?? t('account.rates.inPerson');
+  const caption = row.packageLabel ? `${where} · ${row.packageLabel}` : where;
+  const Fallback = row.platform === null ? MapPin : Link2;
   return (
     <Box row align="center" gap="md" py="md">
       <Box
@@ -32,10 +36,10 @@ const RateLine = memo<{ row: RateRow }>(({ row }) => {
         align="center"
         justify="center"
       >
-        {isSocialPlatform(row.platform) ? (
+        {row.platform && isSocialPlatform(row.platform) ? (
           <SocialPlatformIcon platform={row.platform} size={sizes.icon.sm} color={colors.icon.secondary} />
         ) : (
-          <Link2 size={sizes.icon.sm} color={colors.icon.secondary} />
+          <Fallback size={sizes.icon.sm} color={colors.icon.secondary} />
         )}
       </Box>
       <Box flex={1} gap="xs">
@@ -43,7 +47,7 @@ const RateLine = memo<{ row: RateRow }>(({ row }) => {
           {row.serviceLabel}
         </Text>
         <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-          {row.platformLabel}
+          {caption}
         </Text>
       </Box>
       <MoneyText value={row.price} />
@@ -56,7 +60,7 @@ interface RatesCardProps {
   onEdit: () => void;
 }
 
-/** "My rates": one line per saved price; prices are edited on the platform page. */
+/** "My rates": one line per saved price; editing opens the rates screen. */
 const RatesCardComponent: React.FC<RatesCardProps> = ({ rates, onEdit }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();

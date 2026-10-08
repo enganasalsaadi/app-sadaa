@@ -84,6 +84,7 @@ const preview: PublicMediaKit = {
     },
   ],
   rate_cards: [],
+  contract_terms: null,
   price_from_usd: 30,
   bio: null,
   top_portfolio_items: [],

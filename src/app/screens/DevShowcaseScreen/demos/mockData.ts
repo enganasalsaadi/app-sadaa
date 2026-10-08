@@ -1,3 +1,4 @@
+import type { CatalogService } from '@/core/api';
 import { DEFAULT_CURRENCY } from '@/core/config';
 import type { Money } from '@/core/money';
 import type { PickedFile } from '@/shared/ui';
@@ -91,3 +92,68 @@ export const MOCK_DAILY_EARNINGS: readonly number[] = [
 export const MOCK_CREATOR_PRICE = usd(8000);
 
 export const MOCK_MEDIA_KIT_LINK = 'https://sada.app/c/anas';
+
+const mockCriteria = (retention: boolean): CatalogService['criteria'] => ({
+  delivery_days: { label: 'Delivery time', min: 1, max: 14, default: 5 },
+  revisions: {
+    label: 'Revision rounds',
+    options: [
+      { value: 0, label: 'No revisions' },
+      { value: 1, label: '1 round' },
+      { value: 2, label: '2 rounds' },
+    ],
+    default: 1,
+  },
+  retention: retention
+    ? { label: 'Stays live for', options: [{ value: '24h', label: '24 hours' }], default: '24h', minimum: '24h' }
+    : null,
+});
+
+/** Dev-only catalog services (server-localized labels in real data), not a real catalog. */
+export const MOCK_RATE_SERVICES: Record<'reel' | 'story' | 'onSiteVisit', CatalogService> = {
+  reel: {
+    key: 'reel',
+    label: 'Reel',
+    package: {
+      key: 'duration_sec',
+      label: 'Length',
+      type: 'options',
+      options: [
+        { value: 15, label: 'Up to 15 seconds' },
+        { value: 30, label: 'Up to 30 seconds' },
+        { value: 60, label: 'Up to 60 seconds' },
+      ],
+      default: 30,
+      visible: true,
+    },
+    criteria: mockCriteria(true),
+    attributes: [],
+    addons: ['rush_delivery'],
+  },
+  story: {
+    key: 'story',
+    label: 'Story',
+    package: null,
+    criteria: mockCriteria(true),
+    attributes: [],
+    addons: [],
+  },
+  onSiteVisit: {
+    key: 'on_site_visit',
+    label: 'On-site visit',
+    package: {
+      key: 'hours',
+      label: 'Visit length',
+      type: 'options',
+      options: [
+        { value: 2, label: '2 hours' },
+        { value: 4, label: '4 hours' },
+      ],
+      default: 2,
+      visible: true,
+    },
+    criteria: mockCriteria(false),
+    attributes: [],
+    addons: [],
+  },
+};

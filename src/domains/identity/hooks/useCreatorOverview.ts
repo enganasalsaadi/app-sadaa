@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react';
-import { useLookupItems } from '@/core/api';
 import { useAppSelector } from '@/core/store';
-import { selectUser, useGetProfileQuery, type KycStatus, type ServiceType } from '@/domains/auth';
+import { selectUser, useGetProfileQuery, type KycStatus } from '@/domains/auth';
 import { useGetUserProfileQuery } from '../api/accountApi';
 import { useGetMediaKitQuery, useGetMediaKitStatsQuery } from '../api/mediaKitApi';
 import { useGetPlatformsQuery } from '../api/platformsApi';
+import { useGetRateCardsQuery } from '../api/rateCardsApi';
 import { buildMetricTiles } from '../utils/mediaKitCard';
 import { buildMissingSteps, pickNextStep } from '../utils/profileCompletion';
+import { needsRateCards } from '../utils/rateCardNotice';
 import { buildRateRows } from '../utils/rateRows';
 import { HOME_STATS_PERIOD } from './useMediaKitCard';
 
@@ -31,7 +32,7 @@ export const useCreatorOverview = () => {
   const details = useGetUserProfileQuery();
   const kitQuery = useGetMediaKitQuery();
   const statsQuery = useGetMediaKitStatsQuery(HOME_STATS_PERIOD);
-  const { items: serviceOptions } = useLookupItems('service_types');
+  const ratesQuery = useGetRateCardsQuery();
 
   const kycStatus: KycStatus = user?.kyc?.status ?? user?.kyc_status ?? 'unverified';
   const completion = user?.profile_completion;
@@ -56,13 +57,9 @@ export const useCreatorOverview = () => {
   }, [statsQuery.data]);
   const kpiStatus: KpiStatus = statsQuery.data ? 'ready' : statsQuery.isError ? 'error' : 'loading';
 
-  const serviceLabel = useCallback(
-    (service: ServiceType) => serviceOptions.find(item => item.value === service)?.label ?? service,
-    [serviceOptions],
-  );
   const rateRows = useMemo(
-    () => buildRateRows(details.data?.profile.rate_cards ?? [], platforms, serviceLabel),
-    [details.data?.profile.rate_cards, platforms, serviceLabel],
+    () => buildRateRows(ratesQuery.data ?? [], platforms),
+    [ratesQuery.data, platforms],
   );
 
   const { refetch: refetchMe } = me;
@@ -70,6 +67,7 @@ export const useCreatorOverview = () => {
   const { refetch: refetchDetails } = details;
   const { refetch: refetchKit } = kitQuery;
   const { refetch: refetchStats } = statsQuery;
+  const { refetch: refetchRates } = ratesQuery;
 
   const refresh = useCallback(async () => {
     await Promise.allSettled([
@@ -78,15 +76,16 @@ export const useCreatorOverview = () => {
       refetchDetails(),
       refetchKit(),
       refetchStats(),
+      refetchRates(),
     ]);
-  }, [refetchDetails, refetchKit, refetchMe, refetchPlatforms, refetchStats]);
+  }, [refetchDetails, refetchKit, refetchMe, refetchPlatforms, refetchRates, refetchStats]);
 
   const retryPlatforms = useCallback(() => {
     refetchPlatforms();
   }, [refetchPlatforms]);
   const retryRates = useCallback(() => {
-    refetchDetails();
-  }, [refetchDetails]);
+    refetchRates();
+  }, [refetchRates]);
   const retryStats = useCallback(() => {
     refetchStats();
   }, [refetchStats]);
@@ -107,6 +106,7 @@ export const useCreatorOverview = () => {
     kycStatus,
     isVerified: kycStatus === 'verified',
     platformsReviewStatus: user?.platforms_review_status ?? null,
+    needsRateCards: needsRateCards(user),
     /** `null` until the kit has loaded: no "hidden" notice on a guess. */
     isKitPublic: kitQuery.data ? kitQuery.data.is_public : null,
     completion: {
@@ -124,8 +124,8 @@ export const useCreatorOverview = () => {
     kpis,
     rates: {
       rows: rateRows,
-      isLoading: details.isLoading,
-      isError: details.isError && !details.data,
+      isLoading: ratesQuery.isLoading,
+      isError: ratesQuery.isError && !ratesQuery.data,
       retry: retryRates,
     },
     refresh,

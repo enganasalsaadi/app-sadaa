@@ -34,7 +34,18 @@ export type {
   PlatformAccountDraft,
   PlatformAccountFormValues,
 } from './influencerSocialsSchema';
-export { createInfluencerRatesSchema, fromPriceUsd, toPriceUsd } from './influencerRatesSchema';
-export type { InfluencerRatesFormValues, RateRowFormValues } from './influencerRatesSchema';
+export {
+  createInfluencerRatesSchema,
+  DEFAULT_RATE_PRICE_BOUNDS,
+  fromPriceUsd,
+  ratePriceError,
+  toPriceUsd,
+  toRatePriceBounds,
+} from './influencerRatesSchema';
+export type {
+  InfluencerRatesFormValues,
+  RatePriceBounds,
+  RateRowFormValues,
+} from './influencerRatesSchema';
 export { createDeleteAccountSchema } from './deleteAccountSchema';
 export type { DeleteAccountFormValues } from './deleteAccountSchema';

@@ -1,59 +1,84 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLookupItems } from '@/core/api';
+import { useGetRateCardCatalogQuery, type RateCardCatalog } from '@/core/api';
 import type { InfluencerWizardStackParamList } from '@/core/navigation';
 import { useWizardHeader } from '@/shared/ui';
 import {
   useGetInfluencerOnboardingProgressQuery,
   useInfluencerStep3RatesMutation,
 } from '../../../api';
+import type { RateFormRow } from '../../../components/RatePlatformCard';
 import { INFLUENCER_WIZARD_STEPS } from '../../../constants/influencerOnboarding';
 import { useInfluencerOnboardingFlow } from '../../../hooks/useInfluencerOnboardingFlow';
 import {
   createInfluencerRatesSchema,
+  DEFAULT_RATE_PRICE_BOUNDS,
   fromPriceUsd,
-  isInfluencerPlatform,
   toPriceUsd,
+  toRatePriceBounds,
 } from '../../../schemas';
-import type { InfluencerPlatform, InfluencerRatesFormValues } from '../../../schemas';
-import { SERVICE_TYPES } from '../../../store';
-import type { InfluencerOnboardingProgress, RateCardEntry, ServiceType } from '../../../store';
+import type { InfluencerRatesFormValues } from '../../../schemas';
+import type { InfluencerOnboardingProgress, QuickRateCardInput } from '../../../store';
+import {
+  buildRateServiceGroups,
+  findCatalogService,
+  toPackageKey,
+  toPackageValue,
+} from '../../../utils/rateCatalog';
 
 type RatesAction = 'save' | 'skip';
 
-export interface RatePlatformGroup {
-  platform: InfluencerPlatform;
-  username: string;
-  /** Row indexes into `rates`, one per service, in SERVICE_TYPES order. */
-  rows: { index: number; service: ServiceType }[];
+interface RatePlatformGroup {
+  key: string;
+  /** `null` = the in-person group. */
+  platform: string | null;
+  /** Catalog platform label; `null` for the in-person group. */
+  label: string | null;
+  username: string | null;
+  rows: RateFormRow[];
 }
 
+/**
+ * One row per catalog service of each linked platform, plus the in-person
+ * services. A saved card prefills its service row (first package wins: the
+ * quick form prices one package per service).
+ */
 const buildForm = (
+  catalog: RateCardCatalog,
   profile: InfluencerOnboardingProgress['profile'] | undefined,
 ): { groups: RatePlatformGroup[]; values: InfluencerRatesFormValues } => {
   const saved = profile?.rate_cards ?? [];
-  const groups: RatePlatformGroup[] = [];
+  const accounts = profile?.platforms ?? [];
   const rates: InfluencerRatesFormValues['rates'] = [];
 
-  for (const account of profile?.platforms ?? []) {
-    if (!isInfluencerPlatform(account.platform)) continue;
-    const platform = account.platform;
-    const rows = SERVICE_TYPES.map(service => {
-      const card = saved.find(c => c.platform === platform && c.service_type === service);
+  const groups = buildRateServiceGroups(
+    catalog,
+    accounts.map(account => account.platform),
+  ).map<RatePlatformGroup>(group => ({
+    key: group.platform ?? 'in_person',
+    platform: group.platform,
+    label: group.label,
+    username: accounts.find(account => account.platform === group.platform)?.username ?? null,
+    rows: group.services.map(service => {
+      const card = saved.find(c => c.platform === group.platform && c.service.key === service.key);
       rates.push({
-        platform,
-        service,
+        platform: group.platform,
+        service: service.key,
+        hasPackage: service.package !== null,
         enabled: !!card,
+        packageValue: service.package
+          ? toPackageKey(card?.package?.value ?? service.package.default)
+          : null,
         price: card ? fromPriceUsd(card.price_usd) : null,
       });
       return { index: rates.length - 1, service };
-    });
-    groups.push({ platform, username: account.username, rows });
-  }
+    }),
+  }));
+
   return { groups, values: { rates } };
 };
 
@@ -61,24 +86,31 @@ export const useInfluencerRatesScreen = () => {
   const { t } = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<InfluencerWizardStackParamList, 'InfluencerRates'>>();
-  const schema = useMemo(() => createInfluencerRatesSchema(t), [t]);
 
-  // One rate row per (saved platform × service); prefilled when resuming.
+  const catalogQuery = useGetRateCardCatalogQuery();
+  const catalog = catalogQuery.data;
   const { data: progress } = useGetInfluencerOnboardingProgressQuery();
-  const [{ groups, values: defaultValues }] = useState(() => buildForm(progress?.profile));
 
-  const { control, handleSubmit, formState } = useForm<InfluencerRatesFormValues>({
+  const bounds = useMemo(
+    () => (catalog ? toRatePriceBounds(catalog.price_bounds) : DEFAULT_RATE_PRICE_BOUNDS),
+    [catalog],
+  );
+  const schema = useMemo(() => createInfluencerRatesSchema(t, bounds), [t, bounds]);
+
+  const { control, handleSubmit, formState, reset } = useForm<InfluencerRatesFormValues>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
-    defaultValues,
+    defaultValues: { rates: [] },
   });
 
-  const services = useLookupItems('service_types');
-  const serviceLabel = useCallback(
-    (service: ServiceType) =>
-      services.items.find(item => item.value === service)?.label ?? service,
-    [services.items],
-  );
+  // Built once, when the catalog first lands: later re-reads must not shift row indexes.
+  const [groups, setGroups] = useState<RatePlatformGroup[] | null>(null);
+  useEffect(() => {
+    if (groups || !catalog) return;
+    const built = buildForm(catalog, progress?.profile);
+    setGroups(built.groups);
+    reset(built.values);
+  }, [catalog, groups, progress?.profile, reset]);
 
   const [action, setAction] = useState<RatesAction | null>(null);
   const [saveRates] = useInfluencerStep3RatesMutation();
@@ -100,16 +132,25 @@ export const useInfluencerRatesScreen = () => {
 
   const onSave = useCallback(() => {
     handleSubmit(async values => {
-      const rateCards = values.rates.flatMap<RateCardEntry>(row =>
-        row.enabled && row.price
-          ? [{ platform: row.platform, service_type: row.service, price_usd: toPriceUsd(row.price) }]
-          : [],
-      );
+      if (!catalog) return;
+      // Delivery days, revisions, retention and add-ons take the server defaults (handoff §4.3).
+      const rateCards = values.rates.flatMap<QuickRateCardInput>(row => {
+        const service = findCatalogService(catalog, row.platform, row.service);
+        if (!row.enabled || !row.price || !service) return [];
+        return [
+          {
+            platform: row.platform,
+            service: row.service,
+            package_value: toPackageValue(service, row.packageValue),
+            price_usd: toPriceUsd(row.price),
+          },
+        ];
+      });
       setAction('save');
       await runStep(() => saveRates({ is_skipped: false, rate_cards: rateCards }).unwrap());
       setAction(null);
     })();
-  }, [handleSubmit, runStep, saveRates]);
+  }, [catalog, handleSubmit, runStep, saveRates]);
 
   const onSkip = useCallback(async () => {
     setAction('skip');
@@ -117,12 +158,23 @@ export const useInfluencerRatesScreen = () => {
     setAction(null);
   }, [runStep, saveRates]);
 
+  const { refetch: refetchCatalog } = catalogQuery;
+  const retryCatalog = useCallback(() => {
+    refetchCatalog();
+  }, [refetchCatalog]);
+
   const rootError = formState.errors.rates?.root?.message ?? formState.errors.rates?.message;
 
   return {
     control,
     groups,
-    serviceLabel,
+    catalog: {
+      isLoading: !groups && catalogQuery.isLoading,
+      isError: !groups && catalogQuery.isError,
+      error: catalogQuery.error,
+      retry: retryCatalog,
+      isRetrying: catalogQuery.isFetching,
+    },
     rootError,
     onSave,
     onSkip,

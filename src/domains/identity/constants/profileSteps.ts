@@ -14,7 +14,7 @@ import {
 import type { ProfileStepKey } from '@/domains/auth';
 
 /** Where a missing-step card leads. `editInfo` = the role's own edit screen (personal or company). */
-export type ProfileStepTarget = 'editInfo' | 'avatar' | 'platforms' | 'kyc';
+export type ProfileStepTarget = 'editInfo' | 'avatar' | 'platforms' | 'rates' | 'kyc';
 
 export interface ProfileStepMeta {
   icon: LucideIcon;
@@ -45,7 +45,7 @@ export const PROFILE_STEP_META = {
     titleKey: 'account.profile.steps.platformsVerified',
     target: 'platforms',
   },
-  rate_cards: { icon: CircleDollarSign, titleKey: 'account.profile.steps.rateCards', target: 'platforms' },
+  rate_cards: { icon: CircleDollarSign, titleKey: 'account.profile.steps.rateCards', target: 'rates' },
   kyc: {
     icon: ShieldCheck,
     titleKey: 'account.profile.steps.kyc',

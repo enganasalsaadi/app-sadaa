@@ -15,6 +15,8 @@ import { Text } from '../primitives/Text';
 export interface AccordionProps {
   title: string;
   subtitle?: string;
+  /** Short content before the chevron (a price, a count); not part of the toggle label. */
+  trailing?: React.ReactNode;
   children: React.ReactNode;
   /** Uncontrolled start state. */
   defaultExpanded?: boolean;
@@ -29,6 +31,7 @@ const HALF_TURN_DEG = 180;
 const AccordionComponent: React.FC<AccordionProps> = ({
   title,
   subtitle,
+  trailing,
   children,
   defaultExpanded = false,
   expanded: expandedProp,
@@ -79,6 +82,7 @@ const AccordionComponent: React.FC<AccordionProps> = ({
             </Text>
           ) : null}
         </Box>
+        {trailing}
         <Animated.View style={chevronStyle}>
           <ChevronDown size={sizes.icon.sm} color={colors.icon.secondary} />
         </Animated.View>

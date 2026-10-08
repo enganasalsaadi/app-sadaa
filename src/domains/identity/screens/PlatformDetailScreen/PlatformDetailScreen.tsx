@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PencilLine, SearchX, Trash2 } from 'lucide-react-native';
+import { CircleDollarSign, PencilLine, SearchX, Trash2 } from 'lucide-react-native';
+import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import {
   Box,
@@ -8,20 +9,12 @@ import {
   EmptyState,
   ErrorState,
   Layout,
-  LayoutFooter,
   ListGroup,
   ListRow,
   Notice,
-  SectionHeader,
 } from '@/shared/ui';
 import { useHideBottomBar } from '@/shared/context/BottomBarContext';
-import {
-  PlatformAccountSheet,
-  RatePlatformCard,
-  isInfluencerPlatform,
-  type PlatformResource,
-} from '@/domains/auth';
-import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
+import { PlatformAccountSheet, type PlatformResource } from '@/domains/auth';
 import { usePlatformDetailScreen, type PlatformDetailModel } from './hooks/usePlatformDetailScreen';
 import { PlatformAccountCard } from './components/PlatformAccountCard';
 import { PlatformReviewNotice } from './components/PlatformReviewNotice';
@@ -33,36 +26,32 @@ interface ContentProps {
   platform: PlatformResource;
 }
 
-const PlatformRatesSection: React.FC<ContentProps> = memo(({ vm, platform }) => {
+/** Prices live on the rates screen: a nudge while this platform has none, else a count. */
+const PlatformRatesRow: React.FC<ContentProps> = memo(({ vm, platform }) => {
   const { t } = useTranslation();
-  const { rates } = vm;
+  const { count, open } = vm.rates;
 
-  if (rates.isError) {
+  if (count === null) return null;
+  if (count === 0) {
     return (
       <Notice
-        tone="danger"
-        message={t('account.profile.detailsError')}
-        action={{ label: t('common.retry'), onPress: rates.retry }}
+        tone="warning"
+        icon={CircleDollarSign}
+        title={t('account.rates.notice.title')}
+        message={t('account.platforms.ratesEmpty', { platform: platform.platform_label })}
+        action={{ label: t('account.rates.notice.action'), onPress: open }}
       />
     );
   }
-  if (!rates.ready || !isInfluencerPlatform(platform.platform)) return null;
-
   return (
-    <Box gap="md">
-      <SectionHeader
-        title={t('account.platforms.ratesTitle', { platform: platform.platform_label })}
-        subtitle={t('account.platforms.ratesHint')}
+    <ListGroup>
+      <ListRow
+        icon={CircleDollarSign}
+        title={t('account.platforms.ratesRow', { platform: platform.platform_label })}
+        value={formatNumber(count)}
+        onPress={open}
       />
-      <RatePlatformCard
-        variant="rowsOnly"
-        control={rates.control}
-        platform={platform.platform}
-        username={platform.username}
-        rows={rates.rows}
-        serviceLabel={rates.serviceLabel}
-      />
-    </Box>
+    </ListGroup>
   );
 });
 
@@ -86,7 +75,7 @@ const PlatformDetailContent: React.FC<ContentProps> = memo(({ vm, platform }) =>
         isSettingPrimary={vm.isSettingPrimary}
         canMakePrimary={vm.canMakePrimary}
       />
-      <PlatformRatesSection vm={vm} platform={platform} />
+      <PlatformRatesRow vm={vm} platform={platform} />
       <ListGroup tone="danger">
         <ListRow
           icon={Trash2}
@@ -99,7 +88,7 @@ const PlatformDetailContent: React.FC<ContentProps> = memo(({ vm, platform }) =>
   );
 });
 
-/** Detail archetype: one account, its switches and prices; saving prices is the only primary action. */
+/** Detail archetype: one account, its switches and a link to its prices. */
 const PlatformDetailScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -130,17 +119,6 @@ const PlatformDetailScreenComponent: React.FC = () => {
             ? [{ icon: PencilLine, accessibilityLabel: t('common.edit'), onPress: vm.openEdit }]
             : undefined,
         }}
-        footer={
-          platform && vm.rates.ready ? (
-            <LayoutFooter
-              primary={{
-                label: t('account.platforms.ratesSave'),
-                onPress: vm.saveRates,
-                loading: vm.isSavingRates,
-              }}
-            />
-          ) : undefined
-        }
       >
         {body}
       </Layout>
@@ -158,7 +136,6 @@ const PlatformDetailScreenComponent: React.FC = () => {
         confirmLoading={vm.deleteSheet.loading}
         cancelLabel={t('common.cancel')}
       />
-      <DiscardChangesSheet guard={vm.guard} />
     </>
   );
 };

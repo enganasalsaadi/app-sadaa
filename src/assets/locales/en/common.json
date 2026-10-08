@@ -203,6 +203,7 @@
         "skipNudge": "Adding your rates now increases your chances of brands contacting you.",
         "errors": {
           "price": "Enter a price above 0",
+          "tooLow": "The minimum price is {{min}}",
           "tooHigh": "That looks too high — the max is {{max}}. Check the amount.",
           "minOne": "Tick at least one service, or skip for now"
         },
@@ -395,7 +396,9 @@
     "stat": {
       "change": "{{change}} change",
       "new": "New"
-    }
+    },
+    "increase": "Increase",
+    "decrease": "Decrease"
   },
   "errors": {
     "generic": "Something went wrong",
@@ -655,10 +658,6 @@
       "rejectedTitle": "This account was rejected",
       "rejectedFallback": "Edit the username or tier to send it for review again.",
       "pendingReview": "Our team is checking the tier you picked.",
-      "ratesTitle": "My prices on {{platform}}",
-      "ratesHint": "Tick the services you offer and set a price for each.",
-      "ratesSave": "Save prices",
-      "ratesSaved": "Prices saved",
       "delete": "Remove platform",
       "deleteTitle": "Remove {{platform}}?",
       "deleteBody": "Its prices will be removed too. You can link it again later.",
@@ -668,6 +667,54 @@
         "notEligibleForPrimary": "A rejected account can't be your primary account.",
         "lookupUnavailable": "We can't reach this platform right now. Try again later.",
         "notFound": "This platform isn't linked anymore."
+      },
+      "ratesRow": "Prices on {{platform}}",
+      "ratesEmpty": "No prices on {{platform}} yet, so brands can't book you there."
+    },
+    "rates": {
+      "title": "My rates",
+      "profileHint": "Prices brands see on your media kit",
+      "inPerson": "In person",
+      "add": "Add",
+      "addPrice": "Add a price",
+      "groupEmpty": "No prices yet",
+      "addFor": "Add a price for {{group}}",
+      "linkPlatform": "Link a platform",
+      "linkPlatformHint": "Link Instagram, TikTok and more to price your posts there.",
+      "includes": "What's included",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
+      "hours_one": "{{count}} hour",
+      "hours_other": "{{count}} hours",
+      "notice": {
+        "title": "Set up your prices",
+        "message": "Brands can't send you requests until you add at least one price.",
+        "action": "Add prices"
+      },
+      "editor": {
+        "newTitle": "New price",
+        "editTitle": "Edit price",
+        "platform": "Platform",
+        "service": "Service",
+        "lockedHint": "To change the platform or service, delete this price and add a new one.",
+        "price": "Price (USD)",
+        "details": "Details",
+        "extras": "Extras",
+        "rushWindow": "Delivered within",
+        "rushPrice": "Rush fee (USD)",
+        "rushUnavailable": "Needs a delivery time of at least 2 days.",
+        "save": "Save price",
+        "saved": "Price saved",
+        "deleted": "Price deleted",
+        "delete": "Delete price",
+        "deleteTitle": "Delete this price?",
+        "deleteBody": "Brands will no longer see it on your media kit.",
+        "notFound": "This price no longer exists",
+        "noFreeSlot": "Every service you can offer already has a price. Edit one from the list.",
+        "errors": {
+          "deliveryDays": "Choose between {{min}} and {{max}} days",
+          "rushTooSlow": "Rush must be faster than the normal delivery time"
+        }
       }
     },
     "niches": {
@@ -732,7 +779,9 @@
         "intro": "This is how brands see your media kit.",
         "platforms": "Platforms",
         "rates": "Rates",
-        "rateRow": "{{platform}} · {{service}}",
+        "terms": "Collaboration terms",
+        "termBullet": "•",
+        "addonWithHours": "{{label}} · {{hours}}",
         "username": "@{{username}}"
       },
       "publicScreen": {
@@ -1093,6 +1142,7 @@
       "listRows": "List rows & groups",
       "screenHeader": "Screen header",
       "amountInput": "Amount input",
+      "numberStepper": "Number stepper",
       "moneyText": "Money",
       "statTile": "Stat tile",
       "sparkline": "Sparkline",
@@ -1495,6 +1545,9 @@
       "payoutQ": "When can I withdraw?",
       "payoutSubtitle": "Creators only",
       "payoutA": "As soon as a deal is completed, the amount is in your wallet.",
+      "priceQ": "Reel · Up to 60 seconds",
+      "priceSubtitle": "Instagram",
+      "priceA": "Delivered within 5 days, 1 revision round.",
       "disputeQ": "What if we disagree?",
       "disputeA": "Open a dispute from the deal; support reviews the in-app history."
     },
@@ -1553,6 +1606,11 @@
       "lockedLabel": "Upfront (locked)",
       "stored": "Stored: {{amount}} minor units",
       "storedEmpty": "Stored: empty"
+    },
+    "numberStepper": {
+      "formatted": "Delivery time (1–14 days)",
+      "atMin": "Copies, at the minimum",
+      "disabled": "Disabled"
     },
     "timeline": {
       "brief": "Offer accepted",

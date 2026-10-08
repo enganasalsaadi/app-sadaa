@@ -1,4 +1,4 @@
-import type { BrandSocialLink, PlatformResource, RateCardEntry, User } from '@/domains/auth';
+import type { BrandSocialLink, PlatformResource, User } from '@/domains/auth';
 
 /** `GET /user/profile` influencer `profile` (contract §3.2). */
 export interface InfluencerProfileDetails {
@@ -10,7 +10,6 @@ export interface InfluencerProfileDetails {
   primary_platform_id: string | null;
   primary_platform_locked: boolean;
   platforms: PlatformResource[];
-  rate_cards: (RateCardEntry & { id: string })[];
 }
 
 /** `GET /user/profile` brand `profile` (contract §3.2). */

@@ -76,6 +76,10 @@ type AccountScreens = {
   NotificationsScreen: undefined;
   /** Creator media kit link + visibility; also registered in the creator Home stack. */
   MediaKitSettings: undefined;
+  /** Creator prices (Rate Cards v2), grouped by platform. */
+  RateCards: undefined;
+  /** `cardId` edits a saved card; otherwise a new one, `group` preset from a group's "Add". */
+  RateCardEditor: { cardId?: string; group?: string } | undefined;
 };
 
 /** `HomeTab` stack. Brand registers `HomeScreen` (Explore); creator registers the rest. */

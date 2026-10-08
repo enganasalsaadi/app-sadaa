@@ -30,18 +30,28 @@ export {
   EMPTY_SOCIAL_LINKS,
   toSocialLinksForm,
   toSocialLinksPayload,
-  createInfluencerRatesSchema,
+  DEFAULT_RATE_PRICE_BOUNDS,
   fromPriceUsd,
   INFLUENCER_PLATFORMS,
   isInfluencerPlatform,
+  ratePriceError,
   toPriceUsd,
+  toRatePriceBounds,
 } from './schemas';
 export type {
   SocialLinksFormValues,
   InfluencerPlatform,
   InfluencerRatesFormValues,
   PlatformAccountFormValues,
+  RatePriceBounds,
 } from './schemas';
+export {
+  buildRateServiceGroups,
+  findCatalogService,
+  isRushAllowed,
+  toPackageKey,
+  toPackageValue,
+} from './utils/rateCatalog';
 export {
   useGetProfileQuery,
   useLogoutMutation,
@@ -60,7 +70,7 @@ export {
   selectIsOnboardingComplete,
   selectIsSuspended,
 } from './store';
-export { PROFILE_STEP_KEYS, SERVICE_TYPES } from './store';
+export { PROFILE_STEP_KEYS } from './store';
 export type {
   User,
   AuthState,
@@ -72,8 +82,10 @@ export type {
   ProfileCompletionStep,
   UserKyc,
   PlatformResource,
-  RateCardEntry,
-  ServiceType,
+  RateCard,
+  RateCardInput,
+  RateCardPatch,
+  RateCardAddonInput,
   BrandSocialLink,
 } from './store';
 export { BrandOnboardingNavigator } from './navigation/BrandOnboardingNavigator';

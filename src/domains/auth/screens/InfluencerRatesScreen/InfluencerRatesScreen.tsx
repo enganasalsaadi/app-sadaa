@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp } from 'lucide-react-native';
-import { useTheme } from '@/core/theme';
-import { Box, InlineError, Layout, LayoutFooter, Notice, Text } from '@/shared/ui';
+import { moderateScale, useTheme } from '@/core/theme';
+import {
+  Box,
+  ErrorState,
+  InlineError,
+  Layout,
+  LayoutFooter,
+  Notice,
+  Skeleton,
+  Text,
+} from '@/shared/ui';
 import { RatePlatformCard } from '../../components/RatePlatformCard';
 import { useInfluencerRatesScreen } from './hooks/useInfluencerRatesScreen';
+
+const SKELETON_CARD_HEIGHT = moderateScale(168);
+const SKELETON_CARDS = ['a', 'b'] as const;
+
+const RatesSkeleton = memo(() => (
+  <Box gap="2xl">
+    {SKELETON_CARDS.map(key => (
+      <Skeleton key={key} width="100%" height={SKELETON_CARD_HEIGHT} borderRadius="lg" />
+    ))}
+  </Box>
+));
 
 export const InfluencerRatesScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -12,7 +32,7 @@ export const InfluencerRatesScreen: React.FC = () => {
   const {
     control,
     groups,
-    serviceLabel,
+    catalog,
     rootError,
     onSave,
     onSkip,
@@ -21,6 +41,23 @@ export const InfluencerRatesScreen: React.FC = () => {
     isBusy,
     error,
   } = useInfluencerRatesScreen();
+
+  const renderGroups = () => {
+    if (catalog.isError) {
+      return <ErrorState error={catalog.error} onRetry={catalog.retry} retrying={catalog.isRetrying} />;
+    }
+    if (!groups) return <RatesSkeleton />;
+    return groups.map(group => (
+      <RatePlatformCard
+        key={group.key}
+        control={control}
+        platform={group.platform}
+        title={group.label ?? t('account.rates.inPerson')}
+        subtitle={group.username ? `@${group.username}` : undefined}
+        rows={group.rows}
+      />
+    ));
+  };
 
   return (
     <Layout
@@ -37,7 +74,7 @@ export const InfluencerRatesScreen: React.FC = () => {
             label: t('auth.influencerOnboarding.rates.submit'),
             onPress: onSave,
             loading: isSaving,
-            disabled: isBusy && !isSaving,
+            disabled: !groups || (isBusy && !isSaving),
           }}
           secondary={{
             label: t('auth.influencerOnboarding.rates.skip'),
@@ -55,16 +92,7 @@ export const InfluencerRatesScreen: React.FC = () => {
           message={t('auth.influencerOnboarding.rates.hint')}
         />
 
-        {groups.map(group => (
-          <RatePlatformCard
-            key={group.platform}
-            control={control}
-            platform={group.platform}
-            username={group.username}
-            rows={group.rows}
-            serviceLabel={serviceLabel}
-          />
-        ))}
+        {renderGroups()}
 
         {rootError ? (
           <Text variant="bodySmall" color={colors.status.danger.text}>

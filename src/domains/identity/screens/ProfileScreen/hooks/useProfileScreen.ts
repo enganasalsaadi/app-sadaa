@@ -16,10 +16,12 @@ import {
   type KycStatus,
 } from '@/domains/auth';
 import { useGetUserProfileQuery, useUpdateAvatarMutation } from '../../../api/accountApi';
+import { useGetRateCardsQuery } from '../../../api/rateCardsApi';
 import { PROFILE_SECTIONS, type ProfileSectionKey } from '../../../constants/profileSections';
 import type { ProfileStepTarget } from '../../../constants/profileSteps';
 import { usePushPermissionStatus } from '../../../hooks/usePushPermissionStatus';
 import { buildMissingSteps } from '../../../utils/profileCompletion';
+import { needsRateCards } from '../../../utils/rateCardNotice';
 
 type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'ProfileScreen'>;
 
@@ -50,6 +52,7 @@ export const useProfileScreen = () => {
   const profile = details.data?.profile;
   const userType = user?.user_type ?? 'influencer';
   const isBrand = userType === 'brand';
+  const rateCards = useGetRateCardsQuery(undefined, { skip: isBrand });
 
   const displayName =
     user?.display_name || profile?.full_name || profile?.company_name || user?.full_name || '';
@@ -78,7 +81,7 @@ export const useProfileScreen = () => {
 
   const platforms = profile?.platforms ?? [];
   const primaryPlatform = platforms.find(p => p.is_primary) ?? platforms[0] ?? null;
-  const rateCardCount = profile?.rate_cards?.length ?? 0;
+  const rateCardCount = rateCards.data?.length ?? 0;
 
   const nicheLabels = useMemo(() => {
     const labels = new Map(nicheOptions.map(o => [o.value, o.label]));
@@ -110,11 +113,11 @@ export const useProfileScreen = () => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([me.refetch(), details.refetch()]);
+      await Promise.all([me.refetch(), details.refetch(), ...(isBrand ? [] : [rateCards.refetch()])]);
     } finally {
       setRefreshing(false);
     }
-  }, [me, details]);
+  }, [me, details, isBrand, rateCards]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -173,6 +176,7 @@ export const useProfileScreen = () => {
   const openPassword = useCallback(() => navigation.navigate('ChangePasswordScreen'), [navigation]);
   const openLanguage = useCallback(() => navigation.navigate('LanguageScreen'), [navigation]);
   const openPlatforms = useCallback(() => navigation.navigate('PlatformsScreen'), [navigation]);
+  const openRates = useCallback(() => navigation.navigate('RateCards'), [navigation]);
   const openNiches = useCallback(() => navigation.navigate('NichesScreen'), [navigation]);
   const openMediaKitSettings = useCallback(() => navigation.navigate('MediaKitSettings'), [navigation]);
   const openKyc = useCallback(() => navigation.navigate('KycScreen'), [navigation]);
@@ -207,6 +211,9 @@ export const useProfileScreen = () => {
         case 'platforms':
           openPlatforms();
           return;
+        case 'rates':
+          openRates();
+          return;
         case 'kyc':
           openKyc();
           return;
@@ -216,7 +223,7 @@ export const useProfileScreen = () => {
         }
       }
     },
-    [openEditInfo, changePhoto, openPlatforms, openKyc],
+    [openEditInfo, changePhoto, openPlatforms, openRates, openKyc],
   );
 
   const changeThemeMode = useCallback((next: ThemeMode) => setThemeMode(next), [setThemeMode]);
@@ -246,6 +253,11 @@ export const useProfileScreen = () => {
       canSubmit: kycStatus === 'unverified' || kycStatus === 'rejected',
     },
     push,
+    rates: {
+      count: rateCardCount,
+      isLoading: rateCards.isLoading,
+      needsSetup: needsRateCards(user),
+    },
     platformsSummary: {
       count: platforms.length,
       primary: primaryPlatform,
@@ -283,6 +295,7 @@ export const useProfileScreen = () => {
     openPassword,
     openLanguage,
     openPlatforms,
+    openRates,
     openNiches,
     openMediaKitSettings,
     openKyc,

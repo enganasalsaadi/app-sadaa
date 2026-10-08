@@ -49,7 +49,11 @@ export const INFLUENCER_STEP_ROUTE = {
 export const INFLUENCER_MAX_NICHES = 3;
 /** Rate cards are priced in dollars server-side (`price_usd`). */
 export const RATE_CURRENCY = 'USD' satisfies CurrencyCode;
-/** Sanity ceiling per service, catches a slipped zero (5000 for 50). */
+/**
+ * Server price bounds ($5 – $50,000, handoff §4.1); the catalog's `price_bounds`
+ * override them once loaded. The ceiling also catches a slipped zero.
+ */
+export const RATE_MIN_USD_MINOR = 5 * 100;
 export const RATE_MAX_USD_MINOR = 50_000 * 100;
 
 /** Step-4 ID scans, mirrors the server rules (unlike brand KYC, webp is accepted). */

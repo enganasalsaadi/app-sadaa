@@ -13,17 +13,15 @@ const PlatformEditingDemoComponent: React.FC = () => {
       <RatePlatformCard
         control={demo.control}
         platform="instagram"
-        username="sada.creator"
-        rows={demo.rows}
-        serviceLabel={demo.serviceLabel}
+        title={t('auth.brandOnboarding.profile.platforms.instagram')}
+        subtitle="@sada.creator"
+        rows={demo.platformRows}
       />
       <RatePlatformCard
-        variant="rowsOnly"
         control={demo.control}
-        platform="instagram"
-        username="sada.creator"
-        rows={demo.rows}
-        serviceLabel={demo.serviceLabel}
+        platform={null}
+        title={t('account.rates.inPerson')}
+        rows={demo.inPersonRows}
       />
       <SocialLinkInput
         platform="instagram"

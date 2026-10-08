@@ -173,6 +173,11 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.amountInput',
     covers: ['AmountInput'],
   },
+  numberStepper: {
+    category: 'inputs',
+    titleKey: 'devShowcase.sections.numberStepper',
+    covers: ['NumberStepper'],
+  },
   images: {
     category: 'display',
     titleKey: 'devShowcase.sections.images',

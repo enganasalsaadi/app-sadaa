@@ -53,6 +53,7 @@ const kit: PublicMediaKit = {
   niches: [],
   platforms: [],
   rate_cards: [],
+  contract_terms: null,
   price_from_usd: null,
   bio: null,
   top_portfolio_items: [],

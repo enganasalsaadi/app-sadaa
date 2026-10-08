@@ -43,14 +43,12 @@ export type {
   InfluencerStep1Request,
   InfluencerStep1Response,
   FollowerTierId,
-  ServiceType,
   InfluencerStep2Platform,
   PlatformResource,
   SocialLookupProfile,
   SocialLookupRequest,
   SocialLookupResult,
   InfluencerStep2Request,
-  RateCardEntry,
   InfluencerStep3Request,
   InfluencerOnboardingProgress,
   InfluencerProfileResource,
@@ -65,4 +63,11 @@ export type {
   PrimaryPlatformSummary,
   PlatformsReviewStatus,
 } from './authTypes';
-export { FOLLOWER_TIERS, SERVICE_TYPES, PROFILE_STEP_KEYS } from './authTypes';
+export type {
+  QuickRateCardInput,
+  RateCard,
+  RateCardAddonInput,
+  RateCardInput,
+  RateCardPatch,
+} from './rateCardTypes';
+export { FOLLOWER_TIERS, PROFILE_STEP_KEYS } from './authTypes';

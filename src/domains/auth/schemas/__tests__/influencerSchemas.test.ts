@@ -8,6 +8,7 @@ import {
 } from '../influencerSocialsSchema';
 import {
   createInfluencerRatesSchema,
+  toRatePriceBounds,
   fromPriceUsd,
   toPriceUsd,
 } from '../influencerRatesSchema';
@@ -161,22 +162,29 @@ describe('rates', () => {
   const schema = createInfluencerRatesSchema(t);
   const row = (overrides: Partial<RateRowFormValues>): RateRowFormValues => ({
     platform: 'instagram',
-    service: 'reels',
+    service: 'reel',
+    hasPackage: false,
     enabled: false,
+    packageValue: null,
     price: null,
     ...overrides,
   });
+  const usd = (amount: number) => ({ amount, currency: 'USD' as const });
 
   it('converts minor units to API dollars without float drift', () => {
-    expect(toPriceUsd({ amount: 5000, currency: 'USD' })).toBe(50);
-    expect(toPriceUsd({ amount: 1999, currency: 'USD' })).toBe(19.99);
-    expect(toPriceUsd({ amount: 5, currency: 'USD' })).toBe(0.05);
+    expect(toPriceUsd(usd(5000))).toBe(50);
+    expect(toPriceUsd(usd(1999))).toBe(19.99);
+    expect(toPriceUsd(usd(5))).toBe(0.05);
   });
 
   it('round-trips API dollars back to minor units', () => {
-    expect(fromPriceUsd(19.99)).toEqual({ amount: 1999, currency: 'USD' });
-    expect(fromPriceUsd(50)).toEqual({ amount: 5000, currency: 'USD' });
+    expect(fromPriceUsd(19.99)).toEqual(usd(1999));
+    expect(fromPriceUsd(50)).toEqual(usd(5000));
     expect(fromPriceUsd(Number.NaN)).toBeNull();
+  });
+
+  it('reads catalog price bounds in minor units', () => {
+    expect(toRatePriceBounds({ min_usd: 5, max_usd: 50000 })).toEqual({ min: 500, max: 5_000_000 });
   });
 
   it('needs at least one enabled service', () => {
@@ -185,29 +193,38 @@ describe('rates', () => {
     );
   });
 
-  it('allows clearing every price in-app (requireOne: false)', () => {
-    const inApp = createInfluencerRatesSchema(t, { requireOne: false });
-    expect(() => inApp.validateSync({ rates: [row({})] })).not.toThrow();
-  });
-
-  it('requires a positive price on enabled rows only', () => {
+  it('requires a price on enabled rows only', () => {
     expect(messageOf(() => schema.validateSync({ rates: [row({ enabled: true })] }))).toBe(
       'auth.influencerOnboarding.rates.errors.price',
     );
     expect(() =>
       schema.validateSync({
-        rates: [row({ enabled: true, price: { amount: 5000, currency: 'USD' } }), row({ service: 'story' })],
+        rates: [row({ enabled: true, price: usd(5000) }), row({ service: 'story' })],
       }),
     ).not.toThrow();
   });
 
-  it('catches a slipped zero above the ceiling', () => {
+  it('enforces the $5 floor and the ceiling', () => {
+    expect(
+      messageOf(() => schema.validateSync({ rates: [row({ enabled: true, price: usd(499) })] })),
+    ).toBe('auth.influencerOnboarding.rates.errors.tooLow');
     expect(
       messageOf(() =>
-        schema.validateSync({
-          rates: [row({ enabled: true, price: { amount: 50_000_01, currency: 'USD' } })],
-        }),
+        schema.validateSync({ rates: [row({ enabled: true, price: usd(50_000_01) })] }),
       ),
     ).toBe('auth.influencerOnboarding.rates.errors.tooHigh');
+  });
+
+  it('requires a package only when the service has packages', () => {
+    expect(
+      messageOf(() =>
+        schema.validateSync({ rates: [row({ enabled: true, hasPackage: true, price: usd(5000) })] }),
+      ),
+    ).toBe('validation.selectOne');
+    expect(() =>
+      schema.validateSync({
+        rates: [row({ enabled: true, hasPackage: true, packageValue: '60', price: usd(5000) })],
+      }),
+    ).not.toThrow();
   });
 });

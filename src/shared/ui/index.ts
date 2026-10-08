@@ -113,6 +113,8 @@ export { FAB } from './FAB';
 export type { FABProps } from './FAB';
 export { Switch } from './Switch';
 export type { SwitchProps } from './Switch';
+export { NumberStepper } from './NumberStepper';
+export type { NumberStepperProps } from './NumberStepper';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 export { Radio, RadioGroup } from './Radio';

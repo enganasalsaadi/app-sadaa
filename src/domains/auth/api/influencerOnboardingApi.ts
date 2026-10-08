@@ -31,6 +31,7 @@ export const influencerOnboardingApi = baseApi.injectEndpoints({
     }),
     influencerStep3Rates: builder.mutation<InfluencerProfileResource, InfluencerStep3Request>({
       query: body => ({ url: '/onboarding/influencer/step-3', method: 'POST', body }),
+      invalidatesTags: ['RateCard'],
     }),
     // Multipart: `is_skipped` "1"/"0", `id_front` + `id_back`. Both outcomes
     // complete onboarding.

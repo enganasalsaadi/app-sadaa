@@ -1,4 +1,5 @@
 import type { FollowerTierId } from '@/core/config';
+import type { QuickRateCardInput, RateCard } from './rateCardTypes';
 
 export type { FollowerTierId };
 
@@ -56,6 +57,30 @@ export interface ProfileCompletionStep {
   status: string | null;
 }
 
+/** `capabilities` keys (contract §3.1): influencer first, then brand. */
+export type CapabilityKey =
+  | 'apply_to_briefs'
+  | 'receive_requests'
+  | 'accept_offers'
+  | 'create_campaigns'
+  | 'request_services'
+  | 'fund_deals';
+
+/** Why an action is blocked; drives the blocker text / CTA. */
+export type CapabilityReason =
+  | 'account_suspended'
+  | 'onboarding_incomplete'
+  | 'kyc_required'
+  | 'kyc_pending'
+  | 'kyc_rejected'
+  | 'no_available_platform'
+  | 'rate_card_required';
+
+export interface Capability {
+  allowed: boolean;
+  reason: CapabilityReason | null;
+}
+
 export interface ProfileCompletion {
   percentage: number;
   earned_points: number;
@@ -104,6 +129,8 @@ export interface User {
   platforms_review_status?: PlatformsReviewStatus | null;
   kyc?: UserKyc | null;
   profile_completion?: ProfileCompletion;
+  /** UI gates only; the server enforces them too (contract §3.1). */
+  capabilities?: Partial<Record<CapabilityKey, Capability>>;
   unread_notifications_count?: number;
 
   // --- legacy fields (travel template) kept optional for back-compat ---
@@ -287,10 +314,6 @@ export interface InfluencerStep1Response extends AuthResult {
 
 export { FOLLOWER_TIERS } from '@/core/config';
 
-/** Mirrors backend ServiceTypeEnum. */
-export const SERVICE_TYPES = ['reels', 'story', 'post', 'visit'] as const;
-export type ServiceType = (typeof SERVICE_TYPES)[number];
-
 /** One row of POST /onboarding/influencer/step-2 (contract §5.2). */
 export interface InfluencerStep2Platform {
   platform: string;
@@ -359,17 +382,10 @@ export interface SocialLookupResult {
   profile: SocialLookupProfile | null;
 }
 
-export interface RateCardEntry {
-  platform: string;
-  service_type: ServiceType;
-  /** Dollars as the API expects; built from minor units by `toPriceUsd`. */
-  price_usd: number;
-}
-
 // POST /onboarding/influencer/step-3 — `is_skipped: true` skips rates; KYC (step-4) still follows.
 export type InfluencerStep3Request =
   | { is_skipped: true }
-  | { is_skipped: false; rate_cards: RateCardEntry[] };
+  | { is_skipped: false; rate_cards: QuickRateCardInput[] };
 
 /**
  * Influencer step-2/3/4 response and `progress.profile` (contract §15.6).
@@ -383,7 +399,7 @@ export interface InfluencerProfileResource {
   niches?: string[];
   has_kyc_id?: boolean;
   platforms?: PlatformResource[];
-  rate_cards?: RateCardEntry[];
+  rate_cards?: RateCard[];
 }
 
 export interface InfluencerOnboardingProgress extends OnboardingProgressBase {

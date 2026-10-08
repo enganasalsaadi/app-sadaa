@@ -20,6 +20,7 @@ const STEP_SCREEN = {
   editInfo: 'PersonalInfoScreen',
   avatar: 'ProfileScreen',
   platforms: 'PlatformsScreen',
+  rates: 'RateCards',
   kyc: 'KycScreen',
 } as const satisfies Record<ProfileStepTarget, keyof SettingsStackParamList>;
 
@@ -59,12 +60,9 @@ export const useCreatorHomeScreen = () => {
     [navigation],
   );
 
-  // Prices are edited per platform: go straight to the primary one when it is known.
-  const primaryPlatformId =
-    overview.platforms.items.find(p => p.is_primary)?.id ?? overview.platforms.items[0]?.id ?? null;
   const openRates = useCallback(
-    () => (primaryPlatformId ? openPlatform(primaryPlatformId) : openPlatforms()),
-    [openPlatform, openPlatforms, primaryPlatformId],
+    () => navigation.navigate('SettingsTab', { screen: 'RateCards', initial: false }),
+    [navigation],
   );
 
   const onStepPress = useCallback(
@@ -88,6 +86,9 @@ export const useCreatorHomeScreen = () => {
         case 'openKyc':
           openKyc();
           return;
+        case 'openRates':
+          openRates();
+          return;
         case 'makePublic':
           if (!isMakingPublic) onMakePublic();
           return;
@@ -97,12 +98,13 @@ export const useCreatorHomeScreen = () => {
         }
       }
     },
-    [isMakingPublic, onMakePublic, openKyc, openPlatforms],
+    [isMakingPublic, onMakePublic, openKyc, openPlatforms, openRates],
   );
 
   const noticeKey = resolveHomeNotice({
     platformsReviewStatus: overview.platformsReviewStatus,
     kycStatus: overview.kycStatus,
+    needsRateCards: overview.needsRateCards,
     isKitPublic: overview.isKitPublic,
   });
   const notice = useMemo(() => {

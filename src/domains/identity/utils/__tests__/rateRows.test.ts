@@ -1,9 +1,8 @@
-import type { PlatformResource, RateCardEntry } from '@/domains/auth';
+import type { PlatformResource, RateCard } from '@/domains/auth';
 import { buildRateRows } from '../rateRows';
 
-// The barrel pulls navigators and UI; only the enum and the price helper are needed here.
+// The barrel pulls navigators and UI; only the price helper is needed here.
 jest.mock('@/domains/auth', () => ({
-  ...jest.requireActual<object>('@/domains/auth/store/authTypes'),
   fromPriceUsd: jest.requireActual<{ fromPriceUsd: unknown }>(
     '@/domains/auth/schemas/influencerRatesSchema',
   ).fromPriceUsd,
@@ -28,39 +27,96 @@ const platform = (key: string, label: string, isPrimary = false): PlatformResour
   last_synced_at: null,
 });
 
-const card = (p: string, service: RateCardEntry['service_type'], price: number): RateCardEntry => ({
+const card = (
+  p: string | null,
+  service: RateCard['service']['key'],
+  price: number,
+  overrides: Partial<RateCard> = {},
+): RateCard => ({
+  id: `${p}:${service}`,
+  slot_key: `${p ?? 'none'}:${service}`,
   platform: p,
-  service_type: service,
+  service: { key: service, label: `svc:${service}` },
+  package: null,
   price_usd: price,
+  delivery_days: 5,
+  revisions: 1,
+  retention: null,
+  attributes: [],
+  addons: [],
+  includes: [],
+  ...overrides,
 });
-
-const serviceLabel = (service: string) => `svc:${service}`;
 
 describe('buildRateRows', () => {
   const platforms = [platform('tiktok', 'TikTok'), platform('instagram', 'Instagram', true)];
 
-  it('orders primary platform first, then services in enum order', () => {
+  it('puts the primary platform first and in-person services last', () => {
     const rows = buildRateRows(
-      [card('tiktok', 'post', 10), card('instagram', 'story', 20), card('instagram', 'reels', 50)],
+      [
+        card(null, 'on_site_visit', 200),
+        card('tiktok', 'video', 30),
+        card('instagram', 'story', 20),
+        card('instagram', 'reel', 50),
+      ],
       platforms,
-      serviceLabel,
     );
-    expect(rows.map(r => r.key)).toEqual(['instagram:reels', 'instagram:story', 'tiktok:post']);
+    expect(rows.map(row => row.key)).toEqual([
+      'instagram:story',
+      'instagram:reel',
+      'tiktok:video',
+      'none:on_site_visit',
+    ]);
   });
 
-  it('converts dollars to minor units', () => {
-    const [row] = buildRateRows([card('instagram', 'reels', 49.5)], platforms, serviceLabel);
-    expect(row?.price).toEqual({ amount: 4950, currency: 'USD' });
-    expect(row?.platformLabel).toBe('Instagram');
-    expect(row?.serviceLabel).toBe('svc:reels');
+  it('labels from the card and platforms, with prices in minor units', () => {
+    const [row] = buildRateRows(
+      [
+        card('instagram', 'reel', 49.5, {
+          package: { key: 'duration_sec', value: 60, label: 'Up to 60 seconds' },
+          includes: ['Up to 60 seconds'],
+        }),
+      ],
+      platforms,
+    );
+    expect(row).toMatchObject({
+      platformLabel: 'Instagram',
+      serviceLabel: 'svc:reel',
+      packageLabel: 'Up to 60 seconds',
+      price: { amount: 4950, currency: 'USD' },
+      includes: ['Up to 60 seconds'],
+    });
   });
 
-  it('falls back to the platform key when the platform is not linked', () => {
-    const [row] = buildRateRows([card('youtube', 'post', 5)], platforms, serviceLabel);
-    expect(row?.platformLabel).toBe('youtube');
+  it('has no platform label for in-person services, the key for unknown platforms', () => {
+    expect(buildRateRows([card(null, 'on_site_visit', 5)], platforms)[0]?.platformLabel).toBeNull();
+    expect(buildRateRows([card('youtube', 'shorts', 5)], platforms)[0]?.platformLabel).toBe('youtube');
+  });
+
+  it('maps add-ons from the server-computed price', () => {
+    const [row] = buildRateRows(
+      [
+        card('instagram', 'reel', 100, {
+          addons: [
+            {
+              type: 'rush_delivery',
+              label: 'Rush delivery',
+              pricing_mode: 'fixed',
+              amount: 30,
+              computed_price_usd: 30,
+              options: { delivery_hours: 48 },
+            },
+          ],
+        }),
+      ],
+      platforms,
+    );
+    expect(row?.addons).toEqual([
+      { key: 'rush_delivery', label: 'Rush delivery', price: { amount: 3000, currency: 'USD' }, deliveryHours: 48 },
+    ]);
   });
 
   it('drops a card with an unusable price', () => {
-    expect(buildRateRows([card('instagram', 'reels', Number.NaN)], platforms, serviceLabel)).toEqual([]);
+    expect(buildRateRows([card('instagram', 'reel', Number.NaN)], platforms)).toEqual([]);
   });
 });

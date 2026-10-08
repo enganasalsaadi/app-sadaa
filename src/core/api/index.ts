@@ -19,6 +19,16 @@ export type {
   FollowerTier,
   SocialPlatformLookup,
 } from './lookupsApi';
+export { useGetRateCardCatalogQuery } from './rateCardCatalogApi';
+export type {
+  AddonPricingMode,
+  AddonType,
+  CatalogService,
+  ContractTerms,
+  RateCardCatalog,
+  RateService,
+  Retention,
+} from './rateCardCatalogTypes';
 export {
   applyServerFieldErrors,
   extractServerFieldErrors,

@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-07 |
+| **Last updated** | 2026-10-08 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -309,14 +309,15 @@ APP LAUNCH
     │     navy hero: greeting (beside the bell) · photo + name, verified mark
     │       · tier and handle on their own line
     │       + glass strip of 30-day numbers (reach · profile views · brands) → insights
-    │     · one blocker notice · media kit card (visibility, link, Share, Preview)
-    │     · profile strength + next step · my platforms (+ add) · my prices
+    │     · one blocker notice (incl. "Set up your prices") · media kit card (visibility, link, Share, Preview)
+    │     · profile strength + next step · my platforms (+ add) · my prices → My prices
     │     scrolled: navy bar pinned with photo, name, tier and the bell
     │     ├── Media kit: all insights                                🟡 built, awaiting device and live-server testing
     │     │     period switch (7 / 30 / 90 days) · numbers vs the previous period
     │     │     · daily views line · cities brands view from · most-viewed work · Share
     │     └── Media kit: preview as brands see it                    🟡 built, awaiting device and live-server testing
-    │           hidden-kit warning · profile card · platforms · prices · Share
+    │           hidden-kit warning · profile card · platforms · prices (tap: what's included)
+    │           · collaboration terms · Share
     │           └── Media kit settings (gear in the header)          🟡 built, awaiting device and live-server testing
     │                 link name with a live availability check · show / hide from brands
     ├── Explore (brand) tab                                      🟡 placeholder today    🔜
@@ -327,7 +328,10 @@ APP LAUNCH
           ├── Profile (navy header + cards, different per role)  🟡 built, awaiting device testing
           │     ├── Notifications inbox (bell with unread count in the header)   🟡 built, awaiting device and live-server testing
           │     ├── Verification: creator ID (front + back) or brand company document   🟡 built, awaiting device and live-server testing
-          │     ├── Creator: My platforms → one platform (switches, prices)  🟡 built, awaiting device and live-server testing
+          │     ├── Creator: My prices (grouped by platform + in person)   🟡 built, awaiting device and live-server testing
+          │     │     └── One price: add / edit / delete (package, price, delivery, revisions,
+          │     │           how long it stays live, rush delivery)          🟡 built, awaiting device and live-server testing
+          │     ├── Creator: My platforms → one platform (switches, link to its prices)  🟡 built, awaiting device and live-server testing
           │     ├── Creator: My niches                           🟡 built, awaiting device and live-server testing
           │     ├── Creator: Personal info (name, email, city, area)   🟡 built, awaiting device and live-server testing
           │     ├── Creator: Media kit settings (same page as from Home)   🟡 built, awaiting device and live-server testing
@@ -358,18 +362,20 @@ APP LAUNCH
    - **Manually chosen tiers are marked "Under review"** until the Sada team approves them. They still count for applying to campaigns, and brands see the "under review" label.
    - The creator can mark one platform as **primary**. If they don't, Sada uses their biggest account.
    - Unsaved platform entries are kept on the device, so closing the app doesn't lose the work.
-4. **Set prices (optional).** A price per service type (reel, story, post, visit). They can skip this and add prices later.
+4. **Set prices (optional).** For each linked platform the app lists the services Sada offers there (for example reel, story, feed post on Instagram), plus in-person services such as an on-site visit. The creator ticks what they offer, picks the package (for example story frames or video length) and sets a price between $5 and $50,000. Delivery time, revisions and the rest take sensible defaults they can change later from My prices. They can skip this step.
 5. **Verify identity (optional).** They upload the front and back of their national ID (photo or PDF, up to 10 MB). Skipping is allowed and registration still completes. Verification raises trust with brands.
 6. **Welcome.** A celebration screen. At this natural moment, the app may *offer* to turn on notifications (see §6.4).
 
 #### Journey A2: Managing platforms, prices and niches after registration 🟡
-- **Entry points:** the platforms and niches cards on the Profile, and the "complete your profile" cards for linking platforms, getting them verified and setting prices.
+- **Entry points:** the prices, platforms and niches cards on the Profile, and the "complete your profile" cards for linking platforms, getting them verified and setting prices (which now opens My prices). Without any price, the Profile shows a "Set up your prices" warning in place of the prices row.
 - **My platforms:** a calm list, one card per account (username, tier badge, and small labels for primary, under review, rejected or not available). Tapping a card opens that platform; adding uses the same username + automatic lookup sheet as registration. Only platforms not linked yet can be added (one account per platform).
 - **One platform:** the account (username, followers or "tier picked by you", last update) with a refresh button (the server allows two refreshes per hour; the app shows when the next one is possible). Two switches save immediately: **available for requests** (when off, brands can't send requests on that platform; the creator's overall tier is recalculated from the available, non-rejected accounts) and **primary account** (hidden for rejected accounts; there is always exactly one primary, so it changes by making another platform primary). A rejected account shows the reason and an edit button; a manual tier shows that the team is reviewing it. Editing the username or tier re-runs the lookup.
-- **Prices per platform:** the app defines the services (reel, story, post, visit); the creator ticks what they offer and sets a price for each. Saving keeps the prices of every other platform unchanged. "Save prices" is the only main button on the page.
+- **Prices on a platform's page:** a row with the number of prices on that platform opens My prices. With none yet, a warning explains that brands can't book the creator there, with a button to add prices.
+- **My prices:** one list grouped by platform (primary first), with in-person services (on-site visit) at the end. Each line shows the service, its package and the price; tapping it opens that price. A platform with no price yet invites the creator to add one. "Add a price" is the one main button. While the creator has no price at all, a warning at the top says brands can't send them requests yet. What can be priced, and every label, comes from Sada's service catalog, so new services appear without an app update.
+- **One price:** choose the platform (or in person) and the service, then the package (only packages not priced yet are offered), the price ($5 to $50,000), the delivery time (in days, within the catalog's range), the number of revision rounds and how long the post stays live (not for on-site visits). Where the service allows it, **rush delivery** adds a fixed fee for delivery within 24 or 48 hours; it must be faster than the normal delivery time (24 hours needs at least 2 days, 48 hours at least 3), so shortening the delivery time adjusts or turns off rush. Once saved, the platform and service are fixed (delete and add again to change them), only what changed is sent, and the page shows the "what's included" list brands see. Deleting asks first. Server errors appear next to the field they concern.
 - **Removing a platform** asks for confirmation and warns that its prices are removed too. The last remaining platform can't be removed; the app explains why.
 - **My niches:** pick 1 to 3 niches and save.
-- **Unsaved edits:** leaving the prices or niches page with unsaved changes asks before discarding them.
+- **Unsaved edits:** leaving a price or the niches page with unsaved changes asks before discarding them.
 
 #### Journey A3: Editing your own details (different for creators and brands) 🟡
 - **Creators and brands edit different things.** The edit button in the Profile header, and the matching "complete your profile" cards, open the right page for the role.
@@ -388,14 +394,14 @@ APP LAUNCH
 - **While scrolling:** once the band scrolls away, a solid navy bar fades in that keeps what matters in view: a small photo, the name, the verified mark and the tier crest (tap → Profile), with the bell on the other side. There is no generic "Home" title.
 - **Numbers at a glance:** under the greeting, a glass strip shows the last 30 days: total reach (followers across every linked account), profile views with their change against the 30 days before ("New" when there is nothing to compare), and how many brands looked. Tapping anywhere on the strip opens the insights page. A number that can't be known yet shows a dash, never zero; if the numbers fail to load, the strip says so and a tap retries.
 - **Feel:** the navy band moves slower than the page (a gentle parallax) and the content slides over it as a sheet with rounded corners. Pulling down to refresh stretches the navy band, so the page background never shows above it. The parallax switches off when the phone asks for reduced motion. On short phones the band trims to one row (photo, name, tier) beside the bell, plus the numbers. A barely visible soft light sits in two of the band's corners (white at the top, pale teal at the bottom); they move with the band but don't stretch when it is pulled.
-- **One notice at a time:** if something blocks bookings, a single notice explains it, in this order: a platform needs fixing (opens My platforms) → identity verification was rejected (upload again) → platforms under review (information only) → the media kit is hidden (make it public in one tap). Nothing blocking means no notice.
+- **One notice at a time:** if something blocks bookings, a single notice explains it, in this order: a platform needs fixing (opens My platforms) → identity verification was rejected (upload again) → no price yet, so brands can't send requests (opens My prices) → platforms under review (information only) → the media kit is hidden (make it public in one tap). Nothing blocking means no notice.
 - **Media kit card:** one job, sharing. It shows whether the kit is visible to brands or hidden, a line on what the kit is for (or, with no visits yet, a nudge to share the link), the public link with a copy button, **Share** (the only main button on the screen) and "Preview", which opens the preview page. The creator's identity and numbers moved up to the navy band, so the card no longer repeats them.
 - **Media kit insights (🟡):** the creator picks the last 7, 30 or 90 days (today included). Each number (profile views, brands that looked, link opens, shares) shows its change against the same length of time just before, or "New" when there was nothing to compare to; numbers the service doesn't report yet stay hidden. Below come a small line of daily profile views, the cities the viewing brands are based in (only once at least three brands have looked, so no single brand can be identified), and the most-viewed portfolio work once portfolios exist. With no activity yet, the page invites the creator to share their link. **Share** is the page's one main button, and a hidden kit asks to be made public first. Pull down to refresh; a failed load shows a retry.
-- **Media kit preview (🟡):** the creator sees their kit exactly as brands do: photo, verified badge, tier, every niche and the lowest price, each linked platform with its followers (a check mark only when the count is verified) and tier, and their prices. Parts with nothing to show stay hidden. A note says "this is how brands see you", or, when the kit is hidden, a warning with "Make public". Opening the preview never counts as a profile view. **Share** is the one main button; the gear opens the settings.
+- **Media kit preview (🟡):** the creator sees their kit exactly as brands do: photo, verified badge, tier, every niche and the lowest price, each linked platform with its followers (a check mark only when the count is verified) and tier, and their prices. Each price shows the service, package and amount; tapping it opens what's included (length, delivery time, revisions, how long it stays live) and any rush delivery fee. Sada's collaboration terms close the kit. Parts with nothing to show stay hidden. A note says "this is how brands see you", or, when the kit is hidden, a warning with "Make public". Opening the preview never counts as a profile view. **Share** is the one main button; the gear opens the settings.
 - **Media kit settings (🟡, from the preview or from My profile):** the creator picks the name in their link (for example `anas.style`). While they type, the app says whether the name is free, already taken or reserved, after a short pause so it doesn't ask on every letter; shape problems (length, allowed characters) are explained straight away without asking the server. A link name can change **once every 30 days**: during that time a note gives the date the next change opens, and going back to the previous name is still allowed (the old link keeps working for 30 days and nobody else can take it). If the server refuses on save (name just taken, still in the waiting period), the reason shows under the field with the date where relevant. A switch shows or hides the kit from brands; hiding asks for confirmation first, because the link then shows "Profile not available" and sharing stops. Leaving with an unsaved name asks before discarding it.
 - **Profile strength:** a small plain navy card, so it stands out from the white cards around it. It shows the completion percentage in large type, one line on why it matters ("the more complete your profile, the more brands get to see you"), the completion bar, and the single next useful step as a frosted row (for example "Add a profile photo +10%") that opens the right page. It disappears at 100%; the full list of steps stays on the Profile.
 - **My platforms:** no sideways swiping; every linked account is a compact horizontal card stacked down the page: the platform icon on the reading-start side, then the platform name and handle, then the follower count and tier badge on the far side. The primary account comes first, framed in teal with a "Primary" label. A card shows a status label only when something needs attention (a review problem first, otherwise "not available"); verified accounts stay quiet. A dashed "Add platform" row closes the list. Tapping a card opens that platform, and "Manage" opens the list. With no linked account, a card invites the creator to add one.
-- **My prices:** one line per saved price, with the platform icon, the service, the platform name and the amount. "Edit" opens the primary platform's page, where prices are set. With no prices yet, the card invites the creator to add them so brands can book them.
+- **My prices:** one line per saved price, with the platform icon, the service, the platform name, the package and the amount. "Edit" opens My prices. With no prices yet, the card invites the creator to add them so brands can book them.
 - **Refresh and errors:** pulling down refreshes everything on the page. Each section loads and fails on its own, with its own retry, so one slow answer never blanks the whole screen. Wallet, offers and deals stay off Home until those services exist.
 - **Brands** still see the Explore placeholder on this tab; their dashboard is a separate design.
 
@@ -568,7 +574,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 **🔜 Next: profile and account (immediate)**
 - New "Me" home data and a full profile screen for both roles.
 - 🟡 Edit creator and brand profiles (separate pages per role) and change avatar or logo: built, awaiting testing. Change password on the new service.
-- 🟡 Manage social platforms after registration (add, edit, refresh, set primary, availability, remove) and edit prices per platform: built, awaiting testing.
+- 🟡 Manage social platforms after registration (add, edit, refresh, set primary, availability, remove): built, awaiting testing.
+- 🟡 Prices v2: one price per service and package, with delivery time, revisions, how long it stays live and rush delivery, plus in-person services; set in registration or from My prices: built, awaiting testing against the live service.
 - 🟡 Verify identity (creators) or the business (brands) later from the Profile: built, awaiting testing.
 - 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
 - 🟡 Creator Home dashboard with the shareable media kit, its insights page (7 / 30 / 90 days), the "preview as brands see it" page and the link and visibility settings: built, awaiting testing.
@@ -622,6 +629,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-08 | Prices rebuilt on Sada's new price system (🟡 awaiting device and live-server testing). All old prices were cleared by the server, so creators see "Set up your prices" on Home, the Profile and each platform page until they save one. A new "My prices" page groups prices by platform plus in-person services; each price has a package, delivery time, revisions, how long it stays live and optional rush delivery. Registration's price step offers the catalog's services per platform with a package and price. The per-platform price form is gone (the platform page links to My prices). The media kit shows what each price includes and Sada's collaboration terms. | 5.2, 5.3 (Journeys A, A2, A4), 7.3 |
 | 2026-10-07 | Creator Home "My platforms" redesigned (🟡 awaiting device testing): the swipeable small tiles became compact horizontal cards stacked down the page (icon, name and handle, followers and tier), the primary account first with a teal frame and "Primary" label, status shown only when something needs attention, and a dashed "Add platform" row at the end. | 5.3 (Journey A4) |
 | 2026-10-07 | Profile band unified with the creator Home (🟡 awaiting device testing): same structure and height (page name beside the icons, larger photo with name, city and email, then a frosted completion card with a large percentage, thicker bar and why it matters, kept at 100% as a "complete" state), the same faint corner light, and on scroll a pinned photo + name aligned to the page edges instead of a centred title. Home's pinned bar now also lines up with the page edges. | 5.2, 5.3 (Journeys A3, A4) |
 | 2026-10-07 | Creator Home looks livelier (🟡 awaiting device testing): a barely visible soft light in two corners of the navy band (the first version's bright circle and thick rings were removed after review), and the profile strength card turned into a plain small navy card with a big percentage, a line on why completing the profile helps brands find you, and the next step as a frosted row. | 5.3 (Journey A4) |

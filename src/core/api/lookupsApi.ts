@@ -28,7 +28,6 @@ export interface LookupsResponse {
   business_types: LookupOption[];
   niches: LookupOption[];
   social_platforms: SocialPlatformLookup[];
-  service_types: LookupOption[];
   /** Keyed by tier id, not an array. */
   follower_tiers: Partial<Record<FollowerTierId, FollowerTier>>;
 }

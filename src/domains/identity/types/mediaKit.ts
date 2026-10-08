@@ -1,6 +1,7 @@
 import type { FollowerTierId } from '@/core/config';
 import type { SocialPlatform } from '@/shared/utils';
-import type { ServiceType } from '@/domains/auth';
+import type { ContractTerms } from '@/core/api';
+import type { RateCard } from '@/domains/auth';
 
 /** Contract §17.9. */
 export const STATS_PERIODS = ['7d', '30d', '90d'] as const;
@@ -34,12 +35,6 @@ export interface MediaKitPlatform {
   is_primary: boolean;
 }
 
-export interface MediaKitRateCard {
-  platform: SocialPlatform;
-  service_type: ServiceType;
-  price_usd: number;
-}
-
 export interface PublicMediaKit {
   slug: string;
   display_name: string | null;
@@ -49,8 +44,11 @@ export interface PublicMediaKit {
   is_verified: boolean;
   niches: string[];
   platforms: MediaKitPlatform[];
-  rate_cards: MediaKitRateCard[];
+  /** Handoff §5 shape; platform cards only for available, non-rejected platforms. */
+  rate_cards: RateCard[];
   price_from_usd: number | null;
+  /** `null` from a server that predates Rate Cards v2. */
+  contract_terms: ContractTerms | null;
   bio: null;
   top_portfolio_items: [];
   offers_from_profile: null;

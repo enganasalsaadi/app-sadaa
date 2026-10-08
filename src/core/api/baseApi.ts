@@ -209,6 +209,7 @@ export const baseApi = createApi({
     'Settings',
     'Profile',
     'Platform',
+    'RateCard',
     'Kyc',
     'Notification',
     'Lookups',

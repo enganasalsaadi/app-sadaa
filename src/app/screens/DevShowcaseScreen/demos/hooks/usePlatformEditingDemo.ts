@@ -1,35 +1,37 @@
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLookupItems } from '@/core/api';
 import {
-  SERVICE_TYPES,
   useFollowerTierOptions,
   type InfluencerPlatform,
   type InfluencerRatesFormValues,
-  type ServiceType,
 } from '@/domains/auth';
+import { MOCK_RATE_SERVICES } from '../mockData';
 
 const DEMO_PLATFORMS: readonly InfluencerPlatform[] = ['instagram', 'tiktok', 'telegram'];
-const ROWS = SERVICE_TYPES.map((service, index) => ({ index, service }));
+const PLATFORM_ROWS = [
+  { index: 0, service: MOCK_RATE_SERVICES.reel },
+  { index: 1, service: MOCK_RATE_SERVICES.story },
+];
+const IN_PERSON_ROWS = [{ index: 2, service: MOCK_RATE_SERVICES.onSiteVisit }];
 
-/** Dev-only: one price form shared by both card variants, plus the add sheet (no lookup). */
+/** Dev-only: one price form shared by a platform card and the in-person card, plus the add sheet. */
 export const usePlatformEditingDemo = () => {
   const { control } = useForm<InfluencerRatesFormValues>({
     defaultValues: {
-      rates: SERVICE_TYPES.map(service => ({
-        platform: 'instagram',
-        service,
-        enabled: service === 'reels',
-        price: service === 'reels' ? { amount: 5000, currency: 'USD' } : null,
-      })),
+      rates: [
+        {
+          platform: 'instagram',
+          service: 'reel',
+          hasPackage: true,
+          enabled: true,
+          packageValue: '30',
+          price: { amount: 5000, currency: 'USD' },
+        },
+        { platform: 'instagram', service: 'story', hasPackage: false, enabled: false, packageValue: null, price: null },
+        { platform: null, service: 'on_site_visit', hasPackage: true, enabled: false, packageValue: '2', price: null },
+      ],
     },
   });
-  const services = useLookupItems('service_types');
-  const serviceLabel = useCallback(
-    (service: ServiceType) =>
-      services.items.find(item => item.value === service)?.label ?? service,
-    [services.items],
-  );
   const tiers = useFollowerTierOptions();
   const [sheetVisible, setSheetVisible] = useState(false);
   const openSheet = useCallback(() => setSheetVisible(true), []);
@@ -40,8 +42,8 @@ export const usePlatformEditingDemo = () => {
 
   return {
     control,
-    rows: ROWS,
-    serviceLabel,
+    platformRows: PLATFORM_ROWS,
+    inPersonRows: IN_PERSON_ROWS,
     openSheet,
     links: {
       instagram: instagramLink,

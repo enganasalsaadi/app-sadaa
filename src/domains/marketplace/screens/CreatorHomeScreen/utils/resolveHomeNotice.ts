@@ -5,12 +5,13 @@ import type { KycStatus, User } from '@/domains/auth';
 export const HOME_NOTICES = [
   'platformsActionRequired',
   'kycRejected',
+  'rateCardRequired',
   'platformsUnderReview',
   'kitHidden',
 ] as const;
 export type HomeNoticeKey = (typeof HOME_NOTICES)[number];
 
-export type HomeNoticeAction = 'openPlatforms' | 'openKyc' | 'makePublic';
+export type HomeNoticeAction = 'openPlatforms' | 'openKyc' | 'openRates' | 'makePublic';
 
 export interface HomeNoticeDef {
   tone: 'danger' | 'warning' | 'info';
@@ -32,6 +33,12 @@ export const HOME_NOTICE_DEF = {
     messageKey: 'account.profile.kyc.rejectedBody',
     action: { labelKey: 'account.profile.kyc.reupload', run: 'openKyc' },
   },
+  rateCardRequired: {
+    tone: 'warning',
+    titleKey: 'account.rates.notice.title',
+    messageKey: 'account.rates.notice.message',
+    action: { labelKey: 'account.rates.notice.action', run: 'openRates' },
+  },
   platformsUnderReview: {
     tone: 'info',
     titleKey: 'marketplace.creatorHome.notice.platformsUnderReview.title',
@@ -49,6 +56,8 @@ export const HOME_NOTICE_DEF = {
 export interface HomeNoticeInput {
   platformsReviewStatus: User['platforms_review_status'];
   kycStatus: KycStatus;
+  /** No rate card yet: brands can't send requests (Rate Cards v2 banner). */
+  needsRateCards: boolean;
   /** `null` while the kit loads: never flag it hidden on a guess. */
   isKitPublic: boolean | null;
 }
@@ -57,10 +66,12 @@ export interface HomeNoticeInput {
 export const resolveHomeNotice = ({
   platformsReviewStatus,
   kycStatus,
+  needsRateCards,
   isKitPublic,
 }: HomeNoticeInput): HomeNoticeKey | null => {
   if (platformsReviewStatus === 'action_required') return 'platformsActionRequired';
   if (kycStatus === 'rejected') return 'kycRejected';
+  if (needsRateCards) return 'rateCardRequired';
   if (platformsReviewStatus === 'under_review') return 'platformsUnderReview';
   if (isKitPublic === false) return 'kitHidden';
   return null;

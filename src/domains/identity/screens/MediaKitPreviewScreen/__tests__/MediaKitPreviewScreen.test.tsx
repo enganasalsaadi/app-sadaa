@@ -58,6 +58,7 @@ jest.mock('@/shared/ui', () => {
   const LayoutFooter = ({ top, ...props }: { top?: React.ReactNode }) =>
     createElement('LayoutFooter', props, top);
   return {
+    Accordion: stub('Accordion'),
     Avatar: stub('Avatar'),
     Box: stub('Box'),
     Card: stub('Card'),
@@ -120,6 +121,7 @@ const preview: PublicMediaKit = {
     },
   ],
   rate_cards: [],
+  contract_terms: null,
   price_from_usd: 30,
   bio: null,
   top_portfolio_items: [],
@@ -152,6 +154,9 @@ const model = (overrides: Partial<MediaKitPreviewScreenModel> = {}): MediaKitPre
       platformLabel: 'Instagram',
       serviceLabel: 'Reels',
       price: { amount: 5000, currency: 'USD' },
+      packageLabel: null,
+      includes: [],
+      addons: [],
     },
   ],
   share: share(),
@@ -182,7 +187,9 @@ describe('MediaKitPreviewScreen', () => {
       'instagram',
       'tiktok',
     ]);
-    expect(root.findAll(isHost('KeyValueRow'))).toHaveLength(1);
+    const [rate] = root.findAll(isHost('Accordion'));
+    expect(rate?.props.title).toBe('Reels');
+    expect(rate?.props.subtitle).toBe('Instagram');
     // ✓ only next to verified follower counts.
     const verified = root
       .findAll(isHost('Icon'))
@@ -196,7 +203,20 @@ describe('MediaKitPreviewScreen', () => {
       rateRows: [],
     });
     expect(root.findAll(isHost('SectionHeader'))).toHaveLength(0);
-    expect(root.findAll(isHost('KeyValueRow'))).toHaveLength(0);
+    expect(root.findAll(isHost('Accordion'))).toHaveLength(0);
+  });
+
+  it('lists the contract terms when the kit has them', () => {
+    const { root } = render({
+      preview: {
+        ...preview,
+        contract_terms: { version: 'v1', items: [{ key: 'organic_only', text: 'Organic posts only' }] },
+      },
+    });
+    const headers = root.findAll(isHost('SectionHeader')).map(header => header.props.title);
+    expect(headers).toContain('account.mediaKit.previewScreen.terms');
+    const texts = root.findAll(isHost('Text')).map(text => text.props.children);
+    expect(texts).toContain('Organic posts only');
   });
 
   it('warns when the kit is hidden and offers Make public', () => {

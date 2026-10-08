@@ -5,6 +5,7 @@ Backend source of truth: `api/docs/plans/profile-account/backend-plan.md`.
 Base URL: `/api/v1`. All requests send `Authorization: Bearer <token>` (except public ones) and `Accept-Language: ar|en`.
 Status: LOCKED (2026-10-01), revised by the hardening pass (§0.1, backend-plan §16). Any change must be mirrored in `backend-plan.md`.
 **§17 Media Kit is LOCKED (2026-10-06, implemented in the backend).** Source: `docs/mobile-handoff.md` Appendix.
+**§6 Rate Cards v2 (2026-10-08, live).** Source: `docs/mobile-handoff-rate-cards.md`. Replaces `service_type` and the `/lookups` `service_types` list.
 Wire order for mobile: §0.1 changelog → §1 errors → §15 Registration & Auth → §16 edge cases → rest.
 
 ---
@@ -122,7 +123,7 @@ Pass 409 / 429 to the calling screen (not global handlers). Map `error_code` →
 - `tier_source`: `auto` (Bright Data), `manual` (user picked)
 - `verification_status` (platform): `auto_verified`, `pending_review`, `approved`, `rejected`
 - `kyc_document_type`: `national_id` (influencer, implicit), `commercial_register`, `industrial_register`, `trade_license` (brand)
-- `service_type`: `reels`, `story`, `post`, `visit`
+- `service` (rate cards, §6): catalog keys `reel`, `story`, `feed_post`, `post`, `video`, `shorts`, `integrated_mention`, `dedicated_video`, `channel_post`, `article`, `on_site_visit`. Read the offer per platform from the catalog (§6.1), never hardcode it.
 
 ---
 
@@ -203,7 +204,7 @@ Influencer:
     "area": "المزة", "niches": ["fashion", "food_cooking"],
     "primary_platform_id": "01J9...", "primary_platform_locked": true,
     "platforms": [ /* PlatformResource §5.1 */ ],
-    "rate_cards": [ { "id": "01J9...", "platform": "instagram", "service_type": "reels", "price_usd": 50.0 } ]
+    "rate_cards": [ /* RateCard §6.3 */ ]
   }
 }
 ```
@@ -303,15 +304,54 @@ Unavailable platform: stays visible on profile, brands cannot send requests on i
 
 ---
 
-## 6. Rate cards
+## 6. Rate cards (v2)
 
-Register step 3 (`POST /onboarding/influencer/step-3`): body unchanged (§15.8). **Now moves to step 4 (KYC) instead of finishing.** Response: `InfluencerProfileResource` with `rate_cards` — **no `platforms` key**.
+Since the v2 release every old card was deleted and `has_rate_card` is `false` for every creator. Show "Set up your prices" while `capabilities.receive_requests.reason === "rate_card_required"` or the `rate_cards` completion step is open (§3.1); it clears as soon as one card is saved.
 
-In-app: `PUT /influencer/rate-cards`
-```json
-{ "rate_cards": [ { "platform": "instagram", "service_type": "reels", "price_usd": 50 } ] }
+### 6.1 Catalog — `GET /lookups/rate-card-catalog` (public)
+Localized by `Accept-Language`. `ETag` + `If-None-Match` → 304. The app keeps the last copy per language (MMKV), revalidates once per session and falls back to it offline.
+```jsonc
+{
+  "catalog_version": "1",
+  "price_bounds": { "min_usd": 5, "max_usd": 50000 },
+  "platforms": [ { "key": "instagram", "label": "Instagram", "services": [ /* CatalogService */ ] } ],
+  "platform_agnostic_services": [ /* on_site_visit */ ],
+  "addons": [ { "type": "rush_delivery", "label": "Rush delivery",
+                "pricing_modes": [ { "key": "fixed", "label": "Fixed amount", "min": 0.01, "max": 50000 } ],
+                "options": [ { "key": "delivery_hours", "options": [ { "value": 24 }, { "value": 48 } ], "default": 48, "visible": true } ] } ],
+  "contract_terms": { "version": "v1", "items": [ { "key": "organic_only", "text": "…" } ] }
+}
 ```
-Full replace. `[]` = remove all. Response: rate card list. 422: `rate_cards.N.platform` (not one of your platforms), duplicate platform+service_type.
+`CatalogService`: `key`, `label`, `package` (`null` = one card per service; else `{ key, label, type: "options", options: [{value,label}], default }`), `criteria` (`delivery_days {label,min,max,default}`, `revisions {label,options,default}`, `retention {label,options,default,minimum} | null`), `attributes` (hide and never send `visible: false`, all of them in v1), `addons` (add-on types allowed).
+Editor rules: services of the linked platforms + platform-free ones; package shown when not null; retention only when not null; rush only where the service lists `rush_delivery`, 24h needs `delivery_days ≥ 2`, 48h needs `≥ 3`. Labels always from the catalog.
+
+### 6.2 Endpoints (influencer only)
+| Method | Path | Body | Success |
+|---|---|---|---|
+| GET | `/influencer/rate-cards` | — | 200 list |
+| POST | `/influencer/rate-cards` | `RateCardInput` | 201 card |
+| PATCH | `/influencer/rate-cards/{id}` | changed fields only | 200 card |
+| DELETE | `/influencer/rate-cards/{id}` | — | 200, `data: null` |
+| PUT | `/influencer/rate-cards` | `{ rate_cards: RateCardInput[] }` | 200 list (bulk upsert by slot, ids kept; not used by the app yet) |
+
+`RateCardInput`: `platform` (`null` for `on_site_visit`), `service`, `package_value` (required when the service has a package), `price_usd` (5 – 50000, ≤ 2 decimals), optional `delivery_days`, `revisions`, `retention` (never for on-site), `addons: [{ type, pricing_mode, amount, options: { delivery_hours } }]`.
+PATCH rejects `platform` and `service` (delete + create instead); `addons`, when sent, replaces the whole list (`[]` removes all). Another creator's card id → 404.
+
+### 6.3 `RateCard` (editor and media kit share it)
+```json
+{ "id": "01k…", "slot_key": "instagram:reel:60", "platform": "instagram",
+  "service": { "key": "reel", "label": "Reel" },
+  "package": { "key": "duration_sec", "value": 60, "label": "Up to 60 seconds" },
+  "price_usd": 120, "delivery_days": 5, "revisions": 1,
+  "retention": { "key": "30d", "label": "30 days" },
+  "attributes": [ { "key": "collab_post", "label": "Collab post", "value": false, "value_label": "Not included" } ],
+  "addons": [ { "type": "rush_delivery", "label": "Rush delivery", "pricing_mode": "fixed", "amount": 30, "computed_price_usd": 30, "options": { "delivery_hours": 48 } } ],
+  "includes": [ "Up to 60 seconds", "Delivered within 5 days", "1 revision round", "Stays live: 30 days" ] }
+```
+`platform`, `package`, `retention` can be `null`. `includes` is localized, ready to render.
+
+### 6.4 Validation (422)
+Keys: `platform`, `service` (also "slot already priced"), `package_value`, `price_usd`, `delivery_days`, `revisions`, `retention`, `attributes.{key}`, `addons.{n}.type|pricing_mode|amount|options.{key}` (rush not faster than delivery). PUT and step 3 prefix them with `rate_cards.{i}.`; bulk saves are all-or-nothing.
 
 ---
 
@@ -520,11 +560,14 @@ export interface LookupItem { id: string; name_ar: string; name_en: string; }
 export interface Lookups {
   governorates: LookupItem[]; business_types: LookupItem[]; niches: LookupItem[];
   social_platforms: (LookupItem & { id: PlatformId; supports_lookup: boolean })[];
-  service_types: LookupItem[];
   follower_tiers: Record<FollowerTierId, { label_ar: string; label_en: string; range: string; min: number; max: number | null }>;
 }
 
-export interface RateCard { id: string; platform: PlatformId; service_type: 'reels' | 'story' | 'post' | 'visit'; price_usd: number; }
+/** Rate Cards v2 — full shape in §6.3; app types in `domains/auth/store/rateCardTypes.ts`. */
+export type RateService = 'reel' | 'story' | 'feed_post' | 'post' | 'video' | 'shorts' | 'integrated_mention' | 'dedicated_video' | 'channel_post' | 'article' | 'on_site_visit';
+export type Retention = '24h' | '30d' | '90d' | '180d' | 'permanent';
+export interface RateCardAddon { type: 'rush_delivery' | 'whitelisting' | 'exclusivity' | 'pin' | 'on_site'; label: string; pricing_mode: 'fixed' | 'percent_of_base'; amount: number; computed_price_usd: number; options: Record<string, string | number | boolean>; }
+export interface RateCard { id: string; slot_key: string; platform: PlatformId | null; service: { key: RateService; label: string }; package: { key: string; value: string | number; label: string } | null; price_usd: number; delivery_days: number; revisions: number; retention: { key: Retention; label: string } | null; attributes: { key: string; label: string; value: string | number | boolean; value_label: string }[]; addons: RateCardAddon[]; includes: string[]; }
 
 /** influencer step-2/3/4 response + progress.profile (influencer). platforms/rate_cards present only when loaded (see §15). */
 export interface InfluencerProfileData {
@@ -591,14 +634,13 @@ Labels in both languages (ignores `Accept-Language`). Cache per app session. `su
   "niches":          [ { "id": "food_cooking", "name_ar": "الطهي والطعام", "name_en": "Food & Cooking" } ],
   "social_platforms":[ { "id": "instagram", "name_ar": "إنستغرام", "name_en": "Instagram", "supports_lookup": true },
                        { "id": "telegram",  "name_ar": "تيليغرام", "name_en": "Telegram",  "supports_lookup": false } ],
-  "service_types":   [ { "id": "reels", "name_ar": "ريلز", "name_en": "Reels" } ],
   "follower_tiers": {
     "NANO": { "label_ar": "نانو (Nano)", "label_en": "Nano", "range": "1,000 - 10,000", "min": 1000, "max": 10000 },
     "MEGA": { "label_ar": "ميجا (Mega)", "label_en": "Mega", "range": "+1,000,000", "min": 1000000, "max": null }
   }
 }
 ```
-Full id sets: governorates `damascus, rif_dimashq, aleppo, homs, hama, lattakia, tartus, idlib, deir_ezzor, raqqa, hasakah, daraa, sweida, quneitra`; niches `beauty_lifestyle, fashion, food_cooking, tech_gaming, fitness_health, travel_tourism, business_finance, education`; business types §8.2; platforms §2; service types `reels, story, post, visit`; tiers `NANO, MICRO, MID_TIER, MACRO, MEGA` (object keyed by id, not array).
+Full id sets: governorates `damascus, rif_dimashq, aleppo, homs, hama, lattakia, tartus, idlib, deir_ezzor, raqqa, hasakah, daraa, sweida, quneitra`; niches `beauty_lifestyle, fashion, food_cooking, tech_gaming, fitness_health, travel_tourism, business_finance, education`; business types §8.2; platforms §2; rate card services come from the catalog (§6.1), not `/lookups`; tiers `NANO, MICRO, MID_TIER, MACRO, MEGA` (object keyed by id, not array).
 
 ### 15.2 `POST /onboarding/influencer/step-1` — public
 | Field | Rule |
@@ -665,9 +707,11 @@ Errors: 422 `governorate`, `business_type`, `social_links`, `social_links.N.plat
 ### 15.8 `POST /onboarding/influencer/step-3` — rate cards
 Guards: influencer; needs `current_step >= 2`.
 ```json
-{ "rate_cards": [ { "platform": "instagram", "service_type": "reels", "price_usd": 50 } ] }
+{ "is_skipped": false,
+  "rate_cards": [ { "platform": "instagram", "service": "story", "package_value": 3, "price_usd": 40 },
+                  { "platform": null, "service": "on_site_visit", "package_value": 4, "price_usd": 200 } ] }
 ```
-or skip `{ "is_skipped": true }`. Rules: `is_skipped` optional boolean; `rate_cards` required unless skipped, array min 1; each `platform` platform enum, `service_type` service type, `price_usd` numeric ≥ 0.
+or skip `{ "is_skipped": true }`. Only `platform, service, package_value, price_usd, delivery_days` are read; everything else takes the server defaults. Same upsert semantics as the bulk PUT (§6.2). The app sends one package per service and leaves `delivery_days` to the default.
 Response 200 = `InfluencerProfileResource` with `rate_cards` (no `platforms` key). → `current_step = max(current_step, 3)`; account still `draft`.
 Errors: 422 `rate_cards`, `rate_cards.N.*`; 403 guards; 409 `onboarding_step_out_of_order`.
 
@@ -816,15 +860,16 @@ Body `{ "slug"?: "anas.style", "is_public"?: false }` → 200 same shape as §17
                    "profile_url": "https://instagram.com/anas", "display_name": "Anas Style",
                    "follower_count": 45210, "follower_count_verified": true,
                    "follower_tier": "MICRO", "follower_tier_label": "مايكرو", "is_primary": true } ],
-  "rate_cards": [ { "platform": "instagram", "service_type": "reels", "price_usd": 50.0 } ],
+  "rate_cards": [ /* RateCard §6.3 */ ],
   "price_from_usd": 30.0,
+  "contract_terms": { "version": "v1", "items": [ { "key": "organic_only", "text": "…" } ] },
   "bio": null, "top_portfolio_items": [], "offers_from_profile": null
 }
 ```
 - **Read-only** — opening it does not count a view (call §17.5).
 - `display_name` = primary platform `display_name`, else the user's name. `avatar_url` `null` → show initials.
 - `is_verified` = KYC verified. `platforms` exclude `rejected`, primary first then followers desc. `follower_count_verified` = auto-verified or admin-approved (self-declared counts are `false`).
-- `rate_cards` only for available, non-rejected platforms; `price_from_usd` = their min or `null`. `bio` `null` until AI bio ships.
+- `rate_cards`: on-site visit cards always; platform cards only for available, non-rejected platforms; `price_from_usd` = their min or `null`. `contract_terms` = the catalog's terms (§6.1). `bio` `null` until AI bio ships.
 - **Never returned:** phone, email, `full_name`, `area`, KYC data, `rejection_reason`, user `id`.
 - Old slug (≤ 30 days) → **200** with the new `slug` in the body + `meta.canonical_slug`. Replace the stored slug if `meta.canonical_slug` is present.
 - Unknown / private / suspended / deleted → 404 `not_found`. Rate limit 60/min per IP. `ETag` + `Cache-Control: public, max-age=60` (`If-None-Match` → 304).
@@ -888,8 +933,9 @@ interface PublicMediaKit {
   platforms: { platform: Platform; platform_label: string; username: string; profile_url: string | null;
                display_name: string | null; follower_count: number; follower_count_verified: boolean;
                follower_tier: FollowerTier | null; follower_tier_label: string | null; is_primary: boolean }[];
-  rate_cards: { platform: Platform; service_type: ServiceType; price_usd: number }[];
+  rate_cards: RateCard[]; // §6.3
   price_from_usd: number | null;
+  contract_terms: { version: string; items: { key: string; text: string }[] };
   bio: null; top_portfolio_items: []; offers_from_profile: null;
 }
 interface MediaKit {

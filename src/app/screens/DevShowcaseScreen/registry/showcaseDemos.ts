@@ -42,6 +42,7 @@ import { EmptyStatesDemo } from '../demos/EmptyStatesDemo';
 import { ListRowsDemo } from '../demos/ListRowsDemo';
 import { MoneyTextDemo } from '../demos/MoneyTextDemo';
 import { AmountInputDemo } from '../demos/AmountInputDemo';
+import { NumberStepperDemo } from '../demos/NumberStepperDemo';
 import { TimelineDemo } from '../demos/TimelineDemo';
 import { CountdownDemo } from '../demos/CountdownDemo';
 import { MediaTileDemo } from '../demos/MediaTileDemo';
@@ -102,6 +103,7 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   listRows: ListRowsDemo,
   moneyText: MoneyTextDemo,
   amountInput: AmountInputDemo,
+  numberStepper: NumberStepperDemo,
   timeline: TimelineDemo,
   countdown: CountdownDemo,
   mediaTile: MediaTileDemo,

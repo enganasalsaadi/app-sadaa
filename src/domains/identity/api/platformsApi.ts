@@ -1,7 +1,5 @@
 import { baseApi } from '@/core/api';
-import type { FollowerTierId, PlatformResource, RateCardEntry } from '@/domains/auth';
-import type { InfluencerProfileDetails } from '../types/profile';
-import { accountApi } from './accountApi';
+import type { FollowerTierId, PlatformResource } from '@/domains/auth';
 
 /** The refresh runs a provider lookup, which may take up to 30 s (contract §4). */
 const PLATFORM_REFRESH_TIMEOUT_MS = 35_000;
@@ -24,10 +22,10 @@ export interface PlatformAvailabilityRequest {
   is_available: boolean;
 }
 
-/** Writes that change `/me` (completion, tier, primary) and `/user/profile` (platforms, prices). */
+/** Writes that change `/me` (completion, tier, primary) and `/user/profile` (platforms). */
 const PROFILE_TAGS = ['User', 'Profile'] as const;
 
-/** In-app platform management (contract §5.3) and rate cards (§6). */
+/** In-app platform management (contract §5.3). */
 export const platformsApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
@@ -43,9 +41,10 @@ export const platformsApi = baseApi.injectEndpoints({
       query: ({ id, ...body }) => ({ url: `/influencer/platforms/${id}`, method: 'PATCH', body }),
       invalidatesTags: ['Platform', ...PROFILE_TAGS],
     }),
+    // Its prices can't stay on an unlinked platform: re-read the cards and the kit.
     deletePlatform: builder.mutation<null, string>({
       query: id => ({ url: `/influencer/platforms/${id}`, method: 'DELETE' }),
-      invalidatesTags: ['Platform', ...PROFILE_TAGS],
+      invalidatesTags: ['Platform', 'RateCard', 'MediaKit', ...PROFILE_TAGS],
     }),
     refreshPlatform: builder.mutation<PlatformResource, string>({
       query: id => ({
@@ -95,28 +94,6 @@ export const platformsApi = baseApi.injectEndpoints({
         }
       },
     }),
-    /** Full replace (`[]` removes all): send every platform's prices, not just the edited one. */
-    replaceRateCards: builder.mutation<InfluencerProfileDetails['rate_cards'], RateCardEntry[]>({
-      query: rateCards => ({
-        url: '/influencer/rate-cards',
-        method: 'PUT',
-        body: { rate_cards: rateCards },
-      }),
-      invalidatesTags: [...PROFILE_TAGS],
-      // Lands before the caller's `unwrap()`: the price form re-reads the new list, not the stale one.
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(
-            accountApi.util.updateQueryData('getUserProfile', undefined, draft => {
-              draft.profile.rate_cards = data;
-            }),
-          );
-        } catch {
-          // The screen reports the failure.
-        }
-      },
-    }),
   }),
 });
 
@@ -128,5 +105,4 @@ export const {
   useRefreshPlatformMutation,
   useSetPrimaryPlatformMutation,
   useSetPlatformAvailabilityMutation,
-  useReplaceRateCardsMutation,
 } = platformsApi;
