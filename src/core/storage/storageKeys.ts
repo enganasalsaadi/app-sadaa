@@ -21,6 +21,7 @@ export const StorageKeys = {
   PUSH_DEVICE_SYNC: 'auth.push_device_sync',
   PUSH_PROMPT: 'app.push_prompt',
   RATE_CARD_CATALOG_CACHE: 'app.rate_card_catalog_cache',
+  WALLET_AMOUNTS_HIDDEN: 'app.wallet_amounts_hidden',
   STORAGE_VERSION: 'app.storage_version',
 } as const;
 
@@ -49,6 +50,8 @@ export interface StorageSchema {
   [StorageKeys.PUSH_PROMPT]: string;
   /** Rate card catalog (JSON `{ [language]: { etag, catalog } }`): public reference data, no PII. */
   [StorageKeys.RATE_CARD_CATALOG_CACHE]: string;
+  /** 'true' while the wallet eye toggle hides amounts: a display preference, no amounts stored. */
+  [StorageKeys.WALLET_AMOUNTS_HIDDEN]: string;
   /** Layout of the on-disk stores; '2' once session + PII moved to the encrypted store. */
   [StorageKeys.STORAGE_VERSION]: string;
 }

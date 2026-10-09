@@ -57,7 +57,7 @@ export const RateCardLockedSummary: React.FC<{ group: string; service: string }>
 
     return (
       <Box gap="sm">
-        <Card shadow="none" px="lg" py="sm">
+        <Card px="lg" py="sm">
           <KeyValueRow label={t('account.rates.editor.platform')} value={group} />
           <KeyValueRow label={t('account.rates.editor.service')} value={service} />
         </Card>

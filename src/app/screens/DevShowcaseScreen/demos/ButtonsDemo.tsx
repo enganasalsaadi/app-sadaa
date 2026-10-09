@@ -1,11 +1,15 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Text, CustomButton } from '@/shared/ui';
+import { Box, Text, CustomButton, GradientSurface } from '@/shared/ui';
 import type { ButtonSize } from '@/shared/ui';
 import { ArrowLeft, ArrowRight, Plus } from 'lucide-react-native';
 import { useTheme, BUTTON_COLOR_VARIANTS } from '@/core/theme';
 
 const BUTTON_SIZES: ButtonSize[] = ['sm', 'md', 'lg'];
+/** Only readable over the navy gradient (rule 08), so they're demoed on it. */
+const NAVY_VARIANTS = new Set<string>(['onBrand', 'glass']);
+const NEUTRAL_VARIANTS = BUTTON_COLOR_VARIANTS.filter(variant => !NAVY_VARIANTS.has(variant));
+const ON_NAVY_VARIANTS = BUTTON_COLOR_VARIANTS.filter(variant => NAVY_VARIANTS.has(variant));
 const noop = () => {};
 
 const ButtonsDemoComponent: React.FC = () => {
@@ -15,7 +19,7 @@ const ButtonsDemoComponent: React.FC = () => {
 
   return (
     <Box gap="lg">
-      {BUTTON_COLOR_VARIANTS.map(variant => (
+      {NEUTRAL_VARIANTS.map(variant => (
         <Box key={variant} row wrap gap="sm" align="center">
           {BUTTON_SIZES.map(size => (
             <CustomButton
@@ -28,6 +32,25 @@ const ButtonsDemoComponent: React.FC = () => {
           ))}
         </Box>
       ))}
+
+      <GradientSurface variant="brand" borderRadius="lg" p="lg" gap="sm">
+        <Text variant="label" color={colors.text.onBrand}>
+          {t('devShowcase.buttons.onNavyTitle')}
+        </Text>
+        {ON_NAVY_VARIANTS.map(variant => (
+          <Box key={variant} row wrap gap="sm" align="center">
+            {BUTTON_SIZES.map(size => (
+              <CustomButton
+                key={`${variant}-${size}`}
+                title={t('devShowcase.buttons.sampleLabel', { variant, size })}
+                variant={variant}
+                size={size}
+                onPress={noop}
+              />
+            ))}
+          </Box>
+        ))}
+      </GradientSurface>
 
       <Box
         borderTopWidth="hairline"

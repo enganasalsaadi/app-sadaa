@@ -4,15 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { BadgeCheck } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
-import { Box, SocialPlatformIcon, Text, TierBadge, useHeroCompact } from '@/shared/ui';
+import { Box, LiveIsland, SocialPlatformIcon, Text, TierBadge, useHeroCompact } from '@/shared/ui';
 import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 import { HeroAvatar } from './HeroAvatar';
 import { HeroKpiStrip } from './HeroKpiStrip';
 
 type Hero = CreatorHomeScreenModel['hero'];
+type HomeNotice = NonNullable<CreatorHomeScreenModel['notice']>;
 
 interface CreatorHomeHeroProps {
   hero: Hero;
+  /** The one blocker, shown as the hero's live island (rule 09 §3.1). */
+  notice: HomeNotice | null;
   kpis: CreatorHomeScreenModel['kpis'];
   onOpenProfile: () => void;
   onOpenInsights: () => void;
@@ -78,14 +81,27 @@ const HeroMeta = memo<{ hero: Hero }>(({ hero }) => {
   );
 });
 
+const HeroIsland = memo<{ notice: HomeNotice; compact: boolean }>(({ notice, compact }) => (
+  <LiveIsland
+    key={notice.key}
+    title={notice.title}
+    message={compact ? undefined : notice.message}
+    tone={notice.tone}
+    onPress={notice.action?.onPress}
+    accessibilityHint={notice.action?.label}
+  />
+));
+
 /**
- * Navy greeting band, transparent: Layout paints the gradient behind it
+ * Navy greeting band, transparent: Layout paints the gradient and lights behind it
  * (`heroBackdrop="brandGlow"`). The greeting owns the header row next to the bell; the
- * identity block below gets the full width, then the glass KPI strip. Compact
- * (keyboard / short screens): one identity row beside the bell, no greeting or handle.
+ * identity block below gets the full width, then the one live island and the glass
+ * KPI strip. Only data the app has (rule 09). Compact (keyboard / short screens): one
+ * identity row beside the bell, no greeting, handle or island message.
  */
 const CreatorHomeHeroComponent: React.FC<CreatorHomeHeroProps> = ({
   hero,
+  notice,
   kpis,
   onOpenProfile,
   onOpenInsights,
@@ -106,20 +122,21 @@ const CreatorHomeHeroComponent: React.FC<CreatorHomeHeroProps> = ({
 
   if (compact) {
     return (
-      <Box style={styles.container} px="xl" pb="2xl" gap="md">
+      <Box style={styles.container} px="xl" pb="4xl" gap="md">
         <Box row align="center" gap="md" style={styles.headerRow}>
           <HeroAvatar uri={hero.avatarUrl} size={sizes.avatar.md} onPress={onOpenProfile} />
           <Box flex={1}>
             <HeroName hero={hero} compact />
           </Box>
         </Box>
+        {notice ? <HeroIsland notice={notice} compact /> : null}
         <HeroKpiStrip kpis={kpis} compact onOpenInsights={onOpenInsights} />
       </Box>
     );
   }
 
   return (
-    <Box style={styles.container} px="xl" pb="2xl" gap="lg">
+    <Box style={styles.container} px="xl" pb="4xl" gap="lg">
       <Box justify="center" style={styles.headerRow}>
         <Text variant="body" color={colors.text.onBrandMuted} numberOfLines={1}>
           {hero.greeting}
@@ -134,6 +151,7 @@ const CreatorHomeHeroComponent: React.FC<CreatorHomeHeroProps> = ({
         </Box>
       </Box>
 
+      {notice ? <HeroIsland notice={notice} compact={false} /> : null}
       <HeroKpiStrip kpis={kpis} compact={false} onOpenInsights={onOpenInsights} />
     </Box>
   );

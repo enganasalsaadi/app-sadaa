@@ -15,9 +15,11 @@ import { Box } from '../primitives';
 import { BAR_CORNER, BAR_HEIGHT, SCROLL_TOP_THRESHOLD } from './constants';
 import { GlassBarBackground } from './GlassBarBackground';
 import { TabItem } from './TabItem';
+import { TabLens } from './TabLens';
 
 /**
- * Floating navy liquid-glass capsule (rule 08, approved 2026-10-06). Content scrolls
+ * Floating navy liquid-glass capsule (rule 08, approved 2026-10-06), with a liquid lens
+ * under the active tab (v4, 2026-10-08). Content scrolls
  * behind it and shows through the blur; it slides away on scroll-down and
  * returns on scroll-up. Label and icon come from each screen's `title` /
  * `tabBarIcon` options, so the navigator owns the role-specific tab set.
@@ -70,6 +72,12 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
           width={barWidth}
           height={BAR_HEIGHT}
           corner={BAR_CORNER}
+        />
+        <TabLens
+          index={state.index}
+          count={state.routes.length}
+          barWidth={barWidth}
+          barHeight={BAR_HEIGHT}
         />
         <Box
           row

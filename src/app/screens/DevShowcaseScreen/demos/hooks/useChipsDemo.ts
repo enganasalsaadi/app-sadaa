@@ -22,6 +22,7 @@ export const useChipsDemo = () => {
   const [single, setSingle] = useState<string | null>(null);
   const [groupMulti, setGroupMulti] = useState<string[]>(['tech']);
   const [loading, setLoading] = useState(false);
+  const [dateSet, setDateSet] = useState(false);
 
   const items = useMemo<ChipGroupItem[]>(
     () => CHIP_VALUES.map(value => ({ value, label: t(LABEL_KEY[value]) })),
@@ -38,6 +39,8 @@ export const useChipsDemo = () => {
   }, []);
 
   const toggleLoading = useCallback(() => setLoading(prev => !prev), []);
+  const pickDate = useCallback(() => setDateSet(true), []);
+  const clearDate = useCallback(() => setDateSet(false), []);
 
   return {
     items,
@@ -49,5 +52,8 @@ export const useChipsDemo = () => {
     setGroupMulti,
     loading,
     toggleLoading,
+    dateSet,
+    pickDate,
+    clearDate,
   };
 };

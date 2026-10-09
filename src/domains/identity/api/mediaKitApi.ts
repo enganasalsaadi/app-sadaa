@@ -1,4 +1,4 @@
-import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
+import { baseApi } from '@/core/api';
 import type { WithMeta } from '@/core/api';
 import type {
   MediaKit,
@@ -13,6 +13,9 @@ import type {
   UpdateMediaKitRequest,
 } from '../types/mediaKit';
 import { mapPublicMediaKit } from '../utils/mapPublicMediaKit';
+
+// Contract §17.6 still names it `X-…`; money endpoints use the standard `IDEMPOTENCY_HEADER`.
+const SHARE_IDEMPOTENCY_HEADER = 'X-Idempotency-Key';
 
 export const mediaKitApi = baseApi.injectEndpoints({
   overrideExisting: true,
@@ -47,7 +50,7 @@ export const mediaKitApi = baseApi.injectEndpoints({
         url: '/influencer/media-kit/share',
         method: 'POST',
         body: { channel },
-        headers: { [IDEMPOTENCY_HEADER]: idempotencyKey },
+        headers: { [SHARE_IDEMPOTENCY_HEADER]: idempotencyKey },
       }),
       invalidatesTags: ['MediaKitStats'],
     }),

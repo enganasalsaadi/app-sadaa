@@ -17,7 +17,7 @@ const DailyViewsCardComponent: React.FC<DailyViewsCardProps> = ({
   return (
     <Box gap="sm">
       <SectionHeader title={t('account.mediaKit.insightsScreen.daily.title')} />
-      <Card p="md" shadow="none">
+      <Card p="md">
         <Sparkline values={values} accessibilityLabel={accessibilityLabel} />
       </Card>
     </Box>

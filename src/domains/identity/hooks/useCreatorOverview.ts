@@ -6,7 +6,7 @@ import { useGetMediaKitQuery, useGetMediaKitStatsQuery } from '../api/mediaKitAp
 import { useGetPlatformsQuery } from '../api/platformsApi';
 import { useGetRateCardsQuery } from '../api/rateCardsApi';
 import { buildMetricTiles } from '../utils/mediaKitCard';
-import { buildMissingSteps, pickNextStep } from '../utils/profileCompletion';
+import { buildMissingSteps, buildStrengthStages, pickNextStep } from '../utils/profileCompletion';
 import { needsRateCards } from '../utils/rateCardNotice';
 import { buildRateRows } from '../utils/rateRows';
 import { HOME_STATS_PERIOD } from './useMediaKitCard';
@@ -41,6 +41,10 @@ export const useCreatorOverview = () => {
   const nextStep = useMemo(
     () => pickNextStep(buildMissingSteps(completion?.steps ?? [], kycStatus, false)),
     [completion?.steps, kycStatus],
+  );
+  const stages = useMemo(
+    () => buildStrengthStages(completion?.steps ?? [], nextStep?.key ?? null),
+    [completion?.steps, nextStep?.key],
   );
 
   const platforms = useMemo(() => platformsQuery.data ?? [], [platformsQuery.data]);
@@ -114,6 +118,8 @@ export const useCreatorOverview = () => {
       /** Shown only while `/me` reports a completion below 100%. */
       isVisible: completion != null && percentage < 100,
       nextStep,
+      /** The five-stage track (info → avatar → platforms → prices → ID). */
+      stages,
     },
     platforms: {
       items: platforms,

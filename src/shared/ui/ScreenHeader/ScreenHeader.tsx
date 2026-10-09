@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ArrowRight, type LucideIcon } from 'lucide-react-native';
+import { ArrowLeft, ArrowRight, X, type LucideIcon } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { goBack } from '@/core/navigation';
 import { Box } from '../primitives/Box';
@@ -18,6 +18,8 @@ import { resolveHeaderColors } from './headerColors';
 
 /** `solid`: surface bar · `brand`: navy bar (identity screens) · `transparent`: over hero imagery. */
 export type ScreenHeaderVariant = 'solid' | 'brand' | 'transparent';
+/** `close` (✕) ends a flow (wizard first step, a "just sent" screen) instead of stepping back. */
+export type ScreenHeaderBackIcon = 'back' | 'close';
 
 export interface ScreenHeaderAction {
   icon: LucideIcon;
@@ -25,6 +27,8 @@ export interface ScreenHeaderAction {
   onPress: () => void;
   /** Unread count on the icon (inbox, notifications). */
   badge?: number;
+  /** Glass icon tile instead of a bare icon; navy bars only (`brand`, wallet hero actions). */
+  glass?: boolean;
 }
 
 /** Scroll-driven progress values (0 → 1), fed by `Layout`'s header behaviours. */
@@ -53,6 +57,8 @@ export interface ScreenHeaderProps {
   showBackButton?: boolean;
   /** Default `goBack()`. */
   onBackPress?: () => void;
+  /** Default `back` (arrow). */
+  backIcon?: ScreenHeaderBackIcon;
   /** Trailing icon actions. Two at most, so the title keeps its room. */
   actions?: readonly [ScreenHeaderAction] | readonly [ScreenHeaderAction, ScreenHeaderAction];
   /** Paints behind the status bar (adds the top inset). Default true. */
@@ -73,7 +79,7 @@ const HeaderActionButton = memo<{ action: ScreenHeaderAction; variant: ScreenHea
       <Box>
         <IconButton
           icon={action.icon}
-          variant={button.variant}
+          variant={action.glass && button.tone === 'onBrand' ? 'soft' : button.variant}
           tone={button.tone}
           onPress={action.onPress}
           accessibilityLabel={action.accessibilityLabel}
@@ -102,6 +108,7 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
   variant = 'solid',
   showBackButton = true,
   onBackPress,
+  backIcon = 'back',
   actions,
   withSafeArea = true,
   motion,
@@ -191,11 +198,11 @@ const ScreenHeaderComponent: React.FC<ScreenHeaderProps> = ({
         <Box style={styles.side}>
           {showBackButton ? (
             <IconButton
-              icon={isRTL ? ArrowRight : ArrowLeft}
+              icon={backIcon === 'close' ? X : isRTL ? ArrowRight : ArrowLeft}
               variant={palette.button.variant}
               tone={palette.button.tone}
               onPress={onBackPress ?? goBack}
-              accessibilityLabel={t('common.back')}
+              accessibilityLabel={t(backIcon === 'close' ? 'common.close' : 'common.back')}
             />
           ) : null}
         </Box>

@@ -9,6 +9,7 @@ export const useListRowsDemo = () => {
   const toast = useToast();
   const [vacationMode, setVacationMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [option, setOption] = useState<'office' | 'bank'>('office');
 
   useEffect(() => {
     if (!loading) return;
@@ -18,6 +19,8 @@ export const useListRowsDemo = () => {
 
   const press = useCallback(() => toast.info(t('devShowcase.listRows.pressed')), [t, toast]);
   const startLoading = useCallback(() => setLoading(true), []);
+  const pickOffice = useCallback(() => setOption('office'), []);
+  const pickBank = useCallback(() => setOption('bank'), []);
 
-  return { vacationMode, setVacationMode, loading, startLoading, press };
+  return { vacationMode, setVacationMode, loading, startLoading, press, option, pickOffice, pickBank };
 };

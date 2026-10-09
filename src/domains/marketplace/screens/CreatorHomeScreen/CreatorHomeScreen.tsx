@@ -3,7 +3,7 @@ import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, Layout, Notice } from '@/shared/ui';
+import { Box, Layout, StaggerIn } from '@/shared/ui';
 import { MediaKitCard } from '@/domains/identity';
 import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
 import { CreatorHomeBar } from './components/CreatorHomeBar';
@@ -13,10 +13,11 @@ import { PlatformsSection } from './components/PlatformsSection';
 import { RatesCard } from './components/RatesCard';
 
 /**
- * Creator dashboard: navy hero (identity + 30-day KPIs, tap → Insights) behind a
- * transparent header that pins the creator's identity once the hero scrolls away, then the one blocker, the media kit (Share is the screen's
- * only primary), profile strength, platforms and prices. Sections without an API
- * (wallet, offers, deals) stay out until the API exists (plan §Decisions).
+ * Creator dashboard (v4 "Navy Trust, live"): navy hero with drifting lights (identity,
+ * the one blocker as a live island, 30-day KPIs → Insights) behind a transparent header
+ * that pins the identity once the hero scrolls away. Then, rising in one by one: the
+ * media kit (Share is the screen's only primary), profile strength, platforms and
+ * prices. Sections without an API (wallet, offers, deals) stay out until it exists.
  */
 const CreatorHomeScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ const CreatorHomeScreenComponent: React.FC = () => {
       hero={
         <CreatorHomeHero
           hero={vm.hero}
+          notice={vm.notice}
           kpis={vm.kpis}
           onOpenProfile={vm.openProfile}
           onOpenInsights={vm.openInsights}
@@ -65,38 +67,28 @@ const CreatorHomeScreenComponent: React.FC = () => {
         ),
       }}
     >
-      <Box gap="2xl" pt="xl" pb="5xl">
-        {vm.notice ? (
+      <Box pt="xl" pb="5xl">
+        <StaggerIn gap="2xl">
           <Box px="xl">
-            <Notice
-              key={vm.notice.key}
-              tone={vm.notice.tone}
-              title={vm.notice.title}
-              message={vm.notice.message}
-              action={vm.notice.action}
-            />
+            <MediaKitCard {...vm.mediaKit} onOpenPreview={vm.openPreview} />
           </Box>
-        ) : null}
 
-        <Box px="xl">
-          <MediaKitCard {...vm.mediaKit} onOpenPreview={vm.openPreview} />
-        </Box>
+          {vm.completion.isVisible ? (
+            <Box px="xl">
+              <ProfileStrengthCard completion={vm.completion} onStepPress={vm.onStepPress} />
+            </Box>
+          ) : null}
 
-        {vm.completion.isVisible ? (
+          <PlatformsSection
+            platforms={vm.platforms}
+            onOpenPlatform={vm.openPlatform}
+            onManage={vm.openPlatforms}
+          />
+
           <Box px="xl">
-            <ProfileStrengthCard completion={vm.completion} onStepPress={vm.onStepPress} />
+            <RatesCard rates={vm.rates} onEdit={vm.openRates} />
           </Box>
-        ) : null}
-
-        <PlatformsSection
-          platforms={vm.platforms}
-          onOpenPlatform={vm.openPlatform}
-          onManage={vm.openPlatforms}
-        />
-
-        <Box px="xl">
-          <RatesCard rates={vm.rates} onEdit={vm.openRates} />
-        </Box>
+        </StaggerIn>
       </Box>
     </Layout>
   );

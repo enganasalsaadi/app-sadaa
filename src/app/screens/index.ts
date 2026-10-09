@@ -19,6 +19,7 @@ export {
   LayoutCollapseHeaderScreen,
   LayoutHeroOverlayScreen,
   LayoutStickyScreen,
+  LayoutMoneyWizardScreen,
   LayoutFooterElevateScreen,
   LayoutFabScreen,
   LayoutBrandHeaderScreen,

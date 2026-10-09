@@ -11,7 +11,7 @@ Domain screens and components NEVER import `View`, `Text`, `Image`, `Pressable`,
 | `Box` | `View` | `p px py pt pb ps pe m mx my mt mb ms me gap` (SpacingToken), `bg`, `borderRadius` (RadiiToken), `shadow`, `row`, `flex`, `align`, `justify`, `zIndex` |
 | `Text` | `Text` | `variant` (TypographyVariant), `color`, `align`, margin tokens. Auto RTL + `maxFontSizeMultiplier` |
 | `Pressable` | Touchable*/Pressable | Box props + `scaleOnPress`, `activeOpacity` |
-| `Card` | surface View | Box props + `onPress`, `selected`, `shadow='md'` |
+| `Card` | surface View | Box props + `onPress` (press spring by default), `selected`; borderless + `shadow='card'` by default (rule 08) |
 | `Image` | Image | fast-image backed |
 | `CustomButton`, `CustomInput`, `PhoneInput` | hand-rolled controls | variants/sizes from theme |
 | `Layout` | SafeAreaView/ScrollView wrappers | `mode`, `surface`, `padding`, `header`, `footer` (`LayoutFooter`) |
@@ -30,7 +30,7 @@ All visual values come from the theme (`useTheme()` / `useStyles()`), light + da
 | `'#FFF'`, `'red'`, `'rgba(...)'` in components | `colors.text.primary`, `colors.layout.base`, `colors.brand`… |
 | `margin: 10`, `padding: 16`, `gap: 8` | `spacing.md`, `<Box p="lg" gap="sm">` |
 | `fontSize: 14`, `fontFamily: '...'` | `<Text variant="body">`, `typography.*` |
-| `borderRadius: 12` | `radii.*` / `borderRadius="md"` |
+| `borderRadius: 12` | `radii.*` / `borderRadius="md"` (`xs` 4 · `sm` 10 · `md` 15 · `lg` 22 · `xl` 28 · `full`) |
 | `zIndex: 999` | `zIndices.modal` |
 | `style={{...}}` inline | `useStyles(factory)` or primitive props |
 

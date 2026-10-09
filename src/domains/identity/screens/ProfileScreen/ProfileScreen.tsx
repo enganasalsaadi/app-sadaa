@@ -193,7 +193,11 @@ const ProfileScreenComponent: React.FC = () => {
         confirmLoading={vm.isLoggingOut}
         cancelLabel={t('common.cancel')}
       />
-      <DeleteAccountSheet visible={vm.deleteSheetVisible} onClose={vm.closeDeleteSheet} />
+      <DeleteAccountSheet
+        visible={vm.deleteSheetVisible}
+        onClose={vm.closeDeleteSheet}
+        onOpenWallet={vm.openWallet}
+      />
     </>
   );
 };

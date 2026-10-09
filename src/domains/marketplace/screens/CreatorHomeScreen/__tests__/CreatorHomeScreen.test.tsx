@@ -69,7 +69,11 @@ jest.mock('@/shared/ui', () => {
   // Renders the hero and the body so their sections are reachable in the tree.
   const Layout = ({ hero, children, ...props }: { hero?: React.ReactNode; children?: React.ReactNode }) =>
     createElement('Layout', props, createElement(Fragment, null, hero, children));
+  // Rolling numbers render their final value, so text assertions still read it.
+  const AnimatedNumber = ({ value }: { value: string }) => createElement('Text', null, value);
+  const StaggerIn = ({ children }: { children?: React.ReactNode }) => createElement(Fragment, null, children);
   return {
+    AnimatedNumber,
     Box: stub('Box'),
     Card: stub('Card'),
     CustomButton: stub('CustomButton'),
@@ -77,6 +81,7 @@ jest.mock('@/shared/ui', () => {
     GradientSurface: stub('GradientSurface'),
     Image: stub('Image'),
     Layout,
+    LiveIsland: stub('LiveIsland'),
     MoneyText: stub('MoneyText'),
     Notice: stub('Notice'),
     Pressable: stub('Pressable'),
@@ -84,10 +89,12 @@ jest.mock('@/shared/ui', () => {
     SectionHeader: stub('SectionHeader'),
     Skeleton: stub('Skeleton'),
     SocialPlatformIcon: stub('SocialPlatformIcon'),
+    StaggerIn,
     StatusPill: stub('StatusPill'),
     Tag: stub('Tag'),
     Text: stub('Text'),
     TierBadge: stub('TierBadge'),
+    Timeline: stub('Timeline'),
     useHeroCompact: () => false,
   };
 });
@@ -150,7 +157,16 @@ const model = (overrides: Partial<CreatorHomeScreenModel> = {}): CreatorHomeScre
   unreadNotifications: 3,
   notice: null,
   mediaKit: {} as CreatorHomeScreenModel['mediaKit'],
-  completion: { percentage: 65, isVisible: true, nextStep: null },
+  completion: {
+    percentage: 65,
+    isVisible: true,
+    nextStep: null,
+    stages: [
+      { key: 'info', state: 'done' },
+      { key: 'rates', state: 'current' },
+      { key: 'kyc', state: 'upcoming' },
+    ],
+  },
   platforms: { items: [platform()], isLoading: false, isError: false, retry: jest.fn() },
   rates: {
     rows: [
@@ -302,12 +318,12 @@ describe('CreatorHomeScreen — KPI strip', () => {
 });
 
 describe('CreatorHomeScreen — sections', () => {
-  it('renders no notice when nothing blocks the creator', () => {
+  it('renders no live island when nothing blocks the creator', () => {
     const { root } = render();
-    expect(root.findAll(isHost('Notice'))).toHaveLength(0);
+    expect(root.findAll(isHost('LiveIsland'))).toHaveLength(0);
   });
 
-  it('renders the one notice with its action', () => {
+  it('renders the one blocker as the hero live island with its action', () => {
     const onPress = jest.fn();
     const { root } = render({
       notice: {
@@ -318,27 +334,35 @@ describe('CreatorHomeScreen — sections', () => {
         action: { label: 'make public', onPress },
       },
     });
-    const notices = root.findAll(isHost('Notice'));
-    expect(notices).toHaveLength(1);
-    notices[0]?.props.action.onPress();
+    const islands = root.findAll(isHost('LiveIsland'));
+    expect(islands).toHaveLength(1);
+    expect(islands[0]?.props).toMatchObject({ title: 'hidden', tone: 'warning', accessibilityHint: 'make public' });
+    islands[0]?.props.onPress();
     expect(onPress).toHaveBeenCalled();
   });
 
   it('hides profile strength at 100%', () => {
-    const { root } = render({ completion: { percentage: 100, isVisible: false, nextStep: null } });
-    expect(root.findAll(isHost('ProgressBar'))).toHaveLength(0);
+    const { root } = render({ completion: { percentage: 100, isVisible: false, nextStep: null, stages: [] } });
+    expect(root.findAll(isHost('Timeline'))).toHaveLength(0);
   });
 
-  it('shows profile strength below 100%', () => {
+  it('shows profile strength below 100% as a stage track', () => {
     const { root } = render();
-    expect(root.find(isHost('ProgressBar')).props.value).toBeCloseTo(0.65);
+    const track = root.find(isHost('Timeline'));
+    expect(track.props.variant).toBe('track');
+    expect(track.props.steps).toEqual([
+      { key: 'info', title: 'marketplace.creatorHome.strength.stage.info', state: 'done' },
+      { key: 'rates', title: 'marketplace.creatorHome.strength.stage.rates', state: 'current' },
+      { key: 'kyc', title: 'marketplace.creatorHome.strength.stage.kyc', state: 'upcoming' },
+    ]);
   });
 
-  it('opens the next step from its glass row', () => {
+  it('opens the next step from its row', () => {
     const { root, vm } = render({
       completion: {
         percentage: 65,
         isVisible: true,
+        stages: [],
         nextStep: {
           key: 'kyc',
           points: 15,

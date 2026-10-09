@@ -25,7 +25,6 @@ const StepCard = memo<StepCardProps>(({ step, onPress }) => {
   return (
     <Card
       width={CARD_WIDTH}
-      shadow="none"
       p="md"
       onPress={target ? () => onPress(target) : undefined}
       accessibilityLabel={title}

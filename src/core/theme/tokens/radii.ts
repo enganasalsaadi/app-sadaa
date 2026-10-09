@@ -1,12 +1,15 @@
 import { moderateScale } from '../utils/responsive';
 
-// Rule 08: structured marketplace — radius range 8–12 only.
-// md → buttons, inputs · lg → cards, sheets, modals · sm → small tags · full → avatars, pills.
+// Rule 08 (v4, 2026-10-08): soft but structured.
+// xs → skeleton lines, checkbox · sm → tags · md → buttons, inputs, icon tiles ·
+// lg → cards · xl → sheets, modals, the hero → body seam · full → avatars, pills.
 const BASE_RADII = {
   none: 0,
-  sm: 4,
-  md: 8,
-  lg: 12,
+  xs: 4,
+  sm: 10,
+  md: 15,
+  lg: 22,
+  xl: 28,
   full: 9999,
 } as const;
 

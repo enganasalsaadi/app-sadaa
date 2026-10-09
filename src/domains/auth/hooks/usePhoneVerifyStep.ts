@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { AppApiError } from '@/core/api';
 import { SUPPORT_WHATSAPP_NUMBER } from '@/core/config';
 import { useAppSelector } from '@/core/store';
-import { toastService } from '@/core/toast';
 import { useWizardHeader } from '@/shared/ui';
-import { openWhatsApp } from '@/shared/utils';
 import { useResendPhoneOtpMutation, useVerifyPhoneOtpMutation } from '../api';
 import { OTP_RESEND_SECONDS, OTP_TTL_MS } from '../constants/otp';
 import type { WizardStepDef } from '../constants/wizard';
@@ -13,6 +11,7 @@ import { PHONE_OTP_LENGTH } from '../schemas';
 import { selectPendingPhone, selectPhoneOtpSentAt } from '../store';
 import { formatPhoneForDisplay } from '../utils/formatPhoneForDisplay';
 import type { RunStepOptions } from './useOnboardingFlow';
+import { useOpenSupport } from './useOpenSupport';
 import { useOtpCodeForm } from './useOtpCodeForm';
 
 interface PhoneVerifyStepConfig {
@@ -31,6 +30,7 @@ export const usePhoneVerifyStep = ({
   clearError,
 }: PhoneVerifyStepConfig) => {
   const { t } = useTranslation();
+  const openWhatsAppSupport = useOpenSupport();
   const [supportVisible, setSupportVisible] = useState(false);
 
   const pendingPhone = useAppSelector(selectPendingPhone);
@@ -85,17 +85,8 @@ export const usePhoneVerifyStep = ({
 
   const onContactSupport = useCallback(() => {
     setSupportVisible(false);
-    openWhatsApp(
-      SUPPORT_WHATSAPP_NUMBER,
-      t('auth.phoneVerify.wrongNumber.message', { phone }),
-    ).catch(() =>
-      toastService.error(
-        t('auth.phoneVerify.wrongNumber.openFailed', {
-          number: formatPhoneForDisplay(SUPPORT_WHATSAPP_NUMBER),
-        }),
-      ),
-    );
-  }, [phone, t]);
+    openWhatsAppSupport(t('auth.phoneVerify.wrongNumber.message', { phone }));
+  }, [openWhatsAppSupport, phone, t]);
 
   return {
     otp,

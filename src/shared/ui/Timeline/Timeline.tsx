@@ -1,82 +1,11 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ParseKeys } from 'i18next';
-import { Check, X } from 'lucide-react-native';
-import { iconStroke, useTheme } from '@/core/theme';
+import { useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
-
-export type TimelineStepState = 'done' | 'current' | 'upcoming' | 'error';
-
-export interface TimelineStep {
-  key: string;
-  title: string;
-  /** Date, actor or note (audit trail line). Pre-formatted by the caller. */
-  caption?: string;
-  state: TimelineStepState;
-}
-
-export interface TimelineProps {
-  steps: readonly TimelineStep[];
-}
-
-const STATE_LABEL = {
-  done: 'common.timeline.done',
-  current: 'common.timeline.current',
-  upcoming: 'common.timeline.upcoming',
-  error: 'common.timeline.error',
-} as const satisfies Record<TimelineStepState, ParseKeys>;
-
-const Marker = memo<{ state: TimelineStepState }>(({ state }) => {
-  const { colors, sizes } = useTheme();
-  const size = sizes.control.md;
-  const icon = sizes.icon.xs;
-
-  switch (state) {
-    case 'done':
-      return (
-        <Box width={size} height={size} borderRadius="full" bg={colors.interactive.main} align="center" justify="center">
-          <Check size={icon} color={colors.text.onAccent} strokeWidth={iconStroke.bold} />
-        </Box>
-      );
-    case 'error':
-      return (
-        <Box width={size} height={size} borderRadius="full" bg={colors.status.danger.main} align="center" justify="center">
-          <X size={icon} color={colors.text.onAccent} strokeWidth={iconStroke.bold} />
-        </Box>
-      );
-    case 'current':
-      return (
-        <Box
-          width={size}
-          height={size}
-          borderRadius="full"
-          borderWidth="md"
-          borderColor={colors.interactive.main}
-          bg={colors.surface.main}
-          align="center"
-          justify="center"
-        >
-          <Box width={sizes.dot.md} height={sizes.dot.md} borderRadius="full" bg={colors.interactive.main} />
-        </Box>
-      );
-    case 'upcoming':
-      return (
-        <Box
-          width={size}
-          height={size}
-          borderRadius="full"
-          borderWidth="md"
-          borderColor={colors.border.strong}
-          bg={colors.surface.main}
-        />
-      );
-    default: {
-      const _exhaustive: never = state;
-      return _exhaustive;
-    }
-  }
-});
+import { STATE_LABEL, TimelineMarker } from './TimelineMarker';
+import { TimelineTrack } from './TimelineTrack';
+import type { TimelineProps, TimelineStep } from './types';
 
 const TimelineRow = memo<{ step: TimelineStep; last: boolean; lineDone: boolean }>(
   ({ step, last, lineDone }) => {
@@ -94,7 +23,7 @@ const TimelineRow = memo<{ step: TimelineStep; last: boolean; lineDone: boolean 
           .join(', ')}
       >
         <Box align="center">
-          <Marker state={step.state} />
+          <TimelineMarker state={step.state} />
           {last ? null : (
             <Box
               flex={1}
@@ -130,20 +59,24 @@ const TimelineRow = memo<{ step: TimelineStep; last: boolean; lineDone: boolean 
 );
 
 /**
- * Vertical progress of a process with named stages (deal pipeline, activity log).
- * Wizard position → `StepProgress`; a continuous value → `ProgressBar`.
+ * Progress of a process with named stages (deal pipeline, profile strength, activity log).
+ * The current stage pulses (rule 09 §3.1). Wizard position → `StepProgress`; a
+ * continuous value → `ProgressBar`.
  */
-const TimelineComponent: React.FC<TimelineProps> = ({ steps }) => (
-  <Box>
-    {steps.map((step, index) => (
-      <TimelineRow
-        key={step.key}
-        step={step}
-        last={index === steps.length - 1}
-        lineDone={step.state === 'done'}
-      />
-    ))}
-  </Box>
-);
+const TimelineComponent: React.FC<TimelineProps> = ({ steps, variant = 'vertical' }) =>
+  variant === 'track' ? (
+    <TimelineTrack steps={steps} />
+  ) : (
+    <Box>
+      {steps.map((step, index) => (
+        <TimelineRow
+          key={step.key}
+          step={step}
+          last={index === steps.length - 1}
+          lineDone={step.state === 'done'}
+        />
+      ))}
+    </Box>
+  );
 
 export const Timeline = memo(TimelineComponent);

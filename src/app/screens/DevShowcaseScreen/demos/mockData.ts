@@ -55,6 +55,11 @@ export const MOCK_WALLET = {
   available: usd(125050),
   escrow: usd(30000),
   pending: usd(5000),
+  cancelled: usd(-30000),
+  oneDecimal: usd(100000),
+  bigUsd: usd(129999),
+  // SYP is in whole pounds.
+  sypPayout: { amount: 6402500, currency: 'SYP' },
 } as const satisfies Record<string, Money>;
 
 /** Fixed dev-only dates (epoch ms) so timelines render the same on every run. */
@@ -87,6 +92,14 @@ export const MOCK_DAILY_VIEWS: readonly number[] = [
 /** Dev-only daily earnings in whole dollars (14 points). */
 export const MOCK_DAILY_EARNINGS: readonly number[] = [
   0, 0, 120, 0, 80, 0, 0, 250, 0, 90, 0, 0, 300, 150,
+];
+
+/** Monthly totals in USD cents, oldest first, ending October 2026 (BarChart demo). */
+export const MOCK_MONTHLY_EARNINGS: readonly number[] = [
+  62500, 88000, 53000, 112000, 151000, 184000,
+];
+export const MOCK_MONTHLY_SPEND: readonly number[] = [
+  120000, 0, 95000, 210000, 60000, 180000, 0, 75000, 140000, 260000, 90000, 150000,
 ];
 
 export const MOCK_CREATOR_PRICE = usd(8000);

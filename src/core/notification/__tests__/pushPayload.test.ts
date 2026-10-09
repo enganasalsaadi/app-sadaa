@@ -20,6 +20,20 @@ describe('parsePushPayload', () => {
       type: 'test',
       target: { kind: 'notifications' },
     });
+    expect(
+      parsePushPayload({
+        type: 'wallet_withdrawal_returned',
+        entity_id: '01J9ZQ4M8X',
+        deep_link: 'sada://wallet',
+      }),
+    ).toEqual({ type: 'wallet_withdrawal_returned', target: { kind: 'wallet' } });
+    expect(
+      parsePushPayload({
+        type: 'wallet_top_up_reversed',
+        entity_id: '01JB4M8XQZ',
+        deep_link: 'sada://wallet/top-ups/01JB4M8XQZ',
+      }),
+    ).toEqual({ type: 'wallet_top_up_reversed', target: { kind: 'topUp', topUpId: '01JB4M8XQZ' } });
   });
 
   it('keeps an unknown type as null but still reads the link', () => {
@@ -36,6 +50,11 @@ describe('parsePushPayload', () => {
     ['a raw screen name', 'ProfileScreen'],
     ['extra path segments', 'sada://platforms/01J9/delete'],
     ['a platform without id', 'sada://platforms'],
+    ['a wallet sub-path', 'sada://wallet/withdrawals/01J9'],
+    ['a top-up without id', 'sada://wallet/top-ups/'],
+    ['a top-up id with a path', 'sada://wallet/top-ups/01J9/../x'],
+    ['a top-up id with a query', 'sada://wallet/top-ups/01J9?x=1'],
+    ['the top-up list', 'sada://wallet/top-ups'],
     ['an empty platform id', 'sada://platforms/'],
     ['an id with a query', 'sada://platforms/01J9?x=1'],
     ['an id on a fixed route', 'sada://kyc/123'],

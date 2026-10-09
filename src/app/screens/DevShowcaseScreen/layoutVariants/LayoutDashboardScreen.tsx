@@ -33,7 +33,7 @@ const DashboardHero = memo(() => {
 
   // Transparent: Layout paints the navy gradient behind it (`heroBackdrop="brandGlow"`).
   return (
-    <Box style={styles.container} px="xl" pb="2xl" gap="xs">
+    <Box style={styles.container} px="xl" pb="4xl" gap="xs">
       <Text variant={compact ? 'h4' : 'h3'} color={colors.text.onBrand}>
         {t('devShowcase.layoutGallery.dashboardGreeting')}
       </Text>
@@ -91,7 +91,7 @@ const LayoutDashboardScreenComponent: React.FC = () => {
     >
       <Box gap="2xl" pt="xl" pb="5xl" px="xl">
         <Notice tone="info" message={t('devShowcase.layoutGallery.dashboardNotice')} />
-        <Card shadow="none" p="lg">
+        <Card p="lg">
           <ProgressBar
             value={DEMO_PROGRESS}
             label={t('devShowcase.layoutGallery.dashboardSection')}

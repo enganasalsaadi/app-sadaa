@@ -194,7 +194,7 @@ const ProfileHeroComponent: React.FC<ProfileHeroProps> = ({ hero, onChangePhoto 
 
   if (compact) {
     return (
-      <Box style={styles.container} px="xl" pb="2xl" gap="md">
+      <Box style={styles.container} px="xl" pb="4xl" gap="md">
         <Box row align="center" gap="md" style={styles.headerRow}>
           <HeroPhoto hero={hero} size={sizes.avatar.md} onPress={onChangePhoto} />
           <Box flex={1}>
@@ -207,7 +207,7 @@ const ProfileHeroComponent: React.FC<ProfileHeroProps> = ({ hero, onChangePhoto 
   }
 
   return (
-    <Box style={styles.container} px="xl" pb="2xl" gap="lg">
+    <Box style={styles.container} px="xl" pb="4xl" gap="lg">
       <Box justify="center" style={styles.headerRow}>
         <Text variant="body" color={colors.text.onBrandMuted} numberOfLines={1}>
           {t('account.profile.title')}

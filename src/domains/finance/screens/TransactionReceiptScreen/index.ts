@@ -1,0 +1,1 @@
+export { TransactionReceiptScreen } from './TransactionReceiptScreen';

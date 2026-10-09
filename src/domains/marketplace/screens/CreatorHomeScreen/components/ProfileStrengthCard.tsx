@@ -1,10 +1,11 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { ParseKeys } from 'i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { iconStroke, useTheme } from '@/core/theme';
-import { Box, GradientSurface, Pressable, ProgressBar, Text } from '@/shared/ui';
-import type { ProfileStepTarget } from '@/domains/identity';
+import { AnimatedNumber, Box, Card, Pressable, Text, Timeline, type TimelineStep } from '@/shared/ui';
+import type { ProfileStepTarget, StrengthStageKey } from '@/domains/identity';
 import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 
 type Completion = CreatorHomeScreenModel['completion'];
@@ -14,9 +15,17 @@ interface ProfileStrengthCardProps {
   onStepPress: (target: ProfileStepTarget) => void;
 }
 
+const STAGE_LABEL = {
+  info: 'marketplace.creatorHome.strength.stage.info',
+  avatar: 'marketplace.creatorHome.strength.stage.avatar',
+  platforms: 'marketplace.creatorHome.strength.stage.platforms',
+  rates: 'marketplace.creatorHome.strength.stage.rates',
+  kyc: 'marketplace.creatorHome.strength.stage.kyc',
+} as const satisfies Record<StrengthStageKey, ParseKeys>;
+
 const percent = (value: number) => formatNumber(value / 100, { style: 'percent' });
 
-/** The one next step as a glass row: tapping it opens the screen that completes it. */
+/** The one next step as a teal row: tapping it opens the screen that completes it. */
 const NextStepRow = memo<{ step: NonNullable<Completion['nextStep']>; onPress: () => void }>(
   ({ step, onPress }) => {
     const { t } = useTranslation();
@@ -35,10 +44,9 @@ const NextStepRow = memo<{ step: NonNullable<Completion['nextStep']>; onPress: (
         py="sm"
         minHeight={sizes.button.lg}
         borderRadius="md"
-        borderWidth="thin"
-        borderColor={colors.glass.border}
-        bg={colors.glass.fill}
+        bg={colors.interactive.soft}
         onPress={onPress}
+        scaleOnPress
         accessibilityRole="button"
         accessibilityLabel={`${title}, ${points}`}
         accessibilityHint={t('marketplace.creatorHome.strength.nextStep')}
@@ -47,32 +55,32 @@ const NextStepRow = memo<{ step: NonNullable<Completion['nextStep']>; onPress: (
           width={sizes.iconButton.sm}
           height={sizes.iconButton.sm}
           borderRadius="md"
-          bg={colors.glass.badge}
+          bg={colors.surface.main}
           align="center"
           justify="center"
         >
-          <Icon size={sizes.icon.sm} color={colors.text.onBrand} strokeWidth={iconStroke.regular} />
+          <Icon size={sizes.icon.sm} color={colors.interactive.main} strokeWidth={iconStroke.regular} />
         </Box>
         <Box flex={1} gap="xs">
-          <Text variant="caption" color={colors.text.onBrandMuted}>
+          <Text variant="caption" color={colors.text.secondary}>
             {t('marketplace.creatorHome.strength.nextStep')}
           </Text>
-          <Text variant="bodyMedium" color={colors.text.onBrand} numberOfLines={1}>
+          <Text variant="bodyMedium" color={colors.interactive.text} numberOfLines={1}>
             {title}
           </Text>
         </Box>
-        <Text variant="bodySmall" color={colors.glass.iconInteractive}>
+        <Text variant="bodySmall" color={colors.interactive.text}>
           {points}
         </Text>
-        <Chevron size={sizes.icon.sm} color={colors.text.onBrandMuted} />
+        <Chevron size={sizes.icon.sm} color={colors.interactive.text} />
       </Pressable>
     );
   },
 );
 
 /**
- * Navy glass card: completion %, why it matters (brands find complete profiles), the
- * bar and the one next step; the full rail stays on Profile. Hidden at 100%.
+ * White card: completion %, why it matters (brands find complete profiles), the
+ * five-stage track (rule 09 §3.1) and the one next step. Hidden at 100%.
  */
 const ProfileStrengthCardComponent: React.FC<ProfileStrengthCardProps> = ({
   completion,
@@ -80,35 +88,35 @@ const ProfileStrengthCardComponent: React.FC<ProfileStrengthCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { nextStep } = completion;
+  const { nextStep, stages } = completion;
   const target = nextStep?.meta.target ?? null;
   const handleStep = useCallback(() => {
     if (target) onStepPress(target);
   }, [onStepPress, target]);
 
+  const steps = useMemo<TimelineStep[]>(
+    () => stages.map(stage => ({ key: stage.key, title: t(STAGE_LABEL[stage.key]), state: stage.state })),
+    [stages, t],
+  );
+
   return (
-    <GradientSurface variant="brand" borderRadius="lg" p="lg" gap="lg">
-      <Box row align="center" gap="md">
-        <Box flex={1} gap="xs">
-          <Text variant="title" color={colors.text.onBrand} numberOfLines={1}>
-            {t('marketplace.creatorHome.strength.title')}
-          </Text>
-          <Text variant="bodySmall" color={colors.text.onBrandMuted}>
-            {t('marketplace.creatorHome.strength.benefit')}
-          </Text>
+    <Card p="lg">
+      <Box gap="lg">
+        <Box row align="center" gap="md">
+          <Box flex={1} gap="xs">
+            <Text variant="title" numberOfLines={1}>
+              {t('marketplace.creatorHome.strength.title')}
+            </Text>
+            <Text variant="bodySmall" color={colors.text.secondary}>
+              {t('marketplace.creatorHome.strength.benefit')}
+            </Text>
+          </Box>
+          <AnimatedNumber value={percent(completion.percentage)} variant="h3" color={colors.interactive.text} />
         </Box>
-        <Text variant="h2" color={colors.text.onBrand}>
-          {percent(completion.percentage)}
-        </Text>
+        {steps.length > 1 ? <Timeline steps={steps} variant="track" /> : null}
+        {nextStep ? <NextStepRow step={nextStep} onPress={handleStep} /> : null}
       </Box>
-      <ProgressBar
-        value={completion.percentage / 100}
-        size="md"
-        surface="brand"
-        accessibilityLabel={t('marketplace.creatorHome.strength.title')}
-      />
-      {nextStep ? <NextStepRow step={nextStep} onPress={handleStep} /> : null}
-    </GradientSurface>
+    </Card>
   );
 };
 

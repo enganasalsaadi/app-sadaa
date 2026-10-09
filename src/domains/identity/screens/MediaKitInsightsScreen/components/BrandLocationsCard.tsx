@@ -25,7 +25,7 @@ const BrandLocationsCardComponent: React.FC<BrandLocationsCardProps> = ({
         title={t('account.mediaKit.insightsScreen.locations.title')}
         subtitle={t('account.mediaKit.insightsScreen.locations.subtitle')}
       />
-      <Card p="lg" shadow="none">
+      <Card p="lg">
         <Box gap="lg">
           {rows.map(row => {
             const count = formatNumber(row.count);

@@ -57,14 +57,16 @@ export interface ProfileCompletionStep {
   status: string | null;
 }
 
-/** `capabilities` keys (contract §3.1): influencer first, then brand. */
+/** `capabilities` keys (contract §3.1, wallet handoff §4): influencer first, then brand. */
 export type CapabilityKey =
   | 'apply_to_briefs'
   | 'receive_requests'
   | 'accept_offers'
+  | 'withdraw_funds'
   | 'create_campaigns'
   | 'request_services'
-  | 'fund_deals';
+  | 'fund_deals'
+  | 'top_up_wallet';
 
 /** Why an action is blocked; drives the blocker text / CTA. */
 export type CapabilityReason =
@@ -74,7 +76,10 @@ export type CapabilityReason =
   | 'kyc_pending'
   | 'kyc_rejected'
   | 'no_available_platform'
-  | 'rate_card_required';
+  | 'rate_card_required'
+  | 'wallet_frozen'
+  /** `withdraw_funds` only: payouts paused platform-wide. */
+  | 'withdrawals_paused';
 
 export interface Capability {
   allowed: boolean;

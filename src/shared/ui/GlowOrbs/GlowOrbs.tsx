@@ -1,20 +1,31 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, type LayoutChangeEvent } from 'react-native';
-import { Canvas, Circle, RadialGradient, Skia, vec } from '@shopify/react-native-skia';
-import { useTheme } from '@/core/theme';
+import { Canvas, Circle, Group, RadialGradient, Skia, vec } from '@shopify/react-native-skia';
+import {
+  cancelAnimation,
+  Easing,
+  useDerivedValue,
+  useReducedMotion,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  type SharedValue,
+} from 'react-native-reanimated';
+import { motion, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 
-// Barely there: a hint of light on the navy, never a shape the eye stops on.
-const WASH_OPACITY = { light: 0.1, tint: 0.14 } as const;
-
 /**
- * Fractions of the surface: `x` from the reading-start edge, `y` from the top,
- * `r` of the width so the washes keep their share of the band on any height.
+ * Fractions of the surface: `x` from the reading-start edge, `y` from the top, `r` of
+ * the width. `drift` is how far one leg of the drift travels (fractions of the width)
+ * and `pace` its length relative to `motion.loop.heroDrift`, so the lights never sync.
  */
-const WASHES = {
-  end: { x: 1, y: 0, r: 0.38 },
-  start: { x: 0, y: 1, r: 0.6 },
-} as const;
+const LIGHTS = [
+  { key: 'end', x: 0.87, y: 0, r: 0.62, opacity: 0.3, drift: { x: -0.1, y: 0.08 }, grow: 0.08, pace: 1 },
+  { key: 'start', x: 0.13, y: 1, r: 0.58, opacity: 0.55, drift: { x: 0.08, y: -0.06 }, grow: 0.1, pace: 1.22 },
+  { key: 'highlight', x: 0.36, y: 0.22, r: 0.34, opacity: 0.07, drift: { x: -0.08, y: 0.04 }, grow: 0, pace: 0.83 },
+] as const;
+
+type LightDef = (typeof LIGHTS)[number];
 
 // Skia interpolates unpremultiplied: fading to `transparent` (black) would muddy the glow.
 const clearOf = (color: string) => {
@@ -23,15 +34,67 @@ const clearOf = (color: string) => {
   return c;
 };
 
+const EASE = Easing.inOut(Easing.sin);
+// Solid core, long soft edge: reads like a blurred light, never like a disc.
+const STOPS = [0, 0.3, 1];
+
+interface LightProps {
+  def: LightDef;
+  color: string;
+  width: number;
+  height: number;
+  isRTL: boolean;
+  phase: SharedValue<number>;
+}
+
+const Light = memo<LightProps>(({ def, color, width, height, isRTL, phase }) => {
+  const dir = isRTL ? -1 : 1;
+  const cx = width * (isRTL ? 1 - def.x : def.x);
+  const cy = height * def.y;
+  const r = width * def.r;
+  const center = vec(cx, cy);
+  const transform = useDerivedValue(() => [
+    { translateX: dir * def.drift.x * width * phase.value },
+    { translateY: def.drift.y * width * phase.value },
+    { scale: 1 + def.grow * phase.value },
+  ]);
+
+  return (
+    <Group transform={transform} origin={center} opacity={def.opacity}>
+      <Circle c={center} r={r}>
+        <RadialGradient c={center} r={r} colors={[color, color, clearOf(color)]} positions={STOPS} />
+      </Circle>
+    </Group>
+  );
+});
+
 /**
- * Decoration for navy surfaces (the Layout `brandGlow` hero backdrop): two soft
- * radial light washes in opposite corners, white at the top end, pale teal at the
- * bottom start, no outlines. Fills its parent, draws nothing until measured,
- * never takes touches. Belongs over navy only (rule 08).
+ * Hero lights for navy surfaces (Layout `brandGlow`, rule 08 v4): three large diffuse
+ * teal-family lights that drift very slowly, one of the three allowed loops (rule 09
+ * §3.1). No outlines or shapes. Reduced motion holds them still. Fills its parent,
+ * draws nothing until measured, never takes touches. Belongs over navy only.
  */
 const GlowOrbsComponent: React.FC = () => {
   const { colors, isRTL } = useTheme();
+  const reduceMotion = useReducedMotion();
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const end = useSharedValue(0);
+  const start = useSharedValue(0);
+  const highlight = useSharedValue(0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const phases = [end, start, highlight];
+    phases.forEach((phase, index) => {
+      const pace = LIGHTS[index]?.pace ?? 1;
+      phase.value = withRepeat(
+        withTiming(1, { duration: motion.loop.heroDrift * pace, easing: EASE }),
+        -1,
+        true,
+      );
+    });
+    return () => phases.forEach(phase => cancelAnimation(phase));
+  }, [end, highlight, reduceMotion, start]);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
@@ -39,22 +102,22 @@ const GlowOrbsComponent: React.FC = () => {
   }, []);
 
   const { width, height } = size;
-  const at = (x: number, y: number) => vec(width * (isRTL ? 1 - x : x), height * y);
-  const end = at(WASHES.end.x, WASHES.end.y);
-  const start = at(WASHES.start.x, WASHES.start.y);
-  const light = colors.text.onBrand;
-  const tint = colors.glass.glowSecondary;
+  const [endDef, startDef, highlightDef] = LIGHTS;
 
   return (
     <Box style={StyleSheet.absoluteFill} pointerEvents="none" onLayout={onLayout}>
       {width > 0 && height > 0 ? (
         <Canvas style={StyleSheet.absoluteFill}>
-          <Circle c={end} r={width * WASHES.end.r} opacity={WASH_OPACITY.light}>
-            <RadialGradient c={end} r={width * WASHES.end.r} colors={[light, clearOf(light)]} />
-          </Circle>
-          <Circle c={start} r={width * WASHES.start.r} opacity={WASH_OPACITY.tint}>
-            <RadialGradient c={start} r={width * WASHES.start.r} colors={[tint, clearOf(tint)]} />
-          </Circle>
+          <Light def={endDef} color={colors.glass.glowSecondary} width={width} height={height} isRTL={isRTL} phase={end} />
+          <Light def={startDef} color={colors.glass.glowPrimary} width={width} height={height} isRTL={isRTL} phase={start} />
+          <Light
+            def={highlightDef}
+            color={colors.glass.glowHighlight}
+            width={width}
+            height={height}
+            isRTL={isRTL}
+            phase={highlight}
+          />
         </Canvas>
       ) : null}
     </Box>

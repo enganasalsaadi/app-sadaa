@@ -15,3 +15,4 @@ export { LayoutFooterElevateScreen } from './LayoutFooterElevateScreen';
 export { LayoutFabScreen } from './LayoutFabScreen';
 export { LayoutBrandHeaderScreen } from './LayoutBrandHeaderScreen';
 export { LayoutDashboardScreen } from './LayoutDashboardScreen';
+export { LayoutMoneyWizardScreen } from './LayoutMoneyWizardScreen';

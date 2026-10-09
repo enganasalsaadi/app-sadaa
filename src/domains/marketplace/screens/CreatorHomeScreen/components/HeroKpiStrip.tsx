@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, RotateCw, TrendingDown, TrendingUp } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
-import { Box, Pressable, Skeleton, Text } from '@/shared/ui';
+import { AnimatedNumber, Box, Pressable, Skeleton, Text } from '@/shared/ui';
 import type { MediaKitTile } from '@/domains/identity';
 import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 
@@ -50,12 +50,16 @@ const KpiCell = memo<KpiCellProps>(({ label, value, loading, compact, change }) 
   return (
     <Box flex={1} align="center" gap="xs">
       {loading ? (
-        <Skeleton width="60%" height={typography[variant].lineHeight} borderRadius="sm" surface="brand" />
+        <Skeleton width="60%" height={typography[variant].lineHeight} borderRadius="xs" surface="brand" />
       ) : (
         <Box row align="center" gap="xs">
-          <Text variant={variant} color={colors.text.onBrand} numberOfLines={1}>
-            {value}
-          </Text>
+          {value === NO_VALUE ? (
+            <Text variant={variant} color={colors.text.onBrand} numberOfLines={1}>
+              {value}
+            </Text>
+          ) : (
+            <AnimatedNumber value={value} variant={variant} color={colors.text.onBrand} />
+          )}
           {change !== undefined && !compact ? <ChangeChip change={change} /> : null}
         </Box>
       )}
@@ -77,7 +81,8 @@ interface HeroKpiStripProps {
 
 /**
  * Glass strip of the last 30 days: reach, profile views (with change), brand views.
- * One tap target: opens Insights, or retries when the stats failed to load.
+ * The numbers roll up once when they first arrive (rule 09 §3.1). One tap target:
+ * opens Insights, or retries when the stats failed to load.
  */
 const HeroKpiStripComponent: React.FC<HeroKpiStripProps> = ({ kpis, compact, onOpenInsights }) => {
   const { t } = useTranslation();

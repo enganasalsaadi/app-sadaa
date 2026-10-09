@@ -30,19 +30,22 @@ const ListGroupComponent: React.FC<ListGroupProps> = ({
   return (
     <Box gap="sm">
       {title ? <SectionHeader title={title} action={action} /> : null}
+      {/* Shadow on the outer box: iOS clips a shadow drawn by a view with overflow hidden. */}
       <Box
         bg={colors.surface.main}
         borderRadius="lg"
         borderWidth="thin"
-        borderColor={tone === 'danger' ? colors.status.danger.main : colors.border.default}
-        overflow="hidden"
+        borderColor={tone === 'danger' ? colors.status.danger.main : colors.border.card}
+        shadow="card"
       >
-        {rows.map((row, index) => (
-          <Fragment key={row.key ?? index}>
-            {index > 0 ? <Divider inset="lg" /> : null}
-            {row}
-          </Fragment>
-        ))}
+        <Box borderRadius="lg" overflow="hidden">
+          {rows.map((row, index) => (
+            <Fragment key={row.key ?? index}>
+              {index > 0 ? <Divider inset="lg" /> : null}
+              {row}
+            </Fragment>
+          ))}
+        </Box>
       </Box>
       {footer ? (
         <Text variant="caption" color={colors.text.tertiary} px="xs">

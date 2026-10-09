@@ -73,6 +73,10 @@ const ROWS = {
     titleKey: 'devShowcase.layoutGallery.wizardTitle',
     descriptionKey: 'devShowcase.layoutGallery.wizardDescription',
   },
+  LayoutMoneyWizardScreen: {
+    titleKey: 'devShowcase.layoutGallery.moneyWizardTitle',
+    descriptionKey: 'devShowcase.layoutGallery.moneyWizardDescription',
+  },
   LayoutGradientHeroScreen: {
     titleKey: 'devShowcase.layoutGallery.gradientHeroTitle',
     descriptionKey: 'devShowcase.layoutGallery.gradientHeroDescription',

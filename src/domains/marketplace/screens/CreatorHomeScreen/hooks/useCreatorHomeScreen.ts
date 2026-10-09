@@ -8,13 +8,22 @@ import {
   type ProfileStepTarget,
 } from '@/domains/identity';
 import { DAY_PART_GREETING, resolveDayPart } from '../utils/dayPart';
+import type { LiveIslandTone } from '@/shared/ui';
 import {
   HOME_NOTICE_DEF,
   resolveHomeNotice,
   type HomeNoticeAction,
+  type HomeNoticeTone,
 } from '../utils/resolveHomeNotice';
 
 type Navigation = HomeStackScreenProps<'CreatorHomeScreen'>['navigation'];
+
+/** The blocker lives in the hero's live island (rule 09 §3.1): info = something in progress. */
+const ISLAND_TONE = {
+  info: 'live',
+  warning: 'warning',
+  danger: 'danger',
+} as const satisfies Record<HomeNoticeTone, LiveIslandTone>;
 
 const STEP_SCREEN = {
   editInfo: 'PersonalInfoScreen',
@@ -113,7 +122,7 @@ export const useCreatorHomeScreen = () => {
     const action = def.action;
     return {
       key: noticeKey,
-      tone: def.tone,
+      tone: ISLAND_TONE[def.tone],
       title: t(def.titleKey),
       message: t(def.messageKey),
       action: action

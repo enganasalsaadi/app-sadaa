@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
+import { useDiscardGuard } from '@/core/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import { toastService } from '@/core/toast';
@@ -13,7 +14,6 @@ import {
   formatPhoneForDisplay,
 } from '@/domains/auth';
 import { useGetUserProfileQuery, useUpdateBrandProfileMutation } from '../../../api/accountApi';
-import { useDiscardGuard } from '../../../hooks/useDiscardGuard';
 import { useSupportContact } from '../../../hooks/useSupportContact';
 import {
   createCompanyInfoSchema,

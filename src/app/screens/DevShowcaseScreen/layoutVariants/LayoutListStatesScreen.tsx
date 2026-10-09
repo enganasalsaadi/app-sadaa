@@ -51,6 +51,9 @@ const LayoutListStatesScreenComponent: React.FC = () => {
     isRefreshing,
     onRefresh,
     onRetry,
+    emptyMessage,
+    emptyDescription,
+    emptyAction,
   } = useLayoutListStatesScreen();
 
   const renderItem = useCallback(
@@ -85,7 +88,9 @@ const LayoutListStatesScreenComponent: React.FC = () => {
         isRefreshing={isRefreshing}
         onRefresh={onRefresh}
         onRetry={onRetry}
-        emptyMessage={t('devShowcase.listStates.emptyMessage')}
+        emptyMessage={emptyMessage}
+        emptyDescription={emptyDescription}
+        emptyAction={emptyAction}
         emptyIcon={Inbox}
         onScroll={onScroll}
       />

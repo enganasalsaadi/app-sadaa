@@ -1,29 +1,23 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { baseApi, normalizeApiError, useGetConfigQuery } from '@/core/api';
-import { SUPPORT_WHATSAPP_NUMBER } from '@/core/config';
+import { baseApi, normalizeApiError } from '@/core/api';
 import { useAppDispatch } from '@/core/store';
 import { toastService } from '@/core/toast';
-import { openWhatsApp } from '@/shared/utils';
 import { useLazyGetOnboardingProgressQuery, useLogoutMutation } from '../../../api';
-import { formatPhoneForDisplay } from '../../../utils/formatPhoneForDisplay';
+import { useOpenSupport } from '../../../hooks/useOpenSupport';
 
 export const useSuspendedScreen = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { data: config } = useGetConfigQuery();
   const [fetchProgress, { isFetching: isChecking }] = useLazyGetOnboardingProgressQuery();
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [deleteSheetVisible, setDeleteSheetVisible] = useState(false);
-  const supportNumber = config?.support.whatsapp || SUPPORT_WHATSAPP_NUMBER;
+  const openSupport = useOpenSupport();
 
-  const onContactSupport = useCallback(() => {
-    openWhatsApp(supportNumber, t('auth.suspended.supportMessage')).catch(() =>
-      toastService.error(
-        t('auth.suspended.openFailed', { number: formatPhoneForDisplay(supportNumber) }),
-      ),
-    );
-  }, [supportNumber, t]);
+  const onContactSupport = useCallback(
+    () => openSupport(t('auth.suspended.supportMessage')),
+    [openSupport, t],
+  );
 
   // Progress stays readable while suspended (contract H19). Its query syncs the
   // flag, so a reinstated account leaves this screen through AppStatus alone.

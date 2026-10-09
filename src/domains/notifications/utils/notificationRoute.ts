@@ -8,9 +8,11 @@ import type { AppNotification } from '../types';
 export type NotificationRoute =
   | { screen: 'KycScreen' }
   | { screen: 'PlatformDetailScreen'; platformId: string }
-  | { screen: 'NotificationsScreen' };
+  | { screen: 'NotificationsScreen' }
+  | { screen: 'WalletTab' }
+  | { screen: 'TopUpDetail'; topUpId: string };
 
-/** Platforms are a creator screen: a brand lands in the inbox instead. */
+/** Platforms are a creator screen, top-ups a brand one: the other role lands somewhere safe. */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
   userType: UserType | null,
@@ -25,6 +27,12 @@ export const resolveNotificationRoute = (
         : { screen: 'NotificationsScreen' };
     case 'notifications':
       return { screen: 'NotificationsScreen' };
+    case 'wallet':
+      return { screen: 'WalletTab' };
+    case 'topUp':
+      return userType === 'brand'
+        ? { screen: 'TopUpDetail', topUpId: target.topUpId }
+        : { screen: 'WalletTab' };
     default: {
       const _exhaustive: never = target;
       return _exhaustive;
@@ -39,6 +47,9 @@ const FALLBACK_LINK: Record<string, (entityId: string) => string> = {
   kyc_rejected: () => 'sada://kyc',
   platform_approved: id => `sada://platforms/${id}`,
   platform_rejected: id => `sada://platforms/${id}`,
+  wallet_top_up_completed: id => `sada://wallet/top-ups/${id}`,
+  wallet_top_up_rejected: id => `sada://wallet/top-ups/${id}`,
+  wallet_top_up_reversed: id => `sada://wallet/top-ups/${id}`,
 };
 
 export const notificationTarget = (item: AppNotification): PushTarget | null => {
@@ -64,6 +75,14 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
           params: { platformId: route.platformId },
           initial: false,
         },
+      };
+    case 'WalletTab':
+      return { screen: 'WalletTab' };
+    case 'TopUpDetail':
+      // The wallet home stays underneath, like the Settings routes keep Profile.
+      return {
+        screen: 'WalletTab',
+        params: { screen: 'TopUpDetail', params: { id: route.topUpId }, initial: false },
       };
     case 'KycScreen':
     case 'NotificationsScreen':

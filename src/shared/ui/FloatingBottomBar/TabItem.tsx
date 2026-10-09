@@ -9,7 +9,7 @@ interface TabItemProps {
   onPress: () => void;
 }
 
-/** Stacked icon + label; the active tab is marked by color alone (rule 08). */
+/** Stacked icon + label; the active tab is teal over the bar's liquid lens (rule 08). */
 const TabItemComponent: React.FC<TabItemProps> = ({
   isActive,
   label,

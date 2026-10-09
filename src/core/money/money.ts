@@ -5,10 +5,10 @@ export type CurrencyCode = (typeof CURRENCY_CODES)[number];
 
 export type Money = { amount: number; currency: CurrencyCode };
 
-/** ISO 4217 minor-unit exponent per currency. */
+/** Minor-unit exponent per currency, as the backend sends it: USD in cents, SYP in whole pounds. */
 export const MINOR_UNIT_DIGITS: Record<CurrencyCode, number> = {
   USD: 2,
-  SYP: 2,
+  SYP: 0,
 };
 
 export const isCurrencyCode = (value: unknown): value is CurrencyCode =>

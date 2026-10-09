@@ -54,3 +54,46 @@ export const buildMissingSteps = (
 /** The step Home suggests next: the first one the user can act on now. */
 export const pickNextStep = (steps: readonly MissingStep[]): MissingStep | null =>
   steps.find(step => step.meta.target !== null) ?? null;
+
+/** Home's profile-strength track groups the creator's completion steps into five stages. */
+export type StrengthStageKey = 'info' | 'avatar' | 'platforms' | 'rates' | 'kyc';
+export type StrengthStageState = 'done' | 'current' | 'upcoming';
+
+export interface StrengthStage {
+  key: StrengthStageKey;
+  state: StrengthStageState;
+}
+
+const STRENGTH_STAGES: readonly { key: StrengthStageKey; steps: readonly ProfileStepKey[] }[] = [
+  { key: 'info', steps: ['basic_info', 'email'] },
+  { key: 'avatar', steps: ['avatar'] },
+  { key: 'platforms', steps: ['platforms', 'platforms_verified'] },
+  { key: 'rates', steps: ['rate_cards'] },
+  { key: 'kyc', steps: ['kyc'] },
+];
+
+/**
+ * Stages for the strength track, in a fixed order. A stage shows only when the server
+ * sends at least one of its steps, and is done when every step it sent is complete.
+ * The stage holding `nextStep` is current. Without one (e.g. KYC under review), the
+ * first unfinished stage is current.
+ */
+export const buildStrengthStages = (
+  steps: readonly ProfileCompletionStep[],
+  nextStep: ProfileStepKey | null,
+): StrengthStage[] => {
+  const completed = new Map(steps.map(step => [step.key, step.completed]));
+  const stages = STRENGTH_STAGES.filter(stage => stage.steps.some(key => completed.has(key))).map(
+    stage => ({
+      key: stage.key,
+      done: stage.steps.every(key => completed.get(key) !== false),
+      holdsNext: nextStep !== null && stage.steps.includes(nextStep),
+    }),
+  );
+  const holding = stages.findIndex(stage => !stage.done && stage.holdsNext);
+  const current = holding >= 0 ? holding : stages.findIndex(stage => !stage.done);
+  return stages.map((stage, index) => ({
+    key: stage.key,
+    state: stage.done ? 'done' : index === current ? 'current' : 'upcoming',
+  }));
+};

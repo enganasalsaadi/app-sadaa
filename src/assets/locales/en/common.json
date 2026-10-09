@@ -253,8 +253,7 @@
         "title": "Entered the wrong number?",
         "body": "Message our support team on WhatsApp and we’ll fix it for you.",
         "contact": "Contact us on WhatsApp",
-        "message": "Hi Sada team, I registered with the wrong phone number: {{phone}}",
-        "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+        "message": "Hi Sada team, I registered with the wrong phone number: {{phone}}"
       }
     },
     "suspended": {
@@ -265,8 +264,7 @@
       "checkAgain": "Check again",
       "logout": "Log out",
       "stillSuspended": "Your account is still suspended",
-      "supportMessage": "Hi Sada team, my account is suspended and I need help.",
-      "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+      "supportMessage": "Hi Sada team, my account is suspended and I need help."
     },
     "deleteAccount": {
       "entry": "Delete my account",
@@ -276,7 +274,13 @@
       "passwordPlaceholder": "Enter your current password",
       "confirm": "Delete my account",
       "success": "Your account has been deleted",
-      "locked": "Too many attempts. Try again in {{time}}"
+      "locked": "Too many attempts. Try again in {{time}}",
+      "funds": {
+        "title": "You can’t delete your account yet",
+        "openWallet": "Go to wallet",
+        "contactSupport": "Contact support",
+        "supportMessage": "Hi Sada team, I want to delete my account but my wallet still has funds."
+      }
     },
     "onboardingProgressError": "Couldn’t load your registration. Check your connection and try again.",
     "passwordStrength": {
@@ -367,7 +371,11 @@
     "removeItem": "Remove {{label}}",
     "money": {
       "approx": "≈ {{amount}}",
-      "estimate": "Estimate"
+      "estimate": "Estimate",
+      "hidden": "Amount hidden"
+    },
+    "support": {
+      "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
     },
     "timeline": {
       "done": "Done",
@@ -566,8 +574,7 @@
       "label": "Phone number",
       "hint": "Your phone number is your account identity and can’t be changed in the app.",
       "contactSupport": "Contact support to change your number",
-      "supportMessage": "Hello, I would like to change the phone number linked to my Sada account.",
-      "openFailed": "Couldn't open WhatsApp. Message us at {{number}}"
+      "supportMessage": "Hello, I would like to change the phone number linked to my Sada account."
     },
     "kyc": {
       "influencerTitle": "Identity verification",
@@ -1001,6 +1008,20 @@
         "refunded": "Refunded",
         "unknown": "Unknown status"
       },
+      "stage": {
+        "pendingApproval": "Accept",
+        "awaitingPayment": "Pay",
+        "inProgress": "Create",
+        "underReview": "Review",
+        "readyToPublish": "Ready",
+        "published": "Publish",
+        "completed": "Done",
+        "disputed": "Dispute",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded",
+        "unknown": "Unknown"
+      },
+      "escrowHeld": "held in escrow",
       "meta": "{{counterpart}} · {{adType}}"
     },
     "draft": {
@@ -1053,7 +1074,14 @@
       "strength": {
         "title": "Profile strength",
         "benefit": "The more complete your profile, the more brands get to see you.",
-        "nextStep": "Next step"
+        "nextStep": "Next step",
+        "stage": {
+          "info": "Your info",
+          "avatar": "Photo",
+          "platforms": "Platforms",
+          "rates": "Prices",
+          "kyc": "ID"
+        }
       },
       "platforms": {
         "manage": "Manage",
@@ -1080,10 +1108,369 @@
       "escrowHint": "Held for active deals",
       "pending": "Pending",
       "withdraw": "Withdraw",
-      "deposit": "Add funds"
+      "deposit": "Add funds",
+      "supportMessage": "Hi, I need help with my Sada wallet.",
+      "hideAmounts": "Hide amounts",
+      "showAmounts": "Show amounts",
+      "hero": {
+        "availableCreator": "Available to withdraw",
+        "availableBrand": "Available for campaigns",
+        "monthInCreator": "{{amount}} came in this month",
+        "monthInBrand": "{{amount}} topped up this month",
+        "loadFailed": "Couldn't load your balance."
+      },
+      "tiles": {
+        "inTransfer": "On its way out",
+        "inEscrow": "In escrow",
+        "topUpsInReview": "Top-ups in review"
+      },
+      "blocker": {
+        "openKyc": "Verify ID",
+        "contactSupport": "Contact support",
+        "closed": {
+          "title": "Wallet closed",
+          "message": "Contact support about your balance and options"
+        },
+        "frozen": {
+          "title": "Wallet temporarily frozen",
+          "messageCreator": "Withdrawals are paused · Contact support",
+          "messageBrand": "Top-ups are paused · Contact support"
+        },
+        "unknownStatus": {
+          "message": "Contact support if you need help"
+        },
+        "withdrawalsPaused": {
+          "title": "Withdrawals paused",
+          "message": "Your balance is safe; withdrawals resume soon"
+        },
+        "kycRequired": {
+          "titleCreator": "Verify your ID to withdraw",
+          "titleBrand": "Verify your ID to top up",
+          "message": "Two minutes · front and back of your ID"
+        },
+        "kycPending": {
+          "title": "Your ID is under review",
+          "messageCreator": "Withdrawals open once it's approved",
+          "messageBrand": "Top-ups open once it's approved"
+        },
+        "kycRejected": {
+          "title": "We couldn't approve your ID",
+          "messageCreator": "Upload your ID again to withdraw",
+          "messageBrand": "Upload your ID again to top up"
+        },
+        "onboardingIncomplete": {
+          "title": "Finish setting up your account",
+          "messageCreator": "Withdrawals open once your account is complete",
+          "messageBrand": "Top-ups open once your account is complete"
+        }
+      },
+      "escrowCard": {
+        "titleCreator": "Money on its way to you",
+        "titleBrand": "Your money in escrow",
+        "explainerTitleCreator": "How you get paid",
+        "explainerTitleBrand": "How escrow protects you",
+        "explainerBodyCreator": "When you accept a deal, its amount is held in Sada escrow and released to your wallet once publishing is confirmed.",
+        "explainerBodyBrand": "When you pay for a deal, the amount is held in Sada escrow and released to the creator once you approve publishing.",
+        "releaseManyCreator": "Each payment is released to your wallet once its post is confirmed",
+        "releaseManyBrand": "Each payment is released to the creator once you approve publishing",
+        "brandNode": "Brand",
+        "creatorNode": "Creator",
+        "walletNode": "Your wallet",
+        "escrowNode": "Sada escrow",
+        "dealsCount_one": "1 deal",
+        "dealsCount_other": "{{count}} deals",
+        "protected": "Protected",
+        "flowA11y": "From {{from}} to {{escrow}}, then to {{to}}",
+        "loadFailed": "Couldn't load money in escrow."
+      },
+      "earnings": {
+        "titleCreator": "Your earnings",
+        "titleBrand": "Campaign spend",
+        "a11yCreator": "Your earnings for the selected period: {{total}}",
+        "a11yBrand": "Your campaign spend for the selected period: {{total}}",
+        "period6m": "6 months",
+        "period12m": "Year",
+        "periodA11y": "Chart period",
+        "loadFailed": "Couldn't load the chart."
+      },
+      "rate": {
+        "title": "Today's exchange rate",
+        "value": "{{base}} = {{quote}}",
+        "updatedToday": "Updated today · {{time}}",
+        "updatedOn": "Updated {{date}}",
+        "staleTitle": "Exchange rate out of date",
+        "staleCreator": "Last rate {{rate}}. Withdrawals in Syrian pounds are paused until it's updated.",
+        "staleBrand": "Last rate {{rate}}. Top-ups in Syrian pounds are paused until it's updated."
+      },
+      "activity": {
+        "title": "Activity",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "emptyTitle": "No activity yet",
+        "emptyCreator": "Your earnings and withdrawals show up here after your first completed deal.",
+        "emptyBrand": "Your top-ups and deal payments show up here.",
+        "loadFailed": "Couldn't load your activity.",
+        "viewStatement": "View full statement"
+      },
+      "actions": {
+        "topUp": "Top up",
+        "history": "Top-up history"
+      }
+    },
+    "statement": {
+      "title": "Statement",
+      "count_one": "{{count}} transaction",
+      "count_other": "{{count}} transactions",
+      "end": "End of statement",
+      "clearFilters": "Clear filters",
+      "filteredEmptyTitle": "No transactions match",
+      "filteredEmptyHint": "Try another period or type.",
+      "filtersA11y": "Filter transactions",
+      "lineA11y": "{{title}}, {{amount}}, {{time}}",
+      "lineHint": "Opens the receipt",
+      "types": {
+        "a11y": "Transaction type",
+        "all": "All",
+        "dealEarnings": "Deal earnings",
+        "withdrawals": "Withdrawals",
+        "rewards": "Rewards",
+        "topUps": "Top-ups",
+        "escrowHolds": "Escrow holds",
+        "refunds": "Refunds"
+      },
+      "period": {
+        "title": "Period",
+        "a11y": "Period: {{period}}",
+        "all": "All time",
+        "thisMonth": "This month",
+        "lastMonth": "Last month",
+        "last3Months": "Last 3 months",
+        "thisYear": "This year",
+        "custom": "Custom range…",
+        "range": "{{from}} – {{to}}",
+        "clear": "Clear period"
+      }
+    },
+    "receipt": {
+      "title": "Transaction details",
+      "share": "Share receipt",
+      "shareTitle": "Sada transaction receipt",
+      "details": "Details",
+      "amountSection": "Amount",
+      "type": "Type",
+      "from": "From",
+      "to": "To",
+      "date": "Date",
+      "dateTime": "{{date}} · {{time}}",
+      "status": "Status",
+      "reference": "Reference",
+      "copyReference": "Copy reference {{reference}}",
+      "referenceCopied": "Reference copied",
+      "amount": "Amount",
+      "amountInUsd": "Amount in USD",
+      "amountInSyp": "Amount in SYP",
+      "rate": "Exchange rate",
+      "balanceAfter": "Balance after",
+      "report": "Report a problem",
+      "supportMessage": "Hi, I need help with a wallet transaction. Reference: {{reference}}",
+      "notFound": "This transaction isn't available."
     },
     "breakdown": {
       "estimateNote": "Estimate. The final amount is confirmed at checkout."
+    },
+    "topUp": {
+      "title": "Top up wallet",
+      "progressA11y": "Top-up, step {{current}} of {{total}}",
+      "continue": "Continue",
+      "steps": {
+        "channel": "Transfer method",
+        "amount": "Amount",
+        "transfer": "Transfer and receipt",
+        "review": "Review"
+      },
+      "channels": {
+        "haram": "Al-Haram",
+        "fouad": "Al-Fouad",
+        "syriatelCash": "Syriatel Cash",
+        "mtnCash": "MTN Cash",
+        "bank": "Bank transfer"
+      },
+      "groups": {
+        "exchangeOffice": "Exchange offices",
+        "eWallet": "E-wallets",
+        "bank": "Banks"
+      },
+      "disabled": {
+        "channelPaused": "Paused for now",
+        "rateStale": "Paused: the exchange rate is being updated",
+        "rateUnavailable": "Paused: no exchange rate yet"
+      },
+      "currency": {
+        "usd": "Dollar",
+        "syp": "Syrian pound"
+      },
+      "currencies": {
+        "both": "Dollar or Syrian pound",
+        "usdOnly": "Dollar only",
+        "sypOnly": "Syrian pound only"
+      },
+      "status": {
+        "pendingReview": "In review",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "reversed": "Reversed"
+      },
+      "channel": {
+        "title": "How will you send the money?",
+        "subtitle": "Choose where you'll send the money from. We review every transfer before adding it to your wallet.",
+        "required": "Choose how you'll send the money",
+        "staleNotice": "The Syrian pound rate is being updated, so e-wallets are paused for now. You can top up in dollars.",
+        "pausedNotice": "This method was just paused. Choose another one.",
+        "loadFailed": "Couldn't load the transfer methods.",
+        "optionA11y": "{{channel}}, {{caption}}"
+      },
+      "amount": {
+        "via": "Via {{channel}}",
+        "currencyA11y": "Currency",
+        "segmentUsd": "Dollar $",
+        "segmentSyp": "Syrian pound SYP",
+        "label": "Amount you'll send",
+        "range": "From {{min}} to {{max}}",
+        "rangeWithUsd": "From {{min}} to {{max}} ({{usd}})",
+        "usdSpan": "{{min}} – {{max}}",
+        "rateChanged": "The exchange rate changed. Check the amount, then continue.",
+        "quote": {
+          "sent": "Amount sent",
+          "rate": "Exchange rate",
+          "credit": "Added to your wallet",
+          "estimate": "An estimate. The final amount shows once you send the request.",
+          "exact": "Added as sent once we review the transfer."
+        },
+        "errors": {
+          "required": "Enter the amount",
+          "min": "The minimum is {{amount}}",
+          "max": "The maximum is {{amount}}"
+        }
+      },
+      "transfer": {
+        "title": "Send the money, then attach the receipt",
+        "subtitle": "Send the amount to Sada's account via {{channel}}, then enter the transfer number.",
+        "sendTo": "Send to",
+        "amountRow": "Amount",
+        "copy": "Copy {{label}}",
+        "copied": "{{label}} copied",
+        "payerReference": "Your Sada code",
+        "payerReferenceHint": "Write this code in the transfer note",
+        "exactNotice": "Send exactly this amount. We match the amount and the transfer number with the receipt.",
+        "noAccountsTitle": "We'll send you the account details",
+        "noAccounts": "Message us and we'll send you the receiving account for this method, then come back to finish.",
+        "contactSupport": "Contact support",
+        "supportMessage": "Hi, I'd like to top up my Sada wallet via {{channel}}. Please send me the receiving account.",
+        "detailsSection": "Transfer details",
+        "referenceLabel": "Transfer number",
+        "referencePlaceholder": "e.g. 482913",
+        "referenceHint": "As shown on the transfer receipt",
+        "referenceRequired": "Enter the transfer number",
+        "referenceDuplicate": "This transfer number was already used on this method. Check the number on the receipt.",
+        "receiptLabel": "Receipt photo",
+        "receiptTitle": "Upload the receipt",
+        "receiptHint": "Photo or PDF, up to 10 MB",
+        "receiptRequired": "Attach the receipt",
+        "pickTitle": "Add the receipt",
+        "pickPhotos": "Choose from photos",
+        "pickFiles": "Choose a file",
+        "pickErrors": {
+          "size": "The file is larger than 10 MB.",
+          "type": "Use a photo or a PDF.",
+          "failed": "Couldn't open the file. Try again."
+        }
+      },
+      "review": {
+        "creditEstimate": "Added to your wallet, about",
+        "creditExact": "Added to your wallet",
+        "against": "For {{amount}}",
+        "transferSection": "Transfer",
+        "proofSection": "Proof",
+        "method": "Method",
+        "sent": "Amount sent",
+        "rate": "Exchange rate",
+        "reference": "Transfer number",
+        "receipt": "Receipt",
+        "edit": "Edit",
+        "editA11y": "Edit {{section}}",
+        "caption": "We review the request and notify you once the amount is in your wallet.",
+        "submit": "Send request",
+        "failed": "Couldn't send the request. Try again.",
+        "blocked": "Top-ups aren't available on your account right now.",
+        "pendingLimit": "You already have 5 top-ups in review. You can send a new one once Sada reviews one of them."
+      },
+      "discard": {
+        "title": "Leave the top-up?",
+        "body": "What you've entered won't be saved.",
+        "confirm": "Leave",
+        "stay": "Stay"
+      },
+      "detail": {
+        "title": "Top-up request",
+        "submittedTitle": "We got your request",
+        "creditEstimate": "About",
+        "details": "Details",
+        "method": "Method",
+        "date": "Date",
+        "dateTime": "{{date}} · {{time}}",
+        "sent": "Amount sent",
+        "credited": "Amount added",
+        "rate": "Exchange rate",
+        "reference": "Transfer number",
+        "requestId": "Request number",
+        "copyId": "Copy request number {{id}}",
+        "idCopied": "Request number copied",
+        "receipt": "Receipt",
+        "viewReceipt": "View receipt",
+        "receiptOpenFailed": "Couldn't open the receipt.",
+        "rejectionTitle": "Why it was rejected",
+        "reversalTitle": "Why it was reversed",
+        "noReason": "Contact support to know more.",
+        "timeline": {
+          "submitted": "Request sent",
+          "review": "Sada team review",
+          "reviewCaption": "We'll notify you when it's done",
+          "credited": "Added to your wallet",
+          "rejected": "Request rejected",
+          "reversed": "Top-up reversed"
+        },
+        "backToWallet": "Back to wallet",
+        "history": "Top-up history",
+        "newTopUp": "New top-up",
+        "openTransaction": "View transaction",
+        "supportMessage": "Hi, I need help with a top-up request. Number: {{id}}",
+        "notFound": "This top-up isn't available."
+      },
+      "history": {
+        "title": "Top-up history",
+        "new": "New top-up",
+        "filtersA11y": "Filter top-ups",
+        "all": "All",
+        "rowTitle": "Top-up · {{channel}}",
+        "rowTitleNoChannel": "Top-up",
+        "rowA11y": "{{title}}, {{amount}}, {{status}}",
+        "rowHint": "Opens the request",
+        "end": "End of history",
+        "emptyTitle": "No top-ups yet",
+        "emptyMessage": "Top up your wallet to pay creators through escrow.",
+        "filteredEmptyTitle": "No top-ups with this status",
+        "showAll": "Show all"
+      },
+      "mock": {
+        "recipientName": "Recipient name",
+        "phone": "Phone number",
+        "city": "City",
+        "walletNumber": "Wallet number",
+        "accountName": "Account name",
+        "bankName": "Bank",
+        "accountHolder": "Account holder",
+        "iban": "IBAN"
+      }
     }
   },
   "devShowcase": {
@@ -1146,7 +1533,9 @@
       "moneyText": "Money",
       "statTile": "Stat tile",
       "sparkline": "Sparkline",
+      "barChart": "Bar chart",
       "timeline": "Timeline",
+      "liveElements": "Live elements",
       "countdown": "Countdown",
       "mediaTile": "Media tile",
       "ratingStars": "Rating",
@@ -1174,8 +1563,12 @@
       "buttonSmallLabel": "Small button label",
       "overlineLabel": "OVERLINE",
       "labelLabel": "Field label",
+      "amountSmallLabel": "$125.00",
       "amountLabel": "$1,250.00",
-      "amountLargeLabel": "$12,500.00"
+      "amountTitleLabel": "$1,250.40",
+      "amountLargeLabel": "$12,500.00",
+      "amountHeroLabel": "$1,250.40",
+      "amountDisplayLabel": "$1,250.40"
     },
     "colors": {
       "brand": "Brand (Navy)",
@@ -1203,7 +1596,8 @@
       "stateLoading": "Loading",
       "withLeftIcon": "Leading icon",
       "withRightIcon": "Trailing icon",
-      "fullWidth": "Full width"
+      "fullWidth": "Full width",
+      "onNavyTitle": "On navy (onBrand · glass)"
     },
     "inputs": {
       "defaultLabel": "Default",
@@ -1308,7 +1702,10 @@
       "filterLabel": "Campaign filter",
       "filterAll": "All",
       "filterOpen": "Open",
-      "filterClosed": "Closed"
+      "filterClosed": "Closed",
+      "moneyWizardTitle": "Money wizard",
+      "moneyWizardStep": "Amount",
+      "moneyWizardDescription": "Solid header with ✕ on the first step, a slim step bar pinned under it, content on the surface and one primary in the footer. Used for top-ups."
     },
     "categories": {
       "foundations": "Foundations",
@@ -1340,7 +1737,11 @@
       "singleTitle": "ChipGroup (single-select)",
       "groupMultiTitle": "Multi-select group (up to {{count}})",
       "disabled": "Disabled",
-      "toggleLoading": "Toggle loading"
+      "toggleLoading": "Toggle loading",
+      "filterTitle": "Filter chip (icon · dropdown · clear)",
+      "filterAll": "All time",
+      "filterSet": "This month",
+      "filterClear": "Clear date"
     },
     "otp": {
       "hint": "Enter 123456 for success; any other code shakes.",
@@ -1401,7 +1802,9 @@
     },
     "dateRange": {
       "selected": "{{start}} → {{end}}",
-      "open": "Pick dates"
+      "open": "Pick dates",
+      "pastTitle": "Past range (statements)",
+      "openPast": "Pick a past period"
     },
     "gallery": {
       "open": "Open photo {{index}}"
@@ -1422,11 +1825,15 @@
       "data": "Data",
       "loading": "Loading",
       "empty": "Empty",
+      "filteredEmpty": "Filtered empty",
       "error": "Error",
       "stateLabel": "List state",
       "rowTitle": "Campaign {{index}}",
       "rowBody": "Mock row",
-      "emptyMessage": "No campaigns yet"
+      "emptyMessage": "No campaigns yet",
+      "filteredEmptyMessage": "No campaigns match",
+      "filteredEmptyHint": "Try another filter.",
+      "clearFilters": "Clear filters"
     },
     "iconButton": {
       "sizeTitle": "Size {{size}}",
@@ -1447,7 +1854,11 @@
       "transparentLabel": "transparent: over imagery",
       "title": "Campaigns",
       "subtitle": "12 open",
-      "favorite": "Save"
+      "favorite": "Save",
+      "glassLabel": "Glass actions on a navy header",
+      "hideAmounts": "Hide amounts",
+      "statement": "Statement",
+      "closeLabel": "Close icon (a flow’s first step)"
     },
     "fab": {
       "stageHint": "Pinned to the bottom-end corner of its parent.",
@@ -1589,14 +2000,33 @@
       "sync": "Sync social stats",
       "disabled": "Disabled row",
       "delete": "Delete account",
-      "pressed": "Row pressed"
+      "pressed": "Row pressed",
+      "optionsTitle": "Single choice (selected)",
+      "optionOffice": "Exchange office",
+      "optionOfficeCaption": "Dollar or Syrian pound",
+      "optionBank": "Bank transfer",
+      "optionWallet": "E-wallet",
+      "optionWalletCaption": "Paused for now"
     },
     "moneyText": {
       "price": "Price",
       "muted": "Fee",
       "earning": "Earning",
       "charge": "Charge",
-      "estimate": "Preview"
+      "estimate": "Preview",
+      "hero": "Available balance (hero)",
+      "display": "Wallet balance (58, rolls once)",
+      "hidden": "Hide amounts",
+      "title": "Card total (22)",
+      "small": "Small",
+      "cancelled": "Cancelled line",
+      "oneDecimal": "One decimal",
+      "wholeDown": "Whole, rounded down",
+      "compact": "Compact (stats only)",
+      "syp": "SYP (whole pounds)",
+      "sypCompact": "SYP compact",
+      "code": "Currency code",
+      "none": "No currency"
     },
     "amountInput": {
       "budgetLabel": "Campaign budget",
@@ -1619,7 +2049,28 @@
       "draftCaption": "Due in 2 days",
       "publish": "Publish",
       "failed": "Payment refunded",
-      "errorTitle": "Stopped"
+      "errorTitle": "Stopped",
+      "trackTitle": "Stage track"
+    },
+    "live": {
+      "dotTitle": "Live dot",
+      "islandTitle": "Live island",
+      "islandLive": "Your platforms are under review",
+      "islandLiveBody": "Our team is checking your accounts. We’ll let you know when it’s done.",
+      "islandWarning": "Add your prices",
+      "islandWarningBody": "Brands see your prices before they send an offer.",
+      "islandAction": "Open prices",
+      "islandDanger": "Your account needs action",
+      "islandPressed": "Island pressed",
+      "numberTitle": "Rolling numbers",
+      "replay": "Replay",
+      "flowTitle": "Money flow",
+      "flowFrom": "Escrow",
+      "flowTo": "Your wallet",
+      "smartTitle": "Smart border",
+      "smartBody": "12 creators match your campaign",
+      "staggerTitle": "Stagger rise",
+      "staggerItem": "Section {{index}}"
     },
     "countdown": {
       "draftDue": "Draft due",
@@ -1649,6 +2100,12 @@
       "single": "Single day",
       "loading": "Loading"
     },
+    "barChart": {
+      "earnings": "Monthly earnings (money)",
+      "spend": "12-month spend (neutral)",
+      "zeros": "Months without earnings",
+      "loading": "Loading"
+    },
     "mediaKitCard": {
       "default": "Default",
       "hidden": "Kit hidden",
@@ -1665,7 +2122,8 @@
       "pillsTitle": "Every status",
       "progressTitle": "Under review",
       "completedTitle": "Completed",
-      "disputedTitle": "Disputed during production"
+      "disputedTitle": "Disputed during production",
+      "trackTitle": "Stage track (card)"
     },
     "dealCard": {
       "pressed": "Opens the deal"
@@ -1706,8 +2164,8 @@
       "premiumTitle": "Premium highlight",
       "premiumPill": "Verified",
       "premiumBody": "Soft mustard wash for verified or top creators. Text stays neutral.",
-      "glowTitle": "Brand + GlowOrbs",
-      "glowBody": "Faint light washes in two corners, for the dashboard hero."
+      "glowTitle": "Live hero + GlowOrbs",
+      "glowBody": "Deeper navy gradient with three soft lights drifting slowly, for dashboard heroes."
     }
   },
   "followerTier": {

@@ -17,7 +17,6 @@ const NichesCardComponent: React.FC<NichesCardProps> = ({ labels, isLoading, onP
 
   return (
     <Card
-      shadow="none"
       p="lg"
       onPress={onPress}
       accessibilityLabel={t('account.profile.niches.title')}

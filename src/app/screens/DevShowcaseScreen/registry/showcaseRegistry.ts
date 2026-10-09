@@ -243,10 +243,20 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.sparkline',
     covers: ['Sparkline'],
   },
+  barChart: {
+    category: 'display',
+    titleKey: 'devShowcase.sections.barChart',
+    covers: ['BarChart'],
+  },
   timeline: {
     category: 'display',
     titleKey: 'devShowcase.sections.timeline',
     covers: ['Timeline'],
+  },
+  liveElements: {
+    category: 'display',
+    titleKey: 'devShowcase.sections.liveElements',
+    covers: ['LiveDot', 'LiveIsland', 'AnimatedNumber', 'MoneyFlow', 'SmartBorder', 'StaggerIn'],
   },
   countdown: {
     category: 'display',
@@ -403,4 +413,5 @@ export const SHOWCASE_EXEMPT = {
   useScrollRestoration: 'hook behind SuperList scrollRestorationKey',
   useOptimisticReaction: 'data hook, no UI',
   useInfiniteScroll: 'data hook behind SuperList pagination',
+  useFilePicker: 'picker + validation hook behind FilePickerCard, no UI',
 } as const satisfies Partial<Record<UiExportName, string>>;

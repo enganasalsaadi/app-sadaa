@@ -253,8 +253,7 @@
         "title": "أدخلت رقماً خاطئاً؟",
         "body": "راسل فريق الدعم على واتساب وسنصححه لك.",
         "contact": "تواصل معنا على واتساب",
-        "message": "مرحباً فريق صدى، سجّلت برقم جوال خاطئ: {{phone}}",
-        "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
+        "message": "مرحباً فريق صدى، سجّلت برقم جوال خاطئ: {{phone}}"
       }
     },
     "suspended": {
@@ -265,8 +264,7 @@
       "checkAgain": "تحقّق مجدداً",
       "logout": "تسجيل الخروج",
       "stillSuspended": "لا يزال الحساب موقوفاً",
-      "supportMessage": "مرحباً فريق صدى، حسابي موقوف وأحتاج المساعدة.",
-      "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
+      "supportMessage": "مرحباً فريق صدى، حسابي موقوف وأحتاج المساعدة."
     },
     "deleteAccount": {
       "entry": "حذف حسابي",
@@ -276,7 +274,13 @@
       "passwordPlaceholder": "أدخل كلمة المرور الحالية",
       "confirm": "حذف حسابي",
       "success": "تم حذف حسابك",
-      "locked": "محاولات كثيرة. حاول مجددًا بعد {{time}}"
+      "locked": "محاولات كثيرة. حاول مجددًا بعد {{time}}",
+      "funds": {
+        "title": "لا يمكن حذف حسابك الآن",
+        "openWallet": "الذهاب إلى المحفظة",
+        "contactSupport": "تواصل مع الدعم",
+        "supportMessage": "مرحباً فريق صدى، أريد حذف حسابي لكن في محفظتي رصيد."
+      }
     },
     "onboardingProgressError": "تعذّر تحميل حالة تسجيلك. تحقق من اتصالك وحاول مرة أخرى.",
     "passwordStrength": {
@@ -367,7 +371,11 @@
     "removeItem": "إزالة {{label}}",
     "money": {
       "approx": "≈ {{amount}}",
-      "estimate": "تقديري"
+      "estimate": "تقديري",
+      "hidden": "المبلغ مخفي"
+    },
+    "support": {
+      "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
     },
     "timeline": {
       "done": "مكتمل",
@@ -570,8 +578,7 @@
       "label": "رقم الهاتف",
       "hint": "رقم هاتفك هو هوية حسابك ولا يمكن تغييره من التطبيق.",
       "contactSupport": "لتغيير الرقم تواصل مع الدعم",
-      "supportMessage": "مرحباً، أريد تغيير رقم الهاتف المرتبط بحسابي في صدى.",
-      "openFailed": "تعذّر فتح واتساب. راسلنا على {{number}}"
+      "supportMessage": "مرحباً، أريد تغيير رقم الهاتف المرتبط بحسابي في صدى."
     },
     "kyc": {
       "influencerTitle": "توثيق الهوية",
@@ -1025,6 +1032,20 @@
         "refunded": "مسترد",
         "unknown": "حالة غير معروفة"
       },
+      "stage": {
+        "pendingApproval": "قبول",
+        "awaitingPayment": "دفع",
+        "inProgress": "إنتاج",
+        "underReview": "مراجعة",
+        "readyToPublish": "جاهز",
+        "published": "نشر",
+        "completed": "اكتمل",
+        "disputed": "نزاع",
+        "cancelled": "إلغاء",
+        "refunded": "استرداد",
+        "unknown": "غير معروف"
+      },
+      "escrowHeld": "محفوظة في الضمان",
       "meta": "{{counterpart}} · {{adType}}"
     },
     "draft": {
@@ -1077,7 +1098,14 @@
       "strength": {
         "title": "قوة ملفك",
         "benefit": "كلما اكتمل ملفك، زادت فرص ظهورك أمام الشركات.",
-        "nextStep": "الخطوة التالية"
+        "nextStep": "الخطوة التالية",
+        "stage": {
+          "info": "معلوماتك",
+          "avatar": "الصورة",
+          "platforms": "المنصات",
+          "rates": "الأسعار",
+          "kyc": "التوثيق"
+        }
       },
       "platforms": {
         "manage": "إدارة",
@@ -1104,10 +1132,377 @@
       "escrowHint": "محجوز للصفقات الجارية",
       "pending": "قيد التسوية",
       "withdraw": "سحب",
-      "deposit": "إيداع"
+      "deposit": "إيداع",
+      "supportMessage": "مرحباً، أحتاج مساعدة بخصوص محفظتي على صدى.",
+      "hideAmounts": "إخفاء المبالغ",
+      "showAmounts": "إظهار المبالغ",
+      "hero": {
+        "availableCreator": "الرصيد المتاح للسحب",
+        "availableBrand": "الرصيد المتاح للحملات",
+        "monthInCreator": "{{amount}} دخلت هذا الشهر",
+        "monthInBrand": "{{amount}} شحنتها هذا الشهر",
+        "loadFailed": "تعذّر تحميل رصيدك."
+      },
+      "tiles": {
+        "inTransfer": "قيد التحويل",
+        "inEscrow": "في الضمان",
+        "topUpsInReview": "شحن قيد المراجعة"
+      },
+      "blocker": {
+        "openKyc": "توثيق الهوية",
+        "contactSupport": "التواصل مع الدعم",
+        "closed": {
+          "title": "المحفظة مغلقة",
+          "message": "تواصل مع الدعم لمعرفة رصيدك وخياراتك"
+        },
+        "frozen": {
+          "title": "المحفظة مجمّدة مؤقتاً",
+          "messageCreator": "السحب متوقف حالياً · تواصل مع الدعم",
+          "messageBrand": "الشحن متوقف حالياً · تواصل مع الدعم"
+        },
+        "unknownStatus": {
+          "message": "تواصل مع الدعم إن احتجت مساعدة"
+        },
+        "withdrawalsPaused": {
+          "title": "السحب متوقف مؤقتاً",
+          "message": "رصيدك بأمان، ونُعيد تفعيل السحب قريباً"
+        },
+        "kycRequired": {
+          "titleCreator": "وثّق هويتك لتفعيل السحب",
+          "titleBrand": "وثّق هويتك لتفعيل الشحن",
+          "message": "دقيقتان · صورة الهوية من الجهتين"
+        },
+        "kycPending": {
+          "title": "هويتك قيد المراجعة",
+          "messageCreator": "نُفعّل السحب فور اعتمادها",
+          "messageBrand": "نُفعّل الشحن فور اعتمادها"
+        },
+        "kycRejected": {
+          "title": "لم نتمكّن من اعتماد هويتك",
+          "messageCreator": "أعد رفع صورة الهوية لتفعيل السحب",
+          "messageBrand": "أعد رفع صورة الهوية لتفعيل الشحن"
+        },
+        "onboardingIncomplete": {
+          "title": "أكمل إعداد حسابك",
+          "messageCreator": "يتفعّل السحب بعد إكمال حسابك",
+          "messageBrand": "يتفعّل الشحن بعد إكمال حسابك"
+        }
+      },
+      "escrowCard": {
+        "titleCreator": "أموال في الطريق إليك",
+        "titleBrand": "أموالك في الضمان",
+        "explainerTitleCreator": "كيف تصلك أموالك",
+        "explainerTitleBrand": "كيف يحمي الضمان أموالك",
+        "explainerBodyCreator": "عند قبول صفقة يُحجز مبلغها في ضمان صدى، ويُحرَّر إلى محفظتك بعد تأكيد النشر.",
+        "explainerBodyBrand": "عند الدفع لصفقة يُحجز المبلغ في ضمان صدى، ويُحرَّر للمبدع بعد اعتمادك للنشر.",
+        "releaseManyCreator": "تُحرَّر كل دفعة إلى محفظتك بعد تأكيد نشرها",
+        "releaseManyBrand": "تُحرَّر كل دفعة للمبدع بعد اعتمادك للنشر",
+        "brandNode": "العلامة",
+        "creatorNode": "المبدع",
+        "walletNode": "محفظتك",
+        "escrowNode": "ضمان صدى",
+        "dealsCount_zero": "لا صفقات",
+        "dealsCount_one": "صفقة واحدة",
+        "dealsCount_two": "صفقتان",
+        "dealsCount_few": "{{count}} صفقات",
+        "dealsCount_many": "{{count}} صفقة",
+        "dealsCount_other": "{{count}} صفقة",
+        "protected": "محمية",
+        "flowA11y": "من {{from}} إلى {{escrow}} ثم إلى {{to}}",
+        "loadFailed": "تعذّر تحميل الأموال المحجوزة."
+      },
+      "earnings": {
+        "titleCreator": "أرباحك",
+        "titleBrand": "إنفاقك على الحملات",
+        "a11yCreator": "أرباحك في الفترة المختارة: {{total}}",
+        "a11yBrand": "إنفاقك على الحملات في الفترة المختارة: {{total}}",
+        "period6m": "6 أشهر",
+        "period12m": "سنة",
+        "periodA11y": "فترة الرسم البياني",
+        "loadFailed": "تعذّر تحميل الرسم البياني."
+      },
+      "rate": {
+        "title": "سعر الصرف اليوم",
+        "value": "{{base}} = {{quote}}",
+        "updatedToday": "حُدّث اليوم · {{time}}",
+        "updatedOn": "حُدّث في {{date}}",
+        "staleTitle": "سعر الصرف غير محدَّث",
+        "staleCreator": "آخر سعر {{rate}}. السحب بالليرة السورية متوقف حتى يُحدَّث السعر.",
+        "staleBrand": "آخر سعر {{rate}}. الشحن بالليرة السورية متوقف حتى يُحدَّث السعر."
+      },
+      "activity": {
+        "title": "الحركات",
+        "today": "اليوم",
+        "yesterday": "أمس",
+        "emptyTitle": "لا حركات بعد",
+        "emptyCreator": "أرباحك وسحوباتك ستظهر هنا مع أول صفقة مكتملة.",
+        "emptyBrand": "شحناتك ومدفوعاتك للصفقات ستظهر هنا.",
+        "loadFailed": "تعذّر تحميل الحركات.",
+        "viewStatement": "عرض كشف الحساب كاملاً"
+      },
+      "actions": {
+        "topUp": "شحن",
+        "history": "سجل الشحن"
+      }
+    },
+    "statement": {
+      "title": "كشف الحساب",
+      "count_zero": "لا حركات",
+      "count_one": "حركة واحدة",
+      "count_two": "حركتان",
+      "count_few": "{{count}} حركات",
+      "count_many": "{{count}} حركة",
+      "count_other": "{{count}} حركة",
+      "end": "نهاية الكشف",
+      "clearFilters": "مسح الفلاتر",
+      "filteredEmptyTitle": "لا حركات تطابق الفلتر",
+      "filteredEmptyHint": "جرّب فترة أخرى أو نوعاً آخر.",
+      "filtersA11y": "فلترة الحركات",
+      "lineA11y": "{{title}}، {{amount}}، {{time}}",
+      "lineHint": "يفتح الإيصال",
+      "types": {
+        "a11y": "نوع الحركة",
+        "all": "الكل",
+        "dealEarnings": "أرباح الصفقات",
+        "withdrawals": "السحوبات",
+        "rewards": "المكافآت",
+        "topUps": "الشحن",
+        "escrowHolds": "حجز الضمان",
+        "refunds": "المبالغ المستردة"
+      },
+      "period": {
+        "title": "الفترة",
+        "a11y": "الفترة: {{period}}",
+        "all": "كل الفترات",
+        "thisMonth": "هذا الشهر",
+        "lastMonth": "الشهر الماضي",
+        "last3Months": "آخر 3 أشهر",
+        "thisYear": "هذه السنة",
+        "custom": "فترة مخصّصة…",
+        "range": "{{from}} – {{to}}",
+        "clear": "مسح الفترة"
+      }
+    },
+    "receipt": {
+      "title": "تفاصيل الحركة",
+      "share": "مشاركة الإيصال",
+      "shareTitle": "إيصال حركة من صدى",
+      "details": "التفاصيل",
+      "amountSection": "المبلغ",
+      "type": "النوع",
+      "from": "من",
+      "to": "إلى",
+      "date": "التاريخ",
+      "dateTime": "{{date}} · {{time}}",
+      "status": "الحالة",
+      "reference": "المرجع",
+      "copyReference": "نسخ المرجع {{reference}}",
+      "referenceCopied": "تم نسخ المرجع",
+      "amount": "المبلغ",
+      "amountInUsd": "المبلغ بالدولار",
+      "amountInSyp": "المبلغ بالليرة",
+      "rate": "سعر الصرف",
+      "balanceAfter": "الرصيد بعد الحركة",
+      "report": "الإبلاغ عن مشكلة",
+      "supportMessage": "مرحباً، أحتاج مساعدة بخصوص حركة في محفظتي. المرجع: {{reference}}",
+      "notFound": "هذه الحركة غير متاحة."
     },
     "breakdown": {
       "estimateNote": "مبلغ تقديري، يُؤكَّد المبلغ النهائي عند الدفع."
+    },
+    "topUp": {
+      "title": "شحن المحفظة",
+      "progressA11y": "الشحن، الخطوة {{current}} من {{total}}",
+      "continue": "متابعة",
+      "steps": {
+        "channel": "طريقة التحويل",
+        "amount": "المبلغ",
+        "transfer": "التحويل والإيصال",
+        "review": "المراجعة"
+      },
+      "channels": {
+        "haram": "الهرم",
+        "fouad": "الفؤاد",
+        "syriatelCash": "سيريتل كاش",
+        "mtnCash": "MTN كاش",
+        "bank": "حوالة بنكية"
+      },
+      "groups": {
+        "exchangeOffice": "مكاتب الحوالات",
+        "eWallet": "المحافظ الإلكترونية",
+        "bank": "البنوك"
+      },
+      "disabled": {
+        "channelPaused": "متوقف مؤقتاً",
+        "rateStale": "متوقف مؤقتاً: سعر الصرف قيد التحديث",
+        "rateUnavailable": "متوقف مؤقتاً: لا يوجد سعر صرف بعد"
+      },
+      "currency": {
+        "usd": "دولار",
+        "syp": "ليرة سورية"
+      },
+      "currencies": {
+        "both": "دولار أو ليرة سورية",
+        "usdOnly": "دولار فقط",
+        "sypOnly": "ليرة سورية فقط"
+      },
+      "status": {
+        "pendingReview": "قيد المراجعة",
+        "completed": "مكتمل",
+        "rejected": "مرفوض",
+        "reversed": "معكوس"
+      },
+      "channel": {
+        "title": "كيف ستحوّل المبلغ؟",
+        "subtitle": "اختر الجهة التي سترسل منها المال. نراجع كل تحويل قبل إضافته إلى محفظتك.",
+        "required": "اختر طريقة التحويل",
+        "staleNotice": "سعر صرف الليرة قيد التحديث، لذلك المحافظ الإلكترونية متوقفة مؤقتاً. يمكنك الشحن بالدولار.",
+        "pausedNotice": "توقفت هذه الطريقة للتو. اختر طريقة أخرى.",
+        "loadFailed": "تعذّر تحميل طرق التحويل.",
+        "optionA11y": "{{channel}}، {{caption}}"
+      },
+      "amount": {
+        "via": "عبر {{channel}}",
+        "currencyA11y": "العملة",
+        "segmentUsd": "دولار $",
+        "segmentSyp": "ليرة سورية ل.س",
+        "label": "المبلغ الذي سترسله",
+        "range": "من {{min}} إلى {{max}}",
+        "rangeWithUsd": "من {{min}} إلى {{max}} ({{usd}})",
+        "usdSpan": "{{min}} – {{max}}",
+        "rateChanged": "تغيّر سعر الصرف. راجع المبلغ ثم تابع.",
+        "quote": {
+          "sent": "المبلغ المرسل",
+          "rate": "سعر الصرف",
+          "credit": "يُضاف إلى محفظتك",
+          "estimate": "قيمة تقديرية. المبلغ النهائي يظهر بعد إرسال الطلب.",
+          "exact": "يُضاف المبلغ كما هو بعد مراجعة التحويل."
+        },
+        "errors": {
+          "required": "أدخل المبلغ",
+          "min": "الحد الأدنى {{amount}}",
+          "max": "الحد الأقصى {{amount}}"
+        }
+      },
+      "transfer": {
+        "title": "حوّل المبلغ ثم أرفق الإيصال",
+        "subtitle": "أرسل المبلغ إلى حساب صدى عبر {{channel}}، ثم أدخل رقم الحوالة.",
+        "sendTo": "أرسل إلى",
+        "amountRow": "المبلغ",
+        "copy": "نسخ {{label}}",
+        "copied": "تم نسخ {{label}}",
+        "payerReference": "رمزك في صدى",
+        "payerReferenceHint": "اكتب هذا الرمز في ملاحظة الحوالة",
+        "exactNotice": "أرسل المبلغ نفسه تماماً. نطابق المبلغ ورقم الحوالة مع الإيصال.",
+        "noAccountsTitle": "نرسل لك بيانات الحساب",
+        "noAccounts": "راسلنا لنرسل لك بيانات حساب الاستلام لهذه الطريقة، ثم عد لإكمال الطلب.",
+        "contactSupport": "تواصل مع الدعم",
+        "supportMessage": "مرحباً، أريد شحن محفظتي في صدى عبر {{channel}}. أرسلوا لي بيانات حساب الاستلام من فضلكم.",
+        "detailsSection": "بيانات الحوالة",
+        "referenceLabel": "رقم الحوالة",
+        "referencePlaceholder": "مثال: 482913",
+        "referenceHint": "كما يظهر على إيصال الحوالة",
+        "referenceRequired": "أدخل رقم الحوالة",
+        "referenceDuplicate": "رقم الحوالة هذا مستخدم من قبل على هذه الطريقة. تحقق من الرقم على الإيصال.",
+        "receiptLabel": "صورة الإيصال",
+        "receiptTitle": "ارفع الإيصال",
+        "receiptHint": "صورة أو PDF، حتى 10 MB",
+        "receiptRequired": "أرفق صورة الإيصال",
+        "pickTitle": "إضافة الإيصال",
+        "pickPhotos": "اختيار من الصور",
+        "pickFiles": "اختيار ملف",
+        "pickErrors": {
+          "size": "حجم الملف أكبر من 10 MB.",
+          "type": "استخدم صورة أو ملف PDF.",
+          "failed": "تعذّر فتح الملف. حاول مرة أخرى."
+        }
+      },
+      "review": {
+        "creditEstimate": "يُضاف إلى محفظتك تقريباً",
+        "creditExact": "يُضاف إلى محفظتك",
+        "against": "مقابل {{amount}}",
+        "transferSection": "التحويل",
+        "proofSection": "الإثبات",
+        "method": "الطريقة",
+        "sent": "المبلغ المرسل",
+        "rate": "سعر الصرف",
+        "reference": "رقم الحوالة",
+        "receipt": "الإيصال",
+        "edit": "تعديل",
+        "editA11y": "تعديل {{section}}",
+        "caption": "نراجع الطلب ونرسل لك إشعاراً عند إضافة المبلغ إلى محفظتك.",
+        "submit": "إرسال الطلب",
+        "failed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
+        "blocked": "الشحن غير متاح لحسابك حالياً.",
+        "pendingLimit": "لديك 5 طلبات شحن قيد المراجعة. يمكنك إرسال طلب جديد بعد أن يراجع فريق صدى أحدها."
+      },
+      "discard": {
+        "title": "مغادرة الشحن؟",
+        "body": "لن نحفظ ما أدخلته.",
+        "confirm": "مغادرة",
+        "stay": "البقاء"
+      },
+      "detail": {
+        "title": "طلب الشحن",
+        "submittedTitle": "وصلنا طلبك",
+        "creditEstimate": "تقريباً",
+        "details": "التفاصيل",
+        "method": "الطريقة",
+        "date": "التاريخ",
+        "dateTime": "{{date}} · {{time}}",
+        "sent": "المبلغ المرسل",
+        "credited": "المبلغ المضاف",
+        "rate": "سعر الصرف",
+        "reference": "رقم الحوالة",
+        "requestId": "رقم الطلب",
+        "copyId": "نسخ رقم الطلب {{id}}",
+        "idCopied": "تم نسخ رقم الطلب",
+        "receipt": "الإيصال",
+        "viewReceipt": "عرض الإيصال",
+        "receiptOpenFailed": "تعذّر فتح الإيصال.",
+        "rejectionTitle": "سبب الرفض",
+        "reversalTitle": "سبب العكس",
+        "noReason": "تواصل مع الدعم لمعرفة المزيد.",
+        "timeline": {
+          "submitted": "أُرسل الطلب",
+          "review": "مراجعة فريق صدى",
+          "reviewCaption": "نرسل لك إشعاراً عند الانتهاء",
+          "credited": "إضافة المبلغ إلى المحفظة",
+          "rejected": "رُفض الطلب",
+          "reversed": "عُكس الشحن"
+        },
+        "backToWallet": "العودة إلى المحفظة",
+        "history": "سجل الشحن",
+        "newTopUp": "شحن جديد",
+        "openTransaction": "عرض الحركة",
+        "supportMessage": "مرحباً، أحتاج مساعدة بخصوص طلب شحن. رقم الطلب: {{id}}",
+        "notFound": "طلب الشحن هذا غير متاح."
+      },
+      "history": {
+        "title": "سجل الشحن",
+        "new": "شحن جديد",
+        "filtersA11y": "تصفية طلبات الشحن",
+        "all": "الكل",
+        "rowTitle": "شحن · {{channel}}",
+        "rowTitleNoChannel": "شحن",
+        "rowA11y": "{{title}}، {{amount}}، {{status}}",
+        "rowHint": "يفتح الطلب",
+        "end": "نهاية السجل",
+        "emptyTitle": "لا توجد طلبات شحن بعد",
+        "emptyMessage": "اشحن محفظتك لتدفع لصنّاع المحتوى عبر الضمان.",
+        "filteredEmptyTitle": "لا توجد طلبات بهذه الحالة",
+        "showAll": "عرض الكل"
+      },
+      "mock": {
+        "recipientName": "اسم المستلم",
+        "phone": "رقم الهاتف",
+        "city": "المدينة",
+        "walletNumber": "رقم المحفظة",
+        "accountName": "اسم الحساب",
+        "bankName": "البنك",
+        "accountHolder": "صاحب الحساب",
+        "iban": "IBAN"
+      }
     }
   },
   "devShowcase": {
@@ -1170,7 +1565,9 @@
       "moneyText": "المبالغ",
       "statTile": "بطاقة إحصائية",
       "sparkline": "خط الاتجاه",
+      "barChart": "رسم الأعمدة",
       "timeline": "الخط الزمني",
+      "liveElements": "العناصر الحيّة",
       "countdown": "العد التنازلي",
       "mediaTile": "عنصر الوسائط",
       "ratingStars": "التقييم",
@@ -1198,8 +1595,12 @@
       "buttonSmallLabel": "نص الزر الصغير",
       "overlineLabel": "عنوان علوي",
       "labelLabel": "تسمية الحقل",
+      "amountSmallLabel": "$125.00",
       "amountLabel": "$1,250.00",
-      "amountLargeLabel": "$12,500.00"
+      "amountTitleLabel": "1,250.40 $",
+      "amountLargeLabel": "$12,500.00",
+      "amountHeroLabel": "$1,250.40",
+      "amountDisplayLabel": "1,250.40 $"
     },
     "colors": {
       "brand": "الهوية (كحلي)",
@@ -1227,7 +1628,8 @@
       "stateLoading": "جارٍ التحميل",
       "withLeftIcon": "أيقونة بادئة",
       "withRightIcon": "أيقونة لاحقة",
-      "fullWidth": "بعرض كامل"
+      "fullWidth": "بعرض كامل",
+      "onNavyTitle": "فوق الكحلي (onBrand · glass)"
     },
     "inputs": {
       "defaultLabel": "افتراضي",
@@ -1332,7 +1734,10 @@
       "filterLabel": "فلتر الحملات",
       "filterAll": "الكل",
       "filterOpen": "مفتوحة",
-      "filterClosed": "مغلقة"
+      "filterClosed": "مغلقة",
+      "moneyWizardTitle": "معالج المال",
+      "moneyWizardStep": "المبلغ",
+      "moneyWizardDescription": "ترويسة ثابتة مع ✕ في الخطوة الأولى، شريط خطوات رفيع مثبّت تحتها، المحتوى على السطح وزر رئيسي واحد في الأسفل. يُستخدم للشحن."
     },
     "categories": {
       "foundations": "الأساسيات",
@@ -1364,7 +1769,11 @@
       "singleTitle": "ChipGroup (اختيار واحد)",
       "groupMultiTitle": "مجموعة متعددة الاختيار (حتى {{count}})",
       "disabled": "معطّل",
-      "toggleLoading": "تبديل التحميل"
+      "toggleLoading": "تبديل التحميل",
+      "filterTitle": "شريحة فلترة (أيقونة · قائمة · مسح)",
+      "filterAll": "كل الفترات",
+      "filterSet": "هذا الشهر",
+      "filterClear": "مسح التاريخ"
     },
     "otp": {
       "hint": "أدخل 123456 للنجاح؛ أي رمز آخر يهتز.",
@@ -1425,7 +1834,9 @@
     },
     "dateRange": {
       "selected": "{{start}} ← {{end}}",
-      "open": "اختر التواريخ"
+      "open": "اختر التواريخ",
+      "pastTitle": "فترة سابقة (كشوف الحساب)",
+      "openPast": "اختر فترة سابقة"
     },
     "gallery": {
       "open": "فتح الصورة {{index}}"
@@ -1446,11 +1857,15 @@
       "data": "بيانات",
       "loading": "تحميل",
       "empty": "فارغ",
+      "filteredEmpty": "فارغ بعد الفلترة",
       "error": "خطأ",
       "stateLabel": "حالة القائمة",
       "rowTitle": "حملة {{index}}",
       "rowBody": "صف تجريبي",
-      "emptyMessage": "لا توجد حملات بعد"
+      "emptyMessage": "لا توجد حملات بعد",
+      "filteredEmptyMessage": "لا حملات تطابق الفلتر",
+      "filteredEmptyHint": "جرّب فلتراً آخر.",
+      "clearFilters": "مسح الفلاتر"
     },
     "iconButton": {
       "sizeTitle": "الحجم {{size}}",
@@ -1471,7 +1886,11 @@
       "transparentLabel": "transparent: فوق الصور",
       "title": "الحملات",
       "subtitle": "12 حملة مفتوحة",
-      "favorite": "حفظ"
+      "favorite": "حفظ",
+      "glassLabel": "أزرار زجاجية على الهيدر الكحلي",
+      "hideAmounts": "إخفاء المبالغ",
+      "statement": "كشف الحساب",
+      "closeLabel": "أيقونة الإغلاق (أول خطوة في مسار)"
     },
     "fab": {
       "stageHint": "مثبت في الزاوية السفلية لنهاية الحاوية.",
@@ -1617,14 +2036,33 @@
       "sync": "مزامنة إحصاءات الحسابات",
       "disabled": "صف معطّل",
       "delete": "حذف الحساب",
-      "pressed": "تم الضغط على الصف"
+      "pressed": "تم الضغط على الصف",
+      "optionsTitle": "اختيار واحد (selected)",
+      "optionOffice": "مكتب حوالات",
+      "optionOfficeCaption": "دولار أو ليرة سورية",
+      "optionBank": "حوالة بنكية",
+      "optionWallet": "محفظة إلكترونية",
+      "optionWalletCaption": "متوقف مؤقتاً"
     },
     "moneyText": {
       "price": "السعر",
       "muted": "العمولة",
       "earning": "أرباح",
       "charge": "خصم",
-      "estimate": "معاينة"
+      "estimate": "معاينة",
+      "hero": "الرصيد المتاح (البطل)",
+      "display": "رصيد المحفظة (58، يتدحرج مرة)",
+      "hidden": "إخفاء المبالغ",
+      "title": "إجمالي في بطاقة (22)",
+      "small": "صغير",
+      "cancelled": "عملية ملغاة",
+      "oneDecimal": "منزلة عشرية واحدة",
+      "wholeDown": "عدد صحيح، تقريب للأدنى",
+      "compact": "مختصر (للإحصاءات فقط)",
+      "syp": "ليرة سورية (بدون كسور)",
+      "sypCompact": "ليرة سورية مختصرة",
+      "code": "رمز العملة",
+      "none": "بدون عملة"
     },
     "amountInput": {
       "budgetLabel": "ميزانية الحملة",
@@ -1647,7 +2085,28 @@
       "draftCaption": "التسليم خلال يومين",
       "publish": "النشر",
       "failed": "استُرد المبلغ",
-      "errorTitle": "متوقف"
+      "errorTitle": "متوقف",
+      "trackTitle": "مسار المراحل"
+    },
+    "live": {
+      "dotTitle": "نقطة حيّة",
+      "islandTitle": "الجزيرة الحيّة",
+      "islandLive": "منصاتك قيد المراجعة",
+      "islandLiveBody": "يتحقق فريقنا من حساباتك، وسنخبرك عند الانتهاء.",
+      "islandWarning": "أضف أسعارك",
+      "islandWarningBody": "المعلنون يرون أسعارك قبل أن يرسلوا عرضاً.",
+      "islandAction": "فتح الأسعار",
+      "islandDanger": "حسابك يحتاج إجراء",
+      "islandPressed": "تم الضغط على الجزيرة",
+      "numberTitle": "أرقام دوّارة",
+      "replay": "إعادة",
+      "flowTitle": "تدفق المال",
+      "flowFrom": "الضمان",
+      "flowTo": "محفظتك",
+      "smartTitle": "إطار الاقتراح الذكي",
+      "smartBody": "12 مبدعاً يناسبون حملتك",
+      "staggerTitle": "صعود متتابع",
+      "staggerItem": "القسم {{index}}"
     },
     "countdown": {
       "draftDue": "موعد المسودة",
@@ -1677,6 +2136,12 @@
       "single": "يوم واحد",
       "loading": "جارٍ التحميل"
     },
+    "barChart": {
+      "earnings": "أرباح شهرية (مال)",
+      "spend": "إنفاق 12 شهراً (محايد)",
+      "zeros": "أشهر بلا أرباح",
+      "loading": "تحميل"
+    },
     "mediaKitCard": {
       "default": "الافتراضي",
       "hidden": "الملف مخفي",
@@ -1693,7 +2158,8 @@
       "pillsTitle": "كل الحالات",
       "progressTitle": "قيد المراجعة",
       "completedTitle": "مكتملة",
-      "disputedTitle": "نزاع أثناء التنفيذ"
+      "disputedTitle": "نزاع أثناء التنفيذ",
+      "trackTitle": "مسار المراحل (بطاقة)"
     },
     "dealCard": {
       "pressed": "يفتح الصفقة"
@@ -1734,8 +2200,8 @@
       "premiumTitle": "تمييز مميز",
       "premiumPill": "موثّق",
       "premiumBody": "تدرّج خردلي هادئ للموثّقين وكبار المبدعين. النص يبقى محايداً.",
-      "glowTitle": "سطح العلامة + GlowOrbs",
-      "glowBody": "إضاءة خافتة جداً في زاويتين، لواجهة الرئيسية."
+      "glowTitle": "هيدر حيّ + GlowOrbs",
+      "glowBody": "تدرّج كحلي أعمق مع ثلاثة أضواء ناعمة تنجرف ببطء، لهيدر الشاشات الرئيسية."
     }
   },
   "followerTier": {

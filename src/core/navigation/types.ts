@@ -1,4 +1,5 @@
 import type { CountryCode } from 'libphonenumber-js';
+import type { Money } from '@/core/money';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type {
@@ -93,6 +94,41 @@ export type HomeStackParamList = {
 
 export type SettingsStackParamList = AccountScreens;
 
+/** `WalletTab` stack (finance), same screens for both roles; money flows join it step by step. */
+export type WalletStackParamList = {
+  WalletScreen: undefined;
+  /** Full statement: every line, filtered by type and period. */
+  Statement: undefined;
+  /** One line's receipt; `reference` only, so a push or link can open it too. */
+  TransactionReceipt: { reference: string };
+  /** Brand top-up wizard (nested stack); a "new top-up" from a rejected one carries it over. */
+  TopUp: TopUpPrefill | undefined;
+  /** Top-up history; `status` opens it filtered (the hero's "in review" tile). */
+  TopUps: { status?: TopUpStatusParam } | undefined;
+  /**
+   * One top-up; `submitted` = just sent from the wizard (close goes back to the wallet),
+   * with the channel's localized review time when the server set one.
+   */
+  TopUpDetail: { id: string; submitted?: boolean; processingTime?: string };
+};
+
+/** Top-up statuses the history filters by (finance's `TOP_UP_STATUS` mirrors them). */
+export type TopUpStatusParam = 'pending_review' | 'completed' | 'rejected' | 'reversed';
+
+/** Channel (validated by finance) and amount of the top-up being repeated. */
+export interface TopUpPrefill {
+  channel: string;
+  amount: Money;
+}
+
+/** Brand top-up wizard (channel → amount → proof → review), inside `TopUp`. */
+export type TopUpStackParamList = {
+  TopUpChannel: undefined;
+  TopUpAmount: undefined;
+  TopUpTransfer: undefined;
+  TopUpReview: undefined;
+};
+
 /** How a public creator profile was opened; sent as the views beacon `src` (contract §17.5). */
 export type CreatorProfileSource = 'link' | 'app' | 'search';
 
@@ -137,6 +173,7 @@ export type DevShowcaseStackParamList = {
   LayoutFabScreen: undefined;
   LayoutDashboardScreen: undefined;
   LayoutBrandHeaderScreen: undefined;
+  LayoutMoneyWizardScreen: undefined;
 };
 
 export type RootTabParamList = {
@@ -145,8 +182,7 @@ export type RootTabParamList = {
   DealsTab: undefined;
   /** Placeholder until the messaging domain lands. */
   MessagesTab: undefined;
-  /** Placeholder until finance ships the wallet screen. */
-  WalletTab: undefined;
+  WalletTab: NavigatorScreenParams<WalletStackParamList> | undefined;
   SettingsTab: NavigatorScreenParams<SettingsStackParamList>;
 };
 
@@ -170,6 +206,17 @@ export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
     NativeStackScreenProps<SettingsStackParamList, T>,
     BottomTabScreenProps<RootTabParamList>
   >;
+
+export type WalletStackScreenProps<T extends keyof WalletStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<WalletStackParamList, T>,
+    BottomTabScreenProps<RootTabParamList>
+  >;
+
+export type TopUpStackScreenProps<T extends keyof TopUpStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<TopUpStackParamList, T>,
+  WalletStackScreenProps<'TopUp'>
+>;
 
 export type PublicStackScreenProps<T extends keyof PublicStackParamList> =
   NativeStackScreenProps<PublicStackParamList, T>;

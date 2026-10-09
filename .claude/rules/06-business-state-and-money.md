@@ -38,9 +38,9 @@ export type DealStatus = (typeof DEAL_STATUS)[number];
 - Amounts are **integers in minor units** + ISO currency code: `{ amount: 1500000, currency: 'SYP' }`. Never floats, never formatted strings from API used for math.
 - Type: `type Money = { amount: number; currency: CurrencyCode }` in `@/core` (shared money helpers + formatter, locale-aware).
 - Commission, escrow split (e.g. 30% upfront), totals: shown from server response fields. Client-side math only for *previews*, clearly labelled estimate.
-- Payment/withdraw mutations send an **idempotency key** (`X-Idempotency-Key`, uuid per user intent) so double taps / retries never double-charge.
-- Disable submit while a money mutation is in flight; never auto-retry money mutations.
-- Wallet rules: brands deposit + pay; creators withdraw only. UI must not expose actions the role can't perform.
+- Money POSTs (top-up, withdraw, cancel) send `Idempotency-Key` (`IDEMPOTENCY_HEADER`, uuid v4) through `createIdempotentAction()` (`@/core/api`), one per user intent: the key survives failures and retries of that intent (timeout, app resume, a fixed 4xx), drops after success or `409 idempotency_key_reused`, and `reset()` when the user starts a different action. A replay (`Idempotent-Replayed: true`) is a normal success. Media-kit share (contract §17.6) still uses `X-Idempotency-Key`.
+- Disable submit while a money mutation is in flight. Never auto-retry money mutations, except `409 idempotency_request_in_progress` (same key + body, 2s, max 3), which `createIdempotentAction` already does.
+- Wallet rules: brands deposit + pay; creators withdraw only. UI must not expose actions the role can't perform. Enable Top up / Withdraw from `/me` `capabilities.top_up_wallet` / `withdraw_funds` (`reason` → blocker text); the server re-checks.
 
 ## Audit trail
 

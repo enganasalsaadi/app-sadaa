@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { InfluencerWizardStackParamList } from '@/core/navigation';
-import { useWizardHeader } from '@/shared/ui';
+import { useFilePicker, useWizardHeader, type FilePickError } from '@/shared/ui';
 import { useInfluencerStep4KycMutation } from '../../../api';
 import {
   INFLUENCER_KYC_ALLOWED_MIME_TYPES,
@@ -11,8 +11,6 @@ import {
   INFLUENCER_WIZARD_STEPS,
 } from '../../../constants/influencerOnboarding';
 import { useInfluencerOnboardingFlow } from '../../../hooks/useInfluencerOnboardingFlow';
-import { useKycFilePicker } from '../../../hooks/useKycFilePicker';
-import type { KycPickError } from '../../../hooks/useKycFilePicker';
 import {
   createKycSkipForm,
   isKycAlreadySubmitted,
@@ -25,7 +23,7 @@ const PICK_ERROR_KEY = {
   size: 'auth.influencerOnboarding.kyc.errors.size',
   type: 'auth.influencerOnboarding.kyc.errors.type',
   failed: 'auth.influencerOnboarding.kyc.errors.failed',
-} as const satisfies Record<KycPickError, string>;
+} as const satisfies Record<FilePickError, string>;
 
 export const useInfluencerKycScreen = () => {
   const { t } = useTranslation();
@@ -33,12 +31,12 @@ export const useInfluencerKycScreen = () => {
     useNavigation<NativeStackNavigationProp<InfluencerWizardStackParamList, 'InfluencerKyc'>>();
   const [action, setAction] = useState<KycAction | null>(null);
 
-  const front = useKycFilePicker({
+  const front = useFilePicker({
     allowedMimeTypes: INFLUENCER_KYC_ALLOWED_MIME_TYPES,
     maxBytes: INFLUENCER_KYC_MAX_FILE_BYTES,
     fallbackName: t('auth.influencerOnboarding.kyc.frontFallbackName'),
   });
-  const back = useKycFilePicker({
+  const back = useFilePicker({
     allowedMimeTypes: INFLUENCER_KYC_ALLOWED_MIME_TYPES,
     maxBytes: INFLUENCER_KYC_MAX_FILE_BYTES,
     fallbackName: t('auth.influencerOnboarding.kyc.backFallbackName'),

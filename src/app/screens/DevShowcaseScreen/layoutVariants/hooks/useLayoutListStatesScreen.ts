@@ -4,13 +4,14 @@ import type { ParseKeys } from 'i18next';
 import type { ChipGroupItem } from '@/shared/ui';
 import { useListLayout } from '@/shared/ui';
 
-const LIST_STATES = ['data', 'loading', 'empty', 'error'] as const;
+const LIST_STATES = ['data', 'loading', 'empty', 'filteredEmpty', 'error'] as const;
 type ListState = (typeof LIST_STATES)[number];
 
 const STATE_LABEL_KEY = {
   data: 'devShowcase.listStates.data',
   loading: 'devShowcase.listStates.loading',
   empty: 'devShowcase.listStates.empty',
+  filteredEmpty: 'devShowcase.listStates.filteredEmpty',
   error: 'devShowcase.listStates.error',
 } as const satisfies Record<ListState, ParseKeys>;
 
@@ -65,6 +66,15 @@ export const useLayoutListStatesScreen = () => {
 
   const onRetry = useCallback(() => setState('data'), []);
 
+  // A filtered list that came back empty offers to clear its filters.
+  const emptyAction = useMemo(
+    () =>
+      state === 'filteredEmpty'
+        ? { label: t('devShowcase.listStates.clearFilters'), onPress: onRetry, variant: 'secondary' as const }
+        : undefined,
+    [onRetry, state, t],
+  );
+
   return {
     state,
     stateItems,
@@ -77,5 +87,13 @@ export const useLayoutListStatesScreen = () => {
     isRefreshing,
     onRefresh,
     onRetry,
+    emptyMessage: t(
+      state === 'filteredEmpty'
+        ? 'devShowcase.listStates.filteredEmptyMessage'
+        : 'devShowcase.listStates.emptyMessage',
+    ),
+    emptyDescription:
+      state === 'filteredEmpty' ? t('devShowcase.listStates.filteredEmptyHint') : undefined,
+    emptyAction,
   };
 };

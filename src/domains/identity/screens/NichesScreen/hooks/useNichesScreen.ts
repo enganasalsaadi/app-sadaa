@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
+import { useDiscardGuard } from '@/core/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import { toastService } from '@/core/toast';
@@ -10,7 +11,6 @@ import {
   useGetUserProfileQuery,
   useUpdateInfluencerProfileMutation,
 } from '../../../api/accountApi';
-import { useDiscardGuard } from '../../../hooks/useDiscardGuard';
 import { createNichesSchema, type NichesFormValues } from '../../../schemas/nichesSchema';
 
 const SERVER_FIELD_MAP = { niches: 'niches' } as const;

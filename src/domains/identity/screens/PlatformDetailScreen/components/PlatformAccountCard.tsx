@@ -33,7 +33,7 @@ const PlatformAccountCardComponent: React.FC<PlatformAccountCardProps> = ({
   );
 
   return (
-    <Card shadow="none" p="lg">
+    <Card p="lg">
       <Box gap="lg">
         <Box row align="center" gap="md">
           <Box

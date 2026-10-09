@@ -31,14 +31,14 @@ const MediaKitPreviewComponent: React.FC<MediaKitPreviewProps> = ({
 
   return (
     <Box gap="2xl">
-      <Card shadow="none" p="lg">
+      <Card p="lg">
         <MediaKitPreviewIdentity preview={preview} nicheLabels={nicheLabels} />
       </Card>
 
       {preview.platforms.length > 0 ? (
         <Box gap="md">
           <SectionHeader title={t('account.mediaKit.previewScreen.platforms')} />
-          <Card shadow="none" px="lg">
+          <Card px="lg">
             {preview.platforms.map((platform, index) => (
               <React.Fragment key={platform.platform}>
                 {index > 0 ? <Divider /> : null}
@@ -52,7 +52,7 @@ const MediaKitPreviewComponent: React.FC<MediaKitPreviewProps> = ({
       {rateRows.length > 0 ? (
         <Box gap="md">
           <SectionHeader title={t('account.mediaKit.previewScreen.rates')} />
-          <Card shadow="none" px="lg" py="xs">
+          <Card px="lg" py="xs">
             {rateRows.map((row, index) => (
               <React.Fragment key={row.key}>
                 {index > 0 ? <Divider /> : null}
@@ -66,7 +66,7 @@ const MediaKitPreviewComponent: React.FC<MediaKitPreviewProps> = ({
       {terms.length > 0 ? (
         <Box gap="md">
           <SectionHeader title={t('account.mediaKit.previewScreen.terms')} />
-          <Card shadow="none" p="lg">
+          <Card p="lg">
             <Box gap="md">
               {terms.map(item => (
                 <Box key={item.key} row gap="sm">

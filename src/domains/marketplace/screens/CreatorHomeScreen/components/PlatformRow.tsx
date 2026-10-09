@@ -43,7 +43,6 @@ const PlatformRowComponent: React.FC<PlatformRowProps> = ({
 
   return (
     <Card
-      shadow="none"
       p="md"
       borderColor={isPrimary ? colors.interactive.main : undefined}
       onPress={handlePress}

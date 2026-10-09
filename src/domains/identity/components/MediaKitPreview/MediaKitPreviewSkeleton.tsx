@@ -10,22 +10,22 @@ const MediaKitPreviewSkeletonComponent: React.FC = () => {
 
   return (
     <Box gap="2xl">
-      <Card shadow="none" p="lg">
+      <Card p="lg">
         <Box gap="md">
           <Box row align="center" gap="md">
             <Skeleton width={sizes.avatar.lg} height={sizes.avatar.lg} borderRadius="full" />
             <Box flex={1} gap="sm">
-              <Skeleton width="60%" height={sizes.icon.md} borderRadius="sm" />
-              <Skeleton width="40%" height={sizes.icon.sm} borderRadius="sm" />
+              <Skeleton width="60%" height={sizes.icon.md} borderRadius="xs" />
+              <Skeleton width="40%" height={sizes.icon.sm} borderRadius="xs" />
             </Box>
           </Box>
-          <Skeleton width="70%" height={sizes.icon.md} borderRadius="sm" />
+          <Skeleton width="70%" height={sizes.icon.md} borderRadius="xs" />
         </Box>
       </Card>
-      <Card shadow="none" p="lg">
+      <Card p="lg">
         <Box gap="lg">
           {ROWS.map(key => (
-            <Skeleton key={key} width="100%" height={sizes.icon.lg} borderRadius="sm" />
+            <Skeleton key={key} width="100%" height={sizes.icon.lg} borderRadius="xs" />
           ))}
         </Box>
       </Card>

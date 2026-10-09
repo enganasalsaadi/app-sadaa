@@ -21,6 +21,7 @@ import {
   LayoutCollapseHeaderScreen,
   LayoutHeroOverlayScreen,
   LayoutStickyScreen,
+  LayoutMoneyWizardScreen,
   LayoutFooterElevateScreen,
   LayoutFabScreen,
   LayoutBrandHeaderScreen,
@@ -167,6 +168,7 @@ export const RootNavigator: React.FC<Props> = ({
           <Stack.Screen name="LayoutCollapseHeaderScreen" component={LayoutCollapseHeaderScreen} />
           <Stack.Screen name="LayoutHeroOverlayScreen" component={LayoutHeroOverlayScreen} />
           <Stack.Screen name="LayoutStickyScreen" component={LayoutStickyScreen} />
+          <Stack.Screen name="LayoutMoneyWizardScreen" component={LayoutMoneyWizardScreen} />
           <Stack.Screen name="LayoutFooterElevateScreen" component={LayoutFooterElevateScreen} />
           <Stack.Screen name="LayoutFabScreen" component={LayoutFabScreen} />
           <Stack.Screen name="LayoutBrandHeaderScreen" component={LayoutBrandHeaderScreen} />

@@ -1,8 +1,9 @@
 import type { ViewStyle } from 'react-native';
 import { moderateScale } from '../utils/responsive';
 
-// Rule 08: flat surfaces + border; shadows only for floating elements (bars, sheets, FAB).
-const LIGHT_SHADOW_COLOR = '#0F1D2B';
+// Rule 08 (v4): cards are borderless on a soft navy shadow (`card`); `lg` lifts sheets
+// and the tab bar. In dark a shadow can't read on navy, so cards add `border.card` instead.
+const LIGHT_SHADOW_COLOR = '#1C3349';
 const DARK_SHADOW_COLOR = '#000000';
 
 interface ShadowBase {
@@ -33,9 +34,23 @@ const BASE_SHADOWS: Record<ShadowToken, ShadowBase> = {
     shadowRadius: 8,
     elevation: 4,
   },
+  // Content cards: wide and faint, so the card floats without an outline.
+  card: {
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: { light: 0.09, dark: 0.35 },
+    shadowRadius: 16,
+    elevation: 3,
+  },
+  // Sheets and the floating tab bar.
+  lg: {
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: { light: 0.18, dark: 0.5 },
+    shadowRadius: 28,
+    elevation: 10,
+  },
 };
 
-export type ShadowToken = 'none' | 'sm' | 'md';
+export type ShadowToken = 'none' | 'sm' | 'md' | 'card' | 'lg';
 
 export type ShadowStyle = Pick<
   ViewStyle,

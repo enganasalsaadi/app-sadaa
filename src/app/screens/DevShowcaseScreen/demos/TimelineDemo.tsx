@@ -36,6 +36,11 @@ const TimelineDemoComponent: React.FC = () => {
         <SectionHeader title={t('devShowcase.timeline.errorTitle')} />
         <Timeline steps={failed} />
       </Box>
+      <Box gap="sm">
+        <SectionHeader title={t('devShowcase.timeline.trackTitle')} />
+        <Timeline steps={progress} variant="track" />
+        <Timeline steps={failed} variant="track" />
+      </Box>
     </Box>
   );
 };

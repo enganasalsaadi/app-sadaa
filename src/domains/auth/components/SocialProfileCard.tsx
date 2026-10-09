@@ -19,13 +19,12 @@ export const SocialProfileCard: React.FC<SocialProfileCardProps> = memo(({ loadi
   if (loading) {
     return (
       <Card
-        shadow="none"
         accessibilityLabel={t('auth.influencerOnboarding.socials.lookup.checking')}
       >
         <Box row align="center" gap="md">
           <Skeleton width={avatarSize} height={avatarSize} borderRadius="full" />
           <Box flex={1} gap="xs">
-            <Skeleton width="50%" height={sizes.icon.sm} borderRadius="sm" />
+            <Skeleton width="50%" height={sizes.icon.sm} borderRadius="xs" />
             <Text variant="caption" color={colors.text.secondary}>
               {t('auth.influencerOnboarding.socials.lookup.checking')}
             </Text>

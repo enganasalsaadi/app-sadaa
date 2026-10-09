@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, Heart, Search, Share2 } from 'lucide-react-native';
+import { Bell, Eye, Heart, ReceiptText, Search, Share2 } from 'lucide-react-native';
 import { Avatar, Banner, Box, ScreenHeader, SectionHeader, Text } from '@/shared/ui';
 import type { ScreenHeaderAction } from '@/shared/ui';
 import { useStyles, useTheme } from '@/core/theme';
@@ -29,6 +29,10 @@ const ScreenHeaderDemoComponent: React.FC = () => {
   const mediaActions: readonly [ScreenHeaderAction, ScreenHeaderAction] = [
     { icon: Share2, accessibilityLabel: t('common.share'), onPress: noop },
     { icon: Heart, accessibilityLabel: t('devShowcase.screenHeader.favorite'), onPress: noop },
+  ];
+  const glassActions: readonly [ScreenHeaderAction, ScreenHeaderAction] = [
+    { icon: Eye, accessibilityLabel: t('devShowcase.screenHeader.hideAmounts'), onPress: noop, glass: true },
+    { icon: ReceiptText, accessibilityLabel: t('devShowcase.screenHeader.statement'), onPress: noop, glass: true },
   ];
   const frame = { borderRadius: 'lg', overflow: 'hidden', borderWidth: 'thin', borderColor: colors.border.default } as const;
 
@@ -71,6 +75,18 @@ const ScreenHeaderDemoComponent: React.FC = () => {
       </Box>
 
       <Box gap="sm">
+        <SectionHeader title={t('devShowcase.screenHeader.closeLabel')} />
+        <Box {...frame}>
+          <ScreenHeader
+            title={t('devShowcase.screenHeader.title')}
+            backIcon="close"
+            onBackPress={noop}
+            withSafeArea={false}
+          />
+        </Box>
+      </Box>
+
+      <Box gap="sm">
         <SectionHeader title={t('devShowcase.screenHeader.brandLabel')} />
         <Box {...frame}>
           <ScreenHeader
@@ -101,6 +117,19 @@ const ScreenHeaderDemoComponent: React.FC = () => {
                 </Text>
               </Box>
             }
+          />
+        </Box>
+      </Box>
+
+      <Box gap="sm">
+        <SectionHeader title={t('devShowcase.screenHeader.glassLabel')} />
+        <Box {...frame}>
+          <ScreenHeader
+            title={t('devShowcase.screenHeader.title')}
+            variant="brand"
+            showBackButton={false}
+            actions={glassActions}
+            withSafeArea={false}
           />
         </Box>
       </Box>

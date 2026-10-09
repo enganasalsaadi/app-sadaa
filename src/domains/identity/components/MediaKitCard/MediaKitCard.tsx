@@ -61,7 +61,7 @@ const MediaKitCardComponent: React.FC<MediaKitCardProps> = ({
   const loading = status === 'loading';
 
   return (
-    <Card shadow="none" p="lg" accessibilityLabel={t('account.mediaKit.title')}>
+    <Card p="lg" accessibilityLabel={t('account.mediaKit.title')}>
       <Box gap="lg">
         <Box row align="center" gap="md">
           <Box

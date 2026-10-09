@@ -21,15 +21,15 @@ export interface CardProps {
   onPress?: PressableProps['onPress'];
   /**
    * حالة التحديد: بدون `bg` يُستخدم `interactive.soft` عند `true` و`surface.main` عند `false`.
-   * بدون `borderColor` يُستخدم `interactive.main` عند `true` و`border.default` عند `false`.
+   * بدون `borderColor` يُستخدم `interactive.main` عند `true` و`border.card` عند `false`.
    */
   selected?: boolean;
-  /** ظل من tokens — افتراضي `sm` للكروت (سطوح مسطحة + حد، انظر القاعدة 08) */
+  /** ظل من tokens — افتراضي `card`: بطاقة بلا حد على ظل كحلي ناعم (القاعدة 08، v4) */
   shadow?: ShadowToken;
   /** لون الخلفية؛ يتجاوز اشتقاق `selected` */
   bg?: string;
   borderRadius?: RadiiToken;
-  /** افتراضي `thin`؛ مرّر `none` لإزالة الحد */
+  /** افتراضي `thin` بلون `border.card` (شفاف في الفاتح، خط رفيع في الداكن)؛ مرّر `none` لإزالته */
   borderWidth?: BorderWidthToken;
   /** لون الحد؛ يتجاوز اشتقاق `selected` */
   borderColor?: string;
@@ -68,7 +68,7 @@ const CardInner: React.FC<CardProps> = ({
   children,
   onPress,
   selected,
-  shadow = 'sm',
+  shadow = 'card',
   bg,
   borderRadius = 'lg',
   borderWidth = 'thin',
@@ -96,7 +96,7 @@ const CardInner: React.FC<CardProps> = ({
   alignSelf,
   style,
   activeOpacity = opacity.pressedSubtle,
-  scaleOnPress,
+  scaleOnPress = true,
   disabled,
   accessibilityLabel,
   accessibilityHint,
@@ -107,7 +107,7 @@ const CardInner: React.FC<CardProps> = ({
     bg ?? (selected ? colors.interactive.soft : colors.surface.main);
   const resolvedBorderColor =
     borderColor ??
-    (selected ? colors.interactive.main : colors.border.default);
+    (selected ? colors.interactive.main : colors.border.card);
 
   const layoutProps = useMemo(
     () => ({

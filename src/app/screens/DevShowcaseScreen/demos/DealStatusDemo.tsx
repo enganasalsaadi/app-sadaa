@@ -31,6 +31,11 @@ const DealStatusDemoComponent: React.FC = () => {
         <SectionHeader title={t('devShowcase.dealStatus.disputedTitle')} />
         <DealProgress status="disputed" stoppedAt="in_progress" reachedAt={MOCK_DEAL_DATES} />
       </Box>
+      <Box gap="sm">
+        <SectionHeader title={t('devShowcase.dealStatus.trackTitle')} />
+        <DealProgress status="in_progress" variant="track" />
+        <DealProgress status="disputed" stoppedAt="awaiting_payment" variant="track" />
+      </Box>
     </Box>
   );
 };

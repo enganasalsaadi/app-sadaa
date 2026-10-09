@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, Globe, Palmtree, RefreshCw, Trash2, Wallet } from 'lucide-react-native';
+import { Bell, Globe, Landmark, Palmtree, RefreshCw, Smartphone, Store, Trash2, Wallet } from 'lucide-react-native';
 import { Badge, Box, ListGroup, ListRow, StatusPill, Switch } from '@/shared/ui';
 import { formatMoney } from '@/core/i18n';
 import { MOCK_DEAL_SUMMARY } from './mockData';
@@ -55,6 +55,31 @@ const ListRowsDemoComponent: React.FC = () => {
           onPress={demo.startLoading}
         />
         <ListRow icon={Globe} title={t('devShowcase.listRows.disabled')} onPress={demo.press} disabled />
+      </ListGroup>
+
+      <ListGroup title={t('devShowcase.listRows.optionsTitle')}>
+        <ListRow
+          icon={Store}
+          title={t('devShowcase.listRows.optionOffice')}
+          subtitle={t('devShowcase.listRows.optionOfficeCaption')}
+          selected={demo.option === 'office'}
+          onPress={demo.pickOffice}
+        />
+        <ListRow
+          icon={Landmark}
+          title={t('devShowcase.listRows.optionBank')}
+          subtitle={t('devShowcase.listRows.optionOfficeCaption')}
+          selected={demo.option === 'bank'}
+          onPress={demo.pickBank}
+        />
+        <ListRow
+          icon={Smartphone}
+          title={t('devShowcase.listRows.optionWallet')}
+          subtitle={t('devShowcase.listRows.optionWalletCaption')}
+          selected={false}
+          onPress={demo.press}
+          disabled
+        />
       </ListGroup>
 
       <ListGroup tone="danger">

@@ -59,7 +59,7 @@ const CheckboxComponent: React.FC<CheckboxProps> = ({
         <Box
           width={sizes.control.md}
           height={sizes.control.md}
-          borderRadius="sm"
+          borderRadius="xs"
           borderWidth="sm"
           borderColor={borderColor}
           bg={filled ? colors.interactive.main : colors.surface.main}

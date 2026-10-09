@@ -5,11 +5,11 @@ import {
   DEAL_STATUS_META,
   UNKNOWN_DEAL_STATUS_META,
 } from '../constants/dealStatus';
-import type { StatusMeta } from '../constants/dealStatus';
+import type { DealStatusMeta } from '../constants/dealStatus';
 import type { DealAction, DealRole, DealStatus } from '../types';
 
 /** `null` = a status the app doesn't know (map raw values with `isDealStatus` at the API edge). */
-export const getDealStatusMeta = (status: DealStatus | null): StatusMeta =>
+export const getDealStatusMeta = (status: DealStatus | null): DealStatusMeta =>
   status === null ? UNKNOWN_DEAL_STATUS_META : DEAL_STATUS_META[status];
 
 export const getDealActions = (

@@ -115,7 +115,7 @@ export const RatePlatformCard: React.FC<RatePlatformCardProps> = memo(
     const { colors, sizes } = useTheme();
 
     return (
-      <Card p="lg" shadow="none">
+      <Card p="lg">
         <Box gap="lg">
           <Box row align="center" gap="md">
             <Box

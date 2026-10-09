@@ -17,10 +17,10 @@ export const SkeletonItem: React.FC<SkeletonItemProps> = ({ variant = 'list' }) 
       <Box flex={1} m="xs" borderRadius="lg" overflow="hidden" bg={colors.surface.main} shadow="sm">
         <Skeleton width="100%" height={sizes.thumbnail.lg} borderRadius="none" />
         <Box p="sm" gap="xs">
-          <Skeleton width="80%" height={typography.bodySmall.fontSize} borderRadius="sm" />
-          <Skeleton width="55%" height={typography.caption.fontSize} borderRadius="sm" />
+          <Skeleton width="80%" height={typography.bodySmall.fontSize} borderRadius="xs" />
+          <Skeleton width="55%" height={typography.caption.fontSize} borderRadius="xs" />
           <Box mt="xs">
-            <Skeleton width="40%" height={typography.body.fontSize} borderRadius="sm" />
+            <Skeleton width="40%" height={typography.body.fontSize} borderRadius="xs" />
           </Box>
         </Box>
       </Box>
@@ -31,15 +31,15 @@ export const SkeletonItem: React.FC<SkeletonItemProps> = ({ variant = 'list' }) 
     <Box mb="md" borderRadius="lg" overflow="hidden" bg={colors.surface.main} shadow="sm">
       <Skeleton width="100%" height={sizes.illustration.lg} borderRadius="none" />
       <Box p="lg" gap="sm">
-        <Skeleton width="70%" height={typography.title.fontSize} borderRadius="sm" />
-        <Skeleton width="45%" height={typography.bodySmall.fontSize} borderRadius="sm" />
-        <Skeleton width="60%" height={typography.caption.fontSize} borderRadius="sm" />
+        <Skeleton width="70%" height={typography.title.fontSize} borderRadius="xs" />
+        <Skeleton width="45%" height={typography.bodySmall.fontSize} borderRadius="xs" />
+        <Skeleton width="60%" height={typography.caption.fontSize} borderRadius="xs" />
         <Box row justify="space-between" pt="sm">
           <Box width="28%">
-            <Skeleton width="100%" height={sizes.icon.md} borderRadius="sm" />
+            <Skeleton width="100%" height={sizes.icon.md} borderRadius="xs" />
           </Box>
           <Box width="28%">
-            <Skeleton width="100%" height={sizes.icon.md} borderRadius="sm" />
+            <Skeleton width="100%" height={sizes.icon.md} borderRadius="xs" />
           </Box>
         </Box>
       </Box>

@@ -15,7 +15,7 @@ interface SampleProps {
 const Sample: React.FC<SampleProps> = memo(({ label, children }) => {
   const { colors } = useTheme();
   return (
-    <Card p="md" shadow="none">
+    <Card p="md">
       <Box gap="sm">
         <Text variant="caption" color={colors.text.secondary}>
           {label}

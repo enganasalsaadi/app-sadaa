@@ -25,7 +25,7 @@ const Tile = memo<{ tile: SettingsTile }>(({ tile }) => {
   const { colors, sizes } = useTheme();
   const Icon = tile.icon;
   return (
-    <Card flex={1} shadow="none" p="md" onPress={tile.onPress} accessibilityLabel={tile.label}>
+    <Card flex={1} p="md" onPress={tile.onPress} accessibilityLabel={tile.label}>
       <Box gap="sm">
         <Box
           width={ICON_BOX}
@@ -100,7 +100,7 @@ const SettingsGridComponent: React.FC<SettingsGridProps> = ({
   return (
     <Box gap="md">
       <SectionHeader title={t('account.profile.settings')} />
-      <Card shadow="none" p="md">
+      <Card p="md">
         <Box gap="md">
           <Box row align="center" gap="sm">
             <SunMoon size={sizes.icon.sm} color={colors.icon.primary} />

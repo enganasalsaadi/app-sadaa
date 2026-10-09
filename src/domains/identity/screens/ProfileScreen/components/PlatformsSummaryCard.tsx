@@ -45,7 +45,6 @@ const PlatformsSummaryCardComponent: React.FC<PlatformsSummaryCardProps> = ({
 
   return (
     <Card
-      shadow="none"
       p="lg"
       onPress={onPress}
       accessibilityLabel={t('account.profile.platforms.title')}

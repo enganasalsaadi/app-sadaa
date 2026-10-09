@@ -5,6 +5,7 @@
 export { AuthNavigator } from './navigation/AuthNavigator';
 export { useDeviceRegistration } from './hooks/useDeviceRegistration';
 export { usePushRefresh } from './hooks/usePushRefresh';
+export { useOpenSupport } from './hooks/useOpenSupport';
 export { DeleteAccountSheet } from './components/DeleteAccountSheet';
 export { PlatformAccountSheet } from './components/PlatformAccountSheet';
 export { RatePlatformCard } from './components/RatePlatformCard';
@@ -16,8 +17,6 @@ export {
 export { formatPhoneForDisplay } from './utils/formatPhoneForDisplay';
 export { useFollowerTierOptions } from './hooks/useFollowerTierOptions';
 export { formatClock } from './utils/formatClock';
-export { useKycFilePicker } from './hooks/useKycFilePicker';
-export type { KycPickError } from './hooks/useKycFilePicker';
 export { isKycAlreadySubmitted, toFormDataFile } from './utils/kycSubmission';
 export { KYC_ALLOWED_MIME_TYPES, KYC_MAX_FILE_BYTES } from './constants/brandOnboarding';
 export {

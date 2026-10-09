@@ -25,7 +25,7 @@ const CompanyInfoCardComponent: React.FC<CompanyInfoCardProps> = ({ company, isL
   );
 
   return (
-    <Card shadow="none" p="lg" onPress={onPress} accessibilityLabel={t('account.companyInfo.title')}>
+    <Card p="lg" onPress={onPress} accessibilityLabel={t('account.companyInfo.title')}>
       <Box gap="md">
         <Box row align="center" gap="sm">
           <Box flex={1}>

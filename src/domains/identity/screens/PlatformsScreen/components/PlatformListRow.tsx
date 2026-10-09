@@ -23,7 +23,6 @@ const PlatformListRowComponent: React.FC<PlatformListRowProps> = ({ platform, on
   return (
     <Box pb="md">
       <Card
-        shadow="none"
         p="lg"
         onPress={handlePress}
         accessibilityLabel={`${platform.platform_label} @${platform.username}`}

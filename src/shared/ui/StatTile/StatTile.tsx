@@ -56,7 +56,8 @@ const StatTileComponent: React.FC<StatTileProps> = ({
       p="md"
       borderRadius="lg"
       borderWidth="thin"
-      borderColor={colors.border.default}
+      borderColor={colors.border.card}
+      shadow="card"
       bg={colors.surface.main}
       accessible
       accessibilityLabel={
@@ -80,7 +81,7 @@ const StatTileComponent: React.FC<StatTileProps> = ({
       </Box>
 
       {loading ? (
-        <Skeleton width="60%" height={sizes.icon.lg} borderRadius="sm" />
+        <Skeleton width="60%" height={sizes.icon.lg} borderRadius="xs" />
       ) : (
         <Text variant="amount" color={tone === 'money' ? colors.money.text : colors.text.primary} numberOfLines={1}>
           {value}

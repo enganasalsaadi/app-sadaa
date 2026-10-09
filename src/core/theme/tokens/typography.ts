@@ -54,6 +54,13 @@ const BASE_TYPOGRAPHY = {
   },
   overline: { fontSize: 10, lineHeight: 14, weight: 'medium', letterSpacing: 1.5 },
   label: { fontSize: 16, lineHeight: 20, weight: 'regular', letterSpacing: 0.1 },
+  amountSmall: {
+    fontSize: 14,
+    lineHeight: 20,
+    weight: 'bold',
+    letterSpacing: 0,
+    tabular: true,
+  },
   amount: {
     fontSize: 16,
     lineHeight: 24,
@@ -61,9 +68,32 @@ const BASE_TYPOGRAPHY = {
     letterSpacing: 0,
     tabular: true,
   },
+  /** Card totals and the pinned balance in a header bar. */
+  amountTitle: {
+    fontSize: 22,
+    lineHeight: 30,
+    weight: 'extraBold',
+    letterSpacing: 0,
+    tabular: true,
+  },
   amountLarge: {
     fontSize: 32,
     lineHeight: 40,
+    weight: 'extraBold',
+    letterSpacing: 0,
+    tabular: true,
+  },
+  amountHero: {
+    fontSize: 44,
+    lineHeight: 52,
+    weight: 'extraBold',
+    letterSpacing: 0,
+    tabular: true,
+  },
+  /** The wallet balance (money tab root hero, approved 2026-10-09). */
+  amountDisplay: {
+    fontSize: 58,
+    lineHeight: 64,
     weight: 'extraBold',
     letterSpacing: 0,
     tabular: true,

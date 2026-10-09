@@ -20,6 +20,8 @@ const DealCardDemoComponent: React.FC = () => {
         status="in_progress"
         dueAt={dueAt.draft}
         dueLabel={t('devShowcase.countdown.draftDue')}
+        showProgress
+        escrow={MOCK_DEAL_SUMMARY.upfront}
         onPress={onPress}
       />
       <DealCard

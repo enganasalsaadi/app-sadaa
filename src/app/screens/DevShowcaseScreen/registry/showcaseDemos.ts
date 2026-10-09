@@ -10,6 +10,7 @@ import { FilePickerDemo } from '../demos/FilePickerDemo';
 import { FormSectionDemo } from '../demos/FormSectionDemo';
 import { GalleryDemo } from '../demos/GalleryDemo';
 import { GlassDemo } from '../demos/GlassDemo';
+import { LiveElementsDemo } from '../demos/LiveElementsDemo';
 import { GlobalErrorsDemo } from '../demos/GlobalErrorsDemo';
 import { ImagesDemo } from '../demos/ImagesDemo';
 import { InlineErrorDemo } from '../demos/InlineErrorDemo';
@@ -49,6 +50,7 @@ import { MediaTileDemo } from '../demos/MediaTileDemo';
 import { RatingStarsDemo } from '../demos/RatingStarsDemo';
 import { StatTileDemo } from '../demos/StatTileDemo';
 import { SparklineDemo } from '../demos/SparklineDemo';
+import { BarChartDemo } from '../demos/BarChartDemo';
 import { DealStatusDemo } from '../demos/DealStatusDemo';
 import { DealCardDemo } from '../demos/DealCardDemo';
 import { CreatorCardDemo } from '../demos/CreatorCardDemo';
@@ -105,11 +107,13 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   amountInput: AmountInputDemo,
   numberStepper: NumberStepperDemo,
   timeline: TimelineDemo,
+  liveElements: LiveElementsDemo,
   countdown: CountdownDemo,
   mediaTile: MediaTileDemo,
   ratingStars: RatingStarsDemo,
   statTile: StatTileDemo,
   sparkline: SparklineDemo,
+  barChart: BarChartDemo,
   dealStatus: DealStatusDemo,
   dealCard: DealCardDemo,
   creatorCard: CreatorCardDemo,

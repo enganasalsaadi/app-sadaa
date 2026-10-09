@@ -106,7 +106,6 @@ const KycCardComponent: React.FC<KycCardProps> = ({ kyc, userType, onOpen }) => 
     case 'unverified':
       return (
         <Card
-          shadow="none"
           p="lg"
           onPress={onOpen}
           accessibilityLabel={onOpen ? t(copy.unverifiedTitle) : undefined}

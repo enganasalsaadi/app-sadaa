@@ -24,6 +24,7 @@ import { ComingSoonTabScreen } from '@/app/screens';
 import { CreatorHomeNavigator, HomeNavigator } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
+import { BrandWalletNavigator, CreatorWalletNavigator } from '@/domains/finance';
 import { FloatingBottomBar } from '@/shared/ui';
 import { ScrollProvider } from '@/shared/context/ScrollContext';
 import { BottomBarProvider } from '@/shared/context/BottomBarContext';
@@ -52,17 +53,12 @@ const MessagesPlaceholder: React.FC = () => {
   return <ComingSoonTabScreen title={t('tabs.messages')} icon={MessageCircle} />;
 };
 
-const WalletPlaceholder: React.FC = () => {
-  const { t } = useTranslation();
-  return <ComingSoonTabScreen title={t('tabs.wallet')} icon={Wallet} />;
-};
-
 /** Same route names for both roles; label, icon and root screen differ. */
 const BRAND_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.explore', icon: Compass, component: HomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.campaigns', icon: Megaphone, component: CampaignsPlaceholder },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
-  { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: WalletPlaceholder },
+  { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: BrandWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.account', icon: CircleUser, component: SettingsNavigator },
 ];
 
@@ -70,7 +66,7 @@ const CREATOR_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: CreatorHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: DealsPlaceholder },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
-  { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: WalletPlaceholder },
+  { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: CreatorWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },
 ];
 

@@ -80,7 +80,7 @@ const CustomButtonInner: React.FC<CustomButtonProps> = ({
   );
 
   const isDisabled = disabled || loading;
-  const showBorder = variant === 'outline' && !noBorder;
+  const showBorder = (variant === 'outline' || variant === 'glass') && !noBorder;
   const horizPadding = pxOverride ?? SIZE_PX[size];
 
   const handlePress = useCallback(

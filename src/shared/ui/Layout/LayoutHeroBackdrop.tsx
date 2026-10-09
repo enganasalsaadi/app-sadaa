@@ -10,7 +10,7 @@ interface LayoutHeroBackdropProps {
   height: number;
   /** Same lag as the hero content, so the gradient and its content move together. */
   parallax: number;
-  /** Corner orbs on their own layer: they follow the hero but never stretch with the pull. */
+  /** Live hero: darker gradient + drifting lights on their own layer (they follow the hero but never stretch with the pull). */
   glow: boolean;
 }
 
@@ -45,7 +45,7 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
   return (
     <>
       <Animated.View pointerEvents="none" style={[styles.backdrop, sizeStyle, style]}>
-        <GradientSurface variant="brand" flex={1} />
+        <GradientSurface variant={glow ? 'live' : 'brand'} flex={1} />
       </Animated.View>
       {glow ? (
         <Animated.View pointerEvents="none" style={[styles.backdrop, sizeStyle, glowStyle]}>

@@ -6,6 +6,7 @@ import { iconStroke, opacity, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
+import { RadioMark } from '../Radio/RadioMark';
 
 export type ListRowTone = 'default' | 'danger';
 
@@ -23,6 +24,11 @@ export interface ListRowProps {
   disabled?: boolean;
   loading?: boolean;
   accessibilityLabel?: string;
+  /**
+   * Set (true or false) = one option of a single-choice list (channel picker): a radio
+   * mark replaces the trailing slot and the picked row turns teal soft. Needs `onPress`.
+   */
+  selected?: boolean;
 }
 
 /** One settings/menu/navigation row. Group rows in `ListGroup`. */
@@ -37,14 +43,18 @@ const ListRowComponent: React.FC<ListRowProps> = ({
   disabled = false,
   loading = false,
   accessibilityLabel,
+  selected,
 }) => {
   const { colors, sizes, isRTL } = useTheme();
   const isDanger = tone === 'danger';
+  const isOption = selected !== undefined;
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
 
   const trailingNode =
     loading ? (
       <ActivityIndicator size="small" color={colors.icon.secondary} />
+    ) : isOption ? (
+      <RadioMark selected={selected} />
     ) : trailing !== undefined ? (
       trailing
     ) : onPress && !isDanger ? (
@@ -58,13 +68,13 @@ const ListRowComponent: React.FC<ListRowProps> = ({
           width={sizes.iconButton.sm}
           height={sizes.iconButton.sm}
           borderRadius="md"
-          bg={isDanger ? colors.status.danger.soft : colors.surface.elevated}
+          bg={isDanger ? colors.status.danger.soft : selected ? colors.surface.main : colors.surface.elevated}
           align="center"
           justify="center"
         >
           <Icon
             size={sizes.icon.sm}
-            color={isDanger ? colors.status.danger.main : colors.icon.primary}
+            color={isDanger ? colors.status.danger.main : selected ? colors.interactive.main : colors.icon.primary}
             strokeWidth={iconStroke.regular}
           />
         </Box>
@@ -111,10 +121,11 @@ const ListRowComponent: React.FC<ListRowProps> = ({
       onPress={onPress}
       disabled={disabled || loading}
       opacity={disabled ? opacity.disabled : 1}
-      accessibilityRole="button"
+      bg={selected ? colors.interactive.soft : undefined}
+      accessibilityRole={isOption ? 'radio' : 'button'}
       accessibilityLabel={accessibilityLabel ?? (value ? `${title}, ${value}` : title)}
       accessibilityHint={subtitle}
-      accessibilityState={{ disabled: disabled || loading, busy: loading }}
+      accessibilityState={{ disabled: disabled || loading, busy: loading, checked: isOption ? selected : undefined }}
     >
       {content}
     </Pressable>

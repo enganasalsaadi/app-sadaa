@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CalendarDays } from 'lucide-react-native';
 import { Box, Chip, ChipGroup, CustomButton, Text } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import { useChipsDemo } from './hooks/useChipsDemo';
@@ -19,6 +20,9 @@ const ChipsDemoComponent: React.FC = () => {
     setGroupMulti,
     loading,
     toggleLoading,
+    dateSet,
+    pickDate,
+    clearDate,
   } = useChipsDemo();
 
   return (
@@ -42,6 +46,24 @@ const ChipsDemoComponent: React.FC = () => {
             value="disabled"
             onSelect={toggleMulti}
             disabled
+          />
+        </Box>
+      </Box>
+
+      <Box gap="sm">
+        <Text variant="label" color={colors.text.secondary}>
+          {t('devShowcase.chips.filterTitle')}
+        </Text>
+        <Box row wrap gap="sm">
+          <Chip
+            label={t(dateSet ? 'devShowcase.chips.filterSet' : 'devShowcase.chips.filterAll')}
+            value="date"
+            icon={CalendarDays}
+            dropdown
+            selected={dateSet}
+            onSelect={pickDate}
+            onClear={clearDate}
+            clearLabel={t('devShowcase.chips.filterClear')}
           />
         </Box>
       </Box>

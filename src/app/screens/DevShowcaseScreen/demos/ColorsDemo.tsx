@@ -58,7 +58,7 @@ const ColorsDemoComponent: React.FC = () => {
               <Box
                 width={sizes.icon.xl}
                 height={sizes.icon.xl}
-                borderRadius="sm"
+                borderRadius="xs"
                 bg={group.hue.main}
               />
               <Text variant="caption" color={colors.text.tertiary}>
@@ -69,7 +69,7 @@ const ColorsDemoComponent: React.FC = () => {
               <Box
                 width={sizes.icon.xl}
                 height={sizes.icon.xl}
-                borderRadius="sm"
+                borderRadius="xs"
                 bg={group.hue.text}
               />
               <Text variant="caption" color={colors.text.tertiary}>
@@ -80,7 +80,7 @@ const ColorsDemoComponent: React.FC = () => {
               <Box
                 width={sizes.icon.xl}
                 height={sizes.icon.xl}
-                borderRadius="sm"
+                borderRadius="xs"
                 bg={group.hue.soft}
                 borderWidth="hairline"
                 borderColor={colors.border.default}

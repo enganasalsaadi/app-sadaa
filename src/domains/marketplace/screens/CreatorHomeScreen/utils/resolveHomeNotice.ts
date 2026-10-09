@@ -13,8 +13,10 @@ export type HomeNoticeKey = (typeof HOME_NOTICES)[number];
 
 export type HomeNoticeAction = 'openPlatforms' | 'openKyc' | 'openRates' | 'makePublic';
 
+export type HomeNoticeTone = 'danger' | 'warning' | 'info';
+
 export interface HomeNoticeDef {
-  tone: 'danger' | 'warning' | 'info';
+  tone: HomeNoticeTone;
   titleKey: ParseKeys;
   messageKey: ParseKeys;
   action: { labelKey: ParseKeys; run: HomeNoticeAction } | null;

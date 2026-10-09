@@ -32,6 +32,20 @@ describe('resolveNotificationRoute', () => {
     expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'NotificationsScreen' });
   });
 
+  it('opens the wallet tab for both roles', () => {
+    expect(resolveNotificationRoute({ kind: 'wallet' }, 'brand')).toEqual({ screen: 'WalletTab' });
+    expect(resolveNotificationRoute({ kind: 'wallet' }, 'influencer')).toEqual({
+      screen: 'WalletTab',
+    });
+  });
+
+  it('opens a top-up for a brand, the wallet tab for anyone else', () => {
+    const target = { kind: 'topUp', topUpId: '01JB4M8X' } as const;
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({ screen: 'TopUpDetail', topUpId: '01JB4M8X' });
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({ screen: 'WalletTab' });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
+  });
+
   it('does nothing without a target', () => {
     expect(resolveNotificationRoute(null, 'influencer')).toBeNull();
   });
@@ -57,6 +71,9 @@ describe('notificationTarget', () => {
     expect(
       notificationTarget(item({ type: 'platform_approved', data: { entity_id: '01J9ABC' } })),
     ).toEqual({ kind: 'platform', platformId: '01J9ABC' });
+    expect(
+      notificationTarget(item({ type: 'wallet_top_up_reversed', data: { entity_id: '01JB4M8X' } })),
+    ).toEqual({ kind: 'topUp', topUpId: '01JB4M8X' });
     expect(notificationTarget(item({ type: 'test' }))).toBeNull();
   });
 });
@@ -70,6 +87,17 @@ describe('toTabParams', () => {
     expect(toTabParams({ screen: 'PlatformDetailScreen', platformId: 'p1' })).toEqual({
       screen: 'SettingsTab',
       params: { screen: 'PlatformDetailScreen', params: { platformId: 'p1' }, initial: false },
+    });
+  });
+
+  it('switches to the wallet tab', () => {
+    expect(toTabParams({ screen: 'WalletTab' })).toEqual({ screen: 'WalletTab' });
+  });
+
+  it('opens a top-up over the wallet home', () => {
+    expect(toTabParams({ screen: 'TopUpDetail', topUpId: 'tu1' })).toEqual({
+      screen: 'WalletTab',
+      params: { screen: 'TopUpDetail', params: { id: 'tu1' }, initial: false },
     });
   });
 });

@@ -62,7 +62,11 @@ export type {
   ScreenHeaderMotion,
 } from './ScreenHeader';
 export { DateRangePicker, DateRangePickerContent } from './DateRangePicker';
-export type { DateRangePickerProps, DateRangePickerContentProps } from './DateRangePicker';
+export type {
+  DateRangeDirection,
+  DateRangePickerProps,
+  DateRangePickerContentProps,
+} from './DateRangePicker';
 export {
   SuperList,
   useListLayout,
@@ -92,8 +96,8 @@ export { WizardShell, useWizardHeader } from './WizardShell';
 export type { WizardShellProps, WizardShellAction, WizardHeaderConfig } from './WizardShell';
 export { ConfirmSheet } from './ConfirmSheet';
 export type { ConfirmSheetProps } from './ConfirmSheet';
-export { FilePickerCard } from './FilePickerCard';
-export type { FilePickerCardProps, PickedFile } from './FilePickerCard';
+export { FilePickerCard, useFilePicker } from './FilePickerCard';
+export type { FilePickerCardProps, PickedFile, FilePickError, FilePickSource } from './FilePickerCard';
 export { Skeleton } from './Skeleton';
 export type { SkeletonProps, SkeletonSurface } from './Skeleton';
 export { SocialPlatformIcon } from './SocialPlatformIcon';
@@ -166,7 +170,21 @@ export type { MoneyTextProps, MoneyTextSize, MoneyTextTone } from './MoneyText';
 export { AmountInput } from './AmountInput';
 export type { AmountInputProps } from './AmountInput';
 export { Timeline } from './Timeline';
-export type { TimelineProps, TimelineStep, TimelineStepState } from './Timeline';
+export type { TimelineProps, TimelineStep, TimelineStepState, TimelineVariant } from './Timeline';
+
+// v4 "live" parts (rule 09 §3.1)
+export { LiveDot } from './LiveDot';
+export type { LiveDotProps } from './LiveDot';
+export { LiveIsland } from './LiveIsland';
+export type { LiveIslandProps, LiveIslandTone } from './LiveIsland';
+export { AnimatedNumber } from './AnimatedNumber';
+export type { AnimatedNumberProps } from './AnimatedNumber';
+export { MoneyFlow } from './MoneyFlow';
+export type { MoneyFlowProps } from './MoneyFlow';
+export { SmartBorder } from './SmartBorder';
+export type { SmartBorderProps } from './SmartBorder';
+export { StaggerIn } from './StaggerIn';
+export type { StaggerInProps } from './StaggerIn';
 export { Countdown } from './Countdown';
 export type { CountdownProps } from './Countdown';
 export { MediaTile } from './MediaTile';
@@ -177,3 +195,5 @@ export { StatTile } from './StatTile';
 export type { StatTileProps, StatTileTone } from './StatTile';
 export { Sparkline } from './Sparkline';
 export type { SparklineProps, SparklineTone } from './Sparkline';
+export { BarChart } from './BarChart';
+export type { BarChartProps, BarChartDatum, BarChartTone } from './BarChart';

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { BrandWizardStackParamList } from '@/core/navigation';
-import { useWizardHeader } from '@/shared/ui';
+import { useFilePicker, useWizardHeader, type FilePickError } from '@/shared/ui';
 import { useBrandStep3KycMutation } from '../../../api';
 import {
   BRAND_WIZARD_STEPS,
@@ -12,8 +12,6 @@ import {
   KYC_MAX_FILE_BYTES,
 } from '../../../constants/brandOnboarding';
 import { useBrandOnboardingFlow } from '../../../hooks/useBrandOnboardingFlow';
-import { useKycFilePicker } from '../../../hooks/useKycFilePicker';
-import type { KycPickError } from '../../../hooks/useKycFilePicker';
 import {
   createKycSkipForm,
   isKycAlreadySubmitted,
@@ -26,7 +24,7 @@ const PICK_ERROR_KEY = {
   size: 'auth.brandOnboarding.kyc.errors.size',
   type: 'auth.brandOnboarding.kyc.errors.type',
   failed: 'auth.brandOnboarding.kyc.errors.failed',
-} as const satisfies Record<KycPickError, string>;
+} as const satisfies Record<FilePickError, string>;
 
 export const useBrandKycScreen = () => {
   const { t } = useTranslation();
@@ -38,7 +36,7 @@ export const useBrandKycScreen = () => {
     pickError,
     onPick,
     onRemove,
-  } = useKycFilePicker({
+  } = useFilePicker({
     allowedMimeTypes: KYC_ALLOWED_MIME_TYPES,
     maxBytes: KYC_MAX_FILE_BYTES,
     fallbackName: t('auth.brandOnboarding.kyc.documentFallbackName'),

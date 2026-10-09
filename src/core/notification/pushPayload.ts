@@ -1,9 +1,17 @@
-/** FCM `data.type` values (contract §11.2). */
+/** FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4). */
 export const PUSH_TYPES = [
   'kyc_approved',
   'kyc_rejected',
   'platform_approved',
   'platform_rejected',
+  'wallet_top_up_completed',
+  'wallet_top_up_rejected',
+  'wallet_top_up_reversed',
+  'wallet_withdrawal_completed',
+  'wallet_withdrawal_rejected',
+  'wallet_withdrawal_returned',
+  'wallet_wallet_frozen',
+  'wallet_wallet_unfrozen',
   'test',
 ] as const;
 export type PushType = (typeof PUSH_TYPES)[number];
@@ -12,7 +20,9 @@ export type PushType = (typeof PUSH_TYPES)[number];
 export type PushTarget =
   | { kind: 'kyc' }
   | { kind: 'platform'; platformId: string }
-  | { kind: 'notifications' };
+  | { kind: 'notifications' }
+  | { kind: 'wallet' }
+  | { kind: 'topUp'; topUpId: string };
 
 export interface ParsedPush {
   /** `null` for a type this build doesn't know yet. */
@@ -31,11 +41,19 @@ const isPushType = (value: unknown): value is PushType =>
 const parseDeepLink = (link: unknown): PushTarget | null => {
   if (typeof link !== 'string' || !link.startsWith(DEEP_LINK_SCHEME)) return null;
   const segments = link.slice(DEEP_LINK_SCHEME.length).split('/');
+  // `wallet/top-ups/{id}` is the only three-segment route.
+  if (segments.length === 3) {
+    const [route, sub, id = ''] = segments;
+    return route === 'wallet' && sub === 'top-ups' && ENTITY_ID.test(id)
+      ? { kind: 'topUp', topUpId: id }
+      : null;
+  }
   const [route, id, ...rest] = segments;
   if (rest.length > 0) return null;
 
   if (route === 'kyc' && id === undefined) return { kind: 'kyc' };
   if (route === 'notifications' && id === undefined) return { kind: 'notifications' };
+  if (route === 'wallet' && id === undefined) return { kind: 'wallet' };
   if (route === 'platforms' && id !== undefined && ENTITY_ID.test(id)) {
     return { kind: 'platform', platformId: id };
   }

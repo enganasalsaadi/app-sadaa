@@ -32,8 +32,8 @@ const HeroSheetComponent: React.FC<HeroSheetProps> = ({ header, children }) => {
       sheet: {
         flex: 1,
         backgroundColor: theme.colors.surface.main,
-        borderTopStartRadius: theme.radii.lg,
-        borderTopEndRadius: theme.radii.lg,
+        borderTopStartRadius: theme.radii.xl,
+        borderTopEndRadius: theme.radii.xl,
         overflow: 'hidden',
       },
     }),

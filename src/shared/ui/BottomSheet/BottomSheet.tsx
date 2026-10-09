@@ -28,6 +28,11 @@ interface BottomSheetProps {
   bg?: string;
   fullScreen?: boolean;
   muted?: boolean;
+  /**
+   * After the sheet has fully left the screen. Open the next native screen (an image or
+   * file picker) from here: iOS can't present one while a modal is still dismissing.
+   */
+  onDismissed?: () => void;
 }
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -40,6 +45,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   bg,
   fullScreen = false,
   muted = false,
+  onDismissed,
 }) => {
   const { t } = useTranslation();
   const { colors, sizes, spacing } = useTheme();
@@ -48,9 +54,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const sheetAnim = useRef(new Animated.Value(windowHeight)).current;
+  const onDismissedRef = useRef(onDismissed);
+  onDismissedRef.current = onDismissed;
+  // The close animation also runs on mount; only a sheet that was open reports a dismissal.
+  const shownRef = useRef(false);
 
   useEffect(() => {
     if (visible) {
+      shownRef.current = true;
       setIsVisible(true);
       Animated.parallel([
         Animated.timing(backdropAnim, {
@@ -76,7 +87,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           duration: motion.duration.base,
           useNativeDriver: true,
         }),
-      ]).start(() => setIsVisible(false));
+      ]).start(({ finished }) => {
+        if (!finished) return;
+        setIsVisible(false);
+        const wasShown = shownRef.current;
+        shownRef.current = false;
+        // iOS reports through the Modal's own `onDismiss`, once it is really gone.
+        if (wasShown && Platform.OS !== 'ios') onDismissedRef.current?.();
+      });
     }
   }, [visible, backdropAnim, sheetAnim, windowHeight]);
 
@@ -111,6 +129,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       animationType="none"
       statusBarTranslucent
       onRequestClose={onClose}
+      onDismiss={onDismissed}
     >
       {/* Overlay — pointerEvents none so touches reach the dismiss area below */}
       <Animated.View pointerEvents="none" style={overlayStyle} />
@@ -131,8 +150,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           <Box
             style={sheetStyle}
             bg={backgroundColor}
-            borderTopStartRadius="lg"
-            borderTopEndRadius="lg"
+            borderTopStartRadius="xl"
+            borderTopEndRadius="xl"
             overflow="hidden"
           >
             {showHandle && (

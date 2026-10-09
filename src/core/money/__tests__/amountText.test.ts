@@ -19,7 +19,8 @@ describe('parseAmountText', () => {
     expect(parseAmountText('1250.5', 'USD')).toEqual({ amount: 125050, currency: 'USD' });
     expect(parseAmountText('0.29', 'USD')).toEqual({ amount: 29, currency: 'USD' });
     expect(parseAmountText('.5', 'USD')).toEqual({ amount: 50, currency: 'USD' });
-    expect(parseAmountText('40', 'SYP')).toEqual({ amount: 4000, currency: 'SYP' });
+    expect(parseAmountText('40', 'SYP')).toEqual({ amount: 40, currency: 'SYP' });
+    expect(parseAmountText('6,500.75', 'SYP')).toEqual({ amount: 6500, currency: 'SYP' });
   });
 
   it('returns null for empty input', () => {
@@ -34,6 +35,7 @@ describe('toAmountText', () => {
     expect(toAmountText({ amount: 125050, currency: 'USD' })).toBe('1250.50');
     expect(toAmountText({ amount: 5, currency: 'USD' })).toBe('0.05');
     expect(toAmountText({ amount: 0, currency: 'USD' })).toBe('0.00');
+    expect(toAmountText({ amount: 6402500, currency: 'SYP' })).toBe('6402500');
     expect(parseAmountText(toAmountText({ amount: 99901, currency: 'USD' }), 'USD')).toEqual({
       amount: 99901,
       currency: 'USD',

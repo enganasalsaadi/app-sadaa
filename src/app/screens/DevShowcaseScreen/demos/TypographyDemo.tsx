@@ -20,8 +20,12 @@ const LABEL_KEY = {
   buttonSmall: 'devShowcase.typography.buttonSmallLabel',
   overline: 'devShowcase.typography.overlineLabel',
   label: 'devShowcase.typography.labelLabel',
+  amountSmall: 'devShowcase.typography.amountSmallLabel',
   amount: 'devShowcase.typography.amountLabel',
+  amountTitle: 'devShowcase.typography.amountTitleLabel',
   amountLarge: 'devShowcase.typography.amountLargeLabel',
+  amountHero: 'devShowcase.typography.amountHeroLabel',
+  amountDisplay: 'devShowcase.typography.amountDisplayLabel',
 } as const satisfies Record<TypographyVariant, ParseKeys>;
 
 const VARIANTS = Object.keys(LABEL_KEY) as TypographyVariant[];

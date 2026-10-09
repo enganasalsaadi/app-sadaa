@@ -7,23 +7,69 @@ export interface StatusMeta {
   tone: HueTone;
 }
 
+export interface DealStatusMeta extends StatusMeta {
+  /** One-word stage name for the horizontal stage track (`DealProgress variant="track"`). */
+  stageKey: ParseKeys;
+}
+
 /** Tones per rule 08: info = waiting on review, warning = waiting on money, teal = moving, neutral = closed. */
 export const DEAL_STATUS_META = {
-  pending_approval: { labelKey: 'marketplace.deal.status.pendingApproval', tone: 'info' },
-  awaiting_payment: { labelKey: 'marketplace.deal.status.awaitingPayment', tone: 'warning' },
-  in_progress: { labelKey: 'marketplace.deal.status.inProgress', tone: 'interactive' },
-  under_review: { labelKey: 'marketplace.deal.status.underReview', tone: 'info' },
-  ready_to_publish: { labelKey: 'marketplace.deal.status.readyToPublish', tone: 'interactive' },
-  published: { labelKey: 'marketplace.deal.status.published', tone: 'interactive' },
-  completed: { labelKey: 'marketplace.deal.status.completed', tone: 'success' },
-  disputed: { labelKey: 'marketplace.deal.status.disputed', tone: 'danger' },
-  cancelled: { labelKey: 'marketplace.deal.status.cancelled', tone: 'neutral' },
-  refunded: { labelKey: 'marketplace.deal.status.refunded', tone: 'neutral' },
-} as const satisfies Record<DealStatus, StatusMeta>;
+  pending_approval: {
+    labelKey: 'marketplace.deal.status.pendingApproval',
+    stageKey: 'marketplace.deal.stage.pendingApproval',
+    tone: 'info',
+  },
+  awaiting_payment: {
+    labelKey: 'marketplace.deal.status.awaitingPayment',
+    stageKey: 'marketplace.deal.stage.awaitingPayment',
+    tone: 'warning',
+  },
+  in_progress: {
+    labelKey: 'marketplace.deal.status.inProgress',
+    stageKey: 'marketplace.deal.stage.inProgress',
+    tone: 'interactive',
+  },
+  under_review: {
+    labelKey: 'marketplace.deal.status.underReview',
+    stageKey: 'marketplace.deal.stage.underReview',
+    tone: 'info',
+  },
+  ready_to_publish: {
+    labelKey: 'marketplace.deal.status.readyToPublish',
+    stageKey: 'marketplace.deal.stage.readyToPublish',
+    tone: 'interactive',
+  },
+  published: {
+    labelKey: 'marketplace.deal.status.published',
+    stageKey: 'marketplace.deal.stage.published',
+    tone: 'interactive',
+  },
+  completed: {
+    labelKey: 'marketplace.deal.status.completed',
+    stageKey: 'marketplace.deal.stage.completed',
+    tone: 'success',
+  },
+  disputed: {
+    labelKey: 'marketplace.deal.status.disputed',
+    stageKey: 'marketplace.deal.stage.disputed',
+    tone: 'danger',
+  },
+  cancelled: {
+    labelKey: 'marketplace.deal.status.cancelled',
+    stageKey: 'marketplace.deal.stage.cancelled',
+    tone: 'neutral',
+  },
+  refunded: {
+    labelKey: 'marketplace.deal.status.refunded',
+    stageKey: 'marketplace.deal.stage.refunded',
+    tone: 'neutral',
+  },
+} as const satisfies Record<DealStatus, DealStatusMeta>;
 
 /** Shown for a status this build doesn't know yet (server ahead of the app). */
-export const UNKNOWN_DEAL_STATUS_META: StatusMeta = {
+export const UNKNOWN_DEAL_STATUS_META: DealStatusMeta = {
   labelKey: 'marketplace.deal.status.unknown',
+  stageKey: 'marketplace.deal.stage.unknown',
   tone: 'neutral',
 };
 

@@ -22,6 +22,7 @@ const textPairs = (c: ThemeColors): [string, string, string][] => {
   const texts: [string, string][] = [
     ['text.primary', c.text.primary],
     ['text.secondary', c.text.secondary],
+    ['text.tertiary', c.text.tertiary],
     ['text.link', c.text.link],
     ['brand.text', c.brand.text],
     ['interactive.text', c.interactive.text],
@@ -64,6 +65,11 @@ const textPairs = (c: ThemeColors): [string, string, string][] => {
           string,
         ],
     ),
+    // The live hero's last stop sits under the lights' teal; muted text stays above it.
+    ...c.gradients.heroLive.slice(0, -1).map(
+      stop => ['text.onBrandMuted on heroLive', c.text.onBrandMuted, stop] as [string, string, string],
+    ),
+    ['text.onBrand on heroLive end', c.text.onBrand, c.gradients.heroLive.at(-1) ?? c.brand.main],
     ['money.text on soft', c.money.text, c.money.soft],
     ['premium.text on soft', c.premium.text, c.premium.soft],
   ];

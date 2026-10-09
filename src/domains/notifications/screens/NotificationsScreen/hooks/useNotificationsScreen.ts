@@ -4,9 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ParseKeys } from 'i18next';
 import type { LucideIcon } from 'lucide-react-native';
-import { AtSign, Bell, ShieldCheck } from 'lucide-react-native';
+import { AtSign, Bell, ShieldCheck, Wallet } from 'lucide-react-native';
 import { formatDate } from '@/core/i18n';
 import type { HueTone } from '@/core/theme';
+import { navigate } from '@/core/navigation';
 import type { SettingsStackParamList } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { selectUser } from '@/domains/auth';
@@ -16,7 +17,11 @@ import {
   useMarkNotificationReadMutation,
 } from '../../../api/notificationsApi';
 import type { AppNotification } from '../../../types';
-import { notificationTarget, resolveNotificationRoute } from '../../../utils/notificationRoute';
+import {
+  notificationTarget,
+  resolveNotificationRoute,
+  toTabParams,
+} from '../../../utils/notificationRoute';
 import { toRelativeTime } from '../../../utils/relativeTime';
 
 type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'NotificationsScreen'>;
@@ -42,6 +47,13 @@ const TYPE_LOOK: Record<string, TypeLook> = {
   kyc_rejected: { icon: ShieldCheck, tone: 'danger' },
   platform_approved: { icon: AtSign, tone: 'success' },
   platform_rejected: { icon: AtSign, tone: 'danger' },
+  wallet_top_up_completed: { icon: Wallet, tone: 'success' },
+  wallet_top_up_rejected: { icon: Wallet, tone: 'danger' },
+  wallet_withdrawal_completed: { icon: Wallet, tone: 'success' },
+  wallet_withdrawal_rejected: { icon: Wallet, tone: 'danger' },
+  wallet_withdrawal_returned: { icon: Wallet, tone: 'warning' },
+  wallet_wallet_frozen: { icon: Wallet, tone: 'warning' },
+  wallet_wallet_unfrozen: { icon: Wallet, tone: 'success' },
 };
 const DEFAULT_LOOK: TypeLook = { icon: Bell, tone: 'interactive' };
 
@@ -123,6 +135,11 @@ export const useNotificationsScreen = () => {
           return;
         case 'PlatformDetailScreen':
           navigation.navigate('PlatformDetailScreen', { platformId: route.platformId });
+          return;
+        case 'WalletTab':
+        case 'TopUpDetail':
+          // Another tab: go through the root, like a push tap.
+          navigate('Main', toTabParams(route));
           return;
         case 'NotificationsScreen':
         case undefined:

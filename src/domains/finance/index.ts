@@ -4,4 +4,6 @@
  */
 export { BalanceCard, PaymentBreakdown } from './components';
 export type { BalanceCardProps, PaymentBreakdownProps, PaymentLine } from './components';
+export { walletPushTags } from './constants';
+export { BrandWalletNavigator, CreatorWalletNavigator } from './navigation/WalletNavigator';
 export type { WalletRole } from './types';

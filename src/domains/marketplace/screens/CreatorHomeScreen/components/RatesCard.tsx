@@ -69,14 +69,14 @@ const RatesCardComponent: React.FC<RatesCardProps> = ({ rates, onEdit }) => {
   const renderBody = () => {
     if (rates.isLoading) {
       return (
-        <Card shadow="none" px="lg" py="sm">
+        <Card px="lg" py="sm">
           {SKELETON_ROWS.map(key => (
             <Box key={key} row align="center" gap="md" py="md">
               <Skeleton width={sizes.avatar.sm} height={sizes.avatar.sm} borderRadius="full" />
               <Box flex={1}>
-                <Skeleton width="50%" height={sizes.icon.sm} borderRadius="sm" />
+                <Skeleton width="50%" height={sizes.icon.sm} borderRadius="xs" />
               </Box>
-              <Skeleton width={sizes.avatar.lg} height={sizes.icon.sm} borderRadius="sm" />
+              <Skeleton width={sizes.avatar.lg} height={sizes.icon.sm} borderRadius="xs" />
             </Box>
           ))}
         </Card>
@@ -93,7 +93,7 @@ const RatesCardComponent: React.FC<RatesCardProps> = ({ rates, onEdit }) => {
     }
     if (!hasRows) {
       return (
-        <Card shadow="none" p="lg">
+        <Card p="lg">
           <Box gap="md">
             <Text variant="body" color={colors.text.secondary}>
               {t('marketplace.creatorHome.rates.empty')}
@@ -111,7 +111,7 @@ const RatesCardComponent: React.FC<RatesCardProps> = ({ rates, onEdit }) => {
       );
     }
     return (
-      <Card shadow="none" px="lg" py="xs">
+      <Card px="lg" py="xs">
         {rates.rows.map((row, index) => (
           <React.Fragment key={row.key}>
             {index > 0 ? <Divider /> : null}

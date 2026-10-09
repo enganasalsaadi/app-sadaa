@@ -15,7 +15,7 @@ export { useCreatorOverview } from './hooks/useCreatorOverview';
 export type { CreatorOverview } from './hooks/useCreatorOverview';
 export { PLATFORM_STATUS_PILL } from './constants/platformStatus';
 export type { ProfileStepTarget } from './constants/profileSteps';
-export type { MissingStep } from './utils/profileCompletion';
+export type { MissingStep, StrengthStage, StrengthStageKey } from './utils/profileCompletion';
 export type { RateRow } from './utils/rateRows';
 export type { PublicMediaKit } from './types/mediaKit';
 export type { MediaKitTile } from './utils/mediaKitCard';

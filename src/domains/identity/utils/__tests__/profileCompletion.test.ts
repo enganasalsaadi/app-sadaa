@@ -1,5 +1,5 @@
 import type { ProfileCompletionStep } from '@/domains/auth';
-import { buildMissingSteps, pickNextStep } from '../profileCompletion';
+import { buildMissingSteps, buildStrengthStages, pickNextStep } from '../profileCompletion';
 
 // The barrel pulls navigators and UI; only the enum is needed here.
 jest.mock('@/domains/auth', () => jest.requireActual('@/domains/auth/store/authTypes'));
@@ -56,5 +56,45 @@ describe('pickNextStep', () => {
   it('returns null when nothing is actionable', () => {
     expect(pickNextStep(buildMissingSteps([step('kyc')], 'pending', false))).toBeNull();
     expect(pickNextStep([])).toBeNull();
+  });
+});
+
+describe('buildStrengthStages', () => {
+  const creatorSteps = (done: readonly string[]) =>
+    ['account_created', 'basic_info', 'avatar', 'email', 'platforms', 'platforms_verified', 'rate_cards', 'kyc'].map(
+      key => step(key, done.includes(key)),
+    );
+
+  it('groups steps into the five stages and marks the next step current', () => {
+    const stages = buildStrengthStages(
+      creatorSteps(['account_created', 'basic_info', 'email', 'avatar', 'platforms', 'platforms_verified']),
+      'rate_cards',
+    );
+    expect(stages).toEqual([
+      { key: 'info', state: 'done' },
+      { key: 'avatar', state: 'done' },
+      { key: 'platforms', state: 'done' },
+      { key: 'rates', state: 'current' },
+      { key: 'kyc', state: 'upcoming' },
+    ]);
+  });
+
+  it('keeps a stage open until every step in it is complete', () => {
+    const stages = buildStrengthStages(creatorSteps(['basic_info', 'avatar', 'platforms']), 'email');
+    expect(stages[0]).toEqual({ key: 'info', state: 'current' });
+    expect(stages[2]).toEqual({ key: 'platforms', state: 'upcoming' });
+  });
+
+  it('falls back to the first unfinished stage without a next step (KYC under review)', () => {
+    const stages = buildStrengthStages(
+      creatorSteps(['basic_info', 'email', 'avatar', 'platforms', 'platforms_verified', 'rate_cards']),
+      null,
+    );
+    expect(stages.at(-1)).toEqual({ key: 'kyc', state: 'current' });
+  });
+
+  it('drops stages the server does not send', () => {
+    const stages = buildStrengthStages([step('basic_info', true), step('kyc')], 'kyc');
+    expect(stages.map(s => s.key)).toEqual(['info', 'kyc']);
   });
 });

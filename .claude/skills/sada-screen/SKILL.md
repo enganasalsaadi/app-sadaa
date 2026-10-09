@@ -24,7 +24,7 @@ Present to the user, in this order:
 2. **ASCII mockup**, RTL (Arabic) orientation, showing hero vs sheet, every field, the one primary CTA, secondary actions. Example:
    ```
    ┌──────────────────────┐
-   │ ░ NAVY ░  ((•)) صدى  │   hero: logo + tagline
+   │ ░ NAVY ░  ((•)) صدى  │   hero: logo + tagline (entry screens only)
    │╭────────────────────╮│
    │ أهلاً بعودتك          │   h2 + body subtitle
    │ [🇸🇾 +963 | الجوال ] │
@@ -35,11 +35,18 @@ Present to the user, in this order:
    │ [   إنشاء حساب جديد  ]│   secondary
    ╰──────────────────────╯
    ```
-3. **States**: loading / empty / error / submitting / 422 / keyboard (rule 09 §4) — one line each.
-4. **Motion**: what animates and why (max 1–2 elements; celebration screens excepted).
-5. **Parts list**: existing components reused; any *new* shared component (name, props, why it belongs in `shared/ui` vs the domain).
-6. **Files** to create/change/delete.
-7. **Open questions** (backend behaviour, copy, edge cases).
+3. **Visual preview** (new screen or redesign; skip for small edits): ASCII fixes structure, this fixes the *look*. Build it before asking for approval:
+   - Artifact `quickstart` (intent `design`) → one Design canvas per feature, one artboard per screen (`390×844`, `radius` 44), `is_interactive` only where a toggle really works.
+   - Each artboard's `<helmet>`: Tajawal from Google Fonts + the full contents of `preview-kit.css` (this folder). Root `<div class="sd {{themeClass}}">` with a `dark` boolean tweak; `lang="ar" dir="rtl"`.
+   - Use only kit vars and classes (`hero` + `lights`, `glass`, `glassbtn`, `sheet`, `card`, `row`, `badge`, `pill`, `btn`, `link`, `tabbar` + `lens`, `live`, `track`, `num`). Sizes from rule 08/02 tokens: typography px, spacing 4–80, radius 4/10/15/22/28, 44pt targets. No colors outside the kit, no logo outside entry screens (rule 08).
+   - Real Arabic copy, realistic data (amounts as `formatMoney` prints them), real tab bar for tab roots, every status the screen can show at least once.
+   - One artboard per role variant (memory: brand vs creator screens differ). A kit part with new props → add a spec board (props table + rendered examples).
+   - Write and publish one file at a time; give the user the canvas link. The approved canvas is the visual target for Phase 3 and the Phase 4 self-review.
+4. **States**: loading / empty / error / submitting / 422 / keyboard (rule 09 §4) — one line each.
+5. **Motion**: what animates and why, only from the rule 09 §3.1 table (loops: hero lights, status pulse, money flow; everything else once).
+6. **Parts list**: existing components reused; any *new* shared component (name, props, why it belongs in `shared/ui` vs the domain).
+7. **Files** to create/change/delete.
+8. **Open questions** (backend behaviour, copy, edge cases).
 
 Then STOP and wait for an explicit OK or changes. Use AskUserQuestion for real decisions (with ASCII previews for visual options).
 
@@ -93,11 +100,13 @@ Order matters — lower layers first so screens only compose:
 
 1. `npx tsc --noEmit && npm run lint && npm test` — all green, no disabled lint rules.
 2. Self-review each item, fix before reporting:
+   - [ ] matches the approved visual preview (spacing, hierarchy, colors, copy)
    - [ ] one primary CTA; others secondary/ghost/link
    - [ ] only tokens (no hex, no raw numbers except `moderateScale` constants), RTL-safe props, directional icons flip
    - [ ] every pressable: role + i18n label, ≥ 44pt
    - [ ] all states from rule 09 §4 present
-   - [ ] hero ≤ ~25% of screen, compact via `useHeroCompact()` with keyboard open / short screens
+   - [ ] hero ≤ ~25% of screen (≤ ~40% on dashboard/money tab roots), compact via `useHeroCompact()` with keyboard open / short screens; hero shows only real data
+   - [ ] cards borderless (`Card` defaults); live elements only where rule 09 §3.1 allows; no extra loops
    - [ ] submit never disabled for invalidity; double-submit guarded; toasts truthful
    - [ ] `.tsx` has no logic; hook callbacks memoised; no inline styles
    - [ ] reused shared parts instead of re-implementing (OTP, countdown, phone, password strength, confirm sheet…)

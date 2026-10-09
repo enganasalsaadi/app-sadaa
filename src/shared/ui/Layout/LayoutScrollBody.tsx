@@ -61,9 +61,9 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
           ...(sheet
             ? {
                 backgroundColor: bg,
-                borderTopStartRadius: theme.radii.lg,
-                borderTopEndRadius: theme.radii.lg,
-                marginTop: -theme.radii.lg,
+                borderTopStartRadius: theme.radii.xl,
+                borderTopEndRadius: theme.radii.xl,
+                marginTop: -theme.radii.xl,
               }
             : null),
         },

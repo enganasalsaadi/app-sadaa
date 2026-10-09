@@ -7,6 +7,7 @@ import type {
 } from 'react-native';
 import type { FlashListProps } from '@shopify/flash-list';
 import type { LucideIcon } from 'lucide-react-native';
+import type { EmptyStateAction } from '../EmptyState';
 
 export type ListLayout = 'list' | 'grid-2' | 'grid-3';
 
@@ -36,6 +37,10 @@ export interface SuperListProps<T> {
   emptyMessage?: string;
   /** Empty-state icon; default a "no results" search icon. */
   emptyIcon?: LucideIcon;
+  /** Second line under `emptyMessage` (what to try next). */
+  emptyDescription?: string;
+  /** Empty-state button, e.g. "Clear filters" on a filtered list. */
+  emptyAction?: EmptyStateAction;
   errorMessage?: string;
 
   // ─── Layout ────────────────────────────────────────────────────────────

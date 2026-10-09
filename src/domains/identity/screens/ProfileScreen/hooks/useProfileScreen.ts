@@ -198,6 +198,7 @@ export const useProfileScreen = () => {
     [navigation, t],
   );
   const openDevShowcase = useCallback(() => navigate('DevShowcase'), []);
+  const openWallet = useCallback(() => navigate('Main', { screen: 'WalletTab' }), []);
 
   const onStepPress = useCallback(
     (target: ProfileStepTarget) => {
@@ -287,6 +288,7 @@ export const useProfileScreen = () => {
     closeLogoutSheet,
     openDeleteSheet,
     closeDeleteSheet,
+    openWallet,
     handleLogout,
     changePhoto,
     changeThemeMode,

@@ -14,7 +14,7 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
 const DateRangePickerDemoComponent: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
-  const { picker, range, onConfirm } = useDateRangeDemo();
+  const { picker, range, onConfirm, pastPicker, pastRange, onConfirmPast } = useDateRangeDemo();
 
   const label = useMemo(
     () =>
@@ -23,6 +23,14 @@ const DateRangePickerDemoComponent: React.FC = () => {
         end: formatDate(range.end, DATE_FORMAT, i18n.language),
       }),
     [t, range, i18n.language],
+  );
+  const pastLabel = useMemo(
+    () =>
+      t('devShowcase.dateRange.selected', {
+        start: formatDate(pastRange.start, DATE_FORMAT, i18n.language),
+        end: formatDate(pastRange.end, DATE_FORMAT, i18n.language),
+      }),
+    [t, pastRange, i18n.language],
   );
 
   return (
@@ -41,6 +49,26 @@ const DateRangePickerDemoComponent: React.FC = () => {
         checkIn={range.start}
         checkOut={range.end}
         onConfirm={onConfirm}
+      />
+
+      <Text variant="label" color={colors.text.secondary}>
+        {t('devShowcase.dateRange.pastTitle')}
+      </Text>
+      <Text variant="bodySmall" color={colors.text.secondary}>
+        {pastLabel}
+      </Text>
+      <CustomButton
+        title={t('devShowcase.dateRange.openPast')}
+        onPress={pastPicker.open}
+        variant="outline"
+      />
+      <DateRangePicker
+        visible={pastPicker.visible}
+        onClose={pastPicker.close}
+        checkIn={pastRange.start}
+        checkOut={pastRange.end}
+        onConfirm={onConfirmPast}
+        range="past"
       />
     </Box>
   );

@@ -1,31 +1,6 @@
-import { formatDate, formatMoney, formatNumber } from '../format';
+import { formatDate, formatNumber } from '../format';
 
 const ARABIC_INDIC = /[٠-٩۰-۹]/;
-
-describe('formatMoney', () => {
-  it('formats USD minor units in English', () => {
-    expect(formatMoney({ amount: 125000, currency: 'USD' }, 'en')).toBe(
-      '$1,250.00',
-    );
-  });
-
-  it('uses Western digits in Arabic', () => {
-    const out = formatMoney({ amount: 125050, currency: 'USD' }, 'ar');
-    expect(out).toContain('1,250.50');
-    expect(out).toContain('$');
-    expect(out).not.toMatch(ARABIC_INDIC);
-  });
-
-  it('keeps exact cents for small amounts', () => {
-    expect(formatMoney({ amount: 5, currency: 'USD' }, 'en')).toBe('$0.05');
-  });
-
-  it('signs non-zero amounts with exceptZero', () => {
-    expect(formatMoney({ amount: 5000, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('+$50.00');
-    expect(formatMoney({ amount: -5000, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('-$50.00');
-    expect(formatMoney({ amount: 0, currency: 'USD' }, 'en', { signDisplay: 'exceptZero' })).toBe('$0.00');
-  });
-});
 
 describe('formatNumber', () => {
   it('groups thousands with Western digits in both languages', () => {
@@ -43,5 +18,30 @@ describe('formatDate', () => {
     );
     expect(out).toContain('2026');
     expect(out).not.toMatch(ARABIC_INDIC);
+  });
+
+  it('uses Levantine month names in Arabic', () => {
+    const utc = (month: number) => new Date(Date.UTC(2026, month, 15));
+    const long = { month: 'long', timeZone: 'UTC' } as const;
+    expect(formatDate(utc(0), long, 'ar')).toBe('كانون الثاني');
+    expect(formatDate(utc(1), { month: 'short', timeZone: 'UTC' }, 'ar')).toBe('شباط');
+    expect(formatDate(utc(9), long, 'ar')).toBe('تشرين الأول');
+    expect(formatDate(utc(11), long, 'ar')).toBe('كانون الأول');
+    const full = formatDate(
+      utc(8),
+      { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' },
+      'ar',
+    );
+    expect(full).toContain('أيلول');
+    expect(full).not.toContain('سبتمبر');
+  });
+
+  it('keeps English and numeric months untouched', () => {
+    expect(formatDate(new Date(Date.UTC(2026, 0, 15)), { month: 'long', timeZone: 'UTC' }, 'en')).toBe(
+      'January',
+    );
+    expect(formatDate(new Date(Date.UTC(2026, 0, 15)), { month: 'numeric', timeZone: 'UTC' }, 'ar')).toBe(
+      '1',
+    );
   });
 });

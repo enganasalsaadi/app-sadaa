@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { extractServerFieldErrors, normalizeApiError } from '@/core/api';
-import { useCountdown } from '@/core/hooks';
+import { useCountdown, useDiscardGuard } from '@/core/hooks';
 import { formatDate } from '@/core/i18n';
 import { useAppSelector } from '@/core/store';
 import { toastService } from '@/core/toast';
@@ -14,16 +14,14 @@ import {
   isKycAlreadySubmitted,
   selectUser,
   toFormDataFile,
-  useKycFilePicker,
-  type KycPickError,
 } from '@/domains/auth';
+import { useFilePicker, type FilePickError } from '@/shared/ui';
 import { useGetKycQuery, useSubmitKycMutation } from '../../../api/kycApi';
 import {
   KYC_FILE_FIELDS,
   type BrandKycDocumentType,
   type KycSlot,
 } from '../../../constants/kyc';
-import { useDiscardGuard } from '../../../hooks/useDiscardGuard';
 
 /** Used when a 429 carries no `retry_after` (the limit is 5 per hour). */
 const RATE_LIMIT_FALLBACK_S = 60;
@@ -32,7 +30,7 @@ const PICK_ERROR_KEY = {
   size: 'account.kyc.errors.size',
   type: 'account.kyc.errors.type',
   failed: 'account.kyc.errors.failed',
-} as const satisfies Record<KycPickError, string>;
+} as const satisfies Record<FilePickError, string>;
 
 const DOCUMENT_TYPE_FIELD = 'kyc_document_type';
 
@@ -48,18 +46,18 @@ export const useKycScreen = () => {
   const kyc = useGetKycQuery();
   const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
 
-  const idFront = useKycFilePicker({
+  const idFront = useFilePicker({
     allowedMimeTypes: INFLUENCER_KYC_ALLOWED_MIME_TYPES,
     maxBytes: INFLUENCER_KYC_MAX_FILE_BYTES,
     fallbackName: t('account.kyc.idFrontFallbackName'),
   });
-  const idBack = useKycFilePicker({
+  const idBack = useFilePicker({
     allowedMimeTypes: INFLUENCER_KYC_ALLOWED_MIME_TYPES,
     maxBytes: INFLUENCER_KYC_MAX_FILE_BYTES,
     fallbackName: t('account.kyc.idBackFallbackName'),
   });
   // Brands: no webp (contract §7.4).
-  const document = useKycFilePicker({
+  const document = useFilePicker({
     allowedMimeTypes: KYC_ALLOWED_MIME_TYPES,
     maxBytes: KYC_MAX_FILE_BYTES,
     fallbackName: t('account.kyc.documentFallbackName'),

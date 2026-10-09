@@ -21,6 +21,8 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('@/core/api', () => jest.requireActual('@/core/api/errorHandler'));
+// The barrel also loads push (native Notifee); only the guard is used here.
+jest.mock('@/core/hooks', () => jest.requireActual('@/core/hooks/useDiscardGuard'));
 jest.mock('@/core/i18n', () => ({ formatDate: (date: Date) => date.toISOString().slice(0, 10) }));
 
 const mockDispatch = jest.fn();

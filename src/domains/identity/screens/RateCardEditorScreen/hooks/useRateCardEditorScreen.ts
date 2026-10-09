@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch, type Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
+import { useDiscardGuard } from '@/core/hooks';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
@@ -19,7 +20,6 @@ import {
   useUpdateRateCardMutation,
 } from '../../../api/rateCardsApi';
 import { RATE_CARD_SERVER_FIELDS, RUSH_ADDON } from '../../../constants/rateCards';
-import { useDiscardGuard } from '../../../hooks/useDiscardGuard';
 import { useRateCardSources } from '../../../hooks/useRateCardSources';
 import { createRateCardSchema, type RateCardFormValues } from '../../../schemas/rateCardSchema';
 import {

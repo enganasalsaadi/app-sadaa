@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Undo2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { ConfirmSheet } from '@/shared/ui';
-import type { DiscardGuard } from '../hooks/useDiscardGuard';
+import type { DiscardGuard } from '@/core/hooks';
 
 interface DiscardChangesSheetProps {
   guard: DiscardGuard;

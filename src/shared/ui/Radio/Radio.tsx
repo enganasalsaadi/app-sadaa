@@ -3,6 +3,7 @@ import { opacity, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
+import { RadioMark } from './RadioMark';
 
 export interface RadioProps<T extends string> {
   value: T;
@@ -39,25 +40,7 @@ const RadioComponent = <T extends string>({
       accessibilityHint={description}
       accessibilityState={{ checked: selected, disabled }}
     >
-      <Box
-        width={sizes.control.md}
-        height={sizes.control.md}
-        borderRadius="full"
-        borderWidth="sm"
-        borderColor={selected ? colors.interactive.main : colors.border.strong}
-        bg={colors.surface.main}
-        align="center"
-        justify="center"
-      >
-        {selected ? (
-          <Box
-            width={sizes.control.dot}
-            height={sizes.control.dot}
-            borderRadius="full"
-            bg={colors.interactive.main}
-          />
-        ) : null}
-      </Box>
+      <RadioMark selected={selected} />
       <Box flex={1} gap="xs">
         <Text variant="body">{label}</Text>
         {description ? (

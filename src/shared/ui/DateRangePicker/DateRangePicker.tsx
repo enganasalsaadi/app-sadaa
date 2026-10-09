@@ -14,6 +14,9 @@ import type { DateRangeSelecting } from './DateTab';
 
 // ── Shared types ──────────────────────────────────────────────────────────────
 
+/** `future` = from today on, end after start (bookings). `past` = up to today, one-day ranges allowed (statements). */
+export type DateRangeDirection = 'future' | 'past';
+
 export interface DateRangePickerContentProps {
   visible: boolean;
   onClose: () => void;
@@ -22,6 +25,8 @@ export interface DateRangePickerContentProps {
   onConfirm: (checkIn: Date, checkOut: Date) => void;
   initialSelecting?: DateRangeSelecting;
   mainHeaderButtonsPadding?: SpacingToken;
+  /** Default `future`. */
+  range?: DateRangeDirection;
 }
 
 export type DateRangePickerProps = DateRangePickerContentProps;
@@ -40,6 +45,13 @@ const toDateStr = (date: Date): string => {
 
 const SHORT_DATE: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short' };
 const formatShort = (date: Date): string => formatDate(date, SHORT_DATE);
+
+const MONTH_TITLE: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+
+const startOfMonth = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), 1);
+
+const addDays = (date: Date, days: number): Date =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 
 const nightsBetween = (start: Date, end: Date): number => {
   const a = new Date(start.getFullYear(), start.getMonth(), start.getDate());
@@ -106,19 +118,24 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
   onConfirm,
   initialSelecting = 'checkin',
   mainHeaderButtonsPadding = 'lg',
+  range = 'future',
 }) => {
+  const isPast = range === 'past';
   const { t } = useTranslation();
   const { colors, typography, sizes, borderWidths, isRTL } = useTheme();
 
   const [selecting, setSelecting] = useState<DateRangeSelecting>(initialSelecting);
   const [tempCheckIn, setTempCheckIn] = useState<Date | null>(null);
   const [tempCheckOut, setTempCheckOut] = useState<Date | null>(null);
+  // The calendar's own title follows XDate's English names; ours goes through `formatDate` (Levantine months in Arabic).
+  const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(checkIn));
 
   useEffect(() => {
     if (visible) {
       setTempCheckIn(checkIn);
       setTempCheckOut(checkOut);
       setSelecting(initialSelecting);
+      setVisibleMonth(startOfMonth(checkIn));
     }
   }, [visible, checkIn, checkOut, initialSelecting]);
 
@@ -145,11 +162,8 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
         return;
       }
 
-      const minOut = new Date(
-        tempCheckIn.getFullYear(),
-        tempCheckIn.getMonth(),
-        tempCheckIn.getDate() + 1,
-      );
+      // A statement may cover a single day; a booking needs at least one night.
+      const minOut = addDays(tempCheckIn, isPast ? 0 : 1);
 
       if (tapped >= minOut) {
         setTempCheckOut(tapped);
@@ -158,7 +172,12 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
         setTempCheckOut(null);
       }
     },
-    [selecting, tempCheckIn],
+    [isPast, selecting, tempCheckIn],
+  );
+
+  const handleMonthChange = useCallback(
+    ({ year, month }: DateData) => setVisibleMonth(new Date(year, month - 1, 1)),
+    [],
   );
 
   const markedDates = useMemo(
@@ -203,20 +222,17 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
 
   const minDate = useMemo(() => {
     if (selecting === 'checkout' && tempCheckIn) {
-      return toDateStr(
-        new Date(
-          tempCheckIn.getFullYear(),
-          tempCheckIn.getMonth(),
-          tempCheckIn.getDate() + 1,
-        ),
-      );
+      return toDateStr(addDays(tempCheckIn, isPast ? 0 : 1));
     }
-    return toDateStr(new Date());
-  }, [selecting, tempCheckIn]);
+    return isPast ? undefined : toDateStr(new Date());
+  }, [isPast, selecting, tempCheckIn]);
 
+  const maxDate = useMemo(() => (isPast ? toDateStr(new Date()) : undefined), [isPast]);
+
+  // Past ranges count days inclusively (1–9 Oct = 9 days); bookings count nights.
   const nights =
     tempCheckIn && tempCheckOut
-      ? nightsBetween(tempCheckIn, tempCheckOut)
+      ? nightsBetween(tempCheckIn, tempCheckOut) + (isPast ? 1 : 0)
       : null;
 
   const confirmEnabled = !!(tempCheckIn && tempCheckOut);
@@ -295,8 +311,16 @@ export const DateRangePickerContent: React.FC<DateRangePickerContentProps> = ({
         markingType="period"
         markedDates={markedDates}
         onDayPress={handleDayPress}
+        onMonthChange={handleMonthChange}
+        customHeaderTitle={
+          <Text variant="title" color={colors.calendar.monthText}>
+            {formatDate(visibleMonth, MONTH_TITLE)}
+          </Text>
+        }
         minDate={minDate}
-        current={tempCheckIn ? toDateStr(tempCheckIn) : toDateStr(new Date())}
+        maxDate={maxDate}
+        // Read on mount only: opens on the month the title shows.
+        current={toDateStr(visibleMonth)}
         theme={calendarTheme}
         renderArrow={renderArrow}
         enableSwipeMonths

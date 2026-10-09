@@ -8,7 +8,7 @@ const PlatformDetailSkeletonComponent: React.FC = () => {
 
   return (
     <Box gap="2xl">
-      <Card shadow="none" p="lg">
+      <Card p="lg">
         <Box gap="lg">
           <Box row align="center" gap="md">
             <Skeleton width={sizes.button.lg} height={sizes.button.lg} borderRadius="md" />

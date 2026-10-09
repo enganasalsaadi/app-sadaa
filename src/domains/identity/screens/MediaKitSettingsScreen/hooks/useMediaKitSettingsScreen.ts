@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
+import { useDiscardGuard } from '@/core/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { normalizeApiError } from '@/core/api';
 import { formatDate } from '@/core/i18n';
@@ -13,7 +14,6 @@ import {
   useGetMediaKitQuery,
   useUpdateMediaKitMutation,
 } from '../../../api/mediaKitApi';
-import { useDiscardGuard } from '../../../hooks/useDiscardGuard';
 import { useSlugAvailability } from '../../../hooks/useSlugAvailability';
 import {
   createMediaKitSlugSchema,

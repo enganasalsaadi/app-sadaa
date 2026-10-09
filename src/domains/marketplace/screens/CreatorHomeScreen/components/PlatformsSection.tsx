@@ -69,7 +69,7 @@ const PlatformsSectionComponent: React.FC<PlatformsSectionProps> = ({
     }
     if (!hasItems) {
       return (
-        <Card shadow="none" p="lg">
+        <Card p="lg">
           <Box gap="md">
             <Text variant="body" color={colors.text.secondary}>
               {t('marketplace.creatorHome.platforms.addHint')}

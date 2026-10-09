@@ -18,7 +18,7 @@ const GradientSurfaceDemoComponent: React.FC = () => {
           {t('devShowcase.gradientSurface.brandBody')}
         </Text>
       </GradientSurface>
-      <GradientSurface variant="brand" borderRadius="lg" p="lg" gap="xs">
+      <GradientSurface variant="live" borderRadius="lg" p="lg" gap="xs">
         <GlowOrbs />
         <Text variant="title" color={colors.text.onBrand}>
           {t('devShowcase.gradientSurface.glowTitle')}

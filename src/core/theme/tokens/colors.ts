@@ -35,6 +35,8 @@ export const BUTTON_COLOR_VARIANTS = [
   'danger',
   /** Primary CTA on navy brand surfaces (hero, onboarding) — navy primary vanishes there. */
   'onBrand',
+  /** Secondary action on navy (wallet hero action row): glass fill + hairline, never on neutral bg. */
+  'glass',
 ] as const;
 export type ButtonColorVariant = (typeof BUTTON_COLOR_VARIANTS)[number];
 
@@ -66,7 +68,8 @@ export interface ThemeColors {
     /** Secondary text on navy brand surfaces and glass cards over them. */
     onBrandMuted: string;
   };
-  border: { default: string; strong: string };
+  /** `card`: hairline that stands in for the card shadow where a shadow can't read (dark). */
+  border: { default: string; strong: string; card: string };
   icon: { primary: string; secondary: string; disabled: string };
 
   button: Record<ButtonColorVariant, ButtonColors>;
@@ -82,9 +85,14 @@ export interface ThemeColors {
     /** Ambient backdrop glows (teal family) behind the glass cards. */
     glowPrimary: string;
     glowSecondary: string;
+    /** Faint third hero light (v4): near-white in light mode, pale teal in dark. */
+    glowHighlight: string;
     /** Icons on glass: interaction (teal) / money (mint) roles, tinted to read on navy. */
     iconInteractive: string;
     iconMoney: string;
+    /** Status dots on navy (live island): the dark-mode status shades, readable on the hero. */
+    iconWarning: string;
+    iconDanger: string;
   };
 
   navigation: {
@@ -106,6 +114,9 @@ export interface ThemeColors {
       glassBorder: string;
       /** Drop shadow, drawn only outside the capsule so it never tints the glass. */
       glassShadow: string;
+      /** Liquid lens under the active tab (v4): white glass, bright top fading down. */
+      lens: string;
+      lensFaint: string;
     };
     bottomSheet: { background: string; handle: string };
   };
@@ -133,6 +144,8 @@ export interface ThemeColors {
   };
   gradients: {
     hero: string[];
+    /** Dashboard hero under the drifting lights (v4): ends darker, the lights add the teal. */
+    heroLive: string[];
     /** Soft wash at the top of screens (Layout backdrop="wash"). */
     screenWash: { colors: string[]; locations: number[] };
     /** Full-screen onboarding backdrop. */
@@ -161,12 +174,12 @@ const LOGO_ON_BRAND = { arcsStart: BG, arcsEnd: '#397D8C', dot: '#12B886' };
 const lightText = {
   primary: '#0F1D2B',
   secondary: '#475869',
-  tertiary: '#8394A5',
+  tertiary: '#667085',
 };
 const darkText = {
   primary: '#EAF0F5',
   secondary: '#A5B5C4',
-  tertiary: '#6C8093',
+  tertiary: '#8394A5',
 };
 
 const lightInteractive: HueColors = {
@@ -211,7 +224,7 @@ export const lightColors: ThemeColors = {
     onBrand: WHITE,
     onBrandMuted: ON_BRAND_MUTED,
   },
-  border: { default: '#DCE3EA', strong: '#C3CDD7' },
+  border: { default: '#DCE3EA', strong: '#C3CDD7', card: 'transparent' },
   icon: {
     primary: lightText.primary,
     secondary: lightText.secondary,
@@ -241,6 +254,7 @@ export const lightColors: ThemeColors = {
       border: lightStatus.danger.main,
     },
     onBrand: { bg: BG, text: NAVY, border: BG },
+    glass: { bg: 'rgba(255, 255, 255, 0.15)', text: WHITE, border: 'rgba(255, 255, 255, 0.28)' },
   },
 
   glass: {
@@ -251,8 +265,11 @@ export const lightColors: ThemeColors = {
     progressFill: BG,
     glowPrimary: '#397D8C',
     glowSecondary: '#6FC0CF',
+    glowHighlight: BG,
     iconInteractive: darkInteractive.main,
     iconMoney: '#3DDBA5',
+    iconWarning: darkStatus.warning.main,
+    iconDanger: darkStatus.danger.main,
   },
 
   navigation: {
@@ -267,6 +284,8 @@ export const lightColors: ThemeColors = {
       glassRimFaint: 'rgba(255, 255, 255, 0.04)',
       glassBorder: 'rgba(11, 22, 34, 0.30)',
       glassShadow: 'rgba(15, 29, 43, 0.18)',
+      lens: 'rgba(255, 255, 255, 0.16)',
+      lensFaint: 'rgba(255, 255, 255, 0.05)',
     },
     bottomSheet: { background: WHITE, handle: '#C3CDD7' },
   },
@@ -298,6 +317,7 @@ export const lightColors: ThemeColors = {
   },
   gradients: {
     hero: [NAVY, '#27506A', '#397D8C'],
+    heroLive: [NAVY, '#22425C', '#27506A', '#2F6577'],
     screenWash: {
       colors: ['#E6ECF2', 'rgba(230, 236, 242, 0)'],
       locations: [0, 0.3],
@@ -326,7 +346,7 @@ export const darkColors: ThemeColors = {
     onBrand: BG,
     onBrandMuted: ON_BRAND_MUTED,
   },
-  border: { default: '#22384C', strong: '#30495F' },
+  border: { default: '#22384C', strong: '#30495F', card: '#1B2B3C' },
   icon: {
     primary: darkText.primary,
     secondary: darkText.secondary,
@@ -356,6 +376,7 @@ export const darkColors: ThemeColors = {
       border: darkStatus.danger.main,
     },
     onBrand: { bg: '#5FAFBF', text: ON_TEAL_DARK, border: '#5FAFBF' },
+    glass: { bg: 'rgba(255, 255, 255, 0.07)', text: BG, border: 'rgba(255, 255, 255, 0.18)' },
   },
 
   glass: {
@@ -366,8 +387,11 @@ export const darkColors: ThemeColors = {
     progressFill: darkInteractive.main,
     glowPrimary: '#2D6B78',
     glowSecondary: '#397D8C',
+    glowHighlight: darkInteractive.main,
     iconInteractive: darkInteractive.main,
     iconMoney: '#3DDBA5',
+    iconWarning: darkStatus.warning.main,
+    iconDanger: darkStatus.danger.main,
   },
 
   navigation: {
@@ -382,6 +406,8 @@ export const darkColors: ThemeColors = {
       glassRimFaint: 'rgba(255, 255, 255, 0.04)',
       glassBorder: 'rgba(255, 255, 255, 0.10)',
       glassShadow: 'rgba(0, 0, 0, 0.55)',
+      lens: 'rgba(255, 255, 255, 0.14)',
+      lensFaint: 'rgba(255, 255, 255, 0.04)',
     },
     bottomSheet: { background: '#122131', handle: '#30495F' },
   },
@@ -413,6 +439,7 @@ export const darkColors: ThemeColors = {
   },
   gradients: {
     hero: [NAVY, '#1F4A5C', '#2D6B78'],
+    heroLive: [NAVY_DEEP, NAVY, '#1F4A5C', '#2D6B78'],
     screenWash: {
       colors: ['#16303A', 'rgba(22, 48, 58, 0)'],
       locations: [0, 0.3],
