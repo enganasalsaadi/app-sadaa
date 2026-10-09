@@ -19,8 +19,8 @@ type Navigation = WalletStackScreenProps<'WalletScreen'>['navigation'];
 /**
  * Wallet tab, both roles: the balance hero and its blocker, then the escrow card, the
  * monthly chart, today's rate and the latest lines, which open the statement and each
- * receipt. Brands get Top up + history in the hero; creators get the payout method card
- * under the escrow card, and withdraw joins with its screen (plan step 6).
+ * receipt. Brands get Top up + top-up history in the hero; creators get Withdraw +
+ * withdrawal history there, and the payout method card under the escrow card.
  */
 export const useWalletScreen = (role: WalletRole) => {
   const { t } = useTranslation();
@@ -53,11 +53,16 @@ export const useWalletScreen = (role: WalletRole) => {
 
   const openTopUp = useCallback(() => navigation.navigate('TopUp'), [navigation]);
   const openTopUps = useCallback(() => navigation.navigate('TopUps'), [navigation]);
+  const openWithdraw = useCallback(() => navigation.navigate('Withdraw'), [navigation]);
+  const openWithdrawals = useCallback(() => navigation.navigate('Withdrawals'), [navigation]);
   const onOpenTile = useCallback(
     (target: WalletTileTarget) => {
       switch (target) {
         case 'topUpsInReview':
           navigation.navigate('TopUps', { status: 'pending_review' });
+          return;
+        case 'withdrawalsPending':
+          navigation.navigate('Withdrawals', { status: 'pending' });
           return;
         default: {
           const _exhaustive: never = target;
@@ -68,17 +73,20 @@ export const useWalletScreen = (role: WalletRole) => {
     [navigation],
   );
 
-  // Brands top up (plan step 4); the creator's withdraw joins with its screen (step 6).
+  // Brands top up, creators withdraw (rule 06); `/me` capabilities enable the primary.
   const { actionAllowed } = hero;
-  const actions = useMemo<WalletHeroActions | null>(
+  const actions = useMemo<WalletHeroActions>(
     () =>
       role === 'brand'
         ? {
             primary: { label: t('finance.wallet.actions.topUp'), onPress: openTopUp, disabled: !actionAllowed },
             secondary: { label: t('finance.wallet.actions.history'), onPress: openTopUps },
           }
-        : null,
-    [actionAllowed, openTopUp, openTopUps, role, t],
+        : {
+            primary: { label: t('finance.wallet.actions.withdraw'), onPress: openWithdraw, disabled: !actionAllowed },
+            secondary: { label: t('finance.wallet.actions.withdrawals'), onPress: openWithdrawals },
+          },
+    [actionAllowed, openTopUp, openTopUps, openWithdraw, openWithdrawals, role, t],
   );
 
   const { refetch: refetchWallet } = hero;

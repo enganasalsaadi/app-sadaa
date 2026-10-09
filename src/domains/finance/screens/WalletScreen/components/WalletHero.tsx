@@ -26,8 +26,7 @@ interface WalletHeroProps {
   title: string;
   hero: WalletHeroModel;
   hidden: boolean;
-  /** `null` = the role's action screens aren't built yet. */
-  actions: WalletHeroActions | null;
+  actions: WalletHeroActions;
   onOpenTile: (target: WalletTileTarget) => void;
 }
 
@@ -145,7 +144,7 @@ const WalletHeroComponent: React.FC<WalletHeroProps> = ({ title, hero, hidden, a
         </Box>
       ) : null}
 
-      {actions ? <ActionRow actions={actions} /> : null}
+      <ActionRow actions={actions} />
 
       {hero.island ? (
         <LiveIsland

@@ -6,7 +6,7 @@ import type { DiscardGuard } from '@/core/hooks';
 import { useTheme } from '@/core/theme';
 import { ConfirmSheet } from '@/shared/ui';
 
-type DiscardFlow = 'topUp' | 'payoutMethod';
+type DiscardFlow = 'topUp' | 'withdraw' | 'payoutMethod';
 
 interface DiscardCopy {
   title: ParseKeys;
@@ -21,6 +21,12 @@ const DISCARD_COPY = {
     body: 'finance.topUp.discard.body',
     confirm: 'finance.topUp.discard.confirm',
     stay: 'finance.topUp.discard.stay',
+  },
+  withdraw: {
+    title: 'finance.withdraw.discard.title',
+    body: 'finance.withdraw.discard.body',
+    confirm: 'finance.withdraw.discard.confirm',
+    stay: 'finance.withdraw.discard.stay',
   },
   payoutMethod: {
     title: 'finance.payouts.discard.title',

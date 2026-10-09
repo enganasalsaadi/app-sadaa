@@ -68,3 +68,21 @@ export type {
   TopUpsPage,
   TopUpsPageDto,
 } from './topUp';
+export { WITHDRAWAL_REASON_CODES, WITHDRAWAL_STATUS } from './withdrawal';
+export type {
+  CancelWithdrawalArgs,
+  CreateWithdrawalArgs,
+  Withdrawal,
+  WithdrawalBlock,
+  WithdrawalDto,
+  WithdrawalFilters,
+  WithdrawalQuote,
+  WithdrawalQuoteDto,
+  WithdrawalReason,
+  WithdrawalReasonCode,
+  WithdrawalReasonDto,
+  WithdrawalRequestBody,
+  WithdrawalsPage,
+  WithdrawalsPageDto,
+  WithdrawalStatus,
+} from './withdrawal';

@@ -9,7 +9,7 @@ import { TOP_UP_STATUS } from '../../../types';
 import type { TopUp, TopUpFilters, TopUpStatus } from '../../../types';
 import { isOneOf } from '../../../utils/walletMappers';
 import { groupByDay, type LedgerDay } from '../../../utils/walletDates';
-import type { StatusChip } from '../components/TopUpStatusChips';
+import type { StatusChip } from '../../../components/StatusFilterChips';
 
 type Navigation = WalletStackScreenProps<'TopUps'>['navigation'];
 type Route = WalletStackScreenProps<'TopUps'>['route'];
@@ -96,6 +96,7 @@ export const useTopUpsScreen = () => {
   return {
     title: t('finance.topUp.history.title'),
     newLabel: t('finance.topUp.history.new'),
+    filtersLabel: t('finance.topUp.history.filtersA11y'),
     newTopUp,
     chips,
     selectedStatus: status ?? ALL,

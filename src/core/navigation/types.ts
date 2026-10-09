@@ -113,6 +113,12 @@ export type WalletStackParamList = {
   /** Creator payout methods: where withdrawals go. */
   PayoutMethods: undefined;
   PayoutMethodForm: PayoutMethodFormParams;
+  /** Creator withdraw wizard (nested stack: amount → review). */
+  Withdraw: undefined;
+  /** Withdrawal history; `status` opens it filtered. */
+  Withdrawals: { status?: WithdrawalStatusParam } | undefined;
+  /** One withdrawal; `submitted` = just sent from the wizard (close goes back to the wallet). */
+  WithdrawalDetail: { id: string; submitted?: boolean };
 };
 
 /** `channel` = add a method of that channel (validated by finance); `id` = edit a saved one. */
@@ -120,6 +126,9 @@ export type PayoutMethodFormParams = { channel: string } | { id: string };
 
 /** Top-up statuses the history filters by (finance's `TOP_UP_STATUS` mirrors them). */
 export type TopUpStatusParam = 'pending_review' | 'completed' | 'rejected' | 'reversed';
+
+/** Withdrawal statuses the history filters by (finance's `WITHDRAWAL_STATUS` mirrors them). */
+export type WithdrawalStatusParam = 'pending' | 'completed' | 'rejected' | 'cancelled' | 'returned';
 
 /** Channel (validated by finance) and amount of the top-up being repeated. */
 export interface TopUpPrefill {
@@ -133,6 +142,12 @@ export type TopUpStackParamList = {
   TopUpAmount: undefined;
   TopUpTransfer: undefined;
   TopUpReview: undefined;
+};
+
+/** Creator withdraw wizard (amount + live quote → review), inside `Withdraw`. */
+export type WithdrawStackParamList = {
+  WithdrawAmount: undefined;
+  WithdrawReview: undefined;
 };
 
 /** How a public creator profile was opened; sent as the views beacon `src` (contract §17.5). */
@@ -222,6 +237,11 @@ export type WalletStackScreenProps<T extends keyof WalletStackParamList> =
 export type TopUpStackScreenProps<T extends keyof TopUpStackParamList> = CompositeScreenProps<
   NativeStackScreenProps<TopUpStackParamList, T>,
   WalletStackScreenProps<'TopUp'>
+>;
+
+export type WithdrawStackScreenProps<T extends keyof WithdrawStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<WithdrawStackParamList, T>,
+  WalletStackScreenProps<'Withdraw'>
 >;
 
 export type PublicStackScreenProps<T extends keyof PublicStackParamList> =

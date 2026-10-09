@@ -6,7 +6,7 @@ export type WalletTileSource = 'pending' | 'summaryEscrow' | 'pendingTopUps';
 /** Clock = waiting on a transfer or review · lock = held in escrow. */
 export type WalletTileKind = 'waiting' | 'escrow';
 /** Screen a tile opens on tap (only where that screen exists). */
-export type WalletTileTarget = 'topUpsInReview';
+export type WalletTileTarget = 'topUpsInReview' | 'withdrawalsPending';
 
 export interface WalletTileDef {
   key: string;
@@ -40,7 +40,13 @@ export const WALLET_ROLE_COPY = {
     availableLabel: 'finance.wallet.hero.availableCreator',
     monthIn: 'finance.wallet.hero.monthInCreator',
     tiles: [
-      { key: 'inTransfer', labelKey: 'finance.wallet.tiles.inTransfer', kind: 'waiting', source: 'pending' },
+      {
+        key: 'inTransfer',
+        labelKey: 'finance.wallet.tiles.inTransfer',
+        kind: 'waiting',
+        source: 'pending',
+        opens: 'withdrawalsPending',
+      },
       { key: 'inEscrow', labelKey: 'finance.wallet.tiles.inEscrow', kind: 'escrow', source: 'summaryEscrow' },
     ],
     escrowTitle: 'finance.wallet.escrowCard.titleCreator',

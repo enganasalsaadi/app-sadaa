@@ -1218,7 +1218,9 @@
       },
       "actions": {
         "topUp": "Top up",
-        "history": "Top-up history"
+        "history": "Top-up history",
+        "withdraw": "Withdraw",
+        "withdrawals": "Withdrawals"
       }
     },
     "statement": {
@@ -1301,6 +1303,10 @@
         "usdOnly": "Dollar only",
         "sypOnly": "Syrian pound only"
       }
+    },
+    "reviewSection": {
+      "edit": "Edit",
+      "editA11y": "Edit {{section}}"
     },
     "topUp": {
       "title": "Top up wallet",
@@ -1403,8 +1409,6 @@
         "rate": "Exchange rate",
         "reference": "Transfer number",
         "receipt": "Receipt",
-        "edit": "Edit",
-        "editA11y": "Edit {{section}}",
         "caption": "We review the request and notify you once the amount is in your wallet.",
         "submit": "Send request",
         "failed": "Couldn't send the request. Try again.",
@@ -1577,6 +1581,161 @@
         "addMessage": "An account in your name where we send your earnings",
         "loadFailed": "Couldn't load payout methods",
         "retry": "Tap to try again"
+      }
+    },
+    "withdraw": {
+      "title": "Withdraw earnings",
+      "progressA11y": "Step {{current}} of {{total}}",
+      "continue": "Continue",
+      "steps": {
+        "amount": "Amount",
+        "review": "Confirm"
+      },
+      "amount": {
+        "to": "To",
+        "primary": "Primary",
+        "change": "Change",
+        "changeA11y": "Change where the money goes",
+        "noMethodTitle": "Add where we send your money",
+        "noMethodBody": "An exchange office, an e-wallet or a bank account. It takes a minute.",
+        "addMethod": "Add payout method",
+        "segmentUsd": "Dollar $",
+        "segmentSyp": "Syrian pound SYP",
+        "currencyA11y": "Currency you receive",
+        "label": "Amount from your balance",
+        "available": "Available",
+        "useAll": "Withdraw all",
+        "limits": "Minimum {{min}} · up to {{max}} a day · one withdrawal every {{days}} days",
+        "blockedTitle": "You can't withdraw right now",
+        "blockedFallback": "The server didn't accept this withdrawal. Try again later.",
+        "nextAllowed": "Next withdrawal opens in",
+        "quoteFailed": "Couldn't price this withdrawal.",
+        "quote": {
+          "gross": "Taken from your balance",
+          "fee": "{{channel}} fee",
+          "net": "You receive",
+          "payout": "You receive in pounds",
+          "rate": "At today's rate {{rate}} · locked when you send"
+        },
+        "timing": "The transfer usually arrives within 24 hours",
+        "blockedCaption": "Change the amount or come back later",
+        "errors": {
+          "method": "Choose where to send the money",
+          "required": "Enter the amount",
+          "min": "The minimum is {{amount}}",
+          "max": "The daily limit is {{amount}}",
+          "overBalance": "You have {{amount}} available"
+        }
+      },
+      "methodSheet": {
+        "title": "Where should we send it?",
+        "add": "Add payout method"
+      },
+      "reasons": {
+        "accountInactive": "Your account isn't active.",
+        "kycRequired": "Verify your identity first.",
+        "walletFrozen": "Your wallet is frozen.",
+        "withdrawalsPaused": "Withdrawals are paused for now.",
+        "belowMinimum": "The amount is below the minimum.",
+        "dailyLimitExceeded": "This goes over today's limit.",
+        "openRequestExists": "You already have a withdrawal on its way.",
+        "cooldownActive": "One withdrawal is allowed every 7 days.",
+        "insufficientFunds": "Your balance isn't enough.",
+        "fxRateStale": "Today's exchange rate isn't ready. Try dollars or come back later.",
+        "currencyNotSupported": "This method doesn't pay out in this currency.",
+        "amountBelowFee": "The fee is larger than the amount."
+      },
+      "review": {
+        "receiveOn": "You receive on {{channel}}",
+        "netAfterFee": "{{net}} after a {{fee}} fee",
+        "afterFee": "After a {{fee}} fee",
+        "destinationSection": "To",
+        "method": "Method",
+        "holder": "Account holder",
+        "phone": "Mobile",
+        "account": "Account number",
+        "amountSection": "Amount",
+        "gross": "Taken from your balance",
+        "fee": "Fee",
+        "net": "Net",
+        "rate": "Exchange rate",
+        "caption": "The amount is held from your balance as soon as you send, and you can cancel while it's in transfer.",
+        "submit": "Confirm withdrawal",
+        "blocked": "Withdrawals aren't available on your wallet right now."
+      },
+      "status": {
+        "pending": "In transfer",
+        "completed": "Completed",
+        "returned": "Returned",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "discard": {
+        "title": "Leave the withdrawal?",
+        "body": "Nothing has been sent yet. What you entered will be lost.",
+        "confirm": "Leave",
+        "stay": "Stay"
+      },
+      "detail": {
+        "title": "Withdrawal details",
+        "submittedHeader": "Withdrawal request",
+        "submittedTitle": "We sent your withdrawal request",
+        "dateTime": "{{date}} · {{time}}",
+        "timeline": {
+          "requested": "Request sent",
+          "transfer": "Sada team transfer",
+          "transferCaption": "Usually within 24 hours · we'll notify you",
+          "arrived": "Arrived at {{destination}}",
+          "arrivedNoDestination": "Money arrived",
+          "returned": "Returned to your balance",
+          "rejected": "Request rejected",
+          "cancelled": "Request cancelled"
+        },
+        "rejectionTitle": "Why it was rejected",
+        "returnedTitle": "The full amount went back to your balance",
+        "noReason": "Contact support to know more.",
+        "details": "Details",
+        "to": "To",
+        "date": "Requested on",
+        "completedAt": "Completed on",
+        "returnedAt": "Returned on",
+        "receiptNumber": "Receipt number",
+        "requestId": "Request number",
+        "copied": "Copied",
+        "amounts": "Amount",
+        "gross": "Amount",
+        "fee": "Fee",
+        "net": "Net",
+        "payout": "Received",
+        "rate": "Exchange rate",
+        "backToWallet": "Back to wallet",
+        "history": "Withdrawal history",
+        "cancel": "Cancel request",
+        "cancelTitle": "Cancel this withdrawal?",
+        "cancelBody": "The amount goes straight back to your balance.",
+        "cancelConfirm": "Cancel request",
+        "cancelKeep": "Keep it",
+        "cancelled": "Request cancelled. The amount is back in your balance.",
+        "notPending": "This request is no longer in transfer.",
+        "cancelFailed": "Couldn't cancel the request. Try again.",
+        "reviewMethods": "Review payout methods",
+        "supportMessage": "Hi, I need help with a withdrawal request. Number: {{id}}",
+        "notFound": "This withdrawal isn't available."
+      },
+      "history": {
+        "title": "Withdrawal history",
+        "new": "New withdrawal",
+        "filtersA11y": "Filter withdrawals",
+        "all": "All",
+        "rowTitle": "Withdrawal to {{destination}}",
+        "rowTitleNoDestination": "Withdrawal",
+        "rowA11y": "{{title}}, {{amount}}, {{status}}",
+        "rowHint": "Opens the request",
+        "end": "End of history",
+        "emptyTitle": "No withdrawals yet",
+        "emptyMessage": "Withdraw your earnings to your exchange office, e-wallet or bank.",
+        "filteredEmptyTitle": "No withdrawals with this status",
+        "showAll": "Show all"
       }
     }
   },

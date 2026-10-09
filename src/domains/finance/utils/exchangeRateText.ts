@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { formatMoney } from '@/core/i18n';
 import type { CurrencyCode } from '@/core/money';
 import { MINOR_UNIT_DIGITS, parseAmountText } from '@/core/money';
@@ -19,4 +20,16 @@ export const formatExchangeRateSides = (
     base: formatMoney({ amount: 10 ** MINOR_UNIT_DIGITS[base], currency: base }, lang, { precision: 0 }),
     quote: formatMoney(quoteAmount, lang),
   };
+};
+
+/** "1 $ = 14,000 ل.س" ready to show; `null` when the rate doesn't parse. */
+export const exchangeRateLine = (
+  rate: string,
+  base: CurrencyCode,
+  quote: CurrencyCode,
+  lang: string,
+  t: TFunction,
+): string | null => {
+  const sides = formatExchangeRateSides(rate, base, quote, lang);
+  return sides ? t('finance.wallet.rate.value', sides) : null;
 };

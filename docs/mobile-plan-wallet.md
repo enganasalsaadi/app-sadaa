@@ -68,13 +68,24 @@ Built to the approved Step 4 boards (Sada Wallet Tab canvas). Backend asks: `doc
 - **Tests:** `topUpEstimate`, `topUpMappers` (server + fallback), `topUpSchema`, `receiptUrl`.
 - **Open:** pending status uses the warning tone everywhere (the submitted board used info); drop the 404 fallback once staging + production run v2.
 
-## Step 5: Creator payout methods
+## Step 5: Creator payout methods ✅ (2026-10-09, commits 50d4918 + 3bec572; awaiting live-server + device testing)
 
-List (max 10), add/edit form per channel (schema per channel), delete via `ConfirmSheet`.
+List (max 10), add/edit form per channel (schema per channel), delete via `ConfirmSheet`; Sham Cash `account_code`; payout method alerts → `PayoutMethods`.
 
-## Step 6: Creator withdraw
+## Step 6: Creator withdraw ✅ (2026-10-09, awaiting live-server + device testing)
 
-Amount → live debounced quote (all reason labels, `next_allowed_at` countdown) → confirm (gross / fee / net / net payout) → pending. History, detail, cancel while pending.
+Built to the approved Step 6 boards (Sada Wallet Tab canvas). Approved answers: Continue disabled on a server block (reasons above it; rule 09 §5 exception), "Add payout method" card on step 1, default limits up front ($25 / $500 a day / 7 days, `WITHDRAW_LIMITS`), withdrawal push → detail deferred to Step 7.
+
+- **Routes:** creator stack only: `Withdraw` (nested `WithdrawStackParamList`: `WithdrawAmount` → `WithdrawReview`), `Withdrawals { status? }`, `WithdrawalDetail { id, submitted? }`; `WithdrawalStatusParam` in `core/navigation`.
+- **API (`api/withdrawalApi`):** `getWithdrawalQuote` (silent, `keepUnusedDataFor: 0`), `createWithdrawal` + `cancelWithdrawal` (`Idempotency-Key`; invalidate `Wallet`, `WalletTransaction LIST`, `Withdrawal LIST` (+ id on cancel); create upserts the detail), infinite `getWithdrawals`, `getWithdrawal`. Mappers `utils/withdrawalMappers` (unknown status/channel/reason → `null`, a bad row skipped) + `parseWithdrawalBlock` (`422 withdrawal_not_allowed` `meta.reasons` codes or `{code,label}`, `next_allowed_at`, read from `AppApiError.details`; core untouched).
+- **Flow state:** `navigation/WithdrawNavigator` = `FormProvider` + `WithdrawFlowContext` (`hooks/useWithdrawFlow`): one form (`schemas/withdrawSchema`: method, payout currency, amount ≥ $25, ≤ $500, ≤ available), wallet + `usePayoutMethods`, primary method preselected (not dirty), a method added from the wizard becomes the destination on return (`PayoutMethodForm { channel }` goes back), currency follows the method, quote debounced 400 ms (`WITHDRAW_QUOTE_DEBOUNCE_MS`, `skipToken` while empty, last quote kept dimmed), block = settled quote `allowed: false` or a submit `422` until the request changes, one `createIdempotentAction()`, discard guard + `DiscardSheet flow="withdraw"`, exit `replace('WithdrawalDetail', { submitted })` or back to the wallet.
+- **Chrome:** `components/MoneyStepLayout` (generalised from the top-up step bar; `TopUpStepLayout` and `WithdrawStepLayout` wrap it), shared `ReviewSection` (Edit keys moved to `finance.reviewSection.*`) and `StatusFilterChips` (was `TopUpStatusChips`).
+- **Amount step:** destination card (Change → `WithdrawMethodSheet`: radio `ListRow`s + "Add payout method" after dismissal → `PayoutChannelSheet`), no-method card, currency `SegmentedControl` only for two-currency methods, `AmountInput` + "Available" + "Withdraw all" chip + limits caption, blocked `Notice` (every label; server label, else `WITHDRAWAL_REASON_LABEL`) + `Countdown` (timer re-quotes at `next_allowed_at`), quote card (gross, channel fee, net mint, pounds `estimate` + rate "locked when sent"), quote error `Notice` with retry. Continue: disabled when blocked, waits (loading) for an in-flight quote, re-quotes after an error.
+- **Review:** head (net payout, "net after fee"), destination + amount `ReviewSection`s, hold/cancel note, submit; `withdrawal_not_allowed` → block + re-quote + `popTo` amount; `fx_rate_*` / `currency_not_supported` → re-quote + amount; `kyc_required` / `wallet_*` → toast + wallet; 422 fields → amount; else `InlineError`.
+- **History / detail:** `WithdrawalsScreen` (chips All · in transfer · completed · returned · rejected · cancelled, `WithdrawalDayGroup` / `WithdrawalRow`: signed neutral amount, struck through when lost, SYP payout caption); `WithdrawalDetailScreen` (submitted mode rises in once via `StaggerIn`: ✕ + "Back to wallet" + history + cancel; timeline from timestamps; rejection (danger) / return (info) `Notice`; details with copyable receipt + request numbers; amounts with rate; pending → cancel `ConfirmSheet` (own idempotent action, `409 withdrawal_not_pending` → toast + refetch); returned → "Review payout methods"; `ReportLink`). Status look `WITHDRAWAL_STATUS_LOOK`, view helpers `utils/withdrawalView`.
+- **Wallet hero:** creator action row (`onBrand` Withdraw, disabled unless wallet `active` and `withdraw_funds` allowed; `glass` Withdrawal history); "In transfer" tile → `Withdrawals { status: 'pending' }`. The board's icon-only "payout methods" glass button wasn't built: the action row takes two labelled buttons, and payout methods already open from the card under the escrow card.
+- **Tests:** `withdrawalMappers` (quote, item, page, 422 block), `withdrawSchema`.
+- **Open:** no share action on the withdrawal detail yet (the board's header share icon); withdrawal pushes → `WithdrawalDetail` in Step 7; server-sent limits once the backend adds them.
 
 ## Step 7: Wiring + docs
 

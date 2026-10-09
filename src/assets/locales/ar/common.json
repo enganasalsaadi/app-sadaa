@@ -1246,7 +1246,9 @@
       },
       "actions": {
         "topUp": "شحن",
-        "history": "سجل الشحن"
+        "history": "سجل الشحن",
+        "withdraw": "سحب الأرباح",
+        "withdrawals": "سجل السحوبات"
       }
     },
     "statement": {
@@ -1333,6 +1335,10 @@
         "usdOnly": "دولار فقط",
         "sypOnly": "ليرة سورية فقط"
       }
+    },
+    "reviewSection": {
+      "edit": "تعديل",
+      "editA11y": "تعديل {{section}}"
     },
     "topUp": {
       "title": "شحن المحفظة",
@@ -1435,8 +1441,6 @@
         "rate": "سعر الصرف",
         "reference": "رقم الحوالة",
         "receipt": "الإيصال",
-        "edit": "تعديل",
-        "editA11y": "تعديل {{section}}",
         "caption": "نراجع الطلب ونرسل لك إشعاراً عند إضافة المبلغ إلى محفظتك.",
         "submit": "إرسال الطلب",
         "failed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
@@ -1609,6 +1613,161 @@
         "addMessage": "حساب باسمك نرسل إليه أرباحك عند السحب",
         "loadFailed": "تعذّر تحميل طرق الاستلام",
         "retry": "اضغط لإعادة المحاولة"
+      }
+    },
+    "withdraw": {
+      "title": "سحب الأرباح",
+      "progressA11y": "الخطوة {{current}} من {{total}}",
+      "continue": "متابعة",
+      "steps": {
+        "amount": "المبلغ",
+        "review": "التأكيد"
+      },
+      "amount": {
+        "to": "إلى",
+        "primary": "الأساسية",
+        "change": "تغيير",
+        "changeA11y": "تغيير وجهة المبلغ",
+        "noMethodTitle": "أضف وسيلة نرسل إليها أموالك",
+        "noMethodBody": "مكتب حوالات أو محفظة إلكترونية أو حساب بنكي. يستغرق دقيقة.",
+        "addMethod": "إضافة وسيلة استلام",
+        "segmentUsd": "دولار $",
+        "segmentSyp": "ليرة سورية ل.س",
+        "currencyA11y": "عملة الاستلام",
+        "label": "المبلغ من رصيدك",
+        "available": "المتاح",
+        "useAll": "سحب الكل",
+        "limits": "الحد الأدنى {{min}} · حتى {{max}} يومياً · سحب واحد كل {{days}} أيام",
+        "blockedTitle": "لا يمكن السحب الآن",
+        "blockedFallback": "لم يقبل الخادم هذا السحب. حاول لاحقاً.",
+        "nextAllowed": "السحب التالي متاح بعد",
+        "quoteFailed": "تعذّر حساب هذا السحب.",
+        "quote": {
+          "gross": "يُخصم من رصيدك",
+          "fee": "رسوم {{channel}}",
+          "net": "يصلك",
+          "payout": "تستلمه بالليرة",
+          "rate": "بسعر اليوم {{rate}} · يُثبَّت عند الإرسال"
+        },
+        "timing": "تصل الحوالة عادةً خلال 24 ساعة",
+        "blockedCaption": "عدّل المبلغ أو عُد لاحقاً",
+        "errors": {
+          "method": "اختر أين نرسل المبلغ",
+          "required": "أدخل المبلغ",
+          "min": "الحد الأدنى {{amount}}",
+          "max": "الحد اليومي {{amount}}",
+          "overBalance": "المتاح لديك {{amount}}"
+        }
+      },
+      "methodSheet": {
+        "title": "إلى أين نرسل المبلغ؟",
+        "add": "إضافة وسيلة استلام"
+      },
+      "reasons": {
+        "accountInactive": "حسابك غير نشط.",
+        "kycRequired": "وثّق هويتك أولاً.",
+        "walletFrozen": "محفظتك مجمّدة.",
+        "withdrawalsPaused": "السحب متوقف مؤقتاً.",
+        "belowMinimum": "المبلغ أقل من الحد الأدنى.",
+        "dailyLimitExceeded": "المبلغ يتجاوز حد اليوم.",
+        "openRequestExists": "لديك طلب سحب قيد التحويل.",
+        "cooldownActive": "يُسمح بسحب واحد كل 7 أيام.",
+        "insufficientFunds": "رصيدك لا يكفي.",
+        "fxRateStale": "سعر الصرف غير محدّث. اسحب بالدولار أو عُد لاحقاً.",
+        "currencyNotSupported": "هذه الوسيلة لا تدفع بهذه العملة.",
+        "amountBelowFee": "الرسوم أكبر من المبلغ."
+      },
+      "review": {
+        "receiveOn": "تستلم على {{channel}}",
+        "netAfterFee": "{{net}} بعد رسوم {{fee}}",
+        "afterFee": "بعد رسوم {{fee}}",
+        "destinationSection": "إلى",
+        "method": "الوسيلة",
+        "holder": "صاحب الحساب",
+        "phone": "الجوال",
+        "account": "رقم الحساب",
+        "amountSection": "المبلغ",
+        "gross": "يُخصم من رصيدك",
+        "fee": "الرسوم",
+        "net": "الصافي",
+        "rate": "سعر الصرف",
+        "caption": "يُحجز المبلغ من رصيدك فور الإرسال، ويمكنك إلغاء الطلب ما دام قيد التحويل.",
+        "submit": "تأكيد السحب",
+        "blocked": "السحب غير متاح على محفظتك الآن."
+      },
+      "status": {
+        "pending": "قيد التحويل",
+        "completed": "مكتمل",
+        "returned": "مُعاد إلى رصيدك",
+        "rejected": "مرفوض",
+        "cancelled": "ملغى"
+      },
+      "discard": {
+        "title": "الخروج من السحب؟",
+        "body": "لم يُرسل شيء بعد. سيضيع ما أدخلته.",
+        "confirm": "خروج",
+        "stay": "البقاء"
+      },
+      "detail": {
+        "title": "تفاصيل السحب",
+        "submittedHeader": "طلب السحب",
+        "submittedTitle": "أرسلنا طلب السحب",
+        "dateTime": "{{date}} · {{time}}",
+        "timeline": {
+          "requested": "أُرسل الطلب",
+          "transfer": "تحويل فريق صدى",
+          "transferCaption": "عادةً خلال 24 ساعة · نرسل لك إشعاراً",
+          "arrived": "وصل المبلغ إلى {{destination}}",
+          "arrivedNoDestination": "وصل المبلغ",
+          "returned": "أُعيد إلى رصيدك",
+          "rejected": "رُفض الطلب",
+          "cancelled": "أُلغي الطلب"
+        },
+        "rejectionTitle": "سبب الرفض",
+        "returnedTitle": "أُعيد المبلغ كاملاً إلى رصيدك",
+        "noReason": "تواصل مع الدعم لمعرفة المزيد.",
+        "details": "التفاصيل",
+        "to": "إلى",
+        "date": "تاريخ الطلب",
+        "completedAt": "تاريخ الإتمام",
+        "returnedAt": "تاريخ الإعادة",
+        "receiptNumber": "رقم الإيصال",
+        "requestId": "رقم الطلب",
+        "copied": "تم النسخ",
+        "amounts": "المبلغ",
+        "gross": "المبلغ",
+        "fee": "الرسوم",
+        "net": "الصافي",
+        "payout": "المستلم",
+        "rate": "سعر الصرف",
+        "backToWallet": "العودة إلى المحفظة",
+        "history": "سجل السحوبات",
+        "cancel": "إلغاء الطلب",
+        "cancelTitle": "إلغاء طلب السحب؟",
+        "cancelBody": "يعود المبلغ إلى رصيدك فوراً.",
+        "cancelConfirm": "إلغاء الطلب",
+        "cancelKeep": "إبقاء الطلب",
+        "cancelled": "أُلغي الطلب وعاد المبلغ إلى رصيدك.",
+        "notPending": "هذا الطلب لم يعد قيد التحويل.",
+        "cancelFailed": "تعذّر إلغاء الطلب. حاول مجدداً.",
+        "reviewMethods": "مراجعة وسائل الاستلام",
+        "supportMessage": "مرحباً، أحتاج مساعدة في طلب سحب. الرقم: {{id}}",
+        "notFound": "هذا السحب غير متاح."
+      },
+      "history": {
+        "title": "سجل السحوبات",
+        "new": "سحب جديد",
+        "filtersA11y": "تصفية السحوبات",
+        "all": "الكل",
+        "rowTitle": "سحب إلى {{destination}}",
+        "rowTitleNoDestination": "سحب",
+        "rowA11y": "{{title}}، {{amount}}، {{status}}",
+        "rowHint": "يفتح الطلب",
+        "end": "نهاية السجل",
+        "emptyTitle": "لا سحوبات بعد",
+        "emptyMessage": "اسحب أرباحك إلى مكتب حوالات أو محفظة إلكترونية أو بنك.",
+        "filteredEmptyTitle": "لا سحوبات بهذه الحالة",
+        "showAll": "عرض الكل"
       }
     }
   },

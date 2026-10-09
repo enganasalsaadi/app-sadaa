@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { ScrollView } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useStyles } from '@/core/theme';
 import { Chip } from '@/shared/ui';
 
@@ -9,15 +8,21 @@ export interface StatusChip {
   label: string;
 }
 
-interface TopUpStatusChipsProps {
+interface StatusFilterChipsProps {
   chips: readonly StatusChip[];
   selected: string;
   onSelect: (value: string) => void;
+  /** What the chips filter ("Filter top-ups"). */
+  accessibilityLabel: string;
 }
 
-/** Pinned under the header: All, then one chip per status. */
-const TopUpStatusChipsComponent: React.FC<TopUpStatusChipsProps> = ({ chips, selected, onSelect }) => {
-  const { t } = useTranslation();
+/** History filter row pinned under the header: All, then one chip per status (top-ups, withdrawals). */
+const StatusFilterChipsComponent: React.FC<StatusFilterChipsProps> = ({
+  chips,
+  selected,
+  onSelect,
+  accessibilityLabel,
+}) => {
   const styles = useStyles(({ spacing }) => ({
     content: {
       gap: spacing.sm,
@@ -34,7 +39,7 @@ const TopUpStatusChipsComponent: React.FC<TopUpStatusChipsProps> = ({ chips, sel
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.content}
       accessibilityRole="radiogroup"
-      accessibilityLabel={t('finance.topUp.history.filtersA11y')}
+      accessibilityLabel={accessibilityLabel}
     >
       {chips.map(chip => (
         <Chip
@@ -49,4 +54,4 @@ const TopUpStatusChipsComponent: React.FC<TopUpStatusChipsProps> = ({ chips, sel
   );
 };
 
-export const TopUpStatusChips = memo(TopUpStatusChipsComponent);
+export const StatusFilterChips = memo(StatusFilterChipsComponent);

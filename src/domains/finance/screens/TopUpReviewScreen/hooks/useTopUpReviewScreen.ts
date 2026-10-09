@@ -8,6 +8,7 @@ import type { TopUpStackParamList, TopUpStackScreenProps } from '@/core/navigati
 import { useToast } from '@/core/toast';
 import { toFormDataFile } from '@/domains/auth';
 import { useCreateTopUpMutation } from '../../../api/topUpApi';
+import type { ReviewSectionRow } from '../../../components/ReviewSection';
 import { useTopUpFlow } from '../../../hooks/useTopUpFlow';
 import type { TopUpFormValues } from '../../../schemas/topUpSchema';
 import { formatExchangeRateSides } from '../../../utils/exchangeRateText';
@@ -16,11 +17,7 @@ type Navigation = TopUpStackScreenProps<'TopUpReview'>['navigation'];
 type StepRoute = Exclude<keyof TopUpStackParamList, 'TopUpReview'>;
 type FormField = keyof TopUpFormValues;
 
-export interface ReviewRow {
-  key: string;
-  label: string;
-  value: string;
-}
+type ReviewRow = ReviewSectionRow;
 
 /** 422 `errors` keys → form fields (top-ups v2 §3). */
 const SERVER_FIELDS = {
