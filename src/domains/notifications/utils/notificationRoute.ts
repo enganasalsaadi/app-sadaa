@@ -11,9 +11,10 @@ export type NotificationRoute =
   | { screen: 'NotificationsScreen' }
   | { screen: 'WalletTab' }
   | { screen: 'PayoutMethods' }
-  | { screen: 'TopUpDetail'; topUpId: string };
+  | { screen: 'TopUpDetail'; topUpId: string }
+  | { screen: 'WithdrawalDetail'; withdrawalId: string };
 
-/** Platforms and payout methods are creator screens, top-ups a brand one: the other role lands somewhere safe. */
+/** Platforms, payout methods and withdrawals are creator screens, top-ups a brand one: the other role lands somewhere safe. */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
   userType: UserType | null,
@@ -36,6 +37,10 @@ export const resolveNotificationRoute = (
       return userType === 'brand'
         ? { screen: 'TopUpDetail', topUpId: target.topUpId }
         : { screen: 'WalletTab' };
+    case 'withdrawal':
+      return userType === 'influencer'
+        ? { screen: 'WithdrawalDetail', withdrawalId: target.withdrawalId }
+        : { screen: 'WalletTab' };
     default: {
       const _exhaustive: never = target;
       return _exhaustive;
@@ -53,6 +58,9 @@ const FALLBACK_LINK: Record<string, (entityId: string) => string> = {
   wallet_top_up_completed: id => `sada://wallet/top-ups/${id}`,
   wallet_top_up_rejected: id => `sada://wallet/top-ups/${id}`,
   wallet_top_up_reversed: id => `sada://wallet/top-ups/${id}`,
+  wallet_withdrawal_completed: id => `sada://wallet/withdrawals/${id}`,
+  wallet_withdrawal_rejected: id => `sada://wallet/withdrawals/${id}`,
+  wallet_withdrawal_returned: id => `sada://wallet/withdrawals/${id}`,
   wallet_payout_method_added: () => 'sada://wallet/payout-methods',
   wallet_payout_method_changed: () => 'sada://wallet/payout-methods',
 };
@@ -90,6 +98,11 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
       return {
         screen: 'WalletTab',
         params: { screen: 'TopUpDetail', params: { id: route.topUpId }, initial: false },
+      };
+    case 'WithdrawalDetail':
+      return {
+        screen: 'WalletTab',
+        params: { screen: 'WithdrawalDetail', params: { id: route.withdrawalId }, initial: false },
       };
     case 'KycScreen':
     case 'NotificationsScreen':

@@ -25,7 +25,8 @@ export type PushTarget =
   | { kind: 'notifications' }
   | { kind: 'wallet' }
   | { kind: 'payoutMethods' }
-  | { kind: 'topUp'; topUpId: string };
+  | { kind: 'topUp'; topUpId: string }
+  | { kind: 'withdrawal'; withdrawalId: string };
 
 export interface ParsedPush {
   /** `null` for a type this build doesn't know yet. */
@@ -44,12 +45,13 @@ const isPushType = (value: unknown): value is PushType =>
 const parseDeepLink = (link: unknown): PushTarget | null => {
   if (typeof link !== 'string' || !link.startsWith(DEEP_LINK_SCHEME)) return null;
   const segments = link.slice(DEEP_LINK_SCHEME.length).split('/');
-  // `wallet/top-ups/{id}` is the only three-segment route.
+  // `wallet/top-ups/{id}` and `wallet/withdrawals/{id}` are the only three-segment routes.
   if (segments.length === 3) {
     const [route, sub, id = ''] = segments;
-    return route === 'wallet' && sub === 'top-ups' && ENTITY_ID.test(id)
-      ? { kind: 'topUp', topUpId: id }
-      : null;
+    if (route !== 'wallet' || !ENTITY_ID.test(id)) return null;
+    if (sub === 'top-ups') return { kind: 'topUp', topUpId: id };
+    if (sub === 'withdrawals') return { kind: 'withdrawal', withdrawalId: id };
+    return null;
   }
   const [route, id, ...rest] = segments;
   if (rest.length > 0) return null;

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Ban } from 'lucide-react-native';
+import { Ban, Share2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import {
   Box,
@@ -96,6 +96,10 @@ const WithdrawalDetailScreenComponent: React.FC = () => {
         title: t(vm.submitted ? 'finance.withdraw.detail.submittedHeader' : 'finance.withdraw.detail.title'),
         backIcon: vm.submitted ? 'close' : 'back',
         onBackPress: vm.submitted ? vm.backToWallet : undefined,
+        actions:
+          vm.status === 'ready'
+            ? [{ icon: Share2, accessibilityLabel: t('finance.receipt.share'), onPress: vm.onShare }]
+            : undefined,
       }}
       footer={footer}
     >

@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { Share } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -41,7 +42,8 @@ const TIME: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' };
  * One withdrawal (Money archetype, receipt): what left the balance, the transfer timeline,
  * why it was rejected or returned, the details and the amounts. Right after submitting
  * (`submitted`) it is the confirmation: ✕, "Back to wallet" and history. A pending request
- * can be cancelled (confirm first; its own idempotency key, rule 06).
+ * can be cancelled (confirm first; its own idempotency key, rule 06). Share sends a plain-text
+ * receipt (amounts, status, numbers).
  */
 export const useWithdrawalDetailScreen = () => {
   const { t, i18n } = useTranslation();
@@ -228,6 +230,28 @@ export const useWithdrawalDetailScreen = () => {
     [t, toast],
   );
 
+  const onShare = useCallback(() => {
+    if (!withdrawal || !view) return;
+    const requestedAt = view.details.find(row => row.key === 'date')?.value;
+    const rows = [
+      view.title,
+      `${t('finance.receipt.amount')}: ${formatMoney(withdrawal.gross, lang)}`,
+      withdrawal.net_payout
+        ? `${t('finance.withdraw.detail.payout')}: ${formatMoney(withdrawal.net_payout, lang)}`
+        : null,
+      view.statusLabel ? `${t('finance.receipt.status')}: ${view.statusLabel}` : null,
+      requestedAt ? `${t('finance.receipt.date')}: ${requestedAt}` : null,
+      withdrawal.receipt_number
+        ? `${t('finance.withdraw.detail.receiptNumber')}: ${withdrawal.receipt_number}`
+        : null,
+      `${t('finance.withdraw.detail.requestId')}: ${withdrawal.id}`,
+    ].filter((row): row is string => row !== null);
+    // Dismissing the share sheet is not a failure; nothing to report.
+    Share.share({ message: [t('finance.withdraw.detail.shareTitle'), ...rows].join('\n') }).catch(
+      () => undefined,
+    );
+  }, [lang, t, view, withdrawal]);
+
   const openCancel = useCallback(() => setCancelVisible(true), []);
   const closeCancel = useCallback(() => setCancelVisible(false), []);
   const confirmCancel = useCallback(async () => {
@@ -269,6 +293,7 @@ export const useWithdrawalDetailScreen = () => {
     view,
     retry,
     onCopy,
+    onShare,
     cancelVisible,
     openCancel,
     closeCancel,

@@ -1702,6 +1702,7 @@
         "receiptNumber": "Receipt number",
         "requestId": "Request number",
         "copied": "Copied",
+        "shareTitle": "Sada withdrawal receipt",
         "amounts": "Amount",
         "gross": "Amount",
         "fee": "Fee",

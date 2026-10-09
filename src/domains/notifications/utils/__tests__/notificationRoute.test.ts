@@ -46,6 +46,16 @@ describe('resolveNotificationRoute', () => {
     expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
   });
 
+  it('opens a withdrawal for a creator, the wallet tab for anyone else', () => {
+    const target = { kind: 'withdrawal', withdrawalId: '01JC2W7K' } as const;
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({
+      screen: 'WithdrawalDetail',
+      withdrawalId: '01JC2W7K',
+    });
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({ screen: 'WalletTab' });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
+  });
+
   it('opens payout methods for a creator, the wallet tab for anyone else', () => {
     const target = { kind: 'payoutMethods' } as const;
     expect(resolveNotificationRoute(target, 'influencer')).toEqual({ screen: 'PayoutMethods' });
@@ -81,6 +91,9 @@ describe('notificationTarget', () => {
     expect(
       notificationTarget(item({ type: 'wallet_top_up_reversed', data: { entity_id: '01JB4M8X' } })),
     ).toEqual({ kind: 'topUp', topUpId: '01JB4M8X' });
+    expect(
+      notificationTarget(item({ type: 'wallet_withdrawal_completed', data: { entity_id: '01JC2W7K' } })),
+    ).toEqual({ kind: 'withdrawal', withdrawalId: '01JC2W7K' });
     expect(notificationTarget(item({ type: 'wallet_payout_method_changed', data: { entity_id: 'pm1' } }))).toEqual({
       kind: 'payoutMethods',
     });
@@ -115,6 +128,13 @@ describe('toTabParams', () => {
     expect(toTabParams({ screen: 'TopUpDetail', topUpId: 'tu1' })).toEqual({
       screen: 'WalletTab',
       params: { screen: 'TopUpDetail', params: { id: 'tu1' }, initial: false },
+    });
+  });
+
+  it('opens a withdrawal over the wallet home', () => {
+    expect(toTabParams({ screen: 'WithdrawalDetail', withdrawalId: 'wd1' })).toEqual({
+      screen: 'WalletTab',
+      params: { screen: 'WithdrawalDetail', params: { id: 'wd1' }, initial: false },
     });
   });
 });

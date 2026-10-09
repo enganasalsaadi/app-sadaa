@@ -85,8 +85,13 @@ Built to the approved Step 6 boards (Sada Wallet Tab canvas). Approved answers: 
 - **History / detail:** `WithdrawalsScreen` (chips All · in transfer · completed · returned · rejected · cancelled, `WithdrawalDayGroup` / `WithdrawalRow`: signed neutral amount, struck through when lost, SYP payout caption); `WithdrawalDetailScreen` (submitted mode rises in once via `StaggerIn`: ✕ + "Back to wallet" + history + cancel; timeline from timestamps; rejection (danger) / return (info) `Notice`; details with copyable receipt + request numbers; amounts with rate; pending → cancel `ConfirmSheet` (own idempotent action, `409 withdrawal_not_pending` → toast + refetch); returned → "Review payout methods"; `ReportLink`). Status look `WITHDRAWAL_STATUS_LOOK`, view helpers `utils/withdrawalView`.
 - **Wallet hero:** creator action row (`onBrand` Withdraw, disabled unless wallet `active` and `withdraw_funds` allowed; `glass` Withdrawal history); "In transfer" tile → `Withdrawals { status: 'pending' }`. The board's icon-only "payout methods" glass button wasn't built: the action row takes two labelled buttons, and payout methods already open from the card under the escrow card.
 - **Tests:** `withdrawalMappers` (quote, item, page, 422 block), `withdrawSchema`.
-- **Open:** no share action on the withdrawal detail yet (the board's header share icon); withdrawal pushes → `WithdrawalDetail` in Step 7; server-sent limits once the backend adds them.
+- **Open:** server-sent limits once the backend adds them.
 
 ## Step 7: Wiring + docs
 
 Push tap → wallet routes, replace `WalletPlaceholder`, DevShowcase demos for new kit/domain parts, `docs/mobile-architecture.md` (§4.4, §5.2, §5.3 Journey F, Change Log).
+
+- **Withdrawal deep links:** `parsePushPayload` accepts `sada://wallet/withdrawals/{id}` (`PushTarget` `withdrawal`, same `ENTITY_ID` check as top-ups); `resolveNotificationRoute` → `WithdrawalDetail` for creators, `WalletTab` otherwise; `toTabParams` opens it over the wallet home (`initial: false`); inbox `FALLBACK_LINK` rebuilds the link from `entity_id` for `wallet_withdrawal_completed|rejected|returned`. Cache refresh was already in `walletPushTags`.
+- **Share:** `WithdrawalDetailScreen` header `Share2` action (ready state) → plain-text receipt via `Share.share` (title, gross, net payout, status, date, receipt + request numbers), like `TransactionReceiptScreen`.
+- **Cleanup:** `WalletPlaceholder` already gone (wallet tab real since Step 2); no TODO/mock leftovers in finance/notifications; finance domain parts covered by the DevShowcase registry test.
+- **Tests:** `pushPayload` (withdrawal link + malformed variants), `notificationRoute` (role routing, fallback link, tab params).
