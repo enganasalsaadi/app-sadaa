@@ -30,9 +30,19 @@ export type {
   WalletTransactionsPageDto,
   WalletTransactionType,
 } from './wallet';
+export { PAYMENT_CHANNEL_GROUPS, PAYMENT_CHANNELS } from './paymentChannel';
+export type { PaymentChannel, PaymentChannelGroup } from './paymentChannel';
+export type {
+  CreatePayoutMethodInput,
+  DeletePayoutMethodDto,
+  PayoutDetails,
+  PayoutDetailsDto,
+  PayoutMethod,
+  PayoutMethodDto,
+  PayoutMethodPatch,
+  UpdatePayoutMethodArgs,
+} from './payoutMethod';
 export {
-  TOP_UP_CHANNEL_GROUPS,
-  TOP_UP_CHANNELS,
   TOP_UP_DISABLED_REASONS,
   TOP_UP_STATUS,
 } from './topUp';
@@ -42,9 +52,7 @@ export type {
   TopUpAccount,
   TopUpAccountDto,
   TopUpAccountField,
-  TopUpChannel,
   TopUpChannelDto,
-  TopUpChannelGroup,
   TopUpChannelOption,
   TopUpChannels,
   TopUpChannelsDto,

@@ -62,9 +62,9 @@ Brand only. Send `Cache-Control: no-store`, and refetch each time the flow opens
 ```
 
 Rules:
-- **Order:** show `channels[]` in the order sent (admins control it). Group by `group` in the order each group first appears. The default order is haram, fouad, syriatel_cash, mtn_cash, bank.
+- **Order:** show `channels[]` in the order sent (admins control it). Group by `group` in the order each group first appears. The default order is haram, fouad, syriatel_cash, mtn_cash, sham_cash, bank.
 - **`group`:** `exchange_office` | `e_wallet` | `bank`.
-- **`currencies`:** what the channel accepts **right now**. When the rate is stale or missing, `SYP` is removed. The SYP-only channels (`syriatel_cash`, `mtn_cash`) then become `enabled: false`.
+- **`currencies`:** what the channel accepts **right now**. When the rate is stale or missing, `SYP` is removed. The SYP-only channels (`syriatel_cash`, `mtn_cash`) then become `enabled: false`. `sham_cash` (an `e_wallet` that takes USD and SYP) stays enabled in USD.
 - **`disabled_reason`:** one of
   - `channel_paused`: an admin paused the channel, or Sada has no active receiving account on it.
   - `fx_rate_stale`: the rate is stale (SYP-only channels).

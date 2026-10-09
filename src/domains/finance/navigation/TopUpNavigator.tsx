@@ -3,7 +3,7 @@ import { FormProvider } from 'react-hook-form';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { TopUpStackParamList } from '@/core/navigation';
 import { useHideBottomBar } from '@/shared/context/BottomBarContext';
-import { TopUpDiscardSheet } from '../components/TopUpDiscardSheet';
+import { DiscardSheet } from '../components/DiscardSheet';
 import { TopUpFlowContext, useTopUpFlowState } from '../hooks/useTopUpFlow';
 import { TopUpAmountScreen } from '../screens/TopUpAmountScreen';
 import { TopUpChannelScreen } from '../screens/TopUpChannelScreen';
@@ -31,7 +31,7 @@ export const TopUpNavigator: React.FC = () => {
           <Stack.Screen name="TopUpTransfer" component={TopUpTransferScreen} />
           <Stack.Screen name="TopUpReview" component={TopUpReviewScreen} />
         </Stack.Navigator>
-        <TopUpDiscardSheet guard={guard} />
+        <DiscardSheet guard={guard} flow="topUp" />
       </TopUpFlowContext.Provider>
     </FormProvider>
   );

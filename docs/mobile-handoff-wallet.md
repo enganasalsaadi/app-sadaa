@@ -3,6 +3,8 @@
 Status: **API live on `main`** (2026-10-08). Postman folder: `14 - Wallet & Finance`.
 Backend plan: [backend-plan.md](backend-plan.md).
 
+> **Update 2026-10-09:** the brand top-up flow v2 (channels + receiving accounts, full top-up object, new error codes, top-up deep links) is in [mobile-handoff-topup-v2.md](mobile-handoff-topup-v2.md). It supersedes §6 and the deep link in §9 for top-up pushes.
+
 All endpoints are under `/api/v1`, use the standard envelope `{success, message, data, meta}` / `{success:false, error_code, errors, meta}`, and honor `Accept-Language` (`ar` default).
 
 ## 1. Breaking change (ship with this release)
@@ -112,8 +114,8 @@ Returns a receipt in the same shape. The reference is case-insensitive. Returns 
 
 | Field | Rule |
 |---|---|
-| `channel` | `haram`, `fouad`, `syriatel_cash`, `mtn_cash` or `bank` |
-| `currency` | `USD` or `SYP`. `syriatel_cash` and `mtn_cash` accept **SYP only**. |
+| `channel` | `haram`, `fouad`, `syriatel_cash`, `mtn_cash`, `sham_cash` or `bank` |
+| `currency` | `USD` or `SYP`. `syriatel_cash` and `mtn_cash` accept **SYP only**; `sham_cash` accepts both. |
 | `amount` | Integer in minor units of `currency`. USD-equivalent must be between $10 and $10,000. |
 | `transfer_reference` | Required (≤100 characters) |
 | `receipt` | Required. jpeg, png, webp or pdf, ≤10 MB. |
@@ -147,9 +149,12 @@ Returns a list. Each item:
 
 ```json
 { "id": "...", "channel": "haram", "channel_label": "حوالات الهرم", "label": "Home",
+  "is_default": true,
   "details": {"holder_name": "...", "phone": "+963912345678", "governorate": "damascus", "city": "Mezzeh"},
   "currencies": ["USD", "SYP"] }
 ```
+
+- The primary method (`is_default: true`) comes first, then newest first. Once any method exists, exactly one is primary.
 
 ### `POST /wallet/payout-methods`
 
@@ -159,19 +164,29 @@ Body: `{channel, label?, details}`. Fields required in `details` for each channe
 |---|---|
 | `haram`, `fouad` | `holder_name`, `phone` (`+9639XXXXXXXX`), `governorate` (lookup value), `city`? |
 | `syriatel_cash`, `mtn_cash` | `holder_name`, `phone` |
+| `sham_cash` | `holder_name`, `phone`, `account_code` (the Sham Cash wallet account code, 4–64 letters, digits or dashes) |
 | `bank` | `holder_name`, `bank_name`, `account_number`, `iban`? |
 
 - Unknown keys are dropped.
 - A creator can save at most 10 methods (`422 payout_method_limit`).
+- The first method saved becomes primary. Later ones are saved with `is_default: false`.
 
 ### `PATCH /wallet/payout-methods/{id}`
 
 - Send `label` and/or the full `details` object.
 - `channel` can't change; to switch channel, delete the method and create a new one.
+- Changing `details` sends the owner a `wallet_payout_method_changed` push. A label-only edit, or resending the same details, sends nothing.
 
 ### `DELETE /wallet/payout-methods/{id}`
 
 Deletes the method. Pending withdrawals already sent keep their own copy of the destination.
+
+- Response: `{"default_payout_method_id": "..." | null}`, the primary method after the delete.
+- Deleting the primary promotes the **newest remaining** method (top of the list after the primary). The confirm sheet can name it ahead of time. `null` means no methods are left.
+
+### `POST /wallet/payout-methods/{id}/default`
+
+Makes this method primary and clears the flag on the others. No body. Returns the method (`is_default: true`). Calling it on the current primary is a no-op `200`. Another user's method returns `404`.
 
 ## 8. Creator: withdrawals
 
@@ -232,8 +247,10 @@ Body: `{payout_method_id, amount_cents, payout_currency}`. Requires `Idempotency
 | `wallet_withdrawal_returned` | creator |
 | `wallet_wallet_frozen` | wallet owner |
 | `wallet_wallet_unfrozen` | wallet owner |
+| `wallet_payout_method_added` | creator (security alert; deep link `sada://wallet/payout-methods`) |
+| `wallet_payout_method_changed` | creator (security alert, sent only when `details` change; deep link `sada://wallet/payout-methods`) |
 
-`entity_id` is the top-up id, the withdrawal id, or the wallet id.
+`entity_id` is the top-up id, the withdrawal id, the wallet id, or the payout method id.
 
 On receipt, refresh `GET /wallet` and the relevant list.
 

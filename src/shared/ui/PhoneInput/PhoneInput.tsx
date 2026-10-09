@@ -34,6 +34,8 @@ export interface PhoneInputProps {
   borderRadius?: RadiiToken;
   mb?: SpacingToken;
   editable?: boolean;
+  /** Fixed country (payout phones are Syrian only): no picker, no chevron. */
+  countryLocked?: boolean;
   returnKeyType?: TextInputProps['returnKeyType'];
   onSubmitEditing?: () => void;
 }
@@ -52,6 +54,7 @@ const PhoneInputInner = React.forwardRef(
       borderRadius = 'md',
       mb,
       editable = true,
+      countryLocked = false,
       returnKeyType,
       onSubmitEditing,
     }: PhoneInputProps,
@@ -119,9 +122,10 @@ const PhoneInputInner = React.forwardRef(
       [onChangeText],
     );
 
+    const canPickCountry = editable && !countryLocked;
     const openPicker = useCallback(() => {
-      if (editable) setPickerVisible(true);
-    }, [editable]);
+      if (canPickCountry) setPickerVisible(true);
+    }, [canPickCountry]);
 
     return (
       <Box mb={mb}>
@@ -135,6 +139,7 @@ const PhoneInputInner = React.forwardRef(
           {/* Country selector trigger */}
           <Pressable
             onPress={openPicker}
+            disabled={!canPickCountry}
             row
             align="center"
             px="md"
@@ -153,14 +158,12 @@ const PhoneInputInner = React.forwardRef(
                 ? country?.dialCode + '+'
                 : '+' + country?.dialCode}
             </Text>
-            <ChevronDown
-              size={theme.sizes.icon.xs}
-              color={
-                editable
-                  ? theme.colors.icon.secondary
-                  : theme.colors.icon.disabled
-              }
-            />
+            {countryLocked ? null : (
+              <ChevronDown
+                size={theme.sizes.icon.xs}
+                color={editable ? theme.colors.icon.secondary : theme.colors.icon.disabled}
+              />
+            )}
           </Pressable>
 
           {/* Vertical divider */}

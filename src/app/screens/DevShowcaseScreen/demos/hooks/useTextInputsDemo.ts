@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { CountryCode } from 'libphonenumber-js';
 import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 
@@ -13,6 +13,9 @@ export const useTextInputsDemo = () => {
   const [phoneCountry, setPhoneCountry] = useState<CountryCode>(
     DEFAULT_PHONE_COUNTRY,
   );
+  const [lockedPhoneValue, setLockedPhoneValue] = useState('');
+  // The locked field never opens the picker; the prop is still required.
+  const ignoreCountry = useCallback((_code: CountryCode) => undefined, []);
 
   return {
     defaultValue,
@@ -31,5 +34,8 @@ export const useTextInputsDemo = () => {
     setPhoneValue,
     phoneCountry,
     setPhoneCountry,
+    lockedPhoneValue,
+    setLockedPhoneValue,
+    ignoreCountry,
   };
 };

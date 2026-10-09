@@ -524,6 +524,10 @@
         "title": "الملف الإعلامي",
         "subtitle": "رابطك ومن يمكنه رؤيته"
       },
+      "payouts": {
+        "title": "طرق الاستلام",
+        "subtitle": "إلى أين نرسل أرباحك عند السحب"
+      },
       "company": {
         "title": "الشركة",
         "businessType": "نوع النشاط",
@@ -1310,6 +1314,26 @@
     "breakdown": {
       "estimateNote": "مبلغ تقديري، يُؤكَّد المبلغ النهائي عند الدفع."
     },
+    "channels": {
+      "names": {
+        "haram": "الهرم",
+        "fouad": "الفؤاد",
+        "syriatelCash": "سيريتل كاش",
+        "mtnCash": "MTN كاش",
+        "shamCash": "شام كاش",
+        "bank": "حوالة بنكية"
+      },
+      "groups": {
+        "exchangeOffice": "مكاتب الحوالات",
+        "eWallet": "المحافظ الإلكترونية",
+        "bank": "البنوك"
+      },
+      "currencies": {
+        "both": "دولار أو ليرة سورية",
+        "usdOnly": "دولار فقط",
+        "sypOnly": "ليرة سورية فقط"
+      }
+    },
     "topUp": {
       "title": "شحن المحفظة",
       "progressA11y": "الشحن، الخطوة {{current}} من {{total}}",
@@ -1320,18 +1344,6 @@
         "transfer": "التحويل والإيصال",
         "review": "المراجعة"
       },
-      "channels": {
-        "haram": "الهرم",
-        "fouad": "الفؤاد",
-        "syriatelCash": "سيريتل كاش",
-        "mtnCash": "MTN كاش",
-        "bank": "حوالة بنكية"
-      },
-      "groups": {
-        "exchangeOffice": "مكاتب الحوالات",
-        "eWallet": "المحافظ الإلكترونية",
-        "bank": "البنوك"
-      },
       "disabled": {
         "channelPaused": "متوقف مؤقتاً",
         "rateStale": "متوقف مؤقتاً: سعر الصرف قيد التحديث",
@@ -1340,11 +1352,6 @@
       "currency": {
         "usd": "دولار",
         "syp": "ليرة سورية"
-      },
-      "currencies": {
-        "both": "دولار أو ليرة سورية",
-        "usdOnly": "دولار فقط",
-        "sypOnly": "ليرة سورية فقط"
       },
       "status": {
         "pendingReview": "قيد المراجعة",
@@ -1503,6 +1510,102 @@
         "accountHolder": "صاحب الحساب",
         "iban": "IBAN"
       }
+    },
+    "payouts": {
+      "primary": "الأساسية",
+      "list": {
+        "title": "طرق الاستلام",
+        "heading": "إلى أين نرسل أرباحك؟",
+        "subtitle": "تختار الطريقة عند كل سحب، والأساسية تُختار تلقائياً.",
+        "saved": "طرقك المحفوظة",
+        "count": "{{used}} من {{max}}",
+        "add": "إضافة طريقة استلام",
+        "emptyTitle": "لا توجد طرق استلام بعد",
+        "emptyMessage": "أضف حساباً باسمك لتتمكن من سحب أرباحك: حوالة، محفظة إلكترونية أو بنك.",
+        "limitReached": "وصلت إلى 10 طرق، وهو الحد الأقصى. احذف طريقة لتضيف غيرها.",
+        "sentNotice": "السحوبات المرسلة تبقى على بياناتها القديمة حتى لو عدّلت الطريقة أو حذفتها.",
+        "editHint": "يفتح التعديل"
+      },
+      "channelSheet": {
+        "title": "اختر طريقة الاستلام",
+        "subtitle": "استخدم حساباً باسمك أنت.",
+        "captions": {
+          "exchangeOffice": "تستلم نقداً من أقرب مكتب",
+          "eWallet": "إلى محفظتك على رقم جوالك",
+          "bank": "تحويل إلى حسابك البنكي"
+        }
+      },
+      "form": {
+        "newTitle": "طريقة استلام جديدة",
+        "editTitle": "تعديل طريقة الاستلام",
+        "save": "حفظ الطريقة",
+        "saveChanges": "حفظ التغييرات",
+        "changeChannel": "تغيير",
+        "changeChannelLabel": "تغيير نوع طريقة الاستلام",
+        "lockedLabel": "نوع الطريقة ثابت",
+        "lockedHint": "لا يتغيّر نوع الطريقة. لاستخدام نوع آخر احذف هذه وأضف طريقة جديدة.",
+        "recipientSection": "بيانات المستلم",
+        "accountSection": "بيانات الحساب",
+        "holderName": "الاسم الكامل للمستلم",
+        "holderNamePlaceholder": "كما هو في الهوية",
+        "holderHint": {
+          "exchangeOffice": "كما هو في الهوية، ليسلّمك المكتب الحوالة",
+          "eWallet": "الاسم المسجّل على المحفظة",
+          "bank": "كما هو مسجّل في البنك"
+        },
+        "phone": "رقم الجوال",
+        "phonePlaceholder": "9XX XXX XXX",
+        "governorate": "المحافظة",
+        "governorateHint": "نرسل الحوالة إلى مكتب في محافظتك",
+        "city": "المدينة أو المنطقة (اختياري)",
+        "cityPlaceholder": "مثال: المزة",
+        "bankName": "اسم البنك",
+        "bankNamePlaceholder": "مثال: المصرف التجاري السوري",
+        "accountNumber": "رقم الحساب",
+        "accountNumberPlaceholder": "أرقام وحروف إنجليزية",
+        "iban": "رقم IBAN (اختياري)",
+        "ibanPlaceholder": "SY…",
+        "ibanHint": "يسرّع التحويل إن كان لحسابك رقم IBAN",
+        "extrasSection": "للتمييز بين طرقك",
+        "label": "اسم مختصر (اختياري)",
+        "labelPlaceholder": "مثال: البيت",
+        "labelHint": "يظهر لك فقط",
+        "primaryTitle": "اجعلها الطريقة الأساسية",
+        "primaryFirst": "أول طريقة تحفظها تصبح الأساسية تلقائياً.",
+        "primaryCurrent": "هذه طريقتك الأساسية. لتغييرها اجعل طريقة أخرى أساسية.",
+        "primaryNow": "الأساسية الآن: {{name}}",
+        "primaryHint": "تُختار تلقائياً عند السحب",
+        "primaryFailed": "حُفظت الطريقة، لكن تعذّر جعلها الأساسية. حاول من التعديل.",
+        "saved": "حُفظت طريقة الاستلام",
+        "deleted": "حُذفت طريقة الاستلام",
+        "gone": "لم تعد هذه الطريقة موجودة",
+        "errors": {
+          "phone": "أدخل رقم جوال سوري يبدأ بـ 9 (9 أرقام)",
+          "accountNumber": "رقم الحساب من 6 إلى 30 خانة: أرقام وحروف إنجليزية فقط",
+          "iban": "رقم IBAN غير صحيح. تحقّق منه أو اتركه فارغاً"
+        }
+      },
+      "delete": {
+        "title": "حذف «{{name}}»؟",
+        "body": "السحوبات المرسلة إليها تكمل كما هي.",
+        "confirm": "حذف الطريقة",
+        "primaryWarning": "هذه طريقتك الأساسية. بعد الحذف تصبح «{{name}}» هي الأساسية.",
+        "lastWarning": "هذه طريقتك الوحيدة. لن تتمكن من السحب حتى تضيف طريقة أخرى."
+      },
+      "discard": {
+        "title": "تجاهل التعديلات؟",
+        "body": "لن تُحفظ البيانات التي أدخلتها.",
+        "confirm": "تجاهل",
+        "stay": "متابعة التعديل"
+      },
+      "walletCard": {
+        "title": "طريقة الاستلام",
+        "manage": "إدارة",
+        "addTitle": "أضف طريقة استلام",
+        "addMessage": "حساب باسمك نرسل إليه أرباحك عند السحب",
+        "loadFailed": "تعذّر تحميل طرق الاستلام",
+        "retry": "اضغط لإعادة المحاولة"
+      }
     }
   },
   "devShowcase": {
@@ -1639,6 +1742,8 @@
       "errorMessage": "هذا الحقل مطلوب",
       "phoneLabel": "رقم الهاتف",
       "phonePlaceholder": "5XX XXX XXX",
+      "phoneLockedLabel": "هاتف بدولة ثابتة",
+      "phoneLockedPlaceholder": "9XX XXX XXX",
       "disabledLabel": "معطّل",
       "disabledValue": "قيمة للقراءة فقط",
       "passwordLabel": "كلمة المرور",

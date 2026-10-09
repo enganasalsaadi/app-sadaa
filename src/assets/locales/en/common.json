@@ -524,6 +524,10 @@
         "title": "Media kit",
         "subtitle": "Your link and who can see it"
       },
+      "payouts": {
+        "title": "Payout methods",
+        "subtitle": "Where we send your earnings when you withdraw"
+      },
       "company": {
         "title": "Company",
         "businessType": "Business type",
@@ -1278,6 +1282,26 @@
     "breakdown": {
       "estimateNote": "Estimate. The final amount is confirmed at checkout."
     },
+    "channels": {
+      "names": {
+        "haram": "Al-Haram",
+        "fouad": "Al-Fouad",
+        "syriatelCash": "Syriatel Cash",
+        "mtnCash": "MTN Cash",
+        "shamCash": "Sham Cash",
+        "bank": "Bank transfer"
+      },
+      "groups": {
+        "exchangeOffice": "Exchange offices",
+        "eWallet": "E-wallets",
+        "bank": "Banks"
+      },
+      "currencies": {
+        "both": "Dollar or Syrian pound",
+        "usdOnly": "Dollar only",
+        "sypOnly": "Syrian pound only"
+      }
+    },
     "topUp": {
       "title": "Top up wallet",
       "progressA11y": "Top-up, step {{current}} of {{total}}",
@@ -1288,18 +1312,6 @@
         "transfer": "Transfer and receipt",
         "review": "Review"
       },
-      "channels": {
-        "haram": "Al-Haram",
-        "fouad": "Al-Fouad",
-        "syriatelCash": "Syriatel Cash",
-        "mtnCash": "MTN Cash",
-        "bank": "Bank transfer"
-      },
-      "groups": {
-        "exchangeOffice": "Exchange offices",
-        "eWallet": "E-wallets",
-        "bank": "Banks"
-      },
       "disabled": {
         "channelPaused": "Paused for now",
         "rateStale": "Paused: the exchange rate is being updated",
@@ -1308,11 +1320,6 @@
       "currency": {
         "usd": "Dollar",
         "syp": "Syrian pound"
-      },
-      "currencies": {
-        "both": "Dollar or Syrian pound",
-        "usdOnly": "Dollar only",
-        "sypOnly": "Syrian pound only"
       },
       "status": {
         "pendingReview": "In review",
@@ -1471,6 +1478,102 @@
         "accountHolder": "Account holder",
         "iban": "IBAN"
       }
+    },
+    "payouts": {
+      "primary": "Primary",
+      "list": {
+        "title": "Payout methods",
+        "heading": "Where should we send your earnings?",
+        "subtitle": "You pick a method on each withdrawal; the primary one is preselected.",
+        "saved": "Your saved methods",
+        "count": "{{used}} of {{max}}",
+        "add": "Add a payout method",
+        "emptyTitle": "No payout methods yet",
+        "emptyMessage": "Add an account in your name to withdraw your earnings: an exchange office, an e-wallet or a bank.",
+        "limitReached": "You've saved 10 methods, the most allowed. Delete one to add another.",
+        "sentNotice": "Withdrawals already sent keep their old details, even if you edit or delete the method.",
+        "editHint": "Opens the editor"
+      },
+      "channelSheet": {
+        "title": "Choose a payout method",
+        "subtitle": "Use an account in your own name.",
+        "captions": {
+          "exchangeOffice": "Cash at the nearest office",
+          "eWallet": "To your wallet on your mobile number",
+          "bank": "Transfer to your bank account"
+        }
+      },
+      "form": {
+        "newTitle": "New payout method",
+        "editTitle": "Edit payout method",
+        "save": "Save method",
+        "saveChanges": "Save changes",
+        "changeChannel": "Change",
+        "changeChannelLabel": "Change the payout method type",
+        "lockedLabel": "Method type is fixed",
+        "lockedHint": "The type can't change. To use another type, delete this one and add a new method.",
+        "recipientSection": "Recipient details",
+        "accountSection": "Account details",
+        "holderName": "Recipient's full name",
+        "holderNamePlaceholder": "As on your ID",
+        "holderHint": {
+          "exchangeOffice": "As on your ID, so the office can hand you the transfer",
+          "eWallet": "The name registered on the wallet",
+          "bank": "As registered at the bank"
+        },
+        "phone": "Mobile number",
+        "phonePlaceholder": "9XX XXX XXX",
+        "governorate": "Governorate",
+        "governorateHint": "We send the transfer to an office in your governorate",
+        "city": "City or area (optional)",
+        "cityPlaceholder": "e.g. Mezzeh",
+        "bankName": "Bank name",
+        "bankNamePlaceholder": "e.g. Commercial Bank of Syria",
+        "accountNumber": "Account number",
+        "accountNumberPlaceholder": "Digits and Latin letters",
+        "iban": "IBAN (optional)",
+        "ibanPlaceholder": "SY…",
+        "ibanHint": "Speeds up the transfer if your account has one",
+        "extrasSection": "Tell your methods apart",
+        "label": "Short name (optional)",
+        "labelPlaceholder": "e.g. Home",
+        "labelHint": "Only you see it",
+        "primaryTitle": "Make it the primary method",
+        "primaryFirst": "Your first saved method becomes primary automatically.",
+        "primaryCurrent": "This is your primary method. To change it, make another method primary.",
+        "primaryNow": "Primary now: {{name}}",
+        "primaryHint": "Preselected when you withdraw",
+        "primaryFailed": "The method was saved, but it couldn't be made primary. Try again from Edit.",
+        "saved": "Payout method saved",
+        "deleted": "Payout method deleted",
+        "gone": "This method no longer exists",
+        "errors": {
+          "phone": "Enter a Syrian mobile number starting with 9 (9 digits)",
+          "accountNumber": "Account number: 6 to 30 digits or Latin letters",
+          "iban": "This IBAN is not valid. Check it or leave it empty"
+        }
+      },
+      "delete": {
+        "title": "Delete \"{{name}}\"?",
+        "body": "Withdrawals already sent to it continue as they are.",
+        "confirm": "Delete method",
+        "primaryWarning": "This is your primary method. After deleting, \"{{name}}\" becomes primary.",
+        "lastWarning": "This is your only method. You can't withdraw until you add another one."
+      },
+      "discard": {
+        "title": "Discard changes?",
+        "body": "What you've entered won't be saved.",
+        "confirm": "Discard",
+        "stay": "Keep editing"
+      },
+      "walletCard": {
+        "title": "Payout method",
+        "manage": "Manage",
+        "addTitle": "Add a payout method",
+        "addMessage": "An account in your name where we send your earnings",
+        "loadFailed": "Couldn't load payout methods",
+        "retry": "Tap to try again"
+      }
     }
   },
   "devShowcase": {
@@ -1607,6 +1710,8 @@
       "errorMessage": "This field is required",
       "phoneLabel": "Phone number",
       "phonePlaceholder": "5XX XXX XXX",
+      "phoneLockedLabel": "Phone, fixed country",
+      "phoneLockedPlaceholder": "9XX XXX XXX",
       "disabledLabel": "Disabled",
       "disabledValue": "Read-only value",
       "passwordLabel": "Password",

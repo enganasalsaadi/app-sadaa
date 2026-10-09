@@ -199,6 +199,11 @@ export const useProfileScreen = () => {
   );
   const openDevShowcase = useCallback(() => navigate('DevShowcase'), []);
   const openWallet = useCallback(() => navigate('Main', { screen: 'WalletTab' }), []);
+  // Payout methods live in the wallet stack; `initial: false` keeps the wallet underneath.
+  const openPayoutMethods = useCallback(
+    () => navigate('Main', { screen: 'WalletTab', params: { screen: 'PayoutMethods', initial: false } }),
+    [],
+  );
 
   const onStepPress = useCallback(
     (target: ProfileStepTarget) => {
@@ -289,6 +294,7 @@ export const useProfileScreen = () => {
     openDeleteSheet,
     closeDeleteSheet,
     openWallet,
+    openPayoutMethods,
     handleLogout,
     changePhoto,
     changeThemeMode,

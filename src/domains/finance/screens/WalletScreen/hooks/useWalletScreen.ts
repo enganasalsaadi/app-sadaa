@@ -11,6 +11,7 @@ import { useWalletActivity } from './useWalletActivity';
 import { useWalletEarnings } from './useWalletEarnings';
 import { useWalletEscrows } from './useWalletEscrows';
 import { useWalletHero } from './useWalletHero';
+import { useWalletPayouts } from './useWalletPayouts';
 import { useWalletRate } from './useWalletRate';
 
 type Navigation = WalletStackScreenProps<'WalletScreen'>['navigation'];
@@ -18,7 +19,8 @@ type Navigation = WalletStackScreenProps<'WalletScreen'>['navigation'];
 /**
  * Wallet tab, both roles: the balance hero and its blocker, then the escrow card, the
  * monthly chart, today's rate and the latest lines, which open the statement and each
- * receipt. Brands get Top up + history in the hero; withdraw joins with its screen (plan step 5).
+ * receipt. Brands get Top up + history in the hero; creators get the payout method card
+ * under the escrow card, and withdraw joins with its screen (plan step 6).
  */
 export const useWalletScreen = (role: WalletRole) => {
   const { t } = useTranslation();
@@ -46,6 +48,9 @@ export const useWalletScreen = (role: WalletRole) => {
     [navigation],
   );
 
+  const openPayoutMethods = useCallback(() => navigation.navigate('PayoutMethods'), [navigation]);
+  const payouts = useWalletPayouts(role, openPayoutMethods);
+
   const openTopUp = useCallback(() => navigation.navigate('TopUp'), [navigation]);
   const openTopUps = useCallback(() => navigation.navigate('TopUps'), [navigation]);
   const onOpenTile = useCallback(
@@ -63,7 +68,7 @@ export const useWalletScreen = (role: WalletRole) => {
     [navigation],
   );
 
-  // Brands top up (plan step 4); the creator's withdraw joins with its screen (step 5).
+  // Brands top up (plan step 4); the creator's withdraw joins with its screen (step 6).
   const { actionAllowed } = hero;
   const actions = useMemo<WalletHeroActions | null>(
     () =>
@@ -81,6 +86,7 @@ export const useWalletScreen = (role: WalletRole) => {
   const { refetch: refetchEscrows } = escrows;
   const { refetch: refetchEarnings } = earnings;
   const { refetch: refetchActivity } = activity;
+  const { enabled: payoutsEnabled, refetch: refetchPayouts } = payouts;
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -91,11 +97,21 @@ export const useWalletScreen = (role: WalletRole) => {
         refetchEarnings(),
         refetchActivity(),
         refetchMe(),
+        ...(payoutsEnabled ? [refetchPayouts()] : []),
       ]);
     } finally {
       setRefreshing(false);
     }
-  }, [refetchActivity, refetchEarnings, refetchEscrows, refetchMe, refetchRate, refetchWallet]);
+  }, [
+    payoutsEnabled,
+    refetchActivity,
+    refetchEarnings,
+    refetchEscrows,
+    refetchMe,
+    refetchPayouts,
+    refetchRate,
+    refetchWallet,
+  ]);
 
   return {
     role,
@@ -112,6 +128,7 @@ export const useWalletScreen = (role: WalletRole) => {
     escrows,
     earnings,
     activity,
+    payouts,
     copy: WALLET_ROLE_COPY[role],
     refreshing,
     onRefresh,

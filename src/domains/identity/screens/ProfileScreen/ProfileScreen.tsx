@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Bell, Building2, CircleDollarSign, Link2, LogOut, UserRoundPen } from 'lucide-react-native';
+import { Bell, Building2, CircleDollarSign, Link2, LogOut, UserRoundPen, WalletCards } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, ConfirmSheet, Layout, ListGroup, ListRow, Notice } from '@/shared/ui';
@@ -57,6 +57,17 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
             subtitle={t('account.rates.profileHint')}
             value={vm.rates.isLoading ? undefined : formatNumber(vm.rates.count)}
             onPress={vm.openRates}
+          />
+        </ListGroup>
+      );
+    case 'payouts':
+      return (
+        <ListGroup>
+          <ListRow
+            icon={WalletCards}
+            title={t('account.profile.payouts.title')}
+            subtitle={t('account.profile.payouts.subtitle')}
+            onPress={vm.openPayoutMethods}
           />
         </ListGroup>
       );

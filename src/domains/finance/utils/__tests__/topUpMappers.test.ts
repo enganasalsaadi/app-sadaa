@@ -32,8 +32,8 @@ describe('buildFallbackChannels', () => {
     expect(channels.haram?.currencies).toEqual(['USD', 'SYP']);
     expect(channels.syriatel_cash?.currencies).toEqual(['SYP']);
     expect(channels.syriatel_cash?.enabled).toBe(true);
-    expect(channels.haram?.label).toBe('t:finance.topUp.channels.haram');
-    expect(channels.haram?.groupLabel).toBe('t:finance.topUp.groups.exchangeOffice');
+    expect(channels.haram?.label).toBe('t:finance.channels.names.haram');
+    expect(channels.haram?.groupLabel).toBe('t:finance.channels.groups.exchangeOffice');
     expect(channels.haram?.limits.SYP).toEqual({
       min: { amount: 140_000, currency: 'SYP' },
       max: { amount: 140_000_000, currency: 'SYP' },

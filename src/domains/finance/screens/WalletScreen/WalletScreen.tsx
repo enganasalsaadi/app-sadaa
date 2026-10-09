@@ -9,6 +9,7 @@ import type { WalletRole } from '../../types';
 import { useWalletScreen } from './hooks/useWalletScreen';
 import { EarningsCard } from './components/EarningsCard';
 import { EscrowSection } from './components/EscrowSection';
+import { PayoutDestinationCard } from './components/PayoutDestinationCard';
 import { WalletActivity } from './components/WalletActivity';
 import { WalletHeaderBalance } from './components/WalletHeaderBalance';
 import { WalletHero } from './components/WalletHero';
@@ -98,6 +99,8 @@ const WalletScreenComponent: React.FC<WalletScreenProps> = ({ role }) => {
           ) : null}
 
           <EscrowSection vm={vm} />
+
+          {vm.payouts.enabled ? <PayoutDestinationCard payouts={vm.payouts} /> : null}
 
           <EarningsCard earnings={vm.earnings} hidden={vm.hidden} />
 

@@ -9,7 +9,7 @@ import type { Money } from '@/core/money';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useGetTopUpChannelsQuery } from '../api/topUpApi';
 import { createTopUpSchema, type TopUpFormValues } from '../schemas/topUpSchema';
-import { TOP_UP_CHANNELS } from '../types';
+import { PAYMENT_CHANNELS } from '../types';
 import type { TopUpChannelOption, TopUpChannels, TopUpLimits } from '../types';
 import { estimateCredit, fallbackLimits } from '../utils/topUpEstimate';
 import { isOneOf } from '../utils/walletMappers';
@@ -79,7 +79,7 @@ export const useTopUpFlowState = () => {
 
   const [defaultValues] = useState<TopUpFormValues>(() => {
     const channel =
-      prefill && isOneOf(TOP_UP_CHANNELS, prefill.channel) ? prefill.channel : null;
+      prefill && isOneOf(PAYMENT_CHANNELS, prefill.channel) ? prefill.channel : null;
     return {
       channel,
       currency: channel && prefill ? prefill.amount.currency : 'USD',

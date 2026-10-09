@@ -110,7 +110,13 @@ export type WalletStackParamList = {
    * with the channel's localized review time when the server set one.
    */
   TopUpDetail: { id: string; submitted?: boolean; processingTime?: string };
+  /** Creator payout methods: where withdrawals go. */
+  PayoutMethods: undefined;
+  PayoutMethodForm: PayoutMethodFormParams;
 };
+
+/** `channel` = add a method of that channel (validated by finance); `id` = edit a saved one. */
+export type PayoutMethodFormParams = { channel: string } | { id: string };
 
 /** Top-up statuses the history filters by (finance's `TOP_UP_STATUS` mirrors them). */
 export type TopUpStatusParam = 'pending_review' | 'completed' | 'rejected' | 'reversed';

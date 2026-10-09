@@ -2,9 +2,6 @@ import {
   CircleCheck,
   CircleX,
   Clock,
-  Landmark,
-  Smartphone,
-  Store,
   Undo2,
   type LucideIcon,
 } from 'lucide-react-native';
@@ -13,9 +10,8 @@ import type { CurrencyCode } from '@/core/money';
 import type { TopUpStackParamList } from '@/core/navigation';
 import type { HueTone } from '@/core/theme';
 import type {
+  PaymentChannelGroup,
   TopUpAccount,
-  TopUpChannel,
-  TopUpChannelGroup,
   TopUpDisabledReason,
   TopUpStatus,
 } from '../types';
@@ -36,34 +32,6 @@ export const TOP_UP_REFERENCE_MAX_LENGTH = 100;
 
 /** History page size (same as the statement). */
 export const TOP_UPS_PER_PAGE = 20;
-
-interface TopUpChannelDef {
-  group: TopUpChannelGroup;
-  icon: LucideIcon;
-  labelKey: ParseKeys;
-  /** What the channel takes when the rate is fresh; the cash wallets are SYP only. */
-  currencies: readonly CurrencyCode[];
-}
-
-/** The app's own words and icons per channel; server labels win when they come. */
-export const TOP_UP_CHANNEL_DEF = {
-  haram: { group: 'exchange_office', icon: Store, labelKey: 'finance.topUp.channels.haram', currencies: ['USD', 'SYP'] },
-  fouad: { group: 'exchange_office', icon: Store, labelKey: 'finance.topUp.channels.fouad', currencies: ['USD', 'SYP'] },
-  syriatel_cash: {
-    group: 'e_wallet',
-    icon: Smartphone,
-    labelKey: 'finance.topUp.channels.syriatelCash',
-    currencies: ['SYP'],
-  },
-  mtn_cash: { group: 'e_wallet', icon: Smartphone, labelKey: 'finance.topUp.channels.mtnCash', currencies: ['SYP'] },
-  bank: { group: 'bank', icon: Landmark, labelKey: 'finance.topUp.channels.bank', currencies: ['USD', 'SYP'] },
-} as const satisfies Record<TopUpChannel, TopUpChannelDef>;
-
-export const TOP_UP_GROUP_LABEL = {
-  exchange_office: 'finance.topUp.groups.exchangeOffice',
-  e_wallet: 'finance.topUp.groups.eWallet',
-  bank: 'finance.topUp.groups.bank',
-} as const satisfies Record<TopUpChannelGroup, ParseKeys>;
 
 export const TOP_UP_DISABLED_LABEL = {
   channel_paused: 'finance.topUp.disabled.channelPaused',
@@ -150,7 +118,7 @@ export const TOP_UP_MOCK_ACCOUNTS = {
     },
   ],
 } as const satisfies Record<
-  TopUpChannelGroup,
+  PaymentChannelGroup,
   readonly (Omit<TopUpAccount, 'fields'> & {
     fields: readonly { key: string; label: ParseKeys; value: string; copyable: boolean }[];
   })[]

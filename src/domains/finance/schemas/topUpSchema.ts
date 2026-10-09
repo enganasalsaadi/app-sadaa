@@ -4,11 +4,11 @@ import { formatMoney } from '@/core/i18n';
 import type { CurrencyCode, Money } from '@/core/money';
 import type { PickedFile } from '@/shared/ui';
 import { TOP_UP_REFERENCE_MAX_LENGTH } from '../constants/topUp';
-import type { TopUpChannel, TopUpLimits } from '../types';
+import type { PaymentChannel, TopUpLimits } from '../types';
 
 /** The whole wizard is one form, kept by the navigator; each step validates its own fields. */
 export interface TopUpFormValues {
-  channel: TopUpChannel | null;
+  channel: PaymentChannel | null;
   currency: CurrencyCode;
   amount: Money | null;
   transferReference: string;
@@ -35,7 +35,7 @@ export const createTopUpSchema = (
 ): yup.ObjectSchema<TopUpFormValues> =>
   yup.object({
     channel: yup
-      .mixed<TopUpChannel>()
+      .mixed<PaymentChannel>()
       .nullable()
       .defined()
       .test('channel', t('finance.topUp.channel.required'), value => !!value),

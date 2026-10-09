@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { moderateScale, useTheme } from '@/core/theme';
 import { Box, ErrorState, LayoutFooter, ListGroup, ListRow, Notice, Skeleton, Text } from '@/shared/ui';
 import { TopUpStepLayout } from '../../components/TopUpStepLayout';
-import type { TopUpChannel } from '../../types';
+import type { PaymentChannel } from '../../types';
 import {
   useTopUpChannelScreen,
   type ChannelGroupView,
@@ -17,7 +17,7 @@ const SKELETON_LABEL_HEIGHT = moderateScale(12);
 const ChannelRow = memo<{
   option: ChannelOptionView;
   selected: boolean;
-  onSelect: (channel: TopUpChannel) => void;
+  onSelect: (channel: PaymentChannel) => void;
 }>(({ option, selected, onSelect }) => {
   const { t } = useTranslation();
   const { channel } = option;
@@ -37,8 +37,8 @@ const ChannelRow = memo<{
 
 const ChannelGroup = memo<{
   group: ChannelGroupView;
-  selected: TopUpChannel | null;
-  onSelect: (channel: TopUpChannel) => void;
+  selected: PaymentChannel | null;
+  onSelect: (channel: PaymentChannel) => void;
 }>(({ group, selected, onSelect }) => (
   <ListGroup title={group.label}>
     {group.options.map(option => (

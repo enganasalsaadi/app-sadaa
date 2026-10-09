@@ -7,6 +7,7 @@ export type ProfileSectionKey =
   | 'kyc'
   | 'platforms'
   | 'rates'
+  | 'payouts'
   | 'niches'
   | 'mediaKit'
   | 'company'
@@ -15,6 +16,6 @@ export type ProfileSectionKey =
 
 /** Add, drop or reorder a card here; the screen renders this list as-is. */
 export const PROFILE_SECTIONS = {
-  influencer: ['completion', 'push', 'kyc', 'rates', 'platforms', 'niches', 'mediaKit', 'settings', 'account'],
+  influencer: ['completion', 'push', 'kyc', 'rates', 'payouts', 'platforms', 'niches', 'mediaKit', 'settings', 'account'],
   brand: ['completion', 'push', 'kyc', 'company', 'settings', 'account'],
 } as const satisfies Record<UserType, readonly ProfileSectionKey[]>;

@@ -1,6 +1,8 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { WalletStackParamList } from '@/core/navigation';
+import { PayoutMethodFormScreen } from '../screens/PayoutMethodFormScreen';
+import { PayoutMethodsScreen } from '../screens/PayoutMethodsScreen';
 import { StatementScreen } from '../screens/StatementScreen';
 import { TopUpDetailScreen } from '../screens/TopUpDetailScreen';
 import { TopUpsScreen } from '../screens/TopUpsScreen';
@@ -23,6 +25,8 @@ export const CreatorWalletNavigator: React.FC = () => (
     <Stack.Screen name="WalletScreen" component={CreatorWalletScreen} />
     <Stack.Screen name="Statement" component={CreatorStatementScreen} />
     <Stack.Screen name="TransactionReceipt" component={TransactionReceiptScreen} />
+    <Stack.Screen name="PayoutMethods" component={PayoutMethodsScreen} />
+    <Stack.Screen name="PayoutMethodForm" component={PayoutMethodFormScreen} />
   </Stack.Navigator>
 );
 

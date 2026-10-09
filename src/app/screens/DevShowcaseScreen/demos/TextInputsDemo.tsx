@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { Box, CustomInput, PhoneInput } from '@/shared/ui';
 import { useTextInputsDemo } from './hooks/useTextInputsDemo';
 
@@ -84,6 +85,16 @@ const TextInputsDemoComponent: React.FC = () => {
         onChangeText={demo.setPhoneValue}
         countryCode={demo.phoneCountry}
         onChangeCountry={demo.setPhoneCountry}
+      />
+
+      <PhoneInput
+        label={t('devShowcase.inputs.phoneLockedLabel')}
+        placeholder={t('devShowcase.inputs.phoneLockedPlaceholder')}
+        value={demo.lockedPhoneValue}
+        onChangeText={demo.setLockedPhoneValue}
+        countryCode={DEFAULT_PHONE_COUNTRY}
+        onChangeCountry={demo.ignoreCountry}
+        countryLocked
       />
     </Box>
   );

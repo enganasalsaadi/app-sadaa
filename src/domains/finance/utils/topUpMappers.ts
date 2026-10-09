@@ -1,15 +1,11 @@
 import type { ParseKeys } from 'i18next';
 import { isCurrencyCode } from '@/core/money';
 import type { CurrencyCode } from '@/core/money';
+import { PAYMENT_CHANNEL_DEF, PAYMENT_GROUP_LABEL } from '../constants/paymentChannels';
+import { TOP_UP_DISABLED_LABEL, TOP_UP_MOCK_ACCOUNTS } from '../constants/topUp';
 import {
-  TOP_UP_CHANNEL_DEF,
-  TOP_UP_DISABLED_LABEL,
-  TOP_UP_GROUP_LABEL,
-  TOP_UP_MOCK_ACCOUNTS,
-} from '../constants/topUp';
-import {
-  TOP_UP_CHANNEL_GROUPS,
-  TOP_UP_CHANNELS,
+  PAYMENT_CHANNEL_GROUPS,
+  PAYMENT_CHANNELS,
   TOP_UP_DISABLED_REASONS,
   TOP_UP_STATUS,
 } from '../types';
@@ -58,9 +54,9 @@ const toAccounts = (dtos: TopUpAccountDto[] | null | undefined): TopUpAccount[] 
 
 /** An unknown channel is dropped (the POST would reject it); an unknown group uses the app's own. */
 const mapChannel = (dto: TopUpChannelDto): TopUpChannelOption[] => {
-  if (!isOneOf(TOP_UP_CHANNELS, dto.channel)) return [];
-  const def = TOP_UP_CHANNEL_DEF[dto.channel];
-  const group = isOneOf(TOP_UP_CHANNEL_GROUPS, dto.group) ? dto.group : def.group;
+  if (!isOneOf(PAYMENT_CHANNELS, dto.channel)) return [];
+  const def = PAYMENT_CHANNEL_DEF[dto.channel];
+  const group = isOneOf(PAYMENT_CHANNEL_GROUPS, dto.group) ? dto.group : def.group;
   const currencies = toCurrencies(dto.currencies);
   const reason =
     dto.disabled_reason && isOneOf(TOP_UP_DISABLED_REASONS, dto.disabled_reason) ? dto.disabled_reason : null;
@@ -105,8 +101,8 @@ export const buildFallbackChannels = (
   mock: boolean,
 ): TopUpChannels => {
   const usableRate = rate && !rate.is_stale ? rate.rate : null;
-  const channels = TOP_UP_CHANNELS.map<TopUpChannelOption>(channel => {
-    const def = TOP_UP_CHANNEL_DEF[channel];
+  const channels = PAYMENT_CHANNELS.map<TopUpChannelOption>(channel => {
+    const def = PAYMENT_CHANNEL_DEF[channel];
     const currencies = def.currencies.filter(currency => currency === 'USD' || usableRate !== null);
     const enabled = currencies.length > 0;
     const disabledReason = enabled ? null : rate ? 'fx_rate_stale' : 'fx_rate_unavailable';
@@ -119,7 +115,7 @@ export const buildFallbackChannels = (
       channel,
       label: t(def.labelKey),
       group: def.group,
-      groupLabel: t(TOP_UP_GROUP_LABEL[def.group]),
+      groupLabel: t(PAYMENT_GROUP_LABEL[def.group]),
       currencies,
       enabled,
       disabledReason,
@@ -159,7 +155,7 @@ export const mapTopUp = (dto: TopUpDto): TopUp => ({
   id: dto.id,
   status: isOneOf(TOP_UP_STATUS, dto.status) ? dto.status : null,
   status_label: dto.status_label,
-  channel: isOneOf(TOP_UP_CHANNELS, dto.channel) ? dto.channel : null,
+  channel: isOneOf(PAYMENT_CHANNELS, dto.channel) ? dto.channel : null,
   channel_label: dto.channel_label || null,
   amount: toMoney(dto.amount),
   amount_usd: toOptionalMoney(dto.amount_usd),

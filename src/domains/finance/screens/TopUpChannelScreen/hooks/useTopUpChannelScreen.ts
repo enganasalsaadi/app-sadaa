@@ -4,16 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { LucideIcon } from 'lucide-react-native';
 import type { TopUpStackScreenProps } from '@/core/navigation';
-import { TOP_UP_CHANNEL_DEF } from '../../../constants/topUp';
+import { channelCurrenciesKey, PAYMENT_CHANNEL_DEF } from '../../../constants/paymentChannels';
 import { useTopUpFlow } from '../../../hooks/useTopUpFlow';
 import { TOP_UP_STEP_FIELDS, type TopUpFormValues } from '../../../schemas/topUpSchema';
-import { TOP_UP_CHANNEL_GROUPS } from '../../../types';
-import type { TopUpChannel, TopUpChannelOption } from '../../../types';
+import { PAYMENT_CHANNEL_GROUPS } from '../../../types';
+import type { PaymentChannel, TopUpChannelOption } from '../../../types';
 
 type Navigation = TopUpStackScreenProps<'TopUpChannel'>['navigation'];
 
 export interface ChannelOptionView {
-  channel: TopUpChannel;
+  channel: PaymentChannel;
   label: string;
   caption: string;
   enabled: boolean;
@@ -44,15 +44,7 @@ export const useTopUpChannelScreen = () => {
   const captionOf = useCallback(
     (option: TopUpChannelOption): string => {
       if (!option.enabled) return option.disabledLabel ?? t('finance.topUp.disabled.channelPaused');
-      const usd = option.currencies.includes('USD');
-      const syp = option.currencies.includes('SYP');
-      const currencies = t(
-        usd && syp
-          ? 'finance.topUp.currencies.both'
-          : usd
-            ? 'finance.topUp.currencies.usdOnly'
-            : 'finance.topUp.currencies.sypOnly',
-      );
+      const currencies = t(channelCurrenciesKey(option.currencies));
       return option.processingTimeLabel ? `${currencies} · ${option.processingTimeLabel}` : currencies;
     },
     [t],
@@ -61,7 +53,7 @@ export const useTopUpChannelScreen = () => {
   const options = flow.channels?.channels;
   const groups = useMemo<ChannelGroupView[]>(() => {
     if (!options) return [];
-    return TOP_UP_CHANNEL_GROUPS.flatMap(group => {
+    return PAYMENT_CHANNEL_GROUPS.flatMap(group => {
       const members = options.filter(option => option.group === group);
       const first = members[0];
       if (!first) return [];
@@ -74,7 +66,7 @@ export const useTopUpChannelScreen = () => {
             label: option.label,
             caption: captionOf(option),
             enabled: option.enabled,
-            icon: TOP_UP_CHANNEL_DEF[option.channel].icon,
+            icon: PAYMENT_CHANNEL_DEF[option.channel].icon,
           })),
         },
       ];
@@ -88,7 +80,7 @@ export const useTopUpChannelScreen = () => {
 
   const { setNotice } = flow;
   const onSelect = useCallback(
-    (value: TopUpChannel) => {
+    (value: PaymentChannel) => {
       setValue('channel', value, { shouldDirty: true, shouldValidate: true });
       setNotice(null);
     },

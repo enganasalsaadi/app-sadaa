@@ -10,11 +10,10 @@ export {
   STATEMENT_TYPE_FILTERS,
 } from './statementFilters';
 export type { StatementPeriodPreset, StatementTypeFilter } from './statementFilters';
+export { PAYMENT_CHANNEL_DEF, PAYMENT_GROUP_LABEL } from './paymentChannels';
 export {
-  TOP_UP_CHANNEL_DEF,
   TOP_UP_CURRENCY_LABEL,
   TOP_UP_DISABLED_LABEL,
-  TOP_UP_GROUP_LABEL,
   TOP_UP_MOCK_ACCOUNTS,
   TOP_UP_RECEIPT_MAX_BYTES,
   TOP_UP_RECEIPT_MIME_TYPES,

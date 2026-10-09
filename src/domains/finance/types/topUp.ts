@@ -1,14 +1,7 @@
 import type { CurrencyCode, Money } from '@/core/money';
 import type { TopUpStatusParam } from '@/core/navigation';
+import type { PaymentChannel, PaymentChannelGroup } from './paymentChannel';
 import type { ListPageMeta, MoneyDto } from './wallet';
-
-/** Where a brand sends the money from (handoff §6). */
-export const TOP_UP_CHANNELS = ['haram', 'fouad', 'syriatel_cash', 'mtn_cash', 'bank'] as const;
-export type TopUpChannel = (typeof TOP_UP_CHANNELS)[number];
-
-/** The channel picker's sections, in this order unless the server orders them. */
-export const TOP_UP_CHANNEL_GROUPS = ['exchange_office', 'e_wallet', 'bank'] as const;
-export type TopUpChannelGroup = (typeof TOP_UP_CHANNEL_GROUPS)[number];
 
 export const TOP_UP_STATUS = [
   'pending_review',
@@ -126,9 +119,9 @@ export interface TopUpAccount {
 
 /** One way to send money to Sada; labels are localized (server, or the app's own words on the fallback). */
 export interface TopUpChannelOption {
-  channel: TopUpChannel;
+  channel: PaymentChannel;
   label: string;
-  group: TopUpChannelGroup;
+  group: PaymentChannelGroup;
   groupLabel: string;
   /** Accepted right now (SYP drops out while the rate is stale). */
   currencies: CurrencyCode[];
@@ -175,7 +168,7 @@ export interface TopUp {
   status: TopUpStatus | null;
   status_label: string;
   /** `null` = unknown channel: `channel_label` (or nothing) names it. */
-  channel: TopUpChannel | null;
+  channel: PaymentChannel | null;
   channel_label: string | null;
   /** What the brand sent, in the sent currency. */
   amount: Money;
