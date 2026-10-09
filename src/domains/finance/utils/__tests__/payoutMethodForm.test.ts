@@ -2,6 +2,7 @@ import type { PayoutMethodFormValues } from '../../schemas/payoutMethodSchema';
 import type { PayoutMethod } from '../../types';
 import {
   emptyPayoutMethodForm,
+  isValidAccountCode,
   isValidAccountNumber,
   isValidIban,
   maskTail,
@@ -76,6 +77,17 @@ describe('maskTail', () => {
   });
 });
 
+describe('isValidAccountCode', () => {
+  it('takes 4 to 64 Latin letters, digits or dashes, keeping case', () => {
+    expect(isValidAccountCode('Sc-0042')).toBe(true);
+    expect(isValidAccountCode(' ab12 ')).toBe(true);
+    expect(isValidAccountCode('abc')).toBe(false);
+    expect(isValidAccountCode('x'.repeat(65))).toBe(false);
+    expect(isValidAccountCode('ab_12')).toBe(false);
+    expect(isValidAccountCode('١٢٣٤')).toBe(false);
+  });
+});
+
 describe('toPayoutDetails', () => {
   it('sends only the channel keys, trimmed and in E.164', () => {
     expect(toPayoutDetails(values(), 'haram')).toEqual({
@@ -84,7 +96,12 @@ describe('toPayoutDetails', () => {
       governorate: 'damascus',
       city: 'Mezzeh',
     });
-    expect(toPayoutDetails(values(), 'sham_cash')).toEqual({ holder_name: 'Anas Alsaadi', phone: '+963944123456' });
+    expect(toPayoutDetails(values(), 'mtn_cash')).toEqual({ holder_name: 'Anas Alsaadi', phone: '+963944123456' });
+    expect(toPayoutDetails(values({ accountCode: ' Sc-0042 ' }), 'sham_cash')).toEqual({
+      holder_name: 'Anas Alsaadi',
+      phone: '+963944123456',
+      account_code: 'Sc-0042',
+    });
   });
 
   it('normalises bank numbers and leaves an empty IBAN out', () => {

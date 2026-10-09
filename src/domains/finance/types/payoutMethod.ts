@@ -10,6 +10,7 @@ export interface PayoutDetailsDto {
   bank_name?: string | null;
   account_number?: string | null;
   iban?: string | null;
+  account_code?: string | null;
 }
 
 export interface PayoutMethodDto {
@@ -35,6 +36,8 @@ export interface PayoutDetails {
   bank_name?: string;
   account_number?: string;
   iban?: string;
+  /** Sham Cash wallet account code. */
+  account_code?: string;
 }
 
 /** A creator's saved destination for withdrawals; exactly one is primary once any exist. */

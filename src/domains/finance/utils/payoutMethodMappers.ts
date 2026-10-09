@@ -13,12 +13,14 @@ const toDetails = (dto: PayoutDetailsDto | null | undefined): PayoutDetails => {
   const bankName = text(dto?.bank_name);
   const accountNumber = text(dto?.account_number);
   const iban = text(dto?.iban);
+  const accountCode = text(dto?.account_code);
   if (phone) details.phone = phone;
   if (governorate) details.governorate = governorate;
   if (city) details.city = city;
   if (bankName) details.bank_name = bankName;
   if (accountNumber) details.account_number = accountNumber;
   if (iban) details.iban = iban;
+  if (accountCode) details.account_code = accountCode;
   return details;
 };
 

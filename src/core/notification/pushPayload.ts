@@ -12,6 +12,8 @@ export const PUSH_TYPES = [
   'wallet_withdrawal_returned',
   'wallet_wallet_frozen',
   'wallet_wallet_unfrozen',
+  'wallet_payout_method_added',
+  'wallet_payout_method_changed',
   'test',
 ] as const;
 export type PushType = (typeof PUSH_TYPES)[number];
@@ -22,6 +24,7 @@ export type PushTarget =
   | { kind: 'platform'; platformId: string }
   | { kind: 'notifications' }
   | { kind: 'wallet' }
+  | { kind: 'payoutMethods' }
   | { kind: 'topUp'; topUpId: string };
 
 export interface ParsedPush {
@@ -54,6 +57,7 @@ const parseDeepLink = (link: unknown): PushTarget | null => {
   if (route === 'kyc' && id === undefined) return { kind: 'kyc' };
   if (route === 'notifications' && id === undefined) return { kind: 'notifications' };
   if (route === 'wallet' && id === undefined) return { kind: 'wallet' };
+  if (route === 'wallet' && id === 'payout-methods') return { kind: 'payoutMethods' };
   if (route === 'platforms' && id !== undefined && ENTITY_ID.test(id)) {
     return { kind: 'platform', platformId: id };
   }

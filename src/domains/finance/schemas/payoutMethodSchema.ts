@@ -3,7 +3,13 @@ import type { TFunction } from 'i18next';
 import type { CountryCode } from 'libphonenumber-js';
 import { PAYOUT_FIELD_LIMITS, type PayoutField } from '../constants/payoutMethods';
 import type { PaymentChannel } from '../types';
-import { isValidAccountNumber, isValidIban, payoutFields, toSyrianMobile } from '../utils/payoutMethodForm';
+import {
+  isValidAccountCode,
+  isValidAccountNumber,
+  isValidIban,
+  payoutFields,
+  toSyrianMobile,
+} from '../utils/payoutMethodForm';
 
 /** Every channel's fields in one shape; the schema checks only the picked channel's (handoff §7). */
 export interface PayoutMethodFormValues {
@@ -17,6 +23,8 @@ export interface PayoutMethodFormValues {
   bankName: string;
   accountNumber: string;
   iban: string;
+  /** Sham Cash only. */
+  accountCode: string;
   label: string;
   makeDefault: boolean;
 }
@@ -74,6 +82,13 @@ export const createPayoutMethodSchema = (
         .string()
         .defined()
         .test('iban', t('finance.payouts.form.errors.iban'), value => !value.trim() || isValidIban(value)),
+    ),
+    accountCode: only(
+      'accountCode',
+      yup
+        .string()
+        .required(t('validation.required'))
+        .test('account-code', t('finance.payouts.form.errors.accountCode'), value => isValidAccountCode(value)),
     ),
     label: yup.string().trim().max(label.max, t('validation.maxLength', { count: label.max })).defined(),
     makeDefault: yup.boolean().required(),

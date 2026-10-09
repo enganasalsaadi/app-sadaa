@@ -1534,6 +1534,9 @@
         "iban": "IBAN (optional)",
         "ibanPlaceholder": "SY…",
         "ibanHint": "Speeds up the transfer if your account has one",
+        "accountCode": "Sham Cash account code",
+        "accountCodePlaceholder": "Latin letters, digits or dashes",
+        "accountCodeHint": "Your Sham Cash wallet code, linked to the mobile number above",
         "extrasSection": "Tell your methods apart",
         "label": "Short name (optional)",
         "labelPlaceholder": "e.g. Home",
@@ -1550,7 +1553,8 @@
         "errors": {
           "phone": "Enter a Syrian mobile number starting with 9 (9 digits)",
           "accountNumber": "Account number: 6 to 30 digits or Latin letters",
-          "iban": "This IBAN is not valid. Check it or leave it empty"
+          "iban": "This IBAN is not valid. Check it or leave it empty",
+          "accountCode": "Account code: 4 to 64 Latin letters, digits or dashes"
         }
       },
       "delete": {

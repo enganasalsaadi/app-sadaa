@@ -30,7 +30,22 @@ const errorsOf = async (channel: Parameters<typeof createPayoutMethodSchema>[1],
 
 describe('createPayoutMethodSchema', () => {
   it('accepts an e-wallet with a name and a Syrian mobile, ignoring bank and office fields', async () => {
-    expect(await errorsOf('sham_cash', form())).toEqual({});
+    expect(await errorsOf('syriatel_cash', form())).toEqual({});
+  });
+
+  it('needs a Sham Cash account code: 4 to 64 letters, digits or dashes', async () => {
+    expect(await errorsOf('sham_cash', form())).toEqual({ accountCode: 'validation.required' });
+    expect(await errorsOf('sham_cash', form({ accountCode: 'ab1' }))).toEqual({
+      accountCode: 'finance.payouts.form.errors.accountCode',
+    });
+    expect(await errorsOf('sham_cash', form({ accountCode: 'ab_12' }))).toEqual({
+      accountCode: 'finance.payouts.form.errors.accountCode',
+    });
+    expect(await errorsOf('sham_cash', form({ accountCode: 'x'.repeat(65) }))).toEqual({
+      accountCode: 'finance.payouts.form.errors.accountCode',
+    });
+    expect(await errorsOf('sham_cash', form({ accountCode: 'Sc-0042' }))).toEqual({});
+    expect(await errorsOf('mtn_cash', form({ accountCode: '' }))).toEqual({});
   });
 
   it('needs a governorate for exchange offices; the city stays optional', async () => {

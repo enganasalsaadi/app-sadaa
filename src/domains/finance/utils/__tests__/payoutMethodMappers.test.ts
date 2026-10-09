@@ -41,8 +41,16 @@ describe('mapPayoutMethod', () => {
   });
 
   it('maps Sham Cash and treats a missing flag as not primary', () => {
-    const mapped = mapPayoutMethod(dto({ channel: 'sham_cash', is_default: null, label: '  ' }));
+    const mapped = mapPayoutMethod(
+      dto({
+        channel: 'sham_cash',
+        is_default: null,
+        label: '  ',
+        details: { holder_name: 'Anas', phone: '+963944123456', account_code: ' Sc-0042 ' },
+      }),
+    );
     expect(mapped?.channel).toBe('sham_cash');
+    expect(mapped?.details).toEqual({ holder_name: 'Anas', phone: '+963944123456', account_code: 'Sc-0042' });
     expect(mapped?.is_default).toBe(false);
     expect(mapped?.label).toBeNull();
   });

@@ -10,9 +10,10 @@ export type NotificationRoute =
   | { screen: 'PlatformDetailScreen'; platformId: string }
   | { screen: 'NotificationsScreen' }
   | { screen: 'WalletTab' }
+  | { screen: 'PayoutMethods' }
   | { screen: 'TopUpDetail'; topUpId: string };
 
-/** Platforms are a creator screen, top-ups a brand one: the other role lands somewhere safe. */
+/** Platforms and payout methods are creator screens, top-ups a brand one: the other role lands somewhere safe. */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
   userType: UserType | null,
@@ -29,6 +30,8 @@ export const resolveNotificationRoute = (
       return { screen: 'NotificationsScreen' };
     case 'wallet':
       return { screen: 'WalletTab' };
+    case 'payoutMethods':
+      return userType === 'influencer' ? { screen: 'PayoutMethods' } : { screen: 'WalletTab' };
     case 'topUp':
       return userType === 'brand'
         ? { screen: 'TopUpDetail', topUpId: target.topUpId }
@@ -50,6 +53,8 @@ const FALLBACK_LINK: Record<string, (entityId: string) => string> = {
   wallet_top_up_completed: id => `sada://wallet/top-ups/${id}`,
   wallet_top_up_rejected: id => `sada://wallet/top-ups/${id}`,
   wallet_top_up_reversed: id => `sada://wallet/top-ups/${id}`,
+  wallet_payout_method_added: () => 'sada://wallet/payout-methods',
+  wallet_payout_method_changed: () => 'sada://wallet/payout-methods',
 };
 
 export const notificationTarget = (item: AppNotification): PushTarget | null => {
@@ -78,6 +83,8 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
       };
     case 'WalletTab':
       return { screen: 'WalletTab' };
+    case 'PayoutMethods':
+      return { screen: 'WalletTab', params: { screen: 'PayoutMethods', initial: false } };
     case 'TopUpDetail':
       // The wallet home stays underneath, like the Settings routes keep Profile.
       return {

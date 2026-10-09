@@ -51,6 +51,13 @@ const INPUT_DEF = {
     hint: 'finance.payouts.form.ibanHint',
     input: { autoComplete: 'off', textContentType: 'none', autoCapitalize: 'characters', autoCorrect: false },
   },
+  accountCode: {
+    label: 'finance.payouts.form.accountCode',
+    placeholder: 'finance.payouts.form.accountCodePlaceholder',
+    maxLength: PAYOUT_FIELD_LIMITS.accountCode.max,
+    hint: 'finance.payouts.form.accountCodeHint',
+    input: { autoComplete: 'off', textContentType: 'none', autoCapitalize: 'none', autoCorrect: false },
+  },
 } as const satisfies Record<InputField, InputDef>;
 
 // Payout phones are Syrian only: the field shows +963 without a picker.

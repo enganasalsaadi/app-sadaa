@@ -34,6 +34,13 @@ describe('parsePushPayload', () => {
         deep_link: 'sada://wallet/top-ups/01JB4M8XQZ',
       }),
     ).toEqual({ type: 'wallet_top_up_reversed', target: { kind: 'topUp', topUpId: '01JB4M8XQZ' } });
+    expect(
+      parsePushPayload({
+        type: 'wallet_payout_method_added',
+        entity_id: '01JB4M8XQZ',
+        deep_link: 'sada://wallet/payout-methods',
+      }),
+    ).toEqual({ type: 'wallet_payout_method_added', target: { kind: 'payoutMethods' } });
   });
 
   it('keeps an unknown type as null but still reads the link', () => {
@@ -55,6 +62,8 @@ describe('parsePushPayload', () => {
     ['a top-up id with a path', 'sada://wallet/top-ups/01J9/../x'],
     ['a top-up id with a query', 'sada://wallet/top-ups/01J9?x=1'],
     ['the top-up list', 'sada://wallet/top-ups'],
+    ['a payout method id', 'sada://wallet/payout-methods/01J9'],
+    ['a payout methods query', 'sada://wallet/payout-methods?x=1'],
     ['an empty platform id', 'sada://platforms/'],
     ['an id with a query', 'sada://platforms/01J9?x=1'],
     ['an id on a fixed route', 'sada://kyc/123'],

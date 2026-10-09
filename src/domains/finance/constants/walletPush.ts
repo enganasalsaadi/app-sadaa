@@ -6,7 +6,8 @@ type WalletCacheTag =
   | 'TopUp'
   | 'Withdrawal'
   | 'WalletEscrow'
-  | 'WalletEarnings';
+  | 'WalletEarnings'
+  | 'PayoutMethod';
 
 /** The tab's escrow card and chart move with any wallet event, and the server sends no push of their own. */
 const WALLET_TAB = ['Wallet', 'WalletEscrow', 'WalletEarnings'] as const;
@@ -14,7 +15,8 @@ const TOP_UP_DONE = [...WALLET_TAB, 'WalletTransaction', 'TopUp'] as const;
 const WITHDRAWAL_DONE = [...WALLET_TAB, 'WalletTransaction', 'Withdrawal'] as const;
 
 /**
- * What each wallet push changed (handoff §9): the balance plus the list it belongs to,
+ * What each wallet push changed (handoff §9): the balance plus the list it belongs to
+ * (payout method alerts: the methods list only),
  * so only those caches refetch. Freezes also change capabilities, which `/me` refetch covers.
  */
 const WALLET_PUSH_TAGS = {
@@ -27,6 +29,9 @@ const WALLET_PUSH_TAGS = {
   wallet_withdrawal_returned: WITHDRAWAL_DONE,
   wallet_wallet_frozen: WALLET_TAB,
   wallet_wallet_unfrozen: WALLET_TAB,
+  // A method added or edited elsewhere (another device, support): no money moved.
+  wallet_payout_method_added: ['PayoutMethod'],
+  wallet_payout_method_changed: ['PayoutMethod'],
 } as const satisfies Partial<Record<PushType, readonly WalletCacheTag[]>>;
 
 const isWalletPush = (type: PushType): type is keyof typeof WALLET_PUSH_TAGS =>

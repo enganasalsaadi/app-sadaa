@@ -1,7 +1,12 @@
 import { parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js';
 import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { PAYMENT_CHANNEL_DEF } from '../constants/paymentChannels';
-import { PAYOUT_FIELD_LIMITS, PAYOUT_GROUP_DEF, type PayoutField } from '../constants/payoutMethods';
+import {
+  PAYOUT_CHANNEL_EXTRA_FIELDS,
+  PAYOUT_FIELD_LIMITS,
+  PAYOUT_GROUP_DEF,
+  type PayoutField,
+} from '../constants/payoutMethods';
 import type { PayoutMethodFormValues } from '../schemas/payoutMethodSchema';
 import type { PaymentChannel, PayoutDetails, PayoutMethod, PayoutMethodPatch } from '../types';
 
@@ -10,13 +15,16 @@ const SYRIAN_MOBILE = /^\+9639\d{8}$/;
 const ACCOUNT_NUMBER = /^[A-Z0-9]+$/;
 const IBAN_SHAPE = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
 const IBAN_MODULUS = 97;
+const ACCOUNT_CODE = /^[A-Za-z0-9-]+$/;
 const SPACES = /\s+/g;
 const SPACES_AND_DASHES = /[\s-]+/g;
 const MASK = '••••';
 const TAIL_LENGTH = 4;
 
-export const payoutFields = (channel: PaymentChannel): readonly PayoutField[] =>
-  PAYOUT_GROUP_DEF[PAYMENT_CHANNEL_DEF[channel].group].fields;
+export const payoutFields = (channel: PaymentChannel): readonly PayoutField[] => [
+  ...PAYOUT_GROUP_DEF[PAYMENT_CHANNEL_DEF[channel].group].fields,
+  ...(PAYOUT_CHANNEL_EXTRA_FIELDS[channel] ?? []),
+];
 
 /** E.164 of a typed Syrian mobile ("0944…", "944…"), or `null` for anything else. */
 export const toSyrianMobile = (national: string, country: CountryCode): string | null => {
@@ -49,6 +57,15 @@ export const isValidIban = (value: string): boolean => {
   return remainder === 1;
 };
 
+export const normalizeAccountCode = (value: string): string => value.replace(SPACES, '');
+
+/** Sham Cash account code: 4–64 Latin letters, digits or dashes; case kept as typed. */
+export const isValidAccountCode = (value: string): boolean => {
+  const code = normalizeAccountCode(value);
+  const { min, max } = PAYOUT_FIELD_LIMITS.accountCode;
+  return ACCOUNT_CODE.test(code) && code.length >= min && code.length <= max;
+};
+
 /** "•••• 4567": enough to tell methods apart, never the full number on screen. */
 export const maskTail = (value: string | undefined): string | null => {
   const compact = value?.replace(SPACES_AND_DASHES, '') ?? '';
@@ -74,6 +91,7 @@ export const emptyPayoutMethodForm = (makeDefault: boolean, prefill: PayoutFormP
   bankName: '',
   accountNumber: '',
   iban: '',
+  accountCode: '',
   label: '',
   makeDefault,
 });
@@ -87,6 +105,7 @@ export const toPayoutMethodForm = (method: PayoutMethod): PayoutMethodFormValues
   bankName: method.details.bank_name ?? '',
   accountNumber: method.details.account_number ?? '',
   iban: method.details.iban ?? '',
+  accountCode: method.details.account_code ?? '',
   label: method.label ?? '',
   makeDefault: method.is_default,
 });
@@ -118,6 +137,9 @@ export const toPayoutDetails = (values: PayoutMethodFormValues, channel: Payment
       case 'iban':
         if (values.iban.trim()) details.iban = normalizeIban(values.iban);
         break;
+      case 'accountCode':
+        details.account_code = normalizeAccountCode(values.accountCode);
+        break;
       default: {
         const _exhaustive: never = field;
         return _exhaustive;
@@ -135,6 +157,7 @@ const DETAIL_KEYS = [
   'bank_name',
   'account_number',
   'iban',
+  'account_code',
 ] as const satisfies readonly (keyof PayoutDetails)[];
 
 const sameDetails = (a: PayoutDetails, b: PayoutDetails): boolean =>

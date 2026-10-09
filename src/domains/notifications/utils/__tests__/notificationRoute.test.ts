@@ -46,6 +46,13 @@ describe('resolveNotificationRoute', () => {
     expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
   });
 
+  it('opens payout methods for a creator, the wallet tab for anyone else', () => {
+    const target = { kind: 'payoutMethods' } as const;
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({ screen: 'PayoutMethods' });
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({ screen: 'WalletTab' });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
+  });
+
   it('does nothing without a target', () => {
     expect(resolveNotificationRoute(null, 'influencer')).toBeNull();
   });
@@ -74,6 +81,9 @@ describe('notificationTarget', () => {
     expect(
       notificationTarget(item({ type: 'wallet_top_up_reversed', data: { entity_id: '01JB4M8X' } })),
     ).toEqual({ kind: 'topUp', topUpId: '01JB4M8X' });
+    expect(notificationTarget(item({ type: 'wallet_payout_method_changed', data: { entity_id: 'pm1' } }))).toEqual({
+      kind: 'payoutMethods',
+    });
     expect(notificationTarget(item({ type: 'test' }))).toBeNull();
   });
 });
@@ -92,6 +102,13 @@ describe('toTabParams', () => {
 
   it('switches to the wallet tab', () => {
     expect(toTabParams({ screen: 'WalletTab' })).toEqual({ screen: 'WalletTab' });
+  });
+
+  it('opens payout methods over the wallet home', () => {
+    expect(toTabParams({ screen: 'PayoutMethods' })).toEqual({
+      screen: 'WalletTab',
+      params: { screen: 'PayoutMethods', initial: false },
+    });
   });
 
   it('opens a top-up over the wallet home', () => {

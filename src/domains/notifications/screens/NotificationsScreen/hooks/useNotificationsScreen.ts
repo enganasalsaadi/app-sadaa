@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ParseKeys } from 'i18next';
 import type { LucideIcon } from 'lucide-react-native';
-import { AtSign, Bell, ShieldCheck, Wallet } from 'lucide-react-native';
+import { AtSign, Bell, ShieldAlert, ShieldCheck, Wallet } from 'lucide-react-native';
 import { formatDate } from '@/core/i18n';
 import type { HueTone } from '@/core/theme';
 import { navigate } from '@/core/navigation';
@@ -54,6 +54,9 @@ const TYPE_LOOK: Record<string, TypeLook> = {
   wallet_withdrawal_returned: { icon: Wallet, tone: 'warning' },
   wallet_wallet_frozen: { icon: Wallet, tone: 'warning' },
   wallet_wallet_unfrozen: { icon: Wallet, tone: 'success' },
+  // Security alerts: "if this wasn't you, contact support".
+  wallet_payout_method_added: { icon: ShieldAlert, tone: 'warning' },
+  wallet_payout_method_changed: { icon: ShieldAlert, tone: 'warning' },
 };
 const DEFAULT_LOOK: TypeLook = { icon: Bell, tone: 'interactive' };
 
@@ -137,6 +140,7 @@ export const useNotificationsScreen = () => {
           navigation.navigate('PlatformDetailScreen', { platformId: route.platformId });
           return;
         case 'WalletTab':
+        case 'PayoutMethods':
         case 'TopUpDetail':
           // Another tab: go through the root, like a push tap.
           navigate('Main', toTabParams(route));
