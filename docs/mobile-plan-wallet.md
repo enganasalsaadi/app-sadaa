@@ -70,7 +70,15 @@ Built to the approved Step 4 boards (Sada Wallet Tab canvas). Backend asks: `doc
 
 ## Step 5: Creator payout methods ✅ (2026-10-09, commits 50d4918 + 3bec572; awaiting live-server + device testing)
 
-List (max 10), add/edit form per channel (schema per channel), delete via `ConfirmSheet`; Sham Cash `account_code`; payout method alerts → `PayoutMethods`.
+Handoff §7. Product decisions: see "Decisions" below (no re-auth, manage anytime).
+
+- **Routes:** creator stack only: `PayoutMethods` (List archetype) + `PayoutMethodForm` (`{ channel }` add | `{ id }` edit). Entry points: creator wallet `PayoutDestinationCard` (under the escrow card) and the Profile `payouts` row; the withdraw wizard opens the form with `{ channel }` and takes the new method on return (Step 6).
+- **API (`api/payoutMethodApi`):** `getPayoutMethods` (server order kept: primary first, then newest), `createPayoutMethod`, `updatePayoutMethod` (PATCH sends only changed keys, via `toPayoutMethodPatch`: an unchanged form makes no request, so the server sends no `wallet_payout_method_changed` push), `setDefaultPayoutMethod` (`POST /{id}/default`, called after a save that asks for primary; a failed switch is a warning, the method is saved), `deletePayoutMethod` (optimistic: row removed at once, primary moved to the newest remaining (`nextPrimaryAfterDelete`), then the server's `default_payout_method_id` wins; `undo()` on failure). **No `Idempotency-Key`:** not a money request, a repeated save only edits the same destination (rule 06).
+- **Channels:** shared with top-ups (`PAYMENT_CHANNELS` / `PAYMENT_CHANNEL_DEF`). Field groups per channel in `PAYOUT_GROUP_DEF` (agent transfer: name + phone + governorate + city · cash wallet: name + phone · bank: name + bank + account + IBAN), extra fields in `PAYOUT_CHANNEL_EXTRA_FIELDS` (Sham Cash `account_code`, 4–64 letters/digits/dashes, commit 3bec572). Governorate names from `/lookups` (`usePayoutMethods` builds the views).
+- **Form:** `createPayoutMethodSchema(t, channel)`, client fallback limits `PAYOUT_FIELD_LIMITS` (name 3–100, label ≤ 40, city ≤ 100, account 6–30, IBAN format + mod-97) until the server sends its own; primary switch locked on for the first method and the current primary; discard guard + `DiscardSheet`. Delete: `PayoutDeleteSheet` names the method that becomes primary, or says it's the last one.
+- **Errors:** `422 payout_method_limit` or `404` (deleted elsewhere) → refetch + back to the list; other 422 → fields (`PAYOUT_SERVER_FIELDS`); limit 10 (`PAYOUT_METHODS_MAX`): Add leaves the footer at 10.
+- **Pushes:** `wallet_payout_method_added|changed` (`sada://wallet/payout-methods`) → `PayoutMethods` for creators, wallet tab otherwise; refetch `PayoutMethod` only; warning look in the inbox.
+- **Tests:** `payoutMethodSchema` (per-channel fields, Sham Cash code, Syrian mobile only, bank + IBAN, name/label limits), `payoutMethodForm` (mobile normalising, account/IBAN mod-97, `maskTail`, form → details, `toPayoutMethodPatch` empty when unchanged), `payoutMethodMappers` (unknown channel skipped, primary pinned first, delete promotion, last method → no primary).
 
 ## Step 6: Creator withdraw ✅ (2026-10-09, awaiting live-server + device testing)
 
@@ -87,7 +95,7 @@ Built to the approved Step 6 boards (Sada Wallet Tab canvas). Approved answers: 
 - **Tests:** `withdrawalMappers` (quote, item, page, 422 block), `withdrawSchema`.
 - **Open:** server-sent limits once the backend adds them.
 
-## Step 7: Wiring + docs
+## Step 7: Wiring + docs ✅ (2026-10-09, commit 19ee340; awaiting live-server + device testing)
 
 Push tap → wallet routes, replace `WalletPlaceholder`, DevShowcase demos for new kit/domain parts, `docs/mobile-architecture.md` (§4.4, §5.2, §5.3 Journey F, Change Log).
 
@@ -95,3 +103,83 @@ Push tap → wallet routes, replace `WalletPlaceholder`, DevShowcase demos for n
 - **Share:** `WithdrawalDetailScreen` header `Share2` action (ready state) → plain-text receipt via `Share.share` (title, gross, net payout, status, date, receipt + request numbers), like `TransactionReceiptScreen`.
 - **Cleanup:** `WalletPlaceholder` already gone (wallet tab real since Step 2); no TODO/mock leftovers in finance/notifications; finance domain parts covered by the DevShowcase registry test.
 - **Tests:** `pushPayload` (withdrawal link + malformed variants), `notificationRoute` (role routing, fallback link, tab params).
+- **Frozen / unfrozen pushes:** `wallet_wallet_frozen|unfrozen` → `sada://wallet` → wallet tab; `walletPushTags` refetches `GET /wallet`, so the hero `LiveIsland` (the handoff's "frozen-wallet banner") appears or clears without a manual refresh. Inbox: warning / success look.
+- **Docs:** `docs/mobile-architecture.md` updated with each step (§4.4 wallet rules, §5.2 screen map, §5.3 Journey F, Change Log rows 2026-10-08 → 2026-10-09: wallet tab, statement + receipt, top-up v2, payout methods, Sham Cash, withdrawals, withdrawal deep links).
+
+## Decisions (v1)
+
+| Decision | Why |
+|---|---|
+| **No re-auth / biometrics** before withdraw or payout method changes (decided 2026-10-09) | Speed over friction in v1. Compensating controls: a security push on every new or changed payout method (`wallet_payout_method_added|changed`), withdrawals only to saved methods, server-side limits ($25 min, $500/day, one per 7 days), the 7-day cooldown, cancel while pending, and every rule re-checked by the server. Revisit if fraud shows up or when instant cash-out lands. |
+| **Payout methods manageable anytime** | KYC / frozen-wallet rules gate the Withdraw action only (Step 6), never viewing or editing destinations. |
+| **No screenshot protection** on wallet, receipt or withdrawal screens (decided 2026-10-09) | Users screenshot receipts to send to WhatsApp support; the receipt share action covers the same need in text. No `FLAG_SECURE` / iOS capture blur in v1. |
+| **Eye toggle (hide amounts) is per device**, not per account | Stored in plain MMKV (`StorageKeys.WALLET_AMOUNTS_HIDDEN`, non-identifying preference); `authStorage.clearSession()` doesn't touch it, so it survives logout and a switch to another account on the same phone. Receipts and detail screens always show amounts. |
+| **`Idempotent-Replayed: true` is a normal success** | Same body as the original 201 (handoff §3); no separate handling or toast. |
+| **Analytics / logs: IDs only** | No amounts, phones or names tied to identity (rule 07). |
+
+## Open / waiting on backend
+
+| Item | Owner | Trigger | Then (mobile) |
+|---|---|---|---|
+| v4 wallet fields: `summary.month_in` / `escrow` / `pending_top_ups`, `GET /wallet/escrows`, `GET /wallet/earnings`, line `description` / `counterparty` / `status` / `affects_balance` / SYP `original` (`docs/backend/wallet-v4-prompt.md`) | Backend | Endpoints / fields live on staging | Sections appear on their own (404 → hidden); check the §5 answers against the ledger rows |
+| Top-up channels 404 fallback (`buildFallbackChannels`) | Backend (deploy) → mobile | v2 server on staging **and** production | Delete the fallback + its tests |
+| Server-sent withdraw limits | Backend | Limits in the quote or `/config` | Replace `WITHDRAW_LIMITS` defaults |
+| Server-sent payout field limits | Backend | Limits in the API | Replace `PAYOUT_FIELD_LIMITS` |
+| Sham Cash currencies (USD+SYP) and 1.5% fee | Ops | Confirmed by ops | Fix channel def if different |
+| Multi-type statement filter | Backend | API accepts several `type`s | Multi-select type chips |
+| Deal link on receipts / ledger rows | Marketplace (mobile + backend) | Deal detail screen + `source` deal id | "View deal" footer on the receipt |
+| Wallet empty-state CTA | Product | Decide the action (top up / browse campaigns) | Add to the activity empty state |
+| Pending tone: warning (built) vs info (submitted board) | Design | Decision | Change `*_STATUS_LOOK` if info wins |
+| Firebase regenerated for `com.getsadaapp` | Mobile / DevOps | New config files | Wallet pushes arrive (Step 8 push checks blocked until then) |
+| `API_BASE_URL` staging / production still on the old domain | DevOps | New domains | Update `.env.staging` / `.env.production` + rebuild |
+
+## Step 8: QA & device testing checklist
+
+Run on a real iPhone and a real Android phone against staging (v2 server), both roles. Tick each line with device + date.
+
+**Live-server flows**
+- [ ] Brand: top-up each channel (USD, SYP, cash wallet SYP only) → `pending_review` → admin approves → push → balance + ledger update
+- [ ] Brand: dev mock server returns `completed` at once → detail + wallet show it without a pending step
+- [ ] Brand: top-up rejected / reversed → push → detail `Notice`, tone correct
+- [ ] Brand: `top_up_pending_limit`, `transfer_reference_duplicate`, `channel_paused`, `top_up_amount_out_of_range` mapped as in Step 4
+- [ ] Creator: add each channel (incl. Sham Cash code, bank IBAN), edit (details vs label only: push only on details), set primary, delete primary (promotion matches the sheet), delete last, 11th method blocked
+- [ ] Creator: withdraw USD and SYP → `pending` → admin completes / rejects / returns → push → detail + wallet
+- [ ] Creator: every quote reason shows its label; `cooldown_active` countdown re-quotes at `next_allowed_at`; `open_request_exists` after a first request
+- [ ] Creator: cancel while pending; cancel race (admin completes first) → `409 withdrawal_not_pending` toast + refetch
+- [ ] Statement: period presets, custom range, type chips, paging, "all" shares the tab cache; receipt copy / share / report
+- [ ] Account delete with funds → `422 account_has_funds` blocked state (creator → wallet, brand → support)
+
+**Edge cases**
+- [ ] Wallet `frozen`: `available` 0, `LiveIsland` blocker, Top up / Withdraw disabled, support link; unfreeze push clears it
+- [ ] Wallet `closed` and an unknown status → safe blocker, no crash
+- [ ] Exchange rate stale → `Notice` replaces the rate row, SYP options off; no rate yet (`data: null`) → SYP off, no crash
+- [ ] Idempotency: kill the app mid-submit and retry → same key, `Idempotent-Replayed` shown as success, no double request; slow server → `409 idempotency_request_in_progress` retried (2 s × 3)
+- [ ] Capability reasons (`kyc_required`, `kyc_pending`, `kyc_rejected`, `withdrawals_paused`, `onboarding_incomplete`) → right blocker copy + action
+- [ ] Offline during each money step → snackbar only, submit not lost; double tap on submit → one request
+- [ ] Signed receipt URL expired → detail refetched before opening
+
+**Push (needs Firebase regenerated)**
+- [ ] Each `wallet_*` type: foreground, background and **cold start** tap (launch buffer 30 s) → right screen per role, `initial: false` back to the wallet home
+- [ ] Wrong role (creator gets a top-up link) → wallet tab, no crash; inbox entry without a link → rebuilt from `entity_id`
+
+**Visual / a11y**
+- [ ] Arabic RTL first, then English: chevrons flip, amounts and digits Western, Levantine months
+- [ ] Dark mode: `card` hairline, CTA teal, glass on navy only
+- [ ] Small screen (iPhone SE / 5.5" Android): wallet hero compact layout, keyboard open on amount steps
+- [ ] Reduced motion: no rolling digits, no `MoneyFlow` / `LiveDot` loops, final state at once
+- [ ] Android: `card` shadow tint, Skia hero lights + glass cost (no jank on scroll), bottom bar without blur
+- [ ] Large text (font scale 1.3+): amounts don't clip, footer buttons reachable
+- [ ] Eye toggle: hides every amount on wallet + statement, survives restart and logout
+
+**Release**
+- [ ] Ship with or after the server's `account_has_funds` change (handoff §1); raise `min_version` in `/config` if an older build must stop
+- [ ] `API_BASE_URL` + Firebase updated, release build smoke test
+
+## Phase 2 (out of scope for v1)
+
+- **Deal escrow:** brand pays a deal into escrow (`awaiting_payment` → `in_progress`), escrow release / refund / split screens (today only ledger lines + `EscrowFlowCard`). Lands with the marketplace deal flow.
+- **Disputes:** dispute state on a deal, held funds, support outcome on the receipt.
+- **Statements export:** PDF / CSV statement for brands' accounting; invoices and auto-generated contracts (finance owns them, rule 01).
+- **Instant cash-out:** the spec's instant withdrawal vs the v1 7-day cooldown; needs a product decision + backend rules (and likely re-auth).
+- **Brand spend analytics:** per-campaign spend / ROI (planned `analytics` domain); the wallet bar chart stays a monthly total.
+- **Security hardening:** re-auth / biometrics, screenshot protection, if v1 data says so.
