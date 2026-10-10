@@ -31,12 +31,16 @@ const CreatorRailComponent: React.FC<CreatorRailProps> = ({
     () => (rail.seeAll ? { label: t('marketplace.brandHome.seeAll'), onPress: seeAll } : undefined),
     [rail.seeAll, seeAll, t],
   );
-  const styles = useStyles(theme => ({
-    // Vertical room keeps the cards' shadows from being clipped by the scroll view.
+  const styles = useStyles(({ spacing: space, shadows }) => ({
+    // The scroll view clips its children: the bottom pad holds the whole `card` shadow
+    // (offset + blur), else it ends in a hard dark edge. The negative margin hands that
+    // room back to the gap below, where the shadow fades over the next rail's title.
+    rail: { marginBottom: -space.lg },
     content: {
-      paddingHorizontal: theme.spacing.xl,
-      paddingVertical: theme.spacing.sm,
-      gap: theme.spacing.md,
+      paddingHorizontal: space.xl,
+      paddingTop: space.sm,
+      paddingBottom: (shadows.card.shadowOffset?.height ?? 0) + (shadows.card.shadowRadius ?? 0),
+      gap: space.md,
     },
   }));
 
@@ -48,6 +52,7 @@ const CreatorRailComponent: React.FC<CreatorRailProps> = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.rail}
         contentContainerStyle={styles.content}
         snapToInterval={CREATOR_RAIL_CARD_WIDTH + spacing.md}
         snapToAlignment="start"

@@ -8,7 +8,7 @@ import { selectUser, useOpenSupport } from '@/domains/auth';
 import { useAmountsHidden } from '@/domains/finance';
 import { useGetBrandHomeQuery } from '../../../api/brandHomeApi';
 import { useGetExploreFiltersQuery } from '../../../api/exploreApi';
-import { BRAND_HOME_ISLAND } from '../../../constants/brandHome';
+import { BRAND_HOME_ISLAND, resolveCategoryIcon } from '../../../constants/brandHome';
 import { useCreatorCardActions } from '../../../hooks/useCreatorCardActions';
 import type { BrandHomeRail } from '../../../types/explore';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
@@ -61,6 +61,11 @@ export const useBrandHomeScreen = () => {
     [navigation],
   );
   const openWallet = useCallback(() => navigation.navigate('WalletTab'), [navigation]);
+  // `initial: false` keeps the wallet under the wizard, so closing it lands there.
+  const openTopUp = useCallback(
+    () => navigation.navigate('WalletTab', { screen: 'TopUp', initial: false }),
+    [navigation],
+  );
   const openShortlist = useCallback(() => navigation.navigate('Shortlist'), [navigation]);
 
   const openExplore = useCallback(
@@ -85,7 +90,9 @@ export const useBrandHomeScreen = () => {
 
   const categoryOptions = filtersQuery.data?.categories;
   const categories = useMemo(
-    () => categoryOptions?.map(({ value, label }) => ({ value, label })) ?? [],
+    () =>
+      categoryOptions?.map(({ value, label }) => ({ value, label, icon: resolveCategoryIcon(value) })) ??
+      [],
     [categoryOptions],
   );
 
@@ -117,6 +124,8 @@ export const useBrandHomeScreen = () => {
   const companyName = home?.companyName || user?.display_name || null;
   const governorate = home?.governorate?.label ?? null;
   const wallet = home?.wallet ?? null;
+  // The pill's ＋ shows only once `/me` allows a top-up; any blocker is the island's job (rule 06).
+  const canTopUp = user?.capabilities?.top_up_wallet?.allowed === true;
   const hero = useMemo(
     () => ({
       status,
@@ -124,8 +133,9 @@ export const useBrandHomeScreen = () => {
       companyName: companyName ?? t('marketplace.brandHome.companyFallback'),
       governorate,
       wallet,
+      canTopUp,
     }),
-    [companyName, dayPart, governorate, status, t, wallet],
+    [canTopUp, companyName, dayPart, governorate, status, t, wallet],
   );
 
   const onRefresh = useCallback(async () => {
@@ -158,6 +168,7 @@ export const useBrandHomeScreen = () => {
     openNotifications,
     openShortlist,
     openWallet,
+    openTopUp,
     openCreator,
     toggleShortlist,
     contactSupport,

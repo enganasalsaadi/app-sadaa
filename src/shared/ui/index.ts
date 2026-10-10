@@ -43,7 +43,7 @@ export type { PhoneInputProps } from './PhoneInput';
 export { OtpInput } from './OtpInput';
 export type { OtpInputProps, OtpInputHandle, OtpInputStatus } from './OtpInput';
 export { Chip } from './Chip';
-export type { ChipProps } from './Chip';
+export type { ChipProps, ChipVariant } from './Chip';
 export { ChipGroup } from './ChipGroup';
 export type { ChipGroupItem, ChipGroupProps } from './ChipGroup';
 export { ChipRow } from './ChipRow';

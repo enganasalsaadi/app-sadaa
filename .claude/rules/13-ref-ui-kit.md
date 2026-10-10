@@ -24,7 +24,7 @@ Check DevShowcase (`app/screens/DevShowcaseScreen`, `__DEV__` row in Profile; on
 
 - `CustomButton` (`variant` incl. `onBrand` + `glass` for navy) · `CustomInput` (`suffix`, `showCount` = text area) · `PhoneInput` (libphonenumber, E.164) · `BottomSheet` (`onDismissed`: fires once gone; open native picker only then on iOS) · `SelectionModal` · `DateRangePicker` (`range="past"` for statements) · `GalleryModal`.
 - `SuperList` (`emptyDescription` / `emptyAction` for "Clear filters") · `FloatingBottomBar`.
-- `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`icon`, `dropdown`, `onClear` = filter chip) · `ChipRow` (filter row pinned under header, above `SuperList`; never hand-roll horizontal `ScrollView` — default `flexGrow:1` floats chips mid-screen) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
+- `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`variant` outline|tile — tile = discovery shortcut pill; `icon`, `dropdown`, `onClear` = filter chip) · `ChipRow` (filter row pinned under header, above `SuperList`; never hand-roll horizontal `ScrollView` — default `flexGrow:1` floats chips mid-screen) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
 - `ListRow`/`ListGroup` (settings/menu rows; `selected` = single-choice row with radio mark) · `SectionHeader` `Divider` `KeyValueRow` (summaries, money emphasis).
 - `Badge` `StatusPill` (any `HueTone` via `resolveHue` from `@/core/theme`) `Tag` `ProgressBar` (`surface="brand"` on navy) `Accordion` `AvatarGroup`.
 - `Notice` (in-flow banner) · `EmptyState`/`ErrorState` (full-area; SuperList uses them) · `InlineError`.
@@ -33,7 +33,7 @@ Check DevShowcase (`app/screens/DevShowcaseScreen`, `__DEV__` row in Profile; on
 
 - `HeroBackdrop` + `GlassCard` (Skia, navy only; theme via `useGlassCardStyle()` outside `<Canvas>`).
 - `GradientSurface`: `brand` navy hero gradient, no glass · `live` darker dashboard gradient · `premium` soft gold highlight card.
-- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; navy hero only).
+- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; navy hero only; `paused` freezes them — `LayoutHeroBackdrop` pauses while the screen is blurred or the hero is scrolled away, since tab roots stay mounted and every frame redraws the canvas).
 - `LiveDot` (pulsing dot) · `LiveIsland` (the one blocker in a navy hero) · `AnimatedNumber` (digits roll once) · `MoneyFlow` (mint dots: money on its way) · `SmartBorder` (teal sheen, system suggestions only) · `StaggerIn` (sections rise once).
 
 ## Money & Sada parts

@@ -8,14 +8,16 @@ import { useBrandHomeScreen } from './hooks/useBrandHomeScreen';
 import { BrandHomeBar } from './components/BrandHomeBar';
 import { BrandHomeHero } from './components/BrandHomeHero';
 import { BrandHomeRails } from './components/BrandHomeRails';
-import { ExploreEntry } from './components/ExploreEntry';
+import { CategoryTiles } from './components/CategoryTiles';
+import { WalletStrip } from './components/WalletStrip';
 
 /**
- * Brand dashboard (v4 "Navy Trust, live"): navy hero with drifting lights (company, the
- * wallet strip with its eye, the server's one blocker as a live island) behind a transparent
- * header that pins the company once the hero scrolls away. Then the server's creator rails
- * rise in one by one, closed by the help card. Search, category chips and each rail's
- * "See all" open Explore; the ❤️ beside the bell opens the Shortlist.
+ * Brand discover home (rule 09): a compact navy band with drifting lights (greeting + company,
+ * search, the server's one blocker) behind a transparent header that pins the company once
+ * the band scrolls away. Creators are the hero: category tiles, then the server's
+ * photo-first rails rise in one by one with the wallet card after the first, closed by the
+ * help card. Search, tiles and
+ * each rail's "See all" open Explore; the ❤️ beside the bell opens the Shortlist.
  */
 const BrandHomeScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -56,10 +58,8 @@ const BrandHomeScreenComponent: React.FC = () => {
         <BrandHomeHero
           hero={vm.hero}
           island={vm.island}
-          hidden={vm.hidden}
-          onToggleHidden={vm.toggleHidden}
-          onOpenWallet={vm.openWallet}
           onOpenProfile={vm.openProfile}
+          onOpenSearch={vm.openSearch}
         />
       }
       scrollProps={{
@@ -73,9 +73,9 @@ const BrandHomeScreenComponent: React.FC = () => {
         ),
       }}
     >
-      <Box pt="xl" pb="5xl" gap="2xl">
-        <ExploreEntry
-          openSearch={vm.openSearch}
+      {/* `xl` top clears the sheet's rounded corners when the tiles scroll under them. */}
+      <Box pt="xl" pb="5xl" gap="xl">
+        <CategoryTiles
           categories={vm.categories}
           categoriesLoading={vm.categoriesLoading}
           openCategory={vm.openCategory}
@@ -90,6 +90,15 @@ const BrandHomeScreenComponent: React.FC = () => {
           contactSupport={vm.contactSupport}
           openRail={vm.openRail}
           browseAll={vm.browseAll}
+          wallet={
+            <WalletStrip
+              hero={vm.hero}
+              hidden={vm.hidden}
+              onToggleHidden={vm.toggleHidden}
+              onOpenWallet={vm.openWallet}
+              onTopUp={vm.openTopUp}
+            />
+          }
         />
       </Box>
     </Layout>

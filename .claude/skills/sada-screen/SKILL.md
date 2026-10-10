@@ -12,7 +12,7 @@ Mandatory companions: rule 09 (screen playbook), rule 08 (brand), rule 02 (desig
 
 1. Restate the screen's job in one sentence: who is the user, what do they finish here.
 2. Find the owning domain (rule 01) and the API endpoints (`domains/<x>/api`). Missing backend behaviour → list it as a question, don't invent it.
-3. Open the reference implementation for the closest archetype (rule 09 §2) and skim its `.tsx` + `hooks/`. Copy its structure, not just its look.
+3. Open the reference implementation for the closest archetype (rule 09 §2) and skim its `.tsx` + `hooks/`. Reuse its code structure; the look follows the design intent (Phase 2 step 0), not the reference screen.
 4. Inventory reusable parts before planning anything new:
    `src/shared/ui/index.ts` (UI kit), `src/core/hooks/index.ts`, `src/shared/utils`, the domain's `components/`, `hooks/`, `schemas/`, `constants/`.
 
@@ -20,6 +20,7 @@ Mandatory companions: rule 09 (screen playbook), rule 08 (brand), rule 02 (desig
 
 Present to the user, in this order:
 
+0. **Design intent** (one line): the hero element, the feeling (calm/trust vs lively/social), one reference pattern (e.g. Airbnb listing cards, Instagram profile). Rule 09 §3.2 appeal bar applies.
 1. **Archetype** from rule 09 §2 and why.
 2. **ASCII mockup**, RTL (Arabic) orientation, showing hero vs sheet, every field, the one primary CTA, secondary actions. Example:
    ```
@@ -101,11 +102,12 @@ Order matters — lower layers first so screens only compose:
 1. `npx tsc --noEmit && npm run lint && npm test` — all green, no disabled lint rules.
 2. Self-review each item, fix before reporting:
    - [ ] matches the approved visual preview (spacing, hierarchy, colors, copy)
+   - [ ] appeal bar (rule 09 §3.2): one focal point, media leads on people content, ≤ 2 badges, ≤ 3 lines, money not the largest element on discovery screens
    - [ ] one primary CTA; others secondary/ghost/link
    - [ ] only tokens (no hex, no raw numbers except `moderateScale` constants), RTL-safe props, directional icons flip
    - [ ] every pressable: role + i18n label, ≥ 44pt
    - [ ] all states from rule 09 §4 present
-   - [ ] hero ≤ ~25% of screen (≤ ~40% on dashboard/money tab roots), compact via `useHeroCompact()` with keyboard open / short screens; hero shows only real data
+   - [ ] hero ≤ ~25% of screen (≤ ~40% on dashboard/money tab roots, ≤ ~25% discover home), compact via `useHeroCompact()` with keyboard open / short screens; hero shows only real data
    - [ ] cards borderless (`Card` defaults); live elements only where rule 09 §3.1 allows; no extra loops
    - [ ] submit never disabled for invalidity; double-submit guarded; toasts truthful
    - [ ] `.tsx` has no logic; hook callbacks memoised; no inline styles

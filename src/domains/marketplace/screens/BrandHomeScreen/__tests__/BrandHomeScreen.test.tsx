@@ -32,7 +32,7 @@ jest.mock('@/core/theme', () => {
     }),
     useStyles: () => tokens,
     moderateScale: (n: number) => n,
-    iconStroke: { regular: 2 },
+    iconStroke: { regular: 2, bold: 2.5 },
     motion: { duration: { base: 250 }, spring: {} },
   };
 });
@@ -92,9 +92,12 @@ jest.mock('@/shared/ui', () => {
     Box: stub('Box'),
     Card: stub('Card'),
     Chip: stub('Chip'),
+    ChipRow: stub('ChipRow'),
     CustomButton: stub('CustomButton'),
     EmptyState: stub('EmptyState'),
+    GradientSurface: stub('GradientSurface'),
     IconButton: stub('IconButton'),
+    Image: stub('Image'),
     Layout,
     LiveIsland: stub('LiveIsland'),
     MoneyText: stub('MoneyText'),
@@ -116,6 +119,12 @@ const mockModel: { current: BrandHomeScreenModel | null } = { current: null };
 jest.mock('../hooks/useBrandHomeScreen', () => ({
   useBrandHomeScreen: () => mockModel.current,
 }));
+
+const mockIcon = (name: string) => {
+  const Icon = () => null;
+  Icon.displayName = name;
+  return Icon as unknown as BrandHomeScreenModel['categories'][number]['icon'];
+};
 
 const isHost = (type: string) => (node: ReactTestInstance) => node.type === type;
 
@@ -152,6 +161,7 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
       available: { amount: 125000, currency: 'USD' },
       availableSypApprox: { amount: 18750000, currency: 'SYP' },
     },
+    canTopUp: false,
   },
   island: null,
   hidden: false,
@@ -179,13 +189,14 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
   openNotifications: jest.fn(),
   openShortlist: jest.fn(),
   openWallet: jest.fn(),
+  openTopUp: jest.fn(),
   openCreator: jest.fn(),
   toggleShortlist: jest.fn(),
   contactSupport: jest.fn(),
   openSearch: jest.fn(),
   categories: [
-    { value: 'food', label: 'Food' },
-    { value: 'fashion', label: 'Fashion' },
+    { value: 'restaurants', label: 'Food', icon: mockIcon('Utensils') },
+    { value: 'fashion', label: 'Fashion', icon: mockIcon('Shirt') },
   ],
   categoriesLoading: false,
   openCategory: jest.fn(),
@@ -217,7 +228,7 @@ const textOf = (node: ReactTestInstance): string =>
     .join('|');
 
 describe('BrandHomeScreen — chrome', () => {
-  it('is a dashboard: lit navy hero under a transparent overlay header', () => {
+  it('is a discover home: lit navy band under a transparent overlay header', () => {
     const { root } = render();
     const layout = root.find(isHost('Layout'));
     expect(layout.props.headerBehavior).toBe('overlay');
@@ -237,28 +248,44 @@ describe('BrandHomeScreen — chrome', () => {
 });
 
 describe('BrandHomeScreen — hero', () => {
-  it('greets, names the company and its governorate, and opens the account', () => {
+  it('greets, names the company and opens the account', () => {
     const { root, vm } = render();
     const text = textOf(root);
     expect(text).toContain('marketplace.creatorHome.greetingTime.morning');
     expect(text).toContain('Al Noor');
-    expect(text).toContain('Damascus');
     byLabel(root, 'marketplace.brandHome.openProfile:{"name":"Al Noor"}')?.props.onPress();
     expect(vm.openProfile).toHaveBeenCalled();
   });
 
-  it('rolls the balance up once with ≈ SYP under it, and opens the wallet', () => {
+  it('keeps the wallet out of the band: it sits between the rails', () => {
+    const { root } = render();
+    // The Layout stub renders the hero first, then the body.
+    const [hero] = root.find(isHost('Layout')).children;
+    if (!hero || typeof hero === 'string') throw new Error('hero missing');
+    expect(byLabel(hero, 'marketplace.brandHome.wallet.open')).toBeUndefined();
+    expect(byLabel(root, 'marketplace.brandHome.wallet.open')).toBeDefined();
+  });
+
+  it('rolls the balance up once in the wallet card, and opens the wallet', () => {
     const { root, vm } = render();
-    const [usd, syp] = root.findAll(isHost('MoneyText'));
+    const usd = root.findAll(isHost('MoneyText')).find(n => n.props.value.amount === 125000);
     expect(usd?.props).toMatchObject({ value: { amount: 125000, currency: 'USD' }, animated: true, hidden: false });
-    expect(syp?.props).toMatchObject({ value: { amount: 18750000, currency: 'SYP' }, estimate: true });
+    // One amount: the ≈ SYP line stays on the wallet tab.
+    expect(root.findAll(isHost('MoneyText')).some(n => n.props.value.amount === 18750000)).toBe(false);
     byLabel(root, 'marketplace.brandHome.wallet.open')?.props.onPress();
     expect(vm.openWallet).toHaveBeenCalled();
   });
 
+  it('offers ＋ top-up only when /me allows it', () => {
+    expect(byLabel(render().root, 'finance.wallet.deposit')).toBeUndefined();
+    const { root, vm } = render({ hero: { ...model().hero, canTopUp: true } });
+    byLabel(root, 'finance.wallet.deposit')?.props.onPress();
+    expect(vm.openTopUp).toHaveBeenCalled();
+  });
+
   it('masks the balance and drops the SYP line when amounts are hidden', () => {
     const { root, vm } = render({ hidden: true });
-    // Hero amounts only: the rail cards show prices too.
+    // Wallet amounts only: the rail cards show prices too.
     const amounts = root
       .findAll(isHost('MoneyText'))
       .filter(n => n.props.value.amount === 125000 || n.props.value.currency === 'SYP');
@@ -281,7 +308,9 @@ describe('BrandHomeScreen — hero', () => {
       },
     });
     const island = root.find(isHost('LiveIsland'));
-    expect(island.props).toMatchObject({ title: 'Verify your account', message: 'See prices', tone: 'warning' });
+    // One line in the band: the title only.
+    expect(island.props).toMatchObject({ title: 'Verify your account', tone: 'warning' });
+    expect(island.props.message).toBeUndefined();
     island.props.onPress();
     expect(onPress).toHaveBeenCalled();
   });
@@ -293,7 +322,7 @@ describe('BrandHomeScreen — hero', () => {
 });
 
 describe('BrandHomeScreen — rails', () => {
-  it('renders each rail with its compact cards', () => {
+  it('renders each rail with its photo-first cards', () => {
     const { root } = render();
     expect(root.findAll(isHost('SectionHeader')).map(n => n.props.title)).toEqual(['Near you', 'New on Sada']);
     expect(root.findAll(isHost('Card')).filter(n => n.props.onPress)).toHaveLength(3);
@@ -340,10 +369,12 @@ describe('BrandHomeScreen — Explore entry', () => {
     expect(vm.openSearch).toHaveBeenCalled();
   });
 
-  it('opens Explore prefilled from a category chip', () => {
+  it('opens Explore prefilled from a category tile', () => {
     const { root, vm } = render();
     const chips = root.findAll(isHost('Chip'));
     expect(chips.map(chip => chip.props.label)).toEqual(['Food', 'Fashion']);
+    expect(chips.every(chip => chip.props.variant === 'tile')).toBe(true);
+    expect(chips[0]?.props.icon.displayName).toBe('Utensils');
     chips[1]?.props.onSelect('fashion');
     expect(vm.openCategory).toHaveBeenCalledWith('fashion');
   });

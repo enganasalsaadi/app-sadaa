@@ -2311,7 +2311,8 @@
       "filterAll": "All time",
       "filterSet": "This month",
       "filterClear": "Clear date",
-      "rowTitle": "ChipRow (pinned filter row, scrolls sideways)"
+      "rowTitle": "ChipRow (pinned filter row, scrolls sideways)",
+      "tileTitle": "Chip tile (discovery shortcuts: soft pill + icon)"
     },
     "otp": {
       "hint": "Enter 123456 for success; any other code shakes.",

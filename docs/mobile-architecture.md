@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-10 |
+| **Last updated** | 2026-10-11 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -329,15 +329,16 @@ APP LAUNCH
     │           · collaboration terms · Share
     │           └── Media kit settings (gear in the header)          🟡 built, awaiting device and live-server testing
     │                 link name with a live availability check · show / hide from brands
-    ├── Home (brand) dashboard                                   🟡 built, awaiting device and live-server testing
-    │     navy hero: greeting (beside the bell) · company + city
-    │       · glass wallet strip: available balance (+ ≈ Syrian pounds) → Wallet, eye hides it
-    │       · live island: the one blocker the service picks (verify, under review,
-    │         rejected, finish profile) → verification or company info
-    │     · search field + category chips → Explore
+    ├── Home (brand) discover home                               🟡 built, awaiting device and live-server testing
+    │     slim navy band: greeting + company beside ❤️ and the bell
+    │       · search field → Explore
+    │       · live island (one line): the one blocker the service picks (verify,
+    │         under review, rejected, finish profile) → verification or company info
+    │     · category tiles with icons → Explore filtered
     │     · creator rails from the service (near you · verified · fast delivery · new
-    │       · recently viewed) with "See all" → Explore: swipeable compact cards with
-    │       ❤️ save · help card (WhatsApp)
+    │       · recently viewed) with "See all" → Explore: swipeable photo cards with
+    │       ❤️ save · wallet card after the first row (balance → Wallet, eye
+    │       hides it, + → top-up when allowed) · help card (WhatsApp)
     │     · ❤️ beside the bell → Shortlist
     │     scrolled: navy bar pinned with the company, the ❤️ and the bell
     │     ├── Explore (search, filters, sort)                     🟡 built, awaiting device and live-server testing
@@ -455,11 +456,11 @@ APP LAUNCH
 - **Brands** have their own Home (Journey A4b).
 
 #### Journey A4b: The brand Home 🟡
-- **Hero:** a greeting, the company name and its city, then a glass wallet strip with the balance available for campaigns and its rough value in Syrian pounds (left out when today's rate is out of date). The balance rolls up once when it first shows; tapping the strip opens the Wallet. The eye hides every amount and shares its choice with the Wallet tab. Under it, a live island with a pulsing dot shows the one thing the service says the brand should do next (verify the business, wait for review, fix a rejected request, finish the company profile), and opens the right page.
-- **Creator rails:** the service sends a few rows, such as "Near you", "Verified", "Fast delivery", "New on Sada" and "Recently viewed". Empty rows are never shown. Each row swipes sideways and settles card by card. A card shows the photo, name with verified mark, tier, platform and follower count (with a check when the count is verified), a "New" label, and the starting price. Brands that can't see prices yet see a lock and a short reason instead ("Verify to see price", "Price after verification", and so on). Tapping a card opens the creator's public profile, and that open counts as a view from search.
+- **Header band:** kept slim so creators start high on the screen, with no money in it. One row holds a greeting with the company name. Below the row sits the search field, then, when there is one, a one-line live island with a pulsing dot showing the one thing the service says the brand should do next (verify the business, wait for review, fix a rejected request, finish the company profile); it opens the right page. When the keyboard is open or the screen is short, the band shrinks to the single row.
+- **Creator rails:** the service sends a few rows, such as "Near you", "Verified", "Fast delivery", "New on Sada" and "Recently viewed". Empty rows are never shown. Each row swipes sideways and settles card by card. Cards lead with a large portrait photo (a big initial on a soft navy tile when there is none); on the photo sit the tier, platform and follower count (with a check when the count is verified), a "New" label and the ❤️. Under it: the name with the verified mark, city and main niche, and the starting price in large type with its rough value in Syrian pounds beneath. Brands that can't see prices yet see a lock and a short reason instead ("Verify to see price", "Price after verification", and so on). Tapping a card opens the creator's public profile, and that open counts as a view from search.
 - **Save (❤️):** the heart fills at once and pops; if the service refuses (for example the 200-creator limit), it springs back and a message explains why. A creator saved in one row shows as saved everywhere.
 - **Help:** a card at the end opens Sada support on WhatsApp. It is hidden when the service sends no support link, and it never appears inside a deal (deal talk stays in the app).
-- **Find creators:** under the hero, a search field opens Explore with the keyboard ready, and the service's category chips (restaurants, fashion, tech…) open Explore already filtered. Rows the service gives a "See all" for open Explore with that row's filters.
+- **Find creators:** the search field in the band opens Explore with the keyboard ready, and under the band the service's categories show as soft rounded tiles with an icon each (restaurants, fashion, electronics, beauty, services; any new category gets a sparkle icon), all in the same calm teal tint, opening Explore already filtered. Rows the service gives a "See all" for open Explore with that row's filters.
 - **Loading and errors:** skeleton rows hold the space while Home loads; a failure shows a banner with Retry; if every row is empty, a note invites the brand to explore all creators. Pulling down refreshes. Because each Home visit counts as an impression for the creators shown, the app asks the service again on return only when the page is more than two minutes old.
 - **Saved creators:** a ❤️ beside the bell opens the Shortlist (Journey A4d).
 
@@ -715,7 +716,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - 🟡 Verify identity (creators) or the business (brands, four ways: company document, owner's ID or passport, social page proof, domain email) at registration or later from the Profile: built, awaiting testing.
 - 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
 - 🟡 Creator Home dashboard with the shareable media kit, its insights page (7 / 30 / 90 days), the "preview as brands see it" page and the link and visibility settings: built, awaiting testing.
-- 🟡 Brand Home dashboard: wallet strip, the next step to take, search and categories, creator rails with save (❤️) and a help card: built, awaiting testing.
+- 🟡 Brand Home (discover home): slim band with search, the next step to take, category tiles, photo-first creator rails with save (❤️), a wallet card between the rails and a help card: built, awaiting testing.
 - 🟡 Explore: search, filters, sort and price locks for unverified brands: built, awaiting testing.
 - 🟡 Shortlist of saved creators (❤️ in the Home header, remove with Undo, 200 max): built, awaiting testing.
 - 🟡 Opening a creator's shared link inside the app (their public profile, with a counted view, prices locked with the next step for anyone who isn't a verified brand): built, awaiting testing. Web links need Sada's permanent public web address and the app's identity registered with it.
@@ -768,6 +769,8 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-11 | Brand Home after first device look: the wallet left the header band and became a slim navy card after the first creator row (balance, eye, + to top up when allowed), so the band holds only the greeting, search and next step. Creator card shadows no longer end in a hard dark line, category tiles no longer slide over the rounded sheet corners, and the moving lights in the navy headers now rest when their tab is in the background or scrolled away, so scrolling stays smooth and the phone runs cooler. | 5.2, 5.3 (Journey A4b), 7.3 |
+| 2026-10-11 | Brand Home redesigned as a discover home (🟡 awaiting device testing), so it reads as a place to find creators rather than a bank statement. The navy band is slim: greeting and company beside a small wallet pill (balance, eye, and + to top up when the service allows it) and the search field; the next-step island is one line. Categories became soft rounded tiles with icons. Creator cards now lead with a large portrait photo (a big initial when there is none) with tier and followers on the photo, then name, city and a large starting price with Syrian pounds beneath; Explore and Shortlist rows show the photo beside the details. Colours, fonts and corners unchanged. | 5.2, 5.3 (Journey A4b), 7.3 |
 | 2026-10-10 | Wallet v4 data connected (🟡 awaiting live-server testing): month line, escrow and top-up tiles, the live escrow card, the monthly chart, names and status labels on lines now read the service. A brand's disputed escrow hold shows a red "disputed" label; a creator's deal payment receipt shows the full deal amount and Sada's commission with its rate. | 5.3 (wallet journey), 7.4 |
 | 2026-10-10 | Brand Home, Explore and Shortlist wrapped up (🟡 awaiting device and live-server testing): the creator's insights page now also counts appearances in brands' search results (shown once the service reports it), and a profile opened from Explore, Home or the Shortlist is counted as a view from search. Arabic and English texts complete for all three screens. | 5.2, 5.3 (Journey A4) |
 | 2026-10-10 | Creator public profile price lock (🟡 awaiting device and live-server testing): viewers who aren't verified brands see each price with a lock instead of the amount (what it offers stays visible) and a bottom bar with the reason and one step: verify, review verification, complete company profile, sign in, or just the explanation while in review or for creators. A profile seen while locked is never reused after verification. | 4.5, 5.2, 5.3 (Journey A5), 7.3 |

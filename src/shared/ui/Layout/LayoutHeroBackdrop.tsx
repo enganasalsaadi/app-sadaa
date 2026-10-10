@@ -1,6 +1,12 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedStyle,
+  type SharedValue,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
+import { NavigationContext } from '@react-navigation/native';
 import { GlowOrbs } from '../GlowOrbs';
 import { GradientSurface } from '../GradientSurface';
 
@@ -13,6 +19,36 @@ interface LayoutHeroBackdropProps {
   /** Live hero: darker gradient + drifting lights on their own layer (they follow the hero but never stretch with the pull). */
   glow: boolean;
 }
+
+/**
+ * Tab roots stay mounted, so without this every visited Home / Wallet / Profile would keep
+ * redrawing its lights: they rest while the screen is blurred or the hero is scrolled away.
+ */
+const useLightsPaused = (scrollY: SharedValue<number>, height: number, glow: boolean) => {
+  const navigation = useContext(NavigationContext);
+  const [blurred, setBlurred] = useState(() => navigation?.isFocused() === false);
+  const [scrolledAway, setScrolledAway] = useState(false);
+
+  useEffect(() => {
+    if (!navigation || !glow) return undefined;
+    const offFocus = navigation.addListener('focus', () => setBlurred(false));
+    const offBlur = navigation.addListener('blur', () => setBlurred(true));
+    return () => {
+      offFocus();
+      offBlur();
+    };
+  }, [glow, navigation]);
+
+  useAnimatedReaction(
+    () => glow && height > 0 && scrollY.value > height,
+    (away, previous) => {
+      if (away !== previous) scheduleOnRN(setScrolledAway, away);
+    },
+    [glow, height],
+  );
+
+  return blurred || scrolledAway;
+};
 
 /**
  * Navy gradient behind a transparent hero. It sits behind the scroll view so the iOS
@@ -39,6 +75,7 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
     [parallax],
   );
   const sizeStyle = useMemo(() => ({ height }), [height]);
+  const lightsPaused = useLightsPaused(scrollY, height, glow);
 
   if (height <= 0) return null;
 
@@ -49,7 +86,7 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
       </Animated.View>
       {glow ? (
         <Animated.View pointerEvents="none" style={[styles.backdrop, sizeStyle, glowStyle]}>
-          <GlowOrbs />
+          <GlowOrbs paused={lightsPaused} />
         </Animated.View>
       ) : null}
     </>

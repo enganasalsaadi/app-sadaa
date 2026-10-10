@@ -7,7 +7,7 @@ paths:
 
 # 08 — Brand Identity (Navy Trust)
 
-Sada sells *trust in escrowed money* first, social energy second. Raw hexes, contrast ratios, logo geometry, tab bar spec, native assets: **08b** (loads with theme tokens / logo / native files). Components consume semantic tokens only (rule 02).
+Sada sells **trust** on money and deal screens, **social energy** on discovery screens (Brand Home, Explore, creator profiles): people and their content lead there, money shrinks to one slim card between them. Same colors, type and radii either way. Raw hexes, contrast ratios, logo geometry, tab bar spec, native assets: **08b** (loads with theme tokens / logo / native files). Components consume semantic tokens only (rule 02).
 
 ## Color roles — one job each
 
@@ -51,7 +51,9 @@ Default follow system (`useColorScheme`); user override light|dark|system in MMK
 
 ## Shape
 
-- Radii: `xs` 4 skeleton lines, checkbox · `sm` 10 tags, small badges on media · `md` 15 buttons, inputs, chips-as-fields, 44pt icon tiles, rows inside cards · `lg` 22 cards, glass cards, KPI strip, toasts · `xl` 28 sheet top corners, hero → body seam, modals · `full` avatars, status pills, live island. CTAs stay `md`, never pills.
+- Radii: `xs` 4 skeleton lines, checkbox · `sm` 10 tags, small badges on media · `md` 15 buttons, inputs, chips-as-fields (`Chip` default `outline`), 44pt icon tiles, rows inside cards · `lg` 22 cards, glass cards, KPI strip, toasts · `xl` 28 sheet top corners, hero → body seam, modals · `full` avatars, status pills, live island, `Chip variant="tile"`. CTAs stay `md`, never pills.
+- **Chip variants:** `outline` (default) = filters/fields in forms and Explore. `tile` = discovery shortcuts (category rows): `interactive.soft` fill, no border, teal icon + label, radius `full`; selected = `button.primary` fill. **One tint for every category** — never a color per niche (rejected v3).
+- **Creator media:** creator cards lead with a 4:5 photo (`resizeMode="cover"`, top radius `lg`); no photo → monogram initials on `brand.soft` in `brand.text`. Stats over a photo sit on an `overlay` pill (radius `sm`, `text.onBrand`).
 - **Cards have no border.** `Card` = `surface.main` + shadow `card` (soft navy) + 1px `border.card`. `selected` card keeps teal border. Dividers inside cards `border.default`.
 - Shadows `none · sm · md · card · lg`, navy-tinted in light: `card` content cards · `sm`/`md` small floating parts (FAB, chips over media) · `lg` sheets + tab bar.
 

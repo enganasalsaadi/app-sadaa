@@ -8,6 +8,7 @@ import {
   useReducedMotion,
   useSharedValue,
   withRepeat,
+  withSequence,
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
@@ -73,8 +74,10 @@ const Light = memo<LightProps>(({ def, color, width, height, isRTL, phase }) => 
  * teal-family lights that drift very slowly, one of the three allowed loops (rule 09
  * §3.1). No outlines or shapes. Reduced motion holds them still. Fills its parent,
  * draws nothing until measured, never takes touches. Belongs over navy only.
+ * `paused` freezes them in place: every frame redraws the canvas, so a hero that is off
+ * screen or on a tab in the background must not keep the GPU busy.
  */
-const GlowOrbsComponent: React.FC = () => {
+const GlowOrbsComponent: React.FC<{ paused?: boolean }> = ({ paused = false }) => {
   const { colors, isRTL } = useTheme();
   const reduceMotion = useReducedMotion();
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -83,18 +86,18 @@ const GlowOrbsComponent: React.FC = () => {
   const highlight = useSharedValue(0);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || paused) return;
     const phases = [end, start, highlight];
     phases.forEach((phase, index) => {
-      const pace = LIGHTS[index]?.pace ?? 1;
-      phase.value = withRepeat(
-        withTiming(1, { duration: motion.loop.heroDrift * pace, easing: EASE }),
-        -1,
-        true,
+      const leg = motion.loop.heroDrift * (LIGHTS[index]?.pace ?? 1);
+      // Resumes where a pause left it: back to the start at the same pace, then the drift.
+      phase.value = withSequence(
+        withTiming(0, { duration: leg * phase.value, easing: EASE }),
+        withRepeat(withTiming(1, { duration: leg, easing: EASE }), -1, true),
       );
     });
     return () => phases.forEach(phase => cancelAnimation(phase));
-  }, [end, highlight, reduceMotion, start]);
+  }, [end, highlight, paused, reduceMotion, start]);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;

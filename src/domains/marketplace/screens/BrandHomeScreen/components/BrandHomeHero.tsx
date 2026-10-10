@@ -1,102 +1,84 @@
 import React, { memo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { MapPin } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
-import { Box, LiveIsland, Pressable, Skeleton, Text, useHeroCompact } from '@/shared/ui';
+import { Box, LiveIsland, Pressable, SearchBar, Skeleton, Text, useHeroCompact } from '@/shared/ui';
 import type { BrandHomeScreenModel } from '../hooks/useBrandHomeScreen';
-import { CompanyMark } from './CompanyMark';
-import { HeroWalletCard } from './HeroWalletCard';
 
-const SKELETON_NAME = '50%';
+const SKELETON_NAME = '70%';
+/** The header's ♡ + 🔔 sit over the hero row's reading end. */
+const HEADER_ACTIONS = 2;
+const noop = () => undefined;
 
 type Hero = BrandHomeScreenModel['hero'];
 type Island = NonNullable<BrandHomeScreenModel['island']>;
 
 interface BrandHomeHeroProps {
   hero: Hero;
-  /** The one blocker the server picked, as the hero's live island (rule 09 §3.1). */
+  /** The one blocker the server picked, as a one-line live island (rule 09 §3.1). */
   island: Island | null;
-  hidden: boolean;
-  onToggleHidden: () => void;
-  onOpenWallet: () => void;
   onOpenProfile: () => void;
+  onOpenSearch: () => void;
 }
 
-const Identity = memo<{ hero: Hero; compact: boolean; onOpenProfile: () => void }>(
-  ({ hero, compact, onOpenProfile }) => {
-    const { t } = useTranslation();
-    const { colors, sizes, typography } = useTheme();
-    const styles = useStyles(() => ({ shrink: { flexShrink: 1 } }));
-    const nameVariant = compact ? 'title' : 'h3';
-    const nameLoading = hero.status === 'loading';
+const Identity = memo<{ hero: Hero; onOpenProfile: () => void }>(({ hero, onOpenProfile }) => {
+  const { t } = useTranslation();
+  const { colors, typography } = useTheme();
 
-    return (
-      <Pressable
-        row
-        align="center"
-        gap={compact ? 'md' : 'lg'}
-        onPress={onOpenProfile}
-        accessibilityRole="button"
-        accessibilityLabel={t('marketplace.brandHome.openProfile', { name: hero.companyName })}
-      >
-        <CompanyMark size={compact ? sizes.avatar.sm : sizes.iconButton.md} />
-        <Box flex={1} gap="xs">
-          {nameLoading ? (
-            <Skeleton
-              width={SKELETON_NAME}
-              height={typography[nameVariant].lineHeight}
-              borderRadius="xs"
-              surface="brand"
-            />
-          ) : (
-            <Text variant={nameVariant} color={colors.text.onBrand} numberOfLines={1}>
-              {hero.companyName}
-            </Text>
-          )}
-          {hero.governorate && !compact ? (
-            <Box row align="center" gap="xs">
-              <MapPin size={sizes.icon.xs} color={colors.text.onBrandMuted} />
-              <Box style={styles.shrink}>
-                <Text variant="caption" color={colors.text.onBrandMuted} numberOfLines={1}>
-                  {hero.governorate}
-                </Text>
-              </Box>
-            </Box>
-          ) : null}
-        </Box>
-      </Pressable>
-    );
-  },
-);
+  return (
+    <Pressable
+      flex={1}
+      justify="center"
+      onPress={onOpenProfile}
+      accessibilityRole="button"
+      accessibilityLabel={t('marketplace.brandHome.openProfile', { name: hero.companyName })}
+    >
+      <Text variant="caption" color={colors.text.onBrandMuted} numberOfLines={1}>
+        {hero.greeting}
+      </Text>
+      {hero.status === 'loading' ? (
+        <Skeleton
+          width={SKELETON_NAME}
+          height={typography.title.lineHeight}
+          borderRadius="xs"
+          surface="brand"
+        />
+      ) : (
+        <Text variant="title" color={colors.text.onBrand} numberOfLines={1}>
+          {hero.companyName}
+        </Text>
+      )}
+    </Pressable>
+  );
+});
 
-const HeroIsland = memo<{ island: Island; compact: boolean }>(({ island, compact }) => (
-  <LiveIsland
-    key={island.key}
-    title={island.title}
-    message={compact ? undefined : island.message}
-    tone={island.tone}
-    onPress={island.onPress}
-    accessibilityHint={island.hint}
-  />
-));
+/** Looks like a search field; the real one lives on Explore and opens with the keyboard up. */
+const SearchEntry = memo<{ onOpenSearch: () => void }>(({ onOpenSearch }) => {
+  const { t } = useTranslation();
+  const placeholder = t('marketplace.explore.searchPlaceholder');
+  return (
+    <Pressable onPress={onOpenSearch} scaleOnPress accessibilityRole="search" accessibilityLabel={placeholder}>
+      <Box pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <SearchBar value="" onChangeText={noop} placeholder={placeholder} />
+      </Box>
+    </Pressable>
+  );
+});
 
 /**
- * Brand greeting band, transparent: Layout paints the gradient and lights behind it
- * (`heroBackdrop="brandGlow"`). The greeting owns the header row next to the bell; below it
- * the company and its governorate, the glass wallet strip and the server's one blocker as a
- * live island. Compact (keyboard / short screens): identity beside the bell, one-line wallet,
- * island title only.
+ * Discover-home band (rule 09), transparent: Layout paints the gradient and lights behind it
+ * (`heroBackdrop="brandGlow"`). One row holds the greeting + company, clear of the
+ * header's ♡ and 🔔 (the wallet sits between the rails); the search field and the server's one blocker (title only)
+ * sit under it, so creators start high on the screen. Compact (keyboard / short screens):
+ * the row alone.
  */
 const BrandHomeHeroComponent: React.FC<BrandHomeHeroProps> = ({
   hero,
   island,
-  hidden,
-  onToggleHidden,
-  onOpenWallet,
   onOpenProfile,
+  onOpenSearch,
 }) => {
-  const { colors, sizes } = useTheme();
+  const { sizes } = useTheme();
   const { top } = useSafeAreaInsets();
   const compact = useHeroCompact();
 
@@ -104,44 +86,29 @@ const BrandHomeHeroComponent: React.FC<BrandHomeHeroProps> = ({
     ({ spacing }) => ({
       // Same top as the overlay ScreenHeader's icon row.
       container: { paddingTop: top + spacing.sm },
-      // Clears the bell at the reading end of the header row.
-      headerRow: { minHeight: sizes.iconButton.md, paddingEnd: sizes.iconButton.md + spacing.sm },
+      headerRow: {
+        minHeight: sizes.iconButton.md,
+        paddingEnd: HEADER_ACTIONS * sizes.iconButton.md + spacing.xs,
+      },
     }),
     [top, sizes.iconButton.md],
   );
 
-  const wallet = (
-    <HeroWalletCard
-      hero={hero}
-      hidden={hidden}
-      compact={compact}
-      onToggleHidden={onToggleHidden}
-      onOpenWallet={onOpenWallet}
-    />
-  );
-
-  if (compact) {
-    return (
-      <Box style={styles.container} px="xl" pb="4xl" gap="md">
-        <Box justify="center" style={styles.headerRow}>
-          <Identity hero={hero} compact onOpenProfile={onOpenProfile} />
-        </Box>
-        {island ? <HeroIsland island={island} compact /> : null}
-        {wallet}
-      </Box>
-    );
-  }
-
   return (
-    <Box style={styles.container} px="xl" pb="4xl" gap="lg">
-      <Box justify="center" style={styles.headerRow}>
-        <Text variant="body" color={colors.text.onBrandMuted} numberOfLines={1}>
-          {hero.greeting}
-        </Text>
+    <Box style={styles.container} px="xl" pb="4xl" gap="md">
+      <Box row align="center" gap="md" style={styles.headerRow}>
+        <Identity hero={hero} onOpenProfile={onOpenProfile} />
       </Box>
-      <Identity hero={hero} compact={false} onOpenProfile={onOpenProfile} />
-      {wallet}
-      {island ? <HeroIsland island={island} compact={false} /> : null}
+      {compact ? null : <SearchEntry onOpenSearch={onOpenSearch} />}
+      {island && !compact ? (
+        <LiveIsland
+          key={island.key}
+          title={island.title}
+          tone={island.tone}
+          onPress={island.onPress}
+          accessibilityHint={island.hint}
+        />
+      ) : null}
     </Box>
   );
 };

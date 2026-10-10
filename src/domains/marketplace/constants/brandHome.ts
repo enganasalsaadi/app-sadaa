@@ -1,3 +1,11 @@
+import {
+  Briefcase,
+  Shirt,
+  Smartphone,
+  Sparkles,
+  Utensils,
+  type LucideIcon,
+} from 'lucide-react-native';
 import type { SettingsStackParamList } from '@/core/navigation';
 import type { LiveIslandTone } from '@/shared/ui';
 import type { BrandHomeIslandType } from '../types/explore';
@@ -15,3 +23,17 @@ export const BRAND_HOME_ISLAND = {
   BrandHomeIslandType,
   { tone: LiveIslandTone; screen: keyof SettingsStackParamList }
 >;
+
+/**
+ * Category tile icons by `/explore/filters` category value. The server owns the list, so an
+ * unknown or new category gets the fallback rather than breaking the row.
+ */
+const CATEGORY_ICON: Readonly<Record<string, LucideIcon>> = {
+  restaurants: Utensils,
+  fashion: Shirt,
+  electronics: Smartphone,
+  beauty: Sparkles,
+  services: Briefcase,
+};
+
+export const resolveCategoryIcon = (value: string): LucideIcon => CATEGORY_ICON[value] ?? Sparkles;

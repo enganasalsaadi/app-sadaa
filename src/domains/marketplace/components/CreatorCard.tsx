@@ -1,13 +1,13 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck, CircleCheck, Lock, MapPin, Zap } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
 import {
-  Avatar,
   Box,
   Card,
+  Image,
   MoneyText,
   SocialPlatformIcon,
   StatusPill,
@@ -19,7 +19,12 @@ import type { ExploreCreator } from '../types/explore';
 import { ShortlistHeart } from './ShortlistHeart';
 
 /** Home rail tile: two and a bit fit a phone, so the rail reads as swipeable. */
-export const CREATOR_RAIL_CARD_WIDTH = moderateScale(156);
+export const CREATOR_RAIL_CARD_WIDTH = moderateScale(168);
+/** Photos are 4:5 portraits (rule 08 creator media). */
+const PHOTO_RATIO = 5 / 4;
+export const CREATOR_RAIL_PHOTO_HEIGHT = Math.round(CREATOR_RAIL_CARD_WIDTH * PHOTO_RATIO);
+const ROW_PHOTO_WIDTH = moderateScale(88);
+const ROW_PHOTO_HEIGHT = Math.round(ROW_PHOTO_WIDTH * PHOTO_RATIO);
 const COMPACT: Intl.NumberFormatOptions = { notation: 'compact', maximumFractionDigits: 1 };
 const MAX_ROW_NICHES = 2;
 
@@ -39,12 +44,60 @@ export interface CreatorCardProps {
 
 type Part = { creator: ExploreCreator };
 
+/** First letter of the name, for the photo-less monogram. */
+const monogramOf = (name: string): string => Array.from(name.trim())[0] ?? '';
+
+/**
+ * The creator's photo, 4:5 and cropped to fill; no photo (or a broken one) → the monogram on
+ * `brand.soft`, so the card stays handsome either way.
+ */
+const CreatorPhoto = memo<Part & { variant: CreatorCardVariant }>(({ creator, variant }) => {
+  const { colors } = useTheme();
+  const [failed, setFailed] = useState(false);
+  const onError = useCallback(() => setFailed(true), []);
+  const rail = variant === 'rail';
+  // The rail photo fills the card inside its hairline border.
+  const width = rail ? '100%' : ROW_PHOTO_WIDTH;
+  const height = rail ? CREATOR_RAIL_PHOTO_HEIGHT : ROW_PHOTO_HEIGHT;
+  const showImage = !!creator.avatarUrl && !failed;
+
+  return (
+    <Box
+      width={width}
+      height={height}
+      align="center"
+      justify="center"
+      overflow="hidden"
+      bg={colors.brand.soft}
+      borderRadius={rail ? undefined : 'md'}
+      borderTopStartRadius={rail ? 'lg' : undefined}
+      borderTopEndRadius={rail ? 'lg' : undefined}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
+      {showImage ? (
+        <Image
+          uri={creator.avatarUrl ?? undefined}
+          width={width}
+          height={height}
+          resizeMode="cover"
+          onError={onError}
+        />
+      ) : (
+        <Text variant={rail ? 'h1' : 'h3'} color={colors.brand.text}>
+          {monogramOf(creator.displayName)}
+        </Text>
+      )}
+    </Box>
+  );
+});
+
 const CreatorName = memo<Part & { variant: CreatorCardVariant }>(({ creator, variant }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const styles = useStyles(() => ({ shrink: { flexShrink: 1 } }));
   return (
-    <Box row align="center" gap="xs" justify={variant === 'rail' ? 'center' : 'flex-start'}>
+    <Box row align="center" gap="xs">
       <Box style={styles.shrink}>
         <Text variant={variant === 'rail' ? 'bodyMedium' : 'title'} numberOfLines={1}>
           {creator.displayName}
@@ -86,31 +139,76 @@ const FollowerStat = memo<Part>(({ creator }) => {
   );
 });
 
-/** "From $40 (≈ 600,000 SYP)", or the 🔒 line for viewers who can't see prices yet. */
+/** Tier, platform and followers on a dark pill over the photo's bottom corner. */
+const MediaStats = memo<Part>(({ creator }) => {
+  const { t } = useTranslation();
+  const { colors, sizes } = useTheme();
+  const platform = creator.primaryPlatform;
+  if (!platform && !creator.tier) return null;
+  return (
+    <Box row align="center" gap="xs" px="sm" py="xs" borderRadius="sm" bg={colors.overlay}>
+      {creator.tier ? <TierBadge tier={creator.tier} size="xs" interactive={false} /> : null}
+      {platform && isSocialPlatform(platform.platform) ? (
+        <SocialPlatformIcon platform={platform.platform} size={sizes.icon.xs} color={colors.text.onBrand} />
+      ) : null}
+      {platform ? (
+        <Text variant="caption" color={colors.text.onBrand} numberOfLines={1}>
+          {formatNumber(platform.followerCount, COMPACT)}
+        </Text>
+      ) : null}
+      {platform?.followerCountVerified ? (
+        <CircleCheck
+          size={sizes.icon.xs}
+          color={colors.glass.iconInteractive}
+          accessibilityLabel={t('marketplace.creator.followersVerified')}
+        />
+      ) : null}
+    </Box>
+  );
+});
+
+/**
+ * Rail: "From" over a bold price with ≈ SYP muted under it. Row: one line, "From $40 ≈ SYP".
+ * Viewers who can't see prices yet get the 🔒 line instead.
+ */
 const PriceLine = memo<Part & { variant: CreatorCardVariant }>(({ creator, variant }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const { price } = creator;
-  const centered = variant === 'rail' ? 'center' : 'flex-start';
 
   if (price.locked) {
     return (
-      <Box row align="center" gap="xs" justify={centered}>
+      <Box row align="center" gap="xs">
         <Lock size={sizes.icon.xs} color={colors.icon.secondary} />
-        <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-          {t(price.lockReason ? PRICE_LOCK_LABEL[price.lockReason] : PRICE_LOCK_FALLBACK)}
-        </Text>
+        <Box flex={1}>
+          <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
+            {t(price.lockReason ? PRICE_LOCK_LABEL[price.lockReason] : PRICE_LOCK_FALLBACK)}
+          </Text>
+        </Box>
       </Box>
     );
   }
   if (!price.from) return null;
+  if (variant === 'rail') {
+    return (
+      <Box>
+        <Text variant="caption" color={colors.text.secondary}>
+          {t('marketplace.creator.priceFrom')}
+        </Text>
+        <MoneyText value={price.from} size="title" precision="currency" />
+        {price.fromSypApprox ? (
+          <MoneyText value={price.fromSypApprox} size="sm" tone="muted" estimate />
+        ) : null}
+      </Box>
+    );
+  }
   return (
-    <Box row align="center" gap="xs" justify={centered} wrap>
+    <Box row align="center" gap="xs" wrap>
       <Text variant="caption" color={colors.text.secondary}>
         {t('marketplace.creator.priceFrom')}
       </Text>
-      <MoneyText value={price.from} size="sm" />
-      {variant === 'row' && price.fromSypApprox ? (
+      <MoneyText value={price.from} size="md" />
+      {price.fromSypApprox ? (
         <MoneyText value={price.fromSypApprox} size="sm" tone="muted" estimate />
       ) : null}
     </Box>
@@ -146,17 +244,24 @@ const RowSignals = memo<Part>(({ creator }) => {
   );
 });
 
+/** City · first niche, one muted line. */
+const metaOf = (creator: ExploreCreator, niches: number): string =>
+  [creator.governorate?.label, ...creator.niches.slice(0, niches).map(n => n.label)]
+    .filter(Boolean)
+    .join(' · ');
+
 const RailBody = memo<Part>(({ creator }) => {
-  const { sizes } = useTheme();
+  const { colors } = useTheme();
+  const meta = metaOf(creator, 1);
   return (
-    <Box align="center" gap="sm">
-      <Avatar uri={creator.avatarUrl ?? undefined} size={sizes.avatar.lg} />
-      <Box alignSelf="stretch" gap="xs">
+    <Box flex={1} justify="space-between" gap="sm" p="md">
+      <Box gap="xs">
         <CreatorName creator={creator} variant="rail" />
-        <Box row align="center" justify="center" gap="xs">
-          {creator.tier ? <TierBadge tier={creator.tier} size="xs" interactive={false} /> : null}
-          <FollowerStat creator={creator} />
-        </Box>
+        {meta ? (
+          <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
+            {meta}
+          </Text>
+        ) : null}
       </Box>
       <PriceLine creator={creator} variant="rail" />
     </Box>
@@ -164,38 +269,35 @@ const RailBody = memo<Part>(({ creator }) => {
 });
 
 const RowBody = memo<Part>(({ creator }) => {
-  const { colors, sizes } = useTheme();
-  const meta = [creator.governorate?.label, ...creator.niches.slice(0, MAX_ROW_NICHES).map(n => n.label)]
-    .filter(Boolean)
-    .join(' · ');
+  const { colors } = useTheme();
+  const meta = metaOf(creator, MAX_ROW_NICHES);
   return (
-    <Box gap="sm">
+    <Box row gap="md">
+      <CreatorPhoto creator={creator} variant="row" />
       {/* Clears the ❤️ at the reading end. */}
-      <Box row align="center" gap="md" pe="3xl">
-        <Avatar uri={creator.avatarUrl ?? undefined} size={sizes.avatar.md} />
-        <Box flex={1} gap="xs">
-          <CreatorName creator={creator} variant="row" />
-          <Box row align="center" gap="sm">
-            {creator.tier ? <TierBadge tier={creator.tier} size="sm" interactive={false} /> : null}
-            {meta ? (
-              <Box flex={1}>
-                <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-                  {meta}
-                </Text>
-              </Box>
-            ) : null}
-          </Box>
+      <Box flex={1} gap="xs" pe="3xl">
+        <CreatorName creator={creator} variant="row" />
+        <Box row align="center" gap="sm">
+          {creator.tier ? <TierBadge tier={creator.tier} size="sm" interactive={false} /> : null}
+          {meta ? (
+            <Box flex={1}>
+              <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
+                {meta}
+              </Text>
+            </Box>
+          ) : null}
         </Box>
+        <RowSignals creator={creator} />
+        <PriceLine creator={creator} variant="row" />
       </Box>
-      <RowSignals creator={creator} />
-      <PriceLine creator={creator} variant="row" />
     </Box>
   );
 });
 
 /**
- * Creator result (handoff `CreatorCard`): Home rails (`rail`), Explore and Shortlist (`row`).
- * The ❤️ sits beside the card, not inside it, so screen readers reach both buttons.
+ * Creator result (handoff `CreatorCard`): Home rails (`rail`, photo-first 4:5 tile with the
+ * stats on the photo), Explore and Shortlist (`row`, photo beside the details). The ❤️ sits
+ * beside the card, not inside it, so screen readers reach both buttons.
  * List item — keep it memoised and pass stable handlers.
  */
 const CreatorCardComponent: React.FC<CreatorCardProps> = ({
@@ -209,6 +311,14 @@ const CreatorCardComponent: React.FC<CreatorCardProps> = ({
   const styles = useStyles(({ spacing }) => ({
     heart: { position: 'absolute' as const, top: spacing.xs, end: spacing.xs },
     corner: { position: 'absolute' as const, top: spacing.md, start: spacing.md },
+    // The rail photo runs edge to edge; its body pads itself.
+    flush: { padding: 0 },
+    stats: {
+      position: 'absolute' as const,
+      top: CREATOR_RAIL_PHOTO_HEIGHT - spacing.sm,
+      start: spacing.sm,
+      transform: [{ translateY: '-100%' as const }],
+    },
   }));
   const press = useCallback(() => onPress(creator), [creator, onPress]);
   const toggle = useCallback(() => onToggleShortlist?.(creator), [creator, onToggleShortlist]);
@@ -218,14 +328,19 @@ const CreatorCardComponent: React.FC<CreatorCardProps> = ({
     <Box width={rail ? CREATOR_RAIL_CARD_WIDTH : undefined}>
       <Card
         flex={rail ? 1 : undefined}
-        p={rail ? 'md' : 'lg'}
-        pt={rail ? 'lg' : undefined}
+        style={rail ? styles.flush : undefined}
         onPress={press}
         selected={selected}
         accessibilityLabel={creator.displayName}
       >
+        {rail ? <CreatorPhoto creator={creator} variant="rail" /> : null}
         {rail ? <RailBody creator={creator} /> : <RowBody creator={creator} />}
       </Card>
+      {rail ? (
+        <Box style={styles.stats} pointerEvents="none">
+          <MediaStats creator={creator} />
+        </Box>
+      ) : null}
       {rail && creator.badges.isNew ? (
         <Box style={styles.corner} pointerEvents="none">
           <StatusPill label={t('marketplace.creator.new')} tone="interactive" size="sm" />
@@ -233,7 +348,7 @@ const CreatorCardComponent: React.FC<CreatorCardProps> = ({
       ) : null}
       {onToggleShortlist ? (
         <Box style={styles.heart}>
-          <ShortlistHeart selected={creator.isShortlisted} onToggle={toggle} />
+          <ShortlistHeart selected={creator.isShortlisted} onToggle={toggle} onMedia={rail} />
         </Box>
       ) : null}
     </Box>

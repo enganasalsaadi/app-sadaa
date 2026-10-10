@@ -4,6 +4,9 @@ import { iconStroke, opacity, useTheme } from '@/core/theme';
 import { Text } from '../primitives/Text';
 import { Pressable } from '../primitives/Pressable';
 
+/** `outline` = filter / field chip · `tile` = discovery shortcut (soft teal pill, rule 08). */
+export type ChipVariant = 'outline' | 'tile';
+
 export interface ChipProps {
   label: string;
   value: string;
@@ -21,6 +24,8 @@ export interface ChipProps {
   /** A selected filter chip shows an × that clears it; needs `clearLabel`. */
   onClear?: () => void;
   clearLabel?: string;
+  /** Default `outline`. */
+  variant?: ChipVariant;
 }
 
 const ChipComponent: React.FC<ChipProps> = ({
@@ -35,11 +40,29 @@ const ChipComponent: React.FC<ChipProps> = ({
   dropdown = false,
   onClear,
   clearLabel,
+  variant = 'outline',
 }) => {
   const { colors, sizes } = useTheme();
   const handlePress = useCallback(() => onSelect(value), [onSelect, value]);
-  const iconColor = selected ? colors.interactive.main : colors.icon.secondary;
+  const tile = variant === 'tile';
   const clearable = selected && onClear !== undefined && clearLabel !== undefined;
+  // A selected tile is a filled pill (`button.primary`), so its content takes the button text.
+  const accentColor = tile && selected ? colors.button.primary.text : colors.interactive.main;
+  const iconColor = selected || tile ? accentColor : colors.icon.secondary;
+  const labelColor = tile
+    ? selected
+      ? colors.button.primary.text
+      : colors.text.primary
+    : selected
+      ? colors.interactive.text
+      : colors.text.primary;
+  const bg = tile
+    ? selected
+      ? colors.button.primary.bg
+      : colors.interactive.soft
+    : selected
+      ? colors.interactive.soft
+      : colors.surface.main;
 
   return (
     <Pressable
@@ -48,13 +71,13 @@ const ChipComponent: React.FC<ChipProps> = ({
       row
       align="center"
       justify="center"
-      gap="xs"
+      gap={tile ? 'sm' : 'xs'}
       px="lg"
       minHeight={sizes.button.md}
-      borderRadius="md"
-      borderWidth={selected ? 'sm' : 'thin'}
+      borderRadius={tile ? 'full' : 'md'}
+      borderWidth={tile ? 'none' : selected ? 'sm' : 'thin'}
       borderColor={selected ? colors.interactive.main : colors.border.default}
-      bg={selected ? colors.interactive.soft : colors.surface.main}
+      bg={bg}
       scaleOnPress
       opacity={disabled ? opacity.disabled : 1}
       accessibilityRole={
@@ -65,13 +88,13 @@ const ChipComponent: React.FC<ChipProps> = ({
     >
       {/* Selection is never conveyed by color alone (rule 08): check, or the clear ×. */}
       {Icon ? (
-        <Icon size={sizes.icon.xs} color={iconColor} />
+        <Icon size={tile ? sizes.icon.sm : sizes.icon.xs} color={iconColor} />
       ) : selected ? (
-        <Check size={sizes.icon.xs} color={colors.interactive.main} strokeWidth={iconStroke.bold} />
+        <Check size={sizes.icon.xs} color={accentColor} strokeWidth={iconStroke.bold} />
       ) : null}
       <Text
-        variant={selected ? 'bodyMedium' : 'bodySmall'}
-        color={selected ? colors.interactive.text : colors.text.primary}
+        variant={selected || tile ? 'bodyMedium' : 'bodySmall'}
+        color={labelColor}
         numberOfLines={1}
       >
         {label}
@@ -83,7 +106,7 @@ const ChipComponent: React.FC<ChipProps> = ({
           accessibilityRole="button"
           accessibilityLabel={clearLabel}
         >
-          <X size={sizes.icon.xs} color={colors.interactive.main} strokeWidth={iconStroke.bold} />
+          <X size={sizes.icon.xs} color={accentColor} strokeWidth={iconStroke.bold} />
         </Pressable>
       ) : dropdown ? (
         <ChevronDown size={sizes.icon.xs} color={iconColor} />

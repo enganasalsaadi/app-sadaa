@@ -26,10 +26,13 @@ Every screen looks like one designer, built from the same parts. Procedure: `/sa
 | **Detail** | `Layout header` + `Card` sections + `footer={<LayoutFooter primary />}` | — |
 | **Settings / menu** | `Layout` + `ScreenHeader` + grouped `Card` rows. Profile (tab root) = Dashboard chrome (same hero as Home, glass completion card in KPI slot, `brandGlow`, header `leading` identity) | `identity/screens/ProfileScreen` |
 | **Dashboard** (tab root) | see below | `marketplace/screens/CreatorHomeScreen` |
+| **Discover home** (brand tab root, marketplace browsing) | see below | `marketplace/screens/BrandHomeScreen` |
 | **Money** (wallet home, amount entry, receipt) | Wallet home = Dashboard chrome, hero holds balance. Amount entry = solid `Layout header` + big amount + live quote `Card` + `LayoutFooter primary`. Receipt = `Layout header` + centred amount + `KeyValueRow` cards + secondary footer. Visual rules: **09b** | `finance/screens/WalletScreen` |
 | **Money wizard** (top-up, withdraw) | Solid `Layout header` (✕ `backIcon="close"` step 1, ← after) + slim step bar in `sticky` (title, "Step n of N", `StepProgress tone="surface"`) + body on `surface` + `LayoutFooter primary`. Nested native-stack under one `FormProvider` + flow context at navigator level; one `createIdempotentAction()` per wizard; discard guard on leave; last step = review with per-section Edit (`popTo`); success → `replace` with request detail (submitted mode: ✕ + "Back to wallet"). **Not** `WizardShell` (money flows stay calm, on surface) | `finance/navigation/TopUpNavigator` + `TopUpStepLayout`; gallery `LayoutMoneyWizardScreen` |
 
 **Dashboard:** `Layout padding="none" headerBehavior="overlay" heroBackdrop="brandGlow" heroBehavior="parallax"` + transparent greeting `hero` (greeting beside bell, identity block full width below, ≤ 1 `LiveIsland` = highest-priority blocker, glass KPI strip with `AnimatedNumber`s, `useHeroCompact()`) + header `leading` pinning identity once hero scrolls away (no generic title) + ≤ 2 header icon actions + sections in `StaggerIn` (`gap="2xl"`, `px="xl"`, rails edge to edge) + pull-to-refresh. Hero shows **only real data** (no placeholder stats); sections without an API stay out. Each section owns skeleton/error/retry.
+
+**Discover home** (approved 2026-10-11): Dashboard chrome (`brandGlow`, overlay header, parallax) but the hero is a **compact band ≤ ~25%** (≤ ~30% with the island): one row = identity (greeting + company name) beside ≤ 2 header icons · search field inside the band · optional slim `LiveIsland` (title only). No money in the band. Body: `Chip variant="tile"` category row (top pad ≥ `radii.xl` so tiles clear the sheet corners) → photo-first creator rails (4:5 cards; scroll content keeps bottom room for the `card` shadow) with the **wallet card after the first rail** (the body's one navy highlight card: `GradientSurface brand`, radius `lg`, "available" caption + mint dot + balance `MoneyText title onBrand` + eye + filled `+` top-up only when `/me` `capabilities.top_up_wallet.allowed`; no ≈ SYP line; above the skeleton / error / empty state while rails aren't there). No KPI strip, no big balance: content is the hero. Compact (`useHeroCompact()`): identity row only.
 
 New archetype → propose to user, add here, then build.
 
@@ -64,6 +67,14 @@ Life from elements that tell state + meaningful light motion, never new colors.
 - **Only three loops:** hero lights · status pulse (live island, current stage; smart-border sheen counts as this) · money flow. Spinners and skeleton pulse excepted. Nothing else loops.
 - Draw/roll/rise run **once** per mount, never on re-render/refresh.
 - Reduced motion → final state at once, loops stop. Kit parts handle it; screens don't branch.
+
+### 3.2 Appeal bar (every screen, checked in review)
+
+- **One focal point** per card and per screen region; everything else steps back (muted, smaller).
+- **Media leads** where the content is people: creator photo ≥ 50% of a creator card's area.
+- ≤ 2 badges per card; ≤ 3 text lines under media plus the price block; key number large + bold, secondary muted beneath.
+- Generous breathing room (`lg`+ inside cards, `2xl` between sections); no dense meta rows on discovery cards.
+- Discovery screens must not read like a ledger: money never the largest element outside money screens.
 
 ## 4. Required states
 

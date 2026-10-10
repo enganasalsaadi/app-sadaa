@@ -9,7 +9,7 @@ import Animated, {
 import { useTranslation } from 'react-i18next';
 import { Heart } from 'lucide-react-native';
 import { iconStroke, motion, useTheme } from '@/core/theme';
-import { Pressable } from '@/shared/ui';
+import { Box, Pressable } from '@/shared/ui';
 
 /** How far the heart swells when a creator is saved, before springing back. */
 const POP_SCALE = 1.35;
@@ -17,13 +17,19 @@ const POP_SCALE = 1.35;
 export interface ShortlistHeartProps {
   selected: boolean;
   onToggle: () => void;
+  /** Over a photo: the heart sits on a small white disc so it reads on any image. */
+  onMedia?: boolean;
 }
 
 /**
- * ❤️ shortlist toggle (44pt). Saving pops the heart once and fills it teal (selected, rule 08);
+ * ❤️ shortlist toggle (44pt), plain or on a white disc over a photo (`onMedia`). Saving pops the heart once and fills it teal (selected, rule 08);
  * removing just empties it. The list underneath updates optimistically, so the pop is instant.
  */
-const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({ selected, onToggle }) => {
+const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({
+  selected,
+  onToggle,
+  onMedia = false,
+}) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -57,12 +63,22 @@ const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({ selected, onTo
       )}
     >
       <Animated.View style={popStyle}>
-        <Heart
-          size={sizes.icon.sm}
-          color={color}
-          fill={selected ? color : colors.layout.transparent}
-          strokeWidth={iconStroke.regular}
-        />
+        <Box
+          width={sizes.button.sm}
+          height={sizes.button.sm}
+          borderRadius="full"
+          align="center"
+          justify="center"
+          bg={onMedia ? colors.surface.main : colors.layout.transparent}
+          shadow={onMedia ? 'sm' : 'none'}
+        >
+          <Heart
+            size={sizes.icon.sm}
+            color={color}
+            fill={selected ? color : colors.layout.transparent}
+            strokeWidth={iconStroke.regular}
+          />
+        </Box>
       </Animated.View>
     </Pressable>
   );
