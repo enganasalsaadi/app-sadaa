@@ -179,7 +179,11 @@ export const useProfileScreen = () => {
   const openRates = useCallback(() => navigation.navigate('RateCards'), [navigation]);
   const openNiches = useCallback(() => navigation.navigate('NichesScreen'), [navigation]);
   const openMediaKitSettings = useCallback(() => navigation.navigate('MediaKitSettings'), [navigation]);
-  const openKyc = useCallback(() => navigation.navigate('KycScreen'), [navigation]);
+  // A brand picks one of four verification methods first; a creator uploads an ID.
+  const openKyc = useCallback(
+    () => navigation.navigate(isBrand ? 'CompanyVerification' : 'KycScreen'),
+    [navigation, isBrand],
+  );
   const openNotifications = useCallback(
     () => navigation.navigate('NotificationsScreen'),
     [navigation],

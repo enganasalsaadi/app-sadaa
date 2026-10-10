@@ -1,5 +1,6 @@
 import { baseApi } from '@/core/api';
-import type { KycDetails } from '../types/kyc';
+import type { KycDetails, KycDetailsDto } from '../types/kyc';
+import { toKycDetails } from '../utils/verificationMappers';
 
 /** In-app identity / business verification (contract §7.3–7.4). */
 export const kycApi = baseApi.injectEndpoints({
@@ -7,11 +8,16 @@ export const kycApi = baseApi.injectEndpoints({
   endpoints: builder => ({
     getKyc: builder.query<KycDetails, void>({
       query: () => '/user/kyc',
+      transformResponse: (dto: KycDetailsDto) => toKycDetails(dto),
       providesTags: ['Kyc'],
     }),
-    /** Multipart: creator `id_front` + `id_back`; brand `kyc_document_type` + `kyc_document`. */
+    /**
+     * Multipart: creator `id_front` + `id_back`; brand `kyc_document_type` + the files from
+     * `BRAND_KYC_DOCUMENT_SLOTS` (owner national ID = both faces, else `kyc_document`).
+     */
     submitKyc: builder.mutation<KycDetails, FormData>({
       query: body => ({ url: '/user/kyc', method: 'POST', body }),
+      transformResponse: (dto: KycDetailsDto) => toKycDetails(dto),
       // `/me` carries the KYC status shown on the Profile.
       invalidatesTags: ['User'],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {

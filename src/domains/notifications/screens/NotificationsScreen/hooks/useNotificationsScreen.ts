@@ -45,6 +45,9 @@ interface TypeLook {
 const TYPE_LOOK: Record<string, TypeLook> = {
   kyc_approved: { icon: ShieldCheck, tone: 'success' },
   kyc_rejected: { icon: ShieldCheck, tone: 'danger' },
+  brand_social_proof_approved: { icon: ShieldCheck, tone: 'success' },
+  brand_social_proof_rejected: { icon: ShieldCheck, tone: 'danger' },
+  brand_domain_verified: { icon: ShieldCheck, tone: 'success' },
   platform_approved: { icon: AtSign, tone: 'success' },
   platform_rejected: { icon: AtSign, tone: 'danger' },
   wallet_top_up_completed: { icon: Wallet, tone: 'success' },
@@ -135,6 +138,9 @@ export const useNotificationsScreen = () => {
       switch (route?.screen) {
         case 'KycScreen':
           navigation.navigate('KycScreen');
+          return;
+        case 'CompanyVerification':
+          navigation.navigate('CompanyVerification');
           return;
         case 'PlatformDetailScreen':
           navigation.navigate('PlatformDetailScreen', { platformId: route.platformId });

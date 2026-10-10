@@ -2,7 +2,8 @@ import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
-import { iconStroke, opacity, useTheme } from '@/core/theme';
+import { iconStroke, opacity, resolveHue, useTheme } from '@/core/theme';
+import type { HueTone } from '@/core/theme';
 import { Box } from '../primitives/Box';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
@@ -14,6 +15,10 @@ export interface ListRowProps {
   title: string;
   subtitle?: string;
   icon?: LucideIcon;
+  /** Tints the icon tile (`soft` bg + `main` icon), e.g. the verification method picker. Default: neutral tile. */
+  iconTone?: HueTone;
+  /** Extra line under the subtitle (a `StatusPill`, a meta caption). */
+  meta?: React.ReactNode;
   /** `danger` for destructive rows (delete account). */
   tone?: ListRowTone;
   /** Short text before the trailing slot (current language, balance). */
@@ -36,6 +41,8 @@ const ListRowComponent: React.FC<ListRowProps> = ({
   title,
   subtitle,
   icon: Icon,
+  iconTone,
+  meta,
   tone = 'default',
   value,
   trailing,
@@ -49,6 +56,17 @@ const ListRowComponent: React.FC<ListRowProps> = ({
   const isDanger = tone === 'danger';
   const isOption = selected !== undefined;
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
+  const iconHue = iconTone ? resolveHue(colors, iconTone) : null;
+  const iconBg = isDanger
+    ? colors.status.danger.soft
+    : selected
+      ? colors.surface.main
+      : iconHue?.soft ?? colors.surface.elevated;
+  const iconColor = isDanger
+    ? colors.status.danger.main
+    : selected
+      ? colors.interactive.main
+      : iconHue?.main ?? colors.icon.primary;
 
   const trailingNode =
     loading ? (
@@ -68,13 +86,13 @@ const ListRowComponent: React.FC<ListRowProps> = ({
           width={sizes.iconButton.sm}
           height={sizes.iconButton.sm}
           borderRadius="md"
-          bg={isDanger ? colors.status.danger.soft : selected ? colors.surface.main : colors.surface.elevated}
+          bg={iconBg}
           align="center"
           justify="center"
         >
           <Icon
             size={sizes.icon.sm}
-            color={isDanger ? colors.status.danger.main : selected ? colors.interactive.main : colors.icon.primary}
+            color={iconColor}
             strokeWidth={iconStroke.regular}
           />
         </Box>
@@ -88,6 +106,7 @@ const ListRowComponent: React.FC<ListRowProps> = ({
             {subtitle}
           </Text>
         ) : null}
+        {meta}
       </Box>
       {value ? (
         <Text variant="bodySmall" color={colors.text.secondary}>

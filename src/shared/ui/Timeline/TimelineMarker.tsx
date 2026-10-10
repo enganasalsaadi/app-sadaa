@@ -3,6 +3,7 @@ import type { ParseKeys } from 'i18next';
 import { Check, X } from 'lucide-react-native';
 import { iconStroke, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
+import { Text } from '../primitives/Text';
 import { LiveDot } from '../LiveDot';
 import type { TimelineStepState } from './types';
 
@@ -13,8 +14,15 @@ export const STATE_LABEL = {
   error: 'common.timeline.error',
 } as const satisfies Record<TimelineStepState, ParseKeys>;
 
-/** `size` defaults to the vertical timeline's marker; the track variant passes a larger node. */
-export const TimelineMarker = memo<{ state: TimelineStepState; size?: number }>(({ state, size: sizeProp }) => {
+/**
+ * `size` defaults to the vertical timeline's marker; the track variant passes a larger node.
+ * `number` (steps variant) labels an upcoming node with its position.
+ */
+export const TimelineMarker = memo<{
+  state: TimelineStepState;
+  size?: number;
+  number?: number;
+}>(({ state, size: sizeProp, number }) => {
   const { colors, sizes } = useTheme();
   const size = sizeProp ?? sizes.control.md;
   const icon = sizes.icon.xs;
@@ -22,14 +30,36 @@ export const TimelineMarker = memo<{ state: TimelineStepState; size?: number }>(
   switch (state) {
     case 'done':
       return (
-        <Box width={size} height={size} borderRadius="full" bg={colors.interactive.main} align="center" justify="center">
-          <Check size={icon} color={colors.text.onAccent} strokeWidth={iconStroke.bold} />
+        <Box
+          width={size}
+          height={size}
+          borderRadius="full"
+          bg={colors.interactive.main}
+          align="center"
+          justify="center"
+        >
+          <Check
+            size={icon}
+            color={colors.text.onAccent}
+            strokeWidth={iconStroke.bold}
+          />
         </Box>
       );
     case 'error':
       return (
-        <Box width={size} height={size} borderRadius="full" bg={colors.status.danger.main} align="center" justify="center">
-          <X size={icon} color={colors.text.onAccent} strokeWidth={iconStroke.bold} />
+        <Box
+          width={size}
+          height={size}
+          borderRadius="full"
+          bg={colors.status.danger.main}
+          align="center"
+          justify="center"
+        >
+          <X
+            size={icon}
+            color={colors.text.onAccent}
+            strokeWidth={iconStroke.bold}
+          />
         </Box>
       );
     case 'current':
@@ -48,7 +78,20 @@ export const TimelineMarker = memo<{ state: TimelineStepState; size?: number }>(
         </Box>
       );
     case 'upcoming':
-      return (
+      return number !== undefined ? (
+        <Box
+          width={size}
+          height={size}
+          borderRadius="full"
+          bg={colors.brand.soft}
+          align="center"
+          justify="center"
+        >
+          <Text variant="caption" color={colors.brand.text}>
+            {number}
+          </Text>
+        </Box>
+      ) : (
         <Box
           width={size}
           height={size}

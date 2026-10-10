@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, Globe, Landmark, Palmtree, RefreshCw, Smartphone, Store, Trash2, Wallet } from 'lucide-react-native';
+import { Bell, FileText, Globe, Landmark, Mail, Palmtree, RefreshCw, Smartphone, Store, Trash2, Upload, Wallet, Zap } from 'lucide-react-native';
 import { Badge, Box, ListGroup, ListRow, StatusPill, Switch } from '@/shared/ui';
 import { formatMoney } from '@/core/i18n';
 import { MOCK_DEAL_SUMMARY } from './mockData';
@@ -79,6 +79,25 @@ const ListRowsDemoComponent: React.FC = () => {
           selected={false}
           onPress={demo.press}
           disabled
+        />
+      </ListGroup>
+
+      <ListGroup title={t('devShowcase.listRows.tintedTitle')}>
+        <ListRow
+          icon={FileText}
+          iconTone="brand"
+          title={t('devShowcase.listRows.tintedDocs')}
+          subtitle={t('devShowcase.listRows.tintedDocsCaption')}
+          meta={<StatusPill tone="neutral" size="sm" icon={Upload} label={t('devShowcase.listRows.tintedDocsMeta')} />}
+          onPress={demo.press}
+        />
+        <ListRow
+          icon={Mail}
+          iconTone="interactive"
+          title={t('devShowcase.listRows.tintedEmail')}
+          subtitle={t('devShowcase.listRows.tintedEmailCaption')}
+          meta={<StatusPill tone="interactive" size="sm" icon={Zap} label={t('devShowcase.listRows.tintedEmailMeta')} />}
+          onPress={demo.press}
         />
       </ListGroup>
 

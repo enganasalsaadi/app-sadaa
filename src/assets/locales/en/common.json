@@ -99,27 +99,6 @@
         "lookupsError": "Couldn’t load the options. Check your connection and try again.",
         "submit": "Continue"
       },
-      "kyc": {
-        "title": "Verify your business",
-        "subtitle": "Optional now — but verified brands close deals faster.",
-        "benefitsTitle": "Why verify?",
-        "benefits": {
-          "badge": "A Verified badge on your brand profile",
-          "visibility": "Creators trust and accept your offers sooner",
-          "review": "Reviewed by our team within 48 hours"
-        },
-        "pickDocument": "Upload commercial register",
-        "pickHint": "PDF, JPG or PNG · up to 10 MB",
-        "documentFallbackName": "Commercial register",
-        "errors": {
-          "size": "This file is larger than 10 MB. Choose a smaller one.",
-          "type": "Only PDF, JPG or PNG files are accepted.",
-          "failed": "Couldn’t open the file. Please try another one."
-        },
-        "submit": "Submit for review",
-        "skip": "Skip for now",
-        "skipHint": "You can verify later from your account settings."
-      },
       "welcome": {
         "title": "Welcome to Sada",
         "titleNamed": "Welcome, {{name}}",
@@ -585,6 +564,7 @@
       "brandTitle": "Business verification",
       "influencerIntro": "Upload a clear photo of both sides of your national ID. Verification lets you accept offers and receive your earnings.",
       "brandIntro": "Choose your company document type and upload a clear copy. Verification builds creators’ trust in your offers.",
+      "ownerIntro": "Choose the owner’s ID type and upload a clear copy. Verification builds creators’ trust in your offers.",
       "idFront": "Front of your ID",
       "idBack": "Back of your ID",
       "idHint": "PDF, JPG, PNG or WEBP · up to 10 MB",
@@ -594,7 +574,9 @@
       "documentTypes": {
         "commercialRegister": "Commercial register",
         "industrialRegister": "Industrial register",
-        "tradeLicense": "Trade license"
+        "tradeLicense": "Trade license",
+        "ownerNationalId": "Owner’s national ID",
+        "ownerPassport": "Owner’s passport"
       },
       "idFrontFallbackName": "id-front",
       "idBackFallbackName": "id-back",
@@ -612,6 +594,187 @@
         "size": "The file is larger than 10 MB",
         "type": "This file type isn’t supported",
         "failed": "Couldn’t open the file, try again"
+      }
+    },
+    "verification": {
+      "title": "Business verification",
+      "picker": {
+        "heading": "Choose how to verify",
+        "subtitle": "One is enough. Pick what fits your business, and you can try another way anytime.",
+        "groupDocuments": "With documents",
+        "groupNoDocuments": "Without documents",
+        "groupOther": "Or pick another way",
+        "privacy": "Only Sada’s verification team can see your files and details.",
+        "onboardingTitle": "Verify your business",
+        "onboardingSubtitle": "Optional now, required before you fund deals.",
+        "onboardingLead": "Pick one way that fits your business:",
+        "skipHint": "You can verify later from your account.",
+        "skip": "Skip for now",
+        "onboardingContinue": "Continue",
+        "methods": {
+          "registry": {
+            "title": "Commercial register or license",
+            "description": "For registered companies: commercial or industrial register, or trade license",
+            "short": "For registered companies"
+          },
+          "ownerId": {
+            "title": "Owner’s national ID or passport",
+            "description": "For home businesses and freelancers without a register",
+            "short": "For home businesses and freelancers"
+          },
+          "social": {
+            "title": "Instagram or Facebook page proof",
+            "description": "Send a code from your store’s page in a DM to Sada’s account",
+            "short": "For social media stores",
+            "replaceHint": "A new code replaces the current one",
+            "retryHint": "Create a new code"
+          },
+          "domain": {
+            "title": "Official domain email",
+            "description": "If you own a website: an email like admin@yourbrand.com",
+            "short": "If you own a website"
+          }
+        },
+        "meta": {
+          "upload": "File upload · team review",
+          "manual": "Manual review",
+          "automatic": "Automatic once you open the link"
+        },
+        "active": {
+          "socialTitle": "{{platform}} page proof",
+          "socialPendingBody": "Sent code {{code}}? Our team will match it and notify you.",
+          "rejectedHint": "Try again or pick another way.",
+          "domainPendingBody": "Open the link we sent to {{email}}."
+        }
+      },
+      "social": {
+        "title": "Social page proof",
+        "form": {
+          "heading": "Where’s your store?",
+          "subtitle": "Pick the platform and paste your store’s page link.",
+          "platformLabel": "Platform",
+          "platforms": {
+            "instagram": "Instagram",
+            "facebook": "Facebook"
+          },
+          "urlLabel": "Page link",
+          "urlExample": "Example: {{example}}",
+          "howTitle": "How it works",
+          "how1": "We create a verification code for you.",
+          "how2": "You send it from your store’s page in a DM to Sada’s official account.",
+          "how3": "Our team matches it by hand and notifies you.",
+          "submit": "Create verification code"
+        },
+        "code": {
+          "label": "Verification code",
+          "copy": "Copy code",
+          "copied": "Code copied",
+          "createdAt": "Created {{date}}",
+          "stepCopy": "Copy the code.",
+          "stepPrefilled": "The code is already in the message.",
+          "stepSendInstagram": "Send it in a DM to Sada’s Instagram account.",
+          "stepSendFacebook": "Tap send in Messenger from your store’s page.",
+          "stepSendFallback": "Open {{platform}}, find Sada’s official account and send the code in a DM.",
+          "stepFromStore": "From the store’s account, not your personal one.",
+          "stepReview": "Our team reviews it by hand and notifies you.",
+          "noticeInstagram": "Instagram can’t fill in the message for you: paste the code in the chat yourself.",
+          "noticeFacebook": "Messenger opens with the code already typed: just tap send.",
+          "noticeFallback": "Can’t find the account? Contact support and we’ll help.",
+          "openInstagram": "Open Sada on Instagram",
+          "sendMessenger": "Send code via Messenger",
+          "openApp": "Open {{platform}}",
+          "change": "Change page or create a new code",
+          "replaceTitle": "Create a new code?",
+          "replaceBody": "The current code {{code}} will stop working.",
+          "replaceConfirm": "Create new code",
+          "openFailed": "Couldn’t open the app. Copy the code and send it yourself.",
+          "contactSupport": "Contact support",
+          "supportMessage": "Hi Sada team, I can’t find Sada’s official account to send my verification code {{code}}."
+        },
+        "rejected": {
+          "title": "We couldn’t verify your page",
+          "reasonLabel": "Reason",
+          "page": "Page",
+          "reviewedAt": "Reviewed on",
+          "notice": "A rejection doesn’t stop you from trying again or using another way.",
+          "retry": "Create a new code",
+          "other": "Pick another way"
+        },
+        "errors": {
+          "urlRequired": "Paste your store’s page link",
+          "urlInvalid": "Enter a valid {{platform}} page link"
+        },
+        "toastCreated": "Verification code created"
+      },
+      "domain": {
+        "title": "Official domain email",
+        "form": {
+          "heading": "Verify with your company email",
+          "subtitle": "Enter your website’s domain and an email on it. We’ll send a confirmation link there.",
+          "domainLabel": "Domain",
+          "domainPlaceholder": "yourbrand.com",
+          "domainHint": "Without https:// or www",
+          "emailLabel": "Email on this domain",
+          "emailPlaceholder": "name@yourbrand.com",
+          "publicNotice": "Public email like Gmail or Hotmail isn’t accepted. Use your website’s email.",
+          "submit": "Send confirmation link"
+        },
+        "errors": {
+          "domainRequired": "Enter your website’s domain",
+          "domainInvalid": "Enter a valid domain like yourbrand.com",
+          "emailRequired": "Enter the email",
+          "emailInvalid": "Enter a valid email",
+          "emailMismatch": "The email must be on the domain you entered (@{{domain}}).",
+          "publicDomain": "Use your company’s domain, not a public email provider."
+        },
+        "sent": {
+          "title": "Check your inbox",
+          "body": "We sent a confirmation link to {{email}}. Open it from the email and you’re verified right away.",
+          "domain": "Domain",
+          "email": "Email",
+          "expiry": "Link expires",
+          "expiresIn": "Expires in {{time}}",
+          "notice": "The link opens in your browser. Come back to the app afterwards and we’ll update your status. Nothing arrived? Check your spam folder.",
+          "refresh": "I opened the link, check again",
+          "stillPending": "Not confirmed yet. Open the link from your email, then try again.",
+          "resend": "Resend",
+          "resendIn": "Resend in {{time}}",
+          "change": "Change domain or email"
+        },
+        "expired": {
+          "title": "The link expired",
+          "body": "The confirmation link wasn’t opened in time. Send a new one and open it from your email.",
+          "resend": "Send a new link"
+        },
+        "toastSent": "Confirmation link sent"
+      },
+      "status": {
+        "social": {
+          "pending": "Under review",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "domain": {
+          "pending": "Awaiting confirmation",
+          "verified": "Confirmed",
+          "expired": "Expired"
+        },
+        "document": {
+          "pending": "Under review",
+          "rejected": "Rejected"
+        }
+      },
+      "verified": {
+        "title": "Your business is verified",
+        "badge": "Verified",
+        "via": "Via {{method}}",
+        "fallback": "Sada’s team reviewed and verified your business.",
+        "at": "Verified on {{date}}",
+        "benefit": "Verification builds creators’ trust in your offers and lets you fund deals.",
+        "toast": "Your business is verified"
+      },
+      "errors": {
+        "alreadyVerified": "Your business is already verified. No need to verify again."
       }
     },
     "changePassword": {
@@ -2088,7 +2251,9 @@
       "subtitle": "Demo wizard",
       "body": "Step content sits on the surface sheet; the navy header persists.",
       "action": "Header action",
-      "actionPressed": "Header action pressed"
+      "actionPressed": "Header action pressed",
+      "skip": "Skip for now",
+      "skipHint": "A choice step: tapping an option moves on."
     },
     "listStates": {
       "data": "Data",
@@ -2275,7 +2440,14 @@
       "optionOfficeCaption": "Dollar or Syrian pound",
       "optionBank": "Bank transfer",
       "optionWallet": "E-wallet",
-      "optionWalletCaption": "Paused for now"
+      "optionWalletCaption": "Paused for now",
+      "tintedTitle": "Tinted icon + meta line",
+      "tintedDocs": "Commercial register",
+      "tintedDocsCaption": "For registered companies",
+      "tintedDocsMeta": "File upload · team review",
+      "tintedEmail": "Domain email",
+      "tintedEmailCaption": "If you own a website",
+      "tintedEmailMeta": "Automatic"
     },
     "moneyText": {
       "price": "Price",
@@ -2319,7 +2491,8 @@
       "publish": "Publish",
       "failed": "Payment refunded",
       "errorTitle": "Stopped",
-      "trackTitle": "Stage track"
+      "trackTitle": "Stage track",
+      "stepsTitle": "Numbered steps"
     },
     "live": {
       "dotTitle": "Live dot",

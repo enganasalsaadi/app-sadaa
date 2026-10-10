@@ -19,7 +19,6 @@ import {
 } from '../hooks/useWizardScreenOptions';
 import { resolveBrandOnboardingStep } from '../utils/resolveBrandOnboardingStep';
 import {
-  BrandKycScreen,
   BrandProfileScreen,
   BrandVerifyPhoneScreen,
   BrandWelcomeScreen,
@@ -28,8 +27,27 @@ import {
 const Root = createNativeStackNavigator<BrandOnboardingStackParamList>();
 const Wizard = createNativeStackNavigator<BrandWizardStackParamList>();
 
+/** Step 4 routes: the verification picker and its methods. */
+export type BrandKycStepRoute = Extract<
+  keyof BrandWizardStackParamList,
+  'BrandKyc' | 'BrandKycDocument' | 'BrandSocialProof' | 'BrandDomainEmail'
+>;
+
+/**
+ * Verification lives in identity, which depends on auth: the app injects its screens here
+ * instead of auth importing identity (rule 01).
+ */
+export type BrandKycStepScreens = Record<BrandKycStepRoute, React.ComponentType>;
+
+interface BrandOnboardingNavigatorProps {
+  kycScreens: BrandKycStepScreens;
+}
+
+// A method is a detour from the picker: swipe back to it like the KYC step to the profile.
+const KYC_METHOD_OPTIONS = { gestureEnabled: true } as const;
+
 /** Steps slide inside the WizardShell sheet; the navy header stays put. */
-const BrandWizardNavigator: React.FC = () => {
+const BrandWizardNavigator: React.FC<BrandOnboardingNavigatorProps> = ({ kycScreens }) => {
   const screenOptions = useWizardScreenOptions();
   const deleteEntry = useDeleteAccountEntry();
   // Cache hit: BrandOnboardingNavigator only mounts this once progress loaded.
@@ -51,8 +69,23 @@ const BrandWizardNavigator: React.FC = () => {
           />
           <Wizard.Screen
             name="BrandKyc"
-            component={BrandKycScreen}
+            component={kycScreens.BrandKyc}
             options={{ gestureEnabled: true }}
+          />
+          <Wizard.Screen
+            name="BrandKycDocument"
+            component={kycScreens.BrandKycDocument}
+            options={KYC_METHOD_OPTIONS}
+          />
+          <Wizard.Screen
+            name="BrandSocialProof"
+            component={kycScreens.BrandSocialProof}
+            options={KYC_METHOD_OPTIONS}
+          />
+          <Wizard.Screen
+            name="BrandDomainEmail"
+            component={kycScreens.BrandDomainEmail}
+            options={KYC_METHOD_OPTIONS}
           />
         </Wizard.Navigator>
       </WizardShell>
@@ -66,7 +99,9 @@ const BrandWizardNavigator: React.FC = () => {
  * welcome) is decided once from server progress; afterwards each step asks
  * the server where to go (useBrandOnboardingFlow).
  */
-export const BrandOnboardingNavigator: React.FC = () => {
+export const BrandOnboardingNavigator: React.FC<BrandOnboardingNavigatorProps> = ({
+  kycScreens,
+}) => {
   const { data: progress, isError, refetch } = useGetOnboardingProgressQuery();
 
   if (!progress) {
@@ -78,7 +113,9 @@ export const BrandOnboardingNavigator: React.FC = () => {
 
   return (
     <Root.Navigator initialRouteName={initialRoute} screenOptions={ONBOARDING_ROOT_OPTIONS}>
-      <Root.Screen name="BrandWizard" component={BrandWizardNavigator} />
+      <Root.Screen name="BrandWizard">
+        {() => <BrandWizardNavigator kycScreens={kycScreens} />}
+      </Root.Screen>
       <Root.Screen name="BrandWelcome" component={BrandWelcomeScreen} />
     </Root.Navigator>
   );

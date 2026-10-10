@@ -17,9 +17,16 @@ const item = (overrides: Partial<AppNotification>): AppNotification => ({
 });
 
 describe('resolveNotificationRoute', () => {
-  it('opens KYC for both roles', () => {
-    expect(resolveNotificationRoute({ kind: 'kyc' }, 'brand')).toEqual({ screen: 'KycScreen' });
+  it('opens KYC for a creator, the verification picker for a brand', () => {
+    expect(resolveNotificationRoute({ kind: 'kyc' }, 'brand')).toEqual({ screen: 'CompanyVerification' });
     expect(resolveNotificationRoute({ kind: 'kyc' }, 'influencer')).toEqual({ screen: 'KycScreen' });
+  });
+
+  it('opens the verification picker for a brand only, the inbox for anyone else', () => {
+    const target = { kind: 'verification' } as const;
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({ screen: 'CompanyVerification' });
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({ screen: 'NotificationsScreen' });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'NotificationsScreen' });
   });
 
   it('opens a platform for a creator only, the inbox for a brand', () => {
@@ -85,6 +92,9 @@ describe('notificationTarget', () => {
 
   it('rebuilds the link from the type when none was sent', () => {
     expect(notificationTarget(item({ type: 'kyc_rejected' }))).toEqual({ kind: 'kyc' });
+    expect(notificationTarget(item({ type: 'brand_social_proof_rejected' }))).toEqual({
+      kind: 'verification',
+    });
     expect(
       notificationTarget(item({ type: 'platform_approved', data: { entity_id: '01J9ABC' } })),
     ).toEqual({ kind: 'platform', platformId: '01J9ABC' });
@@ -106,6 +116,10 @@ describe('toTabParams', () => {
     expect(toTabParams({ screen: 'KycScreen' })).toEqual({
       screen: 'SettingsTab',
       params: { screen: 'KycScreen', initial: false },
+    });
+    expect(toTabParams({ screen: 'CompanyVerification' })).toEqual({
+      screen: 'SettingsTab',
+      params: { screen: 'CompanyVerification', initial: false },
     });
     expect(toTabParams({ screen: 'PlatformDetailScreen', platformId: 'p1' })).toEqual({
       screen: 'SettingsTab',

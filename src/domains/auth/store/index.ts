@@ -56,6 +56,7 @@ export type {
   UserType,
   UserStatus,
   KycStatus,
+  KycMethod,
   ProfileStepKey,
   ProfileCompletion,
   ProfileCompletionStep,

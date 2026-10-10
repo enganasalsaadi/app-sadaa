@@ -18,6 +18,7 @@ export { formatPhoneForDisplay } from './utils/formatPhoneForDisplay';
 export { useFollowerTierOptions } from './hooks/useFollowerTierOptions';
 export { formatClock } from './utils/formatClock';
 export { isKycAlreadySubmitted, toFormDataFile } from './utils/kycSubmission';
+export { toKycMethod } from './utils/kycMethod';
 export { KYC_ALLOWED_MIME_TYPES, KYC_MAX_FILE_BYTES } from './constants/brandOnboarding';
 export {
   INFLUENCER_KYC_ALLOWED_MIME_TYPES,
@@ -75,6 +76,7 @@ export type {
   AuthState,
   UserType,
   KycStatus,
+  KycMethod,
   FollowerTierId,
   ProfileStepKey,
   ProfileCompletion,
@@ -88,5 +90,11 @@ export type {
   BrandSocialLink,
 } from './store';
 export { BrandOnboardingNavigator } from './navigation/BrandOnboardingNavigator';
+export type {
+  BrandKycStepRoute,
+  BrandKycStepScreens,
+} from './navigation/BrandOnboardingNavigator';
+export { useBrandKycStep } from './hooks/useBrandKycStep';
+export type { BrandKycStep } from './hooks/useBrandKycStep';
 export { InfluencerOnboardingNavigator } from './navigation/InfluencerOnboardingNavigator';
 export { SuspendedScreen } from './screens';

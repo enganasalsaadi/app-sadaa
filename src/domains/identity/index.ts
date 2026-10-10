@@ -3,6 +3,7 @@
  * Future: creator/brand profiles, social account linking, portfolio.
  */
 export { SettingsNavigator } from './navigation/SettingsNavigator';
+export { BRAND_KYC_STEP_SCREENS } from './navigation/brandKycStepScreens';
 export { MediaKitInsightsScreen } from './screens/MediaKitInsightsScreen';
 export { MediaKitPreviewScreen } from './screens/MediaKitPreviewScreen';
 export { MediaKitSettingsScreen } from './screens/MediaKitSettingsScreen';

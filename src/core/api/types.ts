@@ -50,6 +50,7 @@ export const API_ERROR_CODES = [
   'idempotency_key_reused',
   'idempotency_request_in_progress',
   'kyc_required',
+  'domain_verification_cooldown',
   'wallet_frozen',
   'wallet_closed',
   'currency_not_supported',

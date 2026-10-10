@@ -211,6 +211,7 @@ export const baseApi = createApi({
     'Platform',
     'RateCard',
     'Kyc',
+    'Verification',
     'Notification',
     'Lookups',
     'OnboardingProgress',

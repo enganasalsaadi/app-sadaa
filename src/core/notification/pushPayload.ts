@@ -1,7 +1,10 @@
-/** FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4). */
+/** FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4, company verification). */
 export const PUSH_TYPES = [
   'kyc_approved',
   'kyc_rejected',
+  'brand_social_proof_approved',
+  'brand_social_proof_rejected',
+  'brand_domain_verified',
   'platform_approved',
   'platform_rejected',
   'wallet_top_up_completed',
@@ -18,9 +21,17 @@ export const PUSH_TYPES = [
 ] as const;
 export type PushType = (typeof PUSH_TYPES)[number];
 
+/** Company verification route results (social proof, domain email); they refetch the routes' state. */
+export const VERIFICATION_PUSH_TYPES = [
+  'brand_social_proof_approved',
+  'brand_social_proof_rejected',
+  'brand_domain_verified',
+] as const satisfies readonly PushType[];
+
 /** Where a tapped push leads, parsed from `data.deep_link`. */
 export type PushTarget =
   | { kind: 'kyc' }
+  | { kind: 'verification' }
   | { kind: 'platform'; platformId: string }
   | { kind: 'notifications' }
   | { kind: 'wallet' }
@@ -57,6 +68,7 @@ const parseDeepLink = (link: unknown): PushTarget | null => {
   if (rest.length > 0) return null;
 
   if (route === 'kyc' && id === undefined) return { kind: 'kyc' };
+  if (route === 'verification' && id === undefined) return { kind: 'verification' };
   if (route === 'notifications' && id === undefined) return { kind: 'notifications' };
   if (route === 'wallet' && id === undefined) return { kind: 'wallet' };
   if (route === 'wallet' && id === 'payout-methods') return { kind: 'payoutMethods' };

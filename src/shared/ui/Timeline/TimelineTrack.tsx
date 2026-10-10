@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { LayoutChangeEvent, ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Animated, {
@@ -19,32 +26,41 @@ const DRAW_EASING = Easing.bezier(0.22, 1, 0.36, 1);
 
 /** The stage the fill reaches: the current (or stopped) one, else the last done one. */
 const reachedIndex = (steps: readonly TimelineStep[]): number => {
-  const active = steps.findIndex(step => step.state === 'current' || step.state === 'error');
+  const active = steps.findIndex(
+    step => step.state === 'current' || step.state === 'error',
+  );
   if (active >= 0) return active;
-  return steps.reduce((last, step, index) => (step.state === 'done' ? index : last), -1);
+  return steps.reduce(
+    (last, step, index) => (step.state === 'done' ? index : last),
+    -1,
+  );
 };
 
-const TrackLabel = memo<{ title: string; state: TimelineStepState }>(({ title, state }) => {
-  const { colors } = useTheme();
-  const color = {
-    done: colors.text.secondary,
-    current: colors.interactive.text,
-    upcoming: colors.text.tertiary,
-    error: colors.status.danger.text,
-  }[state];
-  return (
-    <Text variant="caption" color={color} align="center" numberOfLines={2}>
-      {title}
-    </Text>
-  );
-});
+const TrackLabel = memo<{ title: string; state: TimelineStepState }>(
+  ({ title, state }) => {
+    const { colors } = useTheme();
+    const color = {
+      done: colors.text.secondary,
+      current: colors.interactive.text,
+      upcoming: colors.text.tertiary,
+      error: colors.status.danger.text,
+    }[state];
+    return (
+      <Text variant="caption" color={color} align="center" numberOfLines={2}>
+        {title}
+      </Text>
+    );
+  },
+);
 
 /**
  * Horizontal stage track (rule 09 §3.1): one node per stage, a line between the
  * first and last node centres, and a teal fill that draws once to the stage reached.
  * The fill starts at the reading-start edge, so it runs right to left in Arabic.
  */
-const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({ steps }) => {
+const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({
+  steps,
+}) => {
   const { t } = useTranslation();
   const { colors, borderWidths } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -56,7 +72,8 @@ const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({ 
   const slot = count > 0 ? width / count : 0;
   const lineWidth = slot * Math.max(count - 1, 0);
   const reached = reachedIndex(steps);
-  const fillTarget = count > 1 && reached > 0 ? (reached / (count - 1)) * lineWidth : 0;
+  const fillTarget =
+    count > 1 && reached > 0 ? (reached / (count - 1)) * lineWidth : 0;
 
   useEffect(() => {
     if (width === 0) return;
@@ -65,7 +82,10 @@ const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({ 
       return;
     }
     drawn.current = true;
-    fill.value = withTiming(fillTarget, { duration: motion.duration.draw, easing: DRAW_EASING });
+    fill.value = withTiming(fillTarget, {
+      duration: motion.duration.draw,
+      easing: DRAW_EASING,
+    });
   }, [fill, fillTarget, reduceMotion, width]);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
@@ -88,7 +108,10 @@ const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({ 
   const fillStyle = useAnimatedStyle(() => ({ width: fill.value }));
 
   const a11yLabel = useMemo(
-    () => steps.map(step => `${step.title}, ${t(STATE_LABEL[step.state])}`).join('. '),
+    () =>
+      steps
+        .map(step => `${step.title}, ${t(STATE_LABEL[step.state])}`)
+        .join('. '),
     [steps, t],
   );
 
@@ -96,7 +119,11 @@ const TimelineTrackComponent: React.FC<{ steps: readonly TimelineStep[] }> = ({ 
     <Box onLayout={onLayout} accessible accessibilityLabel={a11yLabel}>
       {width > 0 && count > 1 ? (
         <>
-          <Box style={styles.line} borderRadius="full" bg={colors.border.default} />
+          <Box
+            style={styles.line}
+            borderRadius="full"
+            bg={colors.border.default}
+          />
           <Animated.View style={[styles.line, fillStyle]}>
             <Box flex={1} borderRadius="full" bg={colors.interactive.main} />
           </Animated.View>

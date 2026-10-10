@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { extractServerFieldErrors, normalizeApiError } from '@/core/api';
 import { useCountdown, useDiscardGuard } from '@/core/hooks';
 import { formatDate } from '@/core/i18n';
+import type { KycDocumentGroupParam } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { toastService } from '@/core/toast';
 import {
@@ -13,15 +14,25 @@ import {
   formatClock,
   isKycAlreadySubmitted,
   selectUser,
+  selectUserType,
   toFormDataFile,
 } from '@/domains/auth';
 import { useFilePicker, type FilePickError } from '@/shared/ui';
 import { useGetKycQuery, useSubmitKycMutation } from '../../../api/kycApi';
 import {
+  BRAND_KYC_DOCUMENT_GROUPS,
+  BRAND_KYC_DOCUMENT_SLOTS,
   KYC_FILE_FIELDS,
   type BrandKycDocumentType,
   type KycSlot,
 } from '../../../constants/kyc';
+import type { VerificationFlow } from '../../../hooks/useVerificationFlow';
+
+interface KycScreenOptions {
+  /** Brands: picker option 1 (company paperwork) or 2 (owner ID / passport). */
+  documentGroup: KycDocumentGroupParam;
+  flow: VerificationFlow;
+}
 
 /** Used when a 429 carries no `retry_after` (the limit is 5 per hour). */
 const RATE_LIMIT_FALLBACK_S = 60;
@@ -37,11 +48,16 @@ const DOCUMENT_TYPE_FIELD = 'kyc_document_type';
 const toDateLabel = (iso: string | null): string | null =>
   iso ? formatDate(new Date(iso), { dateStyle: 'medium' }) : null;
 
-export const useKycScreen = () => {
+export const useKycScreen = ({ documentGroup, flow }: KycScreenOptions) => {
   const { t } = useTranslation();
   const user = useAppSelector(selectUser);
-  const userType = user?.user_type ?? 'influencer';
+  // During registration the session role is known before the full user object.
+  const sessionUserType = useAppSelector(selectUserType);
+  const userType =
+    user?.user_type ?? (sessionUserType === 'brand' ? 'brand' : 'influencer');
   const isBrand = userType === 'brand';
+  const { onStarted } = flow;
+  const documentTypes = BRAND_KYC_DOCUMENT_GROUPS[documentGroup];
 
   const kyc = useGetKycQuery();
   const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
@@ -67,21 +83,23 @@ export const useKycScreen = () => {
     [idFront, idBack, document],
   );
 
-  const [documentType, setDocumentType] = useState<BrandKycDocumentType>('commercial_register');
+  const [documentType, setDocumentType] = useState<BrandKycDocumentType>(documentTypes[0]);
   const [showMissing, setShowMissing] = useState(false);
   const [serverErrors, setServerErrors] = useState<Partial<Record<KycSlot | 'documentType', string>>>(
     {},
   );
   const [retryUntil, setRetryUntil] = useState<number | null>(null);
+  // Sent: the picked files are no longer unsaved (the wizard leaves right after).
+  const [sent, setSent] = useState(false);
   const waitSeconds = useCountdown(retryUntil);
 
   const slots = useMemo<readonly KycSlot[]>(
-    () => (isBrand ? ['document'] : ['idFront', 'idBack']),
-    [isBrand],
+    () => (isBrand ? BRAND_KYC_DOCUMENT_SLOTS[documentType] : ['idFront', 'idBack']),
+    [isBrand, documentType],
   );
   const canSubmit = kyc.data?.can_submit ?? false;
   const hasFiles = slots.some(slot => pickers[slot].file);
-  const guard = useDiscardGuard(canSubmit && hasFiles && !isSubmitting);
+  const guard = useDiscardGuard(canSubmit && hasFiles && !isSubmitting && !sent);
 
   const slotError = useCallback(
     (slot: KycSlot): string | null => {
@@ -125,13 +143,17 @@ export const useKycScreen = () => {
 
     try {
       await submitKyc(form).unwrap();
+      setSent(true);
       toastService.success(t('account.kyc.submitted'));
+      onStarted();
     } catch (err) {
       const apiError = normalizeApiError(err);
       if (isKycAlreadySubmitted(apiError)) {
         // Someone (or an earlier timed-out try) already sent it: show the real status.
+        setSent(true);
         kyc.refetch();
         toastService.info(t('account.kyc.alreadySubmitted'));
+        onStarted();
         return;
       }
       if (apiError.statusCode === 429) {
@@ -152,7 +174,7 @@ export const useKycScreen = () => {
       // 403/5xx open the global modals.
       if (!apiError.isForbidden && !apiError.isServerError) toastService.error(t('errors.generic'));
     }
-  }, [waitSeconds, isSubmitting, slots, pickers, isBrand, documentType, submitKyc, t, kyc]);
+  }, [waitSeconds, isSubmitting, slots, pickers, isBrand, documentType, submitKyc, t, kyc, onStarted]);
 
   const status = kyc.data?.status ?? 'unverified';
 
@@ -172,7 +194,10 @@ export const useKycScreen = () => {
     slotError,
     pickSlot,
     removeSlot,
+    documentGroup,
+    documentTypes,
     documentType,
+    slots,
     documentTypeError: serverErrors.documentType ?? null,
     onDocumentTypeChange,
     onSubmit,

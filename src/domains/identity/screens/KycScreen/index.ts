@@ -1,1 +1,1 @@
-export { KycScreen } from './KycScreen';
+export { BrandKycDocumentScreen, KycScreen } from './KycScreen';

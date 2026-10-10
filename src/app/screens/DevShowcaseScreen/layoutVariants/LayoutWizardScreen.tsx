@@ -23,6 +23,8 @@ const STEP_TITLE_KEY: readonly ParseKeys[] = [
   'devShowcase.wizard.step3',
 ];
 
+const CHOICE_STEP = 2;
+
 const WizardDemoStep: React.FC = memo(() => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -39,12 +41,24 @@ const WizardDemoStep: React.FC = memo(() => {
   return (
     <Layout
       footer={
-        <LayoutFooter
-          primary={{
-            label: t(isLast ? 'common.done' : 'common.next'),
-            onPress: onNext,
-          }}
-        />
+        // Step 2 stands in for a choice step: options are the action, the footer only skips.
+        step === CHOICE_STEP ? (
+          <LayoutFooter
+            top={
+              <Text variant="caption" align="center" color={colors.text.secondary}>
+                {t('devShowcase.wizard.skipHint')}
+              </Text>
+            }
+            secondary={{ label: t('devShowcase.wizard.skip'), onPress: onNext }}
+          />
+        ) : (
+          <LayoutFooter
+            primary={{
+              label: t(isLast ? 'common.done' : 'common.next'),
+              onPress: onNext,
+            }}
+          />
+        )
       }
     >
       <Box gap="lg">

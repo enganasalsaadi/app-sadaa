@@ -16,6 +16,13 @@ describe('parsePushPayload', () => {
       type: 'platform_rejected',
       target: { kind: 'platform', platformId: '01J9ZQ4M8X' },
     });
+    expect(
+      parsePushPayload({
+        type: 'brand_domain_verified',
+        entity_id: '01JD7V2KQZ',
+        deep_link: 'sada://verification',
+      }),
+    ).toEqual({ type: 'brand_domain_verified', target: { kind: 'verification' } });
     expect(parsePushPayload({ type: 'test', deep_link: 'sada://notifications' })).toEqual({
       type: 'test',
       target: { kind: 'notifications' },
@@ -81,6 +88,7 @@ describe('parsePushPayload', () => {
     ['an empty platform id', 'sada://platforms/'],
     ['an id with a query', 'sada://platforms/01J9?x=1'],
     ['an id on a fixed route', 'sada://kyc/123'],
+    ['an id on the verification route', 'sada://verification/123'],
     ['a non-string link', 42],
   ])('drops %s', (_, deepLink) => {
     expect(parsePushPayload({ type: 'kyc_approved', deep_link: deepLink }).target).toBeNull();

@@ -7,6 +7,14 @@ export type { FollowerTierId };
 export type UserType = 'influencer' | 'brand';
 export type UserStatus = 'draft' | 'active' | 'suspended';
 export type KycStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
+/** Brand verification route: the approved one, else the one with a pending attempt. */
+export const KYC_METHODS = [
+  'commercial_registry',
+  'social_dm_proof',
+  'personal_id',
+  'domain_email',
+] as const;
+export type KycMethod = (typeof KYC_METHODS)[number];
 
 export interface BillingAddress {
   first_name: string;
@@ -95,6 +103,10 @@ export interface ProfileCompletion {
 
 export interface UserKyc {
   status: KycStatus;
+  /** Raw server value: narrow with `toKycMethod` (unknown → `null`). Absent on older servers. */
+  method?: string | null;
+  /** Localized `method`, shown as-is. */
+  method_label?: string | null;
   rejection_reason: string | null;
   submitted_at: string | null;
   reviewed_at: string | null;

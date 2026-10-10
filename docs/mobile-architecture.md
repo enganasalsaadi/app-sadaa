@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-09 |
+| **Last updated** | 2026-10-10 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -297,7 +297,7 @@ APP LAUNCH
 │   └── Register as Creator ───────┤                             ✅
 │                                  ▼
 ├── REGISTRATION WIZARD (signed in, not finished; "Delete my account" on every step)   ✅
-│   ├── Brand:   Verify phone → Business profile → Business document (optional) → Welcome   ✅
+│   ├── Brand:   Verify phone → Business profile → Business verification (optional: one of four ways) → Welcome   🟡 verification step rebuilt, awaiting device and live-server testing
 │   └── Creator: Verify phone → Niches & platforms → Prices (optional) → ID check (optional) → Welcome   ✅
 │
 ├── SUSPENDED (blocking: contact support, re-check status, log out, delete account)   ✅
@@ -346,7 +346,12 @@ APP LAUNCH
     └── Account (brand) / My profile (creator) tab
           ├── Profile (navy header + cards, different per role)  🟡 built, awaiting device testing
           │     ├── Notifications inbox (bell with unread count in the header)   🟡 built, awaiting device and live-server testing
-          │     ├── Verification: creator ID (front + back) or brand company document   🟡 built, awaiting device and live-server testing
+          │     ├── Creator: Verification (ID front + back)          🟡 built, awaiting device and live-server testing
+          │     ├── Brand: Business verification (pick one of four ways)   🟡 built, awaiting device and live-server testing
+          │     │     choices · requests in progress (under review / rejected) · verified card
+          │     │     ├── Company document or owner's ID / passport upload
+          │     │     ├── Instagram or Facebook page proof (page link → code → send it in a DM)
+          │     │     └── Official domain email (domain + email → confirmation link)
           │     ├── Creator: My prices (grouped by platform + in person)   🟡 built, awaiting device and live-server testing
           │     │     └── One price: add / edit / delete (package, price, delivery, revisions,
           │     │           how long it stays live, rush delivery)          🟡 built, awaiting device and live-server testing
@@ -382,8 +387,8 @@ APP LAUNCH
    - **Manually chosen tiers are marked "Under review"** until the Sada team approves them. They still count for applying to campaigns, and brands see the "under review" label.
    - The creator can mark one platform as **primary**. If they don't, Sada uses their biggest account.
    - Unsaved platform entries are kept on the device, so closing the app doesn't lose the work.
-4. **Set prices (optional).** For each linked platform the app lists the services Sada offers there (for example reel, story, feed post on Instagram), plus in-person services such as an on-site visit. The creator ticks what they offer, picks the package (for example story frames or video length) and sets a price between $5 and $50,000. Delivery time, revisions and the rest take sensible defaults they can change later from My prices. They can skip this step.
-5. **Verify identity (optional).** They upload the front and back of their national ID (photo or PDF, up to 10 MB). Skipping is allowed and registration still completes. Verification raises trust with brands.
+4. **Set prices (optional).** For each linked platform the app lists the services Sada offers there (for example reel, story, feed post on Instagram), plus in-person services such as an on-site visit. The creator ticks what they offer, picks the package (for example story frames or video length) and sets a price between $5 and $50,000. Delivery time, revisions and the rest take sensible defaults they can change later from My prices. They can skip this step: like every optional registration step, the skip button sits in the fixed bottom bar under the main button, with a one-line note above it, so it is always visible without scrolling.
+5. **Verify identity (optional).** They upload the front and back of their national ID (photo or PDF, up to 10 MB). Skipping is allowed (same always-visible skip button in the bottom bar) and registration still completes. Verification raises trust with brands.
 6. **Welcome.** A celebration screen. At this natural moment, the app may *offer* to turn on notifications (see §6.4).
 
 #### Journey A2: Managing platforms, prices and niches after registration 🟡
@@ -403,8 +408,8 @@ APP LAUNCH
 - **Brand, "Company info":** company name, email, business type, governorate and social links (Instagram, Facebook, TikTok first, the rest behind "More links"). Links are checked against each platform's real addresses, like at registration. Email changes apply at once.
 - **The phone number can't be changed in the app**, because it is the account's identity. It is shown locked, with a "contact support to change your number" link that opens WhatsApp with a ready message.
 - Only what changed is saved. Leaving with unsaved changes asks first. Server errors appear next to the field they concern.
-- **Verification after registration:** the verification card on the Profile opens the upload page when an upload is possible (never sent, or rejected; a rejection shows the reason and an "Upload again" button). Creators upload the front and back of their national ID (photo or PDF, up to 10 MB). Brands choose the document type (commercial register, industrial register or trade license) and upload one document (JPG, PNG or PDF, up to 10 MB). Files are checked on the phone before sending. While a request is under review, or once verified, the page shows only the status and its date. Sending is limited to 5 tries per hour (shared with registration); when reached, the button shows a countdown. The result arrives as a notification and refreshes the status.
-- **Completion adds up to 100%.** Every step the server counts has its own "complete your profile" card, verification included (35% for brands, 20% for creators), so the cards always add up to what is missing. The verification card opens the upload page; while a request is under review it only says so; after a rejection it asks to upload again.
+- **Verification after registration:** the verification card on the Profile opens the upload page (creators) or the business verification page (brands) when an upload is possible (never sent, or rejected; a rejection shows the reason and an "Upload again" button). Creators upload the front and back of their national ID (photo or PDF, up to 10 MB). Brands first pick one of four ways to verify (Journey D); the two document ways open this upload page with the right document types. Files are checked on the phone before sending. While a request is under review, or once verified, the page shows only the status and its date. Sending is limited to 5 tries per hour (shared with registration); when reached, the button shows a countdown. The result arrives as a notification and refreshes the status.
+- **Completion adds up to 100%.** Every step the server counts has its own "complete your profile" card, verification included (35% for brands, 20% for creators), so the cards always add up to what is missing. The verification card opens the verification page; while a request is under review it only says so; after a rejection it asks to upload again.
 - **The Profile band:** built like the creator Home's so both tabs feel like one product and have the same height: the page name on the top line beside the two icons, then a larger photo (tap to change) with the name, gold check mark, city and email on the full width, then a frosted completion card where the KPI strip sits on Home: the label and a large percentage on one line, a thicker bar, and one line on why it matters (creators only). At 100% the card stays and says "Your profile is complete" with a check, so the band never jumps in height. The same barely visible corner light as Home sits on the navy.
 - **How the Profile moves:** the navy band behind the photo and name stays navy when pulled down (no grey gap), drifts slightly slower than the page, and the cards slide up over it as a rounded sheet. The top bar stays fully see-through until the band has scrolled away, then shows a small photo, the name and the verified mark aligned to the page's start edge (not a centred title), with the icons ending on the page's other edge; Home's pinned bar lines up the same way. The refresh spinner is white on the navy band.
 - **The brand Profile is lighter than the creator's:** the header shows the company logo (tap to change), name, business type and city; below come the completion cards (the photo step reads "add your company logo"), notifications, business verification and a company card (business type, city, links). Platforms, niches and prices are creator-only and never appear for brands.
@@ -443,17 +448,24 @@ APP LAUNCH
 1. **Create account** (name, phone, password) → SMS code is sent.
 2. **Verify phone** (same protected code screen as creators).
 3. **Business profile:** company or store, business name, industry, and social links (Facebook, Instagram and so on).
-4. **Business document (optional):** pick the document type (commercial register, industrial register or trade licence) and upload it (photo or PDF, up to 10 MB). Can be skipped.
+4. **Business verification (optional):** the brand picks one of the four ways described in Journey D. Picking an option is the action, so the bottom bar holds only "Skip for now" (with the note "You can verify later from your account"). Once a document is sent, a confirmation email is sent, or a page-proof code is created, registration moves on to Welcome while the review continues in the background; "Pick another way" always returns to the four choices. 🟡 awaiting device and live-server testing.
 5. **Welcome**, then the main app.
 
 #### Journey C: Resuming an unfinished registration ✅
 If someone closes the app halfway through, the next launch (or login) asks the server "what step is this user on?" and takes them **straight to that step**. If two devices or a slow network get out of sync, the app re-checks with the server and reroutes instead of showing an error. A step is never submitted twice by accident.
 
-#### Journey D: KYC (identity and business verification) ✅ at registration · 🔜 in-app
-- **Today:** verification is an optional final step of registration for both roles.
-- **What happens after upload:** the document goes to a review queue, and the account's verification status moves through *unverified → pending → verified* (or *rejected*, with the option to resubmit).
-- **Planned:** a "Verify my account" entry in Settings so users who skipped can verify later, plus a visible **verified badge** on profiles.
-- **Limits:** a small number of submissions per hour, to prevent abuse.
+#### Journey D: KYC (identity and business verification) ✅ creators · 🟡 brands (four ways, awaiting device and live-server testing)
+- **When:** verification is an optional final step of registration for both roles, and can be done later from the Profile's verification card.
+- **Creators:** upload the front and back of their national ID; the team reviews it, and the status moves through *unverified → pending → verified* (or *rejected*, with the option to upload again).
+- **Brands choose how to verify.** Many Syrian businesses have no company papers, so brands get four ways, and passing any one is enough. The page groups them as "with documents" and "without documents":
+  1. **Commercial register or license** (registered companies): commercial or industrial register, or trade license, one file. Reviewed by the team.
+  2. **Owner's national ID or passport** (home businesses and freelancers): front and back of the ID, or one passport page. Reviewed by the team.
+  3. **Instagram or Facebook page proof** (stores that live on social media): the brand pastes their store's page link (only real Instagram or Facebook page addresses are accepted), Sada creates a code, and the brand sends it in a direct message **from the store's account** to Sada's official account. On Facebook, Messenger opens with the code already typed; Instagram can't pre-fill a message, so the code is copied first. A person on Sada's team matches the code by hand, so the app never promises instant approval. A code never expires; creating a new one replaces the old one (the app asks first). While a code waits for review, the page checks again each time it is opened and every minute while it stays open.
+  4. **Official domain email** (businesses with a website): the brand enters their domain and an email on it; public email providers (Gmail, Hotmail and the like) are refused, and the email must be on that exact domain. Sada emails a confirmation link; opening it verifies the business at once, with no human review. The page shows when the link expires, a "Resend" button that waits a minute between sends, and "I opened the link, check again". An expired link offers a new one.
+- **One page shows where things stand:** requests in progress (under review, awaiting confirmation, rejected with the team's reason) appear at the top with the other ways still available below, because a rejection or a pending request never blocks another way. Once verified, the page shows a gold "Your business is verified" card naming the way that was approved and the date. Status names come from the server in the user's language.
+- **Results arrive as notifications** (page proof approved or rejected, domain confirmed) and open this page.
+- **Limits** (enforced by the server, shown as a countdown on the button): 5 document uploads, 5 page-proof codes and 3 confirmation emails per hour; a confirmation email can be resent only once a minute. Once a brand is verified, every way is closed.
+- **Privacy:** only Sada's verification team sees the files and details.
 
 #### Journey E: Login, forgot password and suspension ✅
 - **Login:** phone and password. Too many attempts show a "please wait" message.
@@ -588,7 +600,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - **Respect "Not now".** After a decline, the app waits at least 48 hours before asking again, and asks at most 3 times per installation. If the phone can no longer show the system prompt, the app stops asking.
 - **Always in control.** The user can change the permission at any time in the phone's settings. The Profile screen shows the live status: while notifications are off, a card explains that campaigns may be missed and offers to turn them on (or opens the phone's settings if the system can no longer ask). Once on, it shows a calm confirmation. A notifications screen with Sada's categories comes with the notification inbox.
 - **Fresh data on every notification.** When a notification arrives or is tapped, the app refreshes the user's data so the screen matches what the notification said.
-- **Safe notification links.** Notification content is checked against an approved list before it is acted on. A notification can never send the user to an arbitrary screen. Tapping a notification opens its screen: verification results open the verification page, platform results open that platform (creators only; brands land in the inbox), top-up results (approved, rejected or reversed) open that top-up request for brands, withdrawal results (paid, rejected or returned) open that withdrawal request for creators, payout method alerts (a method added or its details changed) open the creator's payout methods page, other wallet updates (wallet frozen or unfrozen) open the Wallet tab, anything else opens the inbox. A wallet notification also refreshes the balance and the related list (a payout method alert refreshes only the saved methods). If the tap launched the app, it waits until sign-in has finished, then opens the screen, with the Profile (or the wallet home) underneath so Back always works.
+- **Safe notification links.** Notification content is checked against an approved list before it is acted on. A notification can never send the user to an arbitrary screen. Tapping a notification opens its screen: verification results open the verification page (for brands: the business verification page, including page-proof and domain-email results), platform results open that platform (creators only; brands land in the inbox), top-up results (approved, rejected or reversed) open that top-up request for brands, withdrawal results (paid, rejected or returned) open that withdrawal request for creators, payout method alerts (a method added or its details changed) open the creator's payout methods page, other wallet updates (wallet frozen or unfrozen) open the Wallet tab, anything else opens the inbox. A wallet notification also refreshes the balance and the related list (a payout method alert refreshes only the saved methods). If the tap launched the app, it waits until sign-in has finished, then opens the screen, with the Profile (or the wallet home) underneath so Back always works.
 - **Notification inbox.** A bell in the Profile header shows the unread count. The inbox lists notifications newest first, with an unread dot and bold title, how long ago each arrived, and more as the user scrolls. Tapping one marks it read and opens its screen; one header button marks everything read. An empty inbox says so plainly.
 - **Device registration.** The app registers the device for notifications when the user signs in, when the notification token changes, and when the language changes (so notifications arrive in the right language). On logout the device is unregistered and all local data is cleared.
 - **Planned:** a notifications screen in Settings with the live permission status and categories that fit Sada's events, and **city alerts** for creators when a local brand posts a campaign.
@@ -655,7 +667,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - 🟡 Edit creator and brand profiles (separate pages per role) and change avatar or logo: built, awaiting testing. Change password on the new service.
 - 🟡 Manage social platforms after registration (add, edit, refresh, set primary, availability, remove): built, awaiting testing.
 - 🟡 Prices v2: one price per service and package, with delivery time, revisions, how long it stays live and rush delivery, plus in-person services; set in registration or from My prices: built, awaiting testing against the live service.
-- 🟡 Verify identity (creators) or the business (brands) later from the Profile: built, awaiting testing.
+- 🟡 Verify identity (creators) or the business (brands, four ways: company document, owner's ID or passport, social page proof, domain email) at registration or later from the Profile: built, awaiting testing.
 - 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
 - 🟡 Creator Home dashboard with the shareable media kit, its insights page (7 / 30 / 90 days), the "preview as brands see it" page and the link and visibility settings: built, awaiting testing.
 - 🟡 Opening a creator's shared link inside the app (their public profile, with a counted view): built, awaiting testing. Web links need Sada's permanent public web address and the app's identity registered with it.
@@ -708,6 +720,8 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-10 | Business verification for brands rebuilt (🟡 awaiting device and live-server testing): a picker with four ways (commercial register or license, owner's national ID or passport, Instagram or Facebook page proof with a code sent by DM and reviewed by hand, official domain email with an automatic confirmation link), one status page for requests in progress, rejections and the verified card, new notifications for page proof and domain results that open it, and the same picker as the optional registration step, which now moves on to Welcome once a request is sent. | 5.2, 5.3 (Journeys A3, B, D), 6.4, 7.3 |
+| 2026-10-09 | Registration: the skip button on every optional step (creator prices and identity check, brand business document) now sits in the fixed bottom bar under the main button, with its note above it. On the identity steps it used to sit at the end of the page, hidden until the user scrolled. | 5.3 |
 | 2026-10-09 | Withdrawal notifications (paid, rejected or returned) and their inbox entries now open the withdrawal request itself for creators (brands land on the Wallet tab); a withdrawal request can be shared as a plain-text receipt from its header. | 5.3, 6.4 |
 | 2026-10-09 | Creator withdrawals built (🟡 awaiting device and live-server testing): Withdraw and Withdrawal history buttons in the creator's wallet band (the "in transfer" tile opens the requests on their way); a two-step withdrawal (destination, currency and amount with a live price from the server listing every reason it can't go ahead and a countdown to the next allowed withdrawal, then a review) with an "Add payout method" path that comes back to the withdrawal; a confirmation page with a transfer timeline; a history filtered by status; request pages with the rejection or return reason, the receipt number and cancel while in transfer. The default limits ($25 minimum, $500 a day, one every 7 days) show up front until the service sends them. Withdrawal notifications still open the Wallet tab. | 4.4, 4.5, 5.2, 5.3 (Journey H), 7.4 |
 | 2026-10-09 | Sham Cash payout methods now also ask for the wallet's account code. New security alerts when a payout method is added or its details change; tapping one opens the payout methods page (creators). | 4.5, 6.4 |

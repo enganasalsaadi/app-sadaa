@@ -36,7 +36,7 @@ import {
   selectUserType,
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
-import { MediaKitPublicScreen } from '@/domains/identity';
+import { BRAND_KYC_STEP_SCREENS, MediaKitPublicScreen } from '@/domains/identity';
 import { MainTabs } from './MainTabs';
 
 type RootStackParamList = {
@@ -67,7 +67,7 @@ const OnboardingResume: React.FC = () => {
   return userType === 'influencer' ? (
     <InfluencerOnboardingNavigator />
   ) : (
-    <BrandOnboardingNavigator />
+    <BrandOnboardingNavigator kycScreens={BRAND_KYC_STEP_SCREENS} />
   );
 };
 

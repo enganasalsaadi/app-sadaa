@@ -79,6 +79,7 @@ loading (skeleton with reserved space, not a spinner, when > 300ms) · empty (me
 
 - `react-hook-form` + yup schema factory in `domains/<x>/schemas/` (`createXSchema(t)`, built with `useMemo(..., [t])`), `mode: 'onTouched'`. Reuse field builders (`createPhoneFields`, `createNewPasswordFields`).
 - Submit button stays **enabled**; validation runs on press and shows errors next to fields. Never disable a button just because the form is invalid.
+- **Optional steps (approved 2026-10-09):** Skip is always the `LayoutFooter` `secondary` (ghost) under the primary, with its hint/nudge caption in the footer `top`. Never put Skip at the end of the scroll body, where it is hidden until the user scrolls (references: creator rates + KYC, brand KYC). A **choice step** (tapping an option is the action, e.g. the brand verification picker, 2026-10-10) has no primary: the footer holds only Skip (`LayoutFooter` without `primary`).
 - Every input: label, placeholder, `returnKeyType` + `onSubmitEditing` chaining to the next field, correct `textContentType`/`autoComplete`/`keyboardType`.
 - OTP steps: `useOtpCodeForm` + `OtpCodeField` (auto-submit, shake, timestamp cooldown). Countdowns via `useCountdown(endsAt)`, never a decrementing `setInterval`.
 - Toasts report what really happened (success only after `unwrap()` resolves).

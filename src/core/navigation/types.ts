@@ -38,7 +38,11 @@ export type BrandWizardStackParamList = {
   BrandVerifyPhone: undefined;
   /** `fromBack`: replaced in from KYC on resume — animates as a pop. */
   BrandProfile: { fromBack?: boolean } | undefined;
+  /** Step 4: the verification picker; each method below opens from it. */
   BrandKyc: undefined;
+  BrandKycDocument: { documentGroup: KycDocumentGroupParam };
+  BrandSocialProof: undefined;
+  BrandDomainEmail: undefined;
 };
 
 export type BrandOnboardingStackParamList = {
@@ -61,12 +65,22 @@ export type InfluencerOnboardingStackParamList = {
   InfluencerWelcome: undefined;
 };
 
+/** Brand KYC upload from the verification picker: option 1 (company paperwork) or 2 (owner ID / passport). */
+export type KycDocumentGroupParam = 'company' | 'owner';
+
 /** User-account screens hosted inside the Settings tab. */
 type AccountScreens = {
   ProfileScreen: undefined;
   PersonalInfoScreen: undefined;
   CompanyInfoScreen: undefined;
-  KycScreen: undefined;
+  /** Brands: `documentGroup` picks the document types offered (default `company`). */
+  KycScreen: { documentGroup?: KycDocumentGroupParam } | undefined;
+  /** Brand verification picker: the four methods, the active attempt, or the verified state. */
+  CompanyVerification: undefined;
+  /** Brand verification by a code DM'd from the store's Instagram / Facebook page. */
+  SocialProof: undefined;
+  /** Brand verification by a link emailed to an address on the company's domain. */
+  DomainEmail: undefined;
   ChangePasswordScreen: undefined;
   LanguageScreen: undefined;
   WebViewScreen: { title: string; url: string };

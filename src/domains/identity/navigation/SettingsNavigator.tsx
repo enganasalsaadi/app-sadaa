@@ -7,6 +7,9 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { PersonalInfoScreen } from '../screens/PersonalInfoScreen';
 import { CompanyInfoScreen } from '../screens/CompanyInfoScreen';
 import { KycScreen } from '../screens/KycScreen';
+import { CompanyVerificationScreen } from '../screens/CompanyVerificationScreen';
+import { SocialProofScreen } from '../screens/SocialProofScreen';
+import { DomainEmailScreen } from '../screens/DomainEmailScreen';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
 import { LanguageScreen } from '../screens/LanguageScreen';
 import { WebViewScreen } from '../screens/WebViewScreen';
@@ -32,6 +35,9 @@ export const SettingsNavigator: React.FC = () => (
     <Stack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
     <Stack.Screen name="CompanyInfoScreen" component={CompanyInfoScreen} />
     <Stack.Screen name="KycScreen" component={KycScreen} />
+    <Stack.Screen name="CompanyVerification" component={CompanyVerificationScreen} />
+    <Stack.Screen name="SocialProof" component={SocialProofScreen} />
+    <Stack.Screen name="DomainEmail" component={DomainEmailScreen} />
     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
     <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
     <Stack.Screen name="WebViewScreen" component={WebViewScreen} />

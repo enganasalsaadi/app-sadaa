@@ -13,8 +13,11 @@ export interface LayoutFooterAction {
 }
 
 export interface LayoutFooterProps {
-  /** The screen's single primary action (rule 09). `onBrand` over navy. */
-  primary: LayoutFooterAction & { variant?: Extract<ButtonVariant, 'primary' | 'onBrand' | 'danger'> };
+  /**
+   * The screen's single primary action (rule 09). `onBrand` over navy. Left out only on a
+   * choice step, where tapping an option is the action and the footer holds just Skip.
+   */
+  primary?: LayoutFooterAction & { variant?: Extract<ButtonVariant, 'primary' | 'onBrand' | 'danger'> };
   /** Optional action under the primary: `ghost` (default) for skip/cancel, `secondary` for a real alternative. */
   secondary?: LayoutFooterAction & { variant?: Extract<ButtonVariant, 'secondary' | 'ghost'> };
   /** Optional third, lowest-emphasis action (always `ghost`); pair it with a `secondary` one. */
@@ -35,13 +38,15 @@ const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({
   return (
     <Box px={paddingX} py="md" gap="sm">
       {top}
-      <CustomButton
-        title={primary.label}
-        onPress={primary.onPress}
-        loading={primary.loading}
-        disabled={primary.disabled}
-        variant={primary.variant}
-      />
+      {primary ? (
+        <CustomButton
+          title={primary.label}
+          onPress={primary.onPress}
+          loading={primary.loading}
+          disabled={primary.disabled}
+          variant={primary.variant}
+        />
+      ) : null}
       {secondary ? (
         <CustomButton
           title={secondary.label}

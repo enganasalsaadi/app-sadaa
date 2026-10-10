@@ -7,6 +7,7 @@ import type { AppNotification } from '../types';
 /** Typed destinations of a tapped push or inbox entry (rule 07: never a raw screen name). */
 export type NotificationRoute =
   | { screen: 'KycScreen' }
+  | { screen: 'CompanyVerification' }
   | { screen: 'PlatformDetailScreen'; platformId: string }
   | { screen: 'NotificationsScreen' }
   | { screen: 'WalletTab' }
@@ -14,7 +15,11 @@ export type NotificationRoute =
   | { screen: 'TopUpDetail'; topUpId: string }
   | { screen: 'WithdrawalDetail'; withdrawalId: string };
 
-/** Platforms, payout methods and withdrawals are creator screens, top-ups a brand one: the other role lands somewhere safe. */
+/**
+ * Platforms, payout methods and withdrawals are creator screens, top-ups and company verification
+ * brand ones: the other role lands somewhere safe. A brand's KYC result opens the verification
+ * picker, which shows the document's status beside the other methods.
+ */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
   userType: UserType | null,
@@ -22,7 +27,11 @@ export const resolveNotificationRoute = (
   if (!target) return null;
   switch (target.kind) {
     case 'kyc':
-      return { screen: 'KycScreen' };
+      return userType === 'brand' ? { screen: 'CompanyVerification' } : { screen: 'KycScreen' };
+    case 'verification':
+      return userType === 'brand'
+        ? { screen: 'CompanyVerification' }
+        : { screen: 'NotificationsScreen' };
     case 'platform':
       return userType === 'influencer'
         ? { screen: 'PlatformDetailScreen', platformId: target.platformId }
@@ -53,6 +62,9 @@ export const resolveNotificationRoute = (
 const FALLBACK_LINK: Record<string, (entityId: string) => string> = {
   kyc_approved: () => 'sada://kyc',
   kyc_rejected: () => 'sada://kyc',
+  brand_social_proof_approved: () => 'sada://verification',
+  brand_social_proof_rejected: () => 'sada://verification',
+  brand_domain_verified: () => 'sada://verification',
   platform_approved: id => `sada://platforms/${id}`,
   platform_rejected: id => `sada://platforms/${id}`,
   wallet_top_up_completed: id => `sada://wallet/top-ups/${id}`,
@@ -105,6 +117,7 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
         params: { screen: 'WithdrawalDetail', params: { id: route.withdrawalId }, initial: false },
       };
     case 'KycScreen':
+    case 'CompanyVerification':
     case 'NotificationsScreen':
       return { screen: 'SettingsTab', params: { screen: route.screen, initial: false } };
     default: {

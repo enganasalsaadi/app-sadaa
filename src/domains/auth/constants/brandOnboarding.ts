@@ -25,8 +25,8 @@ export const BRAND_WIZARD_STEPS = {
   },
   kyc: {
     index: 4,
-    titleKey: 'auth.brandOnboarding.kyc.title',
-    subtitleKey: 'auth.brandOnboarding.kyc.subtitle',
+    titleKey: 'account.verification.picker.onboardingTitle',
+    subtitleKey: 'account.verification.picker.onboardingSubtitle',
   },
 } as const satisfies Record<BrandWizardStepKey, WizardStepDef>;
 
@@ -41,7 +41,6 @@ export const BRAND_STEP_ROUTE = {
   keyof BrandWizardStackParamList
 >;
 
-export const KYC_DOCUMENT_TYPE = 'commercial_register';
 export const KYC_MAX_FILE_BYTES = 10 * 1024 * 1024;
 export const KYC_ALLOWED_MIME_TYPES = [
   'application/pdf',

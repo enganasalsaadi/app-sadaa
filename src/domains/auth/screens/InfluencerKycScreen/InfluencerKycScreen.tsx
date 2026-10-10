@@ -4,7 +4,6 @@ import { BadgeCheck, Clock, Handshake } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import {
   Box,
-  CustomButton,
   FilePickerCard,
   InlineError,
   Layout,
@@ -39,11 +38,22 @@ export const InfluencerKycScreen: React.FC = () => {
       padding={{ y: '2xl' }}
       footer={
         <LayoutFooter
+          top={
+            <Text variant="caption" align="center" color={colors.text.secondary}>
+              {t('auth.influencerOnboarding.kyc.skipHint')}
+            </Text>
+          }
           primary={{
             label: t('auth.influencerOnboarding.kyc.submit'),
             onPress: onUpload,
             loading: isUploading,
             disabled: !canUpload || isBusy,
+          }}
+          secondary={{
+            label: t('auth.influencerOnboarding.kyc.skip'),
+            onPress: onSkip,
+            loading: isSkipping,
+            disabled: isBusy && !isSkipping,
           }}
         />
       }
@@ -96,20 +106,6 @@ export const InfluencerKycScreen: React.FC = () => {
         </Box>
 
         <InlineError error={error} />
-
-        <Box gap="xs" align="center">
-          <CustomButton
-            title={t('auth.influencerOnboarding.kyc.skip')}
-            onPress={onSkip}
-            variant="ghost"
-            loading={isSkipping}
-            disabled={isBusy}
-            fullWidth
-          />
-          <Text variant="caption" color={colors.text.tertiary} align="center">
-            {t('auth.influencerOnboarding.kyc.skipHint')}
-          </Text>
-        </Box>
       </Box>
     </Layout>
   );

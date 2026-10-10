@@ -5,7 +5,6 @@ export { ResetPasswordScreen } from './ResetPasswordScreen';
 export { BrandAccountScreen } from './BrandAccountScreen/index';
 export { BrandVerifyPhoneScreen } from './BrandVerifyPhoneScreen/index';
 export { BrandProfileScreen } from './BrandProfileScreen/index';
-export { BrandKycScreen } from './BrandKycScreen/index';
 export { BrandWelcomeScreen } from './BrandWelcomeScreen/index';
 export { InfluencerAccountScreen } from './InfluencerAccountScreen/index';
 export { InfluencerVerifyPhoneScreen } from './InfluencerVerifyPhoneScreen/index';
