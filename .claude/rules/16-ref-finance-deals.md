@@ -26,7 +26,7 @@ paths:
 - `screens/StatementScreen` (`role` prop; `STATEMENT_TYPE_FILTERS` per role; `utils/statementPeriods` → query args, unset keys left out so "all" shares the tab's `{}` cache).
 - `screens/TransactionReceiptScreen` (`{ reference }`; copy, share, report via `useOpenSupport`).
 - Blockers `WALLET_BLOCKER_DEF` + `resolveWalletBlocker`; role copy `WALLET_ROLE_COPY`.
-- Backend asks for v4 fields: `docs/backend/wallet-v4-prompt.md`.
+- v4 contract (live): `docs/mobile-handoff-v4.md`. Escrow `id` = hold id (`source.id` on lines); `deal_id`/`deal_title` `null` until deals ship. Receipt commission rows from `WalletTransaction.commission` (creator `escrow_release` `details`), display only.
 
 ## Brand top-ups (Money wizard archetype, rule 09)
 

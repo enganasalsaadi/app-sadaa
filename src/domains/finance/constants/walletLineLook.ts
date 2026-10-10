@@ -5,6 +5,7 @@ import {
   Clock,
   Lock,
   ReceiptText,
+  TriangleAlert,
   type LucideIcon,
 } from 'lucide-react-native';
 import type { HueTone, ThemeColors } from '@/core/theme';
@@ -42,6 +43,7 @@ export const LINE_KIND_ICON = {
 export const LINE_STATUS_PILL = {
   pending: { tone: 'warning', icon: Clock },
   held: { tone: 'info', icon: Lock },
+  disputed: { tone: 'danger', icon: TriangleAlert },
 } as const satisfies Record<WalletLineStatus, { tone: HueTone; icon: LucideIcon }>;
 
 /** An unknown type falls back to the direction. */

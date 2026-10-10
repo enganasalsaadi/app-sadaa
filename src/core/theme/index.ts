@@ -17,7 +17,8 @@ export {
   screenHeight,
 } from './utils/responsive';
 
-export {FONT_FAMILY} from './tokens/typography';
+export {FONT_FAMILY, BASELINE_SHIFT} from './tokens/typography';
+export type {TextScript} from './tokens/typography';
 export {motion, opacity, iconStroke} from './tokens/motion';
 export type {MotionDurationToken} from './tokens/motion';
 export {

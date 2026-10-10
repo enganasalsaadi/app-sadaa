@@ -13,7 +13,7 @@ export interface MoneyDto {
 export const WALLET_STATUS = ['active', 'frozen', 'closed'] as const;
 export type WalletStatus = (typeof WALLET_STATUS)[number];
 
-/** Wallet v4 delta (`docs/backend/wallet-v4-prompt.md` §1): absent on servers that predate it. */
+/** Wallet v4 (`docs/mobile-handoff-v4.md` §1): absent on servers that predate it. */
 export interface WalletSummaryDto {
   month_in?: MoneyDto | null;
   escrow?: MoneyDto | null;
@@ -94,8 +94,8 @@ export interface Counterparty {
   avatar_url: string | null;
 }
 
-/** A line whose lifecycle is still open (v4 delta §4); `null` once final. */
-export const WALLET_LINE_STATUS = ['pending', 'held'] as const;
+/** A line whose lifecycle is still open (v4 handoff §4); `null` once final. */
+export const WALLET_LINE_STATUS = ['pending', 'held', 'disputed'] as const;
 export type WalletLineStatus = (typeof WALLET_LINE_STATUS)[number];
 
 export interface WalletTransactionDto {
@@ -143,6 +143,16 @@ export interface WalletTransaction {
   status_label: string | null;
   /** `false` = memo line (escrow held for a creator): no sign, not in the balance. */
   affects_balance: boolean;
+  /** Creator `escrow_release` only: Sada's cut, already taken out of `amount`. */
+  commission: LineCommission | null;
+}
+
+/** From `details` (v4 handoff §5.1). Display only: never added to or taken from `amount` again. */
+export interface LineCommission {
+  gross: Money;
+  commission: Money;
+  /** Snapshotted when the money was held (default 10). */
+  rate_percent: number;
 }
 
 /** List meta (contract: `{ items, meta: { current_page, last_page, total } }`). */
@@ -191,9 +201,13 @@ export interface ExchangeRate {
   effective_at: string;
 }
 
+export const WALLET_ESCROW_STATUS = ['held', 'disputed'] as const;
+export type WalletEscrowStatus = (typeof WALLET_ESCROW_STATUS)[number];
+
 export interface WalletEscrowDto {
-  deal_id: string;
-  deal_title: string;
+  id: string;
+  deal_id?: string | null;
+  deal_title?: string | null;
   counterparty?: CounterpartyDto | null;
   amount: MoneyDto;
   status: string;
@@ -207,12 +221,17 @@ export interface WalletEscrowsDto {
   meta: ListPageMeta & { total_amount?: MoneyDto | null };
 }
 
-/** Money held on one active deal (v4 delta §2). Creator: net to receive · brand: gross held. */
+/** Money held on one active deal (v4 handoff §2). Creator: net to receive · brand: gross held. */
 export interface WalletEscrow {
-  deal_id: string;
-  deal_title: string;
+  /** Hold id: equals `source.id` on the escrow's statement lines. */
+  id: string;
+  /** `null` until deals ship: title falls back to `counterparty.name`, no deal link. */
+  deal_id: string | null;
+  deal_title: string | null;
   counterparty: Counterparty | null;
   amount: Money;
+  /** `null` = a status this build doesn't know: `status_label` still shows. */
+  status: WalletEscrowStatus | null;
   status_label: string;
   /** What releases the money at the deal's current stage. */
   release_hint: string | null;
@@ -249,7 +268,7 @@ export interface EarningsBucket {
   amount: Money;
 }
 
-/** `GET /wallet/earnings` (v4 delta §3): creator = net releases · brand = campaign spend. */
+/** `GET /wallet/earnings` (v4 handoff §3): creator = net releases · brand = campaign spend. */
 export interface WalletEarnings {
   total: Money;
   /** Every month of the period, zero months included, oldest first. */

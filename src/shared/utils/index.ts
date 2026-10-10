@@ -12,3 +12,4 @@ export type { SocialPlatform } from './socialLinks';
 export { buildWhatsAppUrl, openWhatsApp } from './whatsapp';
 export { formatFileSize } from './formatFileSize';
 export { getErrorMessage } from './errorMessage';
+export { detectScript } from './textScript';

@@ -3,15 +3,31 @@ import type { TextProps as RNTextProps, TextStyle } from 'react-native';
 import { Text as RNText } from 'react-native';
 import { useTheme } from '@/core/theme/hooks/useTheme';
 import { MAX_FONT_SIZE_MULTIPLIER } from '@/core/config';
+import { BASELINE_SHIFT } from '@/core/theme';
 import type {
   Mutable,
   TypographyVariant,
   SpacingToken,
 } from '@/core/theme/types';
 import { applyReplacements } from '@/shared/utils/textReplacer';
+import { detectScript } from '@/shared/utils/textScript';
 
 const replaceChild = (child: React.ReactNode): React.ReactNode =>
   typeof child === 'string' ? applyReplacements(child) : child;
+
+/** Plain text of string/number children; `null` when a nested element makes the script unknowable. */
+const plainText = (children: React.ReactNode): string | null => {
+  const parts = Array.isArray(children) ? children : [children];
+  let text = '';
+  for (const part of parts) {
+    if (typeof part === 'string' || typeof part === 'number') {
+      text += String(part);
+    } else if (part !== null && part !== undefined && typeof part !== 'boolean') {
+      return null;
+    }
+  }
+  return text;
+};
 
 interface TextProps extends RNTextProps {
   variant?: TypographyVariant;
@@ -62,6 +78,9 @@ const TextComponent: React.FC<TextProps> = ({
 }) => {
   const { typography, colors, spacing, isRTL } = useTheme();
 
+  const text = plainText(children);
+  const script = text === null ? null : detectScript(text);
+
   const computedStyle = useMemo<TextStyle>(() => {
     const variantStyle = typography[variant];
 
@@ -81,6 +100,12 @@ const TextComponent: React.FC<TextProps> = ({
     }
     if (italic) {
       s.fontStyle = 'italic';
+    }
+    // Visual only: the layout box stays put, so rows keep their measured height.
+    if (script !== null) {
+      s.transform = [
+        { translateY: variantStyle.fontSize * BASELINE_SHIFT[script] },
+      ];
     }
 
     if (mt !== undefined) {
@@ -132,6 +157,7 @@ const TextComponent: React.FC<TextProps> = ({
     transform,
     decoration,
     italic,
+    script,
     mt,
     mb,
     ms,

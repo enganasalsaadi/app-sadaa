@@ -1,11 +1,17 @@
 import { isCurrencyCode } from '@/core/money';
 import type { CurrencyCode, Money } from '@/core/money';
-import { WALLET_LINE_STATUS, WALLET_STATUS, WALLET_TRANSACTION_TYPES } from '../types';
+import {
+  WALLET_ESCROW_STATUS,
+  WALLET_LINE_STATUS,
+  WALLET_STATUS,
+  WALLET_TRANSACTION_TYPES,
+} from '../types';
 import type {
   Counterparty,
   CounterpartyDto,
   ExchangeRate,
   ExchangeRateDto,
+  LineCommission,
   MoneyDto,
   TransactionDirection,
   Wallet,
@@ -14,6 +20,7 @@ import type {
   WalletEarningsDto,
   WalletEscrow,
   WalletEscrowDto,
+  WalletEscrowStatus,
   WalletEscrows,
   WalletEscrowsDto,
   WalletLineStatus,
@@ -65,6 +72,28 @@ const toDirection = (direction: string, amount: number): TransactionDirection =>
 const toLineStatus = (status: string | null | undefined): WalletLineStatus | null =>
   status && isOneOf(WALLET_LINE_STATUS, status) ? status : null;
 
+const toEscrowStatus = (status: string): WalletEscrowStatus | null =>
+  isOneOf(WALLET_ESCROW_STATUS, status) ? status : null;
+
+const isMinorUnits = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0;
+
+/**
+ * Sada's cut on a creator's escrow release (handoff §5.1), in the line's currency. A malformed
+ * or zero commission drops the sub-row, never the line.
+ */
+const toCommission = (dto: WalletTransactionDto, amount: Money): LineCommission | null => {
+  if (dto.type !== 'escrow_release' || !dto.details) return null;
+  const { gross_cents: gross, commission_cents: commission, rate_percent: rate } = dto.details;
+  if (!isMinorUnits(gross) || !isMinorUnits(commission) || commission === 0) return null;
+  if (typeof rate !== 'number' || !Number.isFinite(rate)) return null;
+  return {
+    gross: { amount: gross, currency: amount.currency },
+    commission: { amount: commission, currency: amount.currency },
+    rate_percent: rate,
+  };
+};
+
 const toCounterparty = (dto: CounterpartyDto | null | undefined): Counterparty | null =>
   dto
     ? { type: dto.type, id: dto.id ?? null, name: dto.name, avatar_url: dto.avatar_url ?? null }
@@ -87,24 +116,28 @@ export const mapWallet = (dto: WalletDto): Wallet => ({
   summary: mapSummary(dto.summary),
 });
 
-export const mapWalletTransaction = (dto: WalletTransactionDto): WalletTransaction => ({
-  reference: dto.reference,
-  type: toTransactionType(dto.type),
-  type_label: dto.type_label,
-  direction: toDirection(dto.direction, dto.amount.amount),
-  amount: toMoney(dto.amount),
-  balance_after: toMoney(dto.balance_after),
-  original: dto.original ? toMoney(dto.original) : null,
-  exchange_rate: dto.exchange_rate ?? null,
-  source: dto.source ?? null,
-  details: dto.details ?? {},
-  created_at: dto.created_at,
-  description: dto.description || null,
-  counterparty: toCounterparty(dto.counterparty),
-  status: toLineStatus(dto.status),
-  status_label: dto.status_label || null,
-  affects_balance: dto.affects_balance !== false,
-});
+export const mapWalletTransaction = (dto: WalletTransactionDto): WalletTransaction => {
+  const amount = toMoney(dto.amount);
+  return {
+    reference: dto.reference,
+    type: toTransactionType(dto.type),
+    type_label: dto.type_label,
+    direction: toDirection(dto.direction, dto.amount.amount),
+    amount,
+    balance_after: toMoney(dto.balance_after),
+    original: dto.original ? toMoney(dto.original) : null,
+    exchange_rate: dto.exchange_rate ?? null,
+    source: dto.source ?? null,
+    details: dto.details ?? {},
+    created_at: dto.created_at,
+    description: dto.description || null,
+    counterparty: toCounterparty(dto.counterparty),
+    status: toLineStatus(dto.status),
+    status_label: dto.status_label || null,
+    affects_balance: dto.affects_balance !== false,
+    commission: toCommission(dto, amount),
+  };
+};
 
 const tryMapTransaction = (dto: WalletTransactionDto): WalletTransaction[] => {
   try {
@@ -136,10 +169,12 @@ export const mapExchangeRate = (dto: ExchangeRateDto | null): ExchangeRate | nul
   };
 
 const mapEscrow = (dto: WalletEscrowDto): WalletEscrow => ({
-  deal_id: dto.deal_id,
-  deal_title: dto.deal_title,
+  id: dto.id,
+  deal_id: dto.deal_id || null,
+  deal_title: dto.deal_title || null,
   counterparty: toCounterparty(dto.counterparty),
   amount: toMoney(dto.amount),
+  status: toEscrowStatus(dto.status),
   status_label: dto.status_label,
   release_hint: dto.release_hint || null,
   held_at: dto.held_at,

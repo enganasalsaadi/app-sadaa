@@ -18,6 +18,7 @@ const line = (reference: string, created: Date): WalletTransaction => ({
   status: null,
   status_label: null,
   affects_balance: true,
+  commission: null,
 });
 
 describe('groupLinesByDay', () => {

@@ -1571,6 +1571,8 @@
       "amountInUsd": "Amount in USD",
       "amountInSyp": "Amount in SYP",
       "rate": "Exchange rate",
+      "gross": "Deal amount",
+      "commission": "Sada commission · {{rate}}%",
       "balanceAfter": "Balance after",
       "report": "Report a problem",
       "supportMessage": "Hi, I need help with a wallet transaction. Reference: {{reference}}",

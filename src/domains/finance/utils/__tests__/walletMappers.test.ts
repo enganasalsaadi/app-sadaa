@@ -124,7 +124,51 @@ describe('mapWalletTransaction', () => {
       status: null,
       status_label: null,
       affects_balance: true,
+      commission: null,
     });
+  });
+
+  it('reads the commission on a creator escrow release', () => {
+    const mapped = mapWalletTransaction(
+      transactionDto({
+        type: 'escrow_release',
+        amount: usd(36000),
+        original: null,
+        exchange_rate: null,
+        source: { type: 'escrow_hold', id: '01JHOLD' },
+        details: { gross_cents: 40000, commission_cents: 4000, rate_percent: 10 },
+      }),
+    );
+    expect(mapped.amount).toEqual({ amount: 36000, currency: 'USD' });
+    expect(mapped.commission).toEqual({
+      gross: { amount: 40000, currency: 'USD' },
+      commission: { amount: 4000, currency: 'USD' },
+      rate_percent: 10,
+    });
+  });
+
+  it('drops a zero, malformed or non-release commission', () => {
+    const release = (details: Record<string, unknown>) =>
+      mapWalletTransaction(transactionDto({ type: 'escrow_release', details })).commission;
+    expect(release({ gross_cents: 40000, commission_cents: 0, rate_percent: 0 })).toBeNull();
+    expect(release({ gross_cents: '400', commission_cents: 4000, rate_percent: 10 })).toBeNull();
+    expect(release({ gross_cents: 40000, commission_cents: 40.5, rate_percent: 10 })).toBeNull();
+    expect(release({ gross_cents: 40000, commission_cents: 4000 })).toBeNull();
+    expect(
+      mapWalletTransaction(
+        transactionDto({
+          type: 'escrow_split',
+          details: { gross_cents: 40000, commission_cents: 4000, rate_percent: 10 },
+        }),
+      ).commission,
+    ).toBeNull();
+  });
+
+  it('maps a disputed escrow hold', () => {
+    const mapped = mapWalletTransaction(
+      transactionDto({ type: 'escrow_hold', status: 'disputed', status_label: 'متنازع عليها' }),
+    );
+    expect(mapped.status).toBe('disputed');
   });
 
   it('maps the v4 subject, counterparty and open status', () => {
@@ -237,6 +281,7 @@ describe('mapExchangeRate', () => {
 
 describe('mapWalletEscrows', () => {
   const escrowDto = (overrides: Partial<WalletEscrowDto> = {}): WalletEscrowDto => ({
+    id: '01JHOLD',
     deal_id: '01JD',
     deal_title: 'حملة الصيف',
     counterparty: { type: 'brand', id: '01JB', name: 'Zara Home', avatar_url: null },
@@ -250,10 +295,14 @@ describe('mapWalletEscrows', () => {
 
   it('maps the deals, the count and the total', () => {
     const escrows = mapWalletEscrows({
-      items: [escrowDto(), escrowDto({ deal_id: '01JE', amount: { amount: 1, formatted: '1', currency: 'EUR' } })],
+      items: [
+        escrowDto(),
+        escrowDto({ id: '01JHOLD2', amount: { amount: 1, formatted: '1', currency: 'EUR' } }),
+      ],
       meta: { current_page: 1, last_page: 1, total: 2, total_amount: usd(250000) },
     });
-    expect(escrows.items.map(item => item.deal_id)).toEqual(['01JD']);
+    expect(escrows.items.map(item => item.id)).toEqual(['01JHOLD']);
+    expect(escrows.items[0]?.status).toBe('held');
     expect(escrows.items[0]?.counterparty?.name).toBe('Zara Home');
     expect(escrows.count).toBe(2);
     expect(escrows.total_amount).toEqual({ amount: 250000, currency: 'USD' });
@@ -266,6 +315,16 @@ describe('mapWalletEscrows', () => {
     });
     expect(escrows.total_amount).toBeNull();
     expect(escrows.items[0]?.release_hint).toBeNull();
+  });
+
+  it('nulls the deal until deals ship and keeps a disputed hold', () => {
+    const escrows = mapWalletEscrows({
+      items: [escrowDto({ deal_id: null, deal_title: null, status: 'disputed' }), escrowDto({ status: 'frozen' })],
+      meta: { current_page: 1, last_page: 1, total: 2 },
+    });
+    expect(escrows.items[0]).toMatchObject({ deal_id: null, deal_title: null, status: 'disputed' });
+    expect(escrows.items[0]?.counterparty?.name).toBe('Zara Home');
+    expect(escrows.items[1]?.status).toBeNull();
   });
 });
 

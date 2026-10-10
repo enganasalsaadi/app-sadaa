@@ -5,7 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import type { ParseKeys } from 'i18next';
 import { normalizeApiError } from '@/core/api';
-import { formatDate, formatMoney } from '@/core/i18n';
+import { formatDate, formatMoney, formatNumber } from '@/core/i18n';
 import type { CurrencyCode, Money } from '@/core/money';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useToast } from '@/core/toast';
@@ -93,6 +93,20 @@ export const useTransactionReceiptScreen = () => {
         ? { amount: Math.abs(line.original.amount), currency: line.original.currency }
         : null;
     const amounts: ReceiptRow[] = [];
+    // Creator release: gross and Sada's cut, display only (the amount above is already net).
+    if (line.commission) {
+      amounts.push(
+        { key: 'gross', label: t('finance.receipt.gross'), value: formatMoney(line.commission.gross, lang) },
+        {
+          key: 'commission',
+          label: t('finance.receipt.commission', { rate: formatNumber(line.commission.rate_percent, {}, lang) }),
+          value: formatMoney(
+            { ...line.commission.commission, amount: -line.commission.commission.amount },
+            lang,
+          ),
+        },
+      );
+    }
     if (original) {
       amounts.push({
         key: 'original',

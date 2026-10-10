@@ -111,6 +111,18 @@ export type TypographyStyle = {
   fontVariant?: TextStyle['fontVariant'];
 };
 
+export type TextScript = 'arabic' | 'latin';
+
+/**
+ * Tajawal's line box reserves a deep descent (357/1000), so glyphs ride above the box centre:
+ * Latin caps (0..633) by ~0.14em, Arabic letter bodies (~-190..645, mass 0..440) by ~0.05em.
+ * Text is shifted down by this fraction of its font size so it centres optically beside icons.
+ */
+export const BASELINE_SHIFT: Record<TextScript, number> = {
+  arabic: 0.05,
+  latin: 0.14,
+};
+
 // Arabic glyphs sit taller than Latin; extra leading keeps diacritics from clipping.
 const RTL_LINE_HEIGHT_MULTIPLIER = 1.12;
 

@@ -1,4 +1,10 @@
-export { EARNINGS_PERIODS, WALLET_LINE_STATUS, WALLET_STATUS, WALLET_TRANSACTION_TYPES } from './wallet';
+export {
+  EARNINGS_PERIODS,
+  WALLET_ESCROW_STATUS,
+  WALLET_LINE_STATUS,
+  WALLET_STATUS,
+  WALLET_TRANSACTION_TYPES,
+} from './wallet';
 export type {
   Counterparty,
   CounterpartyDto,
@@ -6,6 +12,7 @@ export type {
   EarningsPeriod,
   ExchangeRate,
   ExchangeRateDto,
+  LineCommission,
   ListPageMeta,
   MoneyDto,
   TransactionDirection,
@@ -16,6 +23,7 @@ export type {
   WalletEarningsDto,
   WalletEscrow,
   WalletEscrowDto,
+  WalletEscrowStatus,
   WalletEscrows,
   WalletEscrowsDto,
   WalletLineStatus,
