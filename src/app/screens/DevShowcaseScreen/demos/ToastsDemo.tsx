@@ -5,7 +5,7 @@ import { useToastsDemo } from './hooks/useToastsDemo';
 
 const ToastsDemoComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { showSuccess, showError, showWarning, showInfo } = useToastsDemo();
+  const { showSuccess, showError, showWarning, showInfo, showAction } = useToastsDemo();
 
   return (
     <Box row wrap gap="sm">
@@ -30,6 +30,12 @@ const ToastsDemoComponent: React.FC = () => {
       <CustomButton
         title={t('devShowcase.modalsToasts.toastInfoLabel')}
         onPress={showInfo}
+        variant="secondary"
+        size="sm"
+      />
+      <CustomButton
+        title={t('devShowcase.modalsToasts.toastActionLabel')}
+        onPress={showAction}
         variant="secondary"
         size="sm"
       />

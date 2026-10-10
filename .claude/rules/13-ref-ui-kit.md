@@ -24,7 +24,7 @@ Check DevShowcase (`app/screens/DevShowcaseScreen`, `__DEV__` row in Profile; on
 
 - `CustomButton` (`variant` incl. `onBrand` + `glass` for navy) · `CustomInput` (`suffix`, `showCount` = text area) · `PhoneInput` (libphonenumber, E.164) · `BottomSheet` (`onDismissed`: fires once gone; open native picker only then on iOS) · `SelectionModal` · `DateRangePicker` (`range="past"` for statements) · `GalleryModal`.
 - `SuperList` (`emptyDescription` / `emptyAction` for "Clear filters") · `FloatingBottomBar`.
-- `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`icon`, `dropdown`, `onClear` = filter chip) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
+- `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`icon`, `dropdown`, `onClear` = filter chip) · `ChipRow` (filter row pinned under header, above `SuperList`; never hand-roll horizontal `ScrollView` — default `flexGrow:1` floats chips mid-screen) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
 - `ListRow`/`ListGroup` (settings/menu rows; `selected` = single-choice row with radio mark) · `SectionHeader` `Divider` `KeyValueRow` (summaries, money emphasis).
 - `Badge` `StatusPill` (any `HueTone` via `resolveHue` from `@/core/theme`) `Tag` `ProgressBar` (`surface="brand"` on navy) `Accordion` `AvatarGroup`.
 - `Notice` (in-flow banner) · `EmptyState`/`ErrorState` (full-area; SuperList uses them) · `InlineError`.

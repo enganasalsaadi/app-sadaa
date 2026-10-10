@@ -16,11 +16,13 @@ export interface SearchBarProps {
   /** Spinner in place of the clear button while results load. */
   loading?: boolean;
   autoFocus?: boolean;
+  /** Mirrors the API's limit on the search text. */
+  maxLength?: number;
 }
 
 /** Search field for list/filter screens. Debounce in the screen hook, not here. */
 const SearchBarComponent = forwardRef<TextInputInstance, SearchBarProps>(
-  ({ value, onChangeText, placeholder, onSubmit, loading = false, autoFocus }, ref) => {
+  ({ value, onChangeText, placeholder, onSubmit, loading = false, autoFocus, maxLength }, ref) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const { colors, sizes, isRTL } = theme;
@@ -64,6 +66,7 @@ const SearchBarComponent = forwardRef<TextInputInstance, SearchBarProps>(
           onBlur={handleBlur}
           onSubmitEditing={handleSubmit}
           autoFocus={autoFocus}
+          maxLength={maxLength}
           returnKeyType="search"
           autoCorrect={false}
           autoCapitalize="none"

@@ -97,9 +97,13 @@ type AccountScreens = {
   RateCardEditor: { cardId?: string; group?: string } | undefined;
 };
 
-/** `HomeTab` stack. Brand registers `HomeScreen` (Explore); creator registers the rest. */
+/** `HomeTab` stack. Brand registers `BrandHomeScreen` + `Explore`; creator registers the rest. */
 export type HomeStackParamList = {
-  HomeScreen: undefined;
+  BrandHomeScreen: undefined;
+  /** Creator search; `filters` prefill (a category, a rail's "See all"), `focusSearch` opens the keyboard. */
+  Explore: ExploreParams | undefined;
+  /** Saved creators, from the ❤️ in the brand Home header. */
+  Shortlist: undefined;
   CreatorHomeScreen: undefined;
   MediaKitInsights: undefined;
   MediaKitPreview: undefined;
@@ -143,6 +147,45 @@ export type TopUpStatusParam = 'pending_review' | 'completed' | 'rejected' | 're
 
 /** Withdrawal statuses the history filters by (finance's `WITHDRAWAL_STATUS` mirrors them). */
 export type WithdrawalStatusParam = 'pending' | 'completed' | 'rejected' | 'cancelled' | 'returned';
+
+/** Explore sorts (marketplace's `EXPLORE_SORTS` mirrors them); `price_*` are 🔒 for unverified brands. */
+export type ExploreSortParam =
+  | 'recommended'
+  | 'followers_desc'
+  | 'newest'
+  | 'delivery_asc'
+  | 'price_asc'
+  | 'price_desc';
+
+/** Explore query in app terms; also the cache key, so each filter set keeps its own pages. */
+export interface ExploreFilters {
+  q?: string;
+  governorate?: string[];
+  platform?: string[];
+  niche?: string[];
+  tier?: string[];
+  /** Home category chip; the server expands it to niches. */
+  category?: string;
+  minFollowers?: number;
+  maxFollowers?: number;
+  kycVerified?: boolean;
+  followersVerified?: boolean;
+  rush?: boolean;
+  onSite?: boolean;
+  maxDeliveryDays?: number;
+  /** 🔒 verified brands only (whole dollars). */
+  priceMin?: number;
+  /** 🔒 */
+  priceMax?: number;
+  /** 🔒 */
+  withinBudget?: boolean;
+  sort?: ExploreSortParam;
+}
+
+export interface ExploreParams {
+  filters?: ExploreFilters;
+  focusSearch?: boolean;
+}
 
 /** Channel (validated by finance) and amount of the top-up being repeated. */
 export interface TopUpPrefill {

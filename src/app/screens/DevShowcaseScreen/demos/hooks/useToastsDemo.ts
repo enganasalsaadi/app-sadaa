@@ -23,5 +23,16 @@ export const useToastsDemo = () => {
     [t, toast],
   );
 
-  return { showSuccess, showError, showWarning, showInfo };
+  const showAction = useCallback(
+    () =>
+      toast.info(t('devShowcase.modalsToasts.toastActionMessage'), {
+        action: {
+          label: t('common.undo'),
+          onPress: () => toast.success(t('devShowcase.modalsToasts.toastUndoneMessage')),
+        },
+      }),
+    [t, toast],
+  );
+
+  return { showSuccess, showError, showWarning, showInfo, showAction };
 };

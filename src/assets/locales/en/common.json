@@ -298,6 +298,7 @@
     "edit": "Edit",
     "done": "Done",
     "close": "Close",
+    "undo": "Undo",
     "back": "Back",
     "next": "Next",
     "submit": "Submit",
@@ -963,7 +964,14 @@
         "notFoundTitle": "Profile not available",
         "notFoundBody": "The link may be old, or the creator has hidden their profile.",
         "back": "Go back",
-        "loadFailed": "Couldn't load this profile"
+        "loadFailed": "Couldn't load this profile",
+        "lockedPrice": "••••",
+        "lockedPriceA11y": "Price hidden",
+        "guestLock": {
+          "title": "Prices are for verified brands",
+          "body": "Sign in with a verified brand account to see prices.",
+          "cta": "Sign in"
+        }
       },
       "settingsScreen": {
         "title": "Media kit settings",
@@ -1207,7 +1215,18 @@
     "creator": {
       "verified": "Verified creator",
       "followers": "{{count}} followers",
-      "priceFrom": "From"
+      "priceFrom": "From",
+      "followersVerified": "Verified followers",
+      "deliveryDays_one": "{{count}} day",
+      "deliveryDays_other": "{{count}} days",
+      "onSite": "On site",
+      "new": "New",
+      "priceLock": {
+        "verify": "Verify to see price",
+        "pending": "Price after verification",
+        "completeProfile": "Complete profile to see price",
+        "unavailable": "Price unavailable"
+      }
     },
     "creatorHome": {
       "greetingTime": {
@@ -1266,6 +1285,119 @@
         "add": "Add rates",
         "loadFailed": "Couldn't load your rates"
       }
+    },
+    "brandHome": {
+      "companyFallback": "Your company",
+      "openProfile": "{{name}}, open account",
+      "wallet": {
+        "open": "Available balance, open wallet"
+      },
+      "loadFailed": "Couldn't load your home.",
+      "empty": {
+        "title": "No creators to show yet",
+        "message": "Browse every creator on Sada and filter by city, niche and platform.",
+        "explore": "Explore creators"
+      },
+      "seeAll": "See all",
+      "support": {
+        "title": "Need help?",
+        "body": "The Sada team is on WhatsApp for any question.",
+        "action": "Contact support",
+        "message": "Hi, I need help with Sada."
+      }
+    },
+    "shortlist": {
+      "add": "Save to shortlist",
+      "remove": "Remove from shortlist",
+      "full": "Your shortlist is full (200)",
+      "failed": "Couldn't update your shortlist. Try again.",
+      "title": "Shortlist",
+      "open": "Open shortlist",
+      "removed": "{{name}} removed from your shortlist",
+      "loadFailed": "Couldn't load your shortlist.",
+      "empty": {
+        "title": "Save creators here",
+        "hint": "Tap ❤️ on any creator to keep them for later and compare.",
+        "explore": "Explore creators"
+      }
+    },
+    "explore": {
+      "title": "Explore",
+      "searchPlaceholder": "Search for a creator…",
+      "categoriesA11y": "Categories",
+      "toolbarA11y": "Filters and sorting",
+      "filters": "Filters",
+      "filtersCount_one": "Filters · {{count}}",
+      "filtersCount_other": "Filters · {{count}}",
+      "clearCategory": "Remove {{category}}",
+      "quick": {
+        "verified": "Verified",
+        "rush": "Rush"
+      },
+      "sort": {
+        "title": "Sort by"
+      },
+      "lockedOption": "Verify your account to use it",
+      "clearFilters": "Clear filters",
+      "loadFailed": "Couldn't load creators.",
+      "empty": {
+        "title": "No creators found",
+        "hint": "Try a different word, or browse by category.",
+        "filteredTitle": "No creators match these filters",
+        "filteredHint": "Loosen or clear a filter to see more."
+      },
+      "filterSheet": {
+        "title": "Filters",
+        "reset": "Reset",
+        "governorate": "Governorate",
+        "platform": "Platform",
+        "niche": "Niche",
+        "moreNiches_one": "{{count}} more",
+        "moreNiches_other": "{{count}} more",
+        "tier": "Tier",
+        "followers": "Followers",
+        "min": "Min",
+        "max": "Max",
+        "any": "Any",
+        "delivery": "Delivery within",
+        "more": "More",
+        "kycVerified": "Verified creator",
+        "followersVerified": "Verified followers",
+        "rush": "Rush delivery",
+        "onSite": "Visits on site",
+        "price": "Price (USD)",
+        "withinBudget": "Within my budget",
+        "priceLockedA11y": "Price filters are locked. Verify your account to use them.",
+        "optionsFailed": "Couldn't load filter options.",
+        "apply": "Show results"
+      }
+    },
+    "priceLock": {
+      "verify": {
+        "title": "Verify your account to see prices",
+        "body": "Prices and price filters are open to verified brands. Verification takes a few minutes.",
+        "cta": "Verify now"
+      },
+      "rejected": {
+        "title": "Your verification was not accepted",
+        "body": "Check the reason and send it again to see prices.",
+        "cta": "Review verification"
+      },
+      "pending": {
+        "title": "Verification under review",
+        "body": "We're reviewing your company. Prices open as soon as it's approved."
+      },
+      "completeProfile": {
+        "title": "Complete your company profile",
+        "body": "Finish your company details to see prices.",
+        "cta": "Complete profile"
+      },
+      "unavailable": {
+        "title": "Prices unavailable",
+        "body": "Prices aren't available for this account."
+      },
+      "gotIt": "Got it",
+      "notNow": "Not now"
     }
   },
   "finance": {
@@ -2074,6 +2206,9 @@
       "toastWarningMessage": "Payment is pending review",
       "toastInfoLabel": "Info toast",
       "toastInfoMessage": "New campaign offer received",
+      "toastActionLabel": "Toast with action",
+      "toastActionMessage": "Creator removed from shortlist",
+      "toastUndoneMessage": "Creator saved back",
       "openBottomSheet": "Open bottom sheet",
       "sheetTitle": "Confirm action",
       "sheetBody": "This is a mock confirmation sheet for preview only.",
@@ -2173,7 +2308,8 @@
       "filterTitle": "Filter chip (icon · dropdown · clear)",
       "filterAll": "All time",
       "filterSet": "This month",
-      "filterClear": "Clear date"
+      "filterClear": "Clear date",
+      "rowTitle": "ChipRow (pinned filter row, scrolls sideways)"
     },
     "otp": {
       "hint": "Enter 123456 for success; any other code shakes.",
@@ -2226,10 +2362,13 @@
     "confirmSheet": {
       "openNeutral": "Confirm action",
       "openDanger": "Destructive action",
+      "openNotice": "Notice only",
       "neutralTitle": "Send offer?",
       "neutralBody": "The creator will be notified and can accept or decline.",
       "dangerTitle": "Delete draft?",
       "dangerBody": "This cannot be undone.",
+      "noticeTitle": "Verification under review",
+      "noticeBody": "Nothing to do yet: we will let you know.",
       "confirmed": "Confirmed (demo)"
     },
     "dateRange": {

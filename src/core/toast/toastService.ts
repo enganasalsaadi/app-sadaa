@@ -3,9 +3,21 @@ import i18n from '@/core/i18n';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
+/** One inline button on the toast (e.g. Undo); pressing it runs `onPress` and hides the toast. */
+export interface ToastAction {
+  label: string;
+  onPress: () => void;
+}
+
+/** Extra data handed to the toast renderer (`toastConfig` in the UI kit). */
+export interface ToastProps {
+  action?: ToastAction;
+}
+
 export interface ToastOptions {
   duration?: number;
   position?: 'top' | 'bottom';
+  action?: ToastAction;
 }
 
 class ToastServiceClass {
@@ -19,6 +31,7 @@ class ToastServiceClass {
       text1: message,
       position: options.position ?? 'top',
       visibilityTime: options.duration ?? 3600,
+      props: { action: options.action } satisfies ToastProps,
     });
   }
 

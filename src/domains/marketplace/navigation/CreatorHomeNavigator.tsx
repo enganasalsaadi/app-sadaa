@@ -10,7 +10,7 @@ import { CreatorHomeScreen } from '../screens/CreatorHomeScreen';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
-/** Creator `HomeTab`; the brand tab keeps `HomeNavigator` (rule 01: role branches in MainTabs). */
+/** Creator `HomeTab`; the brand tab is `BrandHomeNavigator` (rule 01: role branches in MainTabs). */
 export const CreatorHomeNavigator: React.FC = () => (
   <Stack.Navigator screenOptions={{ headerShown: false, freezeOnBlur: true }}>
     <Stack.Screen name="CreatorHomeScreen" component={CreatorHomeScreen} />

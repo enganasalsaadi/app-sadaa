@@ -5,6 +5,6 @@ export type { DealProgressProps } from './DealProgress';
 export { DealCard } from './DealCard';
 export type { DealCardProps } from './DealCard';
 export { CreatorCard } from './CreatorCard';
-export type { CreatorCardProps } from './CreatorCard';
+export type { CreatorCardProps, CreatorCardVariant } from './CreatorCard';
 export { DraftReviewCard } from './DraftReviewCard';
 export type { DraftReviewCardProps } from './DraftReviewCard';

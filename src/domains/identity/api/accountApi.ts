@@ -1,6 +1,7 @@
 import { baseApi } from '@/core/api';
 import type { BrandSocialLink } from '@/domains/auth';
 import type { AvatarResponse, UserProfileDetails } from '../types/profile';
+import { toUserProfileDetails } from '../utils/profileDetails';
 
 export interface ChangePasswordRequest {
   current_password: string;
@@ -37,11 +38,13 @@ export const accountApi = baseApi.injectEndpoints({
     }),
     getUserProfile: builder.query<UserProfileDetails, void>({
       query: () => '/user/profile',
+      transformResponse: toUserProfileDetails,
       providesTags: ['Profile'],
     }),
     /** Contract §8.1: partial, send only what changed; answers with the §3.2 profile. */
     updateInfluencerProfile: builder.mutation<UserProfileDetails, UpdateInfluencerProfileRequest>({
       query: body => ({ url: '/influencer/profile', method: 'PATCH', body }),
+      transformResponse: toUserProfileDetails,
       invalidatesTags: ['User'],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -55,6 +58,7 @@ export const accountApi = baseApi.injectEndpoints({
     /** Contract §8.2: partial, email applies at once; answers with the §3.2 profile. */
     updateBrandProfile: builder.mutation<UserProfileDetails, UpdateBrandProfileRequest>({
       query: body => ({ url: '/brand/profile', method: 'PATCH', body }),
+      transformResponse: toUserProfileDetails,
       invalidatesTags: ['User'],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {

@@ -1,18 +1,18 @@
 import React from 'react';
-import type { ToastConfig } from 'react-native-toast-message';
-import { ToastCard } from './ToastCard';
+import type { ToastConfig, ToastConfigParams } from 'react-native-toast-message';
+import type { ToastProps } from '@/core/toast';
+import { ToastCard, type ToastType } from './ToastCard';
+
+// The library types `props` as `any`; `toastService` is the only producer.
+const render =
+  (type: ToastType) =>
+  ({ text1, hide, props }: ToastConfigParams<ToastProps | undefined>) => (
+    <ToastCard type={type} message={text1 ?? ''} onHide={hide} action={props?.action} />
+  );
 
 export const toastConfig: ToastConfig = {
-  success: ({ text1, hide }) => (
-    <ToastCard type="success" message={text1 ?? ''} onHide={hide} />
-  ),
-  error: ({ text1, hide }) => (
-    <ToastCard type="error" message={text1 ?? ''} onHide={hide} />
-  ),
-  warning: ({ text1, hide }) => (
-    <ToastCard type="warning" message={text1 ?? ''} onHide={hide} />
-  ),
-  info: ({ text1, hide }) => (
-    <ToastCard type="info" message={text1 ?? ''} onHide={hide} />
-  ),
+  success: render('success'),
+  error: render('error'),
+  warning: render('warning'),
+  info: render('info'),
 };

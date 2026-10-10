@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CalendarDays } from 'lucide-react-native';
-import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Chip } from '@/shared/ui';
+import { moderateScale, useTheme } from '@/core/theme';
+import { Box, Chip, ChipRow } from '@/shared/ui';
 import type { TypeChip } from '../hooks/useStatementScreen';
 
 const SEPARATOR_HEIGHT = moderateScale(24);
@@ -31,23 +30,9 @@ const StatementFiltersComponent: React.FC<StatementFiltersProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, borderWidths } = useTheme();
-  const styles = useStyles(({ spacing }) => ({
-    content: {
-      gap: spacing.sm,
-      paddingHorizontal: spacing.xl,
-      paddingTop: spacing.sm,
-      paddingBottom: spacing.md,
-      alignItems: 'center' as const,
-    },
-  }));
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.content}
-      accessibilityLabel={t('finance.statement.filtersA11y')}
-    >
+    <ChipRow accessibilityLabel={t('finance.statement.filtersA11y')}>
       <Chip
         label={periodLabel}
         value={PERIOD_CHIP}
@@ -71,7 +56,7 @@ const StatementFiltersComponent: React.FC<StatementFiltersProps> = ({
           />
         ))}
       </Box>
-    </ScrollView>
+    </ChipRow>
   );
 };
 

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useLookupItems } from '@/core/api';
 import type { PublicMediaKit } from '../types/mediaKit';
 import { labelNiches } from '../utils/mediaKitCard';
-import { buildRateRows } from '../utils/rateRows';
+import { buildLockableRateRows } from '../utils/rateRows';
 
 /** Localised niches (from `/lookups`) + rate rows (labels come with the cards) for `MediaKitPreview`. */
 export const useMediaKitPreviewLabels = (preview: PublicMediaKit | undefined) => {
@@ -14,7 +14,7 @@ export const useMediaKitPreviewLabels = (preview: PublicMediaKit | undefined) =>
   );
 
   const rateRows = useMemo(
-    () => (preview ? buildRateRows(preview.rate_cards, preview.platforms) : []),
+    () => (preview ? buildLockableRateRows(preview.rate_cards, preview.platforms) : []),
     [preview],
   );
 

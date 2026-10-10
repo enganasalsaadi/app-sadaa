@@ -157,10 +157,12 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
     if (statusCode === 403) {
       // Flow gates, routed by their owners: the onboarding resolver sends
       // `phone_not_verified` back to the OTP step; `account_suspended` without
-      // a session (nothing to gate) stays with the caller.
+      // a session (nothing to gate) stays with the caller; Explore answers
+      // `gated_parameter` (🔒 filter while locked) with the verification sheet.
       if (
         normalizedError.code === 'phone_not_verified' ||
-        normalizedError.code === 'account_suspended'
+        normalizedError.code === 'account_suspended' ||
+        normalizedError.code === 'gated_parameter'
       ) {
         return { error: result.error };
       }
@@ -225,6 +227,10 @@ export const baseApi = createApi({
     'PayoutMethod',
     'WalletEscrow',
     'WalletEarnings',
+    'BrandHome',
+    'ExploreCreators',
+    'ExploreFilters',
+    'Shortlist',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

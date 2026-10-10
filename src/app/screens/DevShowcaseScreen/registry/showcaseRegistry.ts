@@ -116,7 +116,7 @@ export const SHOWCASE_ENTRIES = {
   chips: {
     category: 'actions',
     titleKey: 'devShowcase.sections.chips',
-    covers: ['Chip', 'ChipGroup'],
+    covers: ['Chip', 'ChipGroup', 'ChipRow'],
   },
   iconButton: {
     category: 'actions',

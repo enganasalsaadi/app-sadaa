@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Box, Card, Divider, SectionHeader, Text } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import type { PublicMediaKit } from '../../types/mediaKit';
-import type { RateRow } from '../../utils/rateRows';
+import type { LockableRateRow } from '../../utils/rateRows';
 import { MediaKitPreviewIdentity } from './MediaKitPreviewIdentity';
 import { MediaKitPreviewPlatformRow } from './MediaKitPreviewPlatformRow';
 import { MediaKitPreviewRateRow } from './MediaKitPreviewRateRow';
@@ -12,7 +12,8 @@ export interface MediaKitPreviewProps {
   preview: PublicMediaKit;
   /** Every niche, already localised from the lookup. */
   nicheLabels: readonly string[];
-  rateRows: readonly RateRow[];
+  /** Prices `null` while locked for this viewer: the rows still say what each slot offers. */
+  rateRows: readonly LockableRateRow[];
 }
 
 /**

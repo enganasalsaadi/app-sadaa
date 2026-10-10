@@ -7,7 +7,7 @@ import {
   useMediaKitCard,
   type ProfileStepTarget,
 } from '@/domains/identity';
-import { DAY_PART_GREETING, resolveDayPart } from '../utils/dayPart';
+import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
 import type { LiveIslandTone } from '@/shared/ui';
 import {
   HOME_NOTICE_DEF,

@@ -10,7 +10,13 @@ paths:
 
 - `DEAL_STATUS` + `Record<DealStatus,…>` maps: `constants/dealStatus.ts` (label/tone), `constants/statusIcons.ts` (icons), `DEAL_ALLOWED_ACTIONS` per role, `DEAL_PIPELINE`.
 - `getDealActions` / `buildDealProgress` (`utils/`, tested).
-- Parts: `DealStatusPill` (`null` = unknown-status fallback) `DealProgress` `DealCard` `CreatorCard` `DraftReviewCard`.
+- Parts: `DealStatusPill` (`null` = unknown-status fallback) `DealProgress` `DealCard` `CreatorCard` (`variant` rail|row on `ExploreCreator`, ❤️ `ShortlistHeart` beside the card via `onToggleShortlist`) `DraftReviewCard`.
+- Brand Home `screens/BrandHomeScreen` (Dashboard): `/brand/home` refetched on focus only when > 2 min old (impressions); island → `BRAND_HOME_ISLAND` (`constants/brandHome`); eye = finance `useAmountsHidden`; search / category chips / rail `seeAll` → `Explore` (`ExploreParams` in core nav: `filters` prefill, `focusSearch`).
+- Card taps everywhere: `hooks/useCreatorCardActions` (Media Kit `src=search` + optimistic ❤️ `toggleShortlist`, `setShortlist(creator, on)` → `Promise<boolean>`, `shortlist_full` toast). Row list skeleton `components/CreatorRowsSkeleton`.
+- Shortlist `screens/ShortlistScreen` (List, `HomeStack` `Shortlist`, Home header ❤️): `getShortlist` refetched on mount; ❤️ removes (optimistic patch in `shortlistApi`) then info toast with Undo (`setShortlist(…, true)`).
+- Price lock: reasons, `toPriceLockReason`, `PRICE_LOCK_ACTION` (copy + CTA screen per reason) live in **identity** (owns the screens; identity must never import marketplace — cycle) and come via `@/domains/identity`. Marketplace `constants/priceLock` keeps `PRICE_LOCK_LABEL` (card line) + `GATED_EXPLORE_PARAMS/SORTS`; `PriceLockSheet` navigates on `onDismissed`. Marketplace tests loading these mock the identity barrel to `utils/priceLock` + `constants/priceLock`.
+- Public Media Kit lock (identity `MediaKitPublicScreen`): `PublicRateCard` nullable prices → `buildLockableRateRows` (`price: null` = 🔒 row); `PriceLockFooter` from `resolvePriceLockNotice(reason, toPriceLockViewer(...))` (guest → Login, creator → text only); locked body also provides `User` so verification saves / pushes drop it.
+- Explore `screens/ExploreScreen` (List): `ExploreFilters` is the infinite-query cache key; search debounced 400 ms (`toSearchQuery` 2–60); sheet draft `useExploreFilterDraft` → `applyFilterDraft`; locked viewer + 🔒 param → `requestLock` (queued until the open sheet's `onDismissed`), never sent; `403 gated_parameter` → `stripGatedFilters` + lock sheet. Lock state from first page meta, before it from Home cache (`useQueryState`, no fetch).
 
 ## Wallet (finance)
 

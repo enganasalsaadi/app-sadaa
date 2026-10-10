@@ -9,7 +9,6 @@ import type { ParseKeys } from 'i18next';
 import {
   Briefcase,
   CircleUser,
-  Compass,
   House,
   IdCard,
   Megaphone,
@@ -21,7 +20,7 @@ import { iconStroke } from '@/core/theme';
 import type { RootTabParamList } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { ComingSoonTabScreen } from '@/app/screens';
-import { CreatorHomeNavigator, HomeNavigator } from '@/domains/marketplace';
+import { BrandHomeNavigator, CreatorHomeNavigator } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
 import { BrandWalletNavigator, CreatorWalletNavigator } from '@/domains/finance';
@@ -55,7 +54,7 @@ const MessagesPlaceholder: React.FC = () => {
 
 /** Same route names for both roles; label, icon and root screen differ. */
 const BRAND_TABS: readonly MainTabDef[] = [
-  { name: 'HomeTab', titleKey: 'tabs.explore', icon: Compass, component: HomeNavigator },
+  { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: BrandHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.campaigns', icon: Megaphone, component: CampaignsPlaceholder },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: BrandWalletNavigator },

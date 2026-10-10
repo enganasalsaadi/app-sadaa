@@ -1,5 +1,5 @@
 import type { PlatformResource, RateCard } from '@/domains/auth';
-import { buildRateRows } from '../rateRows';
+import { buildLockableRateRows, buildRateRows } from '../rateRows';
 
 // The barrel pulls navigators and UI; only the price helper is needed here.
 jest.mock('@/domains/auth', () => ({
@@ -118,5 +118,41 @@ describe('buildRateRows', () => {
 
   it('drops a card with an unusable price', () => {
     expect(buildRateRows([card('instagram', 'reel', Number.NaN)], platforms)).toEqual([]);
+  });
+});
+
+describe('buildLockableRateRows (public kit, brand-explore §6)', () => {
+  const platforms = [platform('instagram', 'Instagram', true)];
+  const rush = {
+    type: 'rush_delivery' as const,
+    label: 'Rush delivery',
+    pricing_mode: 'fixed' as const,
+    options: { delivery_hours: 48 },
+  };
+
+  it('keeps a locked card, priceless, with what it offers and its add-ons', () => {
+    const [row] = buildLockableRateRows(
+      [
+        {
+          ...card('instagram', 'reel', 0, { includes: ['Up to 60 seconds'] }),
+          price_usd: null,
+          addons: [{ ...rush, amount: null, computed_price_usd: null }],
+        },
+      ],
+      platforms,
+    );
+    expect(row).toMatchObject({ key: 'instagram:reel', price: null, includes: ['Up to 60 seconds'] });
+    expect(row?.addons).toEqual([
+      { key: 'rush_delivery', label: 'Rush delivery', price: null, deliveryHours: 48 },
+    ]);
+  });
+
+  it('prices visible → same rows as the own builder', () => {
+    const cards = [card('instagram', 'reel', 49.5)];
+    expect(buildLockableRateRows(cards, platforms)).toEqual(buildRateRows(cards, platforms));
+  });
+
+  it('still drops an unusable (not locked) price', () => {
+    expect(buildLockableRateRows([card('instagram', 'reel', Number.NaN)], platforms)).toEqual([]);
   });
 });

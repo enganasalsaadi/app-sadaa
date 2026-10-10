@@ -35,6 +35,15 @@ export interface MediaKitPlatform {
   is_primary: boolean;
 }
 
+/** A rate card as another viewer sees it: every price `null` while prices are locked (brand-explore §6). */
+export interface PublicRateCard extends Omit<RateCard, 'price_usd' | 'addons'> {
+  price_usd: number | null;
+  addons: (Omit<RateCard['addons'][number], 'amount' | 'computed_price_usd'> & {
+    amount: number | null;
+    computed_price_usd: number | null;
+  })[];
+}
+
 export interface PublicMediaKit {
   slug: string;
   display_name: string | null;
@@ -45,8 +54,16 @@ export interface PublicMediaKit {
   niches: string[];
   platforms: MediaKitPlatform[];
   /** Handoff §5 shape; platform cards only for available, non-rejected platforms. */
-  rate_cards: RateCard[];
+  rate_cards: PublicRateCard[];
+  /** `null` while locked, or when the creator has no rate card. */
   price_from_usd: number | null;
+  /**
+   * Brand-explore §6: prices hidden from this viewer (anonymous, unverified brand, other
+   * creator). Absent from the creator's own preview, which is never locked.
+   */
+  price_locked?: boolean;
+  /** Raw server reason; read through `toPriceLockReason`. */
+  price_lock_reason?: string | null;
   /** `null` from a server that predates Rate Cards v2. */
   contract_terms: ContractTerms | null;
   bio: null;

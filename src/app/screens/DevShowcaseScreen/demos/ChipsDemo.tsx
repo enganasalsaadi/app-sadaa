@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CalendarDays } from 'lucide-react-native';
-import { Box, Chip, ChipGroup, CustomButton, Text } from '@/shared/ui';
+import { Box, Chip, ChipGroup, ChipRow, CustomButton, Text } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import { useChipsDemo } from './hooks/useChipsDemo';
 
@@ -66,6 +66,23 @@ const ChipsDemoComponent: React.FC = () => {
             clearLabel={t('devShowcase.chips.filterClear')}
           />
         </Box>
+      </Box>
+
+      <Box gap="sm">
+        <Text variant="label" color={colors.text.secondary}>
+          {t('devShowcase.chips.rowTitle')}
+        </Text>
+        <ChipRow accessibilityRole="radiogroup" accessibilityLabel={t('devShowcase.chips.rowTitle')}>
+          {items.map(item => (
+            <Chip
+              key={item.value}
+              label={item.label}
+              value={item.value}
+              selected={item.value === single}
+              onSelect={setSingle}
+            />
+          ))}
+        </ChipRow>
       </Box>
 
       <Box gap="sm">

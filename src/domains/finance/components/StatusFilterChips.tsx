@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
-import { ScrollView } from 'react-native';
-import { useStyles } from '@/core/theme';
-import { Chip } from '@/shared/ui';
+import { Chip, ChipRow } from '@/shared/ui';
 
 export interface StatusChip {
   value: string;
@@ -22,36 +20,18 @@ const StatusFilterChipsComponent: React.FC<StatusFilterChipsProps> = ({
   selected,
   onSelect,
   accessibilityLabel,
-}) => {
-  const styles = useStyles(({ spacing }) => ({
-    content: {
-      gap: spacing.sm,
-      paddingHorizontal: spacing.xl,
-      paddingTop: spacing.sm,
-      paddingBottom: spacing.md,
-      alignItems: 'center' as const,
-    },
-  }));
-
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.content}
-      accessibilityRole="radiogroup"
-      accessibilityLabel={accessibilityLabel}
-    >
-      {chips.map(chip => (
-        <Chip
-          key={chip.value}
-          label={chip.label}
-          value={chip.value}
-          selected={chip.value === selected}
-          onSelect={onSelect}
-        />
-      ))}
-    </ScrollView>
-  );
-};
+}) => (
+  <ChipRow accessibilityRole="radiogroup" accessibilityLabel={accessibilityLabel}>
+    {chips.map(chip => (
+      <Chip
+        key={chip.value}
+        label={chip.label}
+        value={chip.value}
+        selected={chip.value === selected}
+        onSelect={onSelect}
+      />
+    ))}
+  </ChipRow>
+);
 
 export const StatusFilterChips = memo(StatusFilterChipsComponent);

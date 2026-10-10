@@ -298,6 +298,7 @@
     "edit": "تعديل",
     "done": "تم",
     "close": "إغلاق",
+    "undo": "تراجع",
     "back": "رجوع",
     "next": "التالي",
     "submit": "إرسال",
@@ -975,7 +976,14 @@
         "notFoundTitle": "الملف غير متاح",
         "notFoundBody": "قد يكون الرابط قديماً، أو أن صانع المحتوى أخفى ملفه.",
         "back": "رجوع",
-        "loadFailed": "تعذّر تحميل هذا الملف"
+        "loadFailed": "تعذّر تحميل هذا الملف",
+        "lockedPrice": "••••",
+        "lockedPriceA11y": "السعر مخفي",
+        "guestLock": {
+          "title": "الأسعار للعلامات التجارية الموثّقة",
+          "body": "سجّل الدخول بحساب علامة تجارية موثّق لرؤية الأسعار.",
+          "cta": "تسجيل الدخول"
+        }
       },
       "settingsScreen": {
         "title": "إعدادات الملف الإعلامي",
@@ -1231,7 +1239,22 @@
     "creator": {
       "verified": "صانع محتوى موثّق",
       "followers": "{{count}} متابع",
-      "priceFrom": "يبدأ من"
+      "priceFrom": "يبدأ من",
+      "followersVerified": "متابعون موثّقون",
+      "deliveryDays_zero": "أقل من يوم",
+      "deliveryDays_one": "يوم واحد",
+      "deliveryDays_two": "يومان",
+      "deliveryDays_few": "{{count}} أيام",
+      "deliveryDays_many": "{{count}} يوماً",
+      "deliveryDays_other": "{{count}} يوم",
+      "onSite": "في الموقع",
+      "new": "جديد",
+      "priceLock": {
+        "verify": "وثّق لرؤية السعر",
+        "pending": "السعر بعد التوثيق",
+        "completeProfile": "أكمل ملفك لرؤية السعر",
+        "unavailable": "السعر غير متاح"
+      }
     },
     "creatorHome": {
       "greetingTime": {
@@ -1290,6 +1313,127 @@
         "add": "أضف أسعارك",
         "loadFailed": "تعذّر تحميل أسعارك"
       }
+    },
+    "brandHome": {
+      "companyFallback": "شركتك",
+      "openProfile": "{{name}}، فتح الحساب",
+      "wallet": {
+        "open": "الرصيد المتاح، فتح المحفظة"
+      },
+      "loadFailed": "تعذّر تحميل الصفحة الرئيسية.",
+      "empty": {
+        "title": "لا يوجد صنّاع محتوى لعرضهم بعد",
+        "message": "تصفّح كل صنّاع المحتوى على صدى وفلتر حسب المدينة والمجال والمنصة.",
+        "explore": "استكشف صنّاع المحتوى"
+      },
+      "seeAll": "عرض الكل",
+      "support": {
+        "title": "تحتاج مساعدة؟",
+        "body": "فريق صدى جاهز على واتساب لأي سؤال.",
+        "action": "تواصل مع الدعم",
+        "message": "مرحباً، أحتاج مساعدة في صدى."
+      }
+    },
+    "shortlist": {
+      "add": "حفظ في المفضّلة",
+      "remove": "إزالة من المفضّلة",
+      "full": "المفضّلة ممتلئة (200)",
+      "failed": "تعذّر تحديث المفضّلة. حاول مجدداً.",
+      "title": "المفضّلة",
+      "open": "فتح المفضّلة",
+      "removed": "تمت إزالة {{name}} من المفضّلة",
+      "loadFailed": "تعذّر تحميل المفضّلة.",
+      "empty": {
+        "title": "احفظ صنّاع المحتوى هنا",
+        "hint": "اضغط ❤️ على أي صانع محتوى لتحتفظ به وتقارن لاحقاً.",
+        "explore": "استكشف صنّاع المحتوى"
+      }
+    },
+    "explore": {
+      "title": "استكشاف",
+      "searchPlaceholder": "ابحث عن صانع محتوى…",
+      "categoriesA11y": "الفئات",
+      "toolbarA11y": "الفلاتر والترتيب",
+      "filters": "فلترة",
+      "filtersCount_zero": "فلترة · {{count}}",
+      "filtersCount_one": "فلترة · {{count}}",
+      "filtersCount_two": "فلترة · {{count}}",
+      "filtersCount_few": "فلترة · {{count}}",
+      "filtersCount_many": "فلترة · {{count}}",
+      "filtersCount_other": "فلترة · {{count}}",
+      "clearCategory": "إزالة {{category}}",
+      "quick": {
+        "verified": "موثّق",
+        "rush": "مستعجل"
+      },
+      "sort": {
+        "title": "الترتيب"
+      },
+      "lockedOption": "وثّق حسابك لاستخدامه",
+      "clearFilters": "مسح الفلاتر",
+      "loadFailed": "تعذّر تحميل صنّاع المحتوى.",
+      "empty": {
+        "title": "لا يوجد نتائج",
+        "hint": "جرّب كلمة أخرى أو تصفّح حسب الفئة.",
+        "filteredTitle": "لا يوجد صنّاع محتوى بهذه الفلاتر",
+        "filteredHint": "خفّف الفلاتر أو امسحها لرؤية المزيد."
+      },
+      "filterSheet": {
+        "title": "الفلاتر",
+        "reset": "إعادة ضبط",
+        "governorate": "المحافظة",
+        "platform": "المنصة",
+        "niche": "المجال",
+        "moreNiches_zero": "+{{count}}",
+        "moreNiches_one": "+{{count}} آخر",
+        "moreNiches_two": "+{{count}} آخران",
+        "moreNiches_few": "+{{count}} أخرى",
+        "moreNiches_many": "+{{count}} أخرى",
+        "moreNiches_other": "+{{count}} أخرى",
+        "tier": "الفئة",
+        "followers": "المتابعون",
+        "min": "من",
+        "max": "إلى",
+        "any": "أي عدد",
+        "delivery": "مدة التسليم",
+        "more": "المزيد",
+        "kycVerified": "صانع محتوى موثّق",
+        "followersVerified": "متابعون موثّقون",
+        "rush": "تسليم مستعجل",
+        "onSite": "زيارة في الموقع",
+        "price": "السعر (دولار)",
+        "withinBudget": "ضمن ميزانيتي",
+        "priceLockedA11y": "فلاتر السعر مقفلة. وثّق حسابك لاستخدامها.",
+        "optionsFailed": "تعذّر تحميل خيارات الفلترة.",
+        "apply": "عرض النتائج"
+      }
+    },
+    "priceLock": {
+      "verify": {
+        "title": "وثّق حسابك لرؤية الأسعار",
+        "body": "الأسعار وفلاتر السعر متاحة للعلامات التجارية الموثّقة. التوثيق يأخذ دقائق.",
+        "cta": "وثّق الآن"
+      },
+      "rejected": {
+        "title": "لم يُقبل توثيق حسابك",
+        "body": "اطّلع على السبب وأعد الإرسال لرؤية الأسعار.",
+        "cta": "مراجعة التوثيق"
+      },
+      "pending": {
+        "title": "التوثيق قيد المراجعة",
+        "body": "نراجع بيانات شركتك الآن، وتظهر الأسعار فور الموافقة."
+      },
+      "completeProfile": {
+        "title": "أكمل ملف شركتك",
+        "body": "أكمل بيانات شركتك لرؤية الأسعار.",
+        "cta": "إكمال الملف"
+      },
+      "unavailable": {
+        "title": "الأسعار غير متاحة",
+        "body": "الأسعار غير متاحة لهذا الحساب."
+      },
+      "gotIt": "حسناً",
+      "notNow": "ليس الآن"
     }
   },
   "finance": {
@@ -2106,6 +2250,9 @@
       "toastWarningMessage": "الدفع قيد المراجعة",
       "toastInfoLabel": "تنبيه معلومات",
       "toastInfoMessage": "تم استلام عرض حملة جديد",
+      "toastActionLabel": "تنبيه مع إجراء",
+      "toastActionMessage": "تمت إزالة صانع المحتوى من المفضّلة",
+      "toastUndoneMessage": "تمت إعادة حفظ صانع المحتوى",
       "openBottomSheet": "فتح القائمة السفلية",
       "sheetTitle": "تأكيد الإجراء",
       "sheetBody": "هذه قائمة تأكيد تجريبية للمعاينة فقط.",
@@ -2205,7 +2352,8 @@
       "filterTitle": "شريحة فلترة (أيقونة · قائمة · مسح)",
       "filterAll": "كل الفترات",
       "filterSet": "هذا الشهر",
-      "filterClear": "مسح التاريخ"
+      "filterClear": "مسح التاريخ",
+      "rowTitle": "ChipRow (صف فلاتر مثبّت، يمرَّر أفقيًا)"
     },
     "otp": {
       "hint": "أدخل 123456 للنجاح؛ أي رمز آخر يهتز.",
@@ -2258,10 +2406,13 @@
     "confirmSheet": {
       "openNeutral": "تأكيد إجراء",
       "openDanger": "إجراء حذف",
+      "openNotice": "إشعار فقط",
       "neutralTitle": "إرسال العرض؟",
       "neutralBody": "سيتم إشعار صانع المحتوى ويمكنه القبول أو الرفض.",
       "dangerTitle": "حذف المسودة؟",
       "dangerBody": "لا يمكن التراجع عن ذلك.",
+      "noticeTitle": "التوثيق قيد المراجعة",
+      "noticeBody": "لا شيء مطلوب منك الآن، سنُعلمك فور الانتهاء.",
       "confirmed": "تم التأكيد (تجريبي)"
     },
     "dateRange": {

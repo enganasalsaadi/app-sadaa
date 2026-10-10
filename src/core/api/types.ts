@@ -63,6 +63,8 @@ export const API_ERROR_CODES = [
   'payout_method_limit',
   'withdrawal_not_allowed',
   'withdrawal_not_pending',
+  'gated_parameter',
+  'shortlist_full',
   'server_error',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];

@@ -60,7 +60,12 @@ export const mediaKitApi = baseApi.injectEndpoints({
       extraOptions: { withMeta: true },
       transformResponse: (response: WithMeta<PublicMediaKit>, _meta, slug) =>
         mapPublicMediaKit(response, slug),
-      providesTags: (_result, _error, slug) => [{ type: 'PublicMediaKit', id: slug }],
+      // A locked body also hangs on `User`: every verification / company-info save and
+      // every push invalidates it, so a brand who just got verified never reuses it (§6).
+      providesTags: (result, _error, slug) =>
+        result?.kit.price_locked
+          ? [{ type: 'PublicMediaKit', id: slug }, 'User']
+          : [{ type: 'PublicMediaKit', id: slug }],
     }),
     /** Contract §17.5: fire-and-forget, 202; the caller never awaits it or shows errors. */
     trackMediaKitView: builder.mutation<void, TrackMediaKitViewRequest>({

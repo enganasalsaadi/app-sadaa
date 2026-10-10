@@ -2,7 +2,7 @@
  * Marketplace domain — campaigns, matchmaking, offers, deal pipeline,
  * content review. Public API only.
  */
-export { HomeNavigator } from './navigation/HomeNavigator';
+export { BrandHomeNavigator } from './navigation/BrandHomeNavigator';
 export { CreatorHomeNavigator } from './navigation/CreatorHomeNavigator';
 export {
   DealStatusPill,
@@ -16,8 +16,9 @@ export type {
   DealProgressProps,
   DealCardProps,
   CreatorCardProps,
+  CreatorCardVariant,
   DraftReviewCardProps,
 } from './components';
 export { DEAL_STATUS } from './types';
-export type { DealStatus, DealRole, DealAction, DraftStatus } from './types';
+export type { DealStatus, DealRole, DealAction, DraftStatus, ExploreCreator } from './types';
 export { getDealActions } from './utils';

@@ -35,7 +35,25 @@ jest.mock('../../../hooks/useMediaKitPreviewLabels', () => ({
   useMediaKitPreviewLabels: () => ({ nicheLabels: [], rateRows: [] }),
 }));
 
-jest.mock('@/core/store', () => ({ useAppDispatch: () => mockDispatch }));
+const mockSession: { signedIn: boolean; userType: string | null } = {
+  signedIn: true,
+  userType: 'brand',
+};
+jest.mock('@/core/store', () => ({
+  useAppDispatch: () => mockDispatch,
+  useAppSelector: (selector: (state: typeof mockSession) => unknown) => selector(mockSession),
+}));
+
+// The barrel pulls navigators and UI; only the session selectors are read.
+jest.mock('@/domains/auth', () => ({
+  selectIsAuthenticated: (state: { signedIn: boolean }) => state.signedIn,
+  selectUserType: (state: { userType: string | null }) => state.userType,
+}));
+
+const mockNavigate = jest.fn();
+jest.mock('@/core/navigation', () => ({
+  navigate: (...args: unknown[]) => mockNavigate(...args),
+}));
 
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual<object>('@react-navigation/native'),
@@ -83,6 +101,8 @@ describe('useMediaKitPublicScreen', () => {
     mockQuery.error = undefined;
     mockQuery.isFetching = true;
     mockRoute.params = { slug: 'old.anas', source: 'link' };
+    mockSession.signedIn = true;
+    mockSession.userType = 'brand';
   });
 
   it('sends one view beacon per open, with the opening slug and source', () => {
@@ -136,5 +156,78 @@ describe('useMediaKitPublicScreen', () => {
     mockRoute.params = { slug: 'anas', source: 'app' };
     mount();
     expect(mockTrackView).toHaveBeenCalledWith({ slug: 'anas', src: 'app' });
+  });
+
+  describe('price lock (brand-explore §6)', () => {
+    const lockedKit = (reason: string | null): PublicMediaKit => ({
+      ...kit,
+      price_locked: true,
+      price_lock_reason: reason,
+    });
+
+    const open = (reason: string | null) => {
+      mockQuery.data = { kit: lockedKit(reason), canonicalSlug: null };
+      mockQuery.isFetching = false;
+      mount();
+    };
+
+    it('no footer while prices are visible', () => {
+      mockQuery.data = { kit: { ...kit, price_locked: false }, canonicalSlug: null };
+      mockQuery.isFetching = false;
+      mount();
+      expect(latest.vm?.priceLock).toBeNull();
+    });
+
+    it('brand: the reason CTA opens its account screen over Profile', () => {
+      open('kyc_required');
+      expect(latest.vm?.priceLock?.cta?.screen).toBe('CompanyVerification');
+      act(() => latest.vm?.onPriceLockAction());
+      expect(mockNavigate).toHaveBeenCalledWith('Main', {
+        screen: 'SettingsTab',
+        params: { screen: 'CompanyVerification', initial: false },
+      });
+    });
+
+    it('brand with an unfinished company profile → company info', () => {
+      open('onboarding_incomplete');
+      act(() => latest.vm?.onPriceLockAction());
+      expect(mockNavigate).toHaveBeenCalledWith('Main', {
+        screen: 'SettingsTab',
+        params: { screen: 'CompanyInfoScreen', initial: false },
+      });
+    });
+
+    it('brand in review: copy only, the action does nothing', () => {
+      open('kyc_pending');
+      expect(latest.vm?.priceLock).toMatchObject({
+        title: 'marketplace.priceLock.pending.title',
+        cta: null,
+      });
+      act(() => latest.vm?.onPriceLockAction());
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    it('guest: sign in, back to Login under the kit', () => {
+      mockSession.signedIn = false;
+      mockSession.userType = null;
+      open('kyc_required');
+      expect(latest.vm?.priceLock?.title).toBe('account.mediaKit.publicScreen.guestLock.title');
+      act(() => latest.vm?.onPriceLockAction());
+      expect(mockNavigate).toHaveBeenCalledWith('Auth', { screen: 'Login' });
+    });
+
+    it('creator: plain text, never the brand verification flow', () => {
+      mockSession.userType = 'influencer';
+      open('kyc_required');
+      expect(latest.vm?.priceLock).toMatchObject({
+        title: 'marketplace.priceLock.unavailable.title',
+        cta: null,
+      });
+    });
+
+    it('unknown reason reads as "verify"', () => {
+      open('something_new');
+      expect(latest.vm?.priceLock?.title).toBe('marketplace.priceLock.verify.title');
+    });
   });
 });

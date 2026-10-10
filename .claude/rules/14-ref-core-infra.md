@@ -20,7 +20,7 @@ paths:
 
 ## Feedback UI
 
-- Toasts: `toastService.success|error|warning|info` (`@/core/toast`) outside React; `useToast()` inside.
+- Toasts: `toastService.success|error|warning|info` (`@/core/toast`) outside React; `useToast()` inside. `options.action { label, onPress }` = one inline button (Undo), hides the toast on press.
 - Errors: `GlobalErrorModal` (5xx) · `NetworkSnackbar` (offline via `useNetworkMonitor`) · `InlineError` (400/404/validation).
 
 ## Forms & data helpers

@@ -1,12 +1,34 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Zap } from 'lucide-react-native';
+import { Check, Lock, Zap } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Accordion, Box, MoneyText, Text } from '@/shared/ui';
-import type { RateRow } from '../../utils/rateRows';
+import type { LockableRateRow } from '../../utils/rateRows';
 
-/** One priced slot: service · package and price; opens to what's included and its add-ons. */
-const MediaKitPreviewRateRowComponent: React.FC<{ row: RateRow }> = ({ row }) => {
+/** 🔒 in place of an amount the viewer may not see (brand-explore §6). */
+const LockedPrice = memo<{ masked: boolean }>(({ masked }) => {
+  const { t } = useTranslation();
+  const { colors, sizes } = useTheme();
+  return (
+    <Box
+      row
+      align="center"
+      gap="xs"
+      accessible
+      accessibilityLabel={t('account.mediaKit.publicScreen.lockedPriceA11y')}
+    >
+      <Lock size={sizes.icon.xs} color={colors.icon.secondary} />
+      {masked ? (
+        <Text variant="bodyMedium" color={colors.text.tertiary}>
+          {t('account.mediaKit.publicScreen.lockedPrice')}
+        </Text>
+      ) : null}
+    </Box>
+  );
+});
+
+/** One slot: service · package and price (🔒 when locked); opens to what's included and its add-ons. */
+const MediaKitPreviewRateRowComponent: React.FC<{ row: LockableRateRow }> = ({ row }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const title = row.packageLabel ? `${row.serviceLabel} · ${row.packageLabel}` : row.serviceLabel;
@@ -15,7 +37,7 @@ const MediaKitPreviewRateRowComponent: React.FC<{ row: RateRow }> = ({ row }) =>
     <Accordion
       title={title}
       subtitle={row.platformLabel ?? t('account.rates.inPerson')}
-      trailing={<MoneyText value={row.price} />}
+      trailing={row.price ? <MoneyText value={row.price} /> : <LockedPrice masked />}
     >
       <Box gap="sm">
         {row.includes.map(line => (
@@ -41,7 +63,7 @@ const MediaKitPreviewRateRowComponent: React.FC<{ row: RateRow }> = ({ row }) =>
                     })}
               </Text>
             </Box>
-            <MoneyText value={addon.price} showSign />
+            {addon.price ? <MoneyText value={addon.price} showSign /> : <LockedPrice masked={false} />}
           </Box>
         ))}
       </Box>

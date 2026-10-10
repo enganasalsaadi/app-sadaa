@@ -14,7 +14,7 @@ jest.mock('@/core/theme', () => {
   return { useTheme: () => ({ colors: tokens, sizes: tokens, isRTL: false }) };
 });
 
-jest.mock('lucide-react-native', () => ({ UserX: 'UserX' }));
+jest.mock('lucide-react-native', () => ({ UserX: 'UserX', Lock: 'Lock' }));
 
 jest.mock('../../../components/MediaKitPreview', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
@@ -36,6 +36,9 @@ jest.mock('@/shared/ui', () => {
     EmptyState: stub('EmptyState'),
     ErrorState: stub('ErrorState'),
     Layout: stub('Layout'),
+    LayoutFooter: stub('LayoutFooter'),
+    Box: stub('Box'),
+    Text: stub('Text'),
   };
 });
 
@@ -70,6 +73,8 @@ const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
     kit,
     nicheLabels: ['Fashion'],
     rateRows: [],
+    priceLock: null,
+    onPriceLockAction: jest.fn(),
     refreshing: false,
     onRefresh: jest.fn(),
     onRetry: jest.fn(),
@@ -85,6 +90,20 @@ const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
   return { root: tree.root, vm };
 };
 
+/** Stubs drop element props (`Layout.footer`, `LayoutFooter.top`): render one on its own. */
+const mountElement = (element: unknown) => {
+  if (!React.isValidElement(element)) throw new Error('not an element');
+  let tree: ReturnType<typeof create> | undefined;
+  act(() => {
+    tree = create(element);
+  });
+  if (!tree) throw new Error('element render failed');
+  return tree.root;
+};
+
+const renderFooter = (root: ReactTestInstance) =>
+  mountElement(root.find(isHost('Layout')).props.footer).find(isHost('LayoutFooter'));
+
 describe('MediaKitPublicScreen', () => {
   it('renders the kit with localised niches and no footer CTA', () => {
     const { root } = render();
@@ -94,6 +113,33 @@ describe('MediaKitPublicScreen', () => {
     const layout = root.find(isHost('Layout'));
     expect(layout.props.header.title).toBe('account.mediaKit.publicScreen.title');
     expect(layout.props.footer).toBeUndefined();
+  });
+
+  it('locked prices → footer with the reason copy and its CTA', () => {
+    const { root, vm } = render({
+      priceLock: {
+        title: 'marketplace.priceLock.verify.title',
+        body: 'marketplace.priceLock.verify.body',
+        cta: { label: 'marketplace.priceLock.verify.cta', screen: 'CompanyVerification' },
+      },
+    });
+    const footer = renderFooter(root);
+    expect(footer.props.primary.label).toBe('marketplace.priceLock.verify.cta');
+    expect(footer.props.primary.onPress).toBe(vm.onPriceLockAction);
+    const top = mountElement(footer.props.top);
+    const texts = top.findAll(isHost('Text')).map(node => node.props.children);
+    expect(texts).toEqual(['marketplace.priceLock.verify.title', 'marketplace.priceLock.verify.body']);
+  });
+
+  it('locked in review → footer copy only, no button', () => {
+    const { root } = render({
+      priceLock: {
+        title: 'marketplace.priceLock.pending.title',
+        body: 'marketplace.priceLock.pending.body',
+        cta: null,
+      },
+    });
+    expect(renderFooter(root).props.primary).toBeUndefined();
   });
 
   it('loading reserves space with the skeleton', () => {

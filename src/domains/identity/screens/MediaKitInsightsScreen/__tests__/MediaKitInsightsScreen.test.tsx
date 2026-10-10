@@ -185,6 +185,28 @@ describe('MediaKitInsightsScreen', () => {
     ]);
   });
 
+  it('adds the search impressions tile once the server reports it', () => {
+    const { root } = render({
+      tileRows: [
+        [
+          { key: 'profile_views', value: 1240, change: 0.12 },
+          { key: 'unique_brand_views', value: 38, change: 0.267 },
+        ],
+        [
+          { key: 'link_opens', value: 96, change: 'new' },
+          { key: 'shares', value: 14, change: 0.556 },
+        ],
+        [{ key: 'search_impressions', value: 410, change: undefined }],
+      ],
+    });
+    const tiles = root.findAll(isHost('StatTile'));
+    expect(tiles).toHaveLength(5);
+    expect(tiles[4]?.props.label).toBe(
+      'account.mediaKit.tiles.searchImpressions',
+    );
+    expect(tiles[4]?.props.change).toBeUndefined();
+  });
+
   it('shows skeleton tiles and no sections while loading', () => {
     const { root } = render({
       status: 'loading',

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react-native';
 import { iconStroke, useTheme } from '@/core/theme';
 import type { StatusTone } from '@/core/theme';
+import type { ToastAction } from '@/core/toast';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 import { Pressable } from '../primitives/Pressable';
@@ -20,6 +21,8 @@ export interface ToastCardProps {
   type: ToastType;
   message: string;
   onHide?: () => void;
+  /** Inline text button before the close icon (e.g. Undo); hides the toast once pressed. */
+  action?: ToastAction;
 }
 
 const TOAST_TONE: Record<ToastType, StatusTone> = {
@@ -40,6 +43,7 @@ export const ToastCard: React.FC<ToastCardProps> = ({
   type,
   message,
   onHide,
+  action,
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -66,6 +70,22 @@ export const ToastCard: React.FC<ToastCardProps> = ({
       <Text variant="bodySmall" color={tone.text} style={styles.message}>
         {message}
       </Text>
+
+      {action ? (
+        <Pressable
+          onPress={() => {
+            action.onPress();
+            onHide?.();
+          }}
+          hitSlop={sizes.hitSlop.lg}
+          accessibilityRole="button"
+          accessibilityLabel={action.label}
+        >
+          <Text variant="label" color={tone.main}>
+            {action.label}
+          </Text>
+        </Pressable>
+      ) : null}
 
       {onHide ? (
         <Pressable

@@ -19,9 +19,12 @@ export interface ConfirmSheetProps {
   onConfirm: () => void;
   confirmVariant?: ButtonVariant;
   confirmLoading?: boolean;
-  cancelLabel: string;
+  /** Omit for a notice the user only acknowledges (the confirm button alone). */
+  cancelLabel?: string;
   /** Defaults to `onClose`. */
   onCancel?: () => void;
+  /** Fires once the sheet is gone: navigate from here so a modal never races a push. */
+  onDismissed?: () => void;
 }
 
 /**
@@ -41,11 +44,12 @@ const ConfirmSheetComponent: React.FC<ConfirmSheetProps> = ({
   confirmLoading = false,
   cancelLabel,
   onCancel,
+  onDismissed,
 }) => {
   const { colors, sizes } = useTheme();
 
   return (
-    <BottomSheet visible={visible} onClose={onClose}>
+    <BottomSheet visible={visible} onClose={onClose} onDismissed={onDismissed}>
       <Box px="2xl" pt="md" pb="2xl" gap="2xl">
         <Box align="center" gap="md">
           {icon ? (
@@ -81,13 +85,15 @@ const ConfirmSheetComponent: React.FC<ConfirmSheetProps> = ({
             disabled={confirmLoading}
             fullWidth
           />
-          <CustomButton
-            title={cancelLabel}
-            onPress={onCancel ?? onClose}
-            variant="ghost"
-            disabled={confirmLoading}
-            fullWidth
-          />
+          {cancelLabel ? (
+            <CustomButton
+              title={cancelLabel}
+              onPress={onCancel ?? onClose}
+              variant="ghost"
+              disabled={confirmLoading}
+              fullWidth
+            />
+          ) : null}
         </Box>
       </Box>
     </BottomSheet>

@@ -5,11 +5,12 @@ import { UserX } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { EmptyState, ErrorState, Layout } from '@/shared/ui';
 import { MediaKitPreview, MediaKitPreviewSkeleton } from '../../components/MediaKitPreview';
+import { PriceLockFooter } from './components/PriceLockFooter';
 import { useMediaKitPublicScreen } from './hooks/useMediaKitPublicScreen';
 
 /**
  * A creator's public profile (Detail archetype), shown over the tabs or Login.
- * No footer CTA until offers ship (plan: no placeholders).
+ * Footer only while prices are locked (verify / sign-in step); offers join once they ship.
  */
 const MediaKitPublicScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -51,6 +52,11 @@ const MediaKitPublicScreenComponent: React.FC = () => {
   return (
     <Layout
       header={{ title: t('account.mediaKit.publicScreen.title') }}
+      footer={
+        vm.status === 'ready' && vm.priceLock ? (
+          <PriceLockFooter notice={vm.priceLock} onAction={vm.onPriceLockAction} />
+        ) : undefined
+      }
       scrollProps={{
         refreshControl: (
           <RefreshControl

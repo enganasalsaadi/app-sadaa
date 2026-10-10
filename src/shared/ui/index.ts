@@ -46,6 +46,8 @@ export { Chip } from './Chip';
 export type { ChipProps } from './Chip';
 export { ChipGroup } from './ChipGroup';
 export type { ChipGroupItem, ChipGroupProps } from './ChipGroup';
+export { ChipRow } from './ChipRow';
+export type { ChipRowProps } from './ChipRow';
 export { ToastCard, toastConfig } from './ToastCard';
 export type { ToastCardProps, ToastType } from './ToastCard';
 export { SelectionModal } from './SelectionModal';
