@@ -35,7 +35,7 @@ Present to the user, in this order:
    │ [   إنشاء حساب جديد  ]│   secondary
    ╰──────────────────────╯
    ```
-3. **Visual preview** (new screen or redesign; skip for small edits): ASCII fixes structure, this fixes the *look*. Build it before asking for approval:
+3. **Visual preview — OPT-IN ONLY.** Skip this step entirely (no Artifact tool, no quickstart, no canvas) unless the user explicitly asks for a visual preview in this request. Default = ASCII only. When asked, ASCII fixes structure, this fixes the *look*:
    - Artifact `quickstart` (intent `design`) → one Design canvas per feature, one artboard per screen (`390×844`, `radius` 44), `is_interactive` only where a toggle really works.
    - Each artboard's `<helmet>`: Tajawal from Google Fonts + the full contents of `preview-kit.css` (this folder). Root `<div class="sd {{themeClass}}">` with a `dark` boolean tweak; `lang="ar" dir="rtl"`.
    - Use only kit vars and classes (`hero` + `lights`, `glass`, `glassbtn`, `sheet`, `card`, `row`, `badge`, `pill`, `btn`, `link`, `tabbar` + `lens`, `live`, `track`, `num`). Sizes from rule 08/02 tokens: typography px, spacing 4–80, radius 4/10/15/22/28, 44pt targets. No colors outside the kit, no logo outside entry screens (rule 08).

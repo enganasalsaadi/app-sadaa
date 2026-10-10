@@ -1,29 +1,21 @@
-# Mobile Docs — Living Architecture & Pitch Guide
+# 11 — Mobile Docs (MANDATORY, Definition of Done)
 
-**MANDATORY:** Whenever a screen, flow, permission, or business rule changes, update `docs/mobile-architecture.md` in plain English. Keep the Pitch sections updated if new value is added. Update the Change Log. Required for Definition of Done.
+Screen, flow, permission, or business rule changes → update `docs/mobile-architecture.md` in the **same change**, plain English, + Pitch sections if new value + Change Log.
 
-## What triggers an update
-
-| Change | Update in `docs/mobile-architecture.md` |
+| Change | Section |
 |---|---|
-| Screen added / removed / renamed, tab or navigator change | §5.2 screen map (+ ✅ 🟡 🔜 marker) |
-| Flow changed (onboarding, KYC, social linking, login, deal, wallet, push) | §5.3 journey walkthrough |
-| Boot gate / `AppStatus` added | §5.1 |
-| Permission added/removed, usage string changed | §7.1 table + §7.2 if store-relevant |
-| Business rule (money, escrow, commission, deal status, role rules, limits) | §4.4 / §4.5 (+ §5.3 Journey F) |
-| New user-facing value (feature, ad type, differentiator) | §1.2 table, §2.3 USPs, §3 personas, §4 model as relevant |
-| UX strategy (RTL, offline, loading states, push prompting) | §6 |
-| Roadmap item shipped / blocker resolved or found | §7.3 status markers, §7.4 table |
+| Screen added/removed/renamed, tab/navigator change | §5.2 screen map (✅ 🟡 🔜) |
+| Flow changed (onboarding, KYC, linking, login, deal, wallet, push) | §5.3 journey |
+| Boot gate / `AppStatus` | §5.1 |
+| Permission added/removed, usage string | §7.1 (+ §7.2 if store-relevant) |
+| Business rule (money, escrow, commission, deal status, roles, limits) | §4.4 / §4.5 (+ §5.3 Journey F) |
+| New user-facing value | §1.2, §2.3 USPs, §3 personas, §4 as relevant |
+| UX strategy (RTL, offline, loading, push prompting) | §6 |
+| Roadmap shipped / blocker resolved or found | §7.3 markers, §7.4 |
 
-## How to write it
-
-- **Plain business English. No code**: no identifiers, file paths, hook/component names, endpoints, or snippets. Describe what the user sees and why it matters. (The ASCII screen map is the only diagram style allowed.)
-- Mark status honestly: ✅ live · 🟡 built but not wired / partial · 🔜 planned. Never present a planned feature as live.
+How:
+- **No code**: no identifiers, paths, hook/component names, endpoints, snippets. What the user sees and why it matters. ASCII screen map is the only diagram.
+- Honest status: ✅ live · 🟡 built not wired/partial · 🔜 planned. Never present planned as live.
 - Unsourced market figures stay `[DATA NEEDED]`.
-- Update `Last updated` in the header table.
-- Add a **Change Log** row (newest first): date (absolute), one-line change, sections touched.
-- Pure refactors with no user-visible, permission, or rule change → no update needed.
-
-## Definition of Done
-
-A change that hits any trigger above is not done until the guide is updated in the **same change** (alongside `npx tsc --noEmit && npm run lint && npm test`).
+- Update `Last updated` in header table. Change Log row (newest first): absolute date, one line, sections touched.
+- Pure refactors with no user-visible/permission/rule change → no update.

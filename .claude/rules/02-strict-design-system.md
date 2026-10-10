@@ -1,66 +1,52 @@
+---
+paths:
+  - "src/**/*.tsx"
+  - "src/shared/ui/**"
+  - "src/core/theme/**"
+---
+
 # 02 — Strict Design System
 
-Enforced by ESLint: raw RN UI imports banned in `src/domains/**` and `src/app/screens/**`; `react-native/no-color-literals`, `react-native/no-inline-styles` everywhere.
+Lint: raw RN UI imports banned in `src/domains/**` and `src/app/screens/**`; `react-native/no-color-literals`, `react-native/no-inline-styles` everywhere.
 
 ## UI kit only (`@/shared/ui`)
 
-Domain screens and components NEVER import `View`, `Text`, `Image`, `Pressable`, `TouchableOpacity`, `TouchableHighlight`, `TouchableWithoutFeedback` from `react-native`.
+Never import `View Text Image Pressable TouchableOpacity TouchableHighlight TouchableWithoutFeedback` from `react-native` in domains/screens.
 
 | Use | Instead of | Key props |
 |---|---|---|
 | `Box` | `View` | `p px py pt pb ps pe m mx my mt mb ms me gap` (SpacingToken), `bg`, `borderRadius` (RadiiToken), `shadow`, `row`, `flex`, `align`, `justify`, `zIndex` |
-| `Text` | `Text` | `variant` (TypographyVariant), `color`, `align`, margin tokens. Auto RTL + `maxFontSizeMultiplier` |
+| `Text` | `Text` | `variant`, `color`, `align`, margins. Auto RTL + `maxFontSizeMultiplier` |
 | `Pressable` | Touchable*/Pressable | Box props + `scaleOnPress`, `activeOpacity` |
-| `Card` | surface View | Box props + `onPress` (press spring by default), `selected`; borderless + `shadow='card'` by default (rule 08) |
+| `Card` | surface View | Box props + `onPress` (press spring), `selected`; borderless + `shadow='card'` |
 | `Image` | Image | fast-image backed |
-| `CustomButton`, `CustomInput`, `PhoneInput` | hand-rolled controls | variants/sizes from theme |
-| `Layout` | SafeAreaView/ScrollView wrappers | `mode`, `surface`, `padding`, `header`, `footer` (`LayoutFooter`) |
-| `ScreenHeader`, `BottomSheet`, `SelectionModal`, `SuperList`, `InlineError` | ad-hoc versions | see component docs |
+| `CustomButton` `CustomInput` `PhoneInput` | hand-rolled controls | theme variants/sizes |
+| `Layout` | SafeAreaView/ScrollView wrappers | `mode surface padding header footer` |
+| `ScreenHeader BottomSheet SelectionModal SuperList InlineError` | ad-hoc versions | — |
 
-Missing a primitive? Build it in `src/shared/ui/<Name>/` first, then use it. Never inline a one-off in a domain. Add its showcase demo in the same change (rule 10).
+Missing primitive → build in `src/shared/ui/<Name>/` first + showcase demo same change (rule 10). Never inline a one-off. `Animated.View` only as transform wrapper with `Box` inside.
 
-`Animated.View` is allowed only as a transform wrapper — put `Box` inside it.
-
-## Tokens only — zero hardcoding
-
-All visual values come from the theme (`useTheme()` / `useStyles()`), light + dark resolved at runtime.
+## Tokens only
 
 | Banned | Use |
 |---|---|
-| `'#FFF'`, `'red'`, `'rgba(...)'` in components | `colors.text.primary`, `colors.layout.base`, `colors.brand`… |
-| `margin: 10`, `padding: 16`, `gap: 8` | `spacing.md`, `<Box p="lg" gap="sm">` |
-| `fontSize: 14`, `fontFamily: '...'` | `<Text variant="body">`, `typography.*` |
-| `borderRadius: 12` | `radii.*` / `borderRadius="md"` (`xs` 4 · `sm` 10 · `md` 15 · `lg` 22 · `xl` 28 · `full`) |
+| `'#FFF'`, `'red'`, `'rgba(...)'` | `colors.text.primary`, `colors.layout.base`… |
+| `margin: 10`, `gap: 8` | `spacing.md`, `<Box p="lg" gap="sm">` |
+| `fontSize`, `fontFamily` | `<Text variant>`, `typography.*` |
+| `borderRadius: 12` | `radii.*` (`xs` 4 · `sm` 10 · `md` 15 · `lg` 22 · `xl` 28 · `full`) |
 | `zIndex: 999` | `zIndices.modal` |
-| `style={{...}}` inline | `useStyles(factory)` or primitive props |
+| inline `style={{}}` | `useStyles(factory)` or primitive props |
 
-- Raw colors/numbers live ONLY in `src/core/theme/tokens/**`.
-- Which color/radius/font to pick for what → rule 08 (brand identity). Color roles are strict: mint = money only, mustard = premium only (never text on light), teal = interaction, navy = identity.
-- Never branch on `isDark` to pick colors in components — the token resolves per mode.
-- Token missing → add it to the token file (both light & dark), then use it.
-- One-off sizes with no token (icon 72px): `moderateScale(n)` / `fontScale(n)` from `@/core/theme`. Design reference 375×812.
-- Color token shape (rule 08): hue groups `{ main, text, soft }` — `colors.brand`, `colors.interactive`, `colors.money`, `colors.premium`, `colors.status.success|warning|danger|info|neutral`. Text in a hue → `.text`; fills/icons/dots → `.main`; tinted backgrounds → `.soft`. Text on a filled accent → `colors.text.onAccent`.
-- No alpha string hacks (`colors.x + '15'`) — use the `soft` token. Placeholder → `colors.form.input.placeholder`; skeleton → `colors.surface.elevated`.
+- Raw colors/numbers ONLY in `src/core/theme/tokens/**`. Which color for what → rule 08.
+- Never branch on `isDark` for colors. Token missing → add to token file (light + dark).
+- One-off sizes: `moderateScale(n)` / `fontScale(n)` (`@/core/theme`). Design ref 375×812.
+- Hue groups `{ main, text, soft }`: text → `.text`; fills/icons/dots → `.main`; tinted bg → `.soft`. Text on filled accent → `colors.text.onAccent`.
+- No alpha hacks (`colors.x + '15'`) → `soft`. Placeholder `colors.form.input.placeholder`; skeleton `colors.surface.elevated`.
 
 ## Hooks
 
-| Hook | Use |
-|---|---|
-| `useTheme()` | `colors, spacing, typography, radii, sizes, zIndices, shadows, isDark` |
-| `useStyles(factory, deps?)` | memoised `StyleSheet` built from theme |
-| `useResponsiveValue({small, medium, large})` | breakpoint values |
+`useTheme()` (`colors spacing typography radii sizes zIndices shadows isDark`) · `useStyles(factory, deps?)` · `useResponsiveValue({small, medium, large})`.
 
 ## Component convention
 
-```
-src/shared/ui/ComponentName/
-  ComponentName.tsx
-  index.ts        ← export { ComponentName } from './ComponentName'
-  styles.ts       ← optional (useStyles factory)
-  types.ts        ← optional
-```
-
-- Props interface exported as `<ComponentName>Props`.
-- Every shared component is exported from `src/shared/ui/index.ts`. Named exports only, `index.ts` barrel per folder.
-- Variants via typed union props (`variant: 'primary' | 'secondary'`), never boolean soup.
-- Accessibility: every pressable has `accessibilityRole` + `accessibilityLabel` (via `t()`); touch target ≥ 44pt (`sizes` tokens).
+`src/shared/ui/<Name>/{<Name>.tsx, index.ts, styles.ts?, types.ts?}`. Props exported as `<Name>Props`. Exported from `src/shared/ui/index.ts`. Named exports, barrel per folder. Variants via typed unions, never boolean soup. Every pressable: `accessibilityRole` + `accessibilityLabel` (via `t()`), touch target ≥ 44pt (`sizes`).
