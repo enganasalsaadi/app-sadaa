@@ -74,6 +74,13 @@ const kit: PublicMediaKit = {
   bio: null,
   top_portfolio_items: [],
   offers_from_profile: null,
+  cover_url: null,
+  city: null,
+  public_url: 'https://sada.sy/c/anas',
+  is_shortlisted: null,
+  highlights: null,
+  audience: null,
+  worked_with: null,
 };
 
 const services: MediaKitPublicScreenModel['services'] = {

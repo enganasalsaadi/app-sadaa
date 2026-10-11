@@ -95,6 +95,13 @@ const kit: PublicMediaKit = {
   bio: null,
   top_portfolio_items: [],
   offers_from_profile: null,
+  cover_url: null,
+  city: null,
+  public_url: 'https://sada.sy/c/anas',
+  is_shortlisted: null,
+  highlights: null,
+  audience: null,
+  worked_with: null,
 };
 
 const latest: { vm: MediaKitPublicScreenModel | null } = { vm: null };
@@ -233,9 +240,7 @@ describe('useMediaKitPublicScreen', () => {
       });
     });
 
-    it('share only once the server sends the public link', () => {
-      openUnlocked();
-      expect(latest.vm?.onShare).toBeNull();
+    it('share is available once the kit is loaded (public_url is always sent)', () => {
       openUnlocked({ public_url: 'https://sada.app/c/anas' });
       expect(typeof latest.vm?.onShare).toBe('function');
     });

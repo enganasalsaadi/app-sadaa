@@ -45,8 +45,9 @@ export interface PublicRateCard extends Omit<RateCard, 'price_usd' | 'addons'> {
 }
 
 /**
- * Media Kit v2 (docs/backend/media-kit-v2-prompt.md). Every v2 field is optional: a server
- * that has not shipped it omits it (or sends `null` / `[]`) and its section stays hidden.
+ * Media Kit v2 (contract §17.11). `highlights`, `audience`, `worked_with` and
+ * `top_portfolio_items` are stubbed server-side (`null` / `[]`) until their data sources ship:
+ * their sections stay hidden and light up without an app release.
  */
 export interface MediaKitCity {
   key: string;
@@ -87,13 +88,13 @@ export interface MediaKitPortfolioItem {
   id: string;
   title: string | null;
   thumbnail_url: string;
-  platform: string | null;
+  platform: SocialPlatform | null;
   views: number | null;
   brand_name: string | null;
 }
 
 /** A brand the creator finished at least one in-app campaign with (and that allows being shown). */
-export interface WorkedWithBrand {
+export interface MediaKitWorkedWithBrand {
   id: string;
   name: string;
   logo_url: string | null;
@@ -101,10 +102,10 @@ export interface WorkedWithBrand {
   completed_campaigns: number;
 }
 
-export interface WorkedWith {
+export interface MediaKitWorkedWith {
   /** All brands, including those beyond `items` or hidden by their own privacy setting. */
   total_brands: number;
-  items: WorkedWithBrand[];
+  items: MediaKitWorkedWithBrand[];
 }
 
 export interface PublicMediaKit {
@@ -132,16 +133,21 @@ export interface PublicMediaKit {
   bio: string | null;
   top_portfolio_items: MediaKitPortfolioItem[];
   offers_from_profile: null;
-  /** v2: the creator's banner; absent → the hero blurs the avatar instead. */
-  cover_url?: string | null;
-  city?: MediaKitCity | null;
-  /** v2: absolute `/c/{slug}` link, for the brand-side Share. */
-  public_url?: string | null;
-  /** v2: only for a signed-in brand viewer; `null` / absent for everyone else. */
-  is_shortlisted?: boolean | null;
-  highlights?: MediaKitHighlights | null;
-  audience?: MediaKitAudience | null;
-  worked_with?: WorkedWith | null;
+  /** The creator's 5:2 banner (1500×600); `null` until uploaded. */
+  cover_url: string | null;
+  city: MediaKitCity | null;
+  /** Absolute `/c/{slug}` link, for the brand-side Share. */
+  public_url: string;
+  /** Only for a signed-in brand viewer; `null` for everyone else: hide the heart, don't render it empty. */
+  is_shortlisted: boolean | null;
+  highlights: MediaKitHighlights | null;
+  audience: MediaKitAudience | null;
+  worked_with: MediaKitWorkedWith | null;
+}
+
+/** Contract §8.3 (brand-only). */
+export interface BrandSettings {
+  show_on_creator_profiles: boolean;
 }
 
 export interface MediaKit {

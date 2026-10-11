@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { BadgeCheck } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Card, Image, Text } from '@/shared/ui';
-import type { WorkedWith, WorkedWithBrand } from '../../types/mediaKit';
+import type { MediaKitWorkedWith, MediaKitWorkedWithBrand } from '../../types/mediaKit';
 import { MediaKitRail } from './MediaKitRail';
 
 const CARD_WIDTH = moderateScale(116);
 
-const BrandCard = memo<{ brand: WorkedWithBrand }>(({ brand }) => {
+const BrandCard = memo<{ brand: MediaKitWorkedWithBrand }>(({ brand }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const styles = useStyles(() => ({ shrink: { flexShrink: 1 } }));
@@ -57,7 +57,7 @@ const BrandCard = memo<{ brand: WorkedWithBrand }>(({ brand }) => {
  * Brands the creator has completed a campaign with inside Sada: social proof a brand can
  * trust because every one went through escrow. Hidden until there is at least one.
  */
-const MediaKitWorkedWithRailComponent: React.FC<{ workedWith: WorkedWith }> = ({ workedWith }) => {
+const MediaKitWorkedWithRailComponent: React.FC<{ workedWith: MediaKitWorkedWith }> = ({ workedWith }) => {
   const { t } = useTranslation();
   const { spacing } = useTheme();
 

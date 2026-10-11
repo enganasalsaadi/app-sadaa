@@ -6,7 +6,7 @@ import type {
   MediaKitPlatform,
   PublicMediaKit,
   PublicRateCard,
-  WorkedWith,
+  MediaKitWorkedWith,
 } from '../types/mediaKit';
 import type { LockableRateRow } from './rateRows';
 
@@ -156,5 +156,5 @@ export const topAgeRange = (ranges: readonly AudienceShare[]): AudienceShare | n
   );
 
 /** `null` until the creator has at least one brand to show. */
-export const toWorkedWith = (worked: WorkedWith | null | undefined): WorkedWith | null =>
+export const toWorkedWith = (worked: MediaKitWorkedWith | null | undefined): MediaKitWorkedWith | null =>
   worked && worked.items.length > 0 ? worked : null;

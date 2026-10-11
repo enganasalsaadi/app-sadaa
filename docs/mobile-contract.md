@@ -6,6 +6,7 @@ Base URL: `/api/v1`. All requests send `Authorization: Bearer <token>` (except p
 Status: LOCKED (2026-10-01), revised by the hardening pass (§0.1, backend-plan §16). Any change must be mirrored in `backend-plan.md`.
 **§17 Media Kit is LOCKED (2026-10-06, implemented in the backend).** Source: `docs/mobile-handoff.md` Appendix.
 **§6 Rate Cards v2 (2026-10-08, live).** Source: `docs/mobile-handoff-rate-cards.md`. Replaces `service_type` and the `/lookups` `service_types` list.
+**§17.11 Media Kit v2 pitch page (2026-10-11, live).** Source: `docs/kit/mobile-handoff-v2.md`. Adds cover, bio, city, shortlist state, brand settings (§8.3); insights/deals sections are stubbed (`null`).
 Wire order for mobile: §0.1 changelog → §1 errors → §15 Registration & Auth → §16 edge cases → rest.
 
 ---
@@ -397,9 +398,11 @@ Result arrives by push (`kyc_approved` / `kyc_rejected`).
 
 ### 8.1 `PATCH /influencer/profile` (partial — send only changed fields)
 ```json
-{ "full_name": "Anas", "email": "a@b.com", "governorate": "damascus", "area": "المزة", "niches": ["fashion"] }
+{ "full_name": "Anas", "email": "a@b.com", "governorate": "damascus", "area": "المزة", "niches": ["fashion"], "bio": "مصورة طعام من دمشق" }
 ```
-Rules: `full_name` string ≤255; `email` nullable email unique; `governorate` enum; `area` nullable string ≤255; `niches` 1–3 enum. Response: §3.2.
+Rules: `full_name` string ≤255; `email` nullable email unique; `governorate` enum; `area` nullable string ≤255; `niches` 1–3 enum; `bio` nullable string ≤300 chars (media kit v2, §17.11). Response: §3.2 (`profile.bio` included).
+- `bio` is trimmed; `""` / whitespace / `null` clears it. Over 300 → 422 `validation_failed` (`errors.bio`).
+- **422 `bio_invalid`** (`errors.bio[0]` = localized message) when the bio contains contact details: URLs, bare domains (`bit.ly`, `insta . com`, `wa(dot)me`, `shop نقطة com`), emails, `@handles`, or any run of **7+ digits** — Arabic-Indic/Persian digits and digits split by spaces / dashes / dots / brackets count. On 422 nothing in the request is saved. Mirror the rule client-side for instant feedback, but the server is the authority.
 
 ### 8.2 `PATCH /brand/profile`
 ```json
@@ -410,9 +413,20 @@ Rules: `full_name` string ≤255; `email` nullable email unique; `governorate` e
 
 Email change applies immediately (no verification).
 
+### 8.3 `GET` / `PATCH /brand/settings` (media kit v2)
+Brand-only (`user.type:brand`, same guards as `/brand/profile`; creator → 403).
+```json
+{ "show_on_creator_profiles": true }
+```
+- GET → 200 the object above. Default `true`.
+- PATCH body `{ "show_on_creator_profiles": false }` (partial; boolean required when sent; `"yes"`/`null` → 422) → 200 same object.
+- Meaning: when `false`, this brand is never listed in any creator's `worked_with` (§17.4). `worked_with` is `null` today (no Deals yet), so the toggle has no visible effect until Deals ship — build the settings screen now.
+
 ---
 
 ## 9. Avatar / logo
+
+Media kit cover: see §17.11 (`POST`/`DELETE /influencer/media-kit/cover`).
 
 - `POST /user/avatar` multipart field `avatar`: jpeg/png/webp ≤ 5MB, **max 4096×4096 px** (downscale on device before upload). Server crops center 1:1 → 500×500 WebP. Response `{ "avatar_url": "https://..." }`. 422 `avatar`. 429 (10/h).
 - `DELETE /user/avatar` → `{ "avatar_url": null }`.
@@ -798,7 +812,7 @@ Body optional `{ "fcm_token": "<current FCM token>" }` (nullable string ≤ 512)
 
 ---
 
-## 17. Media Kit — LOCKED (2026-10-06, implemented)
+## 17. Media Kit — LOCKED (2026-10-06, implemented; v2 additions 2026-10-11 → §17.11)
 
 The creator's public profile: what brands see, shared as a link, with view stats on the creator Home.
 Backend plan: `api/docs/plans/media-kit/backend-plan.md` (§2 lists every change from the mobile proposal, C1–C10).
@@ -861,18 +875,26 @@ Body `{ "slug"?: "anas.style", "is_public"?: false }` → 200 same shape as §17
                    "follower_count": 45210, "follower_count_verified": true,
                    "follower_tier": "MICRO", "follower_tier_label": "مايكرو", "is_primary": true } ],
   "rate_cards": [ /* RateCard §6.3 */ ],
-  "price_from_usd": 30.0,
+  "price_from_usd": 30.0, "price_locked": false, "price_lock_reason": null,
   "contract_terms": { "version": "v1", "items": [ { "key": "organic_only", "text": "…" } ] },
-  "bio": null, "top_portfolio_items": [], "offers_from_profile": null
+  "cover_url": "https://…/covers/01J…/01J….webp",
+  "bio": "مصورة طعام من دمشق",
+  "city": { "key": "damascus", "label": "دمشق" },
+  "public_url": "https://<PUBLIC_WEB_URL>/c/anas",
+  "is_shortlisted": false,
+  "highlights": null, "audience": null, "worked_with": null,
+  "top_portfolio_items": [], "offers_from_profile": null
 }
 ```
 - **Read-only** — opening it does not count a view (call §17.5).
 - `display_name` = primary platform `display_name`, else the user's name. `avatar_url` `null` → show initials.
 - `is_verified` = KYC verified. `platforms` exclude `rejected`, primary first then followers desc. `follower_count_verified` = auto-verified or admin-approved (self-declared counts are `false`).
-- `rate_cards`: on-site visit cards always; platform cards only for available, non-rejected platforms; `price_from_usd` = their min or `null`. `contract_terms` = the catalog's terms (§6.1). `bio` `null` until AI bio ships.
+- `rate_cards`: on-site visit cards always; platform cards only for available, non-rejected platforms; `price_from_usd` = their min or `null`. `contract_terms` = the catalog's terms (§6.1).
+- v2 fields (`cover_url`, `bio`, `city`, `public_url`, `is_shortlisted`, `highlights`, `audience`, `worked_with`): see §17.11.
 - **Never returned:** phone, email, `full_name`, `area`, KYC data, `rejection_reason`, user `id`.
 - Old slug (≤ 30 days) → **200** with the new `slug` in the body + `meta.canonical_slug`. Replace the stored slug if `meta.canonical_slug` is present.
-- Unknown / private / suspended / deleted → 404 `not_found`. Rate limit 60/min per IP. `ETag` + `Cache-Control: public, max-age=60` (`If-None-Match` → 304).
+- Unknown / private / suspended / deleted → 404 `not_found`. Rate limit 60/min per IP. `ETag` on every response (`If-None-Match` → 304).
+- **Caching by viewer:** guest (no bearer) → `Cache-Control: public, max-age=60`. Any bearer → `Cache-Control: private` + `Vary: Authorization` (the body differs per viewer: prices, `is_shortlisted`). Never put an authed response in a shared cache; key client caches by slug **and** user.
 
 ### 17.5 `POST /public/creators/{slug}/views` — count a view
 Body `{ "src": "app" | "link" | "search" | "web" }` → 202 `null`. Send once when the creator screen opens, with the bearer token if logged in.
@@ -934,10 +956,39 @@ interface PublicMediaKit {
                display_name: string | null; follower_count: number; follower_count_verified: boolean;
                follower_tier: FollowerTier | null; follower_tier_label: string | null; is_primary: boolean }[];
   rate_cards: RateCard[]; // §6.3
-  price_from_usd: number | null;
+  price_from_usd: number | null; price_locked: boolean; price_lock_reason: string | null;
   contract_terms: { version: string; items: { key: string; text: string }[] };
-  bio: null; top_portfolio_items: []; offers_from_profile: null;
+  // v2 (§17.11)
+  cover_url: string | null;
+  bio: string | null;
+  city: { key: string; label: string } | null;   // key = governorate id from /lookups
+  public_url: string;
+  is_shortlisted: boolean | null;        // null unless the viewer is a brand
+  highlights: MediaKitHighlights | null; // null today
+  audience: MediaKitAudience | null;     // null today
+  worked_with: MediaKitWorkedWith | null;// null today
+  top_portfolio_items: MediaKitPortfolioItem[]; // [] today
+  offers_from_profile: null;
 }
+interface MediaKitHighlights {
+  engagement_rate_pct: number | null; avg_views: number | null;
+  local_audience_pct: number | null; completed_campaigns: number;
+}
+interface MediaKitAudience {
+  cities: { key: string; label: string; share_pct: number }[];
+  gender: { female_pct: number; male_pct: number } | null;
+  age_ranges: { key: string; label: string; share_pct: number }[];
+  source_label: string; updated_at: string;
+}
+interface MediaKitPortfolioItem {
+  id: string; title: string | null; thumbnail_url: string;
+  platform: Platform | null; views: number | null; brand_name: string | null;
+}
+interface MediaKitWorkedWith {
+  total_brands: number;
+  items: { id: string; name: string; logo_url: string | null; is_verified: boolean; completed_campaigns: number }[];
+}
+interface BrandSettings { show_on_creator_profiles: boolean }
 interface MediaKit {
   id: string; slug: string; public_url: string; is_public: boolean;
   slug_changed_at: string | null; can_change_slug_at: string | null;
@@ -962,3 +1013,46 @@ interface MediaKitStats {
 - [ ] **Share**: new UUID per tap, same UUID on retry; private kit → 409 → prompt "make public".
 - [ ] **View beacon**: fire-and-forget, never block the UI, ignore errors; don't re-send on re-render (backend dedups 30 min anyway).
 - [ ] **Stats tiles**: `null` metric → hide; `change_pct: null` → show "new" / no arrow; `brand_locations: []` → hide the chart.
+- [ ] **v2 sections**: `highlights` / `audience` / `worked_with` `null` → hide the whole section (no empty state, no zeros); `top_portfolio_items: []` → hide. `cover_url: null` → default gradient. `bio: null` → hide (owner: "Add a bio" CTA).
+- [ ] **Shortlist heart**: render only when `is_shortlisted !== null`; toggle optimistically via `PUT`/`DELETE /brand/shortlist/{slug}`, revert on error.
+- [ ] **Bio editor**: 300-char counter; on 422 `bio_invalid` show `errors.bio[0]` under the field.
+
+### 17.11 Media kit v2 — pitch page (2026-10-11, implemented)
+Source request: `docs/backend/media-kit-v2-prompt.md`. Handoff: `docs/kit/mobile-handoff-v2.md`.
+
+**Live now**
+| Field | Rule |
+|---|---|
+| `cover_url` | Uploaded banner or `null`. Also the `/c/{slug}` share (OG) image; falls back to the avatar. |
+| `bio` | Creator-written, ≤ 300 chars, edited via `PATCH /influencer/profile` (§8.1). `null` if unset. |
+| `city` | `{ key, label }` from the creator's governorate (label follows `Accept-Language`). `area` is never returned. |
+| `public_url` | Same as §17.1 `public_url` — the share link. |
+| `is_shortlisted` | Brand bearer → `true`/`false`. Guest, creator (incl. the owner), admin → `null`. |
+
+**Stubbed (fixed shape, no data source yet)** — always the value shown; hide the section.
+| Field | Now | Becomes live when |
+|---|---|---|
+| `highlights` | `null` | An API-connected insights provider (engagement / views / local audience) **or** the Deals domain (`completed_campaigns`). |
+| `audience` | `null` | An insights provider. Today we only read public profile data (followers) — no per-post or demographic data. |
+| `worked_with` | `null` | The Deals domain. |
+| `top_portfolio_items` | `[]` | The Portfolio milestone. |
+
+Rules, fixed now so the UI can be built against them (units: percentages 0–100, max 1 decimal; counts integers; windows in `Asia/Damascus`; a value we can't compute is `null`, never `0`):
+- **`highlights`** is `null` when all three metrics are `null` **and** `completed_campaigns = 0`.
+  - `engagement_rate_pct` = avg interactions per post (likes + comments + shares + saves) over posts from the last 30 days on connected platforms ÷ followers × 100; several platforms → weighted by followers. `null` with < 5 posts or no connected platform.
+  - `avg_views` = avg views (video plays / reach for reels & videos) per post, last 30 days, all connected platforms. `null` with < 5 posts.
+  - `local_audience_pct` = share of audience whose country is Syria (platform insights). `null` without insights.
+  - `completed_campaigns` = creator's deals in status `completed`. Always an integer (`0` allowed; app hides 0).
+- **`audience`** — connected platforms' insights merged, weighted by followers; refreshed ≤ daily. `null` without insights.
+  - `cities`: top 4 + `other`, `share_pct` desc, sums to 100 (Syrian + main diaspora cities as reported).
+  - `gender`: `female_pct + male_pct = 100` ("unknown" dropped, renormalised); `null` if not reported.
+  - `age_ranges`: `{ key, label, share_pct }` in age order, sums to 100.
+  - `source_label`: localized line (source + last update), show as-is. `updated_at`: ISO.
+- **`top_portfolio_items`** — pinned or AI-picked, max 10, newest first. `thumbnail_url` required (4:5 or square, ≥ 400 px). `brand_name` only for a Sada deal or a tagged brand. `views` `null` when unknown.
+- **`worked_with`** — brands with ≥ 1 `completed` deal with this creator, ordered by most recent completed deal, max 12 `items`. `total_brands` counts **all** such brands, **including** those that opted out (§8.3) — opted-out brands are only left out of `items`. `id` = brand public ULID, `logo_url` = brand avatar or `null`, `is_verified` = brand company verification. Never deal amounts, dates or contact data. `null` when there are none.
+
+**Cover — `POST /influencer/media-kit/cover`** (multipart field `cover`)
+- jpeg/png/webp, ≤ 5 MB, ≤ 6000×6000 px. Server center-crops to **1500×600 (5:2)** WebP — crop on device with a 5:2 frame so the user sees the result.
+- → 200 §17.1 shape (`preview.cover_url` set). 422 `validation_failed` (`errors.cover`). 429 after 10/h.
+- `DELETE /influencer/media-kit/cover` → 200 §17.1 shape with `preview.cover_url: null`. Idempotent.
+- The URL changes on every upload (safe to cache forever by URL).
