@@ -53,6 +53,7 @@ export type { ToastCardProps, ToastType } from './ToastCard';
 export { SelectionModal } from './SelectionModal';
 export type { SelectionItem, SelectionModalProps } from './SelectionModal';
 export { FloatingBottomBar } from './FloatingBottomBar';
+export type { FloatingBottomBarProps, FloatingBottomBarVariant } from './FloatingBottomBar';
 export { GalleryModal } from './GalleryModal';
 export type { GalleryModalProps } from './GalleryModal';
 export { BottomSheet } from './BottomSheet';
@@ -136,7 +137,7 @@ export type { StatusPillProps, StatusPillSize } from './StatusPill';
 export { Tag } from './Tag';
 export type { TagProps, TagTone } from './Tag';
 export { TierBadge, TierInfoSheet } from './TierBadge';
-export type { TierBadgeProps, TierBadgeSize, TierInfoSheetProps } from './TierBadge';
+export type { TierBadgeProps, TierBadgeSize, TierBadgeSurface, TierInfoSheetProps } from './TierBadge';
 export { EmptyState, ErrorState } from './EmptyState';
 export type {
   EmptyStateProps,

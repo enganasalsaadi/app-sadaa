@@ -1375,6 +1375,32 @@
     "brandHome": {
       "companyFallback": "Your company",
       "openProfile": "{{name}}, open account",
+      "headline": {
+        "lead": "Who will tell ",
+        "accent": "your story",
+        "tail": "\nthis week?"
+      },
+      "walletLine": {
+        "available": "available in your wallet",
+        "topUp": "Top up"
+      },
+      "islandLabel": "{{title}}. {{message}}",
+      "filters": "Filters",
+      "allCategories": "All",
+      "deck": {
+        "hint": "Swipe for next · Tap to open profile",
+        "next": "Next",
+        "cardLabel": "{{name}}, {{meta}}"
+      },
+      "railCount_one": "{{count}} creator",
+      "railCount_other": "{{count}} creators",
+      "verifiedSubtitle": "Verified identity and follower counts",
+      "fastSubtitle": "Deliver content within days",
+      "fastRowLabel": "{{name}}, fastest delivery: {{delivery}}",
+      "deliveryWithin_one": "Within {{count}} day",
+      "deliveryWithin_other": "Within {{count}} days",
+      "dayUnit_one": "day",
+      "dayUnit_other": "days",
       "wallet": {
         "open": "Available balance, open wallet"
       },
@@ -1385,6 +1411,7 @@
         "explore": "Explore creators"
       },
       "seeAll": "See all",
+      "seeAllOf": "See all: {{title}}",
       "support": {
         "title": "Need help?",
         "body": "The Sada team is on WhatsApp for any question.",
@@ -2589,6 +2616,7 @@
     "tierBadge": {
       "iconTitle": "Icon",
       "scaleTitle": "Size scale",
+      "mediaTitle": "Over a photo",
       "sheetTitle": "Selection sheet",
       "openSheet": "Open follower tier sheet"
     },

@@ -312,7 +312,8 @@ APP LAUNCH
 │
 └── MAIN APP (bottom tab bar: floating rounded glass capsule; page content
     │   shows blurred through it; slides away on scroll down, back on scroll up;
-    │   hidden on inner screens; active tab shown in teal)                           ✅
+    │   hidden on inner screens; active tab shown in teal; brands: icon pill whose
+    │   active tab widens to show its name 🟡)                                       ✅
     │   Five tabs, different per role:
     │     brand:   Home · My campaigns · Messages · Wallet · Account
     │     creator: Home · Deals · Messages · Wallet · My profile
@@ -332,18 +333,20 @@ APP LAUNCH
     │           · collaboration terms · Share
     │           └── Media kit settings (gear in the header)          🟡 built, awaiting device and live-server testing
     │                 link name with a live availability check · show / hide from brands
-    ├── Home (brand) discover home                               🟡 built, awaiting device and live-server testing
-    │     slim navy band: greeting + company beside ❤️ and the bell
-    │       · search field → Explore
-    │       · live island (one line): the one blocker the service picks (verify,
-    │         under review, rejected, finish profile) → verification or company info
-    │     · category tiles with icons → Explore filtered
-    │     · creator rails from the service (near you · verified · fast delivery · new
-    │       · recently viewed) with "See all" → Explore: swipeable photo cards with
-    │       ❤️ save · wallet card after the first row (balance → Wallet, eye
-    │       hides it, + → top-up when allowed) · help card (WhatsApp)
-    │     · ❤️ beside the bell → Shortlist
-    │     scrolled: navy bar pinned with the company, the ❤️ and the bell
+    ├── Home (brand) «Spotlight»                                 🟡 built, awaiting device and live-server testing
+    │     greeting + "company · city" (→ account) beside ❤️ (→ Shortlist) and the bell
+    │     · one quiet wallet line: balance → Wallet · "Top up" when allowed
+    │     · big question "Who will tell your story this week?"
+    │     · search pill → Explore · filter key → Explore
+    │     · the one blocker the service picks (verify, under review, rejected,
+    │       finish profile) → verification or company info
+    │     · category chips ("All" + the service's categories) → Explore
+    │     · rails from the service, each in its own shape, "See all" → Explore:
+    │         near you = swipeable story deck (full photo cards, ❤️, price)
+    │         verified = tall photo tiles (tier, niche · city, followers, price)
+    │         fast delivery = ruled rows with the days as a big figure
+    │         new · recently viewed = story rings
+    │     · help line (WhatsApp)
     │     ├── Explore (search, filters, sort)                     🟡 built, awaiting device and live-server testing
     │     │     search in the bar · filter / sort / category / verified / rush chips
     │     │     · price-locked banner · creator rows loading on as you scroll
@@ -460,13 +463,14 @@ APP LAUNCH
 - **Brands** have their own Home (Journey A4b).
 
 #### Journey A4b: The brand Home 🟡
-- **Header band:** kept slim so creators start high on the screen, with no money in it. One row holds a greeting with the company name. Below the row sits the search field, then, when there is one, a one-line live island with a pulsing dot showing the one thing the service says the brand should do next (verify the business, wait for review, fix a rejected request, finish the company profile); it opens the right page. When the keyboard is open or the screen is short, the band shrinks to the single row.
-- **Creator rails:** the service sends a few rows, such as "Near you", "Verified", "Fast delivery", "New on Sada" and "Recently viewed". Empty rows are never shown. Each row swipes sideways and settles card by card. Cards lead with a large portrait photo (a big initial on a soft navy tile when there is none); on the photo sit the tier, platform and follower count (with a check when the count is verified), a "New" label and the ❤️. Under it: the name with the verified mark, city and main niche, and the starting price in large type with its rough value in Syrian pounds beneath. Brands that can't see prices yet see a lock and a short reason instead ("Verify to see price", "Price after verification", and so on). Tapping a card opens the creator's public profile, and that open counts as a view from search.
-- **Save (❤️):** the heart fills at once and pops; if the service refuses (for example the 200-creator limit), it springs back and a message explains why. A creator saved in one row shows as saved everywhere.
-- **Help:** a card at the end opens Sada support on WhatsApp. It is hidden when the service sends no support link, and it never appears inside a deal (deal talk stays in the app).
-- **Find creators:** the search field in the band opens Explore with the keyboard ready, and under the band the service's categories show as soft rounded tiles with an icon each (restaurants, fashion, electronics, beauty, services; any new category gets a sparkle icon), all in the same calm teal tint, opening Explore already filtered. Rows the service gives a "See all" for open Explore with that row's filters.
-- **Loading and errors:** skeleton rows hold the space while Home loads; a failure shows a banner with Retry; if every row is empty, a note invites the brand to explore all creators. Pulling down refreshes. Because each Home visit counts as an impression for the creators shown, the app asks the service again on return only when the page is more than two minutes old.
-- **Saved creators:** a ❤️ beside the bell opens the Shortlist (Journey A4d).
+- **Top:** a greeting with "company · city" (opens the account), the ❤️ for saved creators and the bell with the unread count. Under it, one quiet line holds the money: a mint dot, the available balance (hidden when the brand hid amounts on the Wallet tab) and "available in your wallet", which opens the Wallet; "Top up" sits at its end only when the service allows a top-up. Money never shares the greeting row.
+- **The question:** a big headline, "Who will tell your story this week?", then a tall search pill (opens Explore with the keyboard ready) with a navy filter key (opens Explore to browse). When the service names one thing to do next (verify the business, wait for review, fix a rejected request, finish the company profile), a tinted card with a pulsing dot shows its title and line and opens the right page. Category chips follow: "All", then the service's categories with an icon each, opening Explore already filtered.
+- **Creators near you, as stories:** the "Near you" creators come as a stack of full-photo cards with story bars on top. Swiping the top card away (either side) brings the next one forward with a light tick; the deck loops. Each card shows the tier, the verified mark, ❤️, the name, city and niche, followers on the main platform, fastest delivery, and the starting price (or a lock with its reason). Tapping a card opens the creator's public profile (counted as a view from search). Screen readers get a "Next" action instead of the swipe.
+- **Every other row has its own shape:** "Verified" as tall photo tiles, each with tier, niche and city, followers with the platform, and the starting price; "Fast delivery" as ruled rows (photo, name with verified mark, starting price, niche and city, tier and followers) with the delivery days as a big teal figure at the end; "New on Sada" and "Recently viewed" as story rings with first names. Empty rows are never shown; rows the service gives a "See all" for open Explore with that row's filters.
+- **Save (❤️):** fills at once and pops; if the service refuses (for example the 200-creator limit), it springs back and a message explains why. A creator saved in one place shows as saved everywhere.
+- **Help:** a closing line opens Sada support on WhatsApp; hidden when the service sends no support link, never inside a deal.
+- **Loading and errors:** a skeleton of the deck and rows holds the space while Home loads; a failure shows a banner with Retry and a dash for the balance; if every row is empty, a note invites the brand to explore all creators. Pulling down refreshes. Because each Home visit counts as an impression for the creators shown, the app asks the service again on return only when the page is more than two minutes old.
+- **Tab bar (brands):** a navy pill of icons; the active tab widens into a teal capsule that shows its name. Creators keep the bar with icon and name on every tab.
 
 #### Journey A4c: Explore creators 🟡
 - **Search:** type a name, a niche or a city in Arabic or English (for example "مطاعم دمشق"); results update a moment after typing stops. One letter is not enough to search; up to 60 characters.
@@ -721,7 +725,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - 🟡 Verify identity (creators) or the business (brands, four ways: company document, owner's ID or passport, social page proof, domain email) at registration or later from the Profile: built, awaiting testing.
 - 🟡 Notification inbox with unread count and tap-to-open: built, awaiting testing. Sada-specific notification categories follow.
 - 🟡 Creator Home dashboard with the shareable media kit, its insights page (7 / 30 / 90 days), the "preview as brands see it" page and the link and visibility settings: built, awaiting testing.
-- 🟡 Brand Home (discover home): slim band with search, the next step to take, category tiles, photo-first creator rails with save (❤️), a wallet card between the rails and a help card: built, awaiting testing.
+- 🟡 Brand Home «Spotlight»: quiet wallet line, big question with search, next step, category chips, a swipeable story deck of nearby creators, verified photo tiles, fast-delivery rows, story rings and a help line; new brand tab bar: built, awaiting testing.
 - 🟡 Explore: search, filters, sort and price locks for unverified brands: built, awaiting testing.
 - 🟡 Shortlist of saved creators (❤️ in the Home header, remove with Undo, 200 max): built, awaiting testing.
 - 🟡 Opening a creator's shared link inside the app (their public profile, with a counted view, prices locked with the next step for anyone who isn't a verified brand): built, awaiting testing. Web links need Sada's permanent public web address and the app's identity registered with it.
@@ -774,6 +778,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-11 | Brand Home redesigned from a blank page as «Spotlight» (🟡 awaiting device testing): greeting with company and city, the balance on its own quiet line with "Top up", a big question over a tall search pill with a filter key, the next step as a tinted card, and category chips. Creators near you now come as a swipeable stack of full-photo story cards; verified creators as tall photo tiles and fast-delivery creators as rows, both with tier, niche, city, followers and starting price; new and recently viewed as story rings. Brands get a new tab bar whose active tab widens to show its name. Explore and Shortlist rows are unchanged. | 5.2, 5.3 (Journey A4b), 7.3 |
 | 2026-10-11 | Brands get a privacy switch on My profile, "Show my brand on creators' profiles" (on by default; turn off to be left out of creators' "worked with" lists). 🟡 awaiting live-server testing; no visible effect until deals go live. | 5.3 (Journey A3) |
 | 2026-10-11 | Creators can now add a cover photo to their media kit (from Media kit settings: pick, preview in the page's own wide frame, confirm; change or remove later) and write a short public bio in Personal info (300 characters, no links, handles, emails or phone numbers; flagged as they type). Both show on the pitch page brands see. 🟡 awaiting device and live-server testing. | 5.2, 5.3 (Journeys A3, A5) |
 | 2026-10-11 | Creator public profile and the creator's preview rebuilt on the new "Creator pitch" layout (🟡 awaiting device and live-server testing): the creator's sharp cover photo now leads (navy band with lights when there is none) and the identity (photo on the cover's edge, name, tier, city, two-line bio, niches) sits on the white sheet below, so cover + identity take about a third of the screen and services start within view. The headline-number strip is gone; the service's highlight numbers show as tiles once it sends them. Service cards lead with name and price plus one line of terms, with inclusions folded under "Details". Shortlist is a heart in the top bar, shown only when the service says it applies. | 5.3 (Journeys A4, A5) |

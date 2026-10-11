@@ -13,9 +13,10 @@ Enforced by `src/app/screens/DevShowcaseScreen/registry/__tests__/showcaseRegist
 ## Before building UI
 
 1. Check DevShowcase (Profile → `__DEV__` row) / `registry/showcaseRegistry.ts` (and rule 13).
-2. Exists, needs new look → add typed **variant**, don't fork.
-3. Missing → build in `src/shared/ui/<Name>/` (rule 02), then use. Never inline a one-off (row, pill, divider) in a domain/app screen.
-4. Domain composites (`CreatorCard`, `DealStatusPill`) in `domains/<x>/components/`, kit parts only. Exported from domain `index.ts` → demo in DevShowcase `sada` category, listed in entry's `domainCovers`.
+2. Exists, needs new look → add typed **variant** (or redesign the part), don't fork.
+3. Missing → screen-specific piece in `screens/<Name>Screen/components/` (or domain `components/`); generic piece (rows, pills, dividers any screen would use) in `src/shared/ui/<Name>/` (rule 02). Promote to kit when a second screen needs it.
+4. Reuse is for consistency of behaviour, not sameness of look. The concept is designed first on a blank page (rule 09 §0); kit parts are matched to it afterwards — a part that doesn't fit → new variant or new part, never bend the concept to the kit.
+5. Domain composites (`CreatorCard`, `DealStatusPill`) in `domains/<x>/components/`, kit parts only. Exported from domain `index.ts` → demo in DevShowcase `sada` category, listed in entry's `domainCovers`.
 
 ## Same change that adds/changes a kit export
 
@@ -27,7 +28,7 @@ Enforced by `src/app/screens/DevShowcaseScreen/registry/__tests__/showcaseRegist
 
 ## Layouts
 
-New archetype or `Layout`/header behaviour → screen in `DevShowcaseScreen/layoutVariants/`, route in `DevShowcaseStackParamList`, row in `demos/LayoutGalleryDemo.tsx` (`satisfies Record<LayoutVariantScreenName, …>`). Virtualized lists demoed on their own layout screen.
+New `Layout`/header behaviour worth reusing → screen in `DevShowcaseScreen/layoutVariants/`, route in `DevShowcaseStackParamList`, row in `demos/LayoutGalleryDemo.tsx` (`satisfies Record<LayoutVariantScreenName, …>`). Virtualized lists demoed on their own layout screen.
 
 ## Showcase code
 

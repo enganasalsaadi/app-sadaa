@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, CustomButton, SectionHeader, TierBadge, TierInfoSheet } from '@/shared/ui';
+import { Box, CustomButton, GradientSurface, SectionHeader, TierBadge, TierInfoSheet } from '@/shared/ui';
 import type { TierBadgeSize } from '@/shared/ui';
 import { FOLLOWER_TIERS } from '@/core/config';
 import { useTierBadgeDemo } from './hooks/useTierBadgeDemo';
@@ -33,6 +33,15 @@ const TierBadgeDemoComponent: React.FC = () => {
             </Box>
           ))}
         </Box>
+      </Box>
+
+      <Box gap="sm">
+        <SectionHeader title={t('devShowcase.tierBadge.mediaTitle')} />
+        <GradientSurface variant="brand" row wrap gap="sm" p="md" borderRadius="lg">
+          {FOLLOWER_TIERS.map(tier => (
+            <TierBadge key={tier} tier={tier} size="sm" surface="media" />
+          ))}
+        </GradientSurface>
       </Box>
 
       <Box gap="sm">

@@ -12,31 +12,45 @@ import { motion, useTheme } from '@/core/theme';
 import { useScrollContext } from '@/shared/context/ScrollContext';
 import { useBottomBar } from '@/shared/context/BottomBarContext';
 import { Box } from '../primitives';
-import { BAR_CORNER, BAR_HEIGHT, SCROLL_TOP_THRESHOLD } from './constants';
+import { BAR_CORNER, BAR_HEIGHT, MORPH_INSET, SCROLL_TOP_THRESHOLD } from './constants';
 import { GlassBarBackground } from './GlassBarBackground';
+import { MorphTabItem } from './MorphTabItem';
 import { TabItem } from './TabItem';
 import { TabLens } from './TabLens';
 
 /**
- * Floating navy liquid-glass capsule (rule 08, approved 2026-10-06), with a liquid lens
- * under the active tab (v4, 2026-10-08). Content scrolls
+ * `lens`: icon + label on every tab, a liquid lens springs under the active one (creator tabs).
+ * `morph`: a navy pill of icons; the active tab widens into a teal capsule showing its label
+ * (brand tabs, approved 2026-10-11).
+ */
+export type FloatingBottomBarVariant = 'lens' | 'morph';
+
+export interface FloatingBottomBarProps extends BottomTabBarProps {
+  /** Default `lens`. */
+  variant?: FloatingBottomBarVariant;
+}
+
+/**
+ * Floating navy glass bar in two looks (`variant`). Content scrolls
  * behind it and shows through the blur; it slides away on scroll-down and
  * returns on scroll-up. Label and icon come from each screen's `title` /
  * `tabBarIcon` options, so the navigator owns the role-specific tab set.
  * Inner screens remove it with `useHideBottomBar()`.
  */
-export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
+export const FloatingBottomBar: React.FC<FloatingBottomBarProps> = ({
   state,
   descriptors,
   navigation,
+  variant = 'lens',
 }) => {
+  const morph = variant === 'morph';
   const { colors, spacing, sizes } = useTheme();
   const { bottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
   const scrollCtx = useScrollContext();
   const { visible } = useBottomBar();
 
-  const barWidth = screenWidth - spacing.lg * 2;
+  const barWidth = screenWidth - (morph ? spacing.xl : spacing.lg) * 2;
   // Bar + its bottom margin + room for the md shadow bleed, so hiding clears it fully.
   const hiddenOffset = BAR_HEIGHT + spacing.sm + spacing.lg + bottom;
 
@@ -71,19 +85,21 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
         <GlassBarBackground
           width={barWidth}
           height={BAR_HEIGHT}
-          corner={BAR_CORNER}
+          corner={morph ? BAR_HEIGHT / 2 : BAR_CORNER}
         />
-        <TabLens
-          index={state.index}
-          count={state.routes.length}
-          barWidth={barWidth}
-          barHeight={BAR_HEIGHT}
-        />
+        {morph ? null : (
+          <TabLens
+            index={state.index}
+            count={state.routes.length}
+            barWidth={barWidth}
+            barHeight={BAR_HEIGHT}
+          />
+        )}
         <Box
           row
           align="center"
           accessibilityRole="tablist"
-          style={StyleSheet.absoluteFill}
+          style={morph ? styles.morphRow : StyleSheet.absoluteFill}
         >
           {state.routes.map((route, index) => {
             const { options } = descriptors[route.key] ?? {};
@@ -99,8 +115,9 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
               }
             };
 
+            const Item = morph ? MorphTabItem : TabItem;
             return (
-              <TabItem
+              <Item
                 key={route.key}
                 isActive={isFocused}
                 label={options?.title ?? route.name}
@@ -122,6 +139,12 @@ export const FloatingBottomBar: React.FC<BottomTabBarProps> = ({
 };
 
 const styles = StyleSheet.create({
+  morphRow: {
+    ...StyleSheet.absoluteFill,
+    paddingHorizontal: MORPH_INSET,
+    paddingVertical: MORPH_INSET,
+    gap: MORPH_INSET / 2,
+  },
   container: {
     position: 'absolute',
     bottom: 0,

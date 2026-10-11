@@ -3,7 +3,7 @@
 Sada (صدى) React Native app. **Rules in `.claude/rules/` are mandatory.** Files with `paths:` frontmatter auto-load when you touch matching files; working in an area whose rule isn't loaded yet → Read it first.
 
 - **Graphify:** orient with `graphify query "<q>"` before grep/read. `graphify-out/graph.json` stale → `graphify update`.
-- **Artifacts:** never publish an Artifact / Design canvas / run `quickstart` unless the user asks in that message. Mockups = ASCII in chat.
+- **Artifacts:** never publish an Artifact / Design canvas / run `quickstart` unless the user asks in that message. Mockups = local HTML file (`design-previews/`, gitignored), opened in the browser.
 
 ## Product
 
@@ -20,16 +20,16 @@ B2B influencer marketplace, Syria-first, Arabic-first. Replaces email/WhatsApp/p
 | File | Scope | Loads |
 |---|---|---|
 | `01-domain-driven-architecture` | folders, layers, boundaries, navigation | always |
-| `02-strict-design-system` | UI kit only, tokens, zero hardcoding | UI files |
+| `02-strict-design-system` | code hygiene: UI kit primitives, tokens, zero hardcoding | UI files |
 | `03-localization-rtl` | typed i18n, RTL-only props | always |
 | `04-data-layer` | RTK Query repos, Redux, storage | always |
 | `05-quality-gates` | strict TS, perf, tests, style | always |
 | `06-business-state-and-money` | state machines, money, idempotency | always |
 | `07-security-and-privacy` | tokens, PII, uploads, deep links | always |
-| `08-brand-identity` | color roles, status colors, type, radii, cards, glass, tiers, currency | UI files |
-| `08b-brand-palette-logo` | raw hexes, contrast, tab bar spec, logo, native assets, brand book | theme tokens, logo, native, brand |
-| `09-screen-playbook` | archetypes, mockup-first, states, forms, live motion, banned | UI files |
-| `09b-money-archetype` | wallet hero, ledger, amount entry, receipt visuals | finance |
+| `08-brand-identity` | **locked:** color roles, status colors, type, currency | UI files |
+| `08b-brand-palette-logo` | raw hexes, contrast, tab bar lessons, logo, native assets, brand book | theme tokens, logo, native, brand |
+| `09-screen-playbook` | design freedom, concept-first, reference patterns, craft, a11y, states, forms | UI files |
+| `09b-money-archetype` | money truth rules (exact/compact, mint, hidden amounts) | finance |
 | `10-component-reuse` | reuse-first, DevShowcase registry | UI files |
 | `11-mobile-docs` | `docs/mobile-architecture.md` update = Definition of Done | always |
 | `12-ref-boot-navigation` | boot pipeline, AppStatus, tabs, App.tsx wiring, push/app links | `src/app`, core nav/notification/linking/config |
@@ -74,7 +74,7 @@ src/
 
 ## Screen work
 
-`/sada-screen` skill. ASCII mockup (AR/RTL) + archetype + parts → explicit OK → build. Brand and creator variants are separate screens.
+`/sada-screen` skill. Creative concept (signature moment, interactions, motion) + local HTML preview (AR/RTL, real colors + Tajawal) + parts → explicit OK → build. **Design rules lock colors + font only**; every design starts from a blank page — never inherit the look of existing screens, kit defaults or past designs; layout, shape, depth, motion, interaction are creative — every screen gets its own bold idea (modern, alive, premium); safe/boring = rework. Brand and creator variants are separate screens.
 
 ## New feature workflow
 

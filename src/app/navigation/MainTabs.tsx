@@ -69,8 +69,9 @@ const CREATOR_TABS: readonly MainTabDef[] = [
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },
 ];
 
-const renderTabBar = (props: BottomTabBarProps) => (
-  <FloatingBottomBar {...props} />
+const renderLensTabBar = (props: BottomTabBarProps) => <FloatingBottomBar {...props} />;
+const renderMorphTabBar = (props: BottomTabBarProps) => (
+  <FloatingBottomBar {...props} variant="morph" />
 );
 
 const buildTabOptions = (
@@ -91,7 +92,8 @@ const buildTabOptions = (
 export const MainTabs: React.FC = () => {
   const { t } = useTranslation();
   const userType = useAppSelector(selectUserType);
-  const tabs = userType === 'influencer' ? CREATOR_TABS : BRAND_TABS;
+  const isCreator = userType === 'influencer';
+  const tabs = isCreator ? CREATOR_TABS : BRAND_TABS;
 
   const options = useMemo(
     () => tabs.map(tab => buildTabOptions(t(tab.titleKey), tab.icon)),
@@ -103,7 +105,7 @@ export const MainTabs: React.FC = () => {
       <BottomBarProvider>
         <Tab.Navigator
           initialRouteName="HomeTab"
-          tabBar={renderTabBar}
+          tabBar={isCreator ? renderLensTabBar : renderMorphTabBar}
           // `animation: 'fade'` here races freezeOnBlur (rn-screens 4.24 + React 19):
           // the cross-fade can finish before the thawed tab commits its first frame,
           // leaving an intermittent blank screen. Instant switch avoids the race.

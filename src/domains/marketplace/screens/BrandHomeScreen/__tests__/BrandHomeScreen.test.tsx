@@ -27,10 +27,13 @@ jest.mock('@/core/theme', () => {
       sizes: tokens,
       spacing: tokens,
       typography: tokens,
+      radii: tokens,
+      shadows: tokens,
       borderWidths: tokens,
       isRTL: false,
     }),
     useStyles: () => tokens,
+    resolveHue: () => tokens,
     moderateScale: (n: number) => n,
     iconStroke: { regular: 2, bold: 2.5 },
     motion: { duration: { base: 250 }, spring: {} },
@@ -39,13 +42,13 @@ jest.mock('@/core/theme', () => {
 
 jest.mock('react-native-reanimated', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
-  const chain: object = new Proxy({}, { get: () => () => chain });
   return {
     __esModule: true,
     default: {
-      View: ({ children }: { children?: React.ReactNode }) => createElement('AnimatedView', null, children),
+      View: ({ children, ...props }: { children?: React.ReactNode }) =>
+        createElement('AnimatedView', props, children),
     },
-    ZoomIn: chain,
+    interpolate: () => 1,
     useReducedMotion: () => false,
     useSharedValue: (value: number) => ({ value }),
     useAnimatedStyle: () => ({}),
@@ -54,8 +57,22 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: () => ({ top: 0, bottom: 0 }),
+jest.mock('react-native-gesture-handler', () => {
+  const { createElement, Fragment } = jest.requireActual<typeof React>('react');
+  return {
+    GestureDetector: ({ children }: { children?: React.ReactNode }) => createElement(Fragment, null, children),
+  };
+});
+
+jest.mock('react-native-linear-gradient', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return ({ children }: { children?: React.ReactNode }) => createElement('LinearGradient', null, children);
+});
+
+const mockDeckNext = jest.fn();
+jest.mock('../hooks/useStoryDeck', () => ({
+  DECK_THROW_DISTANCE: 90,
+  useStoryDeck: () => ({ gesture: {}, base: { value: 0 }, drag: { value: 0 }, top: 0, next: mockDeckNext }),
 }));
 
 jest.mock('lucide-react-native', () => {
@@ -83,35 +100,23 @@ jest.mock('@/shared/ui', () => {
     Component.displayName = host;
     return Component;
   };
-  // Renders the hero and the body so their sections are reachable in the tree.
-  const Layout = ({ hero, children, ...props }: { hero?: React.ReactNode; children?: React.ReactNode }) =>
-    createElement('Layout', props, createElement(Fragment, null, hero, children));
   const StaggerIn = ({ children }: { children?: React.ReactNode }) => createElement(Fragment, null, children);
   return {
-    Avatar: stub('Avatar'),
+    Badge: stub('Badge'),
     Box: stub('Box'),
-    Card: stub('Card'),
-    Chip: stub('Chip'),
-    ChipRow: stub('ChipRow'),
-    CustomButton: stub('CustomButton'),
     EmptyState: stub('EmptyState'),
     GradientSurface: stub('GradientSurface'),
-    IconButton: stub('IconButton'),
     Image: stub('Image'),
-    Layout,
-    LiveIsland: stub('LiveIsland'),
+    Layout: stub('Layout'),
+    LiveDot: stub('LiveDot'),
     MoneyText: stub('MoneyText'),
     Notice: stub('Notice'),
     Pressable: stub('Pressable'),
-    SearchBar: stub('SearchBar'),
-    SectionHeader: stub('SectionHeader'),
     Skeleton: stub('Skeleton'),
     SocialPlatformIcon: stub('SocialPlatformIcon'),
     StaggerIn,
-    StatusPill: stub('StatusPill'),
     Text: stub('Text'),
     TierBadge: stub('TierBadge'),
-    useHeroCompact: () => false,
   };
 });
 
@@ -165,18 +170,29 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
   },
   island: null,
   hidden: false,
-  toggleHidden: jest.fn(),
   rails: [
     {
       key: 'near_you',
       title: 'Near you',
-      items: [creator(), creator({ slug: 'omar' })],
+      items: [creator(), creator({ slug: 'omar', displayName: 'Omar' })],
       seeAll: { governorate: ['damascus'] },
+    },
+    {
+      key: 'verified',
+      title: 'Verified',
+      items: [creator({ slug: 'lina', displayName: 'Lina', price: { locked: true, lockReason: 'kyc_pending' } })],
+      seeAll: { kycVerified: true },
+    },
+    {
+      key: 'fast_delivery',
+      title: 'Fast delivery',
+      items: [creator({ slug: 'sara', displayName: 'Sara', fastestDeliveryDays: 1 })],
+      seeAll: { rush: true },
     },
     {
       key: 'new',
       title: 'New on Sada',
-      items: [creator({ slug: 'lina', price: { locked: true, lockReason: 'kyc_pending' } })],
+      items: [creator({ slug: 'yousef', displayName: 'Yousef Khatib' })],
       seeAll: null,
     },
   ],
@@ -198,7 +214,6 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
     { value: 'restaurants', label: 'Food', icon: mockIcon('Utensils') },
     { value: 'fashion', label: 'Fashion', icon: mockIcon('Shirt') },
   ],
-  categoriesLoading: false,
   openCategory: jest.fn(),
   openRail: jest.fn(),
   browseAll: jest.fn(),
@@ -218,7 +233,7 @@ const render = (overrides: Partial<BrandHomeScreenModel> = {}) => {
 
 const byLabel = (root: ReactTestInstance, label: string) =>
   root
-    .findAll(node => ['Pressable', 'Card', 'IconButton'].includes(String(node.type)))
+    .findAll(isHost('Pressable'))
     .find(node => node.props.accessibilityLabel === label);
 const textOf = (node: ReactTestInstance): string =>
   node
@@ -227,75 +242,58 @@ const textOf = (node: ReactTestInstance): string =>
     .filter((c): c is string => typeof c === 'string')
     .join('|');
 
-describe('BrandHomeScreen — chrome', () => {
-  it('is a discover home: lit navy band under a transparent overlay header', () => {
+describe('BrandHomeScreen — top', () => {
+  it('is a plain scroll page: no navy band, no overlay header', () => {
     const { root } = render();
     const layout = root.find(isHost('Layout'));
-    expect(layout.props.headerBehavior).toBe('overlay');
-    expect(layout.props.heroBackdrop).toBe('brandGlow');
-    expect(layout.props.heroBehavior).toBe('parallax');
+    expect(layout.props.hero).toBeUndefined();
+    expect(layout.props.header).toBeUndefined();
   });
 
-  it('puts ❤️ (shortlist) beside the bell, which carries the unread count', () => {
-    const { root, vm } = render();
-    const { actions } = root.find(isHost('Layout')).props.header;
-    expect(actions).toHaveLength(2);
-    expect(actions[0].accessibilityLabel).toBe('marketplace.shortlist.open');
-    expect(actions[0].onPress).toBe(vm.openShortlist);
-    expect(actions[1].badge).toBe(2);
-    expect(actions[1].onPress).toBe(vm.openNotifications);
-  });
-});
-
-describe('BrandHomeScreen — hero', () => {
-  it('greets, names the company and opens the account', () => {
+  it('greets, names "company · city" and opens the account', () => {
     const { root, vm } = render();
     const text = textOf(root);
     expect(text).toContain('marketplace.creatorHome.greetingTime.morning');
-    expect(text).toContain('Al Noor');
+    expect(text).toContain('Al Noor · Damascus');
     byLabel(root, 'marketplace.brandHome.openProfile:{"name":"Al Noor"}')?.props.onPress();
     expect(vm.openProfile).toHaveBeenCalled();
   });
 
-  it('keeps the wallet out of the band: it sits between the rails', () => {
-    const { root } = render();
-    // The Layout stub renders the hero first, then the body.
-    const [hero] = root.find(isHost('Layout')).children;
-    if (!hero || typeof hero === 'string') throw new Error('hero missing');
-    expect(byLabel(hero, 'marketplace.brandHome.wallet.open')).toBeUndefined();
-    expect(byLabel(root, 'marketplace.brandHome.wallet.open')).toBeDefined();
+  it('puts ❤️ (shortlist) beside the bell, which carries the unread count', () => {
+    const { root, vm } = render();
+    byLabel(root, 'marketplace.shortlist.open')?.props.onPress();
+    expect(vm.openShortlist).toHaveBeenCalled();
+    const bell = byLabel(root, 'notifications.inbox.openUnread:{"count":2}');
+    expect(bell?.findByType('Badge' as never).props.count).toBe(2);
+    bell?.props.onPress();
+    expect(vm.openNotifications).toHaveBeenCalled();
   });
 
-  it('rolls the balance up once in the wallet card, and opens the wallet', () => {
+  it('shows the balance on its own quiet line (not mint text) that opens the wallet', () => {
     const { root, vm } = render();
-    const usd = root.findAll(isHost('MoneyText')).find(n => n.props.value.amount === 125000);
-    expect(usd?.props).toMatchObject({ value: { amount: 125000, currency: 'USD' }, animated: true, hidden: false });
+    const balance = root.findAll(isHost('MoneyText')).find(n => n.props.value.amount === 125000);
+    expect(balance?.props).toMatchObject({ hidden: false, rounding: 'down' });
+    expect(balance?.props.tone).toBeUndefined();
     // One amount: the ≈ SYP line stays on the wallet tab.
-    expect(root.findAll(isHost('MoneyText')).some(n => n.props.value.amount === 18750000)).toBe(false);
+    expect(root.findAll(isHost('MoneyText')).some(n => n.props.value.currency === 'SYP')).toBe(false);
     byLabel(root, 'marketplace.brandHome.wallet.open')?.props.onPress();
     expect(vm.openWallet).toHaveBeenCalled();
   });
 
-  it('offers ＋ top-up only when /me allows it', () => {
+  it('offers "Top up" only when /me allows it', () => {
     expect(byLabel(render().root, 'finance.wallet.deposit')).toBeUndefined();
     const { root, vm } = render({ hero: { ...model().hero, canTopUp: true } });
     byLabel(root, 'finance.wallet.deposit')?.props.onPress();
     expect(vm.openTopUp).toHaveBeenCalled();
   });
 
-  it('masks the balance and drops the SYP line when amounts are hidden', () => {
-    const { root, vm } = render({ hidden: true });
-    // Wallet amounts only: the rail cards show prices too.
-    const amounts = root
-      .findAll(isHost('MoneyText'))
-      .filter(n => n.props.value.amount === 125000 || n.props.value.currency === 'SYP');
-    expect(amounts).toHaveLength(1);
-    expect(amounts[0]?.props.hidden).toBe(true);
-    byLabel(root, 'finance.wallet.showAmounts')?.props.onPress();
-    expect(vm.toggleHidden).toHaveBeenCalled();
+  it('masks the balance when amounts are hidden', () => {
+    const { root } = render({ hidden: true });
+    const balance = root.findAll(isHost('MoneyText')).find(n => n.props.value.amount === 125000);
+    expect(balance?.props.hidden).toBe(true);
   });
 
-  it('shows the server blocker as a live island that routes its CTA', () => {
+  it('shows the server blocker (title + line) and routes its CTA', () => {
     const onPress = jest.fn();
     const { root } = render({
       island: {
@@ -307,41 +305,66 @@ describe('BrandHomeScreen — hero', () => {
         onPress,
       },
     });
-    const island = root.find(isHost('LiveIsland'));
-    // One line in the band: the title only.
-    expect(island.props).toMatchObject({ title: 'Verify your account', tone: 'warning' });
-    expect(island.props.message).toBeUndefined();
-    island.props.onPress();
+    const island = byLabel(root, 'marketplace.brandHome.islandLabel:{"title":"Verify your account","message":"See prices"}');
+    expect(island?.props.accessibilityHint).toBe('Start');
+    expect(textOf(root)).toContain('See prices');
+    island?.props.onPress();
     expect(onPress).toHaveBeenCalled();
+    expect(root.findAll(isHost('LiveDot'))).toHaveLength(1);
   });
 
   it('keeps the island out when the server sends none', () => {
-    const { root } = render();
-    expect(root.findAll(isHost('LiveIsland'))).toHaveLength(0);
+    expect(render().root.findAll(isHost('LiveDot'))).toHaveLength(0);
   });
 });
 
 describe('BrandHomeScreen — rails', () => {
-  it('renders each rail with its photo-first cards', () => {
+  it('gives every rail its own shape, in server order', () => {
     const { root } = render();
-    expect(root.findAll(isHost('SectionHeader')).map(n => n.props.title)).toEqual(['Near you', 'New on Sada']);
-    expect(root.findAll(isHost('Card')).filter(n => n.props.onPress)).toHaveLength(3);
+    const titles = root
+      .findAll(isHost('Text'))
+      .filter(n => n.props.accessibilityRole === 'header')
+      .map(n => n.children.join(''));
+    // The page's question first, then one heading per rail.
+    expect(titles.slice(1)).toEqual(['Near you', 'Verified', 'Fast delivery', 'New on Sada']);
+    expect(textOf(root)).toContain('marketplace.brandHome.railCount:{"count":2}');
+    // Verified tiles, fast rows and rings each open the creator.
+    expect(byLabel(root, 'Lina')).toBeDefined();
+    const fastRow = root
+      .findAll(isHost('Pressable'))
+      .find(n => String(n.props.accessibilityLabel).startsWith('marketplace.brandHome.fastRowLabel:'));
+    expect(fastRow?.props.accessibilityLabel).toContain('"name":"Sara"');
+    expect(textOf(root)).toContain('Yousef');
   });
 
-  it('opens a creator and toggles ❤️ without opening the card', () => {
+  it('opens a deck card, ❤️ toggles without opening, and "next" throws the top card', () => {
     const { root, vm } = render();
-    byLabel(root, 'Reem')?.props.onPress();
+    const card = byLabel(root, 'marketplace.brandHome.deck.cardLabel:{"name":"Reem","meta":"Aleppo"}');
+    card?.props.onPress();
     expect(vm.openCreator).toHaveBeenCalledWith(expect.objectContaining({ slug: 'reem' }));
     byLabel(root, 'marketplace.shortlist.add')?.props.onPress();
-    expect(vm.toggleShortlist).toHaveBeenCalledWith(expect.objectContaining({ slug: 'reem' }));
+    expect(vm.toggleShortlist).toHaveBeenCalled();
     expect(vm.openCreator).toHaveBeenCalledTimes(1);
+    card?.props.onAccessibilityAction({ nativeEvent: { actionName: 'next' } });
+    expect(mockDeckNext).toHaveBeenCalled();
   });
 
   it('shows the price, or the lock line for the viewer\'s reason', () => {
-    const { root } = render();
-    const text = textOf(root);
+    const text = textOf(render().root);
     expect(text).toContain('marketplace.creator.priceFrom');
     expect(text).toContain('marketplace.creator.priceLock.pending');
+  });
+
+  it('shows the delivery days as the fast row\'s big figure', () => {
+    const text = textOf(render().root);
+    expect(text).toContain('marketplace.brandHome.dayUnit:{"count":1}');
+  });
+
+  it('shows "See all" only on rails the server gave filters for', () => {
+    const { root, vm } = render();
+    expect(byLabel(root, 'marketplace.brandHome.seeAllOf:{"title":"New on Sada"}')).toBeUndefined();
+    byLabel(root, 'marketplace.brandHome.seeAllOf:{"title":"Near you"}')?.props.onPress();
+    expect(vm.openRail).toHaveBeenCalledWith(expect.objectContaining({ key: 'near_you' }));
   });
 
   it('offers Explore when every rail is empty', () => {
@@ -351,49 +374,39 @@ describe('BrandHomeScreen — rails', () => {
     empty.props.action.onPress();
     expect(vm.browseAll).toHaveBeenCalled();
   });
-
-  it('shows "See all" only on rails the server gave filters for', () => {
-    const { root, vm } = render();
-    const [near, fresh] = root.findAll(isHost('SectionHeader'));
-    expect(fresh?.props.action).toBeUndefined();
-    expect(near?.props.action.label).toBe('marketplace.brandHome.seeAll');
-    near?.props.action.onPress();
-    expect(vm.openRail).toHaveBeenCalledWith(expect.objectContaining({ key: 'near_you' }));
-  });
 });
 
 describe('BrandHomeScreen — Explore entry', () => {
-  it('opens Explore from the search field', () => {
+  it('opens Explore from search, and for browsing from the filter key', () => {
     const { root, vm } = render();
     byLabel(root, 'marketplace.explore.searchPlaceholder')?.props.onPress();
     expect(vm.openSearch).toHaveBeenCalled();
+    byLabel(root, 'marketplace.brandHome.filters')?.props.onPress();
+    expect(vm.browseAll).toHaveBeenCalled();
   });
 
-  it('opens Explore prefilled from a category tile', () => {
+  it('opens Explore prefilled from a category chip, "All" without a filter', () => {
     const { root, vm } = render();
-    const chips = root.findAll(isHost('Chip'));
-    expect(chips.map(chip => chip.props.label)).toEqual(['Food', 'Fashion']);
-    expect(chips.every(chip => chip.props.variant === 'tile')).toBe(true);
-    expect(chips[0]?.props.icon.displayName).toBe('Utensils');
-    chips[1]?.props.onSelect('fashion');
+    byLabel(root, 'Fashion')?.props.onPress();
     expect(vm.openCategory).toHaveBeenCalledWith('fashion');
+    byLabel(root, 'marketplace.brandHome.allCategories')?.props.onPress();
+    expect(vm.browseAll).toHaveBeenCalledTimes(1);
   });
 
-  it('reserves chip space while categories load, and hides them when there are none', () => {
-    expect(render({ categoriesLoading: true }).root.findAll(isHost('Chip'))).toHaveLength(0);
-    expect(render({ categories: [] }).root.findAll(isHost('Chip'))).toHaveLength(0);
+  it('hides the chips when there are no categories', () => {
+    expect(byLabel(render({ categories: [] }).root, 'marketplace.brandHome.allCategories')).toBeUndefined();
   });
 });
 
 describe('BrandHomeScreen — states', () => {
-  it('reserves skeleton rails while Home loads', () => {
+  it('reserves a skeleton deck and rows while Home loads', () => {
     const { root } = render({
       status: 'loading',
       rails: [],
       hero: { ...model().hero, status: 'loading', wallet: null },
     });
-    expect(root.findAll(isHost('Skeleton')).length).toBeGreaterThan(3);
-    expect(root.findAll(isHost('SectionHeader'))).toHaveLength(0);
+    expect(root.findAll(isHost('Skeleton')).length).toBeGreaterThan(5);
+    expect(root.findAll(isHost('EmptyState'))).toHaveLength(0);
   });
 
   it('shows a retry banner and a dash for the balance when Home fails', () => {
@@ -402,16 +415,15 @@ describe('BrandHomeScreen — states', () => {
       rails: [],
       hero: { ...model().hero, status: 'error', wallet: null },
     });
-    const notice = root.find(isHost('Notice'));
-    notice.props.action.onPress();
+    root.find(isHost('Notice')).props.action.onPress();
     expect(vm.retry).toHaveBeenCalled();
     expect(textOf(root)).toContain('—');
   });
 
-  it('opens support from the help card, and hides it without a link', () => {
+  it('opens support from the closing line, and hides it without a link', () => {
     const { root, vm } = render();
-    root.find(isHost('CustomButton')).props.onPress();
+    byLabel(root, 'marketplace.brandHome.support.action')?.props.onPress();
     expect(vm.contactSupport).toHaveBeenCalled();
-    expect(render({ hasSupport: false }).root.findAll(isHost('CustomButton'))).toHaveLength(0);
+    expect(byLabel(render({ hasSupport: false }).root, 'marketplace.brandHome.support.action')).toBeUndefined();
   });
 });

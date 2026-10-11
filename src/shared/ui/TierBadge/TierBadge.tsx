@@ -72,11 +72,15 @@ const TEXT_VARIANT = {
   lg: 'bodyMedium',
 } as const;
 
+export type TierBadgeSurface = 'default' | 'media';
+
 export interface TierBadgeProps {
   tier: FollowerTierId;
   size?: TierBadgeSize;
   /** Set false when the badge already sits inside another pressable (e.g. a card row). */
   interactive?: boolean;
+  /** `media`: frosted dark pill with a white label, for badges laid over a photo. */
+  surface?: TierBadgeSurface;
   accessibilityLabel?: string;
 }
 
@@ -88,6 +92,7 @@ const TierBadgeComponent: React.FC<TierBadgeProps> = ({
   tier,
   size = 'sm',
   interactive = true,
+  surface = 'default',
   accessibilityLabel,
 }) => {
   const { t } = useTranslation();
@@ -102,6 +107,7 @@ const TierBadgeComponent: React.FC<TierBadgeProps> = ({
   const glyph = tone === 'premium' ? colors.brand.main : colors.text.onAccent;
   const label = t(TIER_NAME_KEY[tier]);
   const iconSize = sizes.icon[size];
+  const onMedia = surface === 'media';
 
   const content =
     size === 'xs' ? (
@@ -115,10 +121,12 @@ const TierBadgeComponent: React.FC<TierBadgeProps> = ({
         px={size === 'lg' ? 'md' : 'sm'}
         py="xs"
         borderRadius="full"
-        bg={hue.soft}
+        bg={onMedia ? colors.media.glass : hue.soft}
+        borderWidth={onMedia ? 'thin' : undefined}
+        borderColor={onMedia ? colors.media.glassBorder : undefined}
       >
         <TierCrestIcon level={level} size={iconSize} fill={hue.main} glyph={glyph} />
-        <Text variant={TEXT_VARIANT[size]} color={hue.text}>
+        <Text variant={TEXT_VARIANT[size]} color={onMedia ? colors.text.onBrand : hue.text}>
           {label}
         </Text>
       </Box>

@@ -1419,6 +1419,44 @@
     "brandHome": {
       "companyFallback": "شركتك",
       "openProfile": "{{name}}، فتح الحساب",
+      "headline": {
+        "lead": "مَن سيروي ",
+        "accent": "قصّتك",
+        "tail": "\nهذا الأسبوع؟"
+      },
+      "walletLine": {
+        "available": "متاح في محفظتك",
+        "topUp": "شحن"
+      },
+      "islandLabel": "{{title}}. {{message}}",
+      "filters": "الفلاتر",
+      "allCategories": "الكل",
+      "deck": {
+        "hint": "اسحب للتالي · اضغط لفتح الملف",
+        "next": "التالي",
+        "cardLabel": "{{name}}، {{meta}}"
+      },
+      "railCount_zero": "لا يوجد صنّاع محتوى",
+      "railCount_one": "صانع محتوى واحد",
+      "railCount_two": "صانعا محتوى",
+      "railCount_few": "{{count}} صنّاع محتوى",
+      "railCount_many": "{{count}} صانع محتوى",
+      "railCount_other": "{{count}} صانع محتوى",
+      "verifiedSubtitle": "هوية وأرقام متابعين موثّقة",
+      "fastSubtitle": "يسلّمون المحتوى خلال أيام",
+      "fastRowLabel": "{{name}}، أسرع تسليم: {{delivery}}",
+      "deliveryWithin_zero": "خلال أقل من يوم",
+      "deliveryWithin_one": "خلال يوم",
+      "deliveryWithin_two": "خلال يومين",
+      "deliveryWithin_few": "خلال {{count}} أيام",
+      "deliveryWithin_many": "خلال {{count}} يوماً",
+      "deliveryWithin_other": "خلال {{count}} يوم",
+      "dayUnit_zero": "أيام",
+      "dayUnit_one": "يوم",
+      "dayUnit_two": "يومين",
+      "dayUnit_few": "أيام",
+      "dayUnit_many": "يوماً",
+      "dayUnit_other": "يوم",
       "wallet": {
         "open": "الرصيد المتاح، فتح المحفظة"
       },
@@ -1429,6 +1467,7 @@
         "explore": "استكشف صنّاع المحتوى"
       },
       "seeAll": "عرض الكل",
+      "seeAllOf": "عرض الكل: {{title}}",
       "support": {
         "title": "تحتاج مساعدة؟",
         "body": "فريق صدى جاهز على واتساب لأي سؤال.",
@@ -2649,6 +2688,7 @@
     "tierBadge": {
       "iconTitle": "الأيقونة",
       "scaleTitle": "مقاسات الحجم",
+      "mediaTitle": "فوق صورة",
       "sheetTitle": "ورقة الاختيار",
       "openSheet": "فتح ورقة فئات المتابعين"
     },

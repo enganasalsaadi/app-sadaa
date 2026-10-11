@@ -117,6 +117,8 @@ export interface ThemeColors {
       /** Liquid lens under the active tab (v4): white glass, bright top fading down. */
       lens: string;
       lensFaint: string;
+      /** Morph bar (brand tabs): the active tab's teal capsule that grows to show its label. */
+      activePill: string;
     };
     bottomSheet: { background: string; handle: string };
   };
@@ -152,6 +154,24 @@ export interface ThemeColors {
     onboarding: string[];
     /** Soft mustard wash for verified / premium highlight cards (rule 08: never text-bearing mustard). */
     premium: string[];
+    /** Bottom-up navy scrim over a photo, so white text reads on any image. */
+    mediaScrim: { colors: string[]; locations: number[] };
+    /** Short top shade over a photo for story bars and corner controls. */
+    mediaTopShade: { colors: string[]; locations: number[] };
+    /** Ring around a creator's round photo (new / recently viewed). */
+    storyRing: string[];
+  };
+  /** Controls and text laid over photos (both modes: photos are never themed). */
+  media: {
+    /** Frosted dark chip / button fill over a photo. */
+    glass: string;
+    glassBorder: string;
+    divider: string;
+    /** Story progress bars. */
+    bar: string;
+    barActive: string;
+    /** Darkens cards stacked behind the top one. */
+    dim: string;
   };
   overlay: string;
   /** Full-screen photo/video viewer backdrop — black in both modes. */
@@ -286,6 +306,7 @@ export const lightColors: ThemeColors = {
       glassShadow: 'rgba(15, 29, 43, 0.18)',
       lens: 'rgba(255, 255, 255, 0.16)',
       lensFaint: 'rgba(255, 255, 255, 0.05)',
+      activePill: 'rgba(111, 192, 207, 0.24)',
     },
     bottomSheet: { background: WHITE, handle: '#C3CDD7' },
   },
@@ -324,6 +345,23 @@ export const lightColors: ThemeColors = {
     },
     onboarding: [NAVY, '#27506A', '#397D8C'],
     premium: ['#FDF8EE', '#F6E6C3'],
+    mediaScrim: {
+      colors: ['rgba(11, 22, 34, 0)', 'rgba(11, 22, 34, 0.6)', 'rgba(11, 22, 34, 0.95)'],
+      locations: [0.36, 0.64, 1],
+    },
+    mediaTopShade: {
+      colors: ['rgba(11, 22, 34, 0.45)', 'rgba(11, 22, 34, 0)'],
+      locations: [0, 0.24],
+    },
+    storyRing: ['#6FC0CF', '#397D8C', NAVY],
+  },
+  media: {
+    glass: 'rgba(11, 22, 34, 0.38)',
+    glassBorder: 'rgba(255, 255, 255, 0.22)',
+    divider: 'rgba(255, 255, 255, 0.18)',
+    bar: 'rgba(255, 255, 255, 0.32)',
+    barActive: '#FFFFFF',
+    dim: '#0B1622',
   },
   overlay: 'rgba(11, 22, 34, 0.5)',
   mediaBackdrop: '#000000',
@@ -408,6 +446,7 @@ export const darkColors: ThemeColors = {
       glassShadow: 'rgba(0, 0, 0, 0.55)',
       lens: 'rgba(255, 255, 255, 0.14)',
       lensFaint: 'rgba(255, 255, 255, 0.04)',
+      activePill: 'rgba(111, 192, 207, 0.26)',
     },
     bottomSheet: { background: '#122131', handle: '#30495F' },
   },
@@ -446,6 +485,23 @@ export const darkColors: ThemeColors = {
     },
     onboarding: [NAVY_DEEP, NAVY, '#1F4A5C', '#2D6B78'],
     premium: ['#2E2716', '#3B321C'],
+    mediaScrim: {
+      colors: ['rgba(11, 22, 34, 0)', 'rgba(11, 22, 34, 0.6)', 'rgba(11, 22, 34, 0.95)'],
+      locations: [0.36, 0.64, 1],
+    },
+    mediaTopShade: {
+      colors: ['rgba(11, 22, 34, 0.45)', 'rgba(11, 22, 34, 0)'],
+      locations: [0, 0.24],
+    },
+    storyRing: ['#6FC0CF', '#397D8C', '#1F4A5C'],
+  },
+  media: {
+    glass: 'rgba(11, 22, 34, 0.38)',
+    glassBorder: 'rgba(255, 255, 255, 0.22)',
+    divider: 'rgba(255, 255, 255, 0.18)',
+    bar: 'rgba(255, 255, 255, 0.32)',
+    barActive: '#FFFFFF',
+    dim: '#0B1622',
   },
   overlay: 'rgba(0, 0, 0, 0.7)',
   mediaBackdrop: '#000000',

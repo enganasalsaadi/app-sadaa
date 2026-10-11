@@ -4,9 +4,11 @@ paths:
   - "src/shared/**"
 ---
 
-# 13 — Ref: UI Kit (`@/shared/ui`) — reuse, don't rebuild
+# 13 — Ref: UI Kit (`@/shared/ui`) — reuse when it fits
 
 Check DevShowcase (`app/screens/DevShowcaseScreen`, `__DEV__` row in Profile; one screen per category from `registry/showcaseRegistry.ts`, archetypes in `layoutVariants/`) before building UI. Every kit export demoed there (rule 10).
+
+Catalog of what exists — reuse for behaviour, never as the look of a new design (rule 09 §0).
 
 ## Primitives & Layout
 
@@ -31,19 +33,19 @@ Check DevShowcase (`app/screens/DevShowcaseScreen`, `__DEV__` row in Profile; on
 
 ## Navy surfaces & live parts (rule 09 §3.1)
 
-- `HeroBackdrop` + `GlassCard` (Skia, navy only; theme via `useGlassCardStyle()` outside `<Canvas>`).
+- `HeroBackdrop` + `GlassCard` (Skia, built for navy backdrops; theme via `useGlassCardStyle()` outside `<Canvas>`).
 - `GradientSurface`: `brand` navy hero gradient, no glass · `live` darker dashboard gradient · `premium` soft gold highlight card.
-- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; navy hero only; `paused` freezes them — `LayoutHeroBackdrop` pauses while the screen is blurred or the hero is scrolled away, since tab roots stay mounted and every frame redraws the canvas).
-- `LiveDot` (pulsing dot) · `LiveIsland` (the one blocker in a navy hero) · `AnimatedNumber` (digits roll once) · `MoneyFlow` (mint dots: money on its way) · `SmartBorder` (teal sheen, system suggestions only) · `StaggerIn` (sections rise once).
+- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; `paused` freezes them — `LayoutHeroBackdrop` pauses while the screen is blurred or the hero is scrolled away, since tab roots stay mounted and every frame redraws the canvas).
+- `LiveDot` (pulsing dot) · `LiveIsland` (blocker pill) · `AnimatedNumber` (digits roll once) · `MoneyFlow` (mint dots: money on its way) · `SmartBorder` (teal sheen, system suggestions only) · `StaggerIn` (sections rise once).
 
 ## Money & Sada parts
 
-- `MoneyText` = only way to show an amount (rule 09 §2.1): `size` sm|md|title|lg|hero|display (`display` 58 = wallet balance) · `animated` · `tone` money (money flow) | `onBrand` · `showSign` · `estimate` · `notation="compact"` (stats/tiles only) · `precision` · `rounding` (`down` for balances) · `currencyDisplay` · `splitFraction` · `hidden` · `strikethrough`.
+- `MoneyText` = only way to show an amount (rule 09b): `size` sm|md|title|lg|hero|display (`display` 58 = wallet balance) · `animated` · `tone` money (money flow) | `onBrand` · `showSign` · `estimate` · `notation="compact"` (stats/tiles only) · `precision` · `rounding` (`down` for balances) · `currencyDisplay` · `splitFraction` · `hidden` · `strikethrough`.
 - `AmountInput` (`Money` minor units, Arabic digits accepted; helpers `parseAmountText`/`toAmountText` in `@/core/money`).
 - `StatTile` · `Sparkline` (axis-free, time flips in RTL) · `BarChart` (monthly bars, highlighted bar + value bubble, grow once; `tone` money|neutral).
 - `Timeline` (`variant` vertical: stages + captions · `track`: horizontal stage track, draws once; current stage pulses) · `Countdown` (deadline pill on `useCountdown`).
 - `MediaTile` (photo/video, upload + review states) · `RatingStars` (display or 1–5 input) · `FilePickerCard uploadProgress` + `useFilePicker` (files or photos, MIME + size checks, `pickFrom(source)`).
-- `TierBadge` / `TierInfoSheet` (rule 08) · `BrandLogo` (logo only via this) · `SocialPlatformIcon` · `Skeleton`.
+- `TierBadge` (`surface="media"` = frosted pill over photos) / `TierInfoSheet` (rule 08) · `BrandLogo` (logo only via this) · `SocialPlatformIcon` · `Skeleton`.
 - `formatMoney(m, lang, options)` / `formatMoneyParts` (same options as `MoneyText`; SYP minor units = 0, own ل.س / SYP symbol).
 
 ## Screen chrome & multi-step
@@ -59,7 +61,7 @@ No `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}
 
 ## Bottom bar
 
-Floating navy liquid-glass capsule (iOS blur + navy tint + Skia rim; active tab teal on a white-glass lens springing between tabs; hide-on-scroll). Content scrolls behind → tab roots need bottom padding. `useHideBottomBar()` on inner screens.
+`FloatingBottomBar variant`: `lens` (creators: icon + label, white-glass lens springs between tabs) · `morph` (brands: icon pill, active tab widens into a teal capsule showing its label). Both hide on scroll; content scrolls behind → tab roots need bottom padding. `useHideBottomBar()` on inner screens.
 
 ## Theme
 

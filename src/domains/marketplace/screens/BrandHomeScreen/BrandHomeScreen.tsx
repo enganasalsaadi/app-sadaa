@@ -1,105 +1,74 @@
 import React, { memo } from 'react';
 import { RefreshControl } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { Bell, Heart } from 'lucide-react-native';
-import { useTheme } from '@/core/theme';
 import { Box, Layout } from '@/shared/ui';
 import { useBrandHomeScreen } from './hooks/useBrandHomeScreen';
-import { BrandHomeBar } from './components/BrandHomeBar';
-import { BrandHomeHero } from './components/BrandHomeHero';
-import { BrandHomeRails } from './components/BrandHomeRails';
-import { CategoryTiles } from './components/CategoryTiles';
-import { WalletStrip } from './components/WalletStrip';
+import { CategoryChips } from './components/CategoryChips';
+import { HomeHeadline } from './components/HomeHeadline';
+import { HomeIsland } from './components/HomeIsland';
+import { HomeRails } from './components/HomeRails';
+import { HomeTopBar } from './components/HomeTopBar';
+import { SearchEntry } from './components/SearchEntry';
+import { SupportLine } from './components/SupportLine';
+import { WalletLine } from './components/WalletLine';
 
 /**
- * Brand discover home (rule 09): a compact navy band with drifting lights (greeting + company,
- * search, the server's one blocker) behind a transparent header that pins the company once
- * the band scrolls away. Creators are the hero: category tiles, then the server's
- * photo-first rails rise in one by one with the wallet card after the first, closed by the
- * help card. Search, tiles and
- * each rail's "See all" open Explore; the ❤️ beside the bell opens the Shortlist.
+ * Brand Home «Spotlight» (approved 2026-10-11): greeting row, a quiet wallet line, one big
+ * question, search, the server's blocker and category shortcuts; then the rails, each in its
+ * own shape, led by the swipeable story deck of creators near you. Search, chips, filters and
+ * "See all" open Explore; ❤️ opens the Shortlist.
  */
 const BrandHomeScreenComponent: React.FC = () => {
-  const { t } = useTranslation();
-  const { colors } = useTheme();
   const vm = useBrandHomeScreen();
 
   return (
     <Layout
       padding="none"
-      statusBar="light"
-      headerBehavior="overlay"
-      heroBackdrop="brandGlow"
-      heroBehavior="parallax"
-      header={{
-        title: t('tabs.home'),
-        variant: 'brand',
-        showBackButton: false,
-        leading: (
-          <BrandHomeBar companyName={vm.hero.companyName} onOpenProfile={vm.openProfile} />
-        ),
-        actions: [
-          {
-            icon: Heart,
-            accessibilityLabel: t('marketplace.shortlist.open'),
-            onPress: vm.openShortlist,
-          },
-          {
-            icon: Bell,
-            accessibilityLabel: vm.unreadNotifications
-              ? t('notifications.inbox.openUnread', { count: vm.unreadNotifications })
-              : t('notifications.inbox.title'),
-            badge: vm.unreadNotifications,
-            onPress: vm.openNotifications,
-          },
-        ],
-      }}
-      hero={
-        <BrandHomeHero
-          hero={vm.hero}
-          island={vm.island}
-          onOpenProfile={vm.openProfile}
-          onOpenSearch={vm.openSearch}
-        />
-      }
       scrollProps={{
-        refreshControl: (
-          <RefreshControl
-            refreshing={vm.refreshing}
-            onRefresh={vm.onRefresh}
-            // The spinner sits over the navy backdrop.
-            tintColor={colors.text.onBrand}
-          />
-        ),
+        refreshControl: <RefreshControl refreshing={vm.refreshing} onRefresh={vm.onRefresh} />,
       }}
     >
-      {/* `xl` top clears the sheet's rounded corners when the tiles scroll under them. */}
-      <Box pt="xl" pb="5xl" gap="xl">
-        <CategoryTiles
-          categories={vm.categories}
-          categoriesLoading={vm.categoriesLoading}
-          openCategory={vm.openCategory}
+      <Box pb="7xl">
+        <HomeTopBar
+          hero={vm.hero}
+          unread={vm.unreadNotifications}
+          onOpenProfile={vm.openProfile}
+          onOpenShortlist={vm.openShortlist}
+          onOpenNotifications={vm.openNotifications}
         />
-        <BrandHomeRails
-          status={vm.status}
-          rails={vm.rails}
-          hasSupport={vm.hasSupport}
-          retry={vm.retry}
-          openCreator={vm.openCreator}
-          toggleShortlist={vm.toggleShortlist}
-          contactSupport={vm.contactSupport}
-          openRail={vm.openRail}
-          browseAll={vm.browseAll}
-          wallet={
-            <WalletStrip
-              hero={vm.hero}
-              hidden={vm.hidden}
-              onToggleHidden={vm.toggleHidden}
-              onOpenWallet={vm.openWallet}
-              onTopUp={vm.openTopUp}
-            />
-          }
-        />
+        <Box mt="xs">
+          <WalletLine
+            hero={vm.hero}
+            hidden={vm.hidden}
+            onOpenWallet={vm.openWallet}
+            onTopUp={vm.openTopUp}
+          />
+        </Box>
+        <Box mt="2xl" gap="lg">
+          <HomeHeadline />
+          <SearchEntry onOpenSearch={vm.openSearch} onOpenFilters={vm.browseAll} />
+          {vm.island ? <HomeIsland key={vm.island.key} island={vm.island} /> : null}
+          <CategoryChips
+            categories={vm.categories}
+            onOpenCategory={vm.openCategory}
+            onBrowseAll={vm.browseAll}
+          />
+        </Box>
+        <Box mt="4xl">
+          <HomeRails
+            status={vm.status}
+            rails={vm.rails}
+            retry={vm.retry}
+            openCreator={vm.openCreator}
+            toggleShortlist={vm.toggleShortlist}
+            openRail={vm.openRail}
+            browseAll={vm.browseAll}
+          />
+        </Box>
+        {vm.hasSupport ? (
+          <Box mt="4xl">
+            <SupportLine onContact={vm.contactSupport} />
+          </Box>
+        ) : null}
       </Box>
     </Layout>
   );

@@ -16,7 +16,6 @@ export type {
   DealProgressProps,
   DealCardProps,
   CreatorCardProps,
-  CreatorCardVariant,
   DraftReviewCardProps,
 } from './components';
 export { DEAL_STATUS } from './types';

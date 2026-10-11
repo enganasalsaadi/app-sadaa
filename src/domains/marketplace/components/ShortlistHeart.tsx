@@ -17,12 +17,12 @@ const POP_SCALE = 1.35;
 export interface ShortlistHeartProps {
   selected: boolean;
   onToggle: () => void;
-  /** Over a photo: the heart sits on a small white disc so it reads on any image. */
+  /** Over a photo: a frosted dark disc with a white heart, teal once saved. */
   onMedia?: boolean;
 }
 
 /**
- * ❤️ shortlist toggle (44pt), plain or on a white disc over a photo (`onMedia`). Saving pops the heart once and fills it teal (selected, rule 08);
+ * ❤️ shortlist toggle (44pt), plain or on a frosted disc over a photo (`onMedia`). Saving pops the heart once and fills it teal (selected, rule 08);
  * removing just empties it. The list underneath updates optimistically, so the pop is instant.
  */
 const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({
@@ -46,7 +46,12 @@ const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({
   }, [onToggle, reduceMotion, scale, selected]);
 
   const popStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-  const color = selected ? colors.interactive.main : colors.icon.secondary;
+  const color = onMedia
+    ? colors.text.onBrand
+    : selected
+      ? colors.interactive.main
+      : colors.icon.secondary;
+  const disc = onMedia ? (selected ? colors.interactive.main : colors.media.glass) : colors.layout.transparent;
 
   return (
     <Pressable
@@ -64,13 +69,14 @@ const ShortlistHeartComponent: React.FC<ShortlistHeartProps> = ({
     >
       <Animated.View style={popStyle}>
         <Box
-          width={sizes.button.sm}
-          height={sizes.button.sm}
+          width={onMedia ? sizes.iconButton.md : sizes.button.sm}
+          height={onMedia ? sizes.iconButton.md : sizes.button.sm}
           borderRadius="full"
           align="center"
           justify="center"
-          bg={onMedia ? colors.surface.main : colors.layout.transparent}
-          shadow={onMedia ? 'sm' : 'none'}
+          bg={disc}
+          borderWidth={onMedia ? 'thin' : undefined}
+          borderColor={onMedia ? colors.media.glassBorder : undefined}
         >
           <Heart
             size={sizes.icon.sm}

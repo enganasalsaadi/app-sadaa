@@ -8,7 +8,7 @@
 .sd *{box-sizing:border-box}
 .num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-/* hero: entry screens use --hero; dashboard tab roots use .hero.live-hero + .lights (no shapes, no logo) */
+/* classes below mirror TODAY's look — optional, never a default for new designs (rule 09 §0). Vars above are the locked part. */
 .hero{background:var(--hero);color:var(--onBrand);padding:58px 20px 40px;position:relative;overflow:hidden;isolation:isolate}
 .hero.live-hero{background:var(--heroLive);padding-bottom:52px}
 .lights i{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:-1}

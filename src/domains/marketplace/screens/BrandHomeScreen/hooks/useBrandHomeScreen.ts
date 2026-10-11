@@ -29,7 +29,7 @@ export const useBrandHomeScreen = () => {
   const navigation = useNavigation<Navigation>();
   const user = useAppSelector(selectUser);
   const openSupport = useOpenSupport();
-  const { hidden, toggleHidden } = useAmountsHidden();
+  const { hidden } = useAmountsHidden();
   const homeQuery = useGetBrandHomeQuery(undefined, {
     refetchOnMountOrArgChange: HOME_STALE_SECONDS,
   });
@@ -124,7 +124,7 @@ export const useBrandHomeScreen = () => {
   const companyName = home?.companyName || user?.display_name || null;
   const governorate = home?.governorate?.label ?? null;
   const wallet = home?.wallet ?? null;
-  // The pill's ＋ shows only once `/me` allows a top-up; any blocker is the island's job (rule 06).
+  // "Top up" shows only once `/me` allows it; any blocker is the island's job (rule 06).
   const canTopUp = user?.capabilities?.top_up_wallet?.allowed === true;
   const hero = useMemo(
     () => ({
@@ -157,7 +157,6 @@ export const useBrandHomeScreen = () => {
     hero,
     island,
     hidden,
-    toggleHidden,
     rails: home?.rails ?? [],
     hasSupport: !!supportUrl,
     unreadNotifications: user?.unread_notifications_count ?? 0,
@@ -173,9 +172,8 @@ export const useBrandHomeScreen = () => {
     toggleShortlist,
     contactSupport,
     openSearch,
-    // Categories are a shortcut: hidden when `/explore/filters` fails, Explore still works.
+    // Categories are a shortcut: hidden while loading or when `/explore/filters` fails.
     categories,
-    categoriesLoading: filtersQuery.isLoading,
     openCategory,
     openRail,
     browseAll,

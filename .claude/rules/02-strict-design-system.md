@@ -7,6 +7,8 @@ paths:
 
 # 02 — Strict Design System
 
+**Scope:** this rule is code hygiene (where values live, which primitives to import), not a style limit. Design freedom: rule 09 §0.
+
 Lint: raw RN UI imports banned in `src/domains/**` and `src/app/screens/**`; `react-native/no-color-literals`, `react-native/no-inline-styles` everywhere.
 
 ## UI kit only (`@/shared/ui`)
@@ -24,7 +26,7 @@ Never import `View Text Image Pressable TouchableOpacity TouchableHighlight Touc
 | `Layout` | SafeAreaView/ScrollView wrappers | `mode surface padding header footer` |
 | `ScreenHeader BottomSheet SelectionModal SuperList InlineError` | ad-hoc versions | — |
 
-Missing primitive → build in `src/shared/ui/<Name>/` first + showcase demo same change (rule 10). Never inline a one-off. `Animated.View` only as transform wrapper with `Box` inside.
+Missing piece → screen-specific visuals go in `screens/<Name>Screen/components/` or `domains/<x>/components/`; promote to `src/shared/ui/` (+ showcase, rule 10) once a second screen needs it. Reanimated (`Animated.View`, layout/shared transitions, scroll handlers), `react-native-gesture-handler`, Skia, `react-native-svg`, Lottie are all fair game for creative visuals; style them via `useStyles` + tokens.
 
 ## Tokens only
 
@@ -33,15 +35,15 @@ Missing primitive → build in `src/shared/ui/<Name>/` first + showcase demo sam
 | `'#FFF'`, `'red'`, `'rgba(...)'` | `colors.text.primary`, `colors.layout.base`… |
 | `margin: 10`, `gap: 8` | `spacing.md`, `<Box p="lg" gap="sm">` |
 | `fontSize`, `fontFamily` | `<Text variant>`, `typography.*` |
-| `borderRadius: 12` | `radii.*` (`xs` 4 · `sm` 10 · `md` 15 · `lg` 22 · `xl` 28 · `full`) |
+| `borderRadius: 12` | `radii.*` or a new radii token |
 | `zIndex: 999` | `zIndices.modal` |
 | inline `style={{}}` | `useStyles(factory)` or primitive props |
 
-- Raw colors/numbers ONLY in `src/core/theme/tokens/**`. Which color for what → rule 08.
+- Raw colors/numbers ONLY in `src/core/theme/tokens/**`. Which color for what → rule 08. Adding tokens (radii, shadows, gradients/alphas of palette hues, motion curves, sizes) is encouraged when the design needs them.
 - Never branch on `isDark` for colors. Token missing → add to token file (light + dark).
 - One-off sizes: `moderateScale(n)` / `fontScale(n)` (`@/core/theme`). Design ref 375×812.
 - Hue groups `{ main, text, soft }`: text → `.text`; fills/icons/dots → `.main`; tinted bg → `.soft`. Text on filled accent → `colors.text.onAccent`.
-- No alpha hacks (`colors.x + '15'`) → `soft`. Placeholder `colors.form.input.placeholder`; skeleton `colors.surface.elevated`.
+- No alpha hacks (`colors.x + '15'`) → `soft` or a new alpha token. Placeholder `colors.form.input.placeholder`; skeleton `colors.surface.elevated`.
 
 ## Hooks
 

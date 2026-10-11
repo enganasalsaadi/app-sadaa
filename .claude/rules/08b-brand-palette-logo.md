@@ -60,15 +60,11 @@ Text shades on white (≥ 4.5:1): `interactive.text #347482` 5.29 · `money.text
 
 ## Glass (`colors.glass`, light / dark)
 
-fill `rgba(255,255,255,.15)` / `.07` · border `.28` / `.18` · badge `.18` / `.10` · progress track `.22` / `.14`, fill `#F5F7F9` / `#6FC0CF` · glowPrimary + glowSecondary `#397D8C` + `#6FC0CF` / `#2D6B78` + `#397D8C` · glowHighlight `#F5F7F9` / `#6FC0CF` · icons: interactive `#6FC0CF`, money `#3DDBA5`. Hero lights: glowSecondary 30% · glowPrimary 55% · glowHighlight 7%. Card shadow: `#1C3349`, y 8, blur 16, 9%.
+fill `rgba(255,255,255,.15)` / `.07` · border `.28` / `.18` · badge `.18` / `.10` · progress track `.22` / `.14`, fill `#F5F7F9` / `#6FC0CF` · glowPrimary + glowSecondary `#397D8C` + `#6FC0CF` / `#2D6B78` + `#397D8C` · glowHighlight `#F5F7F9` / `#6FC0CF` · icons: interactive `#6FC0CF`, money `#3DDBA5`.
 
-## Bottom tab bar (floating navy liquid glass; white glass rejected — blended into white screens)
+## Bottom tab bar
 
-- Floating capsule, `lg` side margins, corner 26, navy both modes (`navigation.tabBar.glassTint` = `#1C3349` at 96% light / 92% dark).
-- Skia drop shadow `glassShadow` drawn outside capsule only (view `shadow` lost on Android without background) + hairline `glassBorder`.
-- Hides on scroll, returns on scroll up / near top. Removed on inner screens via `useHideBottomBar()`. Content scrolls behind.
-- Native blur iOS only (`@react-native-community/blur` thin dark material; Android blur ignores rounded clip → grey rectangle) + tint + Skia specular rim (`glassRim` → `glassRimFaint`).
-- Every tab: icon (`icon.md`) + `caption` label. Active = teal `tabBar.active` `#6FC0CF` on a **liquid lens** (white-glass capsule `tabBar.lens` → `lensFaint`, top highlight `glassRim`, springs to active tab). Inactive `tabBar.inactive` `#A5B5C4`. Both ≥ 4.5:1 on tint. No box/border.
+Look free (rule 09 §0). Technical lessons: white glass blends into white screens; view `shadow` is lost on Android without a background (draw it in Skia); Android native blur ignores rounded clips (grey rectangle). Active/inactive labels ≥ 4.5:1 on their backdrop. Hidden on inner screens via `useHideBottomBar()`.
 
 ## Logo (Concept C — Concentric Echo, geometry v4, FINAL — changes need explicit user approval)
 
