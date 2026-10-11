@@ -504,6 +504,13 @@
         "title": "Media kit",
         "subtitle": "Your link and who can see it"
       },
+      "brandVisibility": {
+        "title": "Show my brand on creators' profiles",
+        "subtitle": "Creators you've worked with can list your brand on their media kit. Turn off to stay out of every list.",
+        "updateFailed": "Couldn't update this setting",
+        "loadFailed": "Couldn't load this setting",
+        "retry": "Try again"
+      },
       "payouts": {
         "title": "Payout methods",
         "subtitle": "Where we send your earnings when you withdraw"

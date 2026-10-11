@@ -19,6 +19,7 @@ import { useGetUserProfileQuery, useUpdateAvatarMutation } from '../../../api/ac
 import { useGetRateCardsQuery } from '../../../api/rateCardsApi';
 import { PROFILE_SECTIONS, type ProfileSectionKey } from '../../../constants/profileSections';
 import type { ProfileStepTarget } from '../../../constants/profileSteps';
+import { useBrandVisibility } from '../../../hooks/useBrandVisibility';
 import { usePushPermissionStatus } from '../../../hooks/usePushPermissionStatus';
 import { buildMissingSteps } from '../../../utils/profileCompletion';
 import { needsRateCards } from '../../../utils/rateCardNotice';
@@ -53,6 +54,7 @@ export const useProfileScreen = () => {
   const userType = user?.user_type ?? 'influencer';
   const isBrand = userType === 'brand';
   const rateCards = useGetRateCardsQuery(undefined, { skip: isBrand });
+  const brandVisibility = useBrandVisibility(isBrand);
 
   const displayName =
     user?.display_name || profile?.full_name || profile?.company_name || user?.full_name || '';
@@ -242,6 +244,7 @@ export const useProfileScreen = () => {
     sections,
     userType,
     isBrand,
+    brandVisibility,
     hero: {
       isBrand,
       displayName,

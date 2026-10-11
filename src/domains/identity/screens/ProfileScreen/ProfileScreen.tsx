@@ -16,6 +16,7 @@ import { KycCard } from '../../components/KycCard';
 import { PlatformsSummaryCard } from './components/PlatformsSummaryCard';
 import { NichesCard } from './components/NichesCard';
 import { CompanyInfoCard } from './components/CompanyInfoCard';
+import { BrandVisibilityCard } from './components/BrandVisibilityCard';
 import { SettingsGrid } from './components/SettingsGrid';
 import { AccountFooter } from './components/AccountFooter';
 
@@ -106,6 +107,8 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
           onPress={vm.openEditInfo}
         />
       );
+    case 'brandVisibility':
+      return <BrandVisibilityCard model={vm.brandVisibility} />;
     case 'settings':
       return (
         <SettingsGrid
