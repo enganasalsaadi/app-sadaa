@@ -1,40 +1,33 @@
 import React, { memo } from 'react';
-import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Skeleton, useHeroCompact } from '@/shared/ui';
-import { PLATFORM_CARD_WIDTH } from './MediaKitPlatformsRail';
+import { moderateScale, useTheme } from '@/core/theme';
+import { Box, Skeleton } from '@/shared/ui';
 
-const PLATFORM_CARD_HEIGHT = moderateScale(72);
-const SERVICE_HEIGHT = moderateScale(112);
-const RAIL = ['a', 'b', 'c'] as const;
-const SERVICES = ['a', 'b'] as const;
+const TILE_HEIGHT = moderateScale(150);
+const TICKET_HEIGHT = moderateScale(132);
+const TILES = ['a', 'b'] as const;
+const TICKETS = ['a', 'b'] as const;
 
-/** Sheet placeholder where the content lands: avatar on the cover edge, name, meta, bio, platforms, services. */
+/** Body placeholder where the sections land: a section title, a pair of tiles, two tickets. */
 const MediaKitShowcaseBodySkeletonComponent: React.FC = () => {
-  const { sizes, borderWidths } = useTheme();
-  // Same avatar size as the identity it stands in for, so nothing jumps when it lands.
-  const compact = useHeroCompact();
-  const ring = (compact ? sizes.avatar.lg : sizes.avatar.xl) + borderWidths.xl * 2;
-  const styles = useStyles(() => ({ overlap: { marginTop: -ring / 2 } }), [ring]);
-
+  const { sizes } = useTheme();
   return (
-    <Box gap="2xl">
-      <Box align="center" gap="sm" px="xl">
-        <Box style={styles.overlap}>
-          <Skeleton width={ring} height={ring} borderRadius="full" />
+    <Box px="xl" pt="sm" gap="4xl">
+      <Box gap="lg">
+        <Box gap="xs">
+          <Skeleton width="20%" height={sizes.icon.xs} borderRadius="xs" />
+          <Skeleton width="60%" height={sizes.icon.lg} borderRadius="xs" />
         </Box>
-        <Skeleton width="50%" height={sizes.icon.lg} borderRadius="xs" />
-        <Skeleton width="30%" height={sizes.icon.md} borderRadius="xs" />
-        <Skeleton width="80%" height={sizes.icon.md} borderRadius="xs" />
+        <Box row gap="md">
+          {TILES.map(key => (
+            <Box key={key} flex={1}>
+              <Skeleton width="100%" height={TILE_HEIGHT} borderRadius="xl" />
+            </Box>
+          ))}
+        </Box>
       </Box>
-      <Box row px="xl" gap="md">
-        {RAIL.map(key => (
-          <Skeleton key={key} width={PLATFORM_CARD_WIDTH} height={PLATFORM_CARD_HEIGHT} borderRadius="lg" />
-        ))}
-      </Box>
-      <Box px="xl" gap="md">
-        <Skeleton width="45%" height={sizes.icon.md} borderRadius="xs" />
-        {SERVICES.map(key => (
-          <Skeleton key={key} width="100%" height={SERVICE_HEIGHT} borderRadius="lg" />
+      <Box gap="md">
+        {TICKETS.map(key => (
+          <Skeleton key={key} width="100%" height={TICKET_HEIGHT} borderRadius="xl" />
         ))}
       </Box>
     </Box>

@@ -25,7 +25,7 @@ const PlatformMarkComponent: React.FC<PlatformMarkProps> = ({ platform }) => {
         <SocialPlatformIcon
           platform={platform}
           size={sizes.icon.md}
-          color={colors.interactive.main}
+          color={colors.text.primary}
         />
       ) : (
         <Link2 size={sizes.icon.md} color={colors.interactive.main} />

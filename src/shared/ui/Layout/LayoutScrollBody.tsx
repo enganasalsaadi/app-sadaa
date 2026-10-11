@@ -15,6 +15,8 @@ interface LayoutScrollBodyProps extends Pick<ScrollViewProps, 'refreshControl'> 
   paddingY: SpacingToken | undefined;
   /** No footer below: pad past the home indicator so the last row is reachable. */
   clearBottomInset: boolean;
+  /** Room kept at the end for a footer floating over the body. */
+  footerSpace: number;
   /** Gap kept between the focused input and the keyboard (footer height + breathing room). */
   keyboardBottomOffset: number;
   scroll: LayoutScrollState;
@@ -36,6 +38,7 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
   paddingX,
   paddingY,
   clearBottomInset,
+  footerSpace,
   keyboardBottomOffset,
   scroll,
   refreshControl,
@@ -53,7 +56,11 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
       const py = paddingY ? theme.spacing[paddingY] : 0;
       return {
         scroll: { flex: 1 },
-        content: { flexGrow: 1, paddingTop: topOffset, paddingBottom: clearBottomInset ? bottom : 0 },
+        content: {
+          flexGrow: 1,
+          paddingTop: topOffset,
+          paddingBottom: (clearBottomInset ? bottom : 0) + footerSpace,
+        },
         body: {
           flexGrow: 1,
           paddingHorizontal: px,
@@ -70,7 +77,7 @@ const LayoutScrollBodyComponent: React.FC<LayoutScrollBodyProps> = ({
         sticky: { backgroundColor: bg, paddingHorizontal: px, paddingVertical: theme.spacing.sm },
       };
     },
-    [paddingX, paddingY, clearBottomInset, bottom, bg, topOffset, sheet],
+    [paddingX, paddingY, clearBottomInset, footerSpace, bottom, bg, topOffset, sheet],
   );
 
   const hasSticky = sticky != null;

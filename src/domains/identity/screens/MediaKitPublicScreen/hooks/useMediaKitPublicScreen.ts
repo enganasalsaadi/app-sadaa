@@ -175,6 +175,20 @@ export const useMediaKitPublicScreen = () => {
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
+  // Visitors without an account: one way in per role, from the join card under the pitch.
+  const onJoinCreator = useCallback(() => {
+    const register: NavigatorScreenParams<AuthStackParamList> = { screen: 'InfluencerRegister' };
+    navigate('Auth', register);
+  }, []);
+  const onJoinBrand = useCallback(() => {
+    const register: NavigatorScreenParams<AuthStackParamList> = { screen: 'BrandRegister' };
+    navigate('Auth', register);
+  }, []);
+  const join = useMemo(
+    () => (signedIn ? undefined : { onCreator: onJoinCreator, onBrand: onJoinBrand }),
+    [onJoinBrand, onJoinCreator, signedIn],
+  );
+
   const footer: MediaKitPublicFooter = priceLock ? 'lock' : selectable ? 'offer' : 'none';
 
   return {
@@ -201,6 +215,7 @@ export const useMediaKitPublicScreen = () => {
     onRefresh,
     onRetry,
     onBack,
+    join,
   };
 };
 

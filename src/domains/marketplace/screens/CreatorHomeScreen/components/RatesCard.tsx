@@ -37,7 +37,7 @@ const RateLine = memo<{ row: RateRow }>(({ row }) => {
         justify="center"
       >
         {row.platform && isSocialPlatform(row.platform) ? (
-          <SocialPlatformIcon platform={row.platform} size={sizes.icon.sm} color={colors.icon.secondary} />
+          <SocialPlatformIcon platform={row.platform} size={sizes.icon.sm} color={colors.text.primary} />
         ) : (
           <Fallback size={sizes.icon.sm} color={colors.icon.secondary} />
         )}

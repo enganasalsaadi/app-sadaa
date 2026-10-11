@@ -23,11 +23,38 @@ const numberFormat = (
   return formatter;
 };
 
+// Hermes' Intl compact notation differs per platform (iOS prints 135,700, Android 135.7 ألف),
+// so K / M / B are placed by hand: identical text in both languages on every device.
+const COMPACT_UNITS = [
+  { exponent: 9, suffix: 'B' },
+  { exponent: 6, suffix: 'M' },
+  { exponent: 3, suffix: 'K' },
+] as const;
+
+/** Social-style, rounds down (139,750 → 139.7K, never up to 1000K); null below 1,000. */
+const compactNumber = (value: number, lang: string): string | null => {
+  const magnitude = Math.abs(value);
+  for (const { exponent, suffix } of COMPACT_UNITS) {
+    const tenths = Math.floor(magnitude / 10 ** (exponent - 1));
+    if (tenths >= 10) {
+      const scaled = numberFormat(lang, { maximumFractionDigits: 1 }).format(tenths / 10);
+      return `${value < 0 ? '-' : ''}${scaled}${suffix}`;
+    }
+  }
+  return null;
+};
+
 export const formatNumber = (
   value: number,
   options: Intl.NumberFormatOptions = {},
   lang: string = i18next.language,
-): string => numberFormat(lang, options).format(value);
+): string => {
+  if (options.notation !== 'compact') return numberFormat(lang, options).format(value);
+  return (
+    compactNumber(value, lang) ??
+    numberFormat(lang, { ...options, notation: 'standard' }).format(value)
+  );
+};
 
 const dateFormat = (
   lang: string,

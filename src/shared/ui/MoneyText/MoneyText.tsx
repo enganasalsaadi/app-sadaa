@@ -13,9 +13,9 @@ import { AnimatedNumber } from '../AnimatedNumber';
 export type MoneyTextSize = 'sm' | 'md' | 'title' | 'lg' | 'hero' | 'display';
 /**
  * `money` only for money flow (balance, earning, payout, rule 08); `default` for prices, totals and debits;
- * `onBrand` on the navy hero.
+ * `onBrand` on the navy hero; `onAccent` on a teal fill (a picked price ticket).
  */
-export type MoneyTextTone = 'default' | 'money' | 'muted' | 'onBrand';
+export type MoneyTextTone = 'default' | 'money' | 'muted' | 'onBrand' | 'onAccent';
 
 export interface MoneyTextProps {
   value: Money;
@@ -46,8 +46,16 @@ export interface MoneyTextProps {
    * Laid out left to right; not combined with `estimate` or `strikethrough`.
    */
   animated?: boolean;
+  /**
+   * Narrow slots (price tickets): one line that shrinks to fit instead of wrapping or
+   * truncating, so an amount is always shown whole. Ignored with `animated` / `splitFraction`.
+   */
+  fit?: boolean;
   align?: TextStyle['textAlign'];
 }
+
+/** Smallest scale `fit` may shrink an amount to before it would stop reading as a price. */
+const FIT_MIN_SCALE = 0.6;
 
 const SIZE_VARIANT: Record<MoneyTextSize, TypographyVariant> = {
   sm: 'amountSmall',
@@ -90,6 +98,7 @@ const MoneyTextComponent: React.FC<MoneyTextProps> = ({
   hidden = false,
   strikethrough = false,
   animated = false,
+  fit = false,
   align,
 }) => {
   const { t, i18n } = useTranslation();
@@ -119,6 +128,7 @@ const MoneyTextComponent: React.FC<MoneyTextProps> = ({
     money: colors.money.text,
     muted: colors.text.secondary,
     onBrand: colors.text.onBrand,
+    onAccent: colors.text.onAccent,
   }[tone];
   const subtleColor = tone === 'onBrand' ? colors.text.onBrandMuted : colors.text.tertiary;
 
@@ -156,6 +166,9 @@ const MoneyTextComponent: React.FC<MoneyTextProps> = ({
       align={align}
       decoration={strikethrough ? 'line-through' : undefined}
       accessibilityLabel={hidden ? t('common.money.hidden') : undefined}
+      numberOfLines={fit ? 1 : undefined}
+      adjustsFontSizeToFit={fit}
+      minimumFontScale={fit ? FIT_MIN_SCALE : undefined}
     >
       {hidden ? HIDDEN_MASK : showFraction ? head : fullText}
       {!hidden && showFraction ? (

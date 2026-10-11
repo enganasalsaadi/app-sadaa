@@ -46,7 +46,7 @@ const SocialLinkInputComponent: React.FC<SocialLinkInputProps> = ({
       onChangeText={onChange}
       onBlur={handleBlur}
       leftIcon={
-        <SocialPlatformIcon platform={platform} size={sizes.icon.sm} color={colors.icon.secondary} />
+        <SocialPlatformIcon platform={platform} size={sizes.icon.sm} color={colors.text.primary} />
       }
       autoCapitalize="none"
       autoCorrect={false}

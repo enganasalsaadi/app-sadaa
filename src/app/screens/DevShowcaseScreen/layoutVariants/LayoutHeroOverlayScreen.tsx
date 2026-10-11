@@ -11,7 +11,7 @@ const noop = () => {};
 
 /**
  * Layout gallery variant: `hero` + overlay header (detail screens: creator, campaign)
- * and an `elevate` footer.
+ * and a `reveal` footer that stays away until the hero is partly scrolled off.
  */
 const LayoutHeroOverlayScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ const LayoutHeroOverlayScreenComponent: React.FC = () => {
       footer={
         <LayoutFooter primary={{ label: t('devShowcase.layoutGallery.sendOffer'), onPress: goBack }} />
       }
-      footerBehavior="elevate"
+      footerBehavior="reveal"
     >
       <Box gap="lg">
         <Box gap="xs">

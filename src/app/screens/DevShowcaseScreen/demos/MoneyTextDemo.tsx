@@ -19,7 +19,7 @@ const Row = memo<{ label: string; children: React.ReactNode }>(({ label, childre
 
 const MoneyTextDemoComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, sizes } = useTheme();
   const demo = useMoneyTextDemo();
 
   return (
@@ -67,6 +67,16 @@ const MoneyTextDemoComponent: React.FC = () => {
       </Row>
       <Row label={t('devShowcase.moneyText.price')}>
         <MoneyText value={MOCK_DEAL_SUMMARY.budget} />
+      </Row>
+      <Row label={t('devShowcase.moneyText.fit')}>
+        <Box row gap="sm">
+          <Box width={sizes.thumbnail.md}>
+            <MoneyText value={MOCK_WALLET.available} size="title" fit />
+          </Box>
+          <Box width={sizes.thumbnail.md} p="xs" borderRadius="sm" bg={colors.interactive.main}>
+            <MoneyText value={MOCK_WALLET.available} size="title" tone="onAccent" fit />
+          </Box>
+        </Box>
       </Row>
       <Row label={t('devShowcase.moneyText.small')}>
         <MoneyText value={MOCK_DEAL_SUMMARY.commission} size="sm" tone="muted" />

@@ -7,10 +7,11 @@ import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ErrorState, Layout, LayoutFooter, Notice } from '@/shared/ui';
 import { MediaKitShareNotice } from '../../components/MediaKitCard/MediaKitShareNotice';
 import {
-  MediaKitCover,
   MediaKitHeaderBar,
   MediaKitShowcaseBody,
   MediaKitShowcaseBodySkeleton,
+  MediaKitStage,
+  MediaKitStageSkeleton,
 } from '../../components/MediaKitShowcase';
 import { useMediaKitPreviewScreen, type MediaKitPreviewScreenModel } from './hooks/useMediaKitPreviewScreen';
 
@@ -61,9 +62,9 @@ const ShareFooter = memo<{ vm: MediaKitPreviewScreenModel }>(({ vm }) => {
 });
 
 /**
- * "Preview as brand": the same Creator pitch brands see (cover, identity, sections), read-only,
- * with the hidden-kit warning under the identity, settings in the header and Share as the one
- * primary. No heart: the server never offers shortlisting on the creator's own kit.
+ * "Preview as brand": the same stage and sections brands see, read-only, with the hidden-kit
+ * warning above the first section, settings in the header and Share as the one primary. No
+ * heart: the server never offers shortlisting on the creator's own kit.
  */
 const MediaKitPreviewScreenComponent: React.FC = () => {
   useHideBottomBar();
@@ -87,24 +88,23 @@ const MediaKitPreviewScreenComponent: React.FC = () => {
   }
 
   const ready = vm.status === 'ready' && preview !== undefined;
-  const backdrop = ready && !preview.cover_url ? 'brandGlow' : 'brand';
 
   return (
     <Layout
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
-      heroBackdrop={backdrop}
-      heroBehavior="parallax"
+      heroBackdrop="brandOpen"
       header={{
         title: t('account.mediaKit.previewScreen.title'),
         variant: 'brand',
         leading: preview ? <MediaKitHeaderBar kit={preview} /> : undefined,
         actions: [{ ...settingsAction, glass: true }],
       }}
-      hero={<MediaKitCover coverUrl={preview?.cover_url ?? null} />}
+      hero={ready ? <MediaKitStage kit={preview} nicheLabels={vm.nicheLabels} /> : <MediaKitStageSkeleton />}
       footer={ready ? <ShareFooter vm={vm} /> : undefined}
-      footerBehavior="elevate"
+      // The stage shows whole on arrival; the footer slides in once the visitor scrolls.
+      footerBehavior="reveal"
       scrollProps={{
         refreshControl: (
           <RefreshControl
@@ -118,7 +118,6 @@ const MediaKitPreviewScreenComponent: React.FC = () => {
       {ready ? (
         <MediaKitShowcaseBody
           kit={preview}
-          nicheLabels={vm.nicheLabels}
           metrics={vm.metrics}
           services={vm.services}
           selectable={false}

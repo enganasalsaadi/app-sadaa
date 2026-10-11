@@ -110,7 +110,7 @@ const FollowerStat = memo<Part>(({ creator }) => {
   return (
     <Box row align="center" gap="xs">
       {isSocialPlatform(platform.platform) ? (
-        <SocialPlatformIcon platform={platform.platform} size={sizes.icon.xs} color={colors.icon.secondary} />
+        <SocialPlatformIcon platform={platform.platform} size={sizes.icon.xs} color={colors.text.primary} />
       ) : null}
       <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
         {formatNumber(platform.followerCount, COMPACT)}

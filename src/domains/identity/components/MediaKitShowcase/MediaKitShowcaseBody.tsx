@@ -1,59 +1,57 @@
 import React, { memo, useMemo } from 'react';
-import { Box, StaggerIn } from '@/shared/ui';
+import { Box } from '@/shared/ui';
 import type { MediaKitServicesModel } from '../../hooks/useMediaKitServices';
 import type { PublicMediaKit } from '../../types/mediaKit';
 import { toShowcaseAudience, toWorkedWith, type ShowcaseMetric } from '../../utils/mediaKitShowcase';
-import { MediaKitAudienceCard } from './MediaKitAudienceCard';
-import { MediaKitHighlightsCard } from './MediaKitHighlightsCard';
-import { MediaKitIdentity } from './MediaKitIdentity';
-import { MediaKitPlatformsRail } from './MediaKitPlatformsRail';
-import { MediaKitServicesSection } from './MediaKitServicesSection';
-import { MediaKitTermsCard } from './MediaKitTermsCard';
-import { MediaKitWorkedWithRail } from './MediaKitWorkedWithRail';
-import { MediaKitWorkRail } from './MediaKitWorkRail';
+import { MediaKitAudience } from './MediaKitAudience';
+import { MediaKitBrands } from './MediaKitBrands';
+import { MediaKitEscrow } from './MediaKitEscrow';
+import { MediaKitHighlights } from './MediaKitHighlights';
+import { MediaKitJoinCard } from './MediaKitJoinCard';
+import { MediaKitRates } from './MediaKitRates';
+import { MediaKitWorkMasonry } from './MediaKitWorkMasonry';
 
 export interface MediaKitShowcaseBodyProps {
   kit: PublicMediaKit;
-  nicheLabels: readonly string[];
   /** Server highlights only (`buildShowcaseMetrics`); empty keeps the section out. */
   metrics: readonly ShowcaseMetric[];
   services: MediaKitServicesModel;
   /** Brand viewer with prices visible. */
   selectable: boolean;
-  /** Under the identity (the creator's own "this is how brands see you" notice). */
+  /** Above the first section (the creator's own "this is how brands see you" notice). */
   intro?: React.ReactNode;
+  /** Visitors without an account get the join card at the end. */
+  join?: { onCreator: () => void; onBrand: () => void };
 }
 
 /**
- * The pitch on the sheet under the cover: identity, then platforms, highlights, audience,
- * brands worked with, past work, services and contract terms, rising in one by one. A section
- * without data stays out entirely, so the stubbed v2 parts light up when the server fills them.
+ * The pitch under the stage: numbers, audience, past work, brands, rates with the escrow
+ * promise right under them, then (for visitors) the join card. Every section rises in as it
+ * scrolls into view; a section without data stays out, so the stubbed v2 parts light up when
+ * the server fills them.
  */
 const MediaKitShowcaseBodyComponent: React.FC<MediaKitShowcaseBodyProps> = ({
   kit,
-  nicheLabels,
   metrics,
   services,
   selectable,
   intro,
+  join,
 }) => {
   const audience = useMemo(() => toShowcaseAudience(kit.audience), [kit.audience]);
   const workedWith = useMemo(() => toWorkedWith(kit.worked_with), [kit.worked_with]);
   const terms = kit.contract_terms?.items ?? [];
 
   return (
-    <Box pb="5xl" gap="2xl">
-      <MediaKitIdentity kit={kit} nicheLabels={nicheLabels} />
-      <StaggerIn gap="2xl">
-        {intro ? <Box px="xl">{intro}</Box> : null}
-        <MediaKitPlatformsRail platforms={kit.platforms} />
-        <MediaKitHighlightsCard metrics={metrics} />
-        {audience ? <MediaKitAudienceCard audience={audience} /> : null}
-        {workedWith ? <MediaKitWorkedWithRail workedWith={workedWith} /> : null}
-        {kit.top_portfolio_items.length > 0 ? <MediaKitWorkRail items={kit.top_portfolio_items} /> : null}
-        <MediaKitServicesSection services={services} selectable={selectable} />
-        {terms.length > 0 ? <MediaKitTermsCard terms={terms} /> : null}
-      </StaggerIn>
+    <Box px="xl" pt="sm" pb="5xl" gap="4xl">
+      {intro}
+      <MediaKitHighlights metrics={metrics} highlights={kit.highlights} brands={workedWith?.items ?? []} />
+      {audience ? <MediaKitAudience audience={audience} /> : null}
+      <MediaKitWorkMasonry items={kit.top_portfolio_items} />
+      {workedWith ? <MediaKitBrands workedWith={workedWith} /> : null}
+      <MediaKitRates services={services} selectable={selectable} />
+      <MediaKitEscrow terms={terms} />
+      {join ? <MediaKitJoinCard onCreator={join.onCreator} onBrand={join.onBrand} /> : null}
     </Box>
   );
 };

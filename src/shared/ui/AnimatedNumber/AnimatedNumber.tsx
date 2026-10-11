@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import type { TextStyle, ViewStyle } from 'react-native';
 import Animated, {
   Easing,
@@ -12,6 +12,7 @@ import { motion, useStyles, useTheme } from '@/core/theme';
 import type { TypographyVariant } from '@/core/theme/types';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
+import { isRtlNumber, splitNumberRuns } from './numberRuns';
 
 export interface AnimatedNumberProps {
   /** The number already formatted (`formatNumber` / `formatMoney`): digits roll, other characters stay. */
@@ -29,6 +30,8 @@ const ROLL_EASING = Easing.bezier(0.22, 1, 0.36, 1);
 
 interface DigitStyles {
   row: ViewStyle;
+  rowRtl: ViewStyle;
+  cluster: ViewStyle;
   column: ViewStyle;
   glyph: TextStyle;
 }
@@ -79,7 +82,8 @@ const Digit = memo<DigitProps>(({ digit, index, rollOnMount, lineHeight, variant
 /**
  * A formatted number whose digits roll up to their value the first time it shows
  * (KPI strips, balances, stat tiles). Reduced motion shows the value at once.
- * Always laid out left to right, so "48.2K" never flips in Arabic.
+ * The number itself is always left to right, so "48.2K" never flips; words around it
+ * ("ألف", "ل.س.") render whole so Arabic letters stay joined, and sit on the RTL side.
  */
 const AnimatedNumberComponent: React.FC<AnimatedNumberProps> = ({
   value,
@@ -95,37 +99,56 @@ const AnimatedNumberComponent: React.FC<AnimatedNumberProps> = ({
   const styles = useStyles(
     (): DigitStyles => ({
       row: { flexDirection: 'row', direction: 'ltr', alignItems: 'flex-start' },
+      rowRtl: { flexDirection: 'row', direction: 'rtl', alignItems: 'flex-start' },
+      cluster: { flexDirection: 'row', direction: 'ltr', alignItems: 'flex-start' },
       column: { height: lineHeight },
       glyph: { height: lineHeight, fontVariant: ['tabular-nums'] },
     }),
     [lineHeight],
   );
+  const runs = useMemo(() => splitNumberRuns(value), [value]);
 
+  // Digit keys and stagger count across runs, so a digit keeps its column when the value changes.
+  let position = 0;
   return (
     <Box
-      style={styles.row}
+      style={isRtlNumber(value) ? styles.rowRtl : styles.row}
       accessible
       accessibilityRole="text"
       accessibilityLabel={accessibilityLabel ?? value}
     >
-      {Array.from(value).map((char, index) => {
-        const digit = DIGITS.indexOf(char);
-        return digit >= 0 ? (
-          <Digit
-            // Position is the identity: a digit keeps its column when the value changes.
-            key={index}
-            digit={digit}
-            index={index}
-            rollOnMount={rollOnMount}
-            lineHeight={lineHeight}
-            variant={variant}
-            color={color}
-            styles={styles}
-          />
-        ) : (
-          <Text key={index} variant={variant} color={color} style={styles.glyph}>
-            {char}
-          </Text>
+      {runs.map((run, runIndex) => {
+        if (run.kind === 'text') {
+          position += run.text.length;
+          return (
+            <Text key={`t${runIndex}`} variant={variant} color={color} style={styles.glyph}>
+              {run.text}
+            </Text>
+          );
+        }
+        return (
+          <Box key={`n${runIndex}`} style={styles.cluster}>
+            {Array.from(run.text).map(char => {
+              const index = position++;
+              const digit = DIGITS.indexOf(char);
+              return digit >= 0 ? (
+                <Digit
+                  key={index}
+                  digit={digit}
+                  index={index}
+                  rollOnMount={rollOnMount}
+                  lineHeight={lineHeight}
+                  variant={variant}
+                  color={color}
+                  styles={styles}
+                />
+              ) : (
+                <Text key={index} variant={variant} color={color} style={styles.glyph}>
+                  {char}
+                </Text>
+              );
+            })}
+          </Box>
         );
       })}
     </Box>

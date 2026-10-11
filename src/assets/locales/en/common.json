@@ -964,8 +964,7 @@
         "intro": "This is how brands see your media kit.",
         "platforms": "Platforms",
         "terms": "Collaboration terms",
-        "addonWithHours": "{{label}} · {{hours}}",
-        "username": "@{{username}}"
+        "addonWithHours": "{{label}} · {{hours}}"
       },
       "publicScreen": {
         "title": "Creator profile",
@@ -1065,8 +1064,16 @@
         "share": "Share media kit",
         "termsHint": "Apply to every collaboration with this creator",
         "platformA11y": "{{platform}}, {{followers}} followers",
+        "stage": {
+          "reach_one": "followers across {{count}} platform",
+          "reach_other": "followers across {{count}} platforms",
+          "moreCount": "+{{count}}",
+          "moreNiches": "Show all niches",
+          "lessNiches": "Hide extra niches"
+        },
         "metrics": {
-          "title": "Highlights",
+          "overline": "By the numbers",
+          "title": "Performance you can trust",
           "a11yItem": "{{label}} {{value}}",
           "engagement": "Engagement",
           "avgViews": "Avg. views",
@@ -1074,35 +1081,72 @@
           "campaigns": "Campaigns done"
         },
         "audience": {
-          "title": "Audience",
+          "overline": "Audience",
+          "title": "Who’s watching?",
           "female": "Women {{pct}}",
           "male": "Men {{pct}}",
-          "topAge": "Largest age group",
-          "ageValue": "{{range}} · {{pct}}"
+          "ageValue": "{{range}} · {{pct}}",
+          "gender": "Gender",
+          "cities": "Top cities",
+          "ages": "Ages",
+          "men": "Men",
+          "women": "Women",
+          "topAgeShort": "Most: {{range}}"
         },
         "workedWith": {
-          "title": "Brands worked with",
-          "subtitle_one": "{{count}} brand · campaigns completed on Sada",
-          "subtitle_other": "{{count}} brands · campaigns completed on Sada",
+          "overline": "They trusted them",
           "campaigns_one": "{{count}} campaign",
-          "campaigns_other": "{{count}} campaigns"
+          "campaigns_other": "{{count}} campaigns",
+          "headline_one": "Worked with {{count}} brand",
+          "headline_other": "Worked with {{count}} brands"
         },
         "work": {
-          "title": "Past work",
-          "views": "{{views}} views"
+          "overline": "Their work",
+          "title": "Content that gets talked about",
+          "views": "{{views}} views",
+          "seeAll": "See all ({{count}})",
+          "seeLess": "Show less",
+          "open": "Open this work"
         },
         "services": {
-          "title": "Services & rates",
-          "pickHint": "Pick the services you need to see an estimated cost",
+          "overline": "Rates",
+          "title": "Pick what you need",
+          "pickHint": "Tap a service to add it to the estimate below",
           "tabsA11y": "Platforms",
-          "nameWithPackage": "{{service}} · {{pkg}}",
           "delivery": "Delivered in {{days}}",
           "revisions_one": "{{count}} revision",
           "revisions_other": "{{count}} revisions",
           "termsSeparator": " · ",
           "details": "Details",
-          "add": "Add",
-          "added": "Added"
+          "price": "Price",
+          "pick": "Pick",
+          "picked": "Picked",
+          "fastest": "Fastest",
+          "stays": "Stays up {{label}}",
+          "allPrices": "All prices ({{count}})",
+          "byPlatform": "By platform",
+          "pillA11y": "{{platform}}, {{count}} packages"
+        },
+        "escrow": {
+          "title": "Your money is protected by Sada escrow",
+          "terms": "Terms ({{count}})",
+          "brand": "Brand",
+          "vault": "Sada escrow",
+          "creator": "Creator",
+          "published": "Published",
+          "coin": "$",
+          "step1Title": "The brand pays when booking",
+          "step1Body": "The money goes to Sada escrow, not straight to the creator",
+          "step2Title": "Sada holds the money",
+          "step2Body": "Through production and content review",
+          "step3Title": "Released to the creator after publishing",
+          "step3Body": "Once you accept the proof of publishing"
+        },
+        "join": {
+          "title": "Your page could be next on Sada",
+          "body": "Creator? Show your numbers and rates like this and get offers backed by escrow. Brand? Book creators with confidence.",
+          "creator": "Create your media kit free",
+          "brand": "Start a campaign as a brand"
         },
         "footer": {
           "selected_one": "{{count}} service picked",
@@ -2361,7 +2405,7 @@
       "collapseTitle": "Large title collapse",
       "collapseDescription": "headerBehavior=\"collapse\": large title shrinks into the bar",
       "heroOverlayTitle": "Hero + overlay header",
-      "heroOverlayDescription": "hero: the header fades in as the image scrolls away",
+      "heroOverlayDescription": "hero: the header fades in as the image scrolls away; footerBehavior=\"reveal\": the CTA slides in once you scroll",
       "stickyTitle": "Sticky filter",
       "stickyDescription": "sticky: segmented filter pinned under the header",
       "footerElevateTitle": "Footer lifts on scroll",
@@ -2707,6 +2751,7 @@
     },
     "moneyText": {
       "price": "Price",
+      "fit": "Price in a narrow slot (shrinks, never cut)",
       "muted": "Fee",
       "earning": "Earning",
       "charge": "Charge",

@@ -36,7 +36,8 @@ jest.mock('lucide-react-native', () => {
 jest.mock('../../../components/MediaKitShowcase', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return {
-    MediaKitCover: (props: object) => createElement('MediaKitCover', props),
+    MediaKitStage: (props: object) => createElement('MediaKitStage', props),
+    MediaKitStageSkeleton: () => createElement('MediaKitStageSkeleton'),
     MediaKitHeaderBar: (props: object) => createElement('MediaKitHeaderBar', props),
     // Renders `intro` so the notice above the sections can be asserted.
     MediaKitShowcaseBody: ({ intro, ...props }: { intro?: React.ReactNode }) =>
@@ -183,6 +184,11 @@ const model = (overrides: Partial<MediaKitPreviewScreenModel> = {}): MediaKitPre
     groups: [],
     activeGroup: null,
     onGroupChange: jest.fn(),
+    showAll: false,
+    onShowAll: jest.fn(),
+    onShowByPlatform: jest.fn(),
+    view: { services: [], more: null, totalCount: 0 },
+    fastestDays: null,
     selected: new Set(),
     toggleService: jest.fn(),
     total: null,
@@ -211,15 +217,18 @@ describe('MediaKitPreviewScreen', () => {
     const { root, vm } = render();
     const layout = root.find(isHost('Layout'));
     expect(layout.props.headerBehavior).toBe('overlay');
-    expect(root.find(isHost('MediaKitCover')).props.coverUrl).toBe(preview.cover_url);
+    expect(layout.props.heroBackdrop).toBe('brandOpen');
+    const stage = root.find(isHost('MediaKitStage'));
+    expect(stage.props.kit).toBe(preview);
+    expect(stage.props.nicheLabels).toEqual(['Fashion', 'Beauty']);
     const body = root.find(isHost('MediaKitShowcaseBody'));
     expect(body.props.kit).toBe(preview);
-    expect(body.props.nicheLabels).toEqual(['Fashion', 'Beauty']);
+    expect(body.props.join).toBeUndefined();
     expect(body.props.metrics).toBe(vm.metrics);
     expect(body.props.selectable).toBe(false);
   });
 
-  it('public kit → info notice under the identity', () => {
+  it('public kit → info notice above the sections', () => {
     const { root } = render();
     expect(root.find(isHost('Notice')).props.tone).toBe('info');
   });
@@ -241,7 +250,7 @@ describe('MediaKitPreviewScreen', () => {
 
   it('loading shows skeletons and no footer; error offers retry', () => {
     const loading = render({ status: 'loading', preview: undefined });
-    expect(loading.root.find(isHost('MediaKitCover')).props.coverUrl).toBeNull();
+    expect(loading.root.findAll(isHost('MediaKitStageSkeleton'))).toHaveLength(1);
     expect(loading.root.findAll(isHost('MediaKitShowcaseBodySkeleton'))).toHaveLength(1);
     expect(loading.root.findAll(isHost('LayoutFooter'))).toHaveLength(0);
 

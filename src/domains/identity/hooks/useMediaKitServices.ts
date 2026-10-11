@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { PublicMediaKit } from '../types/mediaKit';
+import { buildRatesView, uniqueFastestDays } from '../utils/mediaKitRates';
 import { buildServiceGroups, sumSelectedPrices } from '../utils/mediaKitShowcase';
 import type { LockableRateRow } from '../utils/rateRows';
 
 /**
- * The kit's services as platform tabs, plus the brand's picks and their estimated total.
- * Picks live only on this screen; a refetch that drops a card drops its pick too.
+ * The kit's services as a platform filter (or every price at once), plus the brand's picks
+ * and their estimated total. Picks survive filter switches and live only on this screen; a
+ * refetch that drops a card drops its pick too.
  */
 export const useMediaKitServices = (
   kit: PublicMediaKit | undefined,
@@ -16,14 +18,27 @@ export const useMediaKitServices = (
     [kit, rateRows],
   );
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const [picked, setPicked] = useState<ReadonlySet<string>>(() => new Set());
 
   const activeGroup = groups.find(group => group.key === activeKey) ?? groups[0] ?? null;
+  const view = useMemo(
+    () => buildRatesView(groups, activeGroup?.key ?? null, showAll),
+    [activeGroup?.key, groups, showAll],
+  );
+  const fastestDays = useMemo(() => uniqueFastestDays(groups), [groups]);
 
   const selected = useMemo<ReadonlySet<string>>(() => {
     const live = new Set(groups.flatMap(group => group.services.map(service => service.key)));
     return new Set([...picked].filter(key => live.has(key)));
   }, [groups, picked]);
+
+  const onGroupChange = useCallback((key: string) => {
+    setActiveKey(key);
+    setShowAll(false);
+  }, []);
+  const onShowAll = useCallback(() => setShowAll(true), []);
+  const onShowByPlatform = useCallback(() => setShowAll(false), []);
 
   const toggleService = useCallback((key: string) => {
     setPicked(prev => {
@@ -42,7 +57,12 @@ export const useMediaKitServices = (
   return {
     groups,
     activeGroup,
-    onGroupChange: setActiveKey,
+    onGroupChange,
+    showAll,
+    onShowAll,
+    onShowByPlatform,
+    view,
+    fastestDays,
     selected,
     toggleService,
     total,

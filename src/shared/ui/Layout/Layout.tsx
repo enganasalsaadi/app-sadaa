@@ -101,6 +101,8 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   const { paddingX, paddingY, headerBehavior: behavior, headerVariant, headerFloats } = resolved;
   const parallax = resolved.hero && heroBehavior === 'parallax' && !reduceMotion ? HERO_PARALLAX : 0;
   const brandBackdrop = resolved.hero && heroBackdrop !== 'none';
+  // `reveal` floats the footer over the body, so the body keeps room for it at the end.
+  const footerFloats = hasFooter && scrolls && footerBehavior === 'reveal';
 
   const headerMotion = useHeaderMotion({
     behavior,
@@ -112,8 +114,12 @@ const LayoutComponent: React.FC<LayoutProps> = ({
   });
 
   const contextValue = useMemo(
-    () => ({ paddingX: paddingX ?? LAYOUT_DEFAULT_PADDING.x }),
-    [paddingX],
+    () => ({
+      paddingX: paddingX ?? LAYOUT_DEFAULT_PADDING.x,
+      scrollY: scrolls ? scroll.scrollY : null,
+      viewportHeight: scrolls ? scroll.viewportHeight : null,
+    }),
+    [paddingX, scroll.scrollY, scroll.viewportHeight, scrolls],
   );
   const safeAreaStyle = useMemo(() => [styles.flex, { backgroundColor: bg }], [bg]);
 
@@ -188,6 +194,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
       paddingX={paddingX}
       paddingY={paddingY}
       clearBottomInset={!hasFooter}
+      footerSpace={footerFloats ? footerHeight : 0}
       keyboardBottomOffset={footerHeight + spacing.lg}
       scroll={scroll}
       refreshControl={scrollProps?.refreshControl}
@@ -196,7 +203,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
       bg={bg}
       // Overlay headers float over the hero on purpose; a hiding one needs room at rest.
       topOffset={behavior === 'hideOnScroll' && headerFloats ? floatingHeaderHeight : 0}
-      sheet={brandBackdrop}
+      sheet={brandBackdrop && heroBackdrop !== 'brandOpen'}
     >
       {!resolved.sticky && sticky != null ? sticky : null}
       {children}
@@ -227,6 +234,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
       scrollY={scrolls ? scroll.scrollY : undefined}
       contentHeight={scrolls ? scroll.contentHeight : undefined}
       viewportHeight={scrolls ? scroll.viewportHeight : undefined}
+      revealAfter={resolved.hero ? heroHeight : undefined}
       onLayout={onFooterLayout}
     >
       {footer}
@@ -272,6 +280,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
             height={backdropHeight}
             parallax={parallax}
             glow={heroBackdrop === 'brandGlow'}
+            live={heroBackdrop === 'brandOpen'}
           />
         ) : null}
         {headerFloats ? null : headerNode}

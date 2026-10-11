@@ -67,7 +67,7 @@ const HeroMeta = memo<{ hero: Hero }>(({ hero }) => {
             <SocialPlatformIcon
               platform={primaryPlatform.platform}
               size={sizes.icon.xs}
-              color={colors.text.onBrandMuted}
+              color={colors.text.onBrand}
             />
           ) : null}
           <Box style={styles.shrink}>

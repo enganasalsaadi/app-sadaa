@@ -6,10 +6,11 @@ import { useTheme } from '@/core/theme';
 import { EmptyState, ErrorState, Layout } from '@/shared/ui';
 import type { LayoutHeaderConfig, ScreenHeaderAction } from '@/shared/ui';
 import {
-  MediaKitCover,
   MediaKitHeaderBar,
   MediaKitShowcaseBody,
   MediaKitShowcaseBodySkeleton,
+  MediaKitStage,
+  MediaKitStageSkeleton,
 } from '../../components/MediaKitShowcase';
 import { OfferFooter } from './components/OfferFooter';
 import { PriceLockFooter } from './components/PriceLockFooter';
@@ -41,10 +42,10 @@ const Footer = memo<{ vm: MediaKitPublicScreenModel }>(({ vm }) => {
 });
 
 /**
- * A creator's public media kit, "Creator pitch" archetype (rule 09): the cover leads, the
- * identity sits on the sheet under it, then platforms, highlights, audience, brands, past work,
- * services by platform and terms. Brands pick services (estimate) and save the creator; locked
- * prices get the unlock step instead. Opened over the tabs or Login.
+ * A creator's public media kit, «The stage» (approved 2026-10-11): a live navy stage with the
+ * creator and their reach leads, then numbers, audience, past work, brands, rates by platform
+ * and the escrow promise; visitors get a join card at the end. Brands pick services (estimate)
+ * and save the creator; locked prices get the unlock step instead. Opened over the tabs or Login.
  */
 const MediaKitPublicScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -102,31 +103,29 @@ const MediaKitPublicScreenComponent: React.FC = () => {
   }
 
   const ready = vm.status === 'ready' && kit !== undefined;
-  // A real photo hides the lights anyway; without one the navy band carries them.
-  const backdrop = ready && !kit.cover_url ? 'brandGlow' : 'brand';
 
   return (
     <Layout
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
-      heroBackdrop={backdrop}
-      heroBehavior="parallax"
+      heroBackdrop="brandOpen"
       header={{
         title: kit?.display_name ?? t('account.mediaKit.publicScreen.title'),
         variant: 'brand',
         leading: kit ? <MediaKitHeaderBar kit={kit} /> : undefined,
         actions,
       }}
-      hero={<MediaKitCover coverUrl={kit?.cover_url ?? null} />}
+      hero={ready ? <MediaKitStage kit={kit} nicheLabels={vm.nicheLabels} /> : <MediaKitStageSkeleton />}
       footer={ready && vm.footer !== 'none' ? <Footer vm={vm} /> : undefined}
-      footerBehavior="elevate"
+      // The stage shows whole on arrival; the footer slides in once the visitor scrolls.
+      footerBehavior="reveal"
       scrollProps={{
         refreshControl: (
           <RefreshControl
             refreshing={vm.refreshing}
             onRefresh={vm.onRefresh}
-            // The spinner sits over the cover / navy backdrop.
+            // The spinner sits over the navy stage.
             tintColor={colors.text.onBrand}
           />
         ),
@@ -135,10 +134,10 @@ const MediaKitPublicScreenComponent: React.FC = () => {
       {ready ? (
         <MediaKitShowcaseBody
           kit={kit}
-          nicheLabels={vm.nicheLabels}
           metrics={vm.metrics}
           services={vm.services}
           selectable={vm.selectable}
+          join={vm.join}
         />
       ) : (
         <MediaKitShowcaseBodySkeleton />

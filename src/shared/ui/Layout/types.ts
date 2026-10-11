@@ -17,8 +17,11 @@ export type LayoutBackdrop = 'none' | 'wash';
  * background never shows above the hero) and the body slides over it as a sheet with
  * rounded top corners. The hero itself stays transparent. `brandGlow`: the same plus
  * faint `GlowOrbs` light washes in the corners (dashboards); the orbs move with the hero but never stretch.
+ * `brandOpen`: the live navy gradient behind a hero that paints itself and draws its own
+ * edge into the body (media kit waves): it still stretches on pull, but the body is no sheet.
+ * Pair it with `heroBehavior="static"`: a lagging hero would show through the open body.
  */
-export type LayoutHeroBackdrop = 'none' | 'brand' | 'brandGlow';
+export type LayoutHeroBackdrop = 'none' | 'brand' | 'brandGlow' | 'brandOpen';
 /** `parallax`: the hero scrolls slower than the body (off under reduced motion). */
 export type LayoutHeroBehavior = 'static' | 'parallax';
 export type LayoutStatusBar = 'auto' | 'light' | 'dark';
@@ -35,8 +38,10 @@ export type LayoutHeaderBehavior = 'fixed' | 'hideOnScroll' | 'collapse' | 'over
 /**
  * - `divider` (default): hairline while content continues under the footer.
  * - `elevate`: blends with the screen at rest, lifts onto a raised surface while content is under it.
+ * - `reveal` (scroll mode): hidden at rest so the hero shows whole; floats in on a raised surface
+ *   once the hero is partly scrolled away, and leaves again back at the top.
  */
-export type LayoutFooterBehavior = 'divider' | 'elevate';
+export type LayoutFooterBehavior = 'divider' | 'elevate' | 'reveal';
 
 export interface LayoutPadding {
   x?: SpacingToken;

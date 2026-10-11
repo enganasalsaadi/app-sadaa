@@ -1,6 +1,7 @@
 export { Box, Text, Pressable, Card, Image, Avatar, Thumbnail, Banner } from './primitives';
 export type { BoxProps, CardProps, ImageProps, OnLoadEvent } from './primitives';
-export { Layout, LayoutFooter } from './Layout';
+export { Layout, LayoutFooter, useLayoutInView } from './Layout';
+export { useLoopClock } from './motion';
 export type {
   LayoutProps,
   LayoutMode,
@@ -17,6 +18,7 @@ export type {
   LayoutScrollProps,
   LayoutFooterProps,
   LayoutFooterAction,
+  LayoutInViewOptions,
 } from './Layout';
 export { BrandLogo } from './BrandLogo';
 export type {

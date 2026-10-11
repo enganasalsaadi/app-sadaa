@@ -127,7 +127,7 @@ export const RatePlatformCard: React.FC<RatePlatformCardProps> = memo(
               justify="center"
             >
               {platform && isSocialPlatform(platform) ? (
-                <SocialPlatformIcon platform={platform} size={sizes.icon.md} color={colors.interactive.main} />
+                <SocialPlatformIcon platform={platform} size={sizes.icon.md} color={colors.text.primary} />
               ) : (
                 <MapPin size={sizes.icon.md} color={colors.interactive.main} />
               )}

@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 import { NavigationContext } from '@react-navigation/native';
+import { useTheme } from '@/core/theme';
 import { GlowOrbs } from '../GlowOrbs';
 import { GradientSurface } from '../GradientSurface';
 
@@ -18,6 +19,12 @@ interface LayoutHeroBackdropProps {
   parallax: number;
   /** Live hero: darker gradient + drifting lights on their own layer (they follow the hero but never stretch with the pull). */
   glow: boolean;
+  /**
+   * Live gradient without the lights: the hero paints its own (`brandOpen`). It stops a little
+   * above the hero's bottom, tucked under the edge the hero draws into the body, so a rounding
+   * gap between the two never shows a navy line under the hero.
+   */
+  live: boolean;
 }
 
 /**
@@ -62,27 +69,30 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
   height,
   parallax,
   glow,
+  live,
 }) => {
+  const { spacing } = useTheme();
+  const paintHeight = live ? Math.max(height - spacing.sm, 0) : height;
   const style = useAnimatedStyle(() => {
     const y = scrollY.value;
-    if (y < 0 && height > 0) {
-      return { transform: [{ translateY: 0 }, { scaleY: (height - y) / height }] };
+    if (y < 0 && paintHeight > 0) {
+      return { transform: [{ translateY: 0 }, { scaleY: (paintHeight - y) / paintHeight }] };
     }
     return { transform: [{ translateY: -y * (1 - parallax) }, { scaleY: 1 }] };
-  }, [height, parallax]);
+  }, [paintHeight, parallax]);
   const glowStyle = useAnimatedStyle(
     () => ({ transform: [{ translateY: -Math.max(scrollY.value, 0) * (1 - parallax) }] }),
     [parallax],
   );
-  const sizeStyle = useMemo(() => ({ height }), [height]);
+  const sizeStyle = useMemo(() => ({ height: paintHeight }), [paintHeight]);
   const lightsPaused = useLightsPaused(scrollY, height, glow);
 
-  if (height <= 0) return null;
+  if (paintHeight <= 0) return null;
 
   return (
     <>
       <Animated.View pointerEvents="none" style={[styles.backdrop, sizeStyle, style]}>
-        <GradientSurface variant={glow ? 'live' : 'brand'} flex={1} />
+        <GradientSurface variant={glow || live ? 'live' : 'brand'} flex={1} />
       </Animated.View>
       {glow ? (
         <Animated.View pointerEvents="none" style={[styles.backdrop, sizeStyle, glowStyle]}>

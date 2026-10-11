@@ -52,7 +52,7 @@ export const PlatformAccountRow: React.FC<PlatformAccountRowProps> = memo(
             <SocialPlatformIcon
               platform={account.platform}
               size={sizes.icon.md}
-              color={colors.interactive.main}
+              color={colors.text.primary}
             />
           </Box>
           <Box flex={1} gap="xs">

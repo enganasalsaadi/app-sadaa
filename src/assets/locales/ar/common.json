@@ -976,8 +976,7 @@
         "intro": "هكذا تراك العلامات التجارية.",
         "platforms": "المنصات",
         "terms": "شروط التعاون",
-        "addonWithHours": "{{label}} · {{hours}}",
-        "username": "@{{username}}"
+        "addonWithHours": "{{label}} · {{hours}}"
       },
       "publicScreen": {
         "title": "ملف صانع المحتوى",
@@ -1077,8 +1076,20 @@
         "share": "مشاركة الملف الإعلامي",
         "termsHint": "تُطبَّق على كل تعاون مع هذا المؤثر",
         "platformA11y": "{{platform}}، {{followers}} متابع",
+        "stage": {
+          "reach_zero": "متابع",
+          "reach_one": "متابع عبر منصة واحدة",
+          "reach_two": "متابع عبر منصتين",
+          "reach_few": "متابع عبر {{count}} منصات",
+          "reach_many": "متابع عبر {{count}} منصة",
+          "reach_other": "متابع عبر {{count}} منصة",
+          "moreCount": "+{{count}}",
+          "moreNiches": "عرض كل التخصصات",
+          "lessNiches": "إخفاء التخصصات الإضافية"
+        },
         "metrics": {
-          "title": "أبرز الأرقام",
+          "overline": "بالأرقام",
+          "title": "أداء يمكنك الوثوق به",
           "a11yItem": "{{label}} {{value}}",
           "engagement": "معدل التفاعل",
           "avgViews": "متوسط المشاهدات",
@@ -1086,36 +1097,46 @@
           "campaigns": "حملات مكتملة"
         },
         "audience": {
-          "title": "الجمهور",
+          "overline": "الجمهور",
+          "title": "من يشاهده؟",
           "female": "إناث {{pct}}",
           "male": "ذكور {{pct}}",
-          "topAge": "الفئة العمرية الأكبر",
-          "ageValue": "{{range}} · {{pct}}"
+          "ageValue": "{{range}} · {{pct}}",
+          "gender": "الجنس",
+          "cities": "أهم المدن",
+          "ages": "الأعمار",
+          "men": "ذكور",
+          "women": "إناث",
+          "topAgeShort": "الأكثر: {{range}}"
         },
         "workedWith": {
-          "title": "علامات تعاملت معها",
-          "subtitle_zero": "حملات مكتملة عبر صدى",
-          "subtitle_one": "علامة تجارية واحدة · حملات مكتملة عبر صدى",
-          "subtitle_two": "علامتان تجاريتان · حملات مكتملة عبر صدى",
-          "subtitle_few": "{{count}} علامات تجارية · حملات مكتملة عبر صدى",
-          "subtitle_many": "{{count}} علامة تجارية · حملات مكتملة عبر صدى",
-          "subtitle_other": "{{count}} علامة تجارية · حملات مكتملة عبر صدى",
+          "overline": "وثقوا به",
           "campaigns_zero": "لا حملات",
           "campaigns_one": "حملة واحدة",
           "campaigns_two": "حملتان",
           "campaigns_few": "{{count}} حملات",
           "campaigns_many": "{{count}} حملة",
-          "campaigns_other": "{{count}} حملة"
+          "campaigns_other": "{{count}} حملة",
+          "headline_zero": "علامات تجارية عمل معها",
+          "headline_one": "عمل مع علامة تجارية واحدة",
+          "headline_two": "عمل مع علامتين تجاريتين",
+          "headline_few": "عمل مع {{count}} علامات تجارية",
+          "headline_many": "عمل مع {{count}} علامة تجارية",
+          "headline_other": "عمل مع {{count}} علامة تجارية"
         },
         "work": {
-          "title": "أعمال سابقة",
-          "views": "{{views}} مشاهدة"
+          "overline": "أعماله",
+          "title": "محتوى يتكلم عنه",
+          "views": "{{views}} مشاهدة",
+          "seeAll": "عرض الكل ({{count}})",
+          "seeLess": "عرض أقل",
+          "open": "افتح العمل"
         },
         "services": {
-          "title": "الخدمات والأسعار",
-          "pickHint": "اختر الخدمات التي تهمّك لترى التكلفة التقديرية",
+          "overline": "الأسعار",
+          "title": "اختر ما تحتاجه",
+          "pickHint": "اضغط الخدمة لتراها في التقدير أسفل الشاشة",
           "tabsA11y": "المنصات",
-          "nameWithPackage": "{{service}} · {{pkg}}",
           "delivery": "التسليم خلال {{days}}",
           "revisions_zero": "بدون تعديلات",
           "revisions_one": "تعديل واحد",
@@ -1125,8 +1146,35 @@
           "revisions_other": "{{count}} تعديل",
           "termsSeparator": " · ",
           "details": "التفاصيل",
-          "add": "أضف",
-          "added": "مضافة"
+          "price": "السعر",
+          "pick": "اختر",
+          "picked": "مختارة",
+          "fastest": "الأسرع",
+          "stays": "يبقى {{label}}",
+          "allPrices": "كل الأسعار ({{count}})",
+          "byPlatform": "حسب المنصة",
+          "pillA11y": "{{platform}}، {{count}} باقات"
+        },
+        "escrow": {
+          "title": "مالك محمي بضمان صدى",
+          "terms": "الشروط ({{count}})",
+          "brand": "الشركة",
+          "vault": "ضمان صدى",
+          "creator": "المؤثر",
+          "published": "نُشر",
+          "coin": "$",
+          "step1Title": "تدفع الشركة عند الحجز",
+          "step1Body": "المبلغ يذهب إلى ضمان صدى، لا إلى المؤثر مباشرة",
+          "step2Title": "صدى يحفظ المبلغ",
+          "step2Body": "طوال التنفيذ ومراجعة المحتوى",
+          "step3Title": "يُحرَّر للمؤثر بعد النشر",
+          "step3Body": "عند قبولك إثبات النشر"
+        },
+        "join": {
+          "title": "صفحتك القادمة على صدى",
+          "body": "مؤثر؟ اعرض أرقامك وأسعارك هكذا واستقبل عروضاً بضمان مالي. علامة تجارية؟ احجز مؤثرين بثقة.",
+          "creator": "أنشئ ميديا كيت مجاناً",
+          "brand": "ابدأ حملة كعلامة تجارية"
         },
         "footer": {
           "selected_zero": "لم تختر خدمات",
@@ -2433,7 +2481,7 @@
       "collapseTitle": "عنوان كبير يتقلص",
       "collapseDescription": "headerBehavior=\"collapse\": العنوان الكبير يتقلص إلى الشريط",
       "heroOverlayTitle": "صورة رئيسية مع رأس عائم",
-      "heroOverlayDescription": "hero: يظهر الرأس تدريجياً مع تمرير الصورة",
+      "heroOverlayDescription": "hero: يظهر الرأس تدريجياً مع تمرير الصورة؛ footerBehavior=\"reveal\": يظهر زر الإجراء عند التمرير",
       "stickyTitle": "فلتر مثبت",
       "stickyDescription": "sticky: فلتر مثبت أسفل الرأس",
       "footerElevateTitle": "تذييل يرتفع عند التمرير",
@@ -2783,6 +2831,7 @@
     },
     "moneyText": {
       "price": "السعر",
+      "fit": "سعر في خانة ضيقة (يصغر ولا يُقص)",
       "muted": "العمولة",
       "earning": "أرباح",
       "charge": "خصم",

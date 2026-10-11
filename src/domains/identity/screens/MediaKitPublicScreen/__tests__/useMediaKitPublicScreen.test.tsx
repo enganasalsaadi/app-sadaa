@@ -185,6 +185,25 @@ describe('useMediaKitPublicScreen', () => {
     expect(mockTrackView).toHaveBeenCalledWith({ slug: 'anas', src: 'app' });
   });
 
+  describe('join card', () => {
+    it('guests get one way in per role', () => {
+      mockSession.signedIn = false;
+      mockSession.userType = null;
+      mount();
+      const join = latest.vm?.join;
+      if (!join) throw new Error('join card missing');
+      act(() => join.onCreator());
+      expect(mockNavigate).toHaveBeenLastCalledWith('Auth', { screen: 'InfluencerRegister' });
+      act(() => join.onBrand());
+      expect(mockNavigate).toHaveBeenLastCalledWith('Auth', { screen: 'BrandRegister' });
+    });
+
+    it('signed-in viewers never see it', () => {
+      mount();
+      expect(latest.vm?.join).toBeUndefined();
+    });
+  });
+
   describe('brand offer bar', () => {
     const openUnlocked = (overrides: Partial<PublicMediaKit> = {}) => {
       mockRoute.params = { slug: 'anas', source: 'search' };

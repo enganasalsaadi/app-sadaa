@@ -7,6 +7,20 @@ describe('formatNumber', () => {
     expect(formatNumber(1250, {}, 'en')).toBe('1,250');
     expect(formatNumber(1250, {}, 'ar')).toBe('1,250');
   });
+
+  it('compacts to K / M / B, identical in both languages', () => {
+    const compact = { notation: 'compact', maximumFractionDigits: 1 } as const;
+    for (const lang of ['en', 'ar']) {
+      expect(formatNumber(135700, compact, lang)).toBe('135.7K');
+      expect(formatNumber(139750, compact, lang)).toBe('139.7K');
+      expect(formatNumber(2000, compact, lang)).toBe('2K');
+      expect(formatNumber(6500000, compact, lang)).toBe('6.5M');
+      expect(formatNumber(2000000000, compact, lang)).toBe('2B');
+      expect(formatNumber(999999, compact, lang)).toBe('999.9K');
+      expect(formatNumber(-135700, compact, lang)).toBe('-135.7K');
+      expect(formatNumber(850, compact, lang)).toBe('850');
+    }
+  });
 });
 
 describe('formatDate', () => {

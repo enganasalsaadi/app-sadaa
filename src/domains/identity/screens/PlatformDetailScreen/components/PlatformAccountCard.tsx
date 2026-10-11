@@ -48,7 +48,7 @@ const PlatformAccountCardComponent: React.FC<PlatformAccountCardProps> = ({
               <SocialPlatformIcon
                 platform={platform.platform}
                 size={sizes.icon.lg}
-                color={colors.interactive.main}
+                color={colors.text.primary}
               />
             ) : null}
           </Box>

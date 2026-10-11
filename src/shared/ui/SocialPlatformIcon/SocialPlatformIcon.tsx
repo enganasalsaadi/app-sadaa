@@ -10,11 +10,13 @@ import TelegramIcon from '@/assets/icons/social/telegram.svg';
 export interface SocialPlatformIconProps {
   platform: SocialPlatform;
   size: number;
+  /** Ink for the parts that follow the surface: TikTok's glyph and the website globe. */
   color: string;
 }
 
-// Monochrome (currentColor) marks from simple-icons (CC0) so they take theme
-// colors like every other icon; the generic website mark is lucide.
+// Original full-color marks (simple-icons CC0 geometry + each platform's own colors) so a
+// brand recognises the platform at a glance. TikTok's glyph is `currentColor`: dark on light,
+// light on navy. The generic website mark is lucide.
 const BRAND_ICONS = {
   instagram: InstagramIcon,
   facebook: FacebookIcon,

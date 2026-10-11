@@ -414,4 +414,6 @@ export const SHOWCASE_EXEMPT = {
   useOptimisticReaction: 'data hook, no UI',
   useInfiniteScroll: 'data hook behind SuperList pagination',
   useFilePicker: 'picker + validation hook behind FilePickerCard, no UI',
+  useLayoutInView: 'scroll visibility hook (reveal progress + loop pause), no UI',
+  useLoopClock: 'pausable UI-thread loop phase for animated scenes, no UI',
 } as const satisfies Partial<Record<UiExportName, string>>;

@@ -41,7 +41,7 @@ const PlatformListRowComponent: React.FC<PlatformListRowProps> = ({ platform, on
                 <SocialPlatformIcon
                   platform={platform.platform}
                   size={sizes.icon.md}
-                  color={colors.interactive.main}
+                  color={colors.text.primary}
                 />
               ) : null}
             </Box>

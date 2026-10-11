@@ -181,6 +181,49 @@ export interface ThemeColors {
    * (rule 08), identical in both modes: start arcs BG, end arcs teal, mint dot.
    */
   logoOnBrand: { arcsStart: string; arcsEnd: string; dot: string };
+  /**
+   * Each social platform's own brand color(s), for marks drawn in code (follower share bar).
+   * Fixed artwork like the logos themselves: identical in both modes. One stop = solid.
+   */
+  social: Record<'instagram' | 'facebook' | 'tiktok' | 'youtube' | 'telegram' | 'website', string[]>;
+  /** Media kit stage hero (approved 2026-10-11): vectors and lights over `gradients.heroLive`. */
+  stage: {
+    /** Dot grid in the top of the stage. */
+    dot: string;
+    /** Faint teal sound-wave lines. */
+    line: string;
+    /** Mustard sparkle crosses and the warm light. */
+    spark: string;
+    glowCool: string;
+    glowWarm: string;
+    /** Echo rings leaving the photo. */
+    ring: string;
+    /** The turning ring around the photo: teal → mustard → light teal. */
+    ringSweep: string[];
+    /** Initials disc when there is no photo. */
+    monogram: string[];
+    /** Glass pills on the stage (chips, platform tiles). */
+    chip: string;
+    /** Cover photo under the stage: how much of the navy covers its top (it fades to full navy lower down). */
+    coverScrim: number;
+  };
+  /** Escrow card on navy: brand → Sada escrow → creator, three synced steps. */
+  escrow: {
+    node: string;
+    vaultFill: string;
+    vaultBorder: string;
+    rail: string;
+    railDot: string;
+    coinHalo: string;
+    stepIdle: string;
+    stepIdleText: string;
+    stepIdleBorder: string;
+    stepSubtle: string;
+    track: string;
+    /** "Published" pill: white with a mint-green label in both modes. */
+    doneBg: string;
+    doneText: string;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -190,6 +233,41 @@ const ON_TEAL_DARK = '#06121C';
 const BG = '#F5F7F9';
 const ON_BRAND_MUTED = '#C9D6E0';
 const LOGO_ON_BRAND = { arcsStart: BG, arcsEnd: '#397D8C', dot: '#12B886' };
+const SOCIAL = {
+  instagram: ['#285AEB', '#D6249F', '#FD5949', '#FDF497'],
+  facebook: ['#0866FF'],
+  tiktok: ['#25F4EE', '#FE2C55'],
+  youtube: ['#FF0000'],
+  telegram: ['#26A5E4'],
+  website: ['#6FC0CF'],
+};
+const STAGE = {
+  dot: 'rgba(255, 255, 255, 0.12)',
+  line: 'rgba(159, 211, 220, 0.14)',
+  spark: 'rgba(217, 180, 106, 0.35)',
+  glowCool: '#6FC0CF',
+  glowWarm: '#D9B46A',
+  ring: '#6FC0CF',
+  ringSweep: ['#6FC0CF', '#D9B46A', '#9FD3DC', '#6FC0CF'],
+  monogram: ['#27506A', NAVY],
+  chip: 'rgba(255, 255, 255, 0.10)',
+  coverScrim: 0.78,
+};
+const ESCROW = {
+  node: 'rgba(255, 255, 255, 0.08)',
+  vaultFill: 'rgba(61, 219, 165, 0.16)',
+  vaultBorder: 'rgba(61, 219, 165, 0.5)',
+  rail: 'rgba(255, 255, 255, 0.12)',
+  railDot: 'rgba(255, 255, 255, 0.35)',
+  coinHalo: 'rgba(61, 219, 165, 0.22)',
+  stepIdle: '#1E3A50',
+  stepIdleText: '#9FD3DC',
+  stepIdleBorder: 'rgba(255, 255, 255, 0.18)',
+  stepSubtle: 'rgba(201, 214, 224, 0.7)',
+  track: 'rgba(255, 255, 255, 0.08)',
+  doneBg: WHITE,
+  doneText: '#087F5B',
+};
 
 const lightText = {
   primary: '#0F1D2B',
@@ -366,6 +444,9 @@ export const lightColors: ThemeColors = {
   overlay: 'rgba(11, 22, 34, 0.5)',
   mediaBackdrop: '#000000',
   logoOnBrand: LOGO_ON_BRAND,
+  social: SOCIAL,
+  stage: STAGE,
+  escrow: ESCROW,
 };
 
 export const darkColors: ThemeColors = {
@@ -506,6 +587,9 @@ export const darkColors: ThemeColors = {
   overlay: 'rgba(0, 0, 0, 0.7)',
   mediaBackdrop: '#000000',
   logoOnBrand: LOGO_ON_BRAND,
+  social: SOCIAL,
+  stage: STAGE,
+  escrow: ESCROW,
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>

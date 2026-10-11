@@ -2,10 +2,9 @@ import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { isSocialPlatform } from '@/shared/utils';
-import { Box, MoneyText, Pressable, SocialPlatformIcon, Text, TierBadge } from '@/shared/ui';
+import { Box, MoneyText, Pressable, Text } from '@/shared/ui';
 import type { ExploreCreator } from '../../../types/explore';
-import { followersOf, nicheCityOf } from '../../../utils/creatorText';
+import { nicheCityOf } from '../../../utils/creatorText';
 import { CreatorMedia } from './CreatorMedia';
 import { VerifiedMark } from './VerifiedMark';
 
@@ -30,24 +29,6 @@ const RowPrice = memo<{ creator: ExploreCreator }>(({ creator }) => {
         {t('marketplace.creator.priceFrom')}
       </Text>
       <MoneyText value={price.from} size="md" precision="currency" />
-    </Box>
-  );
-});
-
-/** Platform mark + compact followers on a quiet chip. */
-const FollowersChip = memo<{ creator: ExploreCreator }>(({ creator }) => {
-  const { colors, sizes } = useTheme();
-  const followers = followersOf(creator);
-  const platform = creator.primaryPlatform;
-  if (!followers || !platform) return null;
-  return (
-    <Box row align="center" gap="xs" px="sm" py="xs" borderRadius="sm" bg={colors.surface.elevated}>
-      {isSocialPlatform(platform.platform) ? (
-        <SocialPlatformIcon platform={platform.platform} size={sizes.icon.xs} color={colors.icon.secondary} />
-      ) : null}
-      <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-        {followers} {platform.platformLabel}
-      </Text>
     </Box>
   );
 });
