@@ -22,7 +22,7 @@ paths:
 
 - `BalanceCard` (role → withdraw | deposit only) · `PaymentBreakdown` (`estimate` for client previews).
 - `walletApi`: `getWallet` (+ v4 `summary`), infinite `getWalletTransactions`, receipt `getWalletTransaction`, `getExchangeRate`, v4 `getWalletEscrows` / `getWalletEarnings` (404 = server predates them → section hidden / explainer). DTOs → `Money` in `utils/walletMappers`; unknown status/type → `null`.
-- Wallet tab `screens/WalletScreen` (`role` prop from navigator; section hooks per card). Internal parts: `EscrowFlowCard` (`live` | `explainer`) · `ExchangeRateRow` · `WalletTransactionRow` (`onPress(reference)` → receipt) · `WalletDayGroup` / `WalletDayGroupSkeleton` (one day card, tab + statement). Line look `constants/walletLineLook`; eye state `hooks/useAmountsHidden` (shared, re-read on focus).
+- Wallet tab `screens/WalletScreen` (approved mix 2026-10-11; `role` prop from navigator; section hooks per card): `Layout heroBackdrop="brandRounded"` (static hero) · `BalanceDial` (Skia arcs from `useWalletHero` `segments`, `selectedKey`/`selectSegment` + haptic; centre faces cross-fade) + `DialLegend` · `EscrowTickets` (sideways `EscrowTicket`s, `MoneyRise` loop paused via `useLayoutInView({ track })`; none held → `EscrowFlowCard` explainer) · `PayoutPort` (creator) · `TideChart` (Skia, `utils/tidePath`) · `RateLine` · `ReceiptTape` (unrolls on reveal, `ReceiptLine`s). Domain parts: `EscrowFlowCard` (explainer only) · `WalletTransactionRow` (`onPress(reference)` → receipt) · `WalletDayGroup` / `WalletDayGroupSkeleton` (statement). Line data `hooks/useWalletLineView` (row + receipt tape); look `constants/walletLineLook`; eye state `hooks/useAmountsHidden` (shared, re-read on focus). Tokens `colors.wallet.*`, `radii['2xl']`, `motion.loop.moneyRise`.
 - `screens/StatementScreen` (`role` prop; `STATEMENT_TYPE_FILTERS` per role; `utils/statementPeriods` → query args, unset keys left out so "all" shares the tab's `{}` cache).
 - `screens/TransactionReceiptScreen` (`{ reference }`; copy, share, report via `useOpenSupport`).
 - Blockers `WALLET_BLOCKER_DEF` + `resolveWalletBlocker`; role copy `WALLET_ROLE_COPY`.
@@ -42,7 +42,7 @@ paths:
 
 - `PayoutMethodsScreen` (List, ≤ 10 rows in one `ListGroup`, `PayoutChannelSheet` → form).
 - `PayoutMethodFormScreen` (`{ channel }` add | `{ id }` edit): fields per channel group from `PAYOUT_GROUP_DEF`, `createPayoutMethodSchema(t, channel)`, primary via `POST /{id}/default` after save, delete = optimistic `ConfirmSheet`.
-- `payoutMethodApi` (no Idempotency-Key: not money). `usePayoutMethods` (views with governorate names). Creator wallet `PayoutDestinationCard`; Profile `payouts` row.
+- `payoutMethodApi` (no Idempotency-Key: not money). `usePayoutMethods` (views with governorate names). Creator wallet `PayoutPort`; Profile `payouts` row.
 
 ## Creator withdrawals (handoff §8, Money wizard)
 

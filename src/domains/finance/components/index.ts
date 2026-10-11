@@ -4,8 +4,6 @@ export { PaymentBreakdown } from './PaymentBreakdown';
 export type { PaymentBreakdownProps, PaymentLine } from './PaymentBreakdown';
 export { EscrowFlowCard } from './EscrowFlowCard';
 export type { EscrowFlowCardProps, EscrowFlowNode, EscrowFlowNodeKind } from './EscrowFlowCard';
-export { ExchangeRateRow } from './ExchangeRateRow';
-export type { ExchangeRateRowProps } from './ExchangeRateRow';
 export { WalletTransactionRow } from './WalletTransactionRow';
 export type { WalletTransactionRowProps } from './WalletTransactionRow';
 export { WalletDayGroup } from './WalletDayGroup';

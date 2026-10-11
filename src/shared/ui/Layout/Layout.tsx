@@ -203,7 +203,7 @@ const LayoutComponent: React.FC<LayoutProps> = ({
       bg={bg}
       // Overlay headers float over the hero on purpose; a hiding one needs room at rest.
       topOffset={behavior === 'hideOnScroll' && headerFloats ? floatingHeaderHeight : 0}
-      sheet={brandBackdrop && heroBackdrop !== 'brandOpen'}
+      sheet={heroBackdrop === 'brand' || heroBackdrop === 'brandGlow'}
     >
       {!resolved.sticky && sticky != null ? sticky : null}
       {children}
@@ -279,8 +279,9 @@ const LayoutComponent: React.FC<LayoutProps> = ({
             scrollY={scroll.scrollY}
             height={backdropHeight}
             parallax={parallax}
-            glow={heroBackdrop === 'brandGlow'}
+            glow={heroBackdrop === 'brandGlow' || heroBackdrop === 'brandRounded'}
             live={heroBackdrop === 'brandOpen'}
+            rounded={heroBackdrop === 'brandRounded'}
           />
         ) : null}
         {headerFloats ? null : headerNode}

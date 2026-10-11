@@ -29,6 +29,8 @@ export const motion = {
     moneyFlow: 900,
     /** Smart border: one full turn of the sheen. */
     sheen: 8000,
+    /** Escrow ticket: one rise of the chevron toward the wallet (money arriving soon). */
+    moneyRise: 1600,
   },
   spring: {
     damping: 18,

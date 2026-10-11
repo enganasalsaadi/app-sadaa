@@ -25,6 +25,8 @@ interface LayoutHeroBackdropProps {
    * gap between the two never shows a navy line under the hero.
    */
   live: boolean;
+  /** Bottom corners round off over the screen background (`brandRounded`). */
+  rounded: boolean;
 }
 
 /**
@@ -70,8 +72,9 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
   parallax,
   glow,
   live,
+  rounded,
 }) => {
-  const { spacing } = useTheme();
+  const { spacing, radii } = useTheme();
   const paintHeight = live ? Math.max(height - spacing.sm, 0) : height;
   const style = useAnimatedStyle(() => {
     const y = scrollY.value;
@@ -84,7 +87,15 @@ const LayoutHeroBackdropComponent: React.FC<LayoutHeroBackdropProps> = ({
     () => ({ transform: [{ translateY: -Math.max(scrollY.value, 0) * (1 - parallax) }] }),
     [parallax],
   );
-  const sizeStyle = useMemo(() => ({ height: paintHeight }), [paintHeight]);
+  const sizeStyle = useMemo(
+    () => ({
+      height: paintHeight,
+      ...(rounded
+        ? { borderBottomStartRadius: radii['2xl'], borderBottomEndRadius: radii['2xl'], overflow: 'hidden' as const }
+        : null),
+    }),
+    [paintHeight, radii, rounded],
+  );
   const lightsPaused = useLightsPaused(scrollY, height, glow);
 
   if (paintHeight <= 0) return null;

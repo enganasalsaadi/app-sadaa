@@ -16,7 +16,7 @@ Catalog of what exists — reuse for behaviour, never as the look of a new desig
 - `Layout`:
   - `mode` scroll|static · `surface` · `padding` · `header` config → `ScreenHeader`
   - `headerBehavior` fixed|hideOnScroll|collapse|overlay
-  - `hero`: edge-to-edge; header fades in once hero scrolled away. `heroBackdrop="brand"` = navy gradient behind transparent hero, stretches on pull-down, body slides over as rounded sheet. `"brandGlow"` = darker live gradient + drifting `GlowOrbs` (Home, Profile). `heroBehavior="parallax"`.
+  - `hero`: edge-to-edge; header fades in once hero scrolled away. `heroBackdrop="brand"` = navy gradient behind transparent hero, stretches on pull-down, body slides over as rounded sheet. `"brandGlow"` = darker live gradient + drifting `GlowOrbs` (Home, Profile). `"brandOpen"` = live gradient, hero draws its own edge (media kit). `"brandRounded"` = live gradient + lights as one block with rounded bottom corners, no sheet (Wallet). Open/rounded → keep the hero `static`. `heroBehavior="parallax"`.
   - `sticky` (filter row pinned under header)
   - `footer={<LayoutFooter primary secondary tertiary top />}` (`secondary.variant` ghost|secondary; `tertiary` ghost), pinned above keyboard; `footerBehavior` divider|elevate|reveal (reveal = floats over the body, hidden until the hero is partly scrolled away)
   - `overlay` (FAB slot). Behaviours scroll-mode only. Safe-area edges + status bar automatic (inside `HeroSheet` too). Logic `resolveLayout`, scroll motion `useHeaderMotion`.

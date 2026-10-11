@@ -1,19 +1,10 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatDate, formatMoney } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, MoneyText, Pressable, StatusPill, Text } from '@/shared/ui';
-import {
-  LINE_KIND_ICON,
-  LINE_STATUS_PILL,
-  lineBadgeColors,
-  lineDisplayAmount,
-  lineKind,
-  lineTitle,
-} from '../constants/walletLineLook';
+import { LINE_KIND_ICON, lineBadgeColors } from '../constants/walletLineLook';
+import { useWalletLineView } from '../hooks/useWalletLineView';
 import type { WalletTransaction } from '../types';
-
-const TIME: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' };
 
 export interface WalletTransactionRowProps {
   line: WalletTransaction;
@@ -32,32 +23,11 @@ const WalletTransactionRowComponent: React.FC<WalletTransactionRowProps> = ({
   hidden = false,
   onPress,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-
-  const kind = lineKind(line);
-  const Icon = LINE_KIND_ICON[kind];
-  const badge = lineBadgeColors(kind, colors);
-  const title = lineTitle(line);
-  const pill = line.status ? LINE_STATUS_PILL[line.status] : null;
-  const signed = line.affects_balance;
-  const amount = lineDisplayAmount(line);
-
-  const time = useMemo(() => {
-    const created = new Date(line.created_at);
-    return Number.isNaN(created.getTime()) ? '' : formatDate(created, TIME, i18n.language);
-  }, [i18n.language, line.created_at]);
-
-  // Another currency on the line (a SYP payout or top-up): what was actually paid.
-  const paid =
-    line.original && line.original.currency !== line.amount.currency
-      ? t('common.money.approx', {
-          amount: formatMoney(
-            { amount: Math.abs(line.original.amount), currency: line.original.currency },
-            i18n.language,
-          ),
-        })
-      : null;
+  const view = useWalletLineView(line, hidden);
+  const Icon = LINE_KIND_ICON[view.kind];
+  const badge = lineBadgeColors(view.kind, colors);
 
   const { reference } = line;
   const handlePress = useCallback(() => onPress?.(reference), [onPress, reference]);
@@ -77,20 +47,20 @@ const WalletTransactionRowComponent: React.FC<WalletTransactionRowProps> = ({
 
       <Box flex={1} gap="xs">
         <Text variant="bodyMedium" numberOfLines={1}>
-          {title}
+          {view.title}
         </Text>
         <Box row align="center" gap="sm">
           {line.status_label ? (
             <StatusPill
               label={line.status_label}
-              tone={pill?.tone ?? 'neutral'}
-              icon={pill?.icon}
+              tone={view.pill?.tone ?? 'neutral'}
+              icon={view.pill?.icon}
               size="sm"
             />
           ) : null}
-          {time ? (
+          {view.time ? (
             <Text variant="caption" color={colors.text.tertiary}>
-              {time}
+              {view.time}
             </Text>
           ) : null}
         </Box>
@@ -98,14 +68,14 @@ const WalletTransactionRowComponent: React.FC<WalletTransactionRowProps> = ({
 
       <Box align="flex-end" gap="xs">
         <MoneyText
-          value={amount}
-          tone={signed && line.direction === 'credit' ? 'money' : 'default'}
-          showSign={signed}
+          value={view.amount}
+          tone={view.credit ? 'money' : 'default'}
+          showSign={view.signed}
           hidden={hidden}
         />
-        {paid && !hidden ? (
+        {view.paid && !hidden ? (
           <Text variant="caption" color={colors.text.tertiary}>
-            {paid}
+            {view.paid}
           </Text>
         ) : null}
       </Box>
@@ -118,13 +88,7 @@ const WalletTransactionRowComponent: React.FC<WalletTransactionRowProps> = ({
     <Pressable
       onPress={handlePress}
       accessibilityRole="button"
-      accessibilityLabel={t('finance.statement.lineA11y', {
-        title,
-        amount: hidden
-          ? t('common.money.hidden')
-          : formatMoney(amount, i18n.language, { signDisplay: signed ? 'exceptZero' : 'auto' }),
-        time,
-      })}
+      accessibilityLabel={view.accessibilityLabel}
       accessibilityHint={t('finance.statement.lineHint')}
     >
       {content}

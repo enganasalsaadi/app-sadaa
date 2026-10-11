@@ -224,6 +224,31 @@ export interface ThemeColors {
     doneBg: string;
     doneText: string;
   };
+  /** Wallet tab (approved 2026-10-11): the balance dial on navy and the receipt slot of the activity tape. */
+  wallet: {
+    /** Empty ring under the arcs and the dotted bezel inside it. */
+    dialTrack: string;
+    dialBezel: string;
+    /** Halo under the available arc. */
+    dialGlow: string;
+    /**
+     * Resting strength of the escrow arc (faded mint) and the waiting arc (muted), and of every
+     * arc the user didn't pick; a picked arc goes to full strength.
+     */
+    dialEscrowOpacity: number;
+    dialWaitingOpacity: number;
+    dialDimOpacity: number;
+    /** Legend tile of the picked arc. */
+    legendActive: string;
+    /** The slot the activity tape comes out of, its inner shade and its lit lower lip. */
+    slot: string;
+    slotShade: string;
+    slotRim: string;
+    /** Shade the slot casts on the top of the tape. */
+    tapeShade: string[];
+    /** Peak opacity of the area under the earnings line. */
+    chartFill: number;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -267,6 +292,16 @@ const ESCROW = {
   track: 'rgba(255, 255, 255, 0.08)',
   doneBg: WHITE,
   doneText: '#087F5B',
+};
+/** The dial sits on the navy hero in both modes. */
+const WALLET_DIAL = {
+  dialTrack: 'rgba(255, 255, 255, 0.09)',
+  dialBezel: 'rgba(255, 255, 255, 0.18)',
+  dialGlow: 'rgba(61, 219, 165, 0.3)',
+  dialEscrowOpacity: 0.42,
+  dialWaitingOpacity: 0.7,
+  dialDimOpacity: 0.15,
+  legendActive: 'rgba(255, 255, 255, 0.2)',
 };
 
 const lightText = {
@@ -447,6 +482,14 @@ export const lightColors: ThemeColors = {
   social: SOCIAL,
   stage: STAGE,
   escrow: ESCROW,
+  wallet: {
+    ...WALLET_DIAL,
+    slot: NAVY,
+    slotShade: 'rgba(0, 0, 0, 0.55)',
+    slotRim: 'rgba(255, 255, 255, 0.6)',
+    tapeShade: ['rgba(15, 29, 43, 0.12)', 'rgba(15, 29, 43, 0)'],
+    chartFill: 0.32,
+  },
 };
 
 export const darkColors: ThemeColors = {
@@ -590,6 +633,14 @@ export const darkColors: ThemeColors = {
   social: SOCIAL,
   stage: STAGE,
   escrow: ESCROW,
+  wallet: {
+    ...WALLET_DIAL,
+    slot: '#050C14',
+    slotShade: 'rgba(0, 0, 0, 0.8)',
+    slotRim: 'rgba(255, 255, 255, 0.06)',
+    tapeShade: ['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0)'],
+    chartFill: 0.28,
+  },
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>

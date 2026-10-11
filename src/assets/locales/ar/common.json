@@ -1648,6 +1648,11 @@
         "inEscrow": "في الضمان",
         "topUpsInReview": "شحن قيد المراجعة"
       },
+      "dial": {
+        "available": "المتاح",
+        "openWithdrawals": "عرض السحوبات",
+        "openTopUps": "عرض الشحنات"
+      },
       "blocker": {
         "openKyc": "توثيق الهوية",
         "contactSupport": "التواصل مع الدعم",
@@ -2106,6 +2111,7 @@
       },
       "walletCard": {
         "title": "طريقة الاستلام",
+        "sendsTo": "تصل سحوباتك إلى",
         "manage": "إدارة",
         "addTitle": "أضف طريقة استلام",
         "addMessage": "حساب باسمك نرسل إليه أرباحك عند السحب",

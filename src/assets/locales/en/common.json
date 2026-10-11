@@ -1580,6 +1580,11 @@
         "inEscrow": "In escrow",
         "topUpsInReview": "Top-ups in review"
       },
+      "dial": {
+        "available": "Available",
+        "openWithdrawals": "View withdrawals",
+        "openTopUps": "View top-ups"
+      },
       "blocker": {
         "openKyc": "Verify ID",
         "contactSupport": "Contact support",
@@ -2030,6 +2035,7 @@
       },
       "walletCard": {
         "title": "Payout method",
+        "sendsTo": "Withdrawals go to",
         "manage": "Manage",
         "addTitle": "Add a payout method",
         "addMessage": "An account in your name where we send your earnings",

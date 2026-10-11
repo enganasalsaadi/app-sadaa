@@ -1,17 +1,19 @@
 import React, { memo } from 'react';
+import type { LucideIcon } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, LiveIsland, MoneyText, Skeleton, Text, useHeroCompact } from '@/shared/ui';
+import { Box, CustomButton, LiveIsland, Text, useHeroCompact } from '@/shared/ui';
 import type { WalletTileTarget } from '../../../constants';
 import type { WalletHeroModel } from '../hooks/useWalletHero';
-import { HeroTile } from './HeroTile';
-import { MonthInPill } from './MonthInPill';
+import { BalanceDial } from './BalanceDial';
+import { DialLegend } from './DialLegend';
 
-const NO_VALUE = '—';
-const SKELETON_BALANCE = '60%';
+/** The primary carries a little more weight than its history twin. */
+const PRIMARY_FLEX = 1.35;
 
 export interface WalletHeroAction {
   label: string;
+  icon: LucideIcon;
   onPress: () => void;
   disabled?: boolean;
 }
@@ -27,73 +29,49 @@ interface WalletHeroProps {
   hero: WalletHeroModel;
   hidden: boolean;
   actions: WalletHeroActions;
+  /** Active escrows, for the escrow arc's chip. */
+  dealsCount: number;
   onOpenTile: (target: WalletTileTarget) => void;
 }
 
-const ActionRow = memo<{ actions: WalletHeroActions }>(({ actions }) => (
-  <Box row gap="sm">
-    <Box flex={1}>
-      <CustomButton
-        title={actions.primary.label}
-        variant="onBrand"
-        size="md"
-        onPress={actions.primary.onPress}
-        disabled={actions.primary.disabled}
-      />
-    </Box>
-    <Box flex={1}>
-      <CustomButton
-        title={actions.secondary.label}
-        variant="glass"
-        size="md"
-        onPress={actions.secondary.onPress}
-        disabled={actions.secondary.disabled}
-      />
-    </Box>
-  </Box>
-));
-
-const Balance = memo<{ hero: WalletHeroModel; hidden: boolean; compact: boolean }>(
-  ({ hero, hidden, compact }) => {
-    const { colors, typography } = useTheme();
-    const size = compact ? 'hero' : 'display';
-    if (hero.available) {
-      return (
-        <MoneyText
-          value={hero.available}
-          size={size}
-          tone="onBrand"
-          splitFraction
-          rounding="down"
-          animated
-          hidden={hidden}
+const ActionRow = memo<{ actions: WalletHeroActions }>(({ actions }) => {
+  const { primary, secondary } = actions;
+  const PrimaryIcon = primary.icon;
+  const SecondaryIcon = secondary.icon;
+  return (
+    <Box row gap="sm">
+      <Box flex={PRIMARY_FLEX}>
+        <CustomButton
+          title={primary.label}
+          variant="onBrand"
+          size="lg"
+          leftIcon={<PrimaryIcon />}
+          onPress={primary.onPress}
+          disabled={primary.disabled}
         />
-      );
-    }
-    const variant = compact ? 'amountHero' : 'amountDisplay';
-    return hero.status === 'error' ? (
-      <Text variant={variant} color={colors.text.onBrand}>
-        {NO_VALUE}
-      </Text>
-    ) : (
-      <Skeleton
-        width={SKELETON_BALANCE}
-        height={typography[variant].lineHeight}
-        borderRadius="md"
-        surface="brand"
-      />
-    );
-  },
-);
+      </Box>
+      <Box flex={1}>
+        <CustomButton
+          title={secondary.label}
+          variant="glass"
+          size="lg"
+          leftIcon={<SecondaryIcon />}
+          onPress={secondary.onPress}
+          disabled={secondary.disabled}
+        />
+      </Box>
+    </Box>
+  );
+});
 
 /**
- * Navy balance hero, transparent: Layout paints the gradient and lights behind it
- * (`heroBackdrop="brandGlow"`). Title beside the header's eye action, the available
- * balance at display size with a still mint dot, this month's credits, two glass tiles
- * and the one blocker as a live island. Only figures the server sends (rule 09).
- * Compact (keyboard / short screens): hero-size balance, no month pill or island message.
+ * Navy balance hero, transparent: Layout paints the live gradient and its lights as one
+ * block with rounded bottom corners (`heroBackdrop="brandRounded"`). Title beside the
+ * header's eye action, the balance dial and its legend, the role's two actions and the
+ * one blocker as a live island. Only figures the server sends (rule 09).
+ * Compact (keyboard / short screens): a smaller dial, no island message.
  */
-const WalletHeroComponent: React.FC<WalletHeroProps> = ({ title, hero, hidden, actions, onOpenTile }) => {
+const WalletHeroComponent: React.FC<WalletHeroProps> = ({ title, hero, hidden, actions, dealsCount, onOpenTile }) => {
   const { colors, sizes } = useTheme();
   const { top } = useSafeAreaInsets();
   const compact = useHeroCompact();
@@ -109,40 +87,33 @@ const WalletHeroComponent: React.FC<WalletHeroProps> = ({ title, hero, hidden, a
   );
 
   return (
-    <Box style={styles.container} px="xl" pb="4xl" gap={compact ? 'md' : 'lg'}>
+    <Box style={styles.container} px="xl" pb="2xl" gap={compact ? 'md' : 'lg'}>
       <Box justify="center" style={styles.titleRow}>
         <Text variant="h4" color={colors.text.onBrand} numberOfLines={1} accessibilityRole="header">
           {title}
         </Text>
       </Box>
 
-      <Box gap="xs">
-        <Box row align="center" gap="sm">
-          <Box width={sizes.dot.md} height={sizes.dot.md} borderRadius="full" bg={colors.glass.iconMoney} />
-          <Text variant="bodySmall" color={colors.text.onBrandMuted} numberOfLines={1}>
-            {hero.availableLabel}
-          </Text>
-        </Box>
-        <Balance hero={hero} hidden={hidden} compact={compact} />
-        {hero.monthIn && !hidden && !compact ? (
-          <Box pt="xs">
-            <MonthInPill value={hero.monthIn} labelKey={hero.monthInKey} />
-          </Box>
-        ) : null}
-      </Box>
+      <BalanceDial
+        status={hero.status}
+        segments={hero.segments}
+        selectedKey={hero.selectedKey}
+        availableLabel={hero.availableLabel}
+        hidden={hidden}
+        compact={compact}
+        monthIn={hero.monthIn}
+        monthInKey={hero.monthInKey}
+        dealsCount={dealsCount}
+        onOpenTile={onOpenTile}
+      />
 
-      {hero.status === 'loading' ? (
-        <Box row gap="sm">
-          <Skeleton width="48%" height={sizes.button.xl} borderRadius="lg" surface="brand" />
-          <Skeleton width="48%" height={sizes.button.xl} borderRadius="lg" surface="brand" />
-        </Box>
-      ) : hero.tiles.length > 0 ? (
-        <Box row gap="sm">
-          {hero.tiles.map(tile => (
-            <HeroTile key={tile.key} tile={tile} hidden={hidden} onOpen={onOpenTile} />
-          ))}
-        </Box>
-      ) : null}
+      <DialLegend
+        segments={hero.segments}
+        selectedKey={hero.selectedKey}
+        hidden={hidden}
+        loading={hero.status === 'loading'}
+        onSelect={hero.selectSegment}
+      />
 
       <ActionRow actions={actions} />
 

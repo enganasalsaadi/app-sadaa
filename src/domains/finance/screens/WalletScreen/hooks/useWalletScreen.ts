@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
+import { ArrowUpRight, History, Plus } from 'lucide-react-native';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useGetProfileQuery } from '@/domains/auth';
 import type { WalletRole } from '../../../types';
@@ -17,10 +18,10 @@ import { useWalletRate } from './useWalletRate';
 type Navigation = WalletStackScreenProps<'WalletScreen'>['navigation'];
 
 /**
- * Wallet tab, both roles: the balance hero and its blocker, then the escrow card, the
- * monthly chart, today's rate and the latest lines, which open the statement and each
- * receipt. Brands get Top up + top-up history in the hero; creators get Withdraw +
- * withdrawal history there, and the payout method card under the escrow card.
+ * Wallet tab, both roles: the balance dial and its blocker, then the escrow tickets, the
+ * monthly tide, today's rate and the latest lines on a receipt, which open the statement
+ * and each receipt. Brands get Top up + top-up history in the hero; creators get Withdraw +
+ * withdrawal history there, and the payout pill under the escrow tickets.
  */
 export const useWalletScreen = (role: WalletRole) => {
   const { t } = useTranslation();
@@ -79,12 +80,17 @@ export const useWalletScreen = (role: WalletRole) => {
     () =>
       role === 'brand'
         ? {
-            primary: { label: t('finance.wallet.actions.topUp'), onPress: openTopUp, disabled: !actionAllowed },
-            secondary: { label: t('finance.wallet.actions.history'), onPress: openTopUps },
+            primary: { label: t('finance.wallet.actions.topUp'), icon: Plus, onPress: openTopUp, disabled: !actionAllowed },
+            secondary: { label: t('finance.wallet.actions.history'), icon: History, onPress: openTopUps },
           }
         : {
-            primary: { label: t('finance.wallet.actions.withdraw'), onPress: openWithdraw, disabled: !actionAllowed },
-            secondary: { label: t('finance.wallet.actions.withdrawals'), onPress: openWithdrawals },
+            primary: {
+              label: t('finance.wallet.actions.withdraw'),
+              icon: ArrowUpRight,
+              onPress: openWithdraw,
+              disabled: !actionAllowed,
+            },
+            secondary: { label: t('finance.wallet.actions.withdrawals'), icon: History, onPress: openWithdrawals },
           },
     [actionAllowed, openTopUp, openTopUps, openWithdraw, openWithdrawals, role, t],
   );
@@ -134,6 +140,7 @@ export const useWalletScreen = (role: WalletRole) => {
     onOpenTile,
     rate,
     escrows,
+    dealsCount: escrows.escrows?.count ?? 0,
     earnings,
     activity,
     payouts,
