@@ -33,10 +33,21 @@ jest.mock('lucide-react-native', () => {
   );
 });
 
-jest.mock('../../../utils/mediaKitCard', () => ({
-  pickPrimaryPlatform: (platforms: { is_primary: boolean }[]) =>
-    platforms.find(p => p.is_primary) ?? null,
-  toPriceFrom: (usd: number | null) => (usd === null ? null : { amount: usd * 100, currency: 'USD' }),
+jest.mock('../../../components/MediaKitShowcase', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return {
+    MediaKitHero: (props: object) => createElement('MediaKitHero', props),
+    MediaKitHeaderBar: (props: object) => createElement('MediaKitHeaderBar', props),
+    // Renders `intro` so the notice above the sections can be asserted.
+    MediaKitShowcaseBody: ({ intro, ...props }: { intro?: React.ReactNode }) =>
+      createElement('MediaKitShowcaseBody', props, intro),
+    MediaKitShowcaseHeroSkeleton: () => createElement('MediaKitShowcaseHeroSkeleton'),
+    MediaKitShowcaseBodySkeleton: () => createElement('MediaKitShowcaseBodySkeleton'),
+  };
+});
+
+jest.mock('../../../components/MediaKitCard/MediaKitShareNotice', () => ({
+  MediaKitShareNotice: 'MediaKitShareNotice',
 }));
 
 jest.mock('@/shared/ui', () => {
@@ -49,12 +60,14 @@ jest.mock('@/shared/ui', () => {
   };
   const Layout = ({
     footer,
+    hero,
     children,
     ...props
   }: {
     footer?: React.ReactNode;
+    hero?: React.ReactNode;
     children?: React.ReactNode;
-  }) => createElement('Layout', props, createElement(Fragment, null, children, footer));
+  }) => createElement('Layout', props, createElement(Fragment, null, hero, children, footer));
   const LayoutFooter = ({ top, ...props }: { top?: React.ReactNode }) =>
     createElement('LayoutFooter', props, top);
   return {
@@ -159,6 +172,15 @@ const model = (overrides: Partial<MediaKitPreviewScreenModel> = {}): MediaKitPre
       addons: [],
     },
   ],
+  metrics: [{ key: 'reach', value: '46.4K' }],
+  services: {
+    groups: [],
+    activeGroup: null,
+    onGroupChange: jest.fn(),
+    selected: new Set(),
+    toggleService: jest.fn(),
+    total: null,
+  },
   share: share(),
   openSettings: jest.fn(),
   refreshing: false,
@@ -179,44 +201,22 @@ const render = (overrides: Partial<MediaKitPreviewScreenModel> = {}) => {
 };
 
 describe('MediaKitPreviewScreen', () => {
-  it('renders the kit as brands see it: identity, every platform, rates', () => {
+  it('renders the same pitch brands see, read-only', () => {
+    const { root, vm } = render();
+    const layout = root.find(isHost('Layout'));
+    expect(layout.props.headerBehavior).toBe('overlay');
+    const hero = root.find(isHost('MediaKitHero'));
+    expect(hero.props.kit).toBe(preview);
+    expect(hero.props.nicheLabels).toEqual(['Fashion', 'Beauty']);
+    expect(hero.props.metrics).toBe(vm.metrics);
+    const body = root.find(isHost('MediaKitShowcaseBody'));
+    expect(body.props.kit).toBe(preview);
+    expect(body.props.selectable).toBe(false);
+  });
+
+  it('public kit → info notice above the sections', () => {
     const { root } = render();
-    expect(root.findAll(isHost('Tag')).map(tag => tag.props.label)).toEqual(['Fashion', 'Beauty']);
-    expect(root.findAll(isHost('SocialPlatformIcon')).map(icon => icon.props.platform)).toEqual([
-      'instagram',
-      'instagram',
-      'tiktok',
-    ]);
-    const [rate] = root.findAll(isHost('Accordion'));
-    expect(rate?.props.title).toBe('Reels');
-    expect(rate?.props.subtitle).toBe('Instagram');
-    // ✓ only next to verified follower counts.
-    const verified = root
-      .findAll(isHost('Icon'))
-      .filter(icon => icon.props.name === 'CheckCircle2');
-    expect(verified).toHaveLength(2);
-  });
-
-  it('hides sections without data', () => {
-    const { root } = render({
-      preview: { ...preview, platforms: [] },
-      rateRows: [],
-    });
-    expect(root.findAll(isHost('SectionHeader'))).toHaveLength(0);
-    expect(root.findAll(isHost('Accordion'))).toHaveLength(0);
-  });
-
-  it('lists the contract terms when the kit has them', () => {
-    const { root } = render({
-      preview: {
-        ...preview,
-        contract_terms: { version: 'v1', items: [{ key: 'organic_only', text: 'Organic posts only' }] },
-      },
-    });
-    const headers = root.findAll(isHost('SectionHeader')).map(header => header.props.title);
-    expect(headers).toContain('account.mediaKit.previewScreen.terms');
-    const texts = root.findAll(isHost('Text')).map(text => text.props.children);
-    expect(texts).toContain('Organic posts only');
+    expect(root.find(isHost('Notice')).props.tone).toBe('info');
   });
 
   it('warns when the kit is hidden and offers Make public', () => {
@@ -234,9 +234,10 @@ describe('MediaKitPreviewScreen', () => {
     expect(footer.props.primary.onPress).toBe(vm.share.onShare);
   });
 
-  it('loading shows a skeleton and no footer; error offers retry', () => {
+  it('loading shows skeletons and no footer; error offers retry', () => {
     const loading = render({ status: 'loading', preview: undefined });
-    expect(loading.root.findAll(isHost('Skeleton')).length).toBeGreaterThan(0);
+    expect(loading.root.findAll(isHost('MediaKitShowcaseHeroSkeleton'))).toHaveLength(1);
+    expect(loading.root.findAll(isHost('MediaKitShowcaseBodySkeleton'))).toHaveLength(1);
     expect(loading.root.findAll(isHost('LayoutFooter'))).toHaveLength(0);
 
     const failed = render({ status: 'error', preview: undefined });

@@ -44,6 +44,69 @@ export interface PublicRateCard extends Omit<RateCard, 'price_usd' | 'addons'> {
   })[];
 }
 
+/**
+ * Media Kit v2 (docs/backend/media-kit-v2-prompt.md). Every v2 field is optional: a server
+ * that has not shipped it omits it (or sends `null` / `[]`) and its section stays hidden.
+ */
+export interface MediaKitCity {
+  key: string;
+  label: string;
+}
+
+/** Headline numbers, computed by the server from platform insights and completed deals. */
+export interface MediaKitHighlights {
+  /** Percent, 1 decimal (`5.2` = 5.2%). `null` = not enough data. */
+  engagement_rate_pct: number | null;
+  /** Average views per post over the last 30 days, all platforms. */
+  avg_views: number | null;
+  /** Percent of the audience inside Syria. */
+  local_audience_pct: number | null;
+  /** Deals completed in the app (status `completed`). */
+  completed_campaigns: number;
+}
+
+export interface AudienceShare {
+  key: string;
+  label: string;
+  /** Percent; one bucket list sums to 100. */
+  share_pct: number;
+}
+
+export interface MediaKitAudience {
+  /** Top cities first, smaller ones merged into `other`. */
+  cities: AudienceShare[];
+  gender: { female_pct: number; male_pct: number } | null;
+  /** Age buckets in age order (`13-17`, `18-24`, …). */
+  age_ranges: AudienceShare[];
+  /** Localised source line ("Instagram insights"), shown under the card. */
+  source_label: string;
+  updated_at: string;
+}
+
+export interface MediaKitPortfolioItem {
+  id: string;
+  title: string | null;
+  thumbnail_url: string;
+  platform: string | null;
+  views: number | null;
+  brand_name: string | null;
+}
+
+/** A brand the creator finished at least one in-app campaign with (and that allows being shown). */
+export interface WorkedWithBrand {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  is_verified: boolean;
+  completed_campaigns: number;
+}
+
+export interface WorkedWith {
+  /** All brands, including those beyond `items` or hidden by their own privacy setting. */
+  total_brands: number;
+  items: WorkedWithBrand[];
+}
+
 export interface PublicMediaKit {
   slug: string;
   display_name: string | null;
@@ -66,9 +129,19 @@ export interface PublicMediaKit {
   price_lock_reason?: string | null;
   /** `null` from a server that predates Rate Cards v2. */
   contract_terms: ContractTerms | null;
-  bio: null;
-  top_portfolio_items: [];
+  bio: string | null;
+  top_portfolio_items: MediaKitPortfolioItem[];
   offers_from_profile: null;
+  /** v2: the creator's banner; absent → the hero blurs the avatar instead. */
+  cover_url?: string | null;
+  city?: MediaKitCity | null;
+  /** v2: absolute `/c/{slug}` link, for the brand-side Share. */
+  public_url?: string | null;
+  /** v2: only for a signed-in brand viewer; `null` / absent for everyone else. */
+  is_shortlisted?: boolean | null;
+  highlights?: MediaKitHighlights | null;
+  audience?: MediaKitAudience | null;
+  worked_with?: WorkedWith | null;
 }
 
 export interface MediaKit {
@@ -118,6 +191,11 @@ export interface ShareMediaKitRequest {
 export interface ShareMediaKitResult {
   channel: ShareChannel;
   occurred_at: string;
+}
+
+export interface SetKitShortlistedRequest {
+  slug: string;
+  shortlisted: boolean;
 }
 
 export interface TrackMediaKitViewRequest {

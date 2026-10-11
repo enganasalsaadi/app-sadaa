@@ -29,7 +29,26 @@ jest.mock('../../../api/mediaKitApi', () => ({
     return { ...mockQuery, refetch: mockRefetch };
   },
   useTrackMediaKitViewMutation: () => [mockTrackView],
+  useSetKitShortlistedMutation: () => [mockSetShortlisted, { isLoading: false }],
 }));
+
+const mockShortlistResult: { error: unknown } = { error: null };
+const mockSetShortlisted = jest.fn(() => ({
+  unwrap: () => (mockShortlistResult.error ? Promise.reject(mockShortlistResult.error) : Promise.resolve()),
+}));
+const mockToast = { success: jest.fn(), error: jest.fn() };
+jest.mock('@/core/toast', () => ({
+  toastService: {
+    success: (...args: unknown[]) => mockToast.success(...args),
+    error: (...args: unknown[]) => mockToast.error(...args),
+  },
+}));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+jest.mock('@/core/i18n', () => ({ formatNumber: (value: number) => String(value) }));
 
 jest.mock('../../../hooks/useMediaKitPreviewLabels', () => ({
   useMediaKitPreviewLabels: () => ({ nicheLabels: [], rateRows: [] }),
@@ -103,6 +122,7 @@ describe('useMediaKitPublicScreen', () => {
     mockRoute.params = { slug: 'old.anas', source: 'link' };
     mockSession.signedIn = true;
     mockSession.userType = 'brand';
+    mockShortlistResult.error = null;
   });
 
   it('sends one view beacon per open, with the opening slug and source', () => {
@@ -158,6 +178,69 @@ describe('useMediaKitPublicScreen', () => {
     expect(mockTrackView).toHaveBeenCalledWith({ slug: 'anas', src: 'app' });
   });
 
+  describe('brand offer bar', () => {
+    const openUnlocked = (overrides: Partial<PublicMediaKit> = {}) => {
+      mockRoute.params = { slug: 'anas', source: 'search' };
+      mockQuery.data = { kit: { ...kit, price_locked: false, ...overrides }, canonicalSlug: null };
+      mockQuery.isFetching = false;
+      mount();
+    };
+
+    it('brand with visible prices: services pickable, offer footer, from-price', () => {
+      openUnlocked({ price_from_usd: 22 });
+      expect(latest.vm?.footer).toBe('offer');
+      expect(latest.vm?.selectable).toBe(true);
+      expect(latest.vm?.canShortlist).toBe(true);
+      expect(latest.vm?.priceFrom).toEqual({ amount: 2200, currency: 'USD' });
+    });
+
+    it('creator viewer: read-only, no footer, no save', () => {
+      mockSession.userType = 'influencer';
+      openUnlocked();
+      expect(latest.vm?.footer).toBe('none');
+      expect(latest.vm?.selectable).toBe(false);
+      expect(latest.vm?.canShortlist).toBe(false);
+    });
+
+    it('save → PUT for the current slug, then a success toast', async () => {
+      openUnlocked();
+      await act(async () => latest.vm?.onSaveToShortlist());
+      expect(mockSetShortlisted).toHaveBeenCalledWith({ slug: 'anas', shortlisted: true });
+      expect(mockToast.success).toHaveBeenCalledWith('account.mediaKit.showcase.shortlist.saved');
+    });
+
+    it('header toggle on a saved creator removes it, silently', async () => {
+      openUnlocked({ is_shortlisted: true });
+      expect(latest.vm?.isShortlisted).toBe(true);
+      await act(async () => latest.vm?.onToggleShortlist());
+      expect(mockSetShortlisted).toHaveBeenCalledWith({ slug: 'anas', shortlisted: false });
+      expect(mockToast.success).not.toHaveBeenCalled();
+    });
+
+    it('full shortlist → its own error copy', async () => {
+      mockShortlistResult.error = { status: 409, data: { success: false, error_code: 'shortlist_full' } };
+      openUnlocked();
+      await act(async () => latest.vm?.onSaveToShortlist());
+      expect(mockToast.error).toHaveBeenCalledWith('marketplace.shortlist.full');
+    });
+
+    it('opens the shortlist on the Home tab', () => {
+      openUnlocked({ is_shortlisted: true });
+      act(() => latest.vm?.onOpenShortlist());
+      expect(mockNavigate).toHaveBeenCalledWith('Main', {
+        screen: 'HomeTab',
+        params: { screen: 'Shortlist', initial: false },
+      });
+    });
+
+    it('share only once the server sends the public link', () => {
+      openUnlocked();
+      expect(latest.vm?.onShare).toBeNull();
+      openUnlocked({ public_url: 'https://sada.app/c/anas' });
+      expect(typeof latest.vm?.onShare).toBe('function');
+    });
+  });
+
   describe('price lock (brand-explore §6)', () => {
     const lockedKit = (reason: string | null): PublicMediaKit => ({
       ...kit,
@@ -176,6 +259,7 @@ describe('useMediaKitPublicScreen', () => {
       mockQuery.isFetching = false;
       mount();
       expect(latest.vm?.priceLock).toBeNull();
+      expect(latest.vm?.footer).not.toBe('lock');
     });
 
     it('brand: the reason CTA opens its account screen over Profile', () => {

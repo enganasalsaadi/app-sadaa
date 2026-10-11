@@ -1,9 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { HomeStackScreenProps } from '@/core/navigation';
 import { useGetMediaKitQuery } from '../../../api/mediaKitApi';
 import { useMediaKitPreviewLabels } from '../../../hooks/useMediaKitPreviewLabels';
+import { useMediaKitServices } from '../../../hooks/useMediaKitServices';
 import { useMediaKitShareActions } from '../../../hooks/useMediaKitShareActions';
+import { buildShowcaseMetrics } from '../../../utils/mediaKitShowcase';
 
 type Navigation = HomeStackScreenProps<'MediaKitPreview'>['navigation'];
 
@@ -21,6 +23,9 @@ export const useMediaKitPreviewScreen = () => {
 
   const preview = kit?.preview;
   const { nicheLabels, rateRows } = useMediaKitPreviewLabels(preview);
+  const metrics = useMemo(() => (preview ? buildShowcaseMetrics(preview) : []), [preview]);
+  // Read-only here: the creator sees the tabs and cards, never the brand's "Add".
+  const services = useMediaKitServices(preview, rateRows);
 
   const openSettings = useCallback(() => navigation.navigate('MediaKitSettings'), [navigation]);
 
@@ -50,6 +55,8 @@ export const useMediaKitPreviewScreen = () => {
     isPublic: kit?.is_public ?? true,
     nicheLabels,
     rateRows,
+    metrics,
+    services,
     share,
     openSettings,
     refreshing,

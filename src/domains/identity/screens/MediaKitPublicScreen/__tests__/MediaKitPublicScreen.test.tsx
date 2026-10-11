@@ -14,13 +14,22 @@ jest.mock('@/core/theme', () => {
   return { useTheme: () => ({ colors: tokens, sizes: tokens, isRTL: false }) };
 });
 
-jest.mock('lucide-react-native', () => ({ UserX: 'UserX', Lock: 'Lock' }));
+jest.mock('lucide-react-native', () => ({
+  UserX: 'UserX',
+  Lock: 'Lock',
+  BookmarkCheck: 'BookmarkCheck',
+  BookmarkPlus: 'BookmarkPlus',
+  Share2: 'Share2',
+}));
 
-jest.mock('../../../components/MediaKitPreview', () => {
+jest.mock('../../../components/MediaKitShowcase', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return {
-    MediaKitPreview: (props: object) => createElement('MediaKitPreview', props),
-    MediaKitPreviewSkeleton: () => createElement('MediaKitPreviewSkeleton'),
+    MediaKitHero: (props: object) => createElement('MediaKitHero', props),
+    MediaKitHeaderBar: (props: object) => createElement('MediaKitHeaderBar', props),
+    MediaKitShowcaseBody: (props: object) => createElement('MediaKitShowcaseBody', props),
+    MediaKitShowcaseHeroSkeleton: () => createElement('MediaKitShowcaseHeroSkeleton'),
+    MediaKitShowcaseBodySkeleton: () => createElement('MediaKitShowcaseBodySkeleton'),
   };
 });
 
@@ -39,6 +48,7 @@ jest.mock('@/shared/ui', () => {
     LayoutFooter: stub('LayoutFooter'),
     Box: stub('Box'),
     Text: stub('Text'),
+    MoneyText: stub('MoneyText'),
   };
 });
 
@@ -66,6 +76,15 @@ const kit: PublicMediaKit = {
   offers_from_profile: null,
 };
 
+const services: MediaKitPublicScreenModel['services'] = {
+  groups: [],
+  activeGroup: null,
+  onGroupChange: jest.fn(),
+  selected: new Set(),
+  toggleService: jest.fn(),
+  total: null,
+};
+
 const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
   const vm: MediaKitPublicScreenModel = {
     status: 'ready',
@@ -73,8 +92,20 @@ const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
     kit,
     nicheLabels: ['Fashion'],
     rateRows: [],
+    metrics: [{ key: 'reach', value: '45K' }],
+    services,
+    selectable: false,
+    priceFrom: null,
+    footer: 'none',
     priceLock: null,
     onPriceLockAction: jest.fn(),
+    canShortlist: false,
+    isShortlisted: false,
+    savingShortlist: false,
+    onSaveToShortlist: jest.fn(),
+    onToggleShortlist: jest.fn(),
+    onOpenShortlist: jest.fn(),
+    onShare: null,
     refreshing: false,
     onRefresh: jest.fn(),
     onRetry: jest.fn(),
@@ -105,18 +136,52 @@ const renderFooter = (root: ReactTestInstance) =>
   mountElement(root.find(isHost('Layout')).props.footer).find(isHost('LayoutFooter'));
 
 describe('MediaKitPublicScreen', () => {
-  it('renders the kit with localised niches and no footer CTA', () => {
-    const { root } = render();
-    const preview = root.find(isHost('MediaKitPreview'));
-    expect(preview.props.preview).toBe(kit);
-    expect(preview.props.nicheLabels).toEqual(['Fashion']);
+  it('renders the pitch: hero with niches and metrics, body, no footer for a non-brand', () => {
+    const { root, vm } = render();
     const layout = root.find(isHost('Layout'));
-    expect(layout.props.header.title).toBe('account.mediaKit.publicScreen.title');
+    expect(layout.props.headerBehavior).toBe('overlay');
+    expect(layout.props.header.title).toBe('Anas Style');
+    expect(layout.props.header.actions).toBeUndefined();
     expect(layout.props.footer).toBeUndefined();
+    const hero = mountElement(layout.props.hero).find(isHost('MediaKitHero'));
+    expect(hero.props.kit).toBe(kit);
+    expect(hero.props.nicheLabels).toEqual(['Fashion']);
+    expect(hero.props.metrics).toBe(vm.metrics);
+    const body = root.find(isHost('MediaKitShowcaseBody'));
+    expect(body.props.services).toBe(services);
+    expect(body.props.selectable).toBe(false);
+  });
+
+  it('brand with prices → offer bar saves to the shortlist, header save + share', () => {
+    const onShare = jest.fn();
+    const { root, vm } = render({
+      footer: 'offer',
+      selectable: true,
+      canShortlist: true,
+      priceFrom: { amount: 2200, currency: 'USD' },
+      onShare,
+    });
+    const layout = root.find(isHost('Layout'));
+    const actions = layout.props.header.actions;
+    expect(actions.map((a: { icon: string }) => a.icon)).toEqual(['BookmarkPlus', 'Share2']);
+    expect(actions[0].onPress).toBe(vm.onToggleShortlist);
+    expect(actions[1].onPress).toBe(onShare);
+    const footer = renderFooter(root);
+    expect(footer.props.primary.label).toBe('account.mediaKit.showcase.footer.save');
+    expect(footer.props.primary.onPress).toBe(vm.onSaveToShortlist);
+  });
+
+  it('already shortlisted → the bar opens the shortlist', () => {
+    const { root, vm } = render({ footer: 'offer', selectable: true, canShortlist: true, isShortlisted: true });
+    expect(root.find(isHost('Layout')).props.header.actions[0].icon).toBe('BookmarkCheck');
+    const footer = renderFooter(root);
+    expect(footer.props.primary.label).toBe('account.mediaKit.showcase.footer.openShortlist');
+    expect(footer.props.primary.onPress).toBe(vm.onOpenShortlist);
   });
 
   it('locked prices → footer with the reason copy and its CTA', () => {
     const { root, vm } = render({
+      footer: 'lock',
       priceLock: {
         title: 'marketplace.priceLock.verify.title',
         body: 'marketplace.priceLock.verify.body',
@@ -133,6 +198,7 @@ describe('MediaKitPublicScreen', () => {
 
   it('locked in review → footer copy only, no button', () => {
     const { root } = render({
+      footer: 'lock',
       priceLock: {
         title: 'marketplace.priceLock.pending.title',
         body: 'marketplace.priceLock.pending.body',
@@ -142,10 +208,13 @@ describe('MediaKitPublicScreen', () => {
     expect(renderFooter(root).props.primary).toBeUndefined();
   });
 
-  it('loading reserves space with the skeleton', () => {
+  it('loading reserves the hero and body with skeletons', () => {
     const { root } = render({ status: 'loading', kit: undefined });
-    expect(root.findAll(isHost('MediaKitPreviewSkeleton'))).toHaveLength(1);
-    expect(root.findAll(isHost('MediaKitPreview'))).toHaveLength(0);
+    const layout = root.find(isHost('Layout'));
+    expect(mountElement(layout.props.hero).findAll(isHost('MediaKitShowcaseHeroSkeleton'))).toHaveLength(1);
+    expect(root.findAll(isHost('MediaKitShowcaseBodySkeleton'))).toHaveLength(1);
+    expect(root.findAll(isHost('MediaKitShowcaseBody'))).toHaveLength(0);
+    expect(layout.props.footer).toBeUndefined();
   });
 
   it('404 → "Profile not available" with a way back, for every cause', () => {

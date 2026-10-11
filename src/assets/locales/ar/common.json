@@ -921,7 +921,6 @@
       "loadFailed": "تعذّر تحميل ملفك الإعلامي",
       "retry": "إعادة المحاولة",
       "priceFrom": "يبدأ من",
-      "followers": "{{count}} متابع",
       "verifiedFollowers": "عدد متابعين موثّق",
       "verifiedCreator": "صانع محتوى موثّق",
       "linkLabel": "رابط ملفك الإعلامي",
@@ -965,9 +964,7 @@
         "title": "معاينة الملف الإعلامي",
         "intro": "هكذا تراك العلامات التجارية.",
         "platforms": "المنصات",
-        "rates": "الأسعار",
         "terms": "شروط التعاون",
-        "termBullet": "•",
         "addonWithHours": "{{label}} · {{hours}}",
         "username": "@{{username}}"
       },
@@ -1043,6 +1040,78 @@
         "makePublicFailed": "تعذّر جعل ملفك الإعلامي عاماً",
         "rateLimited": "مشاركات كثيرة. حاول لاحقاً.",
         "failed": "تعذّر تسجيل المشاركة."
+      },
+      "showcase": {
+        "listSeparator": "، ",
+        "share": "مشاركة الملف الإعلامي",
+        "termsHint": "تُطبَّق على كل تعاون مع هذا المؤثر",
+        "platformA11y": "{{platform}}، {{followers}} متابع",
+        "metrics": {
+          "a11yItem": "{{label}} {{value}}",
+          "reach": "إجمالي المتابعين",
+          "engagement": "معدل التفاعل",
+          "avgViews": "متوسط المشاهدات",
+          "localAudience": "جمهور داخل سوريا",
+          "campaigns": "حملات مكتملة",
+          "fastestDelivery": "أيام للتسليم",
+          "platforms": "منصات"
+        },
+        "audience": {
+          "title": "الجمهور",
+          "female": "إناث {{pct}}",
+          "male": "ذكور {{pct}}",
+          "topAge": "الفئة العمرية الأكبر",
+          "ageValue": "{{range}} · {{pct}}"
+        },
+        "workedWith": {
+          "title": "علامات تعاملت معها",
+          "subtitle_zero": "حملات مكتملة عبر صدى",
+          "subtitle_one": "علامة تجارية واحدة · حملات مكتملة عبر صدى",
+          "subtitle_two": "علامتان تجاريتان · حملات مكتملة عبر صدى",
+          "subtitle_few": "{{count}} علامات تجارية · حملات مكتملة عبر صدى",
+          "subtitle_many": "{{count}} علامة تجارية · حملات مكتملة عبر صدى",
+          "subtitle_other": "{{count}} علامة تجارية · حملات مكتملة عبر صدى",
+          "campaigns_zero": "لا حملات",
+          "campaigns_one": "حملة واحدة",
+          "campaigns_two": "حملتان",
+          "campaigns_few": "{{count}} حملات",
+          "campaigns_many": "{{count}} حملة",
+          "campaigns_other": "{{count}} حملة"
+        },
+        "work": {
+          "title": "أعمال سابقة",
+          "views": "{{views}} مشاهدة"
+        },
+        "services": {
+          "title": "الخدمات والأسعار",
+          "pickHint": "اختر الخدمات التي تهمّك لترى التكلفة التقديرية",
+          "tabsA11y": "المنصات",
+          "delivery": "التسليم خلال {{days}}",
+          "revisions_zero": "بدون تعديلات",
+          "revisions_one": "تعديل واحد",
+          "revisions_two": "تعديلان",
+          "revisions_few": "{{count}} تعديلات",
+          "revisions_many": "{{count}} تعديلاً",
+          "revisions_other": "{{count}} تعديل",
+          "add": "أضف",
+          "added": "مضافة"
+        },
+        "footer": {
+          "selected_zero": "لم تختر خدمات",
+          "selected_one": "خدمة واحدة مختارة",
+          "selected_two": "خدمتان مختارتان",
+          "selected_few": "{{count}} خدمات مختارة",
+          "selected_many": "{{count}} خدمة مختارة",
+          "selected_other": "{{count}} خدمة مختارة",
+          "offersSoon": "العروض المباشرة قريباً، احفظ المؤثر الآن",
+          "save": "احفظ في القائمة المختصرة",
+          "openShortlist": "عرض القائمة المختصرة"
+        },
+        "shortlist": {
+          "add": "أضف إلى القائمة المختصرة",
+          "remove": "أزل من القائمة المختصرة",
+          "saved": "حُفظ في قائمتك المختصرة"
+        }
       }
     },
     "discard": {

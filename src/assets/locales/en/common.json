@@ -909,7 +909,6 @@
       "loadFailed": "Couldn't load your media kit",
       "retry": "Retry",
       "priceFrom": "From",
-      "followers": "{{count}} followers",
       "verifiedFollowers": "Verified follower count",
       "verifiedCreator": "Verified creator",
       "linkLabel": "Your media kit link",
@@ -953,9 +952,7 @@
         "title": "Media kit preview",
         "intro": "This is how brands see your media kit.",
         "platforms": "Platforms",
-        "rates": "Rates",
         "terms": "Collaboration terms",
-        "termBullet": "•",
         "addonWithHours": "{{label}} · {{hours}}",
         "username": "@{{username}}"
       },
@@ -1031,6 +1028,62 @@
         "makePublicFailed": "Couldn't make your media kit public",
         "rateLimited": "Too many shares. Try again in a while.",
         "failed": "Couldn't record the share."
+      },
+      "showcase": {
+        "listSeparator": ", ",
+        "share": "Share media kit",
+        "termsHint": "Apply to every collaboration with this creator",
+        "platformA11y": "{{platform}}, {{followers}} followers",
+        "metrics": {
+          "a11yItem": "{{label}} {{value}}",
+          "reach": "Total followers",
+          "engagement": "Engagement",
+          "avgViews": "Avg. views",
+          "localAudience": "Audience in Syria",
+          "campaigns": "Campaigns done",
+          "fastestDelivery": "Days to deliver",
+          "platforms": "Platforms"
+        },
+        "audience": {
+          "title": "Audience",
+          "female": "Women {{pct}}",
+          "male": "Men {{pct}}",
+          "topAge": "Largest age group",
+          "ageValue": "{{range}} · {{pct}}"
+        },
+        "workedWith": {
+          "title": "Brands worked with",
+          "subtitle_one": "{{count}} brand · campaigns completed on Sada",
+          "subtitle_other": "{{count}} brands · campaigns completed on Sada",
+          "campaigns_one": "{{count}} campaign",
+          "campaigns_other": "{{count}} campaigns"
+        },
+        "work": {
+          "title": "Past work",
+          "views": "{{views}} views"
+        },
+        "services": {
+          "title": "Services & rates",
+          "pickHint": "Pick the services you need to see an estimated cost",
+          "tabsA11y": "Platforms",
+          "delivery": "Delivered in {{days}}",
+          "revisions_one": "{{count}} revision",
+          "revisions_other": "{{count}} revisions",
+          "add": "Add",
+          "added": "Added"
+        },
+        "footer": {
+          "selected_one": "{{count}} service picked",
+          "selected_other": "{{count}} services picked",
+          "offersSoon": "Direct offers are coming soon, save this creator now",
+          "save": "Save to shortlist",
+          "openShortlist": "View shortlist"
+        },
+        "shortlist": {
+          "add": "Add to shortlist",
+          "remove": "Remove from shortlist",
+          "saved": "Saved to your shortlist"
+        }
       }
     },
     "discard": {

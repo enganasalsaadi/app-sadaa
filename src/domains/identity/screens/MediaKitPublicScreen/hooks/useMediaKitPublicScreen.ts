@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Share } from 'react-native';
 import { useNavigation, useRoute, type NavigatorScreenParams } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { normalizeApiError } from '@/core/api';
 import {
   navigate,
   type AuthStackParamList,
@@ -7,13 +10,19 @@ import {
   type RootTabParamList,
 } from '@/core/navigation';
 import { useAppDispatch, useAppSelector } from '@/core/store';
+import { toastService } from '@/core/toast';
 import { selectIsAuthenticated, selectUserType } from '@/domains/auth';
 import {
   mediaKitApi,
   useGetPublicMediaKitQuery,
+  useSetKitShortlistedMutation,
   useTrackMediaKitViewMutation,
 } from '../../../api/mediaKitApi';
 import { useMediaKitPreviewLabels } from '../../../hooks/useMediaKitPreviewLabels';
+import { useMediaKitServices } from '../../../hooks/useMediaKitServices';
+import { toPriceFrom } from '../../../utils/mediaKitCard';
+import { buildShareUrl } from '../../../utils/mediaKitShare';
+import { buildShowcaseMetrics } from '../../../utils/mediaKitShowcase';
 import {
   resolvePriceLockNotice,
   toPriceLockReason,
@@ -24,13 +33,18 @@ import { resolvePublicMediaKitStatus } from '../../../utils/publicMediaKitStatus
 
 type ScreenProps = PublicStackScreenProps<'MediaKitPublic'>;
 
+/** What sits in the footer: the unlock step, the brand's offer bar, or nothing. */
+export type MediaKitPublicFooter = 'lock' | 'offer' | 'none';
+
 /**
  * A creator's public media kit (contract §17.4), opened from a link or in-app.
  * Counts one view per open (§17.5, fire-and-forget) and moves an old slug to the
  * canonical one so the cache key follows the creator. Locked prices (brand-explore §6)
- * get a footer with the one step that unlocks them for this viewer.
+ * get a footer with the one step that unlocks them for this viewer. A brand who can see
+ * prices picks services (an on-screen estimate) and saves the creator to the shortlist.
  */
 export const useMediaKitPublicScreen = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<ScreenProps['navigation']>();
   const { params } = useRoute<ScreenProps['route']>();
   const dispatch = useAppDispatch();
@@ -64,6 +78,12 @@ export const useMediaKitPublicScreen = () => {
   }, [canonicalSlug, dispatch, kit, navigation]);
 
   const { nicheLabels, rateRows } = useMediaKitPreviewLabels(kit);
+  const metrics = useMemo(() => (kit ? buildShowcaseMetrics(kit) : []), [kit]);
+  const services = useMediaKitServices(kit, rateRows);
+  const viewer = toPriceLockViewer(signedIn, userType);
+  const isBrand = viewer === 'brand';
+  const selectable = isBrand && kit !== undefined && !kit.price_locked;
+  const priceFrom = useMemo(() => toPriceFrom(kit?.price_from_usd ?? null), [kit?.price_from_usd]);
 
   const lockReason = kit?.price_lock_reason;
   const priceLock = useMemo<PriceLockNotice | null>(
@@ -91,6 +111,53 @@ export const useMediaKitPublicScreen = () => {
     navigate('Main', settings);
   }, [priceLock]);
 
+  const [setShortlisted, { isLoading: savingShortlist }] = useSetKitShortlistedMutation();
+  const isShortlisted = kit?.is_shortlisted === true;
+  const slug = params.slug;
+  const updateShortlist = useCallback(
+    async (shortlisted: boolean) => {
+      try {
+        await setShortlisted({ slug, shortlisted }).unwrap();
+        if (shortlisted) toastService.success(t('account.mediaKit.showcase.shortlist.saved'));
+      } catch (err: unknown) {
+        toastService.error(
+          normalizeApiError(err).code === 'shortlist_full'
+            ? t('marketplace.shortlist.full')
+            : t('marketplace.shortlist.failed'),
+        );
+      }
+    },
+    [setShortlisted, slug, t],
+  );
+  const onSaveToShortlist = useCallback(() => {
+    if (savingShortlist) return;
+    updateShortlist(true);
+  }, [savingShortlist, updateShortlist]);
+  const onToggleShortlist = useCallback(() => {
+    if (savingShortlist) return;
+    updateShortlist(!isShortlisted);
+  }, [isShortlisted, savingShortlist, updateShortlist]);
+
+  const onOpenShortlist = useCallback(() => {
+    const home: NavigatorScreenParams<RootTabParamList> = {
+      screen: 'HomeTab',
+      params: { screen: 'Shortlist', initial: false },
+    };
+    navigate('Main', home);
+  }, []);
+
+  const publicUrl = kit?.public_url ?? null;
+  const onShare = useMemo(
+    () =>
+      publicUrl
+        ? () => {
+            // Brand-side share is not counted: §17.6 records only the creator's own shares.
+            Share.share({ message: buildShareUrl(publicUrl) }).catch(() => undefined);
+          }
+        : null,
+    [publicUrl],
+  );
+
   const onRetry = useCallback(() => {
     refetch();
   }, [refetch]);
@@ -106,14 +173,28 @@ export const useMediaKitPublicScreen = () => {
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
+  const footer: MediaKitPublicFooter = priceLock ? 'lock' : selectable ? 'offer' : 'none';
+
   return {
     status: resolvePublicMediaKitStatus({ hasData: kit !== undefined, error, isFetching }),
     error,
     kit,
     nicheLabels,
     rateRows,
+    metrics,
+    services,
+    selectable,
+    priceFrom,
+    footer,
     priceLock,
     onPriceLockAction,
+    canShortlist: isBrand,
+    isShortlisted,
+    savingShortlist,
+    onSaveToShortlist,
+    onToggleShortlist,
+    onOpenShortlist,
+    onShare,
     refreshing,
     onRefresh,
     onRetry,

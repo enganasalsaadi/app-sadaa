@@ -5,6 +5,7 @@ import type {
   MediaKitStats,
   PublicMediaKit,
   PublicMediaKitResult,
+  SetKitShortlistedRequest,
   ShareMediaKitRequest,
   ShareMediaKitResult,
   SlugCheck,
@@ -88,3 +89,39 @@ export const {
   useGetPublicMediaKitQuery,
   useTrackMediaKitViewMutation,
 } = mediaKitApi;
+
+// Second injection so the toggle can patch `getPublicMediaKit` through a typed `util`.
+const mediaKitShortlistApi = mediaKitApi.injectEndpoints({
+  overrideExisting: true,
+  endpoints: builder => ({
+    /**
+     * Brand-explore §5 shortlist PUT/DELETE (idempotent, 204) from the kit itself. Flips the
+     * kit's ❤️ at once and rolls back on failure; Explore, Home rails and the Shortlist list
+     * live in marketplace, so they refetch through their tags instead of a cross-domain patch.
+     */
+    setKitShortlisted: builder.mutation<void, SetKitShortlistedRequest>({
+      query: ({ slug, shortlisted }) => ({
+        url: `/brand/shortlist/${encodeURIComponent(slug)}`,
+        method: shortlisted ? 'PUT' : 'DELETE',
+      }),
+      async onQueryStarted({ slug, shortlisted }, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          mediaKitApi.util.updateQueryData('getPublicMediaKit', slug, draft => {
+            draft.kit.is_shortlisted = shortlisted;
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patch.undo();
+        }
+      },
+      invalidatesTags: (_result, error) =>
+        error
+          ? []
+          : [{ type: 'Shortlist', id: 'LIST' }, { type: 'ExploreCreators', id: 'LIST' }, 'BrandHome'],
+    }),
+  }),
+});
+
+export const { useSetKitShortlistedMutation } = mediaKitShortlistApi;
