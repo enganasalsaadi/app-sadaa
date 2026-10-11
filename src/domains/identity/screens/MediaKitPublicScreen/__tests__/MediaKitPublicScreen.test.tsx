@@ -17,18 +17,16 @@ jest.mock('@/core/theme', () => {
 jest.mock('lucide-react-native', () => ({
   UserX: 'UserX',
   Lock: 'Lock',
-  BookmarkCheck: 'BookmarkCheck',
-  BookmarkPlus: 'BookmarkPlus',
+  Heart: 'Heart',
   Share2: 'Share2',
 }));
 
 jest.mock('../../../components/MediaKitShowcase', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return {
-    MediaKitHero: (props: object) => createElement('MediaKitHero', props),
+    MediaKitCover: (props: object) => createElement('MediaKitCover', props),
     MediaKitHeaderBar: (props: object) => createElement('MediaKitHeaderBar', props),
     MediaKitShowcaseBody: (props: object) => createElement('MediaKitShowcaseBody', props),
-    MediaKitShowcaseHeroSkeleton: () => createElement('MediaKitShowcaseHeroSkeleton'),
     MediaKitShowcaseBodySkeleton: () => createElement('MediaKitShowcaseBodySkeleton'),
   };
 });
@@ -99,7 +97,7 @@ const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
     kit,
     nicheLabels: ['Fashion'],
     rateRows: [],
-    metrics: [{ key: 'reach', value: '45K' }],
+    metrics: [{ key: 'engagement', value: '5.2%' }],
     services,
     selectable: false,
     priceFrom: null,
@@ -143,23 +141,33 @@ const renderFooter = (root: ReactTestInstance) =>
   mountElement(root.find(isHost('Layout')).props.footer).find(isHost('LayoutFooter'));
 
 describe('MediaKitPublicScreen', () => {
-  it('renders the pitch: hero with niches and metrics, body, no footer for a non-brand', () => {
+  it('renders the pitch: cover hero, identity + sections in the body, no footer for a non-brand', () => {
     const { root, vm } = render();
     const layout = root.find(isHost('Layout'));
     expect(layout.props.headerBehavior).toBe('overlay');
     expect(layout.props.header.title).toBe('Anas Style');
     expect(layout.props.header.actions).toBeUndefined();
     expect(layout.props.footer).toBeUndefined();
-    const hero = mountElement(layout.props.hero).find(isHost('MediaKitHero'));
-    expect(hero.props.kit).toBe(kit);
-    expect(hero.props.nicheLabels).toEqual(['Fashion']);
-    expect(hero.props.metrics).toBe(vm.metrics);
+    // No cover → the navy band carries the lights.
+    expect(layout.props.heroBackdrop).toBe('brandGlow');
+    expect(mountElement(layout.props.hero).find(isHost('MediaKitCover')).props.coverUrl).toBeNull();
     const body = root.find(isHost('MediaKitShowcaseBody'));
+    expect(body.props.kit).toBe(kit);
+    expect(body.props.nicheLabels).toEqual(['Fashion']);
+    expect(body.props.metrics).toBe(vm.metrics);
     expect(body.props.services).toBe(services);
     expect(body.props.selectable).toBe(false);
   });
 
-  it('brand with prices → offer bar saves to the shortlist, header save + share', () => {
+  it('a cover leads the hero on a plain navy backdrop', () => {
+    const coverUrl = 'https://cdn.sada.sy/covers/anas.webp';
+    const { root } = render({ kit: { ...kit, cover_url: coverUrl } });
+    const layout = root.find(isHost('Layout'));
+    expect(layout.props.heroBackdrop).toBe('brand');
+    expect(mountElement(layout.props.hero).find(isHost('MediaKitCover')).props.coverUrl).toBe(coverUrl);
+  });
+
+  it('brand with prices → offer bar saves to the shortlist, header heart + share', () => {
     const onShare = jest.fn();
     const { root, vm } = render({
       footer: 'offer',
@@ -170,7 +178,8 @@ describe('MediaKitPublicScreen', () => {
     });
     const layout = root.find(isHost('Layout'));
     const actions = layout.props.header.actions;
-    expect(actions.map((a: { icon: string }) => a.icon)).toEqual(['BookmarkPlus', 'Share2']);
+    expect(actions.map((a: { icon: string }) => a.icon)).toEqual(['Heart', 'Share2']);
+    expect(actions[0].active).toBe(false);
     expect(actions[0].onPress).toBe(vm.onToggleShortlist);
     expect(actions[1].onPress).toBe(onShare);
     const footer = renderFooter(root);
@@ -180,7 +189,7 @@ describe('MediaKitPublicScreen', () => {
 
   it('already shortlisted → the bar opens the shortlist', () => {
     const { root, vm } = render({ footer: 'offer', selectable: true, canShortlist: true, isShortlisted: true });
-    expect(root.find(isHost('Layout')).props.header.actions[0].icon).toBe('BookmarkCheck');
+    expect(root.find(isHost('Layout')).props.header.actions[0].active).toBe(true);
     const footer = renderFooter(root);
     expect(footer.props.primary.label).toBe('account.mediaKit.showcase.footer.openShortlist');
     expect(footer.props.primary.onPress).toBe(vm.onOpenShortlist);
@@ -215,10 +224,11 @@ describe('MediaKitPublicScreen', () => {
     expect(renderFooter(root).props.primary).toBeUndefined();
   });
 
-  it('loading reserves the hero and body with skeletons', () => {
+  it('loading reserves the cover band and the body skeleton', () => {
     const { root } = render({ status: 'loading', kit: undefined });
     const layout = root.find(isHost('Layout'));
-    expect(mountElement(layout.props.hero).findAll(isHost('MediaKitShowcaseHeroSkeleton'))).toHaveLength(1);
+    expect(layout.props.heroBackdrop).toBe('brand');
+    expect(mountElement(layout.props.hero).find(isHost('MediaKitCover')).props.coverUrl).toBeNull();
     expect(root.findAll(isHost('MediaKitShowcaseBodySkeleton'))).toHaveLength(1);
     expect(root.findAll(isHost('MediaKitShowcaseBody'))).toHaveLength(0);
     expect(layout.props.footer).toBeUndefined();

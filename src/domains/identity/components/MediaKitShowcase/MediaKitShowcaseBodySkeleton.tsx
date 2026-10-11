@@ -1,26 +1,32 @@
 import React, { memo } from 'react';
-import { moderateScale, useTheme } from '@/core/theme';
+import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Skeleton } from '@/shared/ui';
 
-const RAIL_CARD = { width: moderateScale(152), height: moderateScale(124) } as const;
-const SERVICE_HEIGHT = moderateScale(168);
+const RAIL_CARD = { width: moderateScale(148), height: moderateScale(64) } as const;
+const SERVICE_HEIGHT = moderateScale(112);
 const RAIL = ['a', 'b', 'c'] as const;
 const SERVICES = ['a', 'b'] as const;
 
-/** Body placeholder: a platforms rail and two service cards. */
+/** Sheet placeholder where the content lands: avatar on the cover edge, name, meta, bio, platforms, services. */
 const MediaKitShowcaseBodySkeletonComponent: React.FC = () => {
-  const { sizes } = useTheme();
+  const { sizes, borderWidths } = useTheme();
+  const ring = sizes.avatar.xl + borderWidths.xl * 2;
+  const styles = useStyles(() => ({ overlap: { marginTop: -ring / 2 } }), [ring]);
+
   return (
-    <Box pt="2xl" gap="2xl">
-      <Box gap="md">
-        <Box px="xl">
-          <Skeleton width="35%" height={sizes.icon.md} borderRadius="xs" />
+    <Box gap="2xl">
+      <Box align="center" gap="sm" px="xl">
+        <Box style={styles.overlap}>
+          <Skeleton width={ring} height={ring} borderRadius="full" />
         </Box>
-        <Box row px="xl" gap="md">
-          {RAIL.map(key => (
-            <Skeleton key={key} width={RAIL_CARD.width} height={RAIL_CARD.height} borderRadius="lg" />
-          ))}
-        </Box>
+        <Skeleton width="50%" height={sizes.icon.lg} borderRadius="xs" />
+        <Skeleton width="30%" height={sizes.icon.md} borderRadius="xs" />
+        <Skeleton width="80%" height={sizes.icon.md} borderRadius="xs" />
+      </Box>
+      <Box row px="xl" gap="md">
+        {RAIL.map(key => (
+          <Skeleton key={key} width={RAIL_CARD.width} height={RAIL_CARD.height} borderRadius="lg" />
+        ))}
       </Box>
       <Box px="xl" gap="md">
         <Skeleton width="45%" height={sizes.icon.md} borderRadius="xs" />

@@ -7,11 +7,10 @@ import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ErrorState, Layout, LayoutFooter, Notice } from '@/shared/ui';
 import { MediaKitShareNotice } from '../../components/MediaKitCard/MediaKitShareNotice';
 import {
+  MediaKitCover,
   MediaKitHeaderBar,
-  MediaKitHero,
   MediaKitShowcaseBody,
   MediaKitShowcaseBodySkeleton,
-  MediaKitShowcaseHeroSkeleton,
 } from '../../components/MediaKitShowcase';
 import { useMediaKitPreviewScreen, type MediaKitPreviewScreenModel } from './hooks/useMediaKitPreviewScreen';
 
@@ -62,8 +61,9 @@ const ShareFooter = memo<{ vm: MediaKitPreviewScreenModel }>(({ vm }) => {
 });
 
 /**
- * "Preview as brand": the same pitch brands see (hero, numbers, sections), read-only, with
- * the hidden-kit warning on top, settings in the header and Share as the one primary.
+ * "Preview as brand": the same Creator pitch brands see (cover, identity, sections), read-only,
+ * with the hidden-kit warning under the identity, settings in the header and Share as the one
+ * primary. No heart: the server never offers shortlisting on the creator's own kit.
  */
 const MediaKitPreviewScreenComponent: React.FC = () => {
   useHideBottomBar();
@@ -87,13 +87,14 @@ const MediaKitPreviewScreenComponent: React.FC = () => {
   }
 
   const ready = vm.status === 'ready' && preview !== undefined;
+  const backdrop = ready && !preview.cover_url ? 'brandGlow' : 'brand';
 
   return (
     <Layout
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
-      heroBackdrop="brandGlow"
+      heroBackdrop={backdrop}
       heroBehavior="parallax"
       header={{
         title: t('account.mediaKit.previewScreen.title'),
@@ -101,13 +102,7 @@ const MediaKitPreviewScreenComponent: React.FC = () => {
         leading: preview ? <MediaKitHeaderBar kit={preview} /> : undefined,
         actions: [{ ...settingsAction, glass: true }],
       }}
-      hero={
-        ready ? (
-          <MediaKitHero kit={preview} nicheLabels={vm.nicheLabels} metrics={vm.metrics} />
-        ) : (
-          <MediaKitShowcaseHeroSkeleton />
-        )
-      }
+      hero={<MediaKitCover coverUrl={preview?.cover_url ?? null} />}
       footer={ready ? <ShareFooter vm={vm} /> : undefined}
       footerBehavior="elevate"
       scrollProps={{
@@ -123,6 +118,8 @@ const MediaKitPreviewScreenComponent: React.FC = () => {
       {ready ? (
         <MediaKitShowcaseBody
           kit={preview}
+          nicheLabels={vm.nicheLabels}
+          metrics={vm.metrics}
           services={vm.services}
           selectable={false}
           intro={<PreviewIntro vm={vm} />}

@@ -3,9 +3,7 @@ import type { LockableRateRow } from '../rateRows';
 import {
   buildServiceGroups,
   buildShowcaseMetrics,
-  fastestDeliveryDays,
   IN_PERSON_GROUP,
-  sumFollowers,
   sumSelectedPrices,
   toShowcaseAudience,
   toWorkedWith,
@@ -84,25 +82,11 @@ const kit = (overrides: Partial<PublicMediaKit> = {}): PublicMediaKit => ({
 });
 
 describe('mediaKitShowcase', () => {
-  it('sums followers over every platform; none → null', () => {
-    expect(sumFollowers(kit().platforms)).toBe(46200);
-    expect(sumFollowers([])).toBeNull();
+  it('no server highlights → no tiles (followers live on the platform cards)', () => {
+    expect(buildShowcaseMetrics(kit())).toEqual([]);
   });
 
-  it('fastest delivery ignores zero days', () => {
-    expect(fastestDeliveryDays([{ delivery_days: 0 }, { delivery_days: 4 }, { delivery_days: 2 }])).toBe(2);
-    expect(fastestDeliveryDays([])).toBeNull();
-  });
-
-  it('today (no v2 highlights) → reach, fastest delivery, platforms only', () => {
-    expect(buildShowcaseMetrics(kit())).toEqual([
-      { key: 'reach', value: '46200' },
-      { key: 'fastestDelivery', value: '2' },
-      { key: 'platforms', value: '2' },
-    ]);
-  });
-
-  it('v2 highlights lead, missing ones are skipped, capped at four', () => {
+  it('server highlights only, in order; missing and zero campaigns are skipped', () => {
     const metrics = buildShowcaseMetrics(
       kit({
         highlights: {
@@ -113,8 +97,10 @@ describe('mediaKitShowcase', () => {
         },
       }),
     );
-    expect(metrics.map(m => m.key)).toEqual(['reach', 'engagement', 'localAudience', 'fastestDelivery']);
-    expect(metrics[1]?.value).toBe('5.2%');
+    expect(metrics).toEqual([
+      { key: 'engagement', value: '5.2%' },
+      { key: 'localAudience', value: '78%' },
+    ]);
   });
 
   it('groups services by platform in row order, in-person last, with card terms', () => {

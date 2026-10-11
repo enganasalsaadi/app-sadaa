@@ -1035,14 +1035,12 @@
         "termsHint": "Apply to every collaboration with this creator",
         "platformA11y": "{{platform}}, {{followers}} followers",
         "metrics": {
+          "title": "Highlights",
           "a11yItem": "{{label}} {{value}}",
-          "reach": "Total followers",
           "engagement": "Engagement",
           "avgViews": "Avg. views",
           "localAudience": "Audience in Syria",
-          "campaigns": "Campaigns done",
-          "fastestDelivery": "Days to deliver",
-          "platforms": "Platforms"
+          "campaigns": "Campaigns done"
         },
         "audience": {
           "title": "Audience",
@@ -1066,9 +1064,12 @@
           "title": "Services & rates",
           "pickHint": "Pick the services you need to see an estimated cost",
           "tabsA11y": "Platforms",
+          "nameWithPackage": "{{service}} · {{pkg}}",
           "delivery": "Delivered in {{days}}",
           "revisions_one": "{{count}} revision",
           "revisions_other": "{{count}} revisions",
+          "termsSeparator": " · ",
+          "details": "Details",
           "add": "Add",
           "added": "Added"
         },

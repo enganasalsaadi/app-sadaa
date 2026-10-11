@@ -21,6 +21,8 @@ export interface IconButtonProps {
   tone?: IconButtonTone;
   disabled?: boolean;
   loading?: boolean;
+  /** On state of a toggle (saved, liked): the icon is filled and read as selected. */
+  active?: boolean;
 }
 
 interface IconButtonColors {
@@ -97,6 +99,7 @@ const IconButtonComponent: React.FC<IconButtonProps> = ({
   tone = 'default',
   disabled = false,
   loading = false,
+  active,
 }) => {
   const { colors, sizes } = useTheme();
 
@@ -122,7 +125,7 @@ const IconButtonComponent: React.FC<IconButtonProps> = ({
       hitSlop={size === 'sm' ? sizes.hitSlop.sm : undefined}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled: isDisabled, busy: loading }}
+      accessibilityState={{ disabled: isDisabled, busy: loading, selected: active }}
     >
       {loading ? (
         <ActivityIndicator size="small" color={palette.icon} />
@@ -130,6 +133,7 @@ const IconButtonComponent: React.FC<IconButtonProps> = ({
         <Icon
           size={size === 'sm' ? sizes.icon.sm : sizes.icon.md}
           color={palette.icon}
+          fill={active ? palette.icon : 'none'}
           strokeWidth={iconStroke.regular}
         />
       )}

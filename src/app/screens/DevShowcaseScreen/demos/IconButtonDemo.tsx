@@ -45,6 +45,7 @@ const IconButtonDemoComponent: React.FC = () => {
           <IconButton icon={Share2} variant="outline" disabled onPress={noop} accessibilityLabel={t('devShowcase.iconButton.share')} />
           <IconButton icon={Bell} variant="soft" loading onPress={noop} accessibilityLabel={t('devShowcase.iconButton.notifications')} />
           <IconButton icon={Plus} variant="solid" onPress={noop} accessibilityLabel={t('devShowcase.iconButton.add')} />
+          <IconButton icon={Heart} variant="soft" active onPress={noop} accessibilityLabel={t('devShowcase.iconButton.like')} />
         </Box>
       </Box>
 
@@ -66,7 +67,7 @@ const IconButtonDemoComponent: React.FC = () => {
           <Banner uri={MOCK_IMAGE_URIS[2]} />
           <Box row gap="sm" style={styles.overImage}>
             <IconButton icon={Share2} variant="overlay" onPress={noop} accessibilityLabel={t('devShowcase.iconButton.share')} />
-            <IconButton icon={Heart} variant="overlay" onPress={noop} accessibilityLabel={t('devShowcase.iconButton.like')} />
+            <IconButton icon={Heart} variant="overlay" active onPress={noop} accessibilityLabel={t('devShowcase.iconButton.like')} />
           </Box>
         </Box>
       </Box>

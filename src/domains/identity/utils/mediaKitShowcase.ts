@@ -3,32 +3,22 @@ import type { Money } from '@/core/money';
 import type {
   AudienceShare,
   MediaKitAudience,
-  MediaKitPlatform,
   PublicMediaKit,
   PublicRateCard,
   MediaKitWorkedWith,
 } from '../types/mediaKit';
 import type { LockableRateRow } from './rateRows';
 
-/** Hero strip cells, best first; the strip shows the first `MAX_METRICS` the kit has data for. */
-export const SHOWCASE_METRIC_KEYS = [
-  'reach',
-  'engagement',
-  'avgViews',
-  'localAudience',
-  'campaigns',
-  'fastestDelivery',
-  'platforms',
-] as const;
+/** Highlight tiles, in the order shown (contract §17.11 `highlights`). */
+export const SHOWCASE_METRIC_KEYS = ['engagement', 'avgViews', 'localAudience', 'campaigns'] as const;
 export type ShowcaseMetricKey = (typeof SHOWCASE_METRIC_KEYS)[number];
 
 export interface ShowcaseMetric {
   key: ShowcaseMetricKey;
-  /** Already formatted, so `AnimatedNumber` rolls only the digits. */
+  /** Already formatted. */
   value: string;
 }
 
-const MAX_METRICS = 4;
 const COMPACT: Intl.NumberFormatOptions = { notation: 'compact', maximumFractionDigits: 1 };
 
 const isNumber = (value: number | null | undefined): value is number =>
@@ -37,40 +27,27 @@ const isNumber = (value: number | null | undefined): value is number =>
 const formatPercent = (pct: number): string =>
   formatNumber(pct / 100, { style: 'percent', maximumFractionDigits: 1 });
 
-/** Followers summed over every linked platform (not de-duplicated: the strip says "total followers"). */
-export const sumFollowers = (platforms: readonly MediaKitPlatform[]): number | null =>
-  platforms.length > 0 ? platforms.reduce((sum, p) => sum + p.follower_count, 0) : null;
-
-/** Quickest turnaround any service promises, in days. */
-export const fastestDeliveryDays = (cards: readonly Pick<PublicRateCard, 'delivery_days'>[]): number | null => {
-  const days = cards.map(card => card.delivery_days).filter(day => isNumber(day) && day > 0);
-  return days.length > 0 ? Math.min(...days) : null;
-};
-
-/** Only metrics the server sent; a missing one is skipped, never shown as 0. */
+/**
+ * Only the server's highlights, each only when sent; never a 0 stand-in or a count derived on
+ * the device (followers are on the platform cards already). `highlights: null` → none.
+ */
 export const buildShowcaseMetrics = (kit: PublicMediaKit): ShowcaseMetric[] => {
-  const highlights = kit.highlights ?? null;
-  const reach = sumFollowers(kit.platforms);
-  const fastest = fastestDeliveryDays(kit.rate_cards);
-  const engagement = highlights?.engagement_rate_pct;
-  const avgViews = highlights?.avg_views;
-  const local = highlights?.local_audience_pct;
-  const campaigns = highlights?.completed_campaigns;
+  const highlights = kit.highlights;
+  if (!highlights) return [];
+  const { engagement_rate_pct: engagement, avg_views: avgViews, local_audience_pct: local } = highlights;
+  const campaigns = highlights.completed_campaigns;
 
   const candidates: Record<ShowcaseMetricKey, string | null> = {
-    reach: reach === null ? null : formatNumber(reach, COMPACT),
     engagement: isNumber(engagement) ? formatPercent(engagement) : null,
     avgViews: isNumber(avgViews) ? formatNumber(avgViews, COMPACT) : null,
     localAudience: isNumber(local) ? formatPercent(local) : null,
     campaigns: isNumber(campaigns) && campaigns > 0 ? formatNumber(campaigns) : null,
-    fastestDelivery: fastest === null ? null : formatNumber(fastest),
-    platforms: kit.platforms.length > 0 ? formatNumber(kit.platforms.length) : null,
   };
 
   return SHOWCASE_METRIC_KEYS.flatMap(key => {
     const value = candidates[key];
     return value === null ? [] : [{ key, value }];
-  }).slice(0, MAX_METRICS);
+  });
 };
 
 /** A rate row plus the terms a brand compares before picking (rate card §5 fields). */

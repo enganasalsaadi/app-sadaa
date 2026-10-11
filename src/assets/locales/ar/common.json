@@ -1047,14 +1047,12 @@
         "termsHint": "تُطبَّق على كل تعاون مع هذا المؤثر",
         "platformA11y": "{{platform}}، {{followers}} متابع",
         "metrics": {
+          "title": "أبرز الأرقام",
           "a11yItem": "{{label}} {{value}}",
-          "reach": "إجمالي المتابعين",
           "engagement": "معدل التفاعل",
           "avgViews": "متوسط المشاهدات",
           "localAudience": "جمهور داخل سوريا",
-          "campaigns": "حملات مكتملة",
-          "fastestDelivery": "أيام للتسليم",
-          "platforms": "منصات"
+          "campaigns": "حملات مكتملة"
         },
         "audience": {
           "title": "الجمهور",
@@ -1086,6 +1084,7 @@
           "title": "الخدمات والأسعار",
           "pickHint": "اختر الخدمات التي تهمّك لترى التكلفة التقديرية",
           "tabsA11y": "المنصات",
+          "nameWithPackage": "{{service}} · {{pkg}}",
           "delivery": "التسليم خلال {{days}}",
           "revisions_zero": "بدون تعديلات",
           "revisions_one": "تعديل واحد",
@@ -1093,6 +1092,8 @@
           "revisions_few": "{{count}} تعديلات",
           "revisions_many": "{{count}} تعديلاً",
           "revisions_other": "{{count}} تعديل",
+          "termsSeparator": " · ",
+          "details": "التفاصيل",
           "add": "أضف",
           "added": "مضافة"
         },

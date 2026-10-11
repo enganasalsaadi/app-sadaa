@@ -194,7 +194,7 @@ describe('useMediaKitPublicScreen', () => {
     };
 
     it('brand with visible prices: services pickable, offer footer, from-price', () => {
-      openUnlocked({ price_from_usd: 22 });
+      openUnlocked({ price_from_usd: 22, is_shortlisted: false });
       expect(latest.vm?.footer).toBe('offer');
       expect(latest.vm?.selectable).toBe(true);
       expect(latest.vm?.canShortlist).toBe(true);
@@ -207,6 +207,18 @@ describe('useMediaKitPublicScreen', () => {
       expect(latest.vm?.footer).toBe('none');
       expect(latest.vm?.selectable).toBe(false);
       expect(latest.vm?.canShortlist).toBe(false);
+    });
+
+    it('heart follows the server: is_shortlisted null hides it even for a brand', () => {
+      openUnlocked({ is_shortlisted: null });
+      expect(latest.vm?.canShortlist).toBe(false);
+      expect(latest.vm?.isShortlisted).toBe(false);
+    });
+
+    it('already saved: the heart is on', () => {
+      openUnlocked({ is_shortlisted: true });
+      expect(latest.vm?.canShortlist).toBe(true);
+      expect(latest.vm?.isShortlisted).toBe(true);
     });
 
     it('save → PUT for the current slug, then a success toast', async () => {

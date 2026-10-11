@@ -4,7 +4,8 @@ import { useStyles } from '@/core/theme';
 import { Box, SectionHeader } from '@/shared/ui';
 
 interface MediaKitRailProps {
-  title: string;
+  /** Omitted when the cards name themselves (platform followers right under the identity). */
+  title?: string;
   subtitle?: string;
   /** Snap step: one card plus the gap. */
   snapInterval: number;
@@ -12,7 +13,7 @@ interface MediaKitRailProps {
 }
 
 /**
- * A titled row of cards running edge to edge (platforms, brands, past work). Bounded by the
+ * A row of cards running edge to edge (platforms, brands, past work). Bounded by the
  * server (a handful each), so no virtualised list. The bottom pad keeps the whole `card`
  * shadow inside the clipping scroll view.
  */
@@ -29,9 +30,11 @@ const MediaKitRailComponent: React.FC<MediaKitRailProps> = ({ title, subtitle, s
 
   return (
     <Box gap="xs">
-      <Box px="xl">
-        <SectionHeader title={title} subtitle={subtitle} emphasis="strong" />
-      </Box>
+      {title ? (
+        <Box px="xl">
+          <SectionHeader title={title} subtitle={subtitle} emphasis="strong" />
+        </Box>
+      ) : null}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

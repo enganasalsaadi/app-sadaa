@@ -1,16 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { BookmarkCheck, BookmarkPlus, Share2, UserX } from 'lucide-react-native';
+import { Heart, Share2, UserX } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { EmptyState, ErrorState, Layout } from '@/shared/ui';
 import type { LayoutHeaderConfig, ScreenHeaderAction } from '@/shared/ui';
 import {
+  MediaKitCover,
   MediaKitHeaderBar,
-  MediaKitHero,
   MediaKitShowcaseBody,
   MediaKitShowcaseBodySkeleton,
-  MediaKitShowcaseHeroSkeleton,
 } from '../../components/MediaKitShowcase';
 import { OfferFooter } from './components/OfferFooter';
 import { PriceLockFooter } from './components/PriceLockFooter';
@@ -42,10 +41,10 @@ const Footer = memo<{ vm: MediaKitPublicScreenModel }>(({ vm }) => {
 });
 
 /**
- * A creator's public media kit as a pitch (Dashboard chrome over a navy hero): cover and big
- * avatar, headline numbers, then platforms, audience, brands worked with, past work, services
- * by platform and terms. Brands pick services (estimate) and save the creator; locked prices
- * get the unlock step instead. Opened over the tabs or Login.
+ * A creator's public media kit, "Creator pitch" archetype (rule 09): the cover leads, the
+ * identity sits on the sheet under it, then platforms, highlights, audience, brands, past work,
+ * services by platform and terms. Brands pick services (estimate) and save the creator; locked
+ * prices get the unlock step instead. Opened over the tabs or Login.
  */
 const MediaKitPublicScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -53,11 +52,12 @@ const MediaKitPublicScreenComponent: React.FC = () => {
   const vm = useMediaKitPublicScreen();
   const { kit } = vm;
 
-  // ≤ 2 glass icons on the navy bar: save (brands only) and share (once the server sends the link).
+  // ≤ 2 glass icons: the heart (only when the server says shortlisting applies) and share.
   const actions = useMemo<LayoutHeaderConfig['actions']>(() => {
     const save: ScreenHeaderAction | null = vm.canShortlist
       ? {
-          icon: vm.isShortlisted ? BookmarkCheck : BookmarkPlus,
+          icon: Heart,
+          active: vm.isShortlisted,
           accessibilityLabel: t(
             vm.isShortlisted
               ? 'account.mediaKit.showcase.shortlist.remove'
@@ -102,13 +102,15 @@ const MediaKitPublicScreenComponent: React.FC = () => {
   }
 
   const ready = vm.status === 'ready' && kit !== undefined;
+  // A real photo hides the lights anyway; without one the navy band carries them.
+  const backdrop = ready && !kit.cover_url ? 'brandGlow' : 'brand';
 
   return (
     <Layout
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
-      heroBackdrop="brandGlow"
+      heroBackdrop={backdrop}
       heroBehavior="parallax"
       header={{
         title: kit?.display_name ?? t('account.mediaKit.publicScreen.title'),
@@ -116,13 +118,7 @@ const MediaKitPublicScreenComponent: React.FC = () => {
         leading: kit ? <MediaKitHeaderBar kit={kit} /> : undefined,
         actions,
       }}
-      hero={
-        ready ? (
-          <MediaKitHero kit={kit} nicheLabels={vm.nicheLabels} metrics={vm.metrics} />
-        ) : (
-          <MediaKitShowcaseHeroSkeleton />
-        )
-      }
+      hero={<MediaKitCover coverUrl={kit?.cover_url ?? null} />}
       footer={ready && vm.footer !== 'none' ? <Footer vm={vm} /> : undefined}
       footerBehavior="elevate"
       scrollProps={{
@@ -130,14 +126,20 @@ const MediaKitPublicScreenComponent: React.FC = () => {
           <RefreshControl
             refreshing={vm.refreshing}
             onRefresh={vm.onRefresh}
-            // The spinner sits over the navy backdrop.
+            // The spinner sits over the cover / navy backdrop.
             tintColor={colors.text.onBrand}
           />
         ),
       }}
     >
       {ready ? (
-        <MediaKitShowcaseBody kit={kit} services={vm.services} selectable={vm.selectable} />
+        <MediaKitShowcaseBody
+          kit={kit}
+          nicheLabels={vm.nicheLabels}
+          metrics={vm.metrics}
+          services={vm.services}
+          selectable={vm.selectable}
+        />
       ) : (
         <MediaKitShowcaseBodySkeleton />
       )}

@@ -113,6 +113,8 @@ export const useMediaKitPublicScreen = () => {
 
   const [setShortlisted, { isLoading: savingShortlist }] = useSetKitShortlistedMutation();
   const isShortlisted = kit?.is_shortlisted === true;
+  // Brand bearer → true / false; everyone else → null: no heart at all (contract §17.11).
+  const canShortlist = kit !== undefined && kit.is_shortlisted !== null;
   const slug = params.slug;
   const updateShortlist = useCallback(
     async (shortlisted: boolean) => {
@@ -188,7 +190,7 @@ export const useMediaKitPublicScreen = () => {
     footer,
     priceLock,
     onPriceLockAction,
-    canShortlist: isBrand,
+    canShortlist,
     isShortlisted,
     savingShortlist,
     onSaveToShortlist,

@@ -29,6 +29,8 @@ export interface ScreenHeaderAction {
   badge?: number;
   /** Glass icon tile instead of a bare icon; navy bars only (`brand`, wallet hero actions). */
   glass?: boolean;
+  /** Toggle action in its on state (a saved creator's heart): filled icon. */
+  active?: boolean;
 }
 
 /** Scroll-driven progress values (0 → 1), fed by `Layout`'s header behaviours. */
@@ -83,6 +85,7 @@ const HeaderActionButton = memo<{ action: ScreenHeaderAction; variant: ScreenHea
           tone={button.tone}
           onPress={action.onPress}
           accessibilityLabel={action.accessibilityLabel}
+          active={action.active}
         />
         {action.badge ? (
           <Box style={styles.badge} pointerEvents="none">
