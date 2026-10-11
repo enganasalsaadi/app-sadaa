@@ -14,6 +14,7 @@ import {
   useGetMediaKitQuery,
   useUpdateMediaKitMutation,
 } from '../../../api/mediaKitApi';
+import { useMediaKitCover } from '../../../hooks/useMediaKitCover';
 import { useSlugAvailability } from '../../../hooks/useSlugAvailability';
 import {
   createMediaKitSlugSchema,
@@ -26,18 +27,13 @@ import {
   previewSlugLink,
   resolveSlugCooldown,
 } from '../../../utils/mediaKitSlug';
+import { shouldToastFailure } from '../../../utils/requestFailure';
 
 const COOLDOWN_DATE: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
 
 const EMPTY: MediaKitSlugFormValues = { slug: '' };
 
 export type MediaKitSettingsStatus = 'loading' | 'error' | 'ready';
-
-/** Unhandled 4xx only: 403/5xx open the global modals, offline shows the snackbar. */
-const shouldToastFailure = (error: unknown): boolean => {
-  const { statusCode, isForbidden, isServerError } = normalizeApiError(error);
-  return statusCode !== null && !isForbidden && !isServerError;
-};
 
 /**
  * Media kit link + visibility (contract §17.2, §17.3). The slug is checked live
@@ -52,6 +48,7 @@ export const useMediaKitSettingsScreen = () => {
   const { data: kit, isError, isFetching, error: loadError, refetch } = useGetMediaKitQuery();
   const [saveSlug, { isLoading: isSaving }] = useUpdateMediaKitMutation();
   const [saveVisibility, { isLoading: isUpdatingVisibility }] = useUpdateMediaKitMutation();
+  const cover = useMediaKitCover(kit?.preview.cover_url ?? null);
   const [saved, setSaved] = useState(false);
   const [pendingPublic, setPendingPublic] = useState<boolean | null>(null);
   const [hideSheetVisible, setHideSheetVisible] = useState(false);
@@ -240,6 +237,7 @@ export const useMediaKitSettingsScreen = () => {
     isPublic: pendingPublic ?? kit?.is_public ?? true,
     isUpdatingVisibility,
     onTogglePublic,
+    cover,
     hideSheetVisible,
     confirmHide,
     closeHideSheet,

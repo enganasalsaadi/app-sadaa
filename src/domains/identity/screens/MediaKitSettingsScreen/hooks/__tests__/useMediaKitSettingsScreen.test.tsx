@@ -62,6 +62,11 @@ jest.mock('../../../../api/mediaKitApi', () => ({
   },
 }));
 
+const mockUseCover = jest.fn((_coverUrl: string | null) => ({ hasCover: false }));
+jest.mock('../../../../hooks/useMediaKitCover', () => ({
+  useMediaKitCover: (coverUrl: string | null) => mockUseCover(coverUrl),
+}));
+
 const mockAvailability: { current: SlugAvailability } = { current: { status: 'available' } };
 const mockRecheck = jest.fn();
 jest.mock('../../../../hooks/useSlugAvailability', () => ({
@@ -131,6 +136,13 @@ describe('useMediaKitSettingsScreen', () => {
     mockMutationCall = 0;
     mockKit.current = kit();
     mockAvailability.current = { status: 'available' };
+  });
+
+  it('hands the saved cover to the cover model', () => {
+    mockKit.current = kit({ preview: { cover_url: 'https://cdn/c.webp' } as MediaKit['preview'] });
+    mount();
+    expect(mockUseCover).toHaveBeenCalledWith('https://cdn/c.webp');
+    expect(current().cover).toEqual({ hasCover: false });
   });
 
   it('shows the cooldown end while can_change_slug_at is in the future', () => {

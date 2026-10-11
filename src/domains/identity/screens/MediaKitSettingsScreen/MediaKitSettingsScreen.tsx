@@ -19,6 +19,7 @@ import {
 } from '@/shared/ui';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { SLUG_MAX_LENGTH } from '../../utils/mediaKitSlug';
+import { MediaKitCoverSection } from './components/MediaKitCoverSection';
 import { MediaKitSettingsSkeleton } from './components/MediaKitSettingsSkeleton';
 import {
   useMediaKitSettingsScreen,
@@ -30,6 +31,8 @@ const SettingsForm: React.FC<{ vm: MediaKitSettingsScreenModel }> = memo(({ vm }
 
   return (
     <Box gap="3xl">
+      <MediaKitCoverSection cover={vm.cover} />
+
       <FormSection title={t('account.mediaKit.settingsScreen.link.section')}>
         <Box gap="lg">
           {vm.cooldownMessage ? (

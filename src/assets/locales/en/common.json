@@ -997,6 +997,26 @@
           "saveBlockedNoDate": "You changed your link recently. Try again later."
         },
         "rateLimited": "Too many changes. Try again later.",
+        "cover": {
+          "section": "Cover photo",
+          "hint": "The wide photo at the top of your page. It is cropped to a wide strip, so keep your subject in the middle.",
+          "empty": "No cover yet",
+          "previewA11y": "Cover photo preview",
+          "choose": "Choose photo",
+          "change": "Change photo",
+          "remove": "Remove",
+          "pendingNote": "This is how brands will see it. Nothing is saved yet.",
+          "use": "Use this photo",
+          "uploaded": "Your cover is updated",
+          "removed": "Your cover was removed",
+          "invalid": "Choose a JPG, PNG or WebP photo up to 5 MB",
+          "uploadFailed": "Couldn't upload your cover",
+          "removeFailed": "Couldn't remove your cover",
+          "rateLimited": "Too many cover uploads. Try again in an hour.",
+          "removeTitle": "Remove your cover?",
+          "removeBody": "Your page goes back to the plain navy header. You can add a new cover any time.",
+          "removeConfirm": "Remove cover"
+        },
         "visibility": {
           "section": "Visibility",
           "label": "Show my media kit to brands",

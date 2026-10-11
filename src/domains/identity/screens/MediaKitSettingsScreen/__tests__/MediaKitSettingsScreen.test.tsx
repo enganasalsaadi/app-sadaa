@@ -32,6 +32,14 @@ jest.mock('../../../utils/mediaKitSlug', () => ({ SLUG_MAX_LENGTH: 30 }));
 
 jest.mock('../../../components/DiscardChangesSheet', () => ({ DiscardChangesSheet: () => null }));
 
+jest.mock('../components/MediaKitCoverFrame', () => ({
+  MediaKitCoverFrame: ({ children }: { children?: React.ReactNode }) => children,
+}));
+
+jest.mock('../components/MediaKitCoverSection', () => ({
+  MediaKitCoverSection: 'MediaKitCoverSection',
+}));
+
 // Renders the slug field straight from the model, so no form library runs in the test.
 jest.mock('react-hook-form', () => ({
   Controller: ({
@@ -104,6 +112,7 @@ const model = (
     isPublic: true,
     isUpdatingVisibility: false,
     onTogglePublic: jest.fn(),
+    cover: { hasCover: false },
     hideSheetVisible: false,
     confirmHide: jest.fn(),
     closeHideSheet: jest.fn(),
@@ -154,6 +163,11 @@ describe('MediaKitSettingsScreen', () => {
     const notice = root.find(isHost('Notice'));
     expect(notice.props.message).toBe('You can pick a new link on 5 November');
     expect(root.find(isHost('CustomInput')).props.editable).toBe(true);
+  });
+
+  it('leads with the cover section, fed by the model', () => {
+    const { root, vm } = render();
+    expect(root.find(isHost('MediaKitCoverSection')).props.cover).toBe(vm.cover);
   });
 
   it('wires save as the one primary', () => {

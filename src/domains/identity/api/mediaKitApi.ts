@@ -90,10 +90,44 @@ export const {
   useTrackMediaKitViewMutation,
 } = mediaKitApi;
 
-// Second injection so the toggle can patch `getPublicMediaKit` through a typed `util`.
-const mediaKitShortlistApi = mediaKitApi.injectEndpoints({
+/** The owner's cover is on the public page too, so only that creator's cached page goes stale. */
+const coverTags = (result: MediaKit | undefined) =>
+  result ? [{ type: 'PublicMediaKit' as const, id: result.slug }] : [];
+
+// Second injection so these can write into `getMediaKit` / `getPublicMediaKit` through a typed `util`.
+const mediaKitMutationsApi = mediaKitApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
+    /**
+     * Contract §17.11: multipart `cover`. The server center-crops to 1500×600 and answers with
+     * the §17.1 kit, which replaces the cached one so the new cover shows everywhere at once.
+     * 429 after 10/h.
+     */
+    uploadMediaKitCover: builder.mutation<MediaKit, FormData>({
+      query: body => ({ url: '/influencer/media-kit/cover', method: 'POST', body }),
+      invalidatesTags: coverTags,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(mediaKitApi.util.upsertQueryData('getMediaKit', undefined, data));
+        } catch {
+          // The screen reports the failure.
+        }
+      },
+    }),
+    /** Contract §17.11: idempotent; answers with the §17.1 kit and `preview.cover_url: null`. */
+    removeMediaKitCover: builder.mutation<MediaKit, void>({
+      query: () => ({ url: '/influencer/media-kit/cover', method: 'DELETE' }),
+      invalidatesTags: coverTags,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(mediaKitApi.util.upsertQueryData('getMediaKit', undefined, data));
+        } catch {
+          // The screen reports the failure.
+        }
+      },
+    }),
     /**
      * Brand-explore §5 shortlist PUT/DELETE (idempotent, 204) from the kit itself. Flips the
      * kit's ❤️ at once and rolls back on failure; Explore, Home rails and the Shortlist list
@@ -124,4 +158,8 @@ const mediaKitShortlistApi = mediaKitApi.injectEndpoints({
   }),
 });
 
-export const { useSetKitShortlistedMutation } = mediaKitShortlistApi;
+export const {
+  useSetKitShortlistedMutation,
+  useUploadMediaKitCoverMutation,
+  useRemoveMediaKitCoverMutation,
+} = mediaKitMutationsApi;
