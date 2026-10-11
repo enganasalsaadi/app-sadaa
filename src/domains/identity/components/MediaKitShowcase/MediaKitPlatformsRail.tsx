@@ -7,7 +7,8 @@ import { Box, Card, SocialPlatformIcon, Text } from '@/shared/ui';
 import type { MediaKitPlatform } from '../../types/mediaKit';
 import { MediaKitRail } from './MediaKitRail';
 
-const CARD_WIDTH = moderateScale(148);
+/** Room for `lg` padding (rule 09 §3.2) beside the platform tile; the skeleton reserves the same width. */
+export const PLATFORM_CARD_WIDTH = moderateScale(160);
 const COMPACT: Intl.NumberFormatOptions = { notation: 'compact', maximumFractionDigits: 1 };
 
 /** One platform: icon, follower count (✓ when the server checked it) and the handle. */
@@ -18,8 +19,8 @@ const PlatformCard = memo<{ platform: MediaKitPlatform }>(({ platform }) => {
 
   return (
     <Card
-      width={CARD_WIDTH}
-      p="md"
+      width={PLATFORM_CARD_WIDTH}
+      p="lg"
       accessibilityLabel={t('account.mediaKit.showcase.platformA11y', {
         platform: platform.platform_label,
         followers,
@@ -64,7 +65,7 @@ const MediaKitPlatformsRailComponent: React.FC<{ platforms: readonly MediaKitPla
   if (platforms.length === 0) return null;
 
   return (
-    <MediaKitRail snapInterval={CARD_WIDTH + spacing.md}>
+    <MediaKitRail snapInterval={PLATFORM_CARD_WIDTH + spacing.md}>
       {platforms.map(platform => (
         <PlatformCard key={platform.platform} platform={platform} />
       ))}

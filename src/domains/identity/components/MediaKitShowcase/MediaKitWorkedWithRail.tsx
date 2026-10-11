@@ -6,7 +6,7 @@ import { Box, Card, Image, Text } from '@/shared/ui';
 import type { MediaKitWorkedWith, MediaKitWorkedWithBrand } from '../../types/mediaKit';
 import { MediaKitRail } from './MediaKitRail';
 
-const CARD_WIDTH = moderateScale(116);
+const CARD_WIDTH = moderateScale(124);
 
 const BrandCard = memo<{ brand: MediaKitWorkedWithBrand }>(({ brand }) => {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ const BrandCard = memo<{ brand: MediaKitWorkedWithBrand }>(({ brand }) => {
   return (
     <Card
       width={CARD_WIDTH}
-      p="md"
+      p="lg"
       accessibilityLabel={[brand.name, campaigns].join(t('account.mediaKit.showcase.listSeparator'))}
     >
       <Box align="center" gap="sm">

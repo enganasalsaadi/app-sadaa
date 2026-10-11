@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Skeleton } from '@/shared/ui';
+import { Box, Skeleton, useHeroCompact } from '@/shared/ui';
+import { PLATFORM_CARD_WIDTH } from './MediaKitPlatformsRail';
 
-const RAIL_CARD = { width: moderateScale(148), height: moderateScale(64) } as const;
+const PLATFORM_CARD_HEIGHT = moderateScale(72);
 const SERVICE_HEIGHT = moderateScale(112);
 const RAIL = ['a', 'b', 'c'] as const;
 const SERVICES = ['a', 'b'] as const;
@@ -10,7 +11,9 @@ const SERVICES = ['a', 'b'] as const;
 /** Sheet placeholder where the content lands: avatar on the cover edge, name, meta, bio, platforms, services. */
 const MediaKitShowcaseBodySkeletonComponent: React.FC = () => {
   const { sizes, borderWidths } = useTheme();
-  const ring = sizes.avatar.xl + borderWidths.xl * 2;
+  // Same avatar size as the identity it stands in for, so nothing jumps when it lands.
+  const compact = useHeroCompact();
+  const ring = (compact ? sizes.avatar.lg : sizes.avatar.xl) + borderWidths.xl * 2;
   const styles = useStyles(() => ({ overlap: { marginTop: -ring / 2 } }), [ring]);
 
   return (
@@ -25,7 +28,7 @@ const MediaKitShowcaseBodySkeletonComponent: React.FC = () => {
       </Box>
       <Box row px="xl" gap="md">
         {RAIL.map(key => (
-          <Skeleton key={key} width={RAIL_CARD.width} height={RAIL_CARD.height} borderRadius="lg" />
+          <Skeleton key={key} width={PLATFORM_CARD_WIDTH} height={PLATFORM_CARD_HEIGHT} borderRadius="lg" />
         ))}
       </Box>
       <Box px="xl" gap="md">
