@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import type { TFunction } from 'i18next';
+import { BIO_MAX_LENGTH, hasBioContactDetails } from '../utils/bioRules';
 
 /** Contract §8.1 limits. */
 export const FULL_NAME_MAX_LENGTH = 255;
@@ -13,6 +14,8 @@ export interface PersonalInfoFormValues {
   governorate: string;
   /** Optional; empty = no area. */
   area: string;
+  /** Optional public bio; empty = no bio. */
+  bio: string;
 }
 
 export const createPersonalInfoSchema = (
@@ -31,4 +34,10 @@ export const createPersonalInfoSchema = (
       .trim()
       .default('')
       .max(AREA_MAX_LENGTH, t('validation.maxLength', { count: AREA_MAX_LENGTH })),
+    bio: yup
+      .string()
+      .trim()
+      .default('')
+      .max(BIO_MAX_LENGTH, t('validation.maxLength', { count: BIO_MAX_LENGTH }))
+      .test('bio-contact-free', t('validation.bioContact'), value => !hasBioContactDetails(value)),
   });

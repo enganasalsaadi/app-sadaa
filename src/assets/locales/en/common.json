@@ -538,6 +538,10 @@
       "governorate": "Governorate",
       "area": "Area (optional)",
       "areaPlaceholder": "e.g. Mezzeh",
+      "aboutSection": "About you",
+      "aboutHint": "Shown on your media kit under your name. Keep it to a couple of lines.",
+      "bio": "Bio",
+      "bioPlaceholder": "e.g. Food and lifestyle creator from Damascus",
       "saved": "Your info was saved"
     },
     "companyInfo": {
@@ -1233,6 +1237,7 @@
     "phoneInvalidForCountry": "Invalid phone number for {{country}}",
     "invalidUrl": "Please enter a valid URL starting with https://",
     "selectOne": "Please choose one option",
+    "bioContact": "Remove links, @handles, emails and phone numbers. Deals stay inside Sada.",
     "invalidSocialLink": "Enter a valid link for this platform or an @handle"
   },
   "dateRange": {

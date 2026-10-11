@@ -18,6 +18,8 @@ export interface UpdateInfluencerProfileRequest {
   email?: string | null;
   governorate?: string;
   area?: string | null;
+  /** Trimmed server-side; `null` clears it. */
+  bio?: string | null;
   niches?: string[];
 }
 

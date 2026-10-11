@@ -15,6 +15,7 @@ export const toPersonalInfoForm = (details: UserProfileDetails): PersonalInfoFor
   email: details.email ?? '',
   governorate: details.profile.governorate ?? '',
   area: details.profile.area ?? '',
+  bio: details.profile.bio ?? '',
 });
 
 export const toCompanyInfoForm = (details: UserProfileDetails): CompanyInfoFormValues => ({
@@ -36,6 +37,7 @@ export const toPersonalInfoPatch = (
   if (orNull(values.email) !== orNull(saved.email)) patch.email = orNull(values.email);
   if (values.governorate !== saved.governorate) patch.governorate = values.governorate;
   if (orNull(values.area) !== orNull(saved.area)) patch.area = orNull(values.area);
+  if (orNull(values.bio) !== orNull(saved.bio)) patch.bio = orNull(values.bio);
   return patch;
 };
 

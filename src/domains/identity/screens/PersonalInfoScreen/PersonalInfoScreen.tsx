@@ -15,6 +15,7 @@ import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { LockedPhoneField } from '../../components/LockedPhoneField';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
 import { AREA_MAX_LENGTH, FULL_NAME_MAX_LENGTH } from '../../schemas/personalInfoSchema';
+import { BIO_MAX_LENGTH } from '../../utils/bioRules';
 import {
   usePersonalInfoScreen,
   type PersonalInfoScreenModel,
@@ -106,12 +107,39 @@ const PersonalInfoForm: React.FC<{ vm: PersonalInfoScreenModel }> = memo(({ vm }
             onBlur={onBlur}
             maxLength={AREA_MAX_LENGTH}
             textContentType="sublocality"
-            returnKeyType="done"
-            onSubmitEditing={vm.onSave}
+            returnKeyType="next"
+            onSubmitEditing={vm.focusBio}
             error={fieldState.error?.message}
           />
         )}
       />
+
+      <FormSection
+        title={t('account.personalInfo.aboutSection')}
+        tag={t('common.optional')}
+        description={t('account.personalInfo.aboutHint')}
+      >
+        <Controller
+          control={control}
+          name="bio"
+          render={({ field: { ref, value, onChange, onBlur }, fieldState }) => (
+            <CustomInput
+              ref={ref}
+              label={t('account.personalInfo.bio')}
+              placeholder={t('account.personalInfo.bioPlaceholder')}
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              multiline
+              numberOfLines={4}
+              maxLength={BIO_MAX_LENGTH}
+              showCount
+              editable={!vm.isSaving}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+      </FormSection>
     </Box>
   );
 });

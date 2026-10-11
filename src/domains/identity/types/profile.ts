@@ -6,6 +6,8 @@ export interface InfluencerProfileDetails {
   governorate: string | null;
   governorate_label: string | null;
   area: string | null;
+  /** Public, ≤ 300 chars (contract §8.1, §17.11); `null` when unset. */
+  bio: string | null;
   niches: string[];
   primary_platform_id: string | null;
   primary_platform_locked: boolean;

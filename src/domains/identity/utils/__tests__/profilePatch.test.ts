@@ -41,7 +41,13 @@ describe('toPersonalInfoForm / toPersonalInfoPatch', () => {
   const saved = toPersonalInfoForm(influencer);
 
   it('prefills the name from the profile and blanks missing optionals', () => {
-    expect(saved).toEqual({ fullName: 'Anas', email: '', governorate: 'damascus', area: '' });
+    expect(saved).toEqual({
+      fullName: 'Anas',
+      email: '',
+      governorate: 'damascus',
+      area: '',
+      bio: '',
+    });
   });
 
   it('sends nothing when nothing changed (whitespace ignored)', () => {
@@ -57,6 +63,20 @@ describe('toPersonalInfoForm / toPersonalInfoPatch', () => {
   it('clears an optional field with null', () => {
     const withArea = { ...saved, area: 'Mezzeh' };
     expect(toPersonalInfoPatch({ ...withArea, area: '  ' }, withArea)).toEqual({ area: null });
+  });
+
+  it('prefills the saved bio', () => {
+    const withBio = { ...influencer, profile: { ...influencer.profile, bio: 'Food creator' } };
+    expect(toPersonalInfoForm(withBio).bio).toBe('Food creator');
+  });
+
+  it('sends a changed bio trimmed, and null once it is emptied', () => {
+    expect(toPersonalInfoPatch({ ...saved, bio: ' Food creator ' }, saved)).toEqual({
+      bio: 'Food creator',
+    });
+    const withBio = { ...saved, bio: 'Food creator' };
+    expect(toPersonalInfoPatch({ ...withBio, bio: '   ' }, withBio)).toEqual({ bio: null });
+    expect(toPersonalInfoPatch(withBio, withBio)).toEqual({});
   });
 });
 

@@ -18,13 +18,14 @@ import {
 } from '../../../schemas/personalInfoSchema';
 import { toPersonalInfoForm, toPersonalInfoPatch } from '../../../utils/profilePatch';
 
-const EMPTY: PersonalInfoFormValues = { fullName: '', email: '', governorate: '', area: '' };
+const EMPTY: PersonalInfoFormValues = { fullName: '', email: '', governorate: '', area: '', bio: '' };
 
 const SERVER_FIELD_MAP = {
   full_name: 'fullName',
   email: 'email',
   governorate: 'governorate',
   area: 'area',
+  bio: 'bio',
 } as const satisfies Record<string, keyof PersonalInfoFormValues>;
 
 export const usePersonalInfoScreen = () => {
@@ -84,6 +85,7 @@ export const usePersonalInfoScreen = () => {
   }, [handleSubmit, savedValues, updateProfile, setError, t]);
 
   const focusEmail = useCallback(() => setFocus('email'), [setFocus]);
+  const focusBio = useCallback(() => setFocus('bio'), [setFocus]);
 
   const retry = useCallback(() => {
     details.refetch();
@@ -98,6 +100,7 @@ export const usePersonalInfoScreen = () => {
     phone: phone ? formatPhoneForDisplay(phone) : '',
     onContactSupport,
     focusEmail,
+    focusBio,
     isLoading: details.isLoading,
     isError: details.isError && !details.data,
     loadError: details.error,
