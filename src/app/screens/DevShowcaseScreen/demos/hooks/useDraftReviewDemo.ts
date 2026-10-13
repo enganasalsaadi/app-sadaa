@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/core/toast';
-import { getDealActions } from '@/domains/marketplace';
-import type { DraftStatus } from '@/domains/marketplace';
+import { getDealItemActions } from '@/domains/marketplace';
+import type { DealDraft } from '@/domains/marketplace';
 
 const MOCK_LATENCY_MS = 800;
 
@@ -10,7 +10,7 @@ const MOCK_LATENCY_MS = 800;
 export const useDraftReviewDemo = () => {
   const { t } = useTranslation();
   const { success, info } = useToast();
-  const [status, setStatus] = useState<DraftStatus>('pending_review');
+  const [review, setReview] = useState<DealDraft['review']>(null);
   const [submitting, setSubmitting] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -21,29 +21,52 @@ export const useDraftReviewDemo = () => {
     [],
   );
 
-  const settle = useCallback((next: DraftStatus, onDone: () => void) => {
+  const settle = useCallback((next: DealDraft['review'], onDone: () => void) => {
     setSubmitting(true);
     timer.current = setTimeout(() => {
       setSubmitting(false);
-      setStatus(next);
+      setReview(next);
       onDone();
     }, MOCK_LATENCY_MS);
   }, []);
 
+  const changesReview = useCallback(
+    (): DealDraft['review'] => ({
+      decision: { key: 'revision_requested', label: t('devShowcase.draftReview.changesToast') },
+      by: 'brand',
+      note: t('devShowcase.draftReview.note'),
+      pins: [],
+      reviewedAt: Date.now(),
+    }),
+    [t],
+  );
+
   const onApprove = useCallback(
-    () => settle('approved', () => success(t('devShowcase.draftReview.approvedToast'))),
+    () =>
+      settle(
+        {
+          decision: { key: 'approved', label: t('devShowcase.draftReview.approvedToast') },
+          by: 'brand',
+          note: null,
+          pins: [],
+          reviewedAt: Date.now(),
+        },
+        () => success(t('devShowcase.draftReview.approvedToast')),
+      ),
     [settle, success, t],
   );
   const onRequestChanges = useCallback(
-    () => settle('changes_requested', () => info(t('devShowcase.draftReview.changesToast'))),
-    [settle, info, t],
+    () => settle(changesReview(), () => info(t('devShowcase.draftReview.changesToast'))),
+    [settle, changesReview, info, t],
   );
-  const reset = useCallback(() => setStatus('pending_review'), []);
+  const reset = useCallback(() => setReview(null), []);
   const onOpen = useCallback(() => info(t('devShowcase.draftReview.openToast')), [info, t]);
 
-  // A brand reviewing an `under_review` deal is allowed both actions.
-  const actions = getDealActions('under_review', 'brand');
-  const canReview = actions.includes('approveDraft') && actions.includes('requestChanges');
+  // A brand looking at a submitted draft may review it.
+  const canReview = getDealItemActions(
+    { status: { key: 'draft_submitted', label: '' }, approveAsIsAvailable: false },
+    'brand',
+  ).includes('reviewDraft');
 
-  return { status, submitting, onApprove, onRequestChanges, reset, onOpen, canReview };
+  return { review, changesReview, submitting, onApprove, onRequestChanges, reset, onOpen, canReview };
 };

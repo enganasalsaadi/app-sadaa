@@ -1315,42 +1315,22 @@
   },
   "marketplace": {
     "deal": {
-      "status": {
-        "pendingApproval": "Awaiting acceptance",
-        "awaitingPayment": "Awaiting payment",
-        "inProgress": "In progress",
-        "underReview": "Under review",
-        "readyToPublish": "Ready to publish",
-        "published": "Published",
-        "completed": "Completed",
-        "disputed": "Disputed",
-        "cancelled": "Cancelled",
-        "refunded": "Refunded",
-        "unknown": "Unknown status"
+      "phase": {
+        "offer": "Offer",
+        "funding": "Escrow",
+        "shipping": "Shipping",
+        "creating": "Create",
+        "publishing": "Publish",
+        "done": "Done"
       },
-      "stage": {
-        "pendingApproval": "Accept",
-        "awaitingPayment": "Pay",
-        "inProgress": "Create",
-        "underReview": "Review",
-        "readyToPublish": "Ready",
-        "published": "Publish",
-        "completed": "Done",
-        "disputed": "Dispute",
-        "cancelled": "Cancelled",
-        "refunded": "Refunded",
-        "unknown": "Unknown"
-      },
+      "items_one": "{{count}} deliverable",
+      "items_other": "{{count}} deliverables",
       "escrowHeld": "held in escrow",
-      "meta": "{{counterpart}} · {{adType}}"
+      "meta": "{{counterpart}} · {{items}}"
     },
     "draft": {
-      "status": {
-        "pendingReview": "Awaiting review",
-        "approved": "Approved",
-        "changesRequested": "Changes requested"
-      },
-      "version": "Draft v{{version}}",
+      "pendingReview": "Awaiting review",
+      "round": "Round {{round}}",
       "open": "Open {{title}}",
       "submittedAt": "Submitted {{date}}",
       "noteTitle": "Brand feedback",
@@ -2902,13 +2882,16 @@
     },
     "dealStatus": {
       "pillsTitle": "Every status",
-      "progressTitle": "Under review",
+      "progressTitle": "Creating — product deal",
       "completedTitle": "Completed",
       "disputedTitle": "Disputed during production",
       "trackTitle": "Stage track (card)"
     },
     "dealCard": {
-      "pressed": "Opens the deal"
+      "pressed": "Opens the deal",
+      "statusInProgress": "In progress",
+      "statusPending": "Awaiting reply",
+      "statusCompleted": "Completed"
     },
     "draftReview": {
       "note": "Please show the logo in the first 3 seconds.",

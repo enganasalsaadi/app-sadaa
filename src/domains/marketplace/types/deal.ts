@@ -1,36 +1,480 @@
-// Mirrors the backend enums exactly (rule 06). Adding a value breaks every `Record<DealStatus, …>` map until it is handled.
+import type { Money } from '@/core/money';
+
+// Mirrors the backend Direct Deals enums exactly (rule 06). Adding a value breaks every
+// `Record<DealStatus, …>` map until it is handled. Unknown values from a newer server map to `null`.
 
 export const DEAL_STATUS = [
-  'pending_approval', // waiting creator acceptance
-  'awaiting_payment', // waiting brand payment into escrow
-  'in_progress', // creator producing content
-  'under_review', // draft uploaded, brand reviewing
-  'ready_to_publish', // draft approved
-  'published', // proof link submitted, tracking window
-  'completed', // funds released to creator wallet
-  'disputed', // support intervention
-  'cancelled',
-  'refunded',
+  'draft',
+  'pending_influencer',
+  'negotiating_deadline',
+  'awaiting_payment',
+  'escrow_locked',
+  'product_shipping',
+  'shipping_issue',
+  'in_progress',
+  'disputed',
+  'completed',
+  'declined',
+  'expired',
+  'cancelled_pre_escrow',
+  'cancelled_payment_timeout',
+  'cancelled_by_brand',
+  'cancelled_with_kill_fee',
+  'cancelled_by_influencer',
+  'cancelled_shipping_timeout',
+  'creator_defaulted',
+  'resolved_refund',
+  'resolved_payout',
+  'resolved_split',
 ] as const;
 export type DealStatus = (typeof DEAL_STATUS)[number];
 
-export const isDealStatus = (value: unknown): value is DealStatus =>
-  typeof value === 'string' && (DEAL_STATUS as readonly string[]).includes(value);
+/** Per-deliverable progress while the deal is `in_progress`; the deal `stage` is the slowest item. */
+export const DEAL_ITEM_STATUS = [
+  'pending',
+  'draft_submitted',
+  'revision_requested',
+  'approved_to_publish',
+  'verifying_live',
+  'verified',
+] as const;
+export type DealItemStatus = (typeof DEAL_ITEM_STATUS)[number];
+
+export const DEAL_SHIPPING_MODE = ['none', 'gift', 'returnable'] as const;
+export type DealShippingMode = (typeof DEAL_SHIPPING_MODE)[number];
+
+export const DEAL_DECLINE_REASON = ['schedule_full', 'not_a_fit', 'vacation', 'other'] as const;
+export type DealDeclineReason = (typeof DEAL_DECLINE_REASON)[number];
+
+export const DEAL_BRAND_CANCEL_REASON = ['no_longer_needed', 'budget_changed', 'timing_changed', 'other'] as const;
+export type DealBrandCancelReason = (typeof DEAL_BRAND_CANCEL_REASON)[number];
+
+export const DEAL_WITHDRAW_REASON = ['schedule_conflict', 'personal', 'brief_concern', 'other'] as const;
+export type DealWithdrawReason = (typeof DEAL_WITHDRAW_REASON)[number];
+
+export const DEAL_CANCEL_OUTCOME = ['free', 'kill_fee', 'dispute_only'] as const;
+export type DealCancelOutcome = (typeof DEAL_CANCEL_OUTCOME)[number];
+
+export const DEAL_SHIPPING_ISSUE_REASON = ['delayed', 'damaged', 'incomplete', 'wrong_item', 'other'] as const;
+export type DealShippingIssueReason = (typeof DEAL_SHIPPING_ISSUE_REASON)[number];
+
+export const DEAL_DRAFT_DECISION = ['approved', 'auto_approved', 'revision_requested'] as const;
+export type DealDraftDecision = (typeof DEAL_DRAFT_DECISION)[number];
+
+export const DEAL_PUBLICATION_DECISION = ['confirmed', 'auto_verified', 'fix_requested'] as const;
+export type DealPublicationDecision = (typeof DEAL_PUBLICATION_DECISION)[number];
+
+export const DEAL_UPSELL_KIND = ['deliverable', 'addon', 'extra_revision'] as const;
+export type DealUpsellKind = (typeof DEAL_UPSELL_KIND)[number];
+
+export const DEAL_UPSELL_STATUS = ['pending', 'accepted', 'declined', 'withdrawn', 'lapsed', 'voided'] as const;
+export type DealUpsellStatus = (typeof DEAL_UPSELL_STATUS)[number];
+
+export const DEAL_UPSELL_DECLINE_REASON = ['schedule_full', 'not_a_fit', 'other'] as const;
+export type DealUpsellDeclineReason = (typeof DEAL_UPSELL_DECLINE_REASON)[number];
+
+export const DEAL_DISPUTE_REASON = [
+  'brief_not_followed',
+  'poor_quality',
+  'missed_deadlines',
+  'unresponsive',
+  'live_post_issue',
+  'excessive_revisions',
+  'scope_change',
+  'brand_unresponsive',
+  'product_issue',
+  'unfair_rejection',
+  'other',
+] as const;
+export type DealDisputeReason = (typeof DEAL_DISPUTE_REASON)[number];
+
+export const DEAL_DISPUTE_STATUS = ['open', 'withdrawn', 'resolved'] as const;
+export type DealDisputeStatus = (typeof DEAL_DISPUTE_STATUS)[number];
+
+export const DEAL_DISPUTE_OUTCOME = ['refund', 'payout', 'split'] as const;
+export type DealDisputeOutcome = (typeof DEAL_DISPUTE_OUTCOME)[number];
+
+export const DEAL_RETENTION_REASON = ['deleted', 'made_private', 'edited', 'other'] as const;
+export type DealRetentionReason = (typeof DEAL_RETENTION_REASON)[number];
+
+export const DEAL_RETENTION_STATUS = ['awaiting_influencer', 'awaiting_brand', 'escalated', 'closed'] as const;
+export type DealRetentionStatus = (typeof DEAL_RETENTION_STATUS)[number];
+
+/** Who moved a deal: the server's actor types (the influencer is our creator). */
+export const DEAL_ACTOR = ['brand', 'influencer', 'system', 'admin'] as const;
+export type DealActor = (typeof DEAL_ACTOR)[number];
+
+export const DEAL_RATING_CRITERIA = {
+  brand: ['content_quality', 'timeliness', 'communication'],
+  creator: ['brief_clarity', 'review_speed', 'request_clarity'],
+} as const;
+export type DealRatingCriterion =
+  (typeof DEAL_RATING_CRITERIA)[keyof typeof DEAL_RATING_CRITERIA][number];
+
+const isOneOf =
+  <T extends string>(values: readonly T[]) =>
+  (value: unknown): value is T =>
+    typeof value === 'string' && (values as readonly string[]).includes(value);
+
+export const isDealStatus = isOneOf(DEAL_STATUS);
+export const isDealItemStatus = isOneOf(DEAL_ITEM_STATUS);
 
 /** The side of the deal the viewer is on; comes from the server user object (rule 07). */
 export type DealRole = 'creator' | 'brand';
 
-/** Action endpoints the UI may offer (`POST deals/:id/<action>`); the server re-validates. */
+/** A server enum with its localized label. `key` is `null` when this build doesn't know the value. */
+export interface Labeled<K extends string> {
+  key: K | null;
+  label: string;
+}
+
+/**
+ * UX hint only: which action surfaces a deal detail shows. The server re-validates every call (rule 06).
+ * Item-level actions live in `DealItemAction`.
+ */
 export type DealAction =
+  // brand
+  | 'sendOffer'
+  | 'editDraft'
+  | 'deleteDraft'
+  | 'withdrawOffer'
+  | 'answerExtension'
+  | 'fund'
+  | 'ship'
+  | 'answerIssue'
+  | 'proposeUpsell'
+  | 'cancel'
+  | 'reportRetention'
+  // creator
   | 'accept'
   | 'decline'
-  | 'pay'
-  | 'submitDraft'
-  | 'approveDraft'
-  | 'requestChanges'
-  | 'submitProof'
+  | 'requestExtension'
+  | 'receiveShipment'
+  | 'reportIssue'
+  | 'freeCancel'
+  | 'answerUpsell'
+  | 'withdraw'
+  | 'restorePost'
+  // both
   | 'openDispute'
-  | 'cancel';
+  | 'addEvidence'
+  | 'rate';
 
-export const DRAFT_STATUS = ['pending_review', 'approved', 'changes_requested'] as const;
-export type DraftStatus = (typeof DRAFT_STATUS)[number];
+export type DealItemAction = 'submitDraft' | 'reviewDraft' | 'approveAsIs' | 'publish' | 'verifyPost';
+
+/** Epoch ms. All deadlines come from the server; `null` on a running timer means paused. */
+export type Timestamp = number;
+
+export interface DealParty {
+  name: string | null;
+  avatarUrl: string | null;
+}
+
+export interface DealCreatorParty extends DealParty {
+  /** Media-kit slug; `null` when the creator has no public kit. */
+  slug: string | null;
+}
+
+export interface DealAddon {
+  /** Raw add-on type; unknown types are kept so the line still totals right. */
+  type: string;
+  label: string;
+  price: Money;
+  options: Record<string, unknown>;
+  /** Bought mid-deal through this upsell; `null` = part of the original offer. */
+  upsellId: string | null;
+}
+
+export interface DealItem {
+  id: string;
+  rateCardId: string | null;
+  /** Set when an accepted upsell added this deliverable. */
+  upsellId: string | null;
+  title: string;
+  platform: string | null;
+  service: string | null;
+  packageValue: string | null;
+  unitPrice: Money;
+  addons: DealAddon[];
+  total: Money;
+  deliveryDays: number | null;
+  deliveryHours: number | null;
+  retentionDays: number | null;
+  revisionsAllowed: number;
+  revisionsUsed: number;
+  revisionsLeft: number;
+  approveAsIsAvailable: boolean;
+  status: Labeled<DealItemStatus>;
+  dueAt: Timestamp | null;
+  timerPaused: boolean;
+  liveUrl: string | null;
+  fixRequestsLeft: number;
+  verifiedAt: Timestamp | null;
+}
+
+export interface DealFile {
+  id: string;
+  kind: 'video' | 'image' | 'document' | null;
+  name: string;
+  mime: string;
+  size: number;
+  status: 'pending' | 'ready' | 'purged' | null;
+  /** Short-lived download URL; `null` once purged. */
+  url: string | null;
+}
+
+export interface DealShipmentPhoto {
+  url: string | null;
+  mime: string;
+  size: number;
+}
+
+export interface DealShipment {
+  id: string;
+  sequence: number;
+  courier: string;
+  trackingNo: string;
+  trackingUrl: string | null;
+  shippedAt: Timestamp;
+  receivedAt: Timestamp | null;
+  delayedReportFrom: Timestamp;
+  issue: {
+    reason: Labeled<DealShippingIssueReason>;
+    note: string | null;
+    photos: DealShipmentPhoto[];
+    reportedAt: Timestamp | null;
+    answerBy: Timestamp | null;
+  } | null;
+}
+
+export interface DealShipping {
+  shipBy: Timestamp | null;
+  reshipsLeft: number;
+  freeCancelFrom: Timestamp | null;
+  shipments: DealShipment[];
+}
+
+export interface DealCancellation {
+  brand: {
+    outcome: Labeled<DealCancelOutcome>;
+    freeUntil: Timestamp | null;
+    refund: Money | null;
+    killFee: Money | null;
+    platformFee: Money | null;
+    creatorNet: Money | null;
+  } | null;
+  creator: {
+    withdrawAvailable: boolean;
+    /** Withdrawing now records a strike. */
+    strike: boolean;
+    refund: Money | null;
+  };
+}
+
+export interface DealExtension {
+  addendumId: string;
+  status: 'pending' | 'approved' | 'lapsed' | null;
+  fromHours: number | null;
+  toHours: number | null;
+  reason: string | null;
+}
+
+export interface DealUpsell {
+  id: string;
+  kind: Labeled<DealUpsellKind>;
+  status: Labeled<DealUpsellStatus>;
+  itemId: string | null;
+  title: string | null;
+  quantity: number | null;
+  addon: Omit<DealAddon, 'upsellId'> | null;
+  deliveryHours: number | null;
+  amount: Money;
+  addendumId: string | null;
+  addedItemIds: string[];
+  reviewPaused: boolean;
+  dueAt: Timestamp | null;
+  declineReason: Labeled<DealUpsellDeclineReason> | null;
+  note: string | null;
+  voidReason: string | null;
+  proposedAt: Timestamp | null;
+  closedAt: Timestamp | null;
+}
+
+/** Whether a new window-gated request is possible now; `closedReason` is a server code. */
+export interface DealWindow {
+  open: boolean;
+  closedReason: string | null;
+}
+
+export interface DealDisputeRuling {
+  outcome: Labeled<DealDisputeOutcome>;
+  reason: string | null;
+  brandAmount: Money;
+  creatorAmount: Money;
+  commission: Money;
+  creatorNet: Money;
+  resolvedAt: Timestamp | null;
+}
+
+export interface DealDispute {
+  id: string;
+  status: Labeled<DealDisputeStatus>;
+  openedBy: DealActor | null;
+  reason: Labeled<DealDisputeReason>;
+  statement: string;
+  priorStatus: DealStatus | null;
+  evidenceOpen: boolean;
+  evidenceDueAt: Timestamp | null;
+  evidenceClosedAt: Timestamp | null;
+  /** Shown only; the server does not enforce it. */
+  adminTargetAt: Timestamp | null;
+  withdrawnAt: Timestamp | null;
+  ruling: DealDisputeRuling | null;
+  openedAt: Timestamp | null;
+  closedAt: Timestamp | null;
+}
+
+export interface DealRetentionWindow {
+  itemId: string;
+  endsAt: Timestamp | null;
+  reportAvailable: boolean;
+  openCaseId: string | null;
+}
+
+export interface DealRetentionCase {
+  id: string;
+  itemId: string;
+  reason: Labeled<DealRetentionReason>;
+  note: string | null;
+  status: Labeled<DealRetentionStatus>;
+  reportFiles: DealFile[];
+  restoredUrl: string | null;
+  /** `null` until the creator restores with a link. */
+  handleChecked: boolean | null;
+  restoreFiles: DealFile[];
+  clawback: Money | null;
+  dueAt: Timestamp | null;
+  reportedAt: Timestamp | null;
+  closedAt: Timestamp | null;
+}
+
+export interface DealRatingSide {
+  answered: boolean;
+  /** Present only once ratings are revealed. */
+  revealed: {
+    skipped: boolean;
+    scores: Partial<Record<DealRatingCriterion, number>>;
+    overall: number | null;
+    comment: string | null;
+    submittedAt: Timestamp | null;
+  } | null;
+}
+
+export interface DealRating {
+  open: boolean;
+  dueAt: Timestamp | null;
+  revealedAt: Timestamp | null;
+  brand: DealRatingSide;
+  creator: DealRatingSide;
+}
+
+export interface DealSignature {
+  party: DealRole | null;
+  signedAt: Timestamp;
+}
+
+export interface Deal {
+  id: string;
+  origin: 'direct' | 'public' | null;
+  status: Labeled<DealStatus>;
+  /** Slowest item's status while `in_progress`; otherwise `null`. */
+  stage: Labeled<DealItemStatus> | null;
+  brand: DealParty;
+  creator: DealCreatorParty;
+  items: DealItem[];
+  itemsCount: number;
+  total: Money;
+  shippingMode: Labeled<DealShippingMode>;
+  shipping: DealShipping | null;
+  cancellation: DealCancellation | null;
+  deliveryHours: number | null;
+  requestedDeliveryDays: number | null;
+  extendedDeliveryHours: number | null;
+  extension: DealExtension | null;
+  declineReason: Labeled<DealDeclineReason> | null;
+  deadlineAt: Timestamp | null;
+  upsells: DealUpsell[];
+  upsellWindow: DealWindow & { pendingUpsellId: string | null };
+  dispute: DealDispute | null;
+  disputeWindow: DealWindow & { disputesLeft: number };
+  retention: DealRetentionWindow[];
+  retentionCases: DealRetentionCase[];
+  rating: DealRating | null;
+  brief: string | null;
+  briefAttachments: DealFile[];
+  /** Current SLA deadline; `null` while timers are frozen (shipping issue, dispute). */
+  dueAt: Timestamp | null;
+  sentAt: Timestamp | null;
+  fundedAt: Timestamp | null;
+  contract: { id: string; hash: string; signatures: DealSignature[] } | null;
+  createdAt: Timestamp | null;
+  updatedAt: Timestamp | null;
+}
+
+export interface DealTimelineRow {
+  id: string;
+  subject: { type: 'deal' | 'item'; id: string };
+  from: { key: string; label: string } | null;
+  to: { key: string; label: string };
+  actor: Labeled<DealActor>;
+  /** Server reason code; unknown reasons still render from `to.label`. */
+  reason: string | null;
+  metadata: Record<string, unknown> | null;
+  dueAt: Timestamp | null;
+  occurredAt: Timestamp;
+  /** `from == to`: an event, not a status change. */
+  isNote: boolean;
+}
+
+/** A brand pin on a draft file: an exact moment (video) or the whole file. */
+export interface DealDraftPin {
+  fileId: string;
+  atSecond: number | null;
+  note: string;
+}
+
+export interface DealDraft {
+  id: string;
+  itemId: string;
+  round: number;
+  caption: string | null;
+  submittedAt: Timestamp;
+  files: DealFile[];
+  /** `null` while the brand is still reviewing. */
+  review: {
+    decision: Labeled<DealDraftDecision>;
+    by: DealActor | null;
+    note: string | null;
+    pins: DealDraftPin[];
+    reviewedAt: Timestamp | null;
+  } | null;
+}
+
+export interface DealPublication {
+  id: string;
+  itemId: string;
+  sequence: number;
+  url: string | null;
+  platform: string | null;
+  handle: string | null;
+  /** `false` = the server couldn't read the link's account; the brand must check the proofs. */
+  handleChecked: boolean;
+  submittedAt: Timestamp;
+  proofs: DealFile[];
+  review: {
+    decision: Labeled<DealPublicationDecision>;
+    by: DealActor | null;
+    note: string | null;
+    reviewedAt: Timestamp | null;
+  } | null;
+}

@@ -219,7 +219,7 @@ Creators are segmented by **follower tier**. The tier is shown everywhere as a c
 ### 4.4 The money flow (how escrow works)
 
 1. **Top-up.** The brand sends money to Sada's account through a local channel (Al-Haram or Al-Fouad exchange offices, Syriatel Cash, MTN Cash or Sham Cash, or a bank transfer), then files a top-up request in the app with the transfer number and a photo of the receipt. Sada's team checks the transfer and then adds the dollars to the wallet. Dollars are added as sent; Syrian pounds are converted at the rate of the moment the request is sent, which is then locked: before sending, the app shows an estimate; after sending, the amount on the request is final.
-2. **Agreement.** The brand and creator agree on a deal. The creator accepts, and the brand sees a detailed invoice.
+2. **Agreement.** The brand builds a direct offer from the creator's published prices (fixed, no haggling), adding fixed-price extras such as rush delivery or an extra revision. The creator accepts, declines with a reason, or asks once for more time (up to 14 extra days). Both sides sign the contract in the app.
 3. **Escrow hold.** The agreed amount is **frozen** in escrow straight away. The creator is notified: *"Funds deposited. You can start working safely."* The creator cannot touch this money yet.
 4. **Production and review.** The creator uploads the draft, and the brand reviews and approves it in the app.
 5. **Publish and prove.** The creator publishes on their real account at the agreed time and submits the post link as proof.
@@ -530,18 +530,19 @@ If someone closes the app halfway through, the next launch (or login) asks the s
 - **Forgot password:** phone → SMS code → new password → back to Login with the phone number already filled in.
 - **Suspension:** if the platform suspends an account, the app switches immediately to the Suspended screen, wherever the user was. From there they can contact support on WhatsApp (for account support only, never for deal actions), re-check whether the suspension has been lifted, log out, or delete their account.
 
-#### Journey F: The deal lifecycle 🟡 components ready · 🔜 live service
-The visual building blocks are already designed and built (deal cards, status pills, a progress timeline, draft review cards, creator cards, wallet balance card, payment breakdown). They will be connected once the marketplace service is ready:
+#### Journey F: The direct deal lifecycle 🟡 foundation built · 🔜 screens
+A brand asks one creator for specific work at the creator's fixed prices (public campaigns come later). The deal's states, the server's labels and the actions each side may take are now built into the app and tested; the screens follow (plan: offer builder, deal lists in a new "My deals" tab for both roles with a count of deals waiting on the user, deal page, drafts, publishing, ratings).
 
-1. A brand posts a campaign (via the Brief Builder) **or** sends a direct offer to a creator.
-2. The creator receives a notification, opens the brief, and chooses **Accept, Reject or Negotiate**.
-3. *Waiting for payment* → the brand pays into escrow → *In progress*.
-4. The creator uploads the draft → *Under review* → the brand approves or asks for changes.
-5. *Ready to publish* → the creator publishes and submits the link → *Published*.
-6. Verification and tracking window → *Completed*, and the money is in the creator's wallet.
-7. Either side can raise a *Dispute* at any time. Breaches lead to *Refunded*.
+1. **Offer.** From a creator's profile the brand picks services and quantities, fixed-price extras, the product to ship if any, and a brief with up to 5 files. The server prices it; the app never adds up totals. The brand signs and sends.
+2. **Creator reply (48 hours).** Accept and sign, decline with a reason, or ask once for more time. A time request goes back to the brand, who approves (and pays) or lets the offer go.
+3. **Payment (24 hours).** If the brand's wallet is short, the deal waits for a top-up; a top-up pays waiting deals by itself. Paid money is held in escrow.
+4. **Product (only when there is one).** The brand ships and enters tracking; the creator confirms receipt or reports a problem with photos.
+5. **Work, per deliverable.** The creator uploads a draft; the brand approves or asks for changes, pinning exact moments in a video (48 hours, then it is approved automatically). The number of revision rounds is set by the offer.
+6. **Publish and verify.** The creator publishes and hands in the link plus screenshots; the brand confirms or asks for a corrected link (48 hours, then confirmed automatically). When every deliverable is confirmed the deal is *Completed* and the money goes to the creator's wallet minus commission.
+7. **After.** Both sides rate each other blind for 7 days. The brand can report a post taken down during the agreed keep-up period.
+8. **When things go wrong.** Cancelling shows the outcome first: free, a 40% kill fee, or dispute only. A creator who withdraws gets a strike. Either side can open a dispute; the deal's timers pause and Sada's team rules a refund, a payout or a split.
 
-Each stage always shows text and an icon, never colour alone. The app only offers the actions that role is allowed to take at that stage, and the server re-checks every action.
+Every status shows the server's own wording with an icon and colour, never colour alone. Timers count down from the server's deadline and show "paused" when the server freezes them. Prices are in US dollars only, exactly as the contract states them. If the deal changed in the meantime (the other side acted, a timer ran out), the app shows the server's message and reloads the deal.
 
 #### Journey G: Deleting an account ✅
 - **Where:** "Delete my account" is in Settings, on the Suspended screen, and in the header of every registration step. Anyone who can create an account can delete it, even halfway through registration or while suspended (an Apple requirement).
@@ -783,6 +784,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-13 | Direct deals foundation: the app now knows every deal state from the service (22 deal states, 6 per-deliverable states) with the server's own labels, the journey phases (offer, escrow, shipping, create, publish, done) and which actions each side may take; the old deal states were retired. Prices are fixed by rate cards, the only negotiation is one deadline extension, deals show US dollars only. No new screen yet. | 4.4, 5.3 (Journey F) |
 | 2026-10-13 | Creator Home: the navy band now holds only the pass and its hanging sign; "who's looking" and Share moved into the sheet as its first card so they no longer slide away half read. | 5.2, 5.3 (Journey A4) |
 | 2026-10-13 | Creator Home redesigned as "Storefront" (🟡 awaiting device testing): a tilted pass card with a passing light (dashed slots for a missing photo or first platform, link with copy), the one blocker as a sign hanging from it that falls away once cleared, "who's looking" panes with a daily views pulse, Share with copy and preview; below, profile strength, audience by platform and prices as swing tags are always shown, each with its own empty state (profile strength stays at 100% as "complete"). Wallet and Profile now use the same hero as Home: the sections slide over the navy band as a sheet instead of a rounded block. | 5.2, 5.3 (Journeys A3, A4, H), 6.3 |
 | 2026-10-13 | Profile redesigned for both roles: rounded navy band with one completion ring around the photo (slices per step, review/rejected verification shown on its slice, up to three step markers with points, a single gold ring once complete and verified), verification pill, rejection strip, tear-off "complete your profile" tickets ordered by points, a faded-notification card while push is off, creator platform cards and tools grid with the media kit link and share, brand company rows and a spotlight visibility switch, settings in one panel. Motion runs once, no loops. | 5.2, 5.3, 6.4 |

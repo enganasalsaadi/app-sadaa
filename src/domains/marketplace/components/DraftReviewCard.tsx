@@ -4,19 +4,18 @@ import { formatDate, formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, Card, CustomButton, MediaTile, Notice, StatusPill, Text } from '@/shared/ui';
 import type { MediaKind } from '@/shared/ui';
-import { DRAFT_STATUS_ICON, DRAFT_STATUS_META } from '../constants';
-import type { DraftStatus } from '../types';
+import { DEAL_DRAFT_REVIEW_ICON, DEAL_DRAFT_REVIEW_TONE } from '../constants';
+import type { DealDraft } from '../types';
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' };
 
 export interface DraftReviewCardProps {
-  version: number;
+  round: number;
   /** Epoch ms. */
   submittedAt: number;
   media: { uri?: string; kind: MediaKind; durationSeconds?: number };
-  status: DraftStatus;
-  /** Brand feedback on a `changes_requested` draft. Shown as-is (server text). */
-  note?: string;
+  /** Server review; `null` while the brand hasn't decided. Its note shows as-is. */
+  review: DealDraft['review'];
   /** Opens the original-quality viewer. */
   onOpen: () => void;
   /** Review actions show only while the draft is pending and the viewer may act (`getDealActions`). */
@@ -28,11 +27,10 @@ export interface DraftReviewCardProps {
 
 /** One uploaded draft in a deal: media, version, review state and the brand's actions. */
 const DraftReviewCardComponent: React.FC<DraftReviewCardProps> = ({
-  version,
+  round,
   submittedAt,
   media,
-  status,
-  note,
+  review,
   onOpen,
   onApprove,
   onRequestChanges,
@@ -40,9 +38,10 @@ const DraftReviewCardComponent: React.FC<DraftReviewCardProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { colors, sizes } = useTheme();
-  const meta = DRAFT_STATUS_META[status];
-  const title = t('marketplace.draft.version', { version: formatNumber(version) });
-  const canReview = status === 'pending_review' && onApprove && onRequestChanges;
+  const decision = review?.decision.key ?? 'pending';
+  const title = t('marketplace.draft.round', { round: formatNumber(round) });
+  const canReview = review === null && onApprove && onRequestChanges;
+  const note = review?.decision.key === 'revision_requested' ? review.note : null;
 
   return (
     <Card>
@@ -63,12 +62,17 @@ const DraftReviewCardComponent: React.FC<DraftReviewCardProps> = ({
               {t('marketplace.draft.submittedAt', { date: formatDate(submittedAt, DATE_FORMAT, i18n.language) })}
             </Text>
             <Box mt="xs">
-              <StatusPill label={t(meta.labelKey)} tone={meta.tone} icon={DRAFT_STATUS_ICON[status]} size="sm" />
+              <StatusPill
+                label={review?.decision.label ?? t('marketplace.draft.pendingReview')}
+                tone={DEAL_DRAFT_REVIEW_TONE[decision]}
+                icon={DEAL_DRAFT_REVIEW_ICON[decision]}
+                size="sm"
+              />
             </Box>
           </Box>
         </Box>
 
-        {note && status === 'changes_requested' ? (
+        {note ? (
           <Notice tone="warning" title={t('marketplace.draft.noteTitle')} message={note} />
         ) : null}
 

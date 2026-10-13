@@ -1,57 +1,140 @@
 import type { TimelineStepState } from '@/shared/ui';
 import {
-  DEAL_ALLOWED_ACTIONS,
-  DEAL_PIPELINE,
+  DEAL_ITEM_ACTIONS,
+  DEAL_ITEM_STATUS_META,
+  DEAL_PHASES,
+  DEAL_STATUS_ACTIONS,
   DEAL_STATUS_META,
+  UNKNOWN_DEAL_ITEM_STATUS_META,
   UNKNOWN_DEAL_STATUS_META,
 } from '../constants/dealStatus';
-import type { DealStatusMeta } from '../constants/dealStatus';
-import type { DealAction, DealRole, DealStatus } from '../types';
+import type { DealItemStatusMeta, DealPhase, DealStatusMeta } from '../constants/dealStatus';
+import type {
+  Deal,
+  DealAction,
+  DealItem,
+  DealItemAction,
+  DealItemStatus,
+  DealRole,
+  DealStatus,
+} from '../types';
 
-/** `null` = a status the app doesn't know (map raw values with `isDealStatus` at the API edge). */
+/** `null` = a status the app doesn't know (mappers turn raw values into `null` at the API edge). */
 export const getDealStatusMeta = (status: DealStatus | null): DealStatusMeta =>
   status === null ? UNKNOWN_DEAL_STATUS_META : DEAL_STATUS_META[status];
 
+export const getDealItemStatusMeta = (status: DealItemStatus | null): DealItemStatusMeta =>
+  status === null ? UNKNOWN_DEAL_ITEM_STATUS_META : DEAL_ITEM_STATUS_META[status];
+
+export type DealActionInput = Pick<
+  Deal,
+  | 'status'
+  | 'cancellation'
+  | 'shipping'
+  | 'dispute'
+  | 'disputeWindow'
+  | 'upsells'
+  | 'upsellWindow'
+  | 'rating'
+  | 'retention'
+  | 'retentionCases'
+>;
+
+/**
+ * Which action surfaces the deal detail shows for this role. UX hint only — the server
+ * re-validates every call (rule 06). `now` (epoch ms) only gates the free shipping cancel.
+ */
 export const getDealActions = (
-  status: DealStatus | null,
+  deal: DealActionInput,
   role: DealRole,
-): readonly DealAction[] => (status === null ? [] : DEAL_ALLOWED_ACTIONS[status][role]);
+  now: number = Date.now(),
+): DealAction[] => {
+  const status = deal.status.key;
+  const actions: DealAction[] = status === null ? [] : [...DEAL_STATUS_ACTIONS[status][role]];
+  const brand = role === 'brand';
+
+  if (brand && deal.cancellation?.brand) actions.push('cancel');
+  if (!brand && deal.cancellation?.creator.withdrawAvailable) actions.push('withdraw');
+
+  const freeCancelFrom = deal.shipping?.freeCancelFrom ?? null;
+  if (
+    !brand &&
+    (status === 'product_shipping' || status === 'shipping_issue') &&
+    freeCancelFrom !== null &&
+    freeCancelFrom <= now
+  ) {
+    actions.push('freeCancel');
+  }
+
+  if (brand && deal.upsellWindow.open) actions.push('proposeUpsell');
+  if (!brand && deal.upsells.some(upsell => upsell.status.key === 'pending')) actions.push('answerUpsell');
+
+  if (deal.disputeWindow.open) actions.push('openDispute');
+  if (status === 'disputed' && deal.dispute?.status.key === 'open' && deal.dispute.evidenceOpen) {
+    actions.push('addEvidence');
+  }
+
+  if (brand && deal.retention.some(window => window.reportAvailable)) actions.push('reportRetention');
+  if (!brand && deal.retentionCases.some(c => c.status.key === 'awaiting_influencer')) {
+    actions.push('restorePost');
+  }
+
+  if (deal.rating?.open && !deal.rating[role].answered) actions.push('rate');
+
+  return actions;
+};
+
+export const getDealItemActions = (
+  item: Pick<DealItem, 'status' | 'approveAsIsAvailable'>,
+  role: DealRole,
+): DealItemAction[] => {
+  const status = item.status.key;
+  const actions: DealItemAction[] = status === null ? [] : [...DEAL_ITEM_ACTIONS[status][role]];
+  if (role === 'brand' && item.approveAsIsAvailable) actions.push('approveAsIs');
+  return actions;
+};
 
 export interface DealProgressStep {
-  status: DealStatus;
+  phase: DealPhase;
   state: TimelineStepState;
 }
 
-const pipelineIndex = (status: DealStatus): number =>
-  (DEAL_PIPELINE as readonly DealStatus[]).indexOf(status);
+export interface DealProgressInput {
+  status: DealStatus | null;
+  /** Slowest item while `in_progress`. */
+  stage: DealItemStatus | null;
+  /** Shipping phase shows only when the offer includes a product. */
+  hasShipping: boolean;
+  /** While `disputed`: the status the dispute froze (`dispute.priorStatus`). */
+  frozenFrom?: DealStatus | null;
+}
+
+const phaseOf = (status: DealStatus, stage: DealItemStatus | null): DealPhase | null =>
+  status === 'in_progress' ? getDealItemStatusMeta(stage).phase : DEAL_STATUS_META[status].phase;
 
 /**
- * Pipeline stages with their state for `Timeline`. On the happy path every stage
- * shows; off-path (dispute, cancel, refund) shows the stages reached up to
- * `stoppedAt`, then the off-path status as an error step.
+ * Journey phases with their state for `Timeline`. A dispute marks the phase it froze as `error`.
+ * Drafts, unknown statuses and stopped deals return `[]`: the screen shows the outcome instead.
  */
-export const buildDealProgress = (
-  status: DealStatus | null,
-  stoppedAt?: DealStatus,
-): DealProgressStep[] => {
+export const buildDealProgress = ({
+  status,
+  stage,
+  hasShipping,
+  frozenFrom = null,
+}: DealProgressInput): DealProgressStep[] => {
   if (status === null) return [];
+  const phases = DEAL_PHASES.filter(phase => hasShipping || phase !== 'shipping');
+  const meta = DEAL_STATUS_META[status];
 
-  const current = pipelineIndex(status);
-  if (current >= 0) {
-    return DEAL_PIPELINE.map((stage, index) => ({
-      status: stage,
-      state:
-        index < current || status === 'completed'
-          ? 'done'
-          : index === current
-            ? 'current'
-            : 'upcoming',
-    }));
-  }
+  if (meta.outcome === 'success') return phases.map(phase => ({ phase, state: 'done' }));
 
-  const reached = stoppedAt === undefined ? -1 : pipelineIndex(stoppedAt);
-  return [
-    ...DEAL_PIPELINE.slice(0, reached + 1).map(stage => ({ status: stage, state: 'done' as const })),
-    { status, state: 'error' },
-  ];
+  const disputed = status === 'disputed';
+  const reached = disputed ? (frozenFrom === null ? null : phaseOf(frozenFrom, stage)) : phaseOf(status, stage);
+  if (meta.outcome === 'stopped' || reached === null) return [];
+
+  const current = phases.indexOf(reached);
+  return phases.map((phase, index) => ({
+    phase,
+    state: index < current ? 'done' : index === current ? (disputed ? 'error' : 'current') : 'upcoming',
+  }));
 };

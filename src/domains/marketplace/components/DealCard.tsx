@@ -1,74 +1,66 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Money } from '@/core/money';
 import { useTheme } from '@/core/theme';
 import { ShieldCheck } from 'lucide-react-native';
 import { Avatar, Box, Card, Countdown, MoneyText, Text } from '@/shared/ui';
-import type { DealStatus } from '../types';
+import type { Deal, DealRole } from '../types';
+import { getDealStatusMeta } from '../utils';
 import { DealProgress } from './DealProgress';
 import { DealStatusPill } from './DealStatusPill';
 
 export interface DealCardProps {
-  title: string;
-  /** Creator name for brands, brand name for creators. */
-  counterpartName: string;
-  counterpartAvatarUri?: string;
-  /** Localised ad type ("Reel", "Story"). */
-  adTypeLabel: string;
-  /** Deal value (price, not money flow → default tone). */
-  amount: Money;
-  status: DealStatus | null;
-  /** Next deadline (draft due, review window), epoch ms. */
-  dueAt?: number | null;
-  dueLabel?: string;
-  /** Adds the stage track (Home's active-deal card, rule 09 §3.1). */
+  deal: Deal;
+  /** Viewer's side: brands see the creator, creators see the brand. */
+  role: DealRole;
+  /** Adds the phase track (Home's active-deal card). */
   showProgress?: boolean;
-  /** Amount the brand has paid into escrow for this deal, from the server; shown as a mint chip. */
-  escrow?: Money | null;
-  onPress: () => void;
+  onPress: (dealId: string) => void;
 }
 
-/** Deal row for pipeline lists (`SuperList` item — keep it memoised). */
-const DealCardComponent: React.FC<DealCardProps> = ({
-  title,
-  counterpartName,
-  counterpartAvatarUri,
-  adTypeLabel,
-  amount,
-  status,
-  dueAt = null,
-  dueLabel,
-  showProgress = false,
-  escrow = null,
-  onPress,
-}) => {
+/** Deal row for pipeline lists (`SuperList` item — keep it memoised, pass a stable `onPress`). */
+const DealCardComponent: React.FC<DealCardProps> = ({ deal, role, showProgress = false, onPress }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
+  const counterpart = role === 'brand' ? deal.creator : deal.brand;
+  const title = deal.items[0]?.title ?? '';
+  const heldInEscrow = deal.fundedAt !== null && getDealStatusMeta(deal.status.key).outcome === 'open';
+  const handlePress = useCallback(() => onPress(deal.id), [onPress, deal.id]);
 
   return (
-    <Card onPress={onPress} accessibilityLabel={title}>
+    <Card onPress={handlePress} accessibilityLabel={title}>
       <Box gap="md">
         <Box row align="center" gap="md">
-          <Avatar uri={counterpartAvatarUri} size={sizes.avatar.sm} />
+          <Avatar uri={counterpart.avatarUrl ?? undefined} size={sizes.avatar.sm} />
           <Box flex={1} gap="xs">
             <Text variant="bodyMedium" numberOfLines={1}>
               {title}
             </Text>
             <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-              {t('marketplace.deal.meta', { counterpart: counterpartName, adType: adTypeLabel })}
+              {t('marketplace.deal.meta', {
+                counterpart: counterpart.name ?? '',
+                items: t('marketplace.deal.items', { count: deal.itemsCount }),
+              })}
             </Text>
           </Box>
-          <DealStatusPill status={status} size="sm" />
+          <DealStatusPill status={deal.status} size="sm" />
         </Box>
-        {showProgress ? <DealProgress status={status} variant="track" /> : null}
+        {showProgress ? (
+          <DealProgress
+            status={deal.status.key}
+            stage={deal.stage?.key ?? null}
+            hasShipping={deal.shipping !== null}
+            frozenFrom={deal.dispute?.priorStatus ?? null}
+            variant="track"
+          />
+        ) : null}
         <Box row align="center" justify="space-between" gap="md">
-          <MoneyText value={amount} />
-          <Countdown endsAt={dueAt} label={dueLabel} size="sm" />
+          <MoneyText value={deal.total} />
+          <Countdown endsAt={deal.dueAt} size="sm" />
         </Box>
-        {escrow ? (
+        {heldInEscrow ? (
           <Box row align="center" gap="sm" px="md" py="sm" borderRadius="md" bg={colors.money.soft}>
             <ShieldCheck size={sizes.icon.sm} color={colors.money.main} />
-            <MoneyText value={escrow} size="sm" tone="money" />
+            <MoneyText value={deal.total} size="sm" tone="money" />
             <Text variant="caption" color={colors.money.text} numberOfLines={1}>
               {t('marketplace.deal.escrowHeld')}
             </Text>

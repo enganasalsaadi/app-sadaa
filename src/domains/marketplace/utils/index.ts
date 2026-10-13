@@ -1,2 +1,8 @@
-export { getDealStatusMeta, getDealActions, buildDealProgress } from './dealStatus';
-export type { DealProgressStep } from './dealStatus';
+export {
+  getDealStatusMeta,
+  getDealItemStatusMeta,
+  getDealActions,
+  getDealItemActions,
+  buildDealProgress,
+} from './dealStatus';
+export type { DealActionInput, DealProgressInput, DealProgressStep } from './dealStatus';

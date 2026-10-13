@@ -1,9 +1,13 @@
 export {
+  DEAL_PHASES,
+  DEAL_PHASE_LABEL,
   DEAL_STATUS_META,
   UNKNOWN_DEAL_STATUS_META,
-  DEAL_PIPELINE,
-  DEAL_ALLOWED_ACTIONS,
-  DRAFT_STATUS_META,
+  DEAL_ITEM_STATUS_META,
+  UNKNOWN_DEAL_ITEM_STATUS_META,
+  DEAL_STATUS_ACTIONS,
+  DEAL_ITEM_ACTIONS,
+  DEAL_DRAFT_REVIEW_TONE,
 } from './dealStatus';
-export type { StatusMeta } from './dealStatus';
-export { DEAL_STATUS_ICON, UNKNOWN_DEAL_STATUS_ICON, DRAFT_STATUS_ICON } from './statusIcons';
+export type { DealPhase, DealOutcome, DealStatusMeta, DealItemStatusMeta } from './dealStatus';
+export { DEAL_STATUS_ICON, UNKNOWN_DEAL_STATUS_ICON, DEAL_ITEM_STATUS_ICON, DEAL_DRAFT_REVIEW_ICON } from './statusIcons';

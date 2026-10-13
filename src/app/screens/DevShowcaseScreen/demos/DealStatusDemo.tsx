@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, SectionHeader } from '@/shared/ui';
 import { DEAL_STATUS, DealProgress, DealStatusPill } from '@/domains/marketplace';
-import { MOCK_DEAL_DATES } from './mockData';
 
 const DealStatusDemoComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -13,28 +12,27 @@ const DealStatusDemoComponent: React.FC = () => {
         <SectionHeader title={t('devShowcase.dealStatus.pillsTitle')} />
         <Box row wrap gap="sm">
           {DEAL_STATUS.map(status => (
-            <DealStatusPill key={status} status={status} />
+            <DealStatusPill key={status} status={{ key: status, label: status }} />
           ))}
-          <DealStatusPill status={null} />
+          <DealStatusPill status={{ key: null, label: 'on_hold' }} />
         </Box>
-        <DealStatusPill status="in_progress" size="sm" />
       </Box>
       <Box gap="sm">
         <SectionHeader title={t('devShowcase.dealStatus.progressTitle')} />
-        <DealProgress status="under_review" reachedAt={MOCK_DEAL_DATES} />
+        <DealProgress status="in_progress" stage="draft_submitted" hasShipping />
       </Box>
       <Box gap="sm">
         <SectionHeader title={t('devShowcase.dealStatus.completedTitle')} />
-        <DealProgress status="completed" />
+        <DealProgress status="completed" stage={null} hasShipping={false} />
       </Box>
       <Box gap="sm">
         <SectionHeader title={t('devShowcase.dealStatus.disputedTitle')} />
-        <DealProgress status="disputed" stoppedAt="in_progress" reachedAt={MOCK_DEAL_DATES} />
+        <DealProgress status="disputed" stage="revision_requested" hasShipping={false} frozenFrom="in_progress" />
       </Box>
       <Box gap="sm">
         <SectionHeader title={t('devShowcase.dealStatus.trackTitle')} />
-        <DealProgress status="in_progress" variant="track" />
-        <DealProgress status="disputed" stoppedAt="awaiting_payment" variant="track" />
+        <DealProgress status="product_shipping" stage={null} hasShipping variant="track" />
+        <DealProgress status="in_progress" stage="verifying_live" hasShipping={false} variant="track" />
       </Box>
     </Box>
   );

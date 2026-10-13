@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, CustomButton } from '@/shared/ui';
 import { DraftReviewCard } from '@/domains/marketplace';
@@ -10,26 +10,25 @@ const VIDEO_SECONDS = 32;
 const DraftReviewDemoComponent: React.FC = () => {
   const { t } = useTranslation();
   const demo = useDraftReviewDemo();
+  const changesReview = useMemo(() => demo.changesReview(), [demo]);
 
   return (
     <Box gap="md">
       <DraftReviewCard
-        version={2}
+        round={2}
         submittedAt={MOCK_DRAFT_SUBMITTED_AT}
         media={{ uri: MOCK_IMAGE_URIS[1], kind: 'video', durationSeconds: VIDEO_SECONDS }}
-        status={demo.status}
-        note={t('devShowcase.draftReview.note')}
+        review={demo.review}
         onOpen={demo.onOpen}
         onApprove={demo.canReview ? demo.onApprove : undefined}
         onRequestChanges={demo.canReview ? demo.onRequestChanges : undefined}
         submitting={demo.submitting}
       />
       <DraftReviewCard
-        version={1}
+        round={1}
         submittedAt={MOCK_DRAFT_SUBMITTED_AT}
         media={{ uri: MOCK_IMAGE_URIS[0], kind: 'image' }}
-        status="changes_requested"
-        note={t('devShowcase.draftReview.note')}
+        review={changesReview}
         onOpen={demo.onOpen}
       />
       <CustomButton title={t('devShowcase.draftReview.reset')} onPress={demo.reset} variant="ghost" size="sm" />

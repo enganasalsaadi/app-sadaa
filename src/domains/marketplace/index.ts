@@ -18,6 +18,17 @@ export type {
   CreatorCardProps,
   DraftReviewCardProps,
 } from './components';
-export { DEAL_STATUS } from './types';
-export type { DealStatus, DealRole, DealAction, DraftStatus, ExploreCreator } from './types';
-export { getDealActions } from './utils';
+export { DEAL_STATUS, DEAL_ITEM_STATUS } from './types';
+export type {
+  Deal,
+  DealItem,
+  DealDraft,
+  DealStatus,
+  DealItemStatus,
+  DealRole,
+  DealAction,
+  DealItemAction,
+  Labeled,
+  ExploreCreator,
+} from './types';
+export { getDealActions, getDealItemActions } from './utils';

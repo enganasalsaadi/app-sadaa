@@ -1363,42 +1363,26 @@
   },
   "marketplace": {
     "deal": {
-      "status": {
-        "pendingApproval": "بانتظار الموافقة",
-        "awaitingPayment": "بانتظار الدفع",
-        "inProgress": "قيد التنفيذ",
-        "underReview": "قيد المراجعة",
-        "readyToPublish": "جاهز للنشر",
-        "published": "منشور",
-        "completed": "مكتمل",
-        "disputed": "نزاع مفتوح",
-        "cancelled": "ملغى",
-        "refunded": "مسترد",
-        "unknown": "حالة غير معروفة"
+      "phase": {
+        "offer": "العرض",
+        "funding": "الضمان",
+        "shipping": "الشحن",
+        "creating": "الإنتاج",
+        "publishing": "النشر",
+        "done": "اكتمل"
       },
-      "stage": {
-        "pendingApproval": "قبول",
-        "awaitingPayment": "دفع",
-        "inProgress": "إنتاج",
-        "underReview": "مراجعة",
-        "readyToPublish": "جاهز",
-        "published": "نشر",
-        "completed": "اكتمل",
-        "disputed": "نزاع",
-        "cancelled": "إلغاء",
-        "refunded": "استرداد",
-        "unknown": "غير معروف"
-      },
+      "items_zero": "بدون مخرجات",
+      "items_one": "مخرَج واحد",
+      "items_two": "مخرَجان",
+      "items_few": "{{count}} مخرجات",
+      "items_many": "{{count}} مخرجاً",
+      "items_other": "{{count}} مخرج",
       "escrowHeld": "محفوظة في الضمان",
-      "meta": "{{counterpart}} · {{adType}}"
+      "meta": "{{counterpart}} · {{items}}"
     },
     "draft": {
-      "status": {
-        "pendingReview": "بانتظار المراجعة",
-        "approved": "معتمدة",
-        "changesRequested": "مطلوب تعديلات"
-      },
-      "version": "المسودة {{version}}",
+      "pendingReview": "بانتظار المراجعة",
+      "round": "الجولة {{round}}",
       "open": "فتح {{title}}",
       "submittedAt": "أُرسلت {{date}}",
       "noteTitle": "ملاحظات العلامة التجارية",
@@ -2986,13 +2970,16 @@
     },
     "dealStatus": {
       "pillsTitle": "كل الحالات",
-      "progressTitle": "قيد المراجعة",
+      "progressTitle": "الإنتاج — صفقة بمنتج",
       "completedTitle": "مكتملة",
       "disputedTitle": "نزاع أثناء التنفيذ",
       "trackTitle": "مسار المراحل (بطاقة)"
     },
     "dealCard": {
-      "pressed": "يفتح الصفقة"
+      "pressed": "يفتح الصفقة",
+      "statusInProgress": "قيد التنفيذ",
+      "statusPending": "بانتظار رد المؤثر",
+      "statusCompleted": "مكتملة"
     },
     "draftReview": {
       "note": "يرجى إظهار الشعار في أول 3 ثوانٍ.",

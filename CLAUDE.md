@@ -13,7 +13,7 @@ B2B influencer marketplace, Syria-first, Arabic-first. Replaces email/WhatsApp/p
 - **Brands:** phone sign-up → type (company/store), name, socials, industry → brief builder (budget, niche, goal, do/don't) → smart match + city filters → compare ≤ 3 creators → pay escrow → review drafts → ROI (views, engagement, affiliate links, discount codes, QR visits).
 - **Ad types:** paid post/story/reel, barter, affiliate commission, visit-based (QR), UGC, offline event booking.
 - **Trust:** escrow wallet, auto contracts/invoices, refunds, disputes, mutual multi-criteria ratings, badges/rankings.
-- **Deal:** `pending_approval → awaiting_payment → in_progress → under_review → ready_to_publish → published → completed` (+ `disputed`). Rule 06.
+- **Deal (Direct Deals):** fixed price from rate cards → `pending_influencer` (accept / decline / one deadline extension) → `awaiting_payment` → `product_shipping` (if product) → `in_progress` (per item: draft → review → publish → verify) → `completed` (+ `disputed`, 12 finals). Spec `docs/direct-deals/`, plan `docs/direct-deals/mobile-plan.md`. Rule 06.
 
 ## Rules index
 
