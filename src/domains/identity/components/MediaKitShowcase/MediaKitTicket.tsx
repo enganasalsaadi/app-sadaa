@@ -6,6 +6,7 @@ import { formatMoney } from '@/core/i18n';
 import { iconStroke, moderateScale, useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
 import { Box, MoneyText, Pressable, SocialPlatformIcon, Text } from '@/shared/ui';
+import { ADDON_ICONS } from '../../constants/addonIcons';
 import type { ShowcaseService } from '../../utils/mediaKitShowcase';
 
 const STUB = moderateScale(122);
@@ -49,22 +50,28 @@ const TicketDetails = memo<{ service: ShowcaseService }>(({ service }) => {
           </Box>
         </Box>
       ))}
-      {service.addons.map(addon => (
-        <Box key={addon.key} row align="center" gap="sm">
-          <Zap size={sizes.icon.xs} color={colors.interactive.main} />
-          <Box flex={1}>
-            <Text variant="caption" color={colors.text.secondary}>
-              {addon.deliveryHours === null
-                ? addon.label
-                : t('account.mediaKit.previewScreen.addonWithHours', {
-                    label: addon.label,
-                    hours: t('account.rates.hours', { count: addon.deliveryHours }),
-                  })}
-            </Text>
+      {service.addons.map(addon => {
+        const Icon = ADDON_ICONS[addon.key];
+        const { detail } = addon;
+        return (
+          <Box key={addon.key} row align="center" gap="sm">
+            <Icon size={sizes.icon.xs} color={colors.interactive.main} />
+            <Box flex={1}>
+              <Text variant="caption" color={colors.text.secondary}>
+                {detail
+                  ? t('account.mediaKit.previewScreen.addonWithDetail', {
+                      label: addon.label,
+                      detail: t(detail.unit === 'hours' ? 'account.rates.hours' : 'account.rates.days', {
+                        count: detail.count,
+                      }),
+                    })
+                  : addon.label}
+              </Text>
+            </Box>
+            {addon.price ? <MoneyText value={addon.price} size="sm" showSign /> : null}
           </Box>
-          {addon.price ? <MoneyText value={addon.price} size="sm" showSign /> : null}
-        </Box>
-      ))}
+        );
+      })}
     </Box>
   );
 });

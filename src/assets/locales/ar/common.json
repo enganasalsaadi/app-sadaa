@@ -921,7 +921,9 @@
         "details": "التفاصيل",
         "extras": "إضافات",
         "rushWindow": "التسليم خلال",
-        "rushPrice": "رسوم الاستعجال (دولار)",
+        "extrasHint": "اختيارية، وكل إضافة ترفع هذا السعر برسوم ثابتة.",
+        "addonDuration": "المدة",
+        "addonPrice": "رسوم {{label}} (دولار)",
         "rushUnavailable": "يحتاج مدة تسليم يومين على الأقل.",
         "save": "حفظ السعر",
         "saved": "تم حفظ السعر",
@@ -995,7 +997,7 @@
         "intro": "هكذا تراك العلامات التجارية.",
         "platforms": "المنصات",
         "terms": "شروط التعاون",
-        "addonWithHours": "{{label}} · {{hours}}"
+        "addonWithDetail": "{{label}} · {{detail}}"
       },
       "publicScreen": {
         "title": "ملف صانع المحتوى",

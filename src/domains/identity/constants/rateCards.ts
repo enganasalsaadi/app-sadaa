@@ -1,15 +1,16 @@
-import type { AddonType } from '@/core/api';
 import type { RateCardFormValues } from '../schemas/rateCardSchema';
 
 /** Group key for platform-free services (on-site visit); never a platform key. */
 export const RATE_GROUP_IN_PERSON = 'in_person';
 
-/** The only add-on the editor manages until it renders from the catalog (direct-deals P1.2). */
-export const RUSH_ADDON = 'rush_delivery' satisfies AddonType;
+/** Rush window option; must stay faster than the card's delivery days (rate-card-addons). */
+export const RUSH_HOURS_OPTION = 'delivery_hours';
+/** How long a duration add-on (exclusivity, paid ads, link in bio, pin) runs. */
+export const DURATION_OPTION = 'duration_days';
 
 /**
- * Single-card 422 keys → editor fields (handoff §6). Rush is always sent first,
- * so its errors come back on `addons.0`.
+ * Single-card 422 keys → editor fields (handoff §6). `addons.{i}.*` index the
+ * sent list, so they are mapped per save (`addonServerFields`).
  */
 export const RATE_CARD_SERVER_FIELDS = {
   platform: 'group',
@@ -19,8 +20,4 @@ export const RATE_CARD_SERVER_FIELDS = {
   delivery_days: 'deliveryDays',
   revisions: 'revisions',
   retention: 'retention',
-  'addons.0.type': 'rushHours',
-  'addons.0.pricing_mode': 'rushPrice',
-  'addons.0.amount': 'rushPrice',
-  'addons.0.options.delivery_hours': 'rushHours',
 } as const satisfies Record<string, keyof RateCardFormValues>;

@@ -11,7 +11,6 @@ import { toastService } from '@/core/toast';
 import {
   DEFAULT_RATE_PRICE_BOUNDS,
   findCatalogService,
-  isRushAllowed,
   toRatePriceBounds,
 } from '@/domains/auth';
 import {
@@ -19,12 +18,22 @@ import {
   useDeleteRateCardMutation,
   useUpdateRateCardMutation,
 } from '../../../api/rateCardsApi';
-import { RATE_CARD_SERVER_FIELDS, RUSH_ADDON } from '../../../constants/rateCards';
+import { DURATION_OPTION, RATE_CARD_SERVER_FIELDS, RUSH_HOURS_OPTION } from '../../../constants/rateCards';
 import { useRateCardSources } from '../../../hooks/useRateCardSources';
 import { createRateCardSchema, type RateCardFormValues } from '../../../schemas/rateCardSchema';
 import {
+  addonDefinitions,
+  addonServerFields,
+  allowedValues,
+  pickAddonOptions,
+  toAddonForms,
+  type AddonDef,
+  type AddonOptionDef,
+  type AddonOptionValue,
+  type AddonInputRow,
+} from '../../../utils/rateCardAddonForm';
+import {
   emptyRateCardForm,
-  findRushAddon,
   groupToPlatform,
   hasFreeSlot,
   platformToGroup,
@@ -41,6 +50,22 @@ type Route = RouteProp<SettingsStackParamList, 'RateCardEditor'>;
 interface ChipItem {
   value: string;
   label: string;
+}
+
+export interface AddonOptionField {
+  key: string;
+  title: string;
+  items: ChipItem[];
+  /** The catalog has one value only: shown as text, not a picker (exclusivity 14 days). */
+  fixed: string | null;
+}
+
+export interface AddonField {
+  type: AddonDef['type'];
+  label: string;
+  /** `false` = no option value fits the delivery time (rush needs 2+ days). */
+  available: boolean;
+  options: AddonOptionField[];
 }
 
 export const useRateCardEditorScreen = () => {
@@ -60,14 +85,9 @@ export const useRateCardEditorScreen = () => {
   const [done, setDone] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
 
-  const rush = useMemo(() => (catalog ? findRushAddon(catalog) : null), [catalog]);
   const bounds = useMemo(
     () => (catalog ? toRatePriceBounds(catalog.price_bounds) : DEFAULT_RATE_PRICE_BOUNDS),
     [catalog],
-  );
-  const rushBounds = useMemo(
-    () => (rush ? toRatePriceBounds({ min_usd: rush.min, max_usd: rush.max }) : DEFAULT_RATE_PRICE_BOUNDS),
-    [rush],
   );
 
   // The rules follow the picked service, so the schema is built per validation.
@@ -77,9 +97,10 @@ export const useRateCardEditorScreen = () => {
         catalog && values.group && values.service
           ? findCatalogService(catalog, groupToPlatform(values.group), values.service)
           : null;
-      return yupResolver(createRateCardSchema(t, { service, bounds, rushBounds }))(values, context, options);
+      const addons = catalog && service ? addonDefinitions(catalog, service) : [];
+      return yupResolver(createRateCardSchema(t, { service, bounds, addons }))(values, context, options);
     },
-    [bounds, catalog, rushBounds, t],
+    [bounds, catalog, t],
   );
 
   const { control, handleSubmit, reset, setError, setValue, getValues, formState } =
@@ -93,24 +114,29 @@ export const useRateCardEditorScreen = () => {
   // Edit: prefill once the card is known; a refetch never wipes edits in progress.
   const prefilled = useRef(false);
   useEffect(() => {
-    if (!card || prefilled.current) return;
+    if (!card || !catalog || prefilled.current) return;
     prefilled.current = true;
-    reset(toRateCardForm(card));
-  }, [card, reset]);
+    const saved = findCatalogService(catalog, card.platform, card.service.key);
+    reset(toRateCardForm(card, saved ? addonDefinitions(catalog, saved) : []));
+  }, [card, catalog, reset]);
 
   const guard = useDiscardGuard(isDirty && !done);
   useEffect(() => {
     if (done) navigation.goBack();
   }, [done, navigation]);
 
-  const [group, serviceKey, deliveryDays, rushEnabled] = useWatch({
+  const [group, serviceKey, deliveryDays] = useWatch({
     control,
-    name: ['group', 'service', 'deliveryDays', 'rushEnabled'],
+    name: ['group', 'service', 'deliveryDays'],
   });
   const platform = group ? groupToPlatform(group) : null;
   const service = useMemo(
     () => (catalog && group && serviceKey ? findCatalogService(catalog, platform, serviceKey) : null),
     [catalog, group, platform, serviceKey],
+  );
+  const addonDefs = useMemo(
+    () => (catalog && service ? addonDefinitions(catalog, service) : []),
+    [catalog, service],
   );
 
   /** Package keys priced by other cards of this service. */
@@ -163,11 +189,9 @@ export const useRateCardEditorScreen = () => {
       setValue('deliveryDays', defaults.deliveryDays, opts);
       setValue('revisions', defaults.revisions, opts);
       setValue('retention', defaults.retention, opts);
-      setValue('rushEnabled', false, opts);
-      setValue('rushHours', null, opts);
-      setValue('rushPrice', null, opts);
+      setValue('addons', catalog ? toAddonForms(addonDefinitions(catalog, next)) : [], opts);
     },
-    [cards, groupServices, platform, setValue],
+    [catalog, cards, groupServices, platform, setValue],
   );
 
   const onPickGroup = useCallback(
@@ -209,39 +233,75 @@ export const useRateCardEditorScreen = () => {
     [service],
   );
 
-  // ─── Rush delivery ─────────────────────────────────────────────────────
-  const rushOffered = !!rush && !!service?.addons.includes(RUSH_ADDON);
-  const rushHourItems = useMemo<ChipItem[]>(
-    () =>
-      rush?.hours
-        .filter(option => isRushAllowed(option.value, deliveryDays))
-        .map(option => ({
-          value: String(option.value),
-          label: option.label ?? t('account.rates.hours', { count: option.value }),
-        })) ?? [],
-    [deliveryDays, rush, t],
+  // ─── Add-ons (rendered from the catalog) ───────────────────────────────
+  const optionTitle = useCallback(
+    (option: AddonOptionDef) =>
+      option.label ??
+      t(option.key === RUSH_HOURS_OPTION ? 'account.rates.editor.rushWindow' : 'account.rates.editor.addonDuration'),
+    [t],
   );
-  const rushAvailable = rushHourItems.length > 0;
-
-  // A shorter delivery can rule out the picked window: move to the slowest allowed one, or turn rush off.
-  useEffect(() => {
-    if (!rushEnabled) return;
-    const current = getValues('rushHours');
-    if (current != null && isRushAllowed(current, deliveryDays)) return;
-    const fallback = rushHourItems[rushHourItems.length - 1];
-    if (fallback) setValue('rushHours', Number(fallback.value), { shouldDirty: true });
-    else setValue('rushEnabled', false, { shouldDirty: true });
-  }, [deliveryDays, getValues, rushEnabled, rushHourItems, setValue]);
-
-  const onToggleRush = useCallback(
-    (next: boolean) => {
-      setValue('rushEnabled', next, { shouldDirty: true });
-      if (!next || getValues('rushHours') != null) return;
-      const preferred = rushHourItems.find(item => Number(item.value) === rush?.defaultHours);
-      const pick = preferred ?? rushHourItems[rushHourItems.length - 1];
-      if (pick) setValue('rushHours', Number(pick.value), { shouldDirty: true });
+  const valueLabel = useCallback(
+    (option: AddonOptionDef, entry: AddonOptionValue) => {
+      if (entry.label) return entry.label;
+      if (typeof entry.value !== 'number') return entry.key;
+      if (option.key === RUSH_HOURS_OPTION) return t('account.rates.hours', { count: entry.value });
+      if (option.key === DURATION_OPTION) return t('account.rates.days', { count: entry.value });
+      return entry.key;
     },
-    [getValues, rush?.defaultHours, rushHourItems, setValue],
+    [t],
+  );
+
+  const addonFields = useMemo<AddonField[]>(
+    () =>
+      addonDefs.map(def => {
+        const options = def.options.map(option => {
+          const [only] = option.values;
+          return {
+            key: option.key,
+            title: optionTitle(option),
+            items: allowedValues(option, deliveryDays).map(entry => ({
+              value: entry.key,
+              label: valueLabel(option, entry),
+            })),
+            fixed: option.values.length === 1 && only ? valueLabel(option, only) : null,
+          };
+        });
+        return {
+          type: def.type,
+          label: def.label,
+          available: options.every(option => option.items.length > 0),
+          options,
+        };
+      }),
+    [addonDefs, deliveryDays, optionTitle, valueLabel],
+  );
+
+  // A shorter delivery can rule out a picked option: move to an allowed one, or turn the add-on off.
+  useEffect(() => {
+    getValues('addons').forEach((row, index) => {
+      const def = addonDefs.find(entry => entry.type === row.type);
+      if (!row.enabled || !def) return;
+      const options = pickAddonOptions(def, deliveryDays, row.options);
+      if (!options) setValue(`addons.${index}.enabled`, false, { shouldDirty: true });
+      else if (def.options.some(option => options[option.key] !== row.options[option.key])) {
+        setValue(`addons.${index}.options`, options, { shouldDirty: true });
+      }
+    });
+  }, [addonDefs, deliveryDays, getValues, setValue]);
+
+  const onToggleAddon = useCallback(
+    (index: number, next: boolean) => {
+      const row = getValues(`addons.${index}`);
+      const def = addonDefs.find(entry => entry.type === row?.type);
+      if (!row || !def) return;
+      if (next) {
+        const options = pickAddonOptions(def, getValues('deliveryDays'), row.options);
+        if (!options) return;
+        setValue(`addons.${index}.options`, options, { shouldDirty: true });
+      }
+      setValue(`addons.${index}.enabled`, next, { shouldDirty: true });
+    },
+    [addonDefs, getValues, setValue],
   );
 
   const formatDays = useCallback((count: number) => t('account.rates.days', { count }), [t]);
@@ -261,23 +321,29 @@ export const useRateCardEditorScreen = () => {
   const onSave = useCallback(() => {
     handleSubmit(async values => {
       if (!service) return;
+      let sent: AddonInputRow[] = [];
       try {
         if (card) {
-          const patch = toRateCardPatch(values, card, service);
-          if (Object.keys(patch).length > 0) await updateRateCard({ id: card.id, patch }).unwrap();
+          const patch = toRateCardPatch(values, card, service, addonDefs);
+          sent = patch.addons;
+          if (Object.keys(patch.body).length > 0) {
+            await updateRateCard({ id: card.id, patch: patch.body }).unwrap();
+          }
         } else {
-          const input = toRateCardInput(values, service);
+          const input = toRateCardInput(values, service, addonDefs);
           if (!input) return;
-          await createRateCard(input).unwrap();
+          sent = input.addons;
+          await createRateCard(input.body).unwrap();
         }
         toastService.success(t('account.rates.editor.saved'));
         setDone(true);
       } catch (err) {
-        applyServerFieldErrors(err, RATE_CARD_SERVER_FIELDS, setError);
+        const fields = { ...RATE_CARD_SERVER_FIELDS, ...addonServerFields(addonDefs, sent) };
+        applyServerFieldErrors(err, fields, setError);
         reportFailure(err);
       }
     })();
-  }, [card, createRateCard, handleSubmit, reportFailure, service, setError, t, updateRateCard]);
+  }, [addonDefs, card, createRateCard, handleSubmit, reportFailure, service, setError, t, updateRateCard]);
 
   const onConfirmDelete = useCallback(async () => {
     if (!card) return;
@@ -331,9 +397,8 @@ export const useRateCardEditorScreen = () => {
     revisionItems,
     retentionItems,
     formatDays,
-    rush: rushOffered && rush
-      ? { label: rush.label, available: rushAvailable, hourItems: rushHourItems, onToggle: onToggleRush }
-      : null,
+    addons: addonFields,
+    onToggleAddon,
     includes: card?.includes ?? [],
     onSave,
     isSaving: isCreating || isUpdating,

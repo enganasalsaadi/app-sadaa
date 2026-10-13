@@ -98,6 +98,8 @@ export interface CatalogAddonPricingMode {
 
 export interface CatalogAddonOption {
   key: string;
+  /** Localized title (catalog v2); older payloads may omit it. */
+  label?: string;
   options: { value: string | number; label?: string }[];
   default: string | number;
   visible: boolean;

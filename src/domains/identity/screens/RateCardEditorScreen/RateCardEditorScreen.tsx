@@ -15,11 +15,8 @@ import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
 import { RateCardLockedSummary, RateCardPickers } from './components/RateCardPickers';
-import {
-  RateCardIncludes,
-  RateCardRushFields,
-  RateCardServiceFields,
-} from './components/RateCardServiceFields';
+import { RateCardAddonFields } from './components/RateCardAddonFields';
+import { RateCardIncludes, RateCardServiceFields } from './components/RateCardServiceFields';
 import { useRateCardEditorScreen, type RateCardEditorModel } from './hooks/useRateCardEditorScreen';
 
 const RateCardForm: React.FC<{ vm: RateCardEditorModel }> = memo(({ vm }) => {
@@ -36,7 +33,7 @@ const RateCardForm: React.FC<{ vm: RateCardEditorModel }> = memo(({ vm }) => {
         <RateCardPickers vm={vm} />
       )}
       <RateCardServiceFields vm={vm} />
-      <RateCardRushFields vm={vm} />
+      <RateCardAddonFields vm={vm} />
       <RateCardIncludes includes={vm.includes} />
     </Box>
   );

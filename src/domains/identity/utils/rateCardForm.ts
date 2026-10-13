@@ -1,16 +1,23 @@
-import type { CatalogService, RateCardCatalog } from '@/core/api';
+import type { CatalogService } from '@/core/api';
 import {
   fromPriceUsd,
   toPackageKey,
   toPackageValue,
   toPriceUsd,
   type RateCard,
-  type RateCardAddonInput,
   type RateCardInput,
   type RateCardPatch,
 } from '@/domains/auth';
-import { RATE_GROUP_IN_PERSON, RUSH_ADDON } from '../constants/rateCards';
+import { RATE_GROUP_IN_PERSON } from '../constants/rateCards';
 import type { RateCardFormValues } from '../schemas/rateCardSchema';
+import {
+  addonsChanged,
+  toAddonForms,
+  toAddonInputs,
+  unmanagedAddons,
+  type AddonDef,
+  type AddonInputRow,
+} from './rateCardAddonForm';
 
 /** Server delivery default when no service is picked yet (handoff §4.1). */
 const FALLBACK_DELIVERY_DAYS = 5;
@@ -54,9 +61,7 @@ export const emptyRateCardForm = (group: string | null): RateCardFormValues => (
   deliveryDays: FALLBACK_DELIVERY_DAYS,
   revisions: FALLBACK_REVISIONS,
   retention: null,
-  rushEnabled: false,
-  rushHours: null,
-  rushPrice: null,
+  addons: [],
 });
 
 /**
@@ -78,43 +83,33 @@ export const serviceDefaults = (
   };
 };
 
-const findAddon = (card: RateCard, type: string) => card.addons.find(addon => addon.type === type);
+/** Prefill; `defs` = the add-ons the card's service offers today. */
+export const toRateCardForm = (card: RateCard, defs: readonly AddonDef[]): RateCardFormValues => ({
+  group: platformToGroup(card.platform),
+  service: card.service.key,
+  packageValue: toPackageKey(card.package?.value),
+  price: fromPriceUsd(card.price_usd),
+  deliveryDays: card.delivery_days,
+  revisions: card.revisions,
+  retention: card.retention?.key ?? null,
+  addons: toAddonForms(defs, card.addons),
+});
 
-export const toRateCardForm = (card: RateCard): RateCardFormValues => {
-  const rush = findAddon(card, RUSH_ADDON);
-  const hours = rush?.options.delivery_hours;
-  return {
-    group: platformToGroup(card.platform),
-    service: card.service.key,
-    packageValue: toPackageKey(card.package?.value),
-    price: fromPriceUsd(card.price_usd),
-    deliveryDays: card.delivery_days,
-    revisions: card.revisions,
-    retention: card.retention?.key ?? null,
-    rushEnabled: !!rush,
-    rushHours: typeof hours === 'number' ? hours : null,
-    rushPrice: rush ? fromPriceUsd(rush.amount) : null,
-  };
-};
-
-const rushInput = (values: RateCardFormValues): RateCardAddonInput | null =>
-  values.rushEnabled && values.rushPrice && values.rushHours != null
-    ? {
-        type: RUSH_ADDON,
-        pricing_mode: 'fixed',
-        amount: toPriceUsd(values.rushPrice),
-        options: { delivery_hours: values.rushHours },
-      }
-    : null;
+export interface RateCardSave<TBody> {
+  body: TBody;
+  /** The add-ons sent first, in order, with their form rows (422 `addons.{i}` mapping). */
+  addons: AddonInputRow[];
+}
 
 /** `POST` body; `null` while the form is incomplete (the schema blocks that first). */
 export const toRateCardInput = (
   values: RateCardFormValues,
   service: CatalogService,
-): RateCardInput | null => {
+  defs: readonly AddonDef[],
+): RateCardSave<RateCardInput> | null => {
   if (!values.group || !values.price) return null;
-  const rush = service.addons.includes(RUSH_ADDON) ? rushInput(values) : null;
-  return {
+  const addons = toAddonInputs(defs, values.addons);
+  const body: RateCardInput = {
     platform: groupToPlatform(values.group),
     service: service.key,
     ...(service.package ? { package_value: toPackageValue(service, values.packageValue) } : {}),
@@ -123,28 +118,21 @@ export const toRateCardInput = (
     revisions: values.revisions,
     ...(service.criteria.retention && values.retention ? { retention: values.retention } : {}),
     // Hidden attributes are never sent: the server applies their defaults.
-    addons: rush ? [rush] : [],
+    addons: addons.map(entry => entry.input),
   };
-};
-
-const sameRush = (card: RateCard, next: RateCardAddonInput | null): boolean => {
-  const saved = findAddon(card, RUSH_ADDON);
-  if (!saved || !next) return !saved && !next;
-  return (
-    fromPriceUsd(saved.amount)?.amount === fromPriceUsd(next.amount)?.amount &&
-    saved.options.delivery_hours === next.options?.delivery_hours
-  );
+  return { body, addons };
 };
 
 /**
  * `PATCH` body: changed fields only (handoff §4.2). `addons` replaces the whole
- * list, so add-ons this editor doesn't manage are sent back unchanged.
+ * list, so saved add-ons the editor doesn't show are sent back unchanged.
  */
 export const toRateCardPatch = (
   values: RateCardFormValues,
   card: RateCard,
   service: CatalogService,
-): RateCardPatch => {
+  defs: readonly AddonDef[],
+): RateCardSave<RateCardPatch> => {
   const patch: RateCardPatch = {};
   if (service.package && values.packageValue !== toPackageKey(card.package?.value)) {
     patch.package_value = toPackageValue(service, values.packageValue);
@@ -157,36 +145,10 @@ export const toRateCardPatch = (
   if (service.criteria.retention && values.retention && values.retention !== card.retention?.key) {
     patch.retention = values.retention;
   }
-  if (service.addons.includes(RUSH_ADDON)) {
-    const rush = rushInput(values);
-    if (!sameRush(card, rush)) {
-      const others = card.addons
-        .filter(addon => addon.type !== RUSH_ADDON)
-        .map<RateCardAddonInput>(({ type, pricing_mode, amount, options }) => ({
-          type,
-          pricing_mode,
-          amount,
-          options,
-        }));
-      patch.addons = rush ? [rush, ...others] : others;
-    }
+  const changed = addonsChanged(defs, values.addons, card.addons);
+  const addons = changed ? toAddonInputs(defs, values.addons) : [];
+  if (changed) {
+    patch.addons = [...addons.map(entry => entry.input), ...unmanagedAddons(defs, card.addons)];
   }
-  return patch;
-};
-
-/** The rush add-on definition, when the catalog offers it with a fixed price. */
-export const findRushAddon = (catalog: RateCardCatalog) => {
-  const addon = catalog.addons.find(entry => entry.type === RUSH_ADDON);
-  const fixed = addon?.pricing_modes.find(mode => mode.key === 'fixed');
-  const hours = addon?.options.find(option => option.key === 'delivery_hours');
-  if (!addon || !fixed || !hours) return null;
-  return {
-    label: addon.label,
-    min: fixed.min,
-    max: fixed.max,
-    hours: hours.options.flatMap(option =>
-      typeof option.value === 'number' ? [{ value: option.value, label: option.label ?? null }] : [],
-    ),
-    defaultHours: typeof hours.default === 'number' ? hours.default : null,
-  };
+  return { body: patch, addons };
 };

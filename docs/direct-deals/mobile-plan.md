@@ -81,8 +81,8 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 
 ## P1 — M1 إضافات الـ Rate Card v2 (المؤثر)
 
-- **P1.1 (S)** `AddonType` = الست الجديدة، إزالة `percent`، تجاهل الأنواع المجهولة، ترتيب حسب الكتالوج.
-- **P1.2 (M)** محرر الإضافات يُرسم من الكتالوج (options/duration، `exclusivity` نص ثابت). عرضها في المديا كيت.
+- ✅ **P1.1 (S)** (2026-10-13) `AddonType` = الست الجديدة، إزالة `percent`، تجاهل الأنواع المجهولة، ترتيب حسب الكتالوج.
+- ✅ **P1.2 (M)** (2026-10-13) محرر الإضافات يُرسم من الكتالوج (options/duration، `exclusivity` نص ثابت). عرضها في المديا كيت. (`utils/rateCardAddonForm.ts`: `addonDefinitions` من الكتالوج (الخيارات المرئية فقط، حدود السعر `fixed`)، صف لكل إضافة في `RateCardFormValues.addons` (options كنصوص ← النوع الأصلي عند الإرسال)، قيد `delivery_hours` < أيام التسليم عام لأي خيار بهذا المفتاح، خيار بقيمة واحدة = نص ثابت؛ الـ PATCH يرسل `addons` فقط عند تغيّر رسم/خيار ويعيد غير المُدارة كما هي؛ أخطاء `422 addons.{i}.*` تُربط بالصف المرسل (`addonServerFields`)؛ المديا كيت: `RateRowAddon.detail` (ساعات/أيام) + `ADDON_ICONS`.)
 
 ## P2 — M2 بناء العرض (البراند) — قلب الميزة
 

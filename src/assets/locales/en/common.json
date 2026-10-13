@@ -905,7 +905,9 @@
         "details": "Details",
         "extras": "Extras",
         "rushWindow": "Delivered within",
-        "rushPrice": "Rush fee (USD)",
+        "extrasHint": "Optional. Each one adds a fixed fee to this price.",
+        "addonDuration": "Duration",
+        "addonPrice": "{{label}} fee (USD)",
         "rushUnavailable": "Needs a delivery time of at least 2 days.",
         "save": "Save price",
         "saved": "Price saved",
@@ -979,7 +981,7 @@
         "intro": "This is how brands see your media kit.",
         "platforms": "Platforms",
         "terms": "Collaboration terms",
-        "addonWithHours": "{{label}} · {{hours}}"
+        "addonWithDetail": "{{label}} · {{detail}}"
       },
       "publicScreen": {
         "title": "Creator profile",

@@ -1,18 +1,25 @@
-import { orderAddons } from '@/core/api';
+import { orderAddons, type AddonType } from '@/core/api';
 import type { Money } from '@/core/money';
 import { fromPriceUsd, type PlatformResource, type RateCard } from '@/domains/auth';
+import { DURATION_OPTION, RUSH_HOURS_OPTION } from '../constants/rateCards';
 import type { PublicRateCard } from '../types/mediaKit';
 
 /** `Money` for own cards; `Money | null` where another viewer may get prices locked. */
 type RowPrice = Money | null;
 
+/** What an add-on's option promises: a rush window in hours, or how many days it runs. */
+export interface RateAddonDetail {
+  unit: 'hours' | 'days';
+  count: number;
+}
+
 export interface RateRowAddon<TPrice extends RowPrice = Money> {
-  key: string;
+  key: AddonType;
   label: string;
   /** Server-computed (`computed_price_usd`), never client math. `null` = locked for this viewer. */
   price: TPrice;
-  /** Rush delivery window; `null` for add-ons without one. */
-  deliveryHours: number | null;
+  /** `null` for add-ons without an option (extra revision). */
+  detail: RateAddonDetail | null;
 }
 
 export interface RateRow<TPrice extends RowPrice = Money> {
@@ -48,6 +55,13 @@ const readOwnPrice: ReadPrice<Money> = usd => (usd === null ? undefined : fromPr
 const readLockablePrice: ReadPrice<RowPrice> = usd =>
   usd === null ? null : fromPriceUsd(usd) ?? undefined;
 
+const toDetail = (options: LockableRowCard['addons'][number]['options']): RateAddonDetail | null => {
+  const hours = options[RUSH_HOURS_OPTION];
+  if (typeof hours === 'number') return { unit: 'hours', count: hours };
+  const days = options[DURATION_OPTION];
+  return typeof days === 'number' ? { unit: 'days', count: days } : null;
+};
+
 const toAddons = <TPrice extends RowPrice>(
   addons: LockableRowCard['addons'],
   readPrice: ReadPrice<TPrice>,
@@ -55,15 +69,7 @@ const toAddons = <TPrice extends RowPrice>(
   orderAddons(addons).flatMap(addon => {
     const price = readPrice(addon.computed_price_usd);
     if (price === undefined) return [];
-    const hours = addon.options.delivery_hours;
-    return [
-      {
-        key: addon.type,
-        label: addon.label,
-        price,
-        deliveryHours: typeof hours === 'number' ? hours : null,
-      },
-    ];
+    return [{ key: addon.type, label: addon.label, price, detail: toDetail(addon.options) }];
   });
 
 const buildRows = <TPrice extends RowPrice>(

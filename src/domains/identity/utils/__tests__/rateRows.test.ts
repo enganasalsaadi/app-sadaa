@@ -112,7 +112,7 @@ describe('buildRateRows', () => {
       platforms,
     );
     expect(row?.addons).toEqual([
-      { key: 'rush_delivery', label: 'Rush delivery', price: { amount: 3000, currency: 'USD' }, deliveryHours: 48 },
+      { key: 'rush_delivery', label: 'Rush delivery', price: { amount: 3000, currency: 'USD' }, detail: { unit: 'hours', count: 48 } },
     ]);
   });
 
@@ -130,6 +130,29 @@ describe('buildRateRows', () => {
       platforms,
     );
     expect(row?.addons.map(addon => addon.key)).toEqual(['extra_revision', 'pin']);
+  });
+
+  it('reads how long a duration add-on runs; none for an option-free one', () => {
+    const extra = (type: string, options: Record<string, number>) => ({
+      type,
+      label: type,
+      pricing_mode: 'fixed' as const,
+      amount: 10,
+      computed_price_usd: 10,
+      options,
+    });
+    const [row] = buildRateRows(
+      [
+        card('instagram', 'reel', 100, {
+          addons: [extra('whitelisting', { duration_days: 60 }), extra('extra_revision', {})],
+        }),
+      ],
+      platforms,
+    );
+    expect(row?.addons.map(addon => [addon.key, addon.detail])).toEqual([
+      ['extra_revision', null],
+      ['whitelisting', { unit: 'days', count: 60 }],
+    ]);
   });
 
   it('drops a card with an unusable price', () => {
@@ -159,7 +182,7 @@ describe('buildLockableRateRows (public kit, brand-explore §6)', () => {
     );
     expect(row).toMatchObject({ key: 'instagram:reel', price: null, includes: ['Up to 60 seconds'] });
     expect(row?.addons).toEqual([
-      { key: 'rush_delivery', label: 'Rush delivery', price: null, deliveryHours: 48 },
+      { key: 'rush_delivery', label: 'Rush delivery', price: null, detail: { unit: 'hours', count: 48 } },
     ]);
   });
 

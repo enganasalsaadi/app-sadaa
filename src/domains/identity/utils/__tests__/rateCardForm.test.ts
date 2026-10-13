@@ -1,8 +1,9 @@
 import type { CatalogService, RateCardCatalog } from '@/core/api';
 import type { RateCard } from '@/domains/auth';
+import type { RateCardFormValues } from '../../schemas/rateCardSchema';
+import { addonDefinitions } from '../rateCardAddonForm';
 import {
   emptyRateCardForm,
-  findRushAddon,
   hasFreeSlot,
   serviceDefaults,
   takenPackageKeys,
@@ -38,8 +39,26 @@ const reel: CatalogService = {
     retention: { label: 'Live', options: [{ value: '30d', label: '30 days' }], default: '30d', minimum: '24h' },
   },
   attributes: [{ key: 'collab_post', label: 'Collab', type: 'boolean', default: false, visible: false }],
-  addons: ['rush_delivery'],
+  addons: ['rush_delivery', 'pin'],
 };
+
+const catalog = {
+  addons: [
+    {
+      type: 'rush_delivery',
+      label: 'Rush delivery',
+      pricing_modes: [{ key: 'fixed', label: 'Fixed', min: 0.01, max: 50000 }],
+      options: [{ key: 'delivery_hours', options: [{ value: 24 }, { value: 48 }], default: 48, visible: true }],
+    },
+    {
+      type: 'pin',
+      label: 'Pin',
+      pricing_modes: [{ key: 'fixed', label: 'Fixed', min: 0.01, max: 50000 }],
+      options: [{ key: 'duration_days', options: [{ value: 7 }, { value: 30 }], default: 7, visible: true }],
+    },
+  ],
+} as unknown as RateCardCatalog;
+const defs = addonDefinitions(catalog, reel);
 
 const visit: CatalogService = {
   ...reel,
@@ -104,36 +123,43 @@ describe('slots', () => {
 });
 
 describe('toRateCardInput', () => {
-  const values = {
+  const values: RateCardFormValues = {
     ...emptyRateCardForm('instagram'),
-    service: 'reel' as const,
+    service: 'reel',
     packageValue: '60',
-    price: { amount: 12050, currency: 'USD' as const },
-    retention: '30d' as const,
-    rushEnabled: true,
-    rushHours: 48,
-    rushPrice: { amount: 3000, currency: 'USD' as const },
+    price: { amount: 12050, currency: 'USD' },
+    retention: '30d',
+    addons: [
+      { type: 'rush_delivery', enabled: true, options: { delivery_hours: '48' }, price: { amount: 3000, currency: 'USD' } },
+      { type: 'pin', enabled: false, options: {}, price: null },
+    ],
   };
 
-  it('sends the catalog package type, rush first, no hidden attributes', () => {
-    expect(toRateCardInput(values, reel)).toEqual({
-      platform: 'instagram',
-      service: 'reel',
-      package_value: 60,
-      price_usd: 120.5,
-      delivery_days: 5,
-      revisions: 1,
-      retention: '30d',
-      addons: [{ type: 'rush_delivery', pricing_mode: 'fixed', amount: 30, options: { delivery_hours: 48 } }],
+  it('sends the catalog package type, enabled add-ons only, no hidden attributes', () => {
+    expect(toRateCardInput(values, reel, defs)).toEqual({
+      body: {
+        platform: 'instagram',
+        service: 'reel',
+        package_value: 60,
+        price_usd: 120.5,
+        delivery_days: 5,
+        revisions: 1,
+        retention: '30d',
+        addons: [{ type: 'rush_delivery', pricing_mode: 'fixed', amount: 30, options: { delivery_hours: 48 } }],
+      },
+      addons: [
+        { row: 0, input: { type: 'rush_delivery', pricing_mode: 'fixed', amount: 30, options: { delivery_hours: 48 } } },
+      ],
     });
   });
 
   it('sends no platform, package or retention for an on-site visit', () => {
     expect(
       toRateCardInput(
-        { ...values, group: 'in_person', service: 'on_site_visit', packageValue: null, retention: null },
+        { ...values, group: 'in_person', service: 'on_site_visit', packageValue: null, retention: null, addons: [] },
         visit,
-      ),
+        [],
+      )?.body,
     ).toEqual({
       platform: null,
       service: 'on_site_visit',
@@ -147,61 +173,40 @@ describe('toRateCardInput', () => {
 
 describe('toRateCardPatch', () => {
   it('is empty when nothing changed', () => {
-    expect(toRateCardPatch(toRateCardForm(card()), card(), reel)).toEqual({});
+    expect(toRateCardPatch(toRateCardForm(card(), defs), card(), reel, defs)).toEqual({ body: {}, addons: [] });
   });
 
   it('sends only what changed', () => {
-    const values = { ...toRateCardForm(card()), price: { amount: 15000, currency: 'USD' as const }, deliveryDays: 7 };
-    expect(toRateCardPatch(values, card(), reel)).toEqual({ price_usd: 150, delivery_days: 7 });
+    const values = {
+      ...toRateCardForm(card(), defs),
+      price: { amount: 15000, currency: 'USD' as const },
+      deliveryDays: 7,
+    };
+    expect(toRateCardPatch(values, card(), reel, defs).body).toEqual({ price_usd: 150, delivery_days: 7 });
   });
 
-  it('replaces the add-on list when rush changes, keeping the others', () => {
+  it('replaces the add-on list when one changes, keeping the ones the editor does not show', () => {
     const withOther = card({
       addons: [
         ...card().addons,
-        {
-          type: 'pin',
-          label: 'Pin',
-          pricing_mode: 'fixed',
-          amount: 10,
-          computed_price_usd: 10,
-          options: {},
-        },
+        { type: 'hologram', label: 'Holo', pricing_mode: 'fixed', amount: 10, computed_price_usd: 10, options: {} },
       ],
     });
-    const values = { ...toRateCardForm(withOther), rushEnabled: false };
-    expect(toRateCardPatch(values, withOther, reel)).toEqual({
-      addons: [{ type: 'pin', pricing_mode: 'fixed', amount: 10, options: {} }],
-    });
-  });
-});
-
-describe('findRushAddon', () => {
-  const catalog = {
-    addons: [
-      {
-        type: 'rush_delivery',
-        label: 'Rush delivery',
-        pricing_modes: [{ key: 'fixed', label: 'Fixed', min: 0.01, max: 50000 }],
-        options: [{ key: 'delivery_hours', options: [{ value: 24 }, { value: 48 }], default: 48, visible: true }],
+    const values: RateCardFormValues = {
+      ...toRateCardForm(withOther, defs),
+      addons: [
+        { type: 'rush_delivery', enabled: false, options: { delivery_hours: '48' }, price: { amount: 3000, currency: 'USD' } },
+        { type: 'pin', enabled: true, options: { duration_days: '30' }, price: { amount: 1500, currency: 'USD' } },
+      ],
+    };
+    expect(toRateCardPatch(values, withOther, reel, defs)).toEqual({
+      body: {
+        addons: [
+          { type: 'pin', pricing_mode: 'fixed', amount: 15, options: { duration_days: 30 } },
+          { type: 'hologram', pricing_mode: 'fixed', amount: 10, options: {} },
+        ],
       },
-    ],
-  } as unknown as RateCardCatalog;
-
-  it('reads the fixed price range and the delivery windows', () => {
-    expect(findRushAddon(catalog)).toEqual({
-      label: 'Rush delivery',
-      min: 0.01,
-      max: 50000,
-      hours: [
-        { value: 24, label: null },
-        { value: 48, label: null },
-      ],
-      defaultHours: 48,
+      addons: [{ row: 1, input: { type: 'pin', pricing_mode: 'fixed', amount: 15, options: { duration_days: 30 } } }],
     });
-  });
-
-  it('is null when the catalog has no rush add-on', () => {
-    expect(findRushAddon({ addons: [] } as unknown as RateCardCatalog)).toBeNull();
   });
 });
