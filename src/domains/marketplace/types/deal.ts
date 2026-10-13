@@ -513,6 +513,16 @@ export interface DealStrikes {
   windowDays: number;
 }
 
+/** Brand's creative guidelines; they become contract terms. */
+export interface DealBrief {
+  hashtags: string[];
+  mentions: string[];
+  talkingPoints: string[];
+  donts: string[];
+  promoCode: string | null;
+  trackingLink: string | null;
+}
+
 export interface Deal {
   id: string;
   origin: 'direct' | 'public' | null;
@@ -540,7 +550,7 @@ export interface Deal {
   retention: DealRetentionWindow[];
   retentionCases: DealRetentionCase[];
   rating: DealRating | null;
-  brief: string | null;
+  brief: DealBrief | null;
   briefAttachments: DealFile[];
   /** Current SLA deadline; `null` while timers are frozen (shipping issue, dispute). */
   dueAt: Timestamp | null;

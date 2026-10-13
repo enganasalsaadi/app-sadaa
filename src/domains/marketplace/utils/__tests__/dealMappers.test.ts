@@ -227,7 +227,14 @@ const dealDto = (overrides: Partial<DealDto> = {}): DealDto => ({
     },
     influencer: { answered: false },
   },
-  brief: 'Show the new menu.',
+  brief: {
+    hashtags: ['#sada'],
+    mentions: ['@sada'],
+    talking_points: ['Show the new menu.'],
+    donts: [],
+    promo_code: 'SADA10',
+    tracking_link: null,
+  },
   brief_attachments: [fileDto({ id: 'b1', kind: 'document', mime: 'application/pdf' })],
   due_at: null,
   sent_at: T0,
@@ -350,6 +357,7 @@ describe('mapDeal', () => {
         dispute: null,
         rating: null,
         contract: null,
+        brief: null,
       }),
     );
 
@@ -359,6 +367,18 @@ describe('mapDeal', () => {
     expect(deal.dispute).toBeNull();
     expect(deal.rating).toBeNull();
     expect(deal.contract).toBeNull();
+    expect(deal.brief).toBeNull();
+  });
+
+  it('maps the structured brief to camelCase', () => {
+    expect(mapDeal(dealDto()).brief).toEqual({
+      hashtags: ['#sada'],
+      mentions: ['@sada'],
+      talkingPoints: ['Show the new menu.'],
+      donts: [],
+      promoCode: 'SADA10',
+      trackingLink: null,
+    });
   });
 
   it('maps a dispute-only cancellation without money', () => {

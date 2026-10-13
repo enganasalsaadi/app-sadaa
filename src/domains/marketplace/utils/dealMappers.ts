@@ -29,6 +29,7 @@ import {
   type Deal,
   type DealAddendum,
   type DealAddon,
+  type DealBrief,
   type DealCancellation,
   type DealContract,
   type DealContractDocument,
@@ -66,6 +67,7 @@ import type {
   BrandActiveDealDto,
   DealActionMetaDto,
   DealAddonDto,
+  DealBriefDto,
   DealCancellationDto,
   DealContractDocumentDto,
   DealContractDto,
@@ -365,6 +367,15 @@ const mapRating = (dto: DealRatingDto): DealRating => ({
   creator: mapRatingSide(dto.influencer),
 });
 
+const mapBrief = (dto: DealBriefDto): DealBrief => ({
+  hashtags: dto.hashtags,
+  mentions: dto.mentions,
+  talkingPoints: dto.talking_points,
+  donts: dto.donts,
+  promoCode: dto.promo_code,
+  trackingLink: dto.tracking_link,
+});
+
 const mapSignature = (dto: DealSignatureDto): DealSignature => ({
   party: toRole(dto.party),
   signedAt: toTimestamp(dto.signed_at),
@@ -409,7 +420,7 @@ export const mapDeal = (dto: DealDto): Deal => ({
   })),
   retentionCases: dto.retention_cases.map(mapDealRetentionCase),
   rating: dto.rating && mapRating(dto.rating),
-  brief: dto.brief,
+  brief: dto.brief && mapBrief(dto.brief),
   briefAttachments: dto.brief_attachments.map(mapDealFile),
   dueAt: toTimestampOrNull(dto.due_at),
   sentAt: toTimestampOrNull(dto.sent_at),

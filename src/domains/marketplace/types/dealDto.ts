@@ -27,6 +27,16 @@ export interface DealFileDto {
   url: string | null;
 }
 
+/** Creative guidelines (`DealBrief::toArray`); lists drop blanks server-side. */
+export interface DealBriefDto {
+  hashtags: string[];
+  mentions: string[];
+  talking_points: string[];
+  donts: string[];
+  promo_code: string | null;
+  tracking_link: string | null;
+}
+
 export interface DealAddonDto {
   type: string;
   label: string;
@@ -262,7 +272,7 @@ export interface DealDto {
   retention: DealRetentionWindowDto[];
   retention_cases: DealRetentionCaseDto[];
   rating: DealRatingDto | null;
-  brief: string | null;
+  brief: DealBriefDto | null;
   brief_attachments: DealFileDto[];
   due_at: string | null;
   sent_at: string | null;
