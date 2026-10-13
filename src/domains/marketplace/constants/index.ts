@@ -11,3 +11,4 @@ export {
 } from './dealStatus';
 export type { DealPhase, DealOutcome, DealStatusMeta, DealItemStatusMeta } from './dealStatus';
 export { DEAL_STATUS_ICON, UNKNOWN_DEAL_STATUS_ICON, DEAL_ITEM_STATUS_ICON, DEAL_DRAFT_REVIEW_ICON } from './statusIcons';
+export { DEAL_UPLOAD_POLICY, DEAL_UPLOAD_LIMIT } from './dealUploads';

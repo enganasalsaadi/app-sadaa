@@ -544,6 +544,8 @@ A brand asks one creator for specific work at the creator's fixed prices (public
 
 Every status shows the server's own wording with an icon and colour, never colour alone. Timers count down from the server's deadline and show "paused" when the server freezes them. Prices are in US dollars only, exactly as the contract states them. If the deal changed in the meantime (the other side acted, a timer ran out), the app shows the server's message and reloads the deal.
 
+Deal files (drafts, publishing screenshots, brief files, dispute evidence, keep-up reports) all go up the same way, built and tested ahead of the screens: the app checks type and size on the phone first (video MP4, MOV or WebM up to 300 MB; JPG, PNG or WebP photos up to 20 MB; PDF up to 20 MB where allowed, e.g. brief and evidence; publishing and keep-up proofs are photos only), then sends the original file straight to secure storage with a live progress bar. Each file uploads on its own, can be removed or retried, and stops cleanly if the user leaves the screen. Nothing is compressed.
+
 #### Journey G: Deleting an account ✅
 - **Where:** "Delete my account" is in Settings, on the Suspended screen, and in the header of every registration step. Anyone who can create an account can delete it, even halfway through registration or while suspended (an Apple requirement).
 - **Confirmation:** a sheet explains exactly what happens: Sada deletes the profile, verification documents, photo and linked accounts, and the phone number becomes free to sign up again. It cannot be undone. The user confirms with their current password.
@@ -675,7 +677,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - **No secrets in the app.** Sensitive keys (AI services, analytics) are only ever used on the server.
 - **No personal data in logs.** Phone numbers, tokens, wallet data and amounts are never logged.
 - **Link safety.** Social links and proof-of-publishing links are only accepted from approved social networks. In-app web pages only open approved addresses. Links that open the app (a creator's shared profile) are accepted only from Sada's own web address in one exact form; anything else is ignored and the app simply opens.
-- **Uploads.** File type and size are checked before upload, and drafts are kept at original quality.
+- **Uploads.** File type and size are checked before upload, and drafts are kept at original quality. Deal files go straight to private storage through a one-time upload link that expires after 30 minutes and is never saved or logged.
 - **Permissions are requested only when needed**, with an explanation (see §7.1).
 
 ---
@@ -784,6 +786,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-13 | Direct deals: one shared way to upload deal files (drafts, proofs, brief, evidence, keep-up reports): type and size checked on the phone per use, original file sent with live progress, remove / retry per file, stops when leaving the screen. No new screen yet. | 5.3 (Journey F), 6.5 |
 | 2026-10-13 | Direct deals foundation: the app now knows every deal state from the service (22 deal states, 6 per-deliverable states) with the server's own labels, the journey phases (offer, escrow, shipping, create, publish, done) and which actions each side may take; the old deal states were retired. Prices are fixed by rate cards, the only negotiation is one deadline extension, deals show US dollars only. No new screen yet. | 4.4, 5.3 (Journey F) |
 | 2026-10-13 | Creator Home: the navy band now holds only the pass and its hanging sign; "who's looking" and Share moved into the sheet as its first card so they no longer slide away half read. | 5.2, 5.3 (Journey A4) |
 | 2026-10-13 | Creator Home redesigned as "Storefront" (🟡 awaiting device testing): a tilted pass card with a passing light (dashed slots for a missing photo or first platform, link with copy), the one blocker as a sign hanging from it that falls away once cleared, "who's looking" panes with a daily views pulse, Share with copy and preview; below, profile strength, audience by platform and prices as swing tags are always shown, each with its own empty state (profile strength stays at 100% as "complete"). Wallet and Profile now use the same hero as Home: the sections slide over the navy band as a sheet instead of a rounded block. | 5.2, 5.3 (Journeys A3, A4, H), 6.3 |

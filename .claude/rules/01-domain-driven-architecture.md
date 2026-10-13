@@ -5,7 +5,7 @@ Lint-enforced (`no-restricted-imports`, `.eslintrc.js`).
 ## Layers
 
 - `app/` composition root: providers, RootNavigator, store assembly, bootstrap (AppStatus), shell screens.
-- `core/` infrastructure, no UI, no business rules: `api/ config/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ hooks/`.
+- `core/` infrastructure, no UI, no business rules: `api/ config/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ upload/ hooks/`.
 - `shared/` reusable, domain-agnostic: `ui/` (kit) · `context/` · `utils/` · `types/`.
 - `domains/` business logic, one folder per bounded context. `assets/` fonts, images, lottie, locales.
 

@@ -18,6 +18,12 @@ paths:
 - `createIdempotentAction()`: one key per money intent, auto-retries only `409 idempotency_request_in_progress`. `IDEMPOTENCY_HEADER` = `Idempotency-Key` (rule 06).
 - `retryRegistry`. Domains `injectEndpoints` with `overrideExisting: true`.
 
+## Uploads (`@/core/upload`)
+
+- 3-step deal uploads (contract §uploads): `uploadFile({ source, policy, requestSlot, onProgress, signal })` → `file_id`; rejects only `UploadError.failure` (`type size empty slot transfer canceled`, `cause` = API error, `maxBytes`). `isRetryableFailure`.
+- `useFileUploads({ policy, requestSlot, limit })`: multi-file set, `entries` / `fileIds` / `add` (returns dropped) / `retry` (fresh slot) / `remove` / `clear`, aborts on unmount.
+- Core holds no limits: domain passes `UploadPolicy` (`DEAL_UPLOAD_POLICY[purpose]`, `DEAL_UPLOAD_LIMIT`) + a `requestSlot` wrapping its slot mutation (`transformResponse: mapUploadSlot`, `.unwrap()`). PUT streams from disk via `react-native-blob-util`; signed URL never logged/persisted. Tests: root `__mocks__/react-native-blob-util.ts` (`fakePuts`, `fakeStat`) + explicit `jest.mock('react-native-blob-util')`.
+
 ## Feedback UI
 
 - Toasts: `toastService.success|error|warning|info` (`@/core/toast`) outside React; `useToast()` inside. `options.action { label, onPress }` = one inline button (Undo), hides the toast on press.
