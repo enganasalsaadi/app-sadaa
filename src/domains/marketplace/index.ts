@@ -4,6 +4,7 @@
  */
 export { BrandHomeNavigator } from './navigation/BrandHomeNavigator';
 export { CreatorHomeNavigator } from './navigation/CreatorHomeNavigator';
+export { BrandDealsNavigator, CreatorDealsNavigator } from './navigation/DealsNavigator';
 export {
   DealStatusPill,
   DealProgress,

@@ -149,6 +149,8 @@ export const useNotificationsScreen = () => {
         case 'PayoutMethods':
         case 'TopUpDetail':
         case 'WithdrawalDetail':
+        case 'DealDetail':
+        case 'Strikes':
           // Another tab: go through the root, like a push tap.
           navigate('Main', toTabParams(route));
           return;

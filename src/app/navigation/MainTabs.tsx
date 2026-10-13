@@ -20,7 +20,12 @@ import { iconStroke } from '@/core/theme';
 import type { RootTabParamList } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { ComingSoonTabScreen } from '@/app/screens';
-import { BrandHomeNavigator, CreatorHomeNavigator } from '@/domains/marketplace';
+import {
+  BrandDealsNavigator,
+  BrandHomeNavigator,
+  CreatorDealsNavigator,
+  CreatorHomeNavigator,
+} from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
 import { BrandWalletNavigator, CreatorWalletNavigator } from '@/domains/finance';
@@ -37,16 +42,6 @@ interface MainTabDef {
   component: React.ComponentType;
 }
 
-const CampaignsPlaceholder: React.FC = () => {
-  const { t } = useTranslation();
-  return <ComingSoonTabScreen title={t('tabs.campaigns')} icon={Megaphone} />;
-};
-
-const DealsPlaceholder: React.FC = () => {
-  const { t } = useTranslation();
-  return <ComingSoonTabScreen title={t('tabs.deals')} icon={Briefcase} />;
-};
-
 const MessagesPlaceholder: React.FC = () => {
   const { t } = useTranslation();
   return <ComingSoonTabScreen title={t('tabs.messages')} icon={MessageCircle} />;
@@ -55,7 +50,7 @@ const MessagesPlaceholder: React.FC = () => {
 /** Same route names for both roles; label, icon and root screen differ. */
 const BRAND_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: BrandHomeNavigator },
-  { name: 'DealsTab', titleKey: 'tabs.campaigns', icon: Megaphone, component: CampaignsPlaceholder },
+  { name: 'DealsTab', titleKey: 'tabs.campaigns', icon: Megaphone, component: BrandDealsNavigator },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: BrandWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.account', icon: CircleUser, component: SettingsNavigator },
@@ -63,7 +58,7 @@ const BRAND_TABS: readonly MainTabDef[] = [
 
 const CREATOR_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: CreatorHomeNavigator },
-  { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: DealsPlaceholder },
+  { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: CreatorDealsNavigator },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: CreatorWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },

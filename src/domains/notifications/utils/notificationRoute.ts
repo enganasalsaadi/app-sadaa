@@ -13,12 +13,15 @@ export type NotificationRoute =
   | { screen: 'WalletTab' }
   | { screen: 'PayoutMethods' }
   | { screen: 'TopUpDetail'; topUpId: string }
-  | { screen: 'WithdrawalDetail'; withdrawalId: string };
+  | { screen: 'WithdrawalDetail'; withdrawalId: string }
+  | { screen: 'DealDetail'; dealId: string }
+  | { screen: 'Strikes' };
 
 /**
- * Platforms, payout methods and withdrawals are creator screens, top-ups and company verification
- * brand ones: the other role lands somewhere safe. A brand's KYC result opens the verification
- * picker, which shows the document's status beside the other methods.
+ * Platforms, payout methods, withdrawals and strikes are creator screens, top-ups and company
+ * verification brand ones: the other role lands somewhere safe. A brand's KYC result opens the
+ * verification picker, which shows the document's status beside the other methods. Every deal
+ * push opens the deal (M11); both roles' Deals tabs host it.
  */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
@@ -50,6 +53,10 @@ export const resolveNotificationRoute = (
       return userType === 'influencer'
         ? { screen: 'WithdrawalDetail', withdrawalId: target.withdrawalId }
         : { screen: 'WalletTab' };
+    case 'deal':
+      return { screen: 'DealDetail', dealId: target.dealId };
+    case 'strikes':
+      return userType === 'influencer' ? { screen: 'Strikes' } : { screen: 'NotificationsScreen' };
     default: {
       const _exhaustive: never = target;
       return _exhaustive;
@@ -87,8 +94,8 @@ export const notificationTarget = (item: AppNotification): PushTarget | null => 
 };
 
 /**
- * Settings-tab params for a route opened from outside the stack (a push tap).
- * `initial: false` keeps Profile underneath, so back never leaves the user stranded.
+ * Tab params for a route opened from outside the stack (a push tap).
+ * `initial: false` keeps the tab's root underneath, so back never leaves the user stranded.
  */
 export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<RootTabParamList> => {
   switch (route.screen) {
@@ -116,6 +123,14 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
         screen: 'WalletTab',
         params: { screen: 'WithdrawalDetail', params: { id: route.withdrawalId }, initial: false },
       };
+    case 'DealDetail':
+      // The deals list stays underneath, so back lands on the rest of the user's deals.
+      return {
+        screen: 'DealsTab',
+        params: { screen: 'DealDetail', params: { id: route.dealId }, initial: false },
+      };
+    case 'Strikes':
+      return { screen: 'DealsTab', params: { screen: 'Strikes', initial: false } };
     case 'KycScreen':
     case 'CompanyVerification':
     case 'NotificationsScreen':

@@ -70,6 +70,20 @@ describe('resolveNotificationRoute', () => {
     expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'WalletTab' });
   });
 
+  it('opens a deal for both roles', () => {
+    const target = { kind: 'deal', dealId: '01JD5K2P' } as const;
+    const route = { screen: 'DealDetail', dealId: '01JD5K2P' };
+    expect(resolveNotificationRoute(target, 'brand')).toEqual(route);
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual(route);
+  });
+
+  it('opens strikes for a creator only, the inbox for anyone else', () => {
+    const target = { kind: 'strikes' } as const;
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({ screen: 'Strikes' });
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({ screen: 'NotificationsScreen' });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'NotificationsScreen' });
+  });
+
   it('does nothing without a target', () => {
     expect(resolveNotificationRoute(null, 'influencer')).toBeNull();
   });
@@ -88,6 +102,14 @@ describe('notificationTarget', () => {
     expect(
       notificationTarget(item({ type: 'platform_rejected', data: { entity_id: '../x' } })),
     ).toBeNull();
+  });
+
+  it('reads a deal inbox entry', () => {
+    expect(
+      notificationTarget(
+        item({ type: 'deal_offer_sent', data: { entity_id: '01JD5K2P', deep_link: 'sada://deals/01JD5K2P' } }),
+      ),
+    ).toEqual({ kind: 'deal', dealId: '01JD5K2P' });
   });
 
   it('rebuilds the link from the type when none was sent', () => {
@@ -149,6 +171,20 @@ describe('toTabParams', () => {
     expect(toTabParams({ screen: 'WithdrawalDetail', withdrawalId: 'wd1' })).toEqual({
       screen: 'WalletTab',
       params: { screen: 'WithdrawalDetail', params: { id: 'wd1' }, initial: false },
+    });
+  });
+
+  it('opens a deal over the deals list', () => {
+    expect(toTabParams({ screen: 'DealDetail', dealId: 'd1' })).toEqual({
+      screen: 'DealsTab',
+      params: { screen: 'DealDetail', params: { id: 'd1' }, initial: false },
+    });
+  });
+
+  it('opens strikes over the deals list', () => {
+    expect(toTabParams({ screen: 'Strikes' })).toEqual({
+      screen: 'DealsTab',
+      params: { screen: 'Strikes', initial: false },
     });
   });
 });

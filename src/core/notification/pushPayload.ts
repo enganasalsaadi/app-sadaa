@@ -1,4 +1,7 @@
-/** FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4, company verification). */
+/**
+ * FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4, company verification).
+ * Deal pushes (`deal_<kind>`, direct deals M11) are routed by their link alone.
+ */
 export const PUSH_TYPES = [
   'kyc_approved',
   'kyc_rejected',
@@ -37,7 +40,9 @@ export type PushTarget =
   | { kind: 'wallet' }
   | { kind: 'payoutMethods' }
   | { kind: 'topUp'; topUpId: string }
-  | { kind: 'withdrawal'; withdrawalId: string };
+  | { kind: 'withdrawal'; withdrawalId: string }
+  | { kind: 'deal'; dealId: string }
+  | { kind: 'strikes' };
 
 export interface ParsedPush {
   /** `null` for a type this build doesn't know yet. */
@@ -72,6 +77,10 @@ const parseDeepLink = (link: unknown): PushTarget | null => {
   if (route === 'notifications' && id === undefined) return { kind: 'notifications' };
   if (route === 'wallet' && id === undefined) return { kind: 'wallet' };
   if (route === 'wallet' && id === 'payout-methods') return { kind: 'payoutMethods' };
+  if (route === 'strikes' && id === undefined) return { kind: 'strikes' };
+  if (route === 'deals' && id !== undefined && ENTITY_ID.test(id)) {
+    return { kind: 'deal', dealId: id };
+  }
   if (route === 'platforms' && id !== undefined && ENTITY_ID.test(id)) {
     return { kind: 'platform', platformId: id };
   }

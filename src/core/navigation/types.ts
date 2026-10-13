@@ -139,6 +139,18 @@ export type WalletStackParamList = {
   WithdrawalDetail: { id: string; submitted?: boolean };
 };
 
+/**
+ * `DealsTab` stack (marketplace), same route names for both roles; each role's navigator
+ * registers its own screens (rule 01). Ids only, so a push or link can open them too.
+ */
+export type DealsStackParamList = {
+  /** Brand: needs action / active / drafts / closed · creator: new offers / active / closed. */
+  Deals: undefined;
+  DealDetail: { id: string };
+  /** Creator only: withdrawal strikes (`sada://strikes`). */
+  Strikes: undefined;
+};
+
 /** `channel` = add a method of that channel (validated by finance); `id` = edit a saved one. */
 export type PayoutMethodFormParams = { channel: string } | { id: string };
 
@@ -256,8 +268,8 @@ export type DevShowcaseStackParamList = {
 
 export type RootTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
-  /** Brand: my campaigns · creator: my deals. Placeholder until marketplace ships it. */
-  DealsTab: undefined;
+  /** Direct deals, both roles (marketplace). */
+  DealsTab: NavigatorScreenParams<DealsStackParamList> | undefined;
   /** Placeholder until the messaging domain lands. */
   MessagesTab: undefined;
   WalletTab: NavigatorScreenParams<WalletStackParamList> | undefined;
@@ -288,6 +300,12 @@ export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
 export type WalletStackScreenProps<T extends keyof WalletStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<WalletStackParamList, T>,
+    BottomTabScreenProps<RootTabParamList>
+  >;
+
+export type DealsStackScreenProps<T extends keyof DealsStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<DealsStackParamList, T>,
     BottomTabScreenProps<RootTabParamList>
   >;
 

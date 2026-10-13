@@ -60,6 +60,19 @@ describe('parsePushPayload', () => {
     ).toEqual({ type: 'wallet_payout_method_added', target: { kind: 'payoutMethods' } });
   });
 
+  it('reads deal links (direct deals M11) whatever the deal kind', () => {
+    expect(
+      parsePushPayload({
+        type: 'deal_draft_submitted',
+        entity_id: '01JD5K2PQZ',
+        deep_link: 'sada://deals/01JD5K2PQZ',
+      }),
+    ).toEqual({ type: null, target: { kind: 'deal', dealId: '01JD5K2PQZ' } });
+    expect(
+      parsePushPayload({ type: 'deal_strikes_flag_cleared', deep_link: 'sada://strikes' }).target,
+    ).toEqual({ kind: 'strikes' });
+  });
+
   it('keeps an unknown type as null but still reads the link', () => {
     expect(parsePushPayload({ type: 'deal_paid', deep_link: 'sada://kyc' })).toEqual({
       type: null,
@@ -89,6 +102,12 @@ describe('parsePushPayload', () => {
     ['an id with a query', 'sada://platforms/01J9?x=1'],
     ['an id on a fixed route', 'sada://kyc/123'],
     ['an id on the verification route', 'sada://verification/123'],
+    ['a deal without id', 'sada://deals/'],
+    ['the deal list', 'sada://deals'],
+    ['a deal id with a path', 'sada://deals/01J9/../x'],
+    ['a deal id with a query', 'sada://deals/01J9?x=1'],
+    ['a deal sub-route', 'sada://deals/01J9/contract'],
+    ['a strike id', 'sada://strikes/01J9'],
     ['a non-string link', 42],
   ])('drops %s', (_, deepLink) => {
     expect(parsePushPayload({ type: 'kyc_approved', deep_link: deepLink }).target).toBeNull();
