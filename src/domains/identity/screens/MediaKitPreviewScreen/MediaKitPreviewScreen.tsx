@@ -5,7 +5,7 @@ import { Settings2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ErrorState, Layout, LayoutFooter, Notice } from '@/shared/ui';
-import { MediaKitShareNotice } from '../../components/MediaKitCard/MediaKitShareNotice';
+import { MediaKitShareNotice } from '../../components/MediaKitShare';
 import {
   MediaKitHeaderBar,
   MediaKitShowcaseBody,

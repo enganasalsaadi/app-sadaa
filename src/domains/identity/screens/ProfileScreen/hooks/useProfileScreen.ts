@@ -1,11 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
+import { Vibration } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import type { ParseKeys } from 'i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 import { getVersion } from 'react-native-device-info';
 import { useAppSelector } from '@/core/store';
 import { normalizeApiError, useLookupItems } from '@/core/api';
+import { getValidLanguage } from '@/core/i18n';
+import { HAPTIC_TAP_MS, type SupportedLanguage } from '@/core/config';
 import { useTheme, type ThemeMode } from '@/core/theme';
 import { toastService } from '@/core/toast';
 import { navigate, type SettingsStackParamList } from '@/core/navigation';
@@ -16,12 +20,16 @@ import {
   type KycStatus,
 } from '@/domains/auth';
 import { useGetUserProfileQuery, useUpdateAvatarMutation } from '../../../api/accountApi';
+import { useGetMediaKitQuery } from '../../../api/mediaKitApi';
 import { useGetRateCardsQuery } from '../../../api/rateCardsApi';
 import { PROFILE_SECTIONS, type ProfileSectionKey } from '../../../constants/profileSections';
 import type { ProfileStepTarget } from '../../../constants/profileSteps';
 import { useBrandVisibility } from '../../../hooks/useBrandVisibility';
+import { useMediaKitShare } from '../../../hooks/useMediaKitShare';
 import { usePushPermissionStatus } from '../../../hooks/usePushPermissionStatus';
+import { formatLinkLabel } from '../../../utils/mediaKitCard';
 import { buildMissingSteps } from '../../../utils/profileCompletion';
+import { buildProfileOrbit, buildProfileSteps } from '../../../utils/profileOrbit';
 import { needsRateCards } from '../../../utils/rateCardNotice';
 
 type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'ProfileScreen'>;
@@ -31,8 +39,16 @@ const AVATAR_TYPES: readonly string[] = ['image/jpeg', 'image/png', 'image/webp'
 const AVATAR_MAX_BYTES = 5 * 1024 * 1024;
 const AVATAR_MAX_EDGE = 2048;
 
+/** A company link reads without its scheme and `www.`. */
+const LINK_SCHEME = /^https?:\/\/(www\.)?/i;
+
+const LANGUAGE_LABEL = {
+  ar: 'chooseLanguage.options.ar.label',
+  en: 'chooseLanguage.options.en.label',
+} as const satisfies Record<SupportedLanguage, ParseKeys>;
+
 export const useProfileScreen = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation<Navigation>();
   const { mode: themeMode, setThemeMode } = useTheme();
   const user = useAppSelector(selectUser);
@@ -54,12 +70,13 @@ export const useProfileScreen = () => {
   const userType = user?.user_type ?? 'influencer';
   const isBrand = userType === 'brand';
   const rateCards = useGetRateCardsQuery(undefined, { skip: isBrand });
+  const mediaKit = useGetMediaKitQuery(undefined, { skip: isBrand });
+  const mediaKitShare = useMediaKitShare({ skip: isBrand });
   const brandVisibility = useBrandVisibility(isBrand);
 
   const displayName =
     user?.display_name || profile?.full_name || profile?.company_name || user?.full_name || '';
   const avatarUrl = user?.avatar_url ?? details.data?.avatar_url ?? null;
-  const email = user?.email || details.data?.email || null;
   // A brand has no area: its line reads "activity · city".
   const location =
     (isBrand
@@ -76,13 +93,32 @@ export const useProfileScreen = () => {
   const percentage = completion?.percentage ?? 0;
   const isComplete = completion != null && percentage >= 100;
 
-  const missingSteps = useMemo(
-    () => buildMissingSteps(completion?.steps ?? [], kycStatus, isBrand),
-    [completion?.steps, isBrand, kycStatus],
+  const platformsReview = user?.platforms_review_status ?? null;
+  const steps = useMemo(
+    () =>
+      buildProfileSteps(
+        buildMissingSteps(completion?.steps ?? [], kycStatus, isBrand),
+        kycStatus,
+        platformsReview,
+      ),
+    [completion?.steps, isBrand, kycStatus, platformsReview],
+  );
+  const orbit = useMemo(
+    () => buildProfileOrbit(completion?.steps.length ?? 0, steps),
+    [completion?.steps.length, steps],
+  );
+  // A rejected KYC gets its own strip with the reason, so it is no ticket.
+  const tickets = useMemo(
+    () => steps.filter(step => step.key !== 'kyc' || step.state !== 'rejected'),
+    [steps],
   );
 
   const platforms = profile?.platforms ?? [];
-  const primaryPlatform = platforms.find(p => p.is_primary) ?? platforms[0] ?? null;
+  const socialLinks = useMemo(
+    () =>
+      (profile?.social_links ?? []).map(link => ({ ...link, label: link.url.replace(LINK_SCHEME, '') })),
+    [profile?.social_links],
+  );
   const rateCardCount = rateCards.data?.length ?? 0;
 
   const nicheLabels = useMemo(() => {
@@ -98,28 +134,32 @@ export const useProfileScreen = () => {
     () =>
       PROFILE_SECTIONS[userType].filter(section => {
         switch (section) {
+          case 'kycRejected':
+            return kycStatus === 'rejected';
           case 'completion':
-            return missingSteps.length > 0;
+            return tickets.length > 0;
           case 'push':
-            return pushPermission != null && pushPermission !== 'unavailable';
-          case 'niches':
+            return pushPermission === 'askable' || pushPermission === 'blocked';
+          case 'detailsError':
+            return detailsFailed;
+          case 'platforms':
           case 'company':
             return !detailsFailed;
           default:
             return true;
         }
       }),
-    [userType, missingSteps.length, pushPermission, detailsFailed],
+    [userType, kycStatus, tickets.length, pushPermission, detailsFailed],
   );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([me.refetch(), details.refetch(), ...(isBrand ? [] : [rateCards.refetch()])]);
+      await Promise.all([me.refetch(), details.refetch(), ...(isBrand ? [] : [rateCards.refetch(), mediaKit.refetch()])]);
     } finally {
       setRefreshing(false);
     }
-  }, [me, details, isBrand, rateCards]);
+  }, [me, details, isBrand, rateCards, mediaKit]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -213,6 +253,7 @@ export const useProfileScreen = () => {
 
   const onStepPress = useCallback(
     (target: ProfileStepTarget) => {
+      Vibration.vibrate(HAPTIC_TAP_MS);
       switch (target) {
         case 'editInfo':
           openEditInfo();
@@ -247,17 +288,18 @@ export const useProfileScreen = () => {
     brandVisibility,
     hero: {
       isBrand,
+      title: t(isBrand ? 'tabs.account' : 'tabs.myProfile'),
       displayName,
       avatarUrl,
-      email,
       location,
+      kycStatus,
       isVerified: kycStatus === 'verified',
       percentage,
       isComplete,
+      orbit,
       isUploadingAvatar,
-      isLoadingDetails: details.isLoading,
     },
-    missingSteps,
+    tickets,
     unreadNotifications: user?.unread_notifications_count ?? 0,
     kyc: {
       status: kycStatus,
@@ -271,17 +313,19 @@ export const useProfileScreen = () => {
       isLoading: rateCards.isLoading,
       needsSetup: needsRateCards(user),
     },
-    platformsSummary: {
-      count: platforms.length,
-      primary: primaryPlatform,
-      rateCardCount,
-      reviewStatus: user?.platforms_review_status ?? null,
+    platforms,
+    mediaKit: {
+      link: mediaKit.data ? formatLinkLabel(mediaKit.data.public_url) : null,
+      isPublic: mediaKit.data?.is_public ?? false,
+      canShare: mediaKitShare.isReady && (mediaKit.data?.is_public ?? false),
+      isSharing: mediaKitShare.isSharing,
+      share: mediaKitShare.share,
     },
     nicheLabels,
     company: {
       businessType: profile?.business_type_label ?? null,
       governorate: profile?.governorate_label ?? null,
-      socialLinks: profile?.social_links ?? [],
+      socialLinks,
     },
     details: {
       isLoading: details.isLoading,
@@ -290,6 +334,7 @@ export const useProfileScreen = () => {
       retry: details.refetch,
     },
     themeMode,
+    languageLabel: t(LANGUAGE_LABEL[getValidLanguage(i18n.language)]),
     appVersion: getVersion(),
     refreshing,
     onRefresh,

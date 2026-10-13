@@ -4,20 +4,23 @@ import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Box, Layout, StaggerIn } from '@/shared/ui';
-import { MediaKitCard } from '@/domains/identity';
 import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
+import { AudienceSection } from './components/AudienceSection';
 import { CreatorHomeBar } from './components/CreatorHomeBar';
-import { CreatorHomeHero } from './components/CreatorHomeHero';
-import { ProfileStrengthCard } from './components/ProfileStrengthCard';
-import { PlatformsSection } from './components/PlatformsSection';
-import { RatesCard } from './components/RatesCard';
+import { PriceTagsSection } from './components/PriceTagsSection';
+import { ReadinessSection } from './components/ReadinessSection';
+import { ShareBar } from './components/ShareBar';
+import { StorefrontHero } from './components/StorefrontHero';
+import { WatchGrid } from './components/WatchGrid';
 
 /**
- * Creator dashboard (v4 "Navy Trust, live"): navy hero with drifting lights (identity,
- * the one blocker as a live island, 30-day KPIs → Insights) behind a transparent header
- * that pins the identity once the hero scrolls away. Then, rising in one by one: the
- * media kit (Share is the screen's only primary), profile strength, platforms and
- * prices. Sections without an API (wallet, offers, deals) stay out until it exists.
+ * Creator dashboard «الواجهة» (approved 2026-10-13): Home is the creator's storefront as
+ * brands meet it. Navy hero with drifting lights (only the tilted pass and the one blocker
+ * hanging from it as a sign) behind a transparent header that pins the identity once the
+ * hero scrolls away; the body slides over it as a sheet. Then, rising in one by one and
+ * always present (each has its own empty state): who's looking in the last 30 days with
+ * the share bar, how ready the storefront is, the audience by platform and the price tags. Sections without an API
+ * (wallet, offers, deals) stay out until it exists.
  */
 const CreatorHomeScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -44,16 +47,20 @@ const CreatorHomeScreenComponent: React.FC = () => {
               : t('notifications.inbox.title'),
             badge: vm.unreadNotifications,
             onPress: vm.openNotifications,
+            glass: true,
           },
         ],
       }}
       hero={
-        <CreatorHomeHero
+        <StorefrontHero
           hero={vm.hero}
           notice={vm.notice}
           kpis={vm.kpis}
-          onOpenProfile={vm.openProfile}
-          onOpenInsights={vm.openInsights}
+          platforms={vm.platforms}
+          mediaKit={vm.mediaKit}
+          onOpenPreview={vm.openPreview}
+          onAddPhoto={vm.openAvatar}
+          onLinkPlatform={vm.openPlatforms}
         />
       }
       scrollProps={{
@@ -67,27 +74,19 @@ const CreatorHomeScreenComponent: React.FC = () => {
         ),
       }}
     >
-      <Box pt="xl" pb="5xl">
-        <StaggerIn gap="2xl">
-          <Box px="xl">
-            <MediaKitCard {...vm.mediaKit} onOpenPreview={vm.openPreview} />
+      <Box pt="2xl" pb="5xl">
+        <StaggerIn gap="3xl">
+          <Box px="xl" gap="lg">
+            <WatchGrid kpis={vm.kpis} onOpenInsights={vm.openInsights} />
+            <ShareBar mediaKit={vm.mediaKit} onOpenPreview={vm.openPreview} />
           </Box>
-
-          {vm.completion.isVisible ? (
-            <Box px="xl">
-              <ProfileStrengthCard completion={vm.completion} onStepPress={vm.onStepPress} />
-            </Box>
-          ) : null}
-
-          <PlatformsSection
-            platforms={vm.platforms}
-            onOpenPlatform={vm.openPlatform}
-            onManage={vm.openPlatforms}
-          />
-
           <Box px="xl">
-            <RatesCard rates={vm.rates} onEdit={vm.openRates} />
+            <ReadinessSection completion={vm.completion} onStepPress={vm.onStepPress} />
           </Box>
+          <Box px="xl">
+            <AudienceSection platforms={vm.platforms} onOpenPlatform={vm.openPlatform} onManage={vm.openPlatforms} />
+          </Box>
+          <PriceTagsSection rates={vm.rates} onEdit={vm.openRates} />
         </StaggerIn>
       </Box>
     </Layout>

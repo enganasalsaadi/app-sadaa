@@ -427,10 +427,11 @@
   },
   "account": {
     "profile": {
-      "title": "Profile",
       "settings": "Settings",
       "changePhoto": "Change Photo",
       "changeLogo": "Change company logo",
+      "addPhoto": "Add photo",
+      "addLogo": "Add logo",
       "changePassword": "Change Password",
       "language": "Language",
       "terms": "Terms & Conditions",
@@ -443,9 +444,15 @@
       "avatarInvalid": "Use a JPG, PNG or WebP photo under 5 MB.",
       "avatarUpdated": "Profile photo updated",
       "completion": "Profile completion",
-      "completed": "Your profile is complete",
       "completeTitle": "Complete your profile",
-      "completeSubtitle": "Each step makes you easier for brands to find",
+      "points_one": "+{{count}} point",
+      "points_other": "+{{count}} points",
+      "tickets": {
+        "summary": "{{steps}} · {{points}}",
+        "steps_one": "{{count}} step",
+        "steps_other": "{{count}} steps",
+        "inReview": "Under review"
+      },
       "steps": {
         "basicInfo": "Add your basic info",
         "avatar": "Add a profile photo",
@@ -462,10 +469,13 @@
         "kycRejected": "Re-upload your documents"
       },
       "push": {
-        "onTitle": "Notifications are on",
-        "onBody": "You'll hear about the best campaigns first.",
+        "title": "Notifications",
+        "on": "On",
         "offTitle": "Notifications are off",
         "offBody": "You may be missing campaigns and offers. Turn them on to hear first.",
+        "offBodyBrand": "You may be missing creator offers and replies. Turn them on to hear first.",
+        "blockedTitle": "Notifications are blocked",
+        "blockedBody": "You turned them off in your device settings. Open them so you miss nothing.",
         "enable": "Turn on",
         "openSettings": "Open settings"
       },
@@ -480,6 +490,10 @@
         "unverifiedTitle": "Verify your identity",
         "unverifiedBody": "Verification lets you accept offers and receive your earnings.",
         "reupload": "Upload again",
+        "pill": {
+          "unverified": "Not verified · Verify now",
+          "unverifiedBrand": "Not verified · Verify your company"
+        },
         "brand": {
           "verifiedBody": "Creators see your verified badge, which builds trust in your offers.",
           "pendingBody": "We’re reviewing your company document and will let you know.",
@@ -490,11 +504,12 @@
       },
       "platforms": {
         "title": "My platforms",
-        "summary": "Platforms: {{platforms}} · Prices: {{rates}}",
-        "primary": "Primary account",
-        "empty": "You haven't linked a platform yet.",
-        "underReview": "Under review",
-        "actionRequired": "Action required"
+        "manage": "Manage",
+        "add": "Link a platform",
+        "primaryShort": "Primary",
+        "verified": "Verified",
+        "followers": "followers",
+        "followersTier": "followers · {{tier}}"
       },
       "niches": {
         "title": "My niches",
@@ -502,7 +517,13 @@
       },
       "mediaKit": {
         "title": "Media kit",
-        "subtitle": "Your link and who can see it"
+        "subtitle": "Your link and who can see it",
+        "share": "Share media kit",
+        "public": "Public",
+        "private": "Private"
+      },
+      "tools": {
+        "ratesHint": "Packages brands can see"
       },
       "brandVisibility": {
         "title": "Show my brand on creators' profiles",
@@ -516,13 +537,10 @@
         "subtitle": "Where we send your earnings when you withdraw"
       },
       "company": {
-        "title": "Company",
+        "title": "Company info",
         "businessType": "Business type",
         "governorate": "Governorate",
         "links": "Links",
-        "linksCount_one": "{{count}} link",
-        "linksCount_other": "{{count}} links",
-        "noLinks": "No links yet",
         "notSet": "Not set"
       },
       "detailsError": "We couldn't load your profile details.",
@@ -915,8 +933,6 @@
       }
     },
     "mediaKit": {
-      "title": "Your media kit",
-      "subtitle": "What brands see when they find you",
       "loadFailed": "Couldn't load your media kit",
       "retry": "Retry",
       "priceFrom": "From",
@@ -924,7 +940,6 @@
       "verifiedCreator": "Verified creator",
       "linkLabel": "Your media kit link",
       "visibility": {
-        "public": "Visible",
         "hidden": "Hidden"
       },
       "noActivity": "Share your link to get your first views",
@@ -1366,14 +1381,30 @@
       "greetingFallback": "Welcome",
       "openProfile": "Open my profile",
       "verified": "Verified account",
+      "storefront": {
+        "kickerOpen": "Your storefront is open to brands",
+        "kickerHidden": "Your storefront is closed to brands",
+        "pass": {
+          "a11y": "Your storefront as brands see it. Open the preview",
+          "addPhoto": "Add your photo",
+          "addPhotoHint": "Your photo is the first thing brands see",
+          "linkPlatform": "Link your first platform",
+          "copy": "Copy",
+          "linkFailed": "Couldn't load your link. Try again"
+        },
+        "watch": {
+          "title": "Who's looking?",
+          "period": "Last 30 days",
+          "brands": "brands visited your storefront",
+          "views": "profile views",
+          "pulseA11y": "Your daily profile views over the last 30 days",
+          "a11y": "Last 30 days: {{brands}} brands visited your storefront, {{views}} profile views. Open all insights"
+        },
+        "share": "Share your storefront"
+      },
       "kpi": {
-        "period": "Last 30 days",
-        "reach": "Your reach",
-        "views": "Profile views",
-        "brands": "Brands viewed",
         "new": "New",
         "failed": "Couldn't load stats. Tap to retry",
-        "a11y": "Last 30 days: reach {{reach}}, profile views {{views}}, brands viewed {{brands}}. Open all insights",
         "retry": "Couldn't load stats. Retry"
       },
       "notice": {
@@ -1397,23 +1428,31 @@
           "platforms": "Platforms",
           "rates": "Prices",
           "kyc": "ID"
-        }
+        },
+        "complete": "Your profile is complete",
+        "completeBody": "Brands see everything they need to book you.",
+        "progressA11y": "{{done}} of {{total}} stages done"
       },
       "platforms": {
+        "title": "Your audience",
         "manage": "Manage",
         "loadFailed": "Couldn't load your platforms",
         "open": "Open {{platform}} @{{username}}",
         "add": "Add platform",
         "addHint": "Link your accounts so brands can reach you",
         "followers": "followers",
-        "openPrimary": "Open your primary platform {{platform}} @{{username}}"
+        "openPrimary": "Open your primary platform {{platform}} @{{username}}",
+        "emptyTitle": "No platforms linked yet"
       },
       "rates": {
-        "title": "My rates",
+        "title": "Your rates",
         "edit": "Edit",
+        "emptyTitle": "Your list is empty",
         "empty": "Add rates so brands can book you",
         "add": "Add rates",
-        "loadFailed": "Couldn't load your rates"
+        "loadFailed": "Couldn't load your rates",
+        "newTag": "New rate",
+        "tagA11y": "{{service}}, {{where}}: {{price}}. Edit your rates"
       }
     },
     "brandHome": {
@@ -2273,7 +2312,7 @@
       "wallet": "Wallet",
       "gradientSurface": "Gradient surface",
       "platformEditing": "Platform & prices editing",
-      "mediaKitCard": "Media kit card"
+      "mediaKitShareNotice": "Media kit share notice"
     },
     "typography": {
       "h1Label": "H1 · Heading",
@@ -2855,17 +2894,11 @@
       "zeros": "Months without earnings",
       "loading": "Loading"
     },
-    "mediaKitCard": {
-      "default": "Default",
-      "hidden": "Kit hidden",
-      "noActivity": "No activity yet",
-      "noPreview": "Without preview",
-      "loading": "Loading",
-      "loadError": "Kit failed to load",
-      "sharing": "Share in progress",
-      "shareHidden": "Share: kit hidden",
-      "shareFailed": "Share: failed",
-      "shareRateLimited": "Share: rate limited"
+    "mediaKitShareNotice": {
+      "private": "Kit hidden",
+      "failed": "Failed, retryable",
+      "failedFinal": "Failed, final",
+      "rateLimited": "Rate limited"
     },
     "dealStatus": {
       "pillsTitle": "Every status",

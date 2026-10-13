@@ -2,8 +2,7 @@ import { moderateScale } from '../utils/responsive';
 
 // Rule 08 (v4, 2026-10-08): soft but structured.
 // xs → skeleton lines, checkbox · sm → tags · md → buttons, inputs, icon tiles ·
-// lg → cards · xl → sheets, modals, the hero → body seam · 2xl → the wallet hero's
-// rounded bottom corners · full → avatars, pills.
+// lg → cards · xl → sheets, modals, the hero → body seam · full → avatars, pills.
 const BASE_RADII = {
   none: 0,
   xs: 4,
@@ -11,7 +10,6 @@ const BASE_RADII = {
   md: 15,
   lg: 22,
   xl: 28,
-  '2xl': 40,
   full: 9999,
 } as const;
 

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/core/toast';
 import { useUpdateMediaKitMutation } from '../api/mediaKitApi';
-import type { MediaKitCardShare } from '../components/MediaKitCard';
+import type { MediaKitCardShare } from '../components/MediaKitShare';
 import { useMediaKitShare } from './useMediaKitShare';
 
 /**

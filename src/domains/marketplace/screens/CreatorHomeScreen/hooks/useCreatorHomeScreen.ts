@@ -8,22 +8,13 @@ import {
   type ProfileStepTarget,
 } from '@/domains/identity';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
-import type { LiveIslandTone } from '@/shared/ui';
 import {
   HOME_NOTICE_DEF,
   resolveHomeNotice,
   type HomeNoticeAction,
-  type HomeNoticeTone,
 } from '../utils/resolveHomeNotice';
 
 type Navigation = HomeStackScreenProps<'CreatorHomeScreen'>['navigation'];
-
-/** The blocker lives in the hero's live island (rule 09 §3.1): info = something in progress. */
-const ISLAND_TONE = {
-  info: 'live',
-  warning: 'warning',
-  danger: 'danger',
-} as const satisfies Record<HomeNoticeTone, LiveIslandTone>;
 
 const STEP_SCREEN = {
   editInfo: 'PersonalInfoScreen',
@@ -82,6 +73,7 @@ export const useCreatorHomeScreen = () => {
     [navigation],
   );
 
+  const openAvatar = useCallback(() => onStepPress('avatar'), [onStepPress]);
   const openInsights = useCallback(() => navigation.navigate('MediaKitInsights'), [navigation]);
   const openPreview = useCallback(() => navigation.navigate('MediaKitPreview'), [navigation]);
 
@@ -116,20 +108,22 @@ export const useCreatorHomeScreen = () => {
     needsRateCards: overview.needsRateCards,
     isKitPublic: overview.isKitPublic,
   });
+  // The sign's button spins while the kit is being made public, then the sign falls away.
+  const noticeBusy = noticeKey === 'kitHidden' && isMakingPublic;
   const notice = useMemo(() => {
     if (!noticeKey) return null;
     const def = HOME_NOTICE_DEF[noticeKey];
     const action = def.action;
     return {
       key: noticeKey,
-      tone: ISLAND_TONE[def.tone],
+      tone: def.tone,
       title: t(def.titleKey),
       message: t(def.messageKey),
       action: action
-        ? { label: t(action.labelKey), onPress: () => runNoticeAction(action.run) }
+        ? { label: t(action.labelKey), onPress: () => runNoticeAction(action.run), busy: noticeBusy }
         : undefined,
     };
-  }, [noticeKey, runNoticeAction, t]);
+  }, [noticeBusy, noticeKey, runNoticeAction, t]);
 
   const { displayName, avatarUrl, tier, isVerified, primaryPlatform } = overview;
   const hero = useMemo(
@@ -171,6 +165,7 @@ export const useCreatorHomeScreen = () => {
     openPlatform,
     openRates,
     onStepPress,
+    openAvatar,
     openInsights,
     openPreview,
   };

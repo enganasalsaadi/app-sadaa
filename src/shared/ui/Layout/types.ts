@@ -20,11 +20,8 @@ export type LayoutBackdrop = 'none' | 'wash';
  * `brandOpen`: the live navy gradient behind a hero that paints itself and draws its own
  * edge into the body (media kit waves): it still stretches on pull, but the body is no sheet.
  * Pair it with `heroBehavior="static"`: a lagging hero would show through the open body.
- * `brandRounded`: the live gradient and its lights as one navy block whose bottom corners
- * round off over the screen background (wallet); the body is no sheet, so keep the hero
- * `static` like `brandOpen`.
  */
-export type LayoutHeroBackdrop = 'none' | 'brand' | 'brandGlow' | 'brandOpen' | 'brandRounded';
+export type LayoutHeroBackdrop = 'none' | 'brand' | 'brandGlow' | 'brandOpen';
 /** `parallax`: the hero scrolls slower than the body (off under reduced motion). */
 export type LayoutHeroBehavior = 'static' | 'parallax';
 export type LayoutStatusBar = 'auto' | 'light' | 'dark';

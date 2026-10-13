@@ -1,2 +1,2 @@
-export { MediaKitCard } from './MediaKitCard';
-export type { MediaKitCardProps, MediaKitCardShare, MediaKitCardStatus } from './MediaKitCard';
+export { MediaKitShareNotice } from './MediaKitShare';
+export type { MediaKitCardShare, MediaKitCardStatus } from './MediaKitShare';

@@ -76,6 +76,7 @@ export type {
   AuthState,
   UserType,
   KycStatus,
+  PlatformsReviewStatus,
   KycMethod,
   FollowerTierId,
   ProfileStepKey,

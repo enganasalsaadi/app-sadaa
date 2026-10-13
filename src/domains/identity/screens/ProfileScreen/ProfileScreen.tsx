@@ -1,23 +1,22 @@
 import React, { memo } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Bell, Building2, CircleDollarSign, Link2, LogOut, UserRoundPen, WalletCards } from 'lucide-react-native';
-import { formatNumber } from '@/core/i18n';
+import { Bell, Building2, LogOut, UserRoundPen } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, ConfirmSheet, Layout, ListGroup, ListRow, Notice } from '@/shared/ui';
+import { Box, ConfirmSheet, Layout, Notice, StaggerIn } from '@/shared/ui';
 import { DeleteAccountSheet } from '@/domains/auth';
 import type { ProfileSectionKey } from '../../constants/profileSections';
 import { useProfileScreen, type ProfileScreenModel } from './hooks/useProfileScreen';
 import { ProfileHero } from './components/ProfileHero';
 import { ProfileBar } from './components/ProfileBar';
+import { KycRejectedStrip } from './components/KycRejectedStrip';
 import { MissingStepsRail } from './components/MissingStepsRail';
 import { PushCard } from './components/PushCard';
-import { KycCard } from '../../components/KycCard';
-import { PlatformsSummaryCard } from './components/PlatformsSummaryCard';
-import { NichesCard } from './components/NichesCard';
+import { PlatformsCarousel } from './components/PlatformsCarousel';
+import { CreatorToolsBento } from './components/CreatorToolsBento';
 import { CompanyInfoCard } from './components/CompanyInfoCard';
 import { BrandVisibilityCard } from './components/BrandVisibilityCard';
-import { SettingsGrid } from './components/SettingsGrid';
+import { SettingsDrawer } from './components/SettingsDrawer';
 import { AccountFooter } from './components/AccountFooter';
 
 interface SectionProps {
@@ -25,97 +24,58 @@ interface SectionProps {
   vm: ProfileScreenModel;
 }
 
-/** One card per registry key; the rail runs edge to edge, the rest sit in the screen gutter. */
+/** Rails run edge to edge; every other block sits in the screen gutter. */
+const EDGE_TO_EDGE: ReadonlySet<ProfileSectionKey> = new Set(['completion', 'platforms']);
+
+/** One block per registry key. */
 const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
   const { t } = useTranslation();
   switch (section) {
+    case 'kycRejected':
+      return <KycRejectedStrip reason={vm.kyc.rejectionReason} isBrand={vm.isBrand} onReupload={vm.openKyc} />;
     case 'completion':
-      return <MissingStepsRail steps={vm.missingSteps} onStepPress={vm.onStepPress} />;
+      return <MissingStepsRail steps={vm.tickets} onStepPress={vm.onStepPress} />;
     case 'push':
-      return <PushCard permission={vm.push.permission} onEnable={vm.push.enable} />;
-    case 'kyc':
+      return <PushCard permission={vm.push.permission} isBrand={vm.isBrand} onEnable={vm.push.enable} />;
+    case 'detailsError':
       return (
-        <KycCard
-          kyc={vm.kyc}
-          userType={vm.userType}
-          onOpen={vm.kyc.canSubmit ? vm.openKyc : undefined}
-        />
-      );
-    case 'rates':
-      return vm.rates.needsSetup ? (
         <Notice
-          tone="warning"
-          icon={CircleDollarSign}
-          title={t('account.rates.notice.title')}
-          message={t('account.rates.notice.message')}
-          action={{ label: t('account.rates.notice.action'), onPress: vm.openRates }}
+          tone="danger"
+          message={t('account.profile.detailsError')}
+          action={{ label: t('common.retry'), onPress: vm.details.retry }}
         />
-      ) : (
-        <ListGroup>
-          <ListRow
-            icon={CircleDollarSign}
-            title={t('account.rates.title')}
-            subtitle={t('account.rates.profileHint')}
-            value={vm.rates.isLoading ? undefined : formatNumber(vm.rates.count)}
-            onPress={vm.openRates}
-          />
-        </ListGroup>
-      );
-    case 'payouts':
-      return (
-        <ListGroup>
-          <ListRow
-            icon={WalletCards}
-            title={t('account.profile.payouts.title')}
-            subtitle={t('account.profile.payouts.subtitle')}
-            onPress={vm.openPayoutMethods}
-          />
-        </ListGroup>
       );
     case 'platforms':
+      return <PlatformsCarousel platforms={vm.platforms} isLoading={vm.details.isLoading} onOpen={vm.openPlatforms} />;
+    case 'creatorTools':
       return (
-        <PlatformsSummaryCard
-          summary={vm.platformsSummary}
-          details={vm.details}
-          onPress={vm.openPlatforms}
+        <CreatorToolsBento
+          rates={vm.rates}
+          mediaKit={vm.mediaKit}
+          nicheLabels={vm.nicheLabels}
+          showNiches={!vm.details.isError}
+          nichesLoading={vm.details.isLoading}
+          onRates={vm.openRates}
+          onPayouts={vm.openPayoutMethods}
+          onMediaKit={vm.openMediaKitSettings}
+          onNiches={vm.openNiches}
         />
-      );
-    case 'niches':
-      return (
-        <NichesCard
-          labels={vm.nicheLabels}
-          isLoading={vm.details.isLoading}
-          onPress={vm.openNiches}
-        />
-      );
-    case 'mediaKit':
-      return (
-        <ListGroup>
-          <ListRow
-            icon={Link2}
-            title={t('account.profile.mediaKit.title')}
-            subtitle={t('account.profile.mediaKit.subtitle')}
-            onPress={vm.openMediaKitSettings}
-          />
-        </ListGroup>
       );
     case 'company':
-      return (
-        <CompanyInfoCard
-          company={vm.company}
-          isLoading={vm.details.isLoading}
-          onPress={vm.openEditInfo}
-        />
-      );
+      return <CompanyInfoCard company={vm.company} isLoading={vm.details.isLoading} onEdit={vm.openEditInfo} />;
     case 'brandVisibility':
-      return <BrandVisibilityCard model={vm.brandVisibility} />;
+      return (
+        <BrandVisibilityCard model={vm.brandVisibility} brandName={vm.hero.displayName} logoUrl={vm.hero.avatarUrl} />
+      );
     case 'settings':
       return (
-        <SettingsGrid
+        <SettingsDrawer
           themeMode={vm.themeMode}
+          pushEnabled={vm.push.permission === 'enabled'}
+          languageLabel={vm.languageLabel}
           onThemeModeChange={vm.changeThemeMode}
-          onPassword={vm.openPassword}
           onLanguage={vm.openLanguage}
+          onPassword={vm.openPassword}
           onTerms={vm.openTerms}
           onPrivacy={vm.openPrivacy}
           onDevShowcase={vm.openDevShowcase}
@@ -123,11 +83,7 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
       );
     case 'account':
       return (
-        <AccountFooter
-          appVersion={vm.appVersion}
-          onLogout={vm.openLogoutSheet}
-          onDeleteAccount={vm.openDeleteSheet}
-        />
+        <AccountFooter appVersion={vm.appVersion} onLogout={vm.openLogoutSheet} onDeleteAccount={vm.openDeleteSheet} />
       );
     default: {
       const _exhaustive: never = section;
@@ -136,6 +92,11 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
   }
 };
 
+/**
+ * Profile / account tab root, one screen for both roles (blocks per role in `PROFILE_SECTIONS`).
+ * Navy hero with the completion orbit (the body slides over it as a sheet), then what is still missing, then the role's
+ * own blocks, settings and the account footer.
+ */
 const ProfileScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -150,7 +111,7 @@ const ProfileScreenComponent: React.FC = () => {
         heroBackdrop="brandGlow"
         heroBehavior="parallax"
         header={{
-          title: vm.hero.displayName || t('account.profile.title'),
+          title: vm.hero.displayName || vm.hero.title,
           variant: 'brand',
           showBackButton: false,
           leading: <ProfileBar hero={vm.hero} />,
@@ -162,37 +123,47 @@ const ProfileScreenComponent: React.FC = () => {
                 : t('notifications.inbox.title'),
               badge: vm.unreadNotifications,
               onPress: vm.openNotifications,
+              glass: true,
             },
             {
               icon: vm.isBrand ? Building2 : UserRoundPen,
-              accessibilityLabel: t(
-                vm.isBrand ? 'account.companyInfo.title' : 'account.personalInfo.title',
-              ),
+              accessibilityLabel: t(vm.isBrand ? 'account.companyInfo.title' : 'account.personalInfo.title'),
               onPress: vm.openEditInfo,
+              glass: true,
             },
           ],
         }}
-        hero={<ProfileHero hero={vm.hero} onChangePhoto={vm.changePhoto} />}
+        hero={
+          <ProfileHero
+            hero={vm.hero}
+            onChangePhoto={vm.changePhoto}
+            onStepPress={vm.onStepPress}
+            onOpenKyc={vm.kyc.canSubmit ? vm.openKyc : undefined}
+          />
+        }
         scrollProps={{
           refreshControl: (
             <RefreshControl
               refreshing={vm.refreshing}
               onRefresh={vm.onRefresh}
+              // The spinner sits over the navy backdrop.
               tintColor={colors.text.onBrand}
             />
           ),
         }}
       >
-        <Box gap="2xl" pt="xl" pb="5xl">
-          {vm.sections.map(section =>
-            section === 'completion' ? (
-              <ProfileSection key={section} section={section} vm={vm} />
-            ) : (
-              <Box key={section} px="xl">
-                <ProfileSection section={section} vm={vm} />
-              </Box>
-            ),
-          )}
+        <Box pt="2xl" pb="5xl">
+          <StaggerIn gap="3xl">
+            {vm.sections.map(section =>
+              EDGE_TO_EDGE.has(section) ? (
+                <ProfileSection key={section} section={section} vm={vm} />
+              ) : (
+                <Box key={section} px="xl">
+                  <ProfileSection section={section} vm={vm} />
+                </Box>
+              ),
+            )}
+          </StaggerIn>
         </Box>
       </Layout>
 
@@ -207,11 +178,7 @@ const ProfileScreenComponent: React.FC = () => {
         confirmLoading={vm.isLoggingOut}
         cancelLabel={t('common.cancel')}
       />
-      <DeleteAccountSheet
-        visible={vm.deleteSheetVisible}
-        onClose={vm.closeDeleteSheet}
-        onOpenWallet={vm.openWallet}
-      />
+      <DeleteAccountSheet visible={vm.deleteSheetVisible} onClose={vm.closeDeleteSheet} onOpenWallet={vm.openWallet} />
     </>
   );
 };

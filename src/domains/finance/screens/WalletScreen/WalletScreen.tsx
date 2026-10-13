@@ -20,9 +20,9 @@ interface WalletScreenProps {
 }
 
 /**
- * Wallet tab (Money archetype, rule 09 §2.1), approved mix 2026-10-11: a navy block with
- * rounded bottom corners holding the balance dial (tap the legend to explain an arc),
- * behind an overlay header that pins the balance once the hero scrolls away; the eye hides
+ * Wallet tab (Money archetype, rule 09 §2.1), approved mix 2026-10-11: the navy hero with
+ * drifting lights holding the balance dial (tap the legend to explain an arc), which the
+ * body slides over as a sheet like every tab root's hero, behind an overlay header that pins the balance once the hero scrolls away; the eye hides
  * every amount. Then, rising in one by one: held money as boarding tickets with rising
  * chevrons, the creator's payout pill, the earnings tide, today's rate, and the latest
  * lines on a receipt printed from a slot. Sections the server can't fill stay out (rule 09).
@@ -37,7 +37,8 @@ const WalletScreenComponent: React.FC<WalletScreenProps> = ({ role }) => {
       padding="none"
       statusBar="light"
       headerBehavior="overlay"
-      heroBackdrop="brandRounded"
+      heroBackdrop="brandGlow"
+      heroBehavior="parallax"
       header={{
         title: vm.title,
         variant: 'brand',

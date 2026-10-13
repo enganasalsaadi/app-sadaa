@@ -31,6 +31,10 @@ export const motion = {
     sheen: 8000,
     /** Escrow ticket: one rise of the chevron toward the wallet (money arriving soon). */
     moneyRise: 1600,
+    /** Creator Home pass: one sweep of light across the card, then a rest. */
+    passSheen: 5200,
+    /** Creator Home sign: one full sway of the sign hanging under the pass (a blocker waiting). */
+    signSwing: 3400,
   },
   spring: {
     damping: 18,

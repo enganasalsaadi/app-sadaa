@@ -16,7 +16,7 @@ Catalog of what exists — reuse for behaviour, never as the look of a new desig
 - `Layout`:
   - `mode` scroll|static · `surface` · `padding` · `header` config → `ScreenHeader`
   - `headerBehavior` fixed|hideOnScroll|collapse|overlay
-  - `hero`: edge-to-edge; header fades in once hero scrolled away. `heroBackdrop="brand"` = navy gradient behind transparent hero, stretches on pull-down, body slides over as rounded sheet. `"brandGlow"` = darker live gradient + drifting `GlowOrbs` (Home, Profile). `"brandOpen"` = live gradient, hero draws its own edge (media kit). `"brandRounded"` = live gradient + lights as one block with rounded bottom corners, no sheet (Wallet). Open/rounded → keep the hero `static`. `heroBehavior="parallax"`.
+  - `hero`: edge-to-edge; header fades in once hero scrolled away. `heroBackdrop="brand"` = navy gradient behind transparent hero, stretches on pull-down, body slides over as rounded sheet. `"brandGlow"` = darker live gradient + drifting `GlowOrbs` — the one tab-root hero (creator Home, Wallet, Profile; pair with `parallax`, hero `pb="4xl"` clears the sheet). `"brandOpen"` = live gradient, hero draws its own edge (media kit); keep the hero `static`. `heroBehavior="parallax"`.
   - `sticky` (filter row pinned under header)
   - `footer={<LayoutFooter primary secondary tertiary top />}` (`secondary.variant` ghost|secondary; `tertiary` ghost), pinned above keyboard; `footerBehavior` divider|elevate|reveal (reveal = floats over the body, hidden until the hero is partly scrolled away)
   - `overlay` (FAB slot). Behaviours scroll-mode only. Safe-area edges + status bar automatic (inside `HeroSheet` too). Logic `resolveLayout`, scroll motion `useHeaderMotion`.
@@ -42,7 +42,7 @@ Catalog of what exists — reuse for behaviour, never as the look of a new desig
 
 - `MoneyText` = only way to show an amount (rule 09b): `size` sm|md|title|lg|hero|display (`display` 58 = wallet balance) · `animated` · `tone` money (money flow) | `onBrand` · `showSign` · `estimate` · `notation="compact"` (stats/tiles only) · `precision` · `rounding` (`down` for balances) · `currencyDisplay` · `splitFraction` · `hidden` · `strikethrough`.
 - `AmountInput` (`Money` minor units, Arabic digits accepted; helpers `parseAmountText`/`toAmountText` in `@/core/money`).
-- `StatTile` · `Sparkline` (axis-free, time flips in RTL) · `BarChart` (monthly bars, highlighted bar + value bubble, grow once; `tone` money|neutral).
+- `StatTile` · `Sparkline` (axis-free, time flips in RTL; `tone` interactive|money) · `BarChart` (monthly bars, highlighted bar + value bubble, grow once; `tone` money|neutral).
 - `Timeline` (`variant` vertical: stages + captions · `track`: horizontal stage track, draws once; current stage pulses) · `Countdown` (deadline pill on `useCountdown`).
 - `MediaTile` (photo/video, upload + review states) · `RatingStars` (display or 1–5 input) · `FilePickerCard uploadProgress` + `useFilePicker` (files or photos, MIME + size checks, `pickFrom(source)`).
 - `TierBadge` (`surface="media"` = frosted pill over photos) / `TierInfoSheet` (rule 08) · `BrandLogo` (logo only via this) · `SocialPlatformIcon` · `Skeleton`.

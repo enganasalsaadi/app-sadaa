@@ -249,6 +249,48 @@ export interface ThemeColors {
     /** Peak opacity of the area under the earnings line. */
     chartFill: number;
   };
+  /**
+   * Profile hero (approved 2026-10-13): the completion orbit on navy, one ring at a time.
+   * Steps are arcs (done / missing / KYC under review / KYC rejected); a complete, verified
+   * profile collapses them into one mustard ring. Missing steps also sit on it as satellites.
+   */
+  profile: {
+    orbitTrack: string;
+    orbitDone: string;
+    orbitPending: string;
+    orbitRejected: string;
+    orbitVerified: string;
+    satellite: string;
+    satelliteBorder: string;
+    /** Rim around the photo in the orbit's centre. */
+    faceRim: string;
+    /** Percentage pill sitting on the bottom of the ring. */
+    percentFill: string;
+    percentText: string;
+    /** Big platform mark behind a platform card's numbers. */
+    watermarkOpacity: number;
+    /** Brand visibility spotlight: the beam and the empty seats beside the brand. */
+    spotlightBeam: string;
+    spotlightSeat: string;
+  };
+  /**
+   * Creator Home "storefront" (approved 2026-10-13): the tilted pass card on navy, the sign
+   * hanging from it, the audience bar and the price tags in the body.
+   */
+  storefront: {
+    /** Pass card face, top-start → bottom-end. */
+    pass: string[];
+    /** Hairline that catches the light along the pass edge. */
+    passRim: string;
+    /** Light sweeping across the pass: clear → teal → mustard → clear. */
+    sheen: string[];
+    /** Strings the sign hangs on. */
+    string: string;
+    /** Audience bar and swatches, one shade per platform in display order. */
+    audience: string[];
+    /** Soft shadow drawn under a price tag. */
+    tagShadow: string;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -303,6 +345,30 @@ const WALLET_DIAL = {
   dialDimOpacity: 0.15,
   legendActive: 'rgba(255, 255, 255, 0.2)',
 };
+
+/** The orbit sits on the navy hero in both modes. */
+const PROFILE_ORBIT = {
+  orbitTrack: 'rgba(255, 255, 255, 0.22)',
+  orbitDone: '#6FC0CF',
+  orbitPending: '#6CA6FF',
+  orbitRejected: '#F97066',
+  orbitVerified: '#E6C47E',
+  satellite: 'rgba(255, 255, 255, 0.16)',
+  satelliteBorder: 'rgba(255, 255, 255, 0.42)',
+  faceRim: 'rgba(255, 255, 255, 0.9)',
+  percentFill: '#F5F7F9',
+  percentText: '#1C3349',
+  watermarkOpacity: 0.07,
+  spotlightBeam: 'rgba(246, 227, 180, 0.3)',
+  spotlightSeat: 'rgba(255, 255, 255, 0.1)',
+};
+
+const STOREFRONT_SHEEN = [
+  'rgba(159, 211, 220, 0)',
+  'rgba(159, 211, 220, 0.5)',
+  'rgba(217, 180, 106, 0.3)',
+  'rgba(217, 180, 106, 0)',
+];
 
 const lightText = {
   primary: '#0F1D2B',
@@ -490,6 +556,15 @@ export const lightColors: ThemeColors = {
     tapeShade: ['rgba(15, 29, 43, 0.12)', 'rgba(15, 29, 43, 0)'],
     chartFill: 0.32,
   },
+  profile: PROFILE_ORBIT,
+  storefront: {
+    pass: [WHITE, '#F2F7F9', '#E3F0F2'],
+    passRim: 'rgba(255, 255, 255, 0.6)',
+    sheen: STOREFRONT_SHEEN,
+    string: 'rgba(201, 214, 224, 0.75)',
+    audience: [NAVY, '#397D8C', '#6FC0CF', '#9FD3DC', '#2D6B78', '#C9D6E0'],
+    tagShadow: 'rgba(28, 51, 73, 0.14)',
+  },
 };
 
 export const darkColors: ThemeColors = {
@@ -640,6 +715,15 @@ export const darkColors: ThemeColors = {
     slotRim: 'rgba(255, 255, 255, 0.06)',
     tapeShade: ['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0)'],
     chartFill: 0.28,
+  },
+  profile: PROFILE_ORBIT,
+  storefront: {
+    pass: ['#1B3046', '#152739', '#16303A'],
+    passRim: 'rgba(255, 255, 255, 0.12)',
+    sheen: STOREFRONT_SHEEN,
+    string: 'rgba(201, 214, 224, 0.45)',
+    audience: ['#6FC0CF', '#397D8C', '#2D6B78', '#9FD3DC', '#1F4E5A', '#C9D6E0'],
+    tagShadow: 'rgba(0, 0, 0, 0.45)',
   },
 };
 

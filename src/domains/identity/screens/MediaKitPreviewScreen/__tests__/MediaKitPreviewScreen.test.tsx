@@ -46,7 +46,7 @@ jest.mock('../../../components/MediaKitShowcase', () => {
   };
 });
 
-jest.mock('../../../components/MediaKitCard/MediaKitShareNotice', () => ({
+jest.mock('../../../components/MediaKitShare', () => ({
   MediaKitShareNotice: 'MediaKitShareNotice',
 }));
 

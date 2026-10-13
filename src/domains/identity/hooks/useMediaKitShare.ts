@@ -18,10 +18,11 @@ import type { MediaKitShareError, ShareAttempt } from '../utils/mediaKitShare';
  * (immediately on copy) and is never auto-retried: a failed attempt waits for
  * `retry()`, which replays the same key.
  */
-export const useMediaKitShare = () => {
+export const useMediaKitShare = ({ skip = false }: { skip?: boolean } = {}) => {
   const { t } = useTranslation();
   const toast = useToast();
-  const { data: kit } = useGetMediaKitQuery();
+  // Brands have no media kit: the endpoint answers 403 for them.
+  const { data: kit } = useGetMediaKitQuery(undefined, { skip });
   const [shareMediaKit] = useShareMediaKitMutation();
   const attempts = useMemo(() => createShareAttempts(), []);
   const inFlight = useRef(false);

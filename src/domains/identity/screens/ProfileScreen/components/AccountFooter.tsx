@@ -22,7 +22,7 @@ const AccountFooterComponent: React.FC<AccountFooterProps> = ({
     <Box gap="md" align="center">
       <CustomButton
         title={t('account.profile.logout')}
-        variant="secondary"
+        variant="outline"
         fullWidth
         leftIcon={<LogOut />}
         onPress={onLogout}

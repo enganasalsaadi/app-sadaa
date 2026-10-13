@@ -8,6 +8,16 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+jest.mock('@/core/theme', () => {
+  const tokens: object = new Proxy({}, { get: () => tokens });
+  return { useTheme: () => ({ colors: tokens, sizes: tokens, isRTL: false }) };
+});
+
+jest.mock('../components/BrandSpotlight', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return { BrandSpotlight: (props: object) => createElement('BrandSpotlight', props) };
+});
+
 jest.mock('lucide-react-native', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return new Proxy(
@@ -24,16 +34,18 @@ jest.mock('lucide-react-native', () => {
 jest.mock('@/shared/ui', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   const stub = (host: string) => {
-    const Component = ({ children, ...props }: { children?: React.ReactNode; trailing?: React.ReactNode }) =>
-      createElement(host, props, children, props.trailing);
+    const Component = ({ children, ...props }: { children?: React.ReactNode }) =>
+      createElement(host, props, children);
     Component.displayName = host;
     return Component;
   };
   return {
-    ListGroup: stub('ListGroup'),
-    ListRow: stub('ListRow'),
+    Box: stub('Box'),
+    GradientSurface: stub('GradientSurface'),
     Notice: stub('Notice'),
+    Skeleton: stub('Skeleton'),
     Switch: stub('Switch'),
+    Text: stub('Text'),
   };
 });
 
@@ -52,7 +64,7 @@ const model = (overrides: Partial<BrandVisibilityModel> = {}): BrandVisibilityMo
 const render = (m: BrandVisibilityModel) => {
   let renderer: ReturnType<typeof create> | undefined;
   act(() => {
-    renderer = create(<BrandVisibilityCard model={m} />);
+    renderer = create(<BrandVisibilityCard model={m} brandName="Yasmine" logoUrl={null} />);
   });
   if (!renderer) throw new Error('not rendered');
   return renderer.root;
@@ -76,7 +88,12 @@ describe('BrandVisibilityCard', () => {
   it('shows no switch until the value is known', () => {
     const root = render(model({ visible: null, isLoading: true }));
     expect(root.findAll(isHost('Switch'))).toHaveLength(0);
-    expect(root.find(isHost('ListRow')).props.loading).toBe(true);
+    expect(root.findAll(isHost('Skeleton'))).toHaveLength(1);
+  });
+
+  it('lights the spotlight only when the brand is shown', () => {
+    expect(render(model({ visible: true })).find(isHost('BrandSpotlight')).props.visible).toBe(true);
+    expect(render(model({ visible: null, isLoading: true })).find(isHost('BrandSpotlight')).props.visible).toBe(false);
   });
 
   it('offers a retry when the setting could not load', () => {

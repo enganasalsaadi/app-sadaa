@@ -386,11 +386,11 @@ export const SHOWCASE_ENTRIES = {
     covers: [],
     domainCovers: ['RatePlatformCard', 'PlatformAccountSheet', 'SocialLinkInput'],
   },
-  mediaKitCard: {
+  mediaKitShareNotice: {
     category: 'sada',
-    titleKey: 'devShowcase.sections.mediaKitCard',
+    titleKey: 'devShowcase.sections.mediaKitShareNotice',
     covers: [],
-    domainCovers: ['MediaKitCard'],
+    domainCovers: ['MediaKitShareNotice'],
   },
 } as const satisfies Record<string, ShowcaseEntryDef>;
 

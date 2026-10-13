@@ -279,9 +279,8 @@ const LayoutComponent: React.FC<LayoutProps> = ({
             scrollY={scroll.scrollY}
             height={backdropHeight}
             parallax={parallax}
-            glow={heroBackdrop === 'brandGlow' || heroBackdrop === 'brandRounded'}
+            glow={heroBackdrop === 'brandGlow'}
             live={heroBackdrop === 'brandOpen'}
-            rounded={heroBackdrop === 'brandRounded'}
           />
         ) : null}
         {headerFloats ? null : headerNode}

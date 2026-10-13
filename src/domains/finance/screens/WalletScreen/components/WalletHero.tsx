@@ -9,7 +9,7 @@ import { BalanceDial } from './BalanceDial';
 import { DialLegend } from './DialLegend';
 
 /** The primary carries a little more weight than its history twin. */
-const PRIMARY_FLEX = 1.35;
+const PRIMARY_FLEX = 1;
 
 export interface WalletHeroAction {
   label: string;
@@ -65,8 +65,8 @@ const ActionRow = memo<{ actions: WalletHeroActions }>(({ actions }) => {
 });
 
 /**
- * Navy balance hero, transparent: Layout paints the live gradient and its lights as one
- * block with rounded bottom corners (`heroBackdrop="brandRounded"`). Title beside the
+ * Navy balance hero, transparent: Layout paints the live gradient and its lights behind it
+ * and slides the body over its bottom edge (`heroBackdrop="brandGlow"`). Title beside the
  * header's eye action, the balance dial and its legend, the role's two actions and the
  * one blocker as a live island. Only figures the server sends (rule 09).
  * Compact (keyboard / short screens): a smaller dial, no island message.
@@ -87,7 +87,7 @@ const WalletHeroComponent: React.FC<WalletHeroProps> = ({ title, hero, hidden, a
   );
 
   return (
-    <Box style={styles.container} px="xl" pb="2xl" gap={compact ? 'md' : 'lg'}>
+    <Box style={styles.container} px="xl" pb="4xl" gap={compact ? 'md' : 'lg'}>
       <Box justify="center" style={styles.titleRow}>
         <Text variant="h4" color={colors.text.onBrand} numberOfLines={1} accessibilityRole="header">
           {title}

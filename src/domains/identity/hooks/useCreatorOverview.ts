@@ -57,6 +57,8 @@ export const useCreatorOverview = () => {
     return {
       views: byKey.get('profile_views') ?? null,
       brandViews: byKey.get('unique_brand_views') ?? null,
+      /** Daily profile views, oldest first: the Home views pulse. */
+      viewsSeries: statsQuery.data?.profile_views.series.map(day => day.value) ?? [],
     };
   }, [statsQuery.data]);
   const kpiStatus: KpiStatus = statsQuery.data ? 'ready' : statsQuery.isError ? 'error' : 'loading';
@@ -115,8 +117,8 @@ export const useCreatorOverview = () => {
     isKitPublic: kitQuery.data ? kitQuery.data.is_public : null,
     completion: {
       percentage,
-      /** Shown only while `/me` reports a completion below 100%. */
-      isVisible: completion != null && percentage < 100,
+      /** `/me` reported a completion; until then Home shows a placeholder, never 0%. */
+      isLoaded: completion != null,
       nextStep,
       /** The five-stage track (info → avatar → platforms → prices → ID). */
       stages,

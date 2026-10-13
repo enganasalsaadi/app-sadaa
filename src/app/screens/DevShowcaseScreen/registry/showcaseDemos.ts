@@ -57,7 +57,7 @@ import { CreatorCardDemo } from '../demos/CreatorCardDemo';
 import { PlatformEditingDemo } from '../demos/PlatformEditingDemo';
 import { DraftReviewDemo } from '../demos/DraftReviewDemo';
 import { WalletDemo } from '../demos/WalletDemo';
-import { MediaKitCardDemo } from '../demos/MediaKitCardDemo';
+import { MediaKitShareNoticeDemo } from '../demos/MediaKitShareNoticeDemo';
 import type { ShowcaseEntryId } from './showcaseRegistry';
 
 /** Kept apart from the registry so its jest test never loads native modules. */
@@ -120,5 +120,5 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   platformEditing: PlatformEditingDemo,
   draftReview: DraftReviewDemo,
   wallet: WalletDemo,
-  mediaKitCard: MediaKitCardDemo,
+  mediaKitShareNotice: MediaKitShareNoticeDemo,
 };

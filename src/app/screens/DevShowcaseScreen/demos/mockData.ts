@@ -104,8 +104,6 @@ export const MOCK_MONTHLY_SPEND: readonly number[] = [
 
 export const MOCK_CREATOR_PRICE = usd(8000);
 
-export const MOCK_MEDIA_KIT_LINK = 'https://sada.app/c/anas';
-
 const mockCriteria = (retention: boolean): CatalogService['criteria'] => ({
   delivery_days: { label: 'Delivery time', min: 1, max: 14, default: 5 },
   revisions: {

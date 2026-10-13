@@ -427,10 +427,11 @@
   },
   "account": {
     "profile": {
-      "title": "الملف الشخصي",
       "settings": "الإعدادات",
       "changePhoto": "تغيير الصورة",
       "changeLogo": "تغيير شعار الشركة",
+      "addPhoto": "أضف صورة",
+      "addLogo": "أضف الشعار",
       "changePassword": "تغيير كلمة المرور",
       "language": "اللغة",
       "terms": "الشروط والأحكام",
@@ -443,11 +444,25 @@
       "avatarInvalid": "استخدم صورة JPG أو PNG أو WebP بحجم أقل من 5 ميغابايت.",
       "avatarUpdated": "تم تحديث الصورة الشخصية",
       "completion": "اكتمال الملف",
-      "completed": "ملفك مكتمل",
       "completeTitle": "أكمل ملفك",
-      "completeSubtitle": "كل خطوة تسهّل على العلامات التجارية الوصول إليك",
+      "points_zero": "+{{count}} نقطة",
+      "points_one": "+نقطة واحدة",
+      "points_two": "+نقطتان",
+      "points_few": "+{{count}} نقاط",
+      "points_many": "+{{count}} نقطة",
+      "points_other": "+{{count}} نقطة",
+      "tickets": {
+        "summary": "{{steps}} · {{points}}",
+        "steps_zero": "لا خطوات",
+        "steps_one": "خطوة واحدة",
+        "steps_two": "خطوتان",
+        "steps_few": "{{count}} خطوات",
+        "steps_many": "{{count}} خطوة",
+        "steps_other": "{{count}} خطوة",
+        "inReview": "قيد المراجعة"
+      },
       "steps": {
-        "basicInfo": "أضف معلوماتك الأساسية",
+        "basicInfo": "أضف معلوماتك",
         "avatar": "أضف صورة شخصية",
         "logo": "أضف شعار شركتك",
         "email": "أضف بريدك الإلكتروني",
@@ -462,10 +477,13 @@
         "kycRejected": "أعد رفع وثائق التوثيق"
       },
       "push": {
-        "onTitle": "الإشعارات مفعّلة",
-        "onBody": "ستصلك أقوى الحملات أولاً بأول.",
+        "title": "الإشعارات",
+        "on": "مفعّلة",
         "offTitle": "الإشعارات متوقفة",
         "offBody": "ربما فاتتك حملات وعروض كثيرة. فعّلها لتصلك أولاً.",
+        "offBodyBrand": "ربما فاتتك عروض وردود المبدعين. فعّلها لتصلك أولاً.",
+        "blockedTitle": "الإشعارات محظورة",
+        "blockedBody": "أوقفتها من إعدادات جهازك. افتحها كي لا يفوتك شيء.",
         "enable": "تفعيل",
         "openSettings": "فتح الإعدادات"
       },
@@ -480,6 +498,10 @@
         "unverifiedTitle": "وثّق هويتك",
         "unverifiedBody": "التوثيق يتيح لك قبول العروض واستلام أرباحك.",
         "reupload": "إعادة الرفع",
+        "pill": {
+          "unverified": "غير موثّق · وثّق الآن",
+          "unverifiedBrand": "غير موثّقة · وثّق شركتك"
+        },
         "brand": {
           "verifiedBody": "يرى المؤثرون شارة التوثيق، فتزيد ثقتهم بعروضك.",
           "pendingBody": "نراجع وثيقة شركتك الآن وسنخبرك بالنتيجة.",
@@ -490,11 +512,12 @@
       },
       "platforms": {
         "title": "منصاتي",
-        "summary": "المنصات: {{platforms}} · الأسعار: {{rates}}",
-        "primary": "الحساب الأساسي",
-        "empty": "لم تربط أي منصة بعد.",
-        "underReview": "قيد المراجعة",
-        "actionRequired": "يحتاج إجراء"
+        "manage": "إدارة",
+        "add": "ربط منصة",
+        "primaryShort": "أساسي",
+        "verified": "موثّقة",
+        "followers": "متابع",
+        "followersTier": "متابع · {{tier}}"
       },
       "niches": {
         "title": "اهتماماتي",
@@ -502,7 +525,13 @@
       },
       "mediaKit": {
         "title": "الملف الإعلامي",
-        "subtitle": "رابطك ومن يمكنه رؤيته"
+        "subtitle": "رابطك ومن يمكنه رؤيته",
+        "share": "مشاركة الملف الإعلامي",
+        "public": "عام",
+        "private": "خاص"
+      },
+      "tools": {
+        "ratesHint": "باقات تراها العلامات التجارية"
       },
       "brandVisibility": {
         "title": "إظهار علامتي في ملفات المبدعين",
@@ -516,17 +545,10 @@
         "subtitle": "إلى أين نرسل أرباحك عند السحب"
       },
       "company": {
-        "title": "الشركة",
+        "title": "معلومات الشركة",
         "businessType": "نوع النشاط",
         "governorate": "المحافظة",
         "links": "الروابط",
-        "linksCount_zero": "لا روابط",
-        "linksCount_one": "رابط واحد",
-        "linksCount_two": "رابطان",
-        "linksCount_few": "{{count}} روابط",
-        "linksCount_many": "{{count}} رابطاً",
-        "linksCount_other": "{{count}} رابط",
-        "noLinks": "لم تُضف روابط بعد",
         "notSet": "غير محدد"
       },
       "detailsError": "تعذّر تحميل تفاصيل ملفك.",
@@ -927,8 +949,6 @@
       }
     },
     "mediaKit": {
-      "title": "ملفك الإعلامي",
-      "subtitle": "يراه المعلنون عند البحث عنك",
       "loadFailed": "تعذّر تحميل ملفك الإعلامي",
       "retry": "إعادة المحاولة",
       "priceFrom": "يبدأ من",
@@ -936,7 +956,6 @@
       "verifiedCreator": "صانع محتوى موثّق",
       "linkLabel": "رابط ملفك الإعلامي",
       "visibility": {
-        "public": "ظاهر",
         "hidden": "مخفي"
       },
       "noActivity": "شارك رابطك لتحصل على أول مشاهداتك",
@@ -1414,14 +1433,30 @@
       "greetingFallback": "أهلاً بك",
       "openProfile": "افتح ملفي",
       "verified": "حساب موثّق",
+      "storefront": {
+        "kickerOpen": "واجهتك مفتوحة للعلامات التجارية",
+        "kickerHidden": "واجهتك مغلقة أمام العلامات التجارية",
+        "pass": {
+          "a11y": "واجهتك كما تراها العلامات التجارية. افتح المعاينة",
+          "addPhoto": "أضف صورتك",
+          "addPhotoHint": "صورتك أول ما يراه المعلنون",
+          "linkPlatform": "اربط منصّتك الأولى",
+          "copy": "نسخ",
+          "linkFailed": "تعذّر تحميل رابطك. أعد المحاولة"
+        },
+        "watch": {
+          "title": "من يتفرّج عليك؟",
+          "period": "آخر 30 يوماً",
+          "brands": "علامة تجارية زارت واجهتك",
+          "views": "مشاهدة لملفك",
+          "pulseA11y": "مشاهدات ملفك يومياً خلال آخر 30 يوماً",
+          "a11y": "آخر 30 يوماً: {{brands}} علامة تجارية زارت واجهتك، و{{views}} مشاهدة لملفك. افتح كل الإحصائيات"
+        },
+        "share": "شارك واجهتك"
+      },
       "kpi": {
-        "period": "آخر 30 يوماً",
-        "reach": "وصولك",
-        "views": "زيارات ملفك",
-        "brands": "معلنون شاهدوك",
         "new": "جديد",
         "failed": "تعذّر تحميل الإحصائيات، اضغط لإعادة المحاولة",
-        "a11y": "آخر 30 يوماً: وصولك {{reach}}، زيارات ملفك {{views}}، معلنون شاهدوك {{brands}}. افتح كل الإحصائيات",
         "retry": "تعذّر تحميل الإحصائيات. إعادة المحاولة"
       },
       "notice": {
@@ -1445,23 +1480,31 @@
           "platforms": "المنصات",
           "rates": "الأسعار",
           "kyc": "التوثيق"
-        }
+        },
+        "complete": "ملفك مكتمل",
+        "completeBody": "العلامات التجارية ترى كل ما تحتاجه لحجزك.",
+        "progressA11y": "{{done}} من {{total}} مراحل مكتملة"
       },
       "platforms": {
+        "title": "جمهورك",
         "manage": "إدارة",
         "loadFailed": "تعذّر تحميل منصاتك",
         "open": "افتح {{platform}} @{{username}}",
         "add": "أضف منصة",
         "addHint": "اربط حساباتك ليصل إليك المعلنون",
         "followers": "متابع",
-        "openPrimary": "افتح منصتك الأساسية {{platform}} @{{username}}"
+        "openPrimary": "افتح منصتك الأساسية {{platform}} @{{username}}",
+        "emptyTitle": "لم تربط أي منصة بعد"
       },
       "rates": {
-        "title": "أسعاري",
+        "title": "أسعارك",
         "edit": "تعديل",
+        "emptyTitle": "قائمتك فارغة",
         "empty": "أضف أسعارك ليتمكن المعلنون من حجزك",
         "add": "أضف أسعارك",
-        "loadFailed": "تعذّر تحميل أسعارك"
+        "loadFailed": "تعذّر تحميل أسعارك",
+        "newTag": "سعر جديد",
+        "tagA11y": "{{service}}، {{where}}: {{price}}. تعديل أسعارك"
       }
     },
     "brandHome": {
@@ -2022,7 +2065,7 @@
       "primary": "الأساسية",
       "list": {
         "title": "طرق الاستلام",
-        "heading": "إلى أين نرسل أرباحك؟",
+        "heading": "إلى أين نرسل أرباحك؟ ",
         "subtitle": "تختار الطريقة عند كل سحب، والأساسية تُختار تلقائياً.",
         "saved": "طرقك المحفوظة",
         "count": "{{used}} من {{max}}",
@@ -2349,7 +2392,7 @@
       "wallet": "المحفظة",
       "gradientSurface": "سطح متدرّج",
       "platformEditing": "تعديل المنصات والأسعار",
-      "mediaKitCard": "بطاقة الملف الإعلامي"
+      "mediaKitShareNotice": "تنبيه مشاركة الملف الإعلامي"
     },
     "typography": {
       "h1Label": "H1 · عنوان",
@@ -2935,17 +2978,11 @@
       "zeros": "أشهر بلا أرباح",
       "loading": "تحميل"
     },
-    "mediaKitCard": {
-      "default": "الافتراضي",
-      "hidden": "الملف مخفي",
-      "noActivity": "لا نشاط بعد",
-      "noPreview": "بدون معاينة",
-      "loading": "جارٍ التحميل",
-      "loadError": "فشل تحميل الملف",
-      "sharing": "المشاركة جارية",
-      "shareHidden": "المشاركة: الملف مخفي",
-      "shareFailed": "المشاركة: فشلت",
-      "shareRateLimited": "المشاركة: تجاوز الحد"
+    "mediaKitShareNotice": {
+      "private": "الملف مخفي",
+      "failed": "فشلت، يمكن إعادة المحاولة",
+      "failedFinal": "فشلت نهائياً",
+      "rateLimited": "تجاوز الحد"
     },
     "dealStatus": {
       "pillsTitle": "كل الحالات",

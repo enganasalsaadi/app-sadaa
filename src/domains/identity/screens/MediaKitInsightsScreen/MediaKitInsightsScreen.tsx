@@ -10,7 +10,7 @@ import {
   LayoutFooter,
   SegmentedControl,
 } from '@/shared/ui';
-import { MediaKitShareNotice } from '../../components/MediaKitCard/MediaKitShareNotice';
+import { MediaKitShareNotice } from '../../components/MediaKitShare';
 import { useMediaKitInsightsScreen } from './hooks/useMediaKitInsightsScreen';
 import { BrandLocationsCard } from './components/BrandLocationsCard';
 import { DailyViewsCard } from './components/DailyViewsCard';
