@@ -608,3 +608,82 @@ export interface DealPublication {
     reviewedAt: Timestamp | null;
   } | null;
 }
+
+/** Which deal and from which side: brand and creator read the same deal from different routes. */
+export interface DealRef {
+  role: DealRole;
+  id: string;
+}
+
+export interface DealListArgs {
+  role: DealRole;
+  /** Empty or missing = every status the role can see (creators never see drafts). */
+  statuses?: readonly DealStatus[];
+}
+
+export interface DealsPage {
+  items: Deal[];
+  meta: { currentPage: number; lastPage: number; total: number };
+}
+
+export interface DealFunding {
+  funded: boolean;
+  reason: string | null;
+  /** What the brand's wallet still lacks; zero when funded. */
+  missing: Money;
+}
+
+/** Deal detail: brand detail carries `funding` while `awaiting_payment`, otherwise `null`. */
+export interface DealDetail {
+  deal: Deal;
+  funding: DealFunding | null;
+}
+
+export interface DealActionResult extends DealDetail {
+  draft: DealDraft | null;
+  publication: DealPublication | null;
+  upsellId: string | null;
+}
+
+type DealItemPath<A extends string> = `items/${string}/${A}`;
+
+/**
+ * Every action route whose success `data` is the full deal (handoff §0), relative to
+ * `/{brand|influencer}/deals/{id}/`. Routes answering another resource (rating, retention,
+ * opening a dispute or adding evidence) and the multipart `shipment/issue` get their own mutations.
+ */
+export type DealActionPath =
+  // brand
+  | 'send'
+  | 'fund'
+  | 'cancel'
+  | 'extension/approve'
+  | 'extension/decline'
+  | 'shipment'
+  | DealItemPath<'approve' | 'revision' | 'verify' | 'fix'>
+  | 'upsells'
+  | `upsells/${string}/withdraw`
+  // creator
+  | 'accept'
+  | 'decline'
+  | 'extension'
+  | 'shipment/receive'
+  | DealItemPath<'drafts' | 'publish'>
+  | `upsells/${string}/${'accept' | 'decline'}`
+  // both (brand pulls back an offer / creator withdraws with a strike; shipping cancel is per role)
+  | 'withdraw'
+  | 'shipment/cancel'
+  | 'dispute/withdraw';
+
+export interface DealActionArgs {
+  ref: DealRef;
+  path: DealActionPath;
+  /** `PUT` only for editing a shipment. */
+  method?: 'POST' | 'PUT';
+  body?: Record<string, unknown>;
+  /** Money / binding actions (rule 06): accept, fund, cancel, upsells, extension approve. */
+  idempotencyKey?: string;
+}
+
+/** What a screen passes per tap; the ref and the idempotency key come from `useDealAction`. */
+export type DealActionRequest = Pick<DealActionArgs, 'method' | 'body'>;

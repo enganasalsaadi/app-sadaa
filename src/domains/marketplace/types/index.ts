@@ -96,6 +96,15 @@ export type {
   DealDraftPin,
   DealDraft,
   DealPublication,
+  DealRef,
+  DealListArgs,
+  DealsPage,
+  DealFunding,
+  DealDetail,
+  DealActionResult,
+  DealActionPath,
+  DealActionArgs,
+  DealActionRequest,
 } from './deal';
 export {
   EXPLORE_SORTS,

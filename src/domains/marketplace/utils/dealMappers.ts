@@ -32,7 +32,9 @@ import {
   type DealCancellation,
   type DealContract,
   type DealContractDocument,
+  type DealActionResult,
   type DealCreatorParty,
+  type DealDetail,
   type DealDispute,
   type DealDisputeDetail,
   type DealDisputeEntry,
@@ -40,6 +42,7 @@ import {
   type DealDraft,
   type DealExtension,
   type DealFile,
+  type DealFunding,
   type DealItem,
   type DealPublication,
   type DealRating,
@@ -50,6 +53,7 @@ import {
   type DealRole,
   type DealShipment,
   type DealShipping,
+  type DealsPage,
   type DealSignature,
   type DealStrike,
   type DealStrikes,
@@ -60,6 +64,7 @@ import {
 } from '../types/deal';
 import type {
   BrandActiveDealDto,
+  DealActionMetaDto,
   DealAddonDto,
   DealCancellationDto,
   DealContractDocumentDto,
@@ -72,6 +77,7 @@ import type {
   DealDto,
   DealExtensionDto,
   DealFileDto,
+  DealFundingDto,
   DealItemDto,
   DealLabeledDto,
   DealPublicationDto,
@@ -81,6 +87,7 @@ import type {
   DealRetentionCaseDto,
   DealShipmentDto,
   DealShippingDto,
+  DealsPageDto,
   DealSignatureDto,
   DealStrikeDto,
   DealStrikesMetaDto,
@@ -522,4 +529,28 @@ export const mapDealStrikes = (dtos: DealStrikeDto[], meta: DealStrikesMetaDto):
   items: dtos.map(mapStrike),
   activeCount: meta.active_count,
   windowDays: meta.window_days,
+});
+
+export const mapDealsPage = ({ items, meta }: DealsPageDto): DealsPage => ({
+  items: items.map(mapDeal),
+  meta: { currentPage: meta.current_page, lastPage: meta.last_page, total: meta.total },
+});
+
+export const mapDealFunding = (dto: DealFundingDto): DealFunding => ({
+  funded: dto.funded,
+  reason: dto.reason,
+  missing: parseUsd(dto.missing_usd),
+});
+
+/** Detail (`withMeta`): only the brand side sends `meta.funding`, and only while `awaiting_payment`. */
+export const mapDealDetail = (dto: DealDto, meta: DealActionMetaDto): DealDetail => ({
+  deal: mapDeal(dto),
+  funding: meta.funding ? mapDealFunding(meta.funding) : null,
+});
+
+export const mapDealActionResult = (dto: DealDto, meta: DealActionMetaDto): DealActionResult => ({
+  ...mapDealDetail(dto, meta),
+  draft: meta.draft ? mapDealDraft(meta.draft) : null,
+  publication: meta.publication ? mapDealPublication(meta.publication) : null,
+  upsellId: meta.upsell_id ?? null,
 });

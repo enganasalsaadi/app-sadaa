@@ -28,7 +28,23 @@ export type {
   DealRole,
   DealAction,
   DealItemAction,
+  DealRef,
+  DealListArgs,
+  DealDetail,
+  DealActionPath,
+  DealActionRequest,
+  DealActionResult,
   Labeled,
   ExploreCreator,
 } from './types';
 export { getDealActions, getDealItemActions } from './utils';
+export type { DealActionOutcome } from './utils';
+export {
+  dealsApi,
+  useGetDealsInfiniteQuery,
+  useGetDealQuery,
+  useGetDealTimelineQuery,
+  useGetDealContractQuery,
+} from './api/dealsApi';
+export { useDealAction } from './hooks/useDealAction';
+export type { UseDealActionOptions } from './hooks/useDealAction';

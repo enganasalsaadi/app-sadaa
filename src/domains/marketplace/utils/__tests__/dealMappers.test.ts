@@ -13,7 +13,9 @@ import type {
 import {
   mapBrandActiveDeal,
   mapDeal,
+  mapDealActionResult,
   mapDealContract,
+  mapDealDetail,
   mapDealDisputeDetail,
   mapDealDraft,
   mapDealFile,
@@ -22,6 +24,7 @@ import {
   mapDealRetentionCase,
   mapDealStrikes,
   mapDealTimelineRow,
+  mapDealsPage,
 } from '../dealMappers';
 
 const T0 = '2026-10-15T09:00:00+03:00';
@@ -720,6 +723,59 @@ describe('mapDealStrikes', () => {
       ],
       activeCount: 1,
       windowDays: 90,
+    });
+  });
+});
+
+describe('mapDealsPage', () => {
+  it('maps each deal and camel-cases the page meta', () => {
+    const page = mapDealsPage({
+      items: [dealDto(), dealDto({ id: '02J', status: { key: 'brand_new_status', label: 'New' } })],
+      meta: { current_page: 1, last_page: 3, total: 41 },
+    });
+
+    expect(page.items.map(deal => [deal.id, deal.status.key])).toEqual([
+      ['01J', 'in_progress'],
+      ['02J', null],
+    ]);
+    expect(page.meta).toEqual({ currentPage: 1, lastPage: 3, total: 41 });
+  });
+});
+
+describe('mapDealDetail', () => {
+  it('maps the brand funding preview while awaiting payment', () => {
+    const detail = mapDealDetail(dealDto(), {
+      funding: { funded: false, reason: 'insufficient_funds', missing_usd: '42.50' },
+    });
+
+    expect(detail.deal.id).toBe('01J');
+    expect(detail.funding).toEqual({ funded: false, reason: 'insufficient_funds', missing: usd(4250) });
+  });
+
+  it('leaves funding null when the server sends none', () => {
+    expect(mapDealDetail(dealDto(), {}).funding).toBeNull();
+  });
+});
+
+describe('mapDealActionResult', () => {
+  it('maps the per-action extras', () => {
+    const result = mapDealActionResult(dealDto(), {
+      upsell_id: 'u9',
+      draft: { id: 'd1', item_id: 'i1', round: 2, caption: null, submitted_at: T0, files: [], review: null },
+    });
+
+    expect(result.upsellId).toBe('u9');
+    expect(result.draft).toMatchObject({ id: 'd1', round: 2, submittedAt: T0_MS });
+    expect(result.publication).toBeNull();
+    expect(result.funding).toBeNull();
+  });
+
+  it('defaults every extra to null', () => {
+    expect(mapDealActionResult(dealDto(), {})).toMatchObject({
+      funding: null,
+      draft: null,
+      publication: null,
+      upsellId: null,
     });
   });
 });

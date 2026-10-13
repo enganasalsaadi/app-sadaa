@@ -366,3 +366,28 @@ export interface DealStrikesMetaDto {
   active_count: number;
   window_days: number;
 }
+
+/** `GET /{brand|influencer}/deals`: the page lives in `data` (`{ items, meta }`), newest activity first. */
+export interface DealsPageDto {
+  items: DealDto[];
+  meta: { current_page: number; last_page: number; total: number };
+}
+
+/** `meta.funding` on accept, extension approve and the brand detail while `awaiting_payment`. */
+export interface DealFundingDto {
+  funded: boolean;
+  /** Why escrow wasn't held (`insufficient_funds`, `wallet_frozen`…); `null` when funded. */
+  reason: string | null;
+  missing_usd: string;
+}
+
+/** Success `meta` of a deal action; each key only on the actions that send it. */
+export interface DealActionMetaDto {
+  funding?: DealFundingDto;
+  /** Draft submit (201). */
+  draft?: DealDraftDto;
+  /** Publish (201). */
+  publication?: DealPublicationDto;
+  /** Upsell propose (201). */
+  upsell_id?: string;
+}

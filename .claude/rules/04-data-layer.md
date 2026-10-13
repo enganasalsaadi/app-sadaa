@@ -28,7 +28,7 @@ RTK Query (server state) · Redux Toolkit slices (global client state) · MMKV (
 | Status | Behaviour |
 |---|---|
 | 401 | clear tokens + credentials + `resetApiState()`, redirect Login |
-| 403 | `account_suspended` (with session) → `auth/setAccountSuspended` → `SUSPENDED` gate, even silent calls · `phone_not_verified` → passed through · others → toast + `showForbiddenError` |
+| 403 | `account_suspended` (with session) → `auth/setAccountSuspended` → `SUSPENDED` gate, even silent calls · `phone_not_verified` / `gated_parameter` / `deal_*` → passed through · others → toast + `showForbiddenError` |
 | 422 | toast + passed through (map `errors` to fields) |
 | 400/404 | passed through → `<InlineError />` |
 | 409/429 | passed through — screen handles (`otp_cooldown` from `retryAfter`, out-of-order → re-read progress) |

@@ -159,10 +159,13 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       // `phone_not_verified` back to the OTP step; `account_suspended` without
       // a session (nothing to gate) stays with the caller; Explore answers
       // `gated_parameter` (🔒 filter while locked) with the verification sheet.
+      // `deal_*` (dispute not open / not the opener) means the deal moved: the
+      // deal action hook shows the message and refetches, like a 409.
       if (
         normalizedError.code === 'phone_not_verified' ||
         normalizedError.code === 'account_suspended' ||
-        normalizedError.code === 'gated_parameter'
+        normalizedError.code === 'gated_parameter' ||
+        normalizedError.code?.startsWith('deal_')
       ) {
         return { error: result.error };
       }
@@ -231,6 +234,9 @@ export const baseApi = createApi({
     'ExploreCreators',
     'ExploreFilters',
     'Shortlist',
+    'Deal',
+    'DealList',
+    'DealHistory',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,
