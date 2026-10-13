@@ -14,7 +14,7 @@ import {
 } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
-import { Box, CustomButton, IconButton, Pressable, Skeleton, Tag, Text } from '@/shared/ui';
+import { Box, IconButton, Pressable, Skeleton, Tag, Text } from '@/shared/ui';
 import type { ProfileScreenModel } from '../hooks/useProfileScreen';
 
 const ICON_BOX = moderateScale(40);

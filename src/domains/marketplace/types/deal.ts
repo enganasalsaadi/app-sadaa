@@ -100,6 +100,44 @@ export type DealRetentionReason = (typeof DEAL_RETENTION_REASON)[number];
 export const DEAL_RETENTION_STATUS = ['awaiting_influencer', 'awaiting_brand', 'escalated', 'closed'] as const;
 export type DealRetentionStatus = (typeof DEAL_RETENTION_STATUS)[number];
 
+export const DEAL_RETENTION_ESCALATION = ['contested', 'influencer_silent', 'brand_rejected'] as const;
+export type DealRetentionEscalation = (typeof DEAL_RETENTION_ESCALATION)[number];
+
+/** How long a live post must stay up, from the rate card snapshot. */
+export const DEAL_RETENTION_TERM = ['24h', '30d', '90d', '180d', 'permanent'] as const;
+export type DealRetentionTerm = (typeof DEAL_RETENTION_TERM)[number];
+
+export const DEAL_FILE_KIND = ['video', 'image', 'document'] as const;
+export type DealFileKind = (typeof DEAL_FILE_KIND)[number];
+
+export const DEAL_FILE_STATUS = ['pending', 'ready', 'purged'] as const;
+export type DealFileStatus = (typeof DEAL_FILE_STATUS)[number];
+
+export const DEAL_FILE_PURPOSE = [
+  'draft',
+  'brief',
+  'proof',
+  'evidence',
+  'retention_report',
+  'retention_restore',
+] as const;
+export type DealFilePurpose = (typeof DEAL_FILE_PURPOSE)[number];
+
+/** Brand Home "needs your action" keys. */
+export const BRAND_DEAL_ACTION = [
+  'fund',
+  'answer_extension',
+  'answer_issue',
+  'ship',
+  'review_draft',
+  'verify_post',
+  'add_evidence',
+] as const;
+export type BrandDealAction = (typeof BRAND_DEAL_ACTION)[number];
+
+export const DEAL_STRIKE_REASON = ['withdrew', 'defaulted', 'dispute_lost', 'retention_violation'] as const;
+export type DealStrikeReason = (typeof DEAL_STRIKE_REASON)[number];
+
 /** Who moved a deal: the server's actor types (the influencer is our creator). */
 export const DEAL_ACTOR = ['brand', 'influencer', 'system', 'admin'] as const;
 export type DealActor = (typeof DEAL_ACTOR)[number];
@@ -199,7 +237,7 @@ export interface DealItem {
   total: Money;
   deliveryDays: number | null;
   deliveryHours: number | null;
-  retentionDays: number | null;
+  retention: DealRetentionTerm | null;
   revisionsAllowed: number;
   revisionsUsed: number;
   revisionsLeft: number;
@@ -214,11 +252,11 @@ export interface DealItem {
 
 export interface DealFile {
   id: string;
-  kind: 'video' | 'image' | 'document' | null;
+  kind: DealFileKind | null;
   name: string;
   mime: string;
   size: number;
-  status: 'pending' | 'ready' | 'purged' | null;
+  status: DealFileStatus | null;
   /** Short-lived download URL; `null` once purged. */
   url: string | null;
 }
@@ -334,6 +372,26 @@ export interface DealDispute {
   closedAt: Timestamp | null;
 }
 
+/** Evidence pointing at something already on the deal. `null` file / url = gone or purged. */
+export type DealDisputeRef =
+  | { type: 'file'; id: string; purpose: DealFilePurpose | null; file: DealFile | null }
+  | { type: 'shipment_photo'; shipmentId: string; index: number; url: string | null };
+
+export interface DealDisputeEntry {
+  id: string;
+  party: DealActor | null;
+  note: string | null;
+  links: string[];
+  files: DealFile[];
+  refs: DealDisputeRef[];
+  createdAt: Timestamp | null;
+}
+
+/** `GET …/disputes` and the dispute POSTs return the dispute with its evidence thread. */
+export interface DealDisputeDetail extends DealDispute {
+  entries: DealDisputeEntry[];
+}
+
 export interface DealRetentionWindow {
   itemId: string;
   endsAt: Timestamp | null;
@@ -348,10 +406,23 @@ export interface DealRetentionCase {
   note: string | null;
   status: Labeled<DealRetentionStatus>;
   reportFiles: DealFile[];
+  response: 'restored' | 'contested' | null;
+  responseNote: string | null;
   restoredUrl: string | null;
   /** `null` until the creator restores with a link. */
   handleChecked: boolean | null;
   restoreFiles: DealFile[];
+  respondedAt: Timestamp | null;
+  brandDecision: 'confirmed' | 'rejected' | null;
+  brandNote: string | null;
+  decidedAt: Timestamp | null;
+  escalationReason: Labeled<DealRetentionEscalation> | null;
+  escalatedAt: Timestamp | null;
+  /** Server code (`upheld`, `dismissed`, …); shown through the status label. */
+  closedReason: string | null;
+  /** The team's public note when an admin closed the case. */
+  adminNote: string | null;
+  /** Moved back from the creator to the brand; `null` when nothing was. */
   clawback: Money | null;
   dueAt: Timestamp | null;
   reportedAt: Timestamp | null;
@@ -381,6 +452,65 @@ export interface DealRating {
 export interface DealSignature {
   party: DealRole | null;
   signedAt: Timestamp;
+}
+
+/** The signed contract or an addendum: `document` is the bilingual snapshot, shown as-is (Arabic governs). */
+export interface DealContractDocument {
+  id: string;
+  hash: string;
+  issuedAt: Timestamp;
+  document: Record<string, unknown>;
+  signatures: DealSignature[];
+}
+
+export interface DealAddendum extends DealContractDocument {
+  sequence: number;
+  /** Server addendum type (`deadline_extension`, upsell, …). */
+  type: string | null;
+}
+
+export interface DealContract extends DealContractDocument {
+  termsVersion: string;
+  addenda: DealAddendum[];
+}
+
+/** The caller's own rating, returned by submit / skip. */
+export interface DealRatingEntry {
+  id: string;
+  ratedBy: DealRole | null;
+  skipped: boolean;
+  scores: Partial<Record<DealRatingCriterion, number>>;
+  overall: number | null;
+  comment: string | null;
+  submittedAt: Timestamp;
+}
+
+/** Brand Home open-deal row: "needs your action" first, then soonest `dueAt`. */
+export interface BrandActiveDeal {
+  id: string;
+  status: Labeled<DealStatus>;
+  stage: Labeled<DealItemStatus> | null;
+  creator: DealCreatorParty;
+  title: string;
+  total: Money;
+  /** Deadline of `action`, else the deal's next deadline. */
+  dueAt: Timestamp | null;
+  needsAction: boolean;
+  action: Labeled<BrandDealAction> | null;
+}
+
+export interface DealStrike {
+  id: string;
+  dealId: string;
+  reason: Labeled<DealStrikeReason>;
+  occurredAt: Timestamp;
+  expiresAt: Timestamp;
+}
+
+export interface DealStrikes {
+  items: DealStrike[];
+  activeCount: number;
+  windowDays: number;
 }
 
 export interface Deal {

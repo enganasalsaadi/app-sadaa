@@ -74,7 +74,7 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 ## P0 — الأساس (بدون UI) — شرط لكل ما بعده
 
 - ✅ **P0.1 (M)** (2026-10-13) الأنواع: استبدال `DEAL_STATUS` القديم بـ 22 حالة الباك إند + `DEAL_ITEM_STATUS` + `DealActionKey` + `CancelOutcome` + أنواع `Deal`, `DealItem`, `Shipping`, `Upsell`, `Dispute`, `Retention`, `Rating`, `TimelineRow`. خرائط `Record<…>` (tone/icon/allowed actions). fallback للحالة المجهولة. تحديث `DealStatusPill/DealCard/DealProgress` + demos. تحديث نص القاعدة 06/16 و`CLAUDE.md` (سطر Deal). اختبارات.
-- **P0.2 (S)** المال (+ DTO types لكل resource — مراجعها في `api/app/Domains/Marketplace/Deals/Http/Resources/*`): `parseUsd("150.00") → Money` في `core/money` + mappers DTO→domain لكل الصفقة. اختبارات.
+- ✅ **P0.2 (S)** (2026-10-13) المال (+ DTO types لكل resource — مراجعها في `api/app/Domains/Marketplace/Deals/Http/Resources/*`): `parseUsd("150.00") → Money` في `core/money` + mappers DTO→domain لكل الصفقة. اختبارات. (`types/dealDto.ts` + `utils/dealMappers.ts`؛ `DealItem.retentionDays` → `retention: DealRetentionTerm` لأن الباك إند يرسل enum.)
 - **P0.3 (M)** `dealsApi` (brand + influencer): list/detail/timeline/contract، tags `Deal`/`DealList`، `ApiErrorCode` لكل `deal_*`، hook موحد `useDealAction` (409 → toast + refetch، replace cache من `data`).
 - **P0.4 (M)** `core/upload`: slot → PUT مع progress → `file_id`، فحص MIME/حجم قبل الطلب، إلغاء عند unmount. اختبارات.
 - **P0.5 (S)** الملاحة: مسارات `Deals*` في `core/navigation/types.ts` + navigator لكل دور + deep links `sada://deals/{id}`, `sada://strikes` + `deal_*` في `notificationRoute`.

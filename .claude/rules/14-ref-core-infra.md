@@ -41,4 +41,4 @@ paths:
 
 ## Money & format
 
-`Money`/`CurrencyCode` (`@/core/money`). `formatMoney` / `formatNumber` / `formatDate` (`@/core/i18n`, Western digits; Arabic months Levantine: كانون الثاني … كانون الأول).
+`Money`/`CurrencyCode` (`@/core/money`). Server decimal strings → `parseUsd("150.00")` / `parseUsdOrNull` / `parseDecimalMoney(text, currency)` (string math, throws on malformed; no amount in the error). `formatMoney` / `formatNumber` / `formatDate` (`@/core/i18n`, Western digits; Arabic months Levantine: كانون الثاني … كانون الأول).

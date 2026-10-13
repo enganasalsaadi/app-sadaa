@@ -56,7 +56,7 @@ export const buildMockDeal = ({
         total,
         deliveryDays: 5,
         deliveryHours: null,
-        retentionDays: 30,
+        retention: '30d',
         revisionsAllowed: 2,
         revisionsUsed: 0,
         revisionsLeft: 2,

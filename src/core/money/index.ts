@@ -8,3 +8,4 @@ export type { CurrencyCode, Money } from './money';
 export { roundMagnitude, toDigitUnits } from './rounding';
 export type { MoneyRounding } from './rounding';
 export { sanitizeAmountText, parseAmountText, toAmountText } from './amountText';
+export { parseDecimalMoney, parseUsd, parseUsdOrNull } from './decimalMoney';
