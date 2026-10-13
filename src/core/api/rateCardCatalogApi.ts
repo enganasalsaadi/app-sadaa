@@ -2,6 +2,7 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { getValidLanguage } from '@/core/i18n';
 import { appStorage, StorageKeys } from '@/core/storage';
 import { baseApi } from './baseApi';
+import { withKnownAddons } from './rateCardAddons';
 import { readCatalogCache, writeCatalogCache } from './rateCardCatalogCache';
 import type { RateCardCatalog } from './rateCardCatalogTypes';
 
@@ -36,14 +37,17 @@ export const rateCardCatalogApi = baseApi.injectEndpoints({
           },
         });
 
-        if (result.error) return cached ? { data: cached.catalog } : { error: result.error };
+        // Cached raw: a 304 after an app update must still carry types this build learnt.
+        if (result.error) {
+          return cached ? { data: withKnownAddons(cached.catalog) } : { error: result.error };
+        }
         if (result.data == null) {
-          return cached ? { data: cached.catalog } : { error: EMPTY_CATALOG_ERROR };
+          return cached ? { data: withKnownAddons(cached.catalog) } : { error: EMPTY_CATALOG_ERROR };
         }
         // Trust boundary: the envelope's `data` is the catalog (contract §1).
         const catalog = result.data as RateCardCatalog;
         writeCatalogCache(language, { etag: received.etag, catalog });
-        return { data: catalog };
+        return { data: withKnownAddons(catalog) };
       },
       // Reference data: one revalidation per session is enough.
       keepUnusedDataFor: 60 * 60,

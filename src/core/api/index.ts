@@ -21,6 +21,7 @@ export type {
   SocialPlatformLookup,
 } from './lookupsApi';
 export { useGetRateCardCatalogQuery } from './rateCardCatalogApi';
+export { orderAddons } from './rateCardAddons';
 export type {
   AddonPricingMode,
   AddonType,

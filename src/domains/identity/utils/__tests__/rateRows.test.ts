@@ -116,6 +116,22 @@ describe('buildRateRows', () => {
     ]);
   });
 
+  it('lists add-ons in catalog order and skips types this build does not know', () => {
+    const extra = (type: string) => ({
+      type,
+      label: type,
+      pricing_mode: 'fixed' as const,
+      amount: 10,
+      computed_price_usd: 10,
+      options: {},
+    });
+    const [row] = buildRateRows(
+      [card('instagram', 'reel', 100, { addons: [extra('pin'), extra('hologram'), extra('extra_revision')] })],
+      platforms,
+    );
+    expect(row?.addons.map(addon => addon.key)).toEqual(['extra_revision', 'pin']);
+  });
+
   it('drops a card with an unusable price', () => {
     expect(buildRateRows([card('instagram', 'reel', Number.NaN)], platforms)).toEqual([]);
   });

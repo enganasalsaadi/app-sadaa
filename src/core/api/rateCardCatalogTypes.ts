@@ -19,9 +19,21 @@ export type RateService =
 
 export type Retention = '24h' | '30d' | '90d' | '180d' | 'permanent';
 
-/** Only `rush_delivery` is offered in v1. */
-export type AddonType = 'rush_delivery' | 'whitelisting' | 'exclusivity' | 'pin' | 'on_site';
-export type AddonPricingMode = 'fixed' | 'percent_of_base';
+/**
+ * Catalog v2 add-ons, in catalog order. A type newer than this build is skipped
+ * wherever add-ons are read (`isAddonType`), never a crash.
+ */
+export const ADDON_TYPES = [
+  'rush_delivery',
+  'extra_revision',
+  'exclusivity',
+  'whitelisting',
+  'link_in_bio',
+  'pin',
+] as const;
+export type AddonType = (typeof ADDON_TYPES)[number];
+/** Every add-on is a fixed USD fee in v2. */
+export type AddonPricingMode = 'fixed';
 
 export interface CatalogOption<TValue> {
   value: TValue;
@@ -67,7 +79,7 @@ export interface CatalogService {
   package: CatalogPackage | null;
   criteria: CatalogCriteria;
   attributes: CatalogAttribute[];
-  /** Add-on types allowed on this service. */
+  /** Add-on types allowed on this service, in display order. */
   addons: AddonType[];
 }
 

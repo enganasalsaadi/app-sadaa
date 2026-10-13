@@ -1,11 +1,12 @@
-import type { AddonPricingMode, AddonType, RateService, Retention } from '@/core/api';
+import type { AddonPricingMode, RateService, Retention } from '@/core/api';
 
 /**
  * Rate Cards v2 (handoff §5). Lives in auth because onboarding step 3 writes
  * them; the in-app editor and the media kit (identity) read the same shape.
  */
 export interface RateCardAddon {
-  type: AddonType;
+  /** Raw: may be newer than this build. Read through `orderAddons`, which skips unknown types. */
+  type: string;
   label: string;
   pricing_mode: AddonPricingMode;
   amount: number;
@@ -33,7 +34,8 @@ export interface RateCard {
 }
 
 export interface RateCardAddonInput {
-  type: AddonType;
+  /** An `AddonType`, or an unknown saved one sent back unchanged (`addons` replaces the list). */
+  type: string;
   pricing_mode: AddonPricingMode;
   amount: number;
   options?: Record<string, string | number | boolean>;

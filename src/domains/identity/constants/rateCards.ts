@@ -4,7 +4,7 @@ import type { RateCardFormValues } from '../schemas/rateCardSchema';
 /** Group key for platform-free services (on-site visit); never a platform key. */
 export const RATE_GROUP_IN_PERSON = 'in_person';
 
-/** The only add-on offered in v1 (handoff §3). */
+/** The only add-on the editor manages until it renders from the catalog (direct-deals P1.2). */
 export const RUSH_ADDON = 'rush_delivery' satisfies AddonType;
 
 /**

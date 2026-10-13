@@ -1,3 +1,4 @@
+import { orderAddons } from '@/core/api';
 import type { Money } from '@/core/money';
 import { fromPriceUsd, type PlatformResource, type RateCard } from '@/domains/auth';
 import type { PublicRateCard } from '../types/mediaKit';
@@ -51,7 +52,7 @@ const toAddons = <TPrice extends RowPrice>(
   addons: LockableRowCard['addons'],
   readPrice: ReadPrice<TPrice>,
 ): RateRowAddon<TPrice>[] =>
-  addons.flatMap(addon => {
+  orderAddons(addons).flatMap(addon => {
     const price = readPrice(addon.computed_price_usd);
     if (price === undefined) return [];
     const hours = addon.options.delivery_hours;
@@ -103,7 +104,7 @@ const buildRows = <TPrice extends RowPrice>(
 /**
  * Saved rate cards as display rows: primary platform first, then the platform
  * order, in-person services last; server order within a platform. A card with
- * an unusable price is dropped.
+ * an unusable price is dropped; add-ons in catalog order, unknown types skipped.
  */
 export const buildRateRows = (
   cards: readonly Pick<RateCard, RowFields>[],
