@@ -113,9 +113,8 @@ const render = (overrides: Partial<MediaKitPublicScreenModel> = {}) => {
     canShortlist: false,
     isShortlisted: false,
     savingShortlist: false,
-    onSaveToShortlist: jest.fn(),
     onToggleShortlist: jest.fn(),
-    onOpenShortlist: jest.fn(),
+    onStartOffer: jest.fn(),
     onShare: null,
     refreshing: false,
     onRefresh: jest.fn(),
@@ -191,16 +190,15 @@ describe('MediaKitPublicScreen', () => {
     expect(actions[0].onPress).toBe(vm.onToggleShortlist);
     expect(actions[1].onPress).toBe(onShare);
     const footer = renderFooter(root);
-    expect(footer.props.primary.label).toBe('account.mediaKit.showcase.footer.save');
-    expect(footer.props.primary.onPress).toBe(vm.onSaveToShortlist);
+    expect(footer.props.primary.label).toBe('marketplace.offer.mediaKitCta');
+    expect(footer.props.primary.onPress).toBe(vm.onStartOffer);
   });
 
-  it('already shortlisted → the bar opens the shortlist', () => {
+  it('already shortlisted → the heart is on, the bar still starts an offer', () => {
     const { root, vm } = render({ footer: 'offer', selectable: true, canShortlist: true, isShortlisted: true });
     expect(root.find(isHost('Layout')).props.header.actions[0].active).toBe(true);
     const footer = renderFooter(root);
-    expect(footer.props.primary.label).toBe('account.mediaKit.showcase.footer.openShortlist');
-    expect(footer.props.primary.onPress).toBe(vm.onOpenShortlist);
+    expect(footer.props.primary.onPress).toBe(vm.onStartOffer);
   });
 
   it('locked prices → footer with the reason copy and its CTA', () => {

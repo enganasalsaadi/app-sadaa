@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Bell,
+  BookOpenText,
   ChevronLeft,
   ChevronRight,
   FileText,
@@ -67,6 +68,7 @@ interface SettingsDrawerProps {
   onThemeModeChange: (mode: ThemeMode) => void;
   onLanguage: () => void;
   onPassword: () => void;
+  onDealGuide: () => void;
   onTerms: () => void;
   onPrivacy: () => void;
   onDevShowcase: () => void;
@@ -80,6 +82,7 @@ const SettingsDrawerComponent: React.FC<SettingsDrawerProps> = ({
   onThemeModeChange,
   onLanguage,
   onPassword,
+  onDealGuide,
   onTerms,
   onPrivacy,
   onDevShowcase,
@@ -114,6 +117,7 @@ const SettingsDrawerComponent: React.FC<SettingsDrawerProps> = ({
         ) : null}
         <DrawerRow icon={Globe} label={t('account.profile.language')} value={languageLabel} onPress={onLanguage} />
         <DrawerRow icon={KeyRound} label={t('account.profile.changePassword')} onPress={onPassword} />
+        <DrawerRow icon={BookOpenText} label={t('marketplace.guide.title')} onPress={onDealGuide} />
         <DrawerRow icon={FileText} label={t('account.profile.terms')} onPress={onTerms} />
         <DrawerRow icon={ShieldCheck} label={t('account.profile.privacy')} onPress={onPrivacy} />
         {/* Dev-only showcase entry, dropped from release builds with `__DEV__`. */}

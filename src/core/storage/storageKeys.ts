@@ -22,6 +22,7 @@ export const StorageKeys = {
   PUSH_PROMPT: 'app.push_prompt',
   RATE_CARD_CATALOG_CACHE: 'app.rate_card_catalog_cache',
   WALLET_AMOUNTS_HIDDEN: 'app.wallet_amounts_hidden',
+  DEAL_LAST_SHIPPING_MODE: 'app.deal_last_shipping_mode',
   STORAGE_VERSION: 'app.storage_version',
 } as const;
 
@@ -52,6 +53,8 @@ export interface StorageSchema {
   [StorageKeys.RATE_CARD_CATALOG_CACHE]: string;
   /** 'true' while the wallet eye toggle hides amounts: a display preference, no amounts stored. */
   [StorageKeys.WALLET_AMOUNTS_HIDDEN]: string;
+  /** The offer builder's last product choice ('gift' | 'returnable'): a preference, identifies no one. */
+  [StorageKeys.DEAL_LAST_SHIPPING_MODE]: string;
   /** Layout of the on-disk stores; '2' once session + PII moved to the encrypted store. */
   [StorageKeys.STORAGE_VERSION]: string;
 }

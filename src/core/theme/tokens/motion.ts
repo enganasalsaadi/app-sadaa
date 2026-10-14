@@ -35,6 +35,8 @@ export const motion = {
     passSheen: 5200,
     /** Creator Home sign: one full sway of the sign hanging under the pass (a blocker waiting). */
     signSwing: 3400,
+    /** Deal journey: one run of the comet from the current station to the next. */
+    comet: 2600,
   },
   spring: {
     damping: 18,

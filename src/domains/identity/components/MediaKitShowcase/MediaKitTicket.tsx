@@ -275,7 +275,7 @@ const MediaKitTicketComponent: React.FC<MediaKitTicketProps> = ({
   );
 
   // The shadow lives on the outer layer: iOS clips a shadow on the view that clips its content.
-  const outer = { borderRadius: 'xl', bg: colors.surface.main, shadow: 'card' } as const;
+  const outer = { borderRadius: 'lg', bg: colors.surface.main } as const;
   const ticket = (
     <Box
       row

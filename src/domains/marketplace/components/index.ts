@@ -8,3 +8,7 @@ export { CreatorCard } from './CreatorCard';
 export type { CreatorCardProps } from './CreatorCard';
 export { DraftReviewCard } from './DraftReviewCard';
 export type { DraftReviewCardProps } from './DraftReviewCard';
+export { DealJourney } from './DealJourney';
+export type { DealJourneyProps } from './DealJourney';
+export { DealGuideButton } from './DealGuideButton';
+export type { DealGuideButtonProps } from './DealGuideButton';

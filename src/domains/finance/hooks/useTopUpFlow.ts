@@ -79,11 +79,11 @@ export const useTopUpFlowState = () => {
 
   const [defaultValues] = useState<TopUpFormValues>(() => {
     const channel =
-      prefill && isOneOf(PAYMENT_CHANNELS, prefill.channel) ? prefill.channel : null;
+      prefill?.channel && isOneOf(PAYMENT_CHANNELS, prefill.channel) ? prefill.channel : null;
     return {
       channel,
-      currency: channel && prefill ? prefill.amount.currency : 'USD',
-      amount: channel && prefill ? prefill.amount : null,
+      currency: prefill ? prefill.amount.currency : 'USD',
+      amount: prefill ? prefill.amount : null,
       transferReference: '',
       receipt: null,
     };

@@ -242,7 +242,7 @@ describe('useMediaKitPublicScreen', () => {
 
     it('save → PUT for the current slug, then a success toast', async () => {
       openUnlocked();
-      await act(async () => latest.vm?.onSaveToShortlist());
+      await act(async () => latest.vm?.onToggleShortlist());
       expect(mockSetShortlisted).toHaveBeenCalledWith({ slug: 'anas', shortlisted: true });
       expect(mockToast.success).toHaveBeenCalledWith('account.mediaKit.showcase.shortlist.saved');
     });
@@ -258,17 +258,14 @@ describe('useMediaKitPublicScreen', () => {
     it('full shortlist → its own error copy', async () => {
       mockShortlistResult.error = { status: 409, data: { success: false, error_code: 'shortlist_full' } };
       openUnlocked();
-      await act(async () => latest.vm?.onSaveToShortlist());
+      await act(async () => latest.vm?.onToggleShortlist());
       expect(mockToast.error).toHaveBeenCalledWith('marketplace.shortlist.full');
     });
 
-    it('opens the shortlist on the Home tab', () => {
-      openUnlocked({ is_shortlisted: true });
-      act(() => latest.vm?.onOpenShortlist());
-      expect(mockNavigate).toHaveBeenCalledWith('Main', {
-        screen: 'HomeTab',
-        params: { screen: 'Shortlist', initial: false },
-      });
+    it('starts a direct offer for this creator with the picked services', () => {
+      openUnlocked();
+      act(() => latest.vm?.onStartOffer());
+      expect(mockNavigate).toHaveBeenCalledWith('OfferBuilder', { slug: 'anas', rateCardIds: [] });
     });
 
     it('share is available once the kit is loaded (public_url is always sent)', () => {

@@ -27,7 +27,7 @@ import {
   LayoutBrandHeaderScreen,
   LayoutDashboardScreen,
 } from '@/app/screens';
-import type { DevShowcaseStackParamList, PublicStackParamList } from '@/core/navigation';
+import type { DealFlowStackParamList, DevShowcaseStackParamList, PublicStackParamList } from '@/core/navigation';
 import {
   AuthNavigator,
   BrandOnboardingNavigator,
@@ -37,6 +37,7 @@ import {
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { BRAND_KYC_STEP_SCREENS, MediaKitPublicScreen } from '@/domains/identity';
+import { DealGuideScreen, OfferBuilderScreen } from '@/domains/marketplace';
 import { MainTabs } from './MainTabs';
 
 type RootStackParamList = {
@@ -49,6 +50,7 @@ type RootStackParamList = {
   Suspended: undefined;
   Main: undefined;
 } & PublicStackParamList &
+  DealFlowStackParamList &
   DevShowcaseStackParamList;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +78,7 @@ export const RootNavigator: React.FC<Props> = ({
   maintenanceMessage,
   onOnboardingFinish,
 }) => {
+  const userType = useAppSelector(selectUserType);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -113,6 +116,20 @@ export const RootNavigator: React.FC<Props> = ({
       )}
       {appStatus === AppStatus.AUTHENTICATED && (
         <Stack.Screen name="Main" component={MainTabs} />
+      )}
+      {/*
+        Deal flows over the tabs. Only brands send offers (role from the server session);
+        the deal guide serves both roles.
+      */}
+      {appStatus === AppStatus.AUTHENTICATED && userType === 'brand' && (
+        <Stack.Screen
+          name="OfferBuilder"
+          component={OfferBuilderScreen}
+          options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
+        />
+      )}
+      {appStatus === AppStatus.AUTHENTICATED && (
+        <Stack.Screen name="DealGuide" component={DealGuideScreen} options={{ animation: 'default' }} />
       )}
       {/*
         Public creator profile (opened links, contract §17.8) over the tabs or

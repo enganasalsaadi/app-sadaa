@@ -9,25 +9,18 @@ interface OfferFooterProps {
   /** Estimated base price of the picked services; `null` while nothing priced is picked. */
   total: Money | null;
   selectedCount: number;
-  isShortlisted: boolean;
-  saving: boolean;
-  onSave: () => void;
-  onOpenShortlist: () => void;
+  onStartOffer: () => void;
 }
 
 /**
  * The brand's bar: "from $X", or the picked services and their estimated total rolling as
- * they change; then the one primary. Direct offers are not live yet, so the action saves
- * the creator to the shortlist (then opens it).
+ * they change; then the one primary: a direct offer starting from the picked services.
  */
 const OfferFooterComponent: React.FC<OfferFooterProps> = ({
   priceFrom,
   total,
   selectedCount,
-  isShortlisted,
-  saving,
-  onSave,
-  onOpenShortlist,
+  onStartOffer,
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -39,25 +32,18 @@ const OfferFooterComponent: React.FC<OfferFooterProps> = ({
       top={
         amount ? (
           <Box row align="center" justify="space-between" gap="md">
-            <Box flex={1} gap="xs">
+            <Box flex={1}>
               <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
                 {picked
                   ? t('account.mediaKit.showcase.footer.selected', { count: selectedCount })
                   : t('account.mediaKit.priceFrom')}
-              </Text>
-              <Text variant="caption" color={colors.text.tertiary} numberOfLines={1}>
-                {t('account.mediaKit.showcase.footer.offersSoon')}
               </Text>
             </Box>
             <MoneyText value={amount} size="title" animated estimate={picked} />
           </Box>
         ) : undefined
       }
-      primary={
-        isShortlisted
-          ? { label: t('account.mediaKit.showcase.footer.openShortlist'), onPress: onOpenShortlist }
-          : { label: t('account.mediaKit.showcase.footer.save'), onPress: onSave, loading: saving }
-      }
+      primary={{ label: t('marketplace.offer.mediaKitCta'), onPress: onStartOffer }}
     />
   );
 };

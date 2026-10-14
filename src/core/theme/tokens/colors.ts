@@ -90,6 +90,10 @@ export interface ThemeColors {
     /** Icons on glass: interaction (teal) / money (mint) roles, tinted to read on navy. */
     iconInteractive: string;
     iconMoney: string;
+    /** Ink on an `iconInteractive` fill (done step nodes on the offer rail). */
+    onIconInteractive: string;
+    /** Straight bottom edge of a navy bar where it meets the page. */
+    hairline: string;
     /** Status dots on navy (live island): the dark-mode status shades, readable on the hero. */
     iconWarning: string;
     iconDanger: string;
@@ -467,6 +471,8 @@ export const lightColors: ThemeColors = {
     glowHighlight: BG,
     iconInteractive: darkInteractive.main,
     iconMoney: '#3DDBA5',
+    onIconInteractive: ON_TEAL_DARK,
+    hairline: '#1E293B',
     iconWarning: darkStatus.warning.main,
     iconDanger: darkStatus.danger.main,
   },
@@ -627,6 +633,8 @@ export const darkColors: ThemeColors = {
     glowHighlight: darkInteractive.main,
     iconInteractive: darkInteractive.main,
     iconMoney: '#3DDBA5',
+    onIconInteractive: ON_TEAL_DARK,
+    hairline: '#1E293B',
     iconWarning: darkStatus.warning.main,
     iconDanger: darkStatus.danger.main,
   },

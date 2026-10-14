@@ -18,3 +18,6 @@ export const LayoutContext = createContext<LayoutContextValue>({
 });
 
 export const useLayoutContext = (): LayoutContextValue => useContext(LayoutContext);
+
+/** The body's scroll offset for a custom header / footer element (`null` in `static` mode). */
+export const useLayoutScrollY = (): SharedValue<number> | null => useContext(LayoutContext).scrollY;

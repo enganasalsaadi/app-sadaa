@@ -1,5 +1,6 @@
 export { Layout } from './Layout';
 export { LayoutFooter } from './LayoutFooter';
+export { useLayoutScrollY } from './LayoutContext';
 export { useLayoutInView } from './hooks/useLayoutInView';
 export type { LayoutInViewOptions } from './hooks/useLayoutInView';
 export type {

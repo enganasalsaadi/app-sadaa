@@ -161,8 +161,10 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       // `gated_parameter` (🔒 filter while locked) with the verification sheet.
       // `deal_*` (dispute not open / not the opener) means the deal moved: the
       // deal action hook shows the message and refetches, like a 409.
+      // `kyc_required` (deal quote / send) turns the offer builder into its verify gate.
       if (
         normalizedError.code === 'phone_not_verified' ||
+        normalizedError.code === 'kyc_required' ||
         normalizedError.code === 'account_suspended' ||
         normalizedError.code === 'gated_parameter' ||
         normalizedError.code?.startsWith('deal_')

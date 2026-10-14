@@ -76,6 +76,7 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
           onThemeModeChange={vm.changeThemeMode}
           onLanguage={vm.openLanguage}
           onPassword={vm.openPassword}
+          onDealGuide={vm.openDealGuide}
           onTerms={vm.openTerms}
           onPrivacy={vm.openPrivacy}
           onDevShowcase={vm.openDevShowcase}

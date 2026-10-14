@@ -6,6 +6,7 @@ import { normalizeApiError } from '@/core/api';
 import {
   navigate,
   type AuthStackParamList,
+  type DealFlowStackParamList,
   type PublicStackScreenProps,
   type RootTabParamList,
 } from '@/core/navigation';
@@ -131,22 +132,20 @@ export const useMediaKitPublicScreen = () => {
     },
     [setShortlisted, slug, t],
   );
-  const onSaveToShortlist = useCallback(() => {
-    if (savingShortlist) return;
-    updateShortlist(true);
-  }, [savingShortlist, updateShortlist]);
   const onToggleShortlist = useCallback(() => {
     if (savingShortlist) return;
     updateShortlist(!isShortlisted);
   }, [isShortlisted, savingShortlist, updateShortlist]);
 
-  const onOpenShortlist = useCallback(() => {
-    const home: NavigatorScreenParams<RootTabParamList> = {
-      screen: 'HomeTab',
-      params: { screen: 'Shortlist', initial: false },
+  // The picked services (rate-card slots) start the offer; the builder prices them for real.
+  const onStartOffer = useCallback(() => {
+    if (!kit) return;
+    const offer: DealFlowStackParamList['OfferBuilder'] = {
+      slug: kit.slug,
+      rateCardIds: kit.rate_cards.filter(card => services.selected.has(card.slot_key)).map(card => card.id),
     };
-    navigate('Main', home);
-  }, []);
+    navigate('OfferBuilder', offer);
+  }, [kit, services.selected]);
 
   const publicUrl = kit?.public_url ?? null;
   const onShare = useMemo(
@@ -207,9 +206,8 @@ export const useMediaKitPublicScreen = () => {
     canShortlist,
     isShortlisted,
     savingShortlist,
-    onSaveToShortlist,
     onToggleShortlist,
-    onOpenShortlist,
+    onStartOffer,
     onShare,
     refreshing,
     onRefresh,

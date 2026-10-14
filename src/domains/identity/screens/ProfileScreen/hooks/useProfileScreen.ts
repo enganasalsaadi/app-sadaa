@@ -12,7 +12,7 @@ import { getValidLanguage } from '@/core/i18n';
 import { HAPTIC_TAP_MS, type SupportedLanguage } from '@/core/config';
 import { useTheme, type ThemeMode } from '@/core/theme';
 import { toastService } from '@/core/toast';
-import { navigate, type SettingsStackParamList } from '@/core/navigation';
+import { navigate, type DealGuideParams, type SettingsStackParamList } from '@/core/navigation';
 import {
   selectUser,
   useGetProfileQuery,
@@ -243,6 +243,10 @@ export const useProfileScreen = () => {
       }),
     [navigation, t],
   );
+  const openDealGuide = useCallback(() => {
+    const guide: DealGuideParams = { role: isBrand ? 'brand' : 'creator', context: 'general' };
+    navigate('DealGuide', guide);
+  }, [isBrand]);
   const openDevShowcase = useCallback(() => navigate('DevShowcase'), []);
   const openWallet = useCallback(() => navigate('Main', { screen: 'WalletTab' }), []);
   // Payout methods live in the wallet stack; `initial: false` keeps the wallet underneath.
@@ -360,6 +364,7 @@ export const useProfileScreen = () => {
     openMediaKitSettings,
     openKyc,
     openNotifications,
+    openDealGuide,
     openTerms,
     openPrivacy,
     openDevShowcase,

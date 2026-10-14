@@ -1,3 +1,5 @@
+// Hermes ships no Intl.PluralRules: without it i18next only knows one/other and Arabic two/few/many break.
+import 'intl-pluralrules';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import {I18nManager} from 'react-native';

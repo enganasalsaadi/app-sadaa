@@ -1167,10 +1167,7 @@
         },
         "footer": {
           "selected_one": "{{count}} service picked",
-          "selected_other": "{{count}} services picked",
-          "offersSoon": "Direct offers are coming soon, save this creator now",
-          "save": "Save to shortlist",
-          "openShortlist": "View shortlist"
+          "selected_other": "{{count}} services picked"
         },
         "shortlist": {
           "add": "Add to shortlist",
@@ -1576,6 +1573,613 @@
       },
       "gotIt": "Got it",
       "notNow": "Not now"
+    },
+    "offer": {
+      "units": {
+        "hours_one": "{{count}} hour",
+        "hours_other": "{{count}} hours",
+        "days_one": "{{count}} day",
+        "days_other": "{{count}} days",
+        "revisions_one": "{{count}} revision",
+        "revisions_other": "{{count}} revisions",
+        "deliverables_one": "{{count}} deliverable",
+        "deliverables_other": "{{count}} deliverables",
+        "briefItems_one": "{{count}} item",
+        "briefItems_other": "{{count}} items",
+        "attachments_one": "{{count}} attachment",
+        "attachments_other": "{{count}} attachments",
+        "within": "within {{duration}}"
+      },
+      "header": {
+        "close": "Close the builder",
+        "back": "Previous step",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "saveFailed": "Not saved",
+        "steps": {
+          "services": "Services",
+          "brief": "Brief",
+          "sign": "Sign"
+        },
+        "stepA11y": "Step {{step}}: {{label}}"
+      },
+      "gate": {
+        "checking": "Preparing your offer…",
+        "kitFailed": "Couldn't load the creator's services"
+      },
+      "blocked": {
+        "also": "Also",
+        "back": "Back to the profile",
+        "kyc": {
+          "title": "Verify your business to send offers",
+          "body": "Verification protects both sides and turns on contracts and escrow. It takes minutes, then you come right back here.",
+          "cta": "Start verification"
+        },
+        "unavailable": {
+          "title": "{{name}} isn't taking offers right now",
+          "body": "This profile is closed to new offers for now. Save it to your shortlist to come back later.",
+          "cta": "Save to shortlist",
+          "ctaSaved": "Open shortlist"
+        },
+        "exists": {
+          "title": "You already have an open offer with {{name}}",
+          "body": "One open offer per creator is allowed. Follow the current one; you can add services to it after it is accepted.",
+          "cta": "Open the current offer"
+        },
+        "offerLimit": {
+          "title": "You reached the open offers limit",
+          "body": "This is the most open offers at once. When one is answered or expires you can send again.",
+          "cta": "My open offers",
+          "meter": "Open offers"
+        },
+        "draftLimit": {
+          "title": "You reached the drafts limit",
+          "body": "This is the most saved drafts. Finish one or delete those you don't need to start a new offer.",
+          "cta": "My drafts",
+          "meter": "Drafts"
+        },
+        "generic": {
+          "title": "You can't send an offer right now"
+        },
+        "strip": "Open"
+      },
+      "services": {
+        "title": "What do you need from {{name}}?",
+        "body": "Prices are fixed from the rate card. Pick one or more services and add what you need.",
+        "pickError": "Pick at least one service to continue",
+        "emptyTitle": "No priced services yet",
+        "emptyBody": "{{name}} hasn't priced any services. Save them to your shortlist and come back later.",
+        "inPerson": "In person",
+        "perUnit": "each",
+        "quantity": "Quantity",
+        "quantityHint": "Up to {{max}} per service",
+        "lineCap": "Max {{max}} per service",
+        "dealCap": "Max {{max}} deliverables per offer",
+        "addTo": "Add to {{title}}",
+        "lineTotal": "This line",
+        "lineTotalQty": "This line (×{{count}})",
+        "remove": "Remove service",
+        "pick": "Add {{title}}",
+        "unpick": "Remove {{title}}",
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity",
+        "lineCapToast": "Max {{max}} of each service per offer",
+        "dealCapToast": "Max {{max}} deliverables per offer",
+        "changed": "The creator's services changed. We refreshed the list."
+      },
+      "shipping": {
+        "title": "Does it include a product?",
+        "body": "If you'll send a product to feature in the content",
+        "digitalTitle": "Content only",
+        "digitalBody": "No shipping",
+        "productTitle": "I'll send a product",
+        "productBody": "A gift or a returnable sample",
+        "giftTitle": "Gift",
+        "giftBody": "The creator keeps it after the shoot",
+        "returnableTitle": "Returnable sample",
+        "returnableBody": "Comes back to you after publishing",
+        "lastPick": "Your last choice",
+        "note": "The delivery timer starts once receipt is confirmed, not before.",
+        "pickError": "Pick the shipment type",
+        "none": "No product"
+      },
+      "delivery": {
+        "title": "When do you need it?",
+        "emptyBody": "The timing shows once you pick a service",
+        "body": "Counted from the start of work, not from sending",
+        "fastest": "The creator's fastest time",
+        "requested": "A deadline you asked for",
+        "rushed": "With rush delivery",
+        "asap": "As soon as possible",
+        "twoWeeks": "Within two weeks",
+        "month": "Within a month",
+        "other": "Other…",
+        "tip": "A longer deadline makes the offer easier to accept",
+        "rushOn": "Rush delivery is on",
+        "rushOff": "Turn off",
+        "rushTitle": "Need it faster?",
+        "rushBody": "Turn on rush delivery: within {{fast}} instead of {{normal}}",
+        "rushToast": "Rush delivery on · within {{fast}}",
+        "sheetTitle": "Other deadline",
+        "sheetBody": "Longer than the fastest time ({{fastest}}) and up to {{max}} days",
+        "sheetCaption": "{{duration}} from the start of work",
+        "apply": "Use {{duration}}",
+        "cancel": "Cancel"
+      },
+      "dock": {
+        "total": "Total",
+        "summary": "{{items}} · delivered within {{duration}}",
+        "empty": "Pick a service to continue",
+        "next": "Continue",
+        "review": "Review offer",
+        "details": "Price details",
+        "pricing": "Pricing…"
+      },
+      "receipt": {
+        "title": "Price details",
+        "body": "As it will appear in the contract",
+        "unit": "{{price}} each",
+        "total": "Total",
+        "fine": "Prices come from the creator's rate card and lock when you sign · in US dollars",
+        "done": "Done"
+      },
+      "brief": {
+        "title": "Explain the idea to {{name}}",
+        "body": "A clear brief = faster acceptance and a sharper result. Every field is optional and becomes part of the contract.",
+        "templates": "Start from a template",
+        "template": {
+          "launch": {
+            "title": "Product launch",
+            "body": "Intro + try-out + call",
+            "p1": "Introduce the new product and what makes it special",
+            "p2": "Try it on camera and share your honest take",
+            "p3": "End with a clear call to try it",
+            "d1": "Don't mention unconfirmed prices",
+            "d2": "Don't compare with competitors by name"
+          },
+          "offer": {
+            "title": "Offer & discount",
+            "body": "Code in the first 5 seconds",
+            "p1": "Say the discount code clearly in the first 5 seconds",
+            "p2": "State how long the offer runs",
+            "p3": "Show how to order step by step",
+            "d1": "Don't promise a bigger discount than agreed"
+          },
+          "event": {
+            "title": "Opening or event",
+            "body": "The vibe + the address",
+            "p1": "Film the atmosphere inside",
+            "p2": "Mention the address and opening hours",
+            "p3": "Invite followers to come",
+            "d1": "Don't film customers' faces without permission"
+          },
+          "review": {
+            "title": "Honest review",
+            "body": "A real opinion, no script",
+            "p1": "Share your honest opinion, pros and notes",
+            "p2": "Focus on everyday use",
+            "d1": "Don't read a script word for word"
+          },
+          "awareness": {
+            "title": "Brand awareness",
+            "body": "The story in daily life",
+            "p1": "Tell the brand's story briefly",
+            "p2": "Show the product in a natural everyday setting",
+            "d1": "Don't use copyrighted music"
+          }
+        },
+        "talk": {
+          "title": "What should the content say?",
+          "body": "Talking points and tone",
+          "placeholder": "Add a point…",
+          "tone": "Tone"
+        },
+        "tone": {
+          "casual": {
+            "label": "Casual",
+            "point": "Tone: casual and close to people"
+          },
+          "luxury": {
+            "label": "Premium",
+            "point": "Tone: calm and premium"
+          },
+          "fun": {
+            "label": "Playful",
+            "point": "Tone: playful and light"
+          },
+          "educational": {
+            "label": "Educational",
+            "point": "Tone: educational, explains in detail"
+          }
+        },
+        "donts": {
+          "title": "What to avoid",
+          "body": "Clear don'ts mean fewer revision rounds",
+          "placeholder": "Add a don't…"
+        },
+        "tags": {
+          "title": "Hashtags & mentions",
+          "body": "Written exactly as in the post",
+          "hashtags": "Hashtags",
+          "hashtagsPlaceholder": "#hashtag",
+          "mentions": "Mentions",
+          "mentionsPlaceholder": "@account"
+        },
+        "measure": {
+          "title": "Measure the result",
+          "body": "Mentioned in the content so you can track it",
+          "promo": "Discount code",
+          "promoPlaceholder": "SADA15",
+          "link": "Tracking link",
+          "linkPlaceholder": "https://",
+          "linkError": "Enter a full link starting with https://"
+        },
+        "files": {
+          "title": "Reference files",
+          "body": "Images or PDFs the creator can refer to",
+          "add": "Add file",
+          "caption": "Images or PDF · up to 20 MB each · locked into the contract when you send",
+          "waiting": "Wait for the files to finish uploading",
+          "failed": "Upload failed",
+          "retry": "Upload {{name}} again",
+          "remove": "Remove {{name}}",
+          "type": "Unsupported file: images or PDF only",
+          "size": "The file is larger than 20 MB",
+          "limit": "Max {{max}} files",
+          "photos": "From photos",
+          "documents": "From files",
+          "sheetTitle": "Add a file"
+        },
+        "add": "Add",
+        "remove": "Remove \"{{text}}\"",
+        "max": "You reached the limit ({{max}})",
+        "duplicate": "Already added",
+        "count": "{{count}}/{{max}}"
+      },
+      "review": {
+        "title": "Review and sign",
+        "body": "This is the deal as {{name}} will receive it.",
+        "brand": "Brand",
+        "creator": "Creator",
+        "duration": "Delivery time",
+        "product": "Product shipping",
+        "noShipping": "No shipping needed",
+        "brief": "Brief items",
+        "empty": "—",
+        "deliverables": "What you get",
+        "total": "Total",
+        "totalNote": "In dollars · fixed once signed",
+        "views": "Average views over 30 days",
+        "contract": "View the full contract terms",
+        "contractCount": "View the full contract terms ({{terms}})",
+        "escrowNote": "The amount is held in a secure Sada escrow once the creator accepts, and is only released after you approve the content and its publishing is verified.",
+        "contractTitle": "Contract",
+        "contractSub": "The terms as they will be locked into the contract.",
+        "contractFine": "Your signature is recorded with its time and device.",
+        "contractOk": "Got it",
+        "contractMissing": "The full terms are attached to the deal when you send.",
+        "walletTitle": "Nothing is charged now",
+        "walletBody": "{{amount}} is held from your balance only once the creator accepts.",
+        "balance": "Your balance",
+        "enough": "Enough",
+        "short": "{{amount}} short",
+        "later": "You can send now. We'll show a top-up button after sending, and you have {{duration}} after acceptance to complete the balance.",
+        "lineTitle": "{{count}}× {{title}}",
+        "addon": "+ {{label}}"
+      },
+      "sign": {
+        "caption": "Your signature is legally binding · the amount is held once the creator accepts",
+        "hold": "Press and hold to sign and send",
+        "hint": "Keep holding until the ring fills",
+        "signed": "Offer signed",
+        "sending": "Sending the offer to {{name}}…",
+        "a11yHint": "Press and hold for a second to sign and send the offer"
+      },
+      "priceChanged": {
+        "title": "The price just changed",
+        "body": "The creator's rate card was updated while you prepared the offer. Nothing was sent or charged.",
+        "total": "Total",
+        "apply": "Sign at the new price",
+        "edit": "Edit services",
+        "applied": "Offer updated to the new price · sign again"
+      },
+      "resume": {
+        "title": "You have a draft for {{name}}",
+        "body": "We saved it automatically. Continue where you left off.",
+        "savedAt": "Saved {{date}}",
+        "fine": "Drafts are deleted after {{days}} days without changes.",
+        "resume": "Continue the draft",
+        "fresh": "Start a new offer",
+        "restored": "Your draft is back as you left it",
+        "failed": "Couldn't open the draft. Start a new offer or try later."
+      },
+      "closedWithDraft": "Your draft is saved · find it in \"My deals\"",
+      "sent": {
+        "stamp": "Sent",
+        "title": "Your offer is on its way to {{name}}",
+        "body": "You signed the offer. We'll notify you as soon as there's a reply.",
+        "topUpTitle": "Top up {{amount}} now",
+        "topUpBody": "So the amount is held the moment it is accepted and work starts without waiting. Top-ups get a short review.",
+        "topUpCta": "Top up {{amount}}",
+        "openDeal": "Open the deal",
+        "done": "Done"
+      },
+      "guideButton": {
+        "title": "Learn how a deal is completed",
+        "body": "Every stage in detail: who acts, how long it takes, and what if someone is late"
+      },
+      "mediaKitCta": "Request a direct service",
+      "retention": {
+        "24h": "Stays up 24 hours",
+        "30d": "Stays up 30 days",
+        "90d": "Stays up 90 days",
+        "180d": "Stays up 180 days",
+        "permanent": "Stays up permanently"
+      }
+    },
+    "journey": {
+      "titlePlan": "What happens after you sign?",
+      "titleLive": "Where is your deal now?",
+      "hint": "Tap any station or swipe the card",
+      "counter": "Station",
+      "flag": "Now",
+      "status": {
+        "done": "Done",
+        "now": "Now",
+        "next": "Next",
+        "later": "Later"
+      },
+      "you": "You",
+      "sada": "Sada",
+      "yourRole": "Your part",
+      "ifLate": "If it doesn't happen on time",
+      "prev": "Previous station",
+      "next": "Next station",
+      "countdown": "Left to reply",
+      "station": "{{name}}: {{status}}",
+      "stage": {
+        "sign": {
+          "name": "Sign",
+          "title": "You sign and send the offer",
+          "whenPlan": "Now · waiting for your signature",
+          "whenLive": "Done {{time}}",
+          "what": "Prices, brief and files are locked into one contract that reaches {{name}}. Nothing leaves your balance at this point.",
+          "youPlan": "Press and hold the sign button below.",
+          "youLive": "Done. You can withdraw the offer until there's a reply."
+        },
+        "reply": {
+          "name": "Reply",
+          "title": "{{name}} reviews your offer",
+          "when": "Up to {{duration}} after sending",
+          "what": "Accept as is or decline. One deadline extension can be requested, and you decide. No price negotiation.",
+          "you": "Nothing. We'll notify you as soon as there's a reply.",
+          "ifLate": "No reply within {{duration}}? The offer expires and nothing is charged."
+        },
+        "escrow": {
+          "name": "Escrow",
+          "title": "The amount is held in escrow",
+          "when": "The moment it is accepted",
+          "what": "{{amount}} is held from your wallet in escrow and never reaches {{name}} before you approve and the post is verified.",
+          "youShort": "Top up {{amount}} within {{duration}} of acceptance.",
+          "youEnough": "Nothing. It's held from your balance automatically.",
+          "ifShort": "Balance not completed within {{duration}}? The offer is cancelled with no fees."
+        },
+        "ship": {
+          "name": "Shipping",
+          "titleGift": "Ship the gift to {{name}}",
+          "titleReturnable": "Ship the sample to {{name}}",
+          "when": "Within {{duration}} of escrow",
+          "what": "You send the product and add the tracking number, then receipt is confirmed in the app. The delivery timer won't start before receipt.",
+          "whatReturnable": "You send the sample and add the tracking number, then receipt is confirmed in the app. The delivery timer won't start before receipt, and the sample comes back after publishing.",
+          "you": "Ship the product and add the courier and tracking number.",
+          "ifLate": "Missed the shipping window? The creator may cancel free and your money comes back."
+        },
+        "make": {
+          "name": "Creation",
+          "title": "Creating the content",
+          "whenDigital": "{{duration}} from escrow",
+          "whenProduct": "{{duration}} from receiving the product",
+          "what": "A draft for every deliverable is uploaded in the app ({{items}}), each with its own countdown.",
+          "you": "Nothing until the first draft arrives.",
+          "ifLate": "Deadline missed with nothing delivered? The contract is cancelled and the full amount returns to your wallet."
+        },
+        "review": {
+          "name": "Your review",
+          "title": "You review the drafts",
+          "when": "{{duration}} per draft",
+          "what": "Approve the draft or ask for changes with notes on the exact moment, within the agreed revision rounds per line.",
+          "you": "Review, then approve or ask for changes.",
+          "ifLate": "Didn't review within {{duration}}? The draft is approved automatically."
+        },
+        "publish": {
+          "name": "Publishing",
+          "title": "Publishing and verification",
+          "when": "Within {{duration}} of approval",
+          "what": "The content goes live with the link and a proof screenshot. You verify the post, or ask for the link to be fixed.",
+          "you": "Open the link and confirm the post.",
+          "ifLate": "Didn't verify within {{duration}}? The post is verified automatically."
+        },
+        "done": {
+          "name": "Complete",
+          "title": "Money released, deal complete",
+          "when": "As soon as every line is verified",
+          "what": "The amount is released to {{name}}, you get the invoice, and both sides rate each other.",
+          "you": "Rate the experience to help other brands."
+        }
+      }
+    },
+    "guide": {
+      "title": "How does a deal get completed?",
+      "kicker": "Deal guide · {{audience}}",
+      "stations_one": "{{count}} station",
+      "stations_other": "{{count}} stations",
+      "barStation": "Station {{current}} of {{total}}",
+      "optional": "With a physical product",
+      "faq": "Questions",
+      "done": "Got it",
+      "back": "Back",
+      "jump": "Go to {{name}}",
+      "brand": {
+        "audience": "For brands",
+        "sub": "From signing to releasing the money. Every step happens in Sada, recorded and protected by escrow.",
+        "who": {
+          "you": "You",
+          "other": "Creator",
+          "sada": "Sada"
+        },
+        "fact1": "The price is fixed once signed",
+        "fact2": "Money stays in escrow until the post",
+        "fact3": "Every step is recorded as evidence",
+        "sign": {
+          "name": "Sign",
+          "title": "Sign and send",
+          "time": "Minutes",
+          "body": "You pick services from the creator's rate card, write the brief, then sign with a long press. The offer becomes one contract at a fixed price.",
+          "p1": "Nothing is charged when you send",
+          "p2": "The brief and files are part of the contract",
+          "p3": "Your draft saves automatically as you write"
+        },
+        "reply": {
+          "name": "Creator's reply",
+          "title": "The creator's reply",
+          "time": "Up to {{duration}}",
+          "body": "The creator accepts the offer as is or declines. They can ask once to extend the deadline (up to {{days}} days), and you decide.",
+          "p1": "No price negotiation: it comes from the creator's rate card",
+          "p2": "We notify you as soon as there's a reply",
+          "ifLate": "No reply within {{duration}}? The offer expires and nothing is charged."
+        },
+        "escrow": {
+          "name": "Escrow",
+          "title": "The amount is held in escrow",
+          "time": "When accepted",
+          "body": "The amount is held from your wallet in a Sada escrow account. It doesn't reach the creator before you approve the content and the post is verified.",
+          "p1": "Balance short? Top up within {{duration}} and the offer is funded automatically",
+          "ifLate": "Balance not completed within {{duration}}? The offer is cancelled with no fees."
+        },
+        "ship": {
+          "name": "Shipping",
+          "title": "Ship the product",
+          "time": "Up to {{duration}}",
+          "body": "You send the product and add the courier and tracking number. The creator confirms receipt, or reports a problem with photos.",
+          "p1": "The delivery timer doesn't start before receipt",
+          "p2": "A returnable sample comes back to you after publishing",
+          "ifLate": "Missed the shipping window? The creator may cancel free and your money comes back."
+        },
+        "make": {
+          "name": "Creation",
+          "title": "Creating the content",
+          "time": "Each service's timing",
+          "body": "The creator shoots and uploads a draft of every deliverable in the app. You see a countdown for each line.",
+          "ifLate": "Deadline missed with nothing delivered? The contract is cancelled and the full amount returns to your wallet."
+        },
+        "review": {
+          "name": "Review",
+          "title": "Reviewing drafts",
+          "time": "{{duration}} per draft",
+          "body": "You approve the draft or ask for changes with notes on the exact moment, within the agreed revision rounds.",
+          "p1": "Out of rounds? You can add a paid round",
+          "ifLate": "Didn't review within {{duration}}? The draft is approved automatically."
+        },
+        "publish": {
+          "name": "Publishing",
+          "title": "Publishing and verification",
+          "time": "{{duration}}",
+          "body": "The creator publishes and adds the link and a proof screenshot. You verify the post, or ask to fix the link up to twice.",
+          "ifLate": "Didn't verify within {{duration}}? The post is verified automatically."
+        },
+        "done": {
+          "name": "Complete",
+          "title": "Money released, deal complete",
+          "time": "Instantly",
+          "body": "Once every line is verified, the deal completes and the money is released to the creator. You get the invoice and both sides rate each other.",
+          "p1": "The contract and invoice stay inside the deal",
+          "p2": "A disagreement? A dispute opens in the app with the recorded evidence"
+        },
+        "q1": "When is the money taken from my wallet?",
+        "a1": "Only when the creator accepts. It's held in escrow and not passed on before you approve and the post is verified.",
+        "q2": "Can the price change after signing?",
+        "a2": "No. The price locks when you sign. If the creator's rate card changes before sending, we show you the difference to decide.",
+        "q3": "What if I don't like the content?",
+        "a3": "Ask for changes within the agreed rounds, and you can add a paid round. If you disagree, open a dispute in the app with evidence.",
+        "q4": "What if the creator doesn't deliver?",
+        "a4": "The contract is cancelled automatically after the deadline, and the full amount returns to your wallet.",
+        "q5": "Can I withdraw the offer?",
+        "a5": "Yes, as long as the creator hasn't replied. After acceptance, cancelling follows the contract terms."
+      },
+      "creator": {
+        "audience": "For creators",
+        "sub": "From the offer arriving to your earnings landing. You never work on a promise: the money is held before you start.",
+        "who": {
+          "you": "You",
+          "other": "Brand",
+          "sada": "Sada"
+        },
+        "fact1": "The money is held before you start",
+        "fact2": "Your price comes from your card, no haggling",
+        "fact3": "Every step is recorded as evidence",
+        "offer": {
+          "name": "Offer arrives",
+          "title": "The offer arrives",
+          "time": "Instantly",
+          "body": "You receive the requested services, the brief, files and the fixed price from your rate card, as a contract signed by the brand."
+        },
+        "reply": {
+          "name": "Your reply",
+          "title": "Accept or decline",
+          "time": "Up to {{duration}}",
+          "body": "Accept the offer as is, decline with a reason, or ask once to extend the deadline (up to {{days}} days).",
+          "ifLate": "Didn't reply within {{duration}}? The offer expires automatically."
+        },
+        "escrow": {
+          "name": "Escrow",
+          "title": "The amount is held in escrow",
+          "time": "When you accept",
+          "body": "The full amount is held from the brand's wallet before you start working.",
+          "ifLate": "The brand didn't complete its balance within {{duration}}? The offer is cancelled with no obligation on you."
+        },
+        "receive": {
+          "name": "Receipt",
+          "title": "Receive the product",
+          "time": "On arrival",
+          "body": "Confirm receipt, or report a problem with photos. Your timer won't start before receipt.",
+          "ifLate": "Not shipped within the window? You may cancel with no penalty."
+        },
+        "make": {
+          "name": "Creation",
+          "title": "Creating the content",
+          "time": "Each service's timing",
+          "body": "Shoot and upload a draft of every deliverable before the countdown ends.",
+          "ifLate": "Deadline missed with nothing delivered? The contract is cancelled, the brand is refunded and a late strike is recorded."
+        },
+        "review": {
+          "name": "Review",
+          "title": "The brand's review",
+          "time": "{{duration}} per draft",
+          "body": "The brand approves the draft or asks for changes within the agreed rounds only.",
+          "ifLate": "The brand didn't review within {{duration}}? Your draft is approved automatically."
+        },
+        "publish": {
+          "name": "Publishing",
+          "title": "Publish and prove",
+          "time": "{{duration}}",
+          "body": "Publish and add the link and a screenshot as proof.",
+          "ifLate": "The brand didn't verify within {{duration}}? The post is verified automatically."
+        },
+        "earnings": {
+          "name": "Your earnings",
+          "title": "Your earnings land",
+          "time": "Once verified",
+          "body": "The amount is released to your wallet after the platform fee, and you withdraw whenever you like."
+        },
+        "q1": "Is the money guaranteed?",
+        "a1": "Yes. It's fully held in escrow before you start, and the brand can't pull it back during the work.",
+        "q2": "When do I get paid?",
+        "a2": "After the post is verified, or automatically if the brand doesn't verify within {{duration}}.",
+        "q3": "Can I change the price in an offer?",
+        "a3": "No. The price comes from your rate card. Edit your card so it applies to future offers.",
+        "q4": "What if the brand asks for lots of changes?",
+        "a4": "Changes are limited to the agreed rounds. Any extra round is paid."
+      }
     }
   },
   "finance": {

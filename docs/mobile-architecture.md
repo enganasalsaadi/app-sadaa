@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-10-14 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -308,8 +308,22 @@ APP LAUNCH
 │     total followers + share per platform) · numbers · audience 🔜 · past work 🔜 ·
 │     brands worked with 🔜 · prices: platform filter + price tickets, "All prices" ·
 │     escrow card (brand → Sada escrow → creator, 3 steps, terms) · join card (visitors) ·
-│     bottom bar: "from $X" or the picked total + Save to shortlist (brands), or 🔒 the next
+│     bottom bar: "from $X" or the picked total + "Request a direct service" (brands), or 🔒 the next
 │     step when the viewer can't see prices · "Profile not available" for any hidden link
+│     └── Direct offer builder (brands, over the app)              🟡 built, awaiting device and live-server testing
+│           checking → navy header (close, creator, save state; step rail: icon + name of current step) over 3 steps:
+│           1 services (quantity, add-ons, product or not, deadline, rush) ·
+│           2 brief (templates, talking points + tone, don'ts, #tags, @mentions,
+│             discount code, tracking link, up to 5 files) ·
+│           3 deal pass + contract + wallet hold + deal journey → press and hold to sign
+│           · blocked page (verify, creator closed, open offer exists, limits)
+│           · price changed sheet · continue-draft sheet · sent stamp + journey + top-up
+│
+├── HOW A DEAL COMPLETES (deal guide, one page per role; from the offer builder,
+│     the sent page and Settings)                                  🟡 built, awaiting device testing
+│     navy hero + station map (tap jumps) + 3 trust facts · bar "station n of N"
+│     with reading progress · one chapter per station · questions · shipping chapter
+│     only where a product can ship
 │
 └── MAIN APP (bottom tab bar: floating rounded glass capsule; page content
     │   shows blurred through it; slides away on scroll down, back on scroll up;
@@ -396,6 +410,7 @@ APP LAUNCH
           │     └── Brand: Company info (name, email, activity, city, links)   🟡 built, awaiting device and live-server testing
           ├── Change password                                    ✅
           ├── Language                                           ✅
+          ├── How a deal completes (opens the deal guide for the role)   🟡 built, awaiting device testing
           ├── Terms & Privacy (in-app web pages)                 ✅
           └── Delete my account (password-confirmed)             ✅
 ```
@@ -532,10 +547,12 @@ If someone closes the app halfway through, the next launch (or login) asks the s
 - **Forgot password:** phone → SMS code → new password → back to Login with the phone number already filled in.
 - **Suspension:** if the platform suspends an account, the app switches immediately to the Suspended screen, wherever the user was. From there they can contact support on WhatsApp (for account support only, never for deal actions), re-check whether the suspension has been lifted, log out, or delete their account.
 
-#### Journey F: The direct deal lifecycle 🟡 foundation built · 🔜 screens
-A brand asks one creator for specific work at the creator's fixed prices (public campaigns come later). The deal's states, the server's labels and the actions each side may take are now built into the app and tested; the screens follow (plan: offer builder, deal lists in a new "My deals" tab for both roles with a count of deals waiting on the user, deal page, drafts, publishing, ratings).
+#### Journey F: The direct deal lifecycle 🟡 foundation + offer builder + deal guide built · 🔜 deal screens
+A brand asks one creator for specific work at the creator's fixed prices (public campaigns come later). The deal's states, the server's labels and the actions each side may take are now built into the app and tested; the offer builder and the deal guide are built (awaiting device and live-server testing); the other screens follow (deal lists in a new "My deals" tab for both roles with a count of deals waiting on the user, deal page, drafts, publishing, ratings).
 
-1. **Offer.** From a creator's profile the brand picks services and quantities, fixed-price extras, the product to ship if any, and a brief with up to 5 files. The server prices it; the app never adds up totals. The brand signs and sends.
+1. **Offer (🟡 built).** On a creator's public profile the brand picks services and taps "Request a direct service". The builder first checks the brand may send (verified business, creator open to offers, no open offer with this creator yet, under the open-offer and draft limits); if not, a calm page says why, with the one step that fixes it and anything else that also blocks. Otherwise three steps under a navy header: close, the creator in the middle and the save state in words («saving…», «saved», «not saved»), and below them a step rail where the current step opens into a white capsule with its icon, name and position («2/3»), finished steps show a check and take the brand back when tapped, and coming steps show their own icon. Scrolling down tucks the top row away so only the rail stays; scrolling up brings it back, with a floating navy bar at the bottom carrying the live total and "Continue" (asleep until a service is picked): **services** (quantity up to 10 per service and 20 per offer, fixed-price add-ons, whether a product ships as a gift or a returnable sample, a deadline: as soon as possible, two weeks, a month or a number of days, or rush delivery when offered), **brief** (one-tap templates, talking points with a tone, don'ts, hashtags, mentions, discount code, tracking link, up to 5 images or PDFs; everything optional and part of the contract) and **review** (the deal as one clean business card: brand and creator side by side, what is bought with retention and revisions, the server's total, delivery time, product shipping and brief items, a note on where the money waits in escrow, and a link to the full contract terms; the creator's average views when known, the wallet: nothing is charged now, the amount is held only on acceptance; a short balance is a warning, never a block). The total always comes from the server, live as the brand builds. After the first step the offer saves itself as a draft (a brand coming back to the same creator is offered to continue it; drafts expire after 30 days untouched). The brand signs by pressing and holding the capsule at the bottom for a second until it fills. If the creator's prices changed meanwhile, a sheet shows old and new totals and the brand signs again or edits. Once sent, the ticket is stamped "Sent", the journey moves to the creator's reply with a live countdown, and a short wallet gets a one-tap prefilled top-up.
+   - **The deal journey** (on the review step and after sending): every station of the deal on one line (sign → reply → escrow → shipping, only with a product → creation → your review → publishing → complete), drawn up to "now" with a light running to the next station. Tapping a station or swiping the card shows its status, who acts (you, the creator or Sada), how long it takes (hours and days from the server's windows, never calendar dates), what happens, your part and what happens if it is late. Under reduced motion everything shows at rest.
+   - **The deal guide** ("How a deal completes", one page for brands and one for creators): a navy hero with a station map (tap jumps to that chapter) and three trust facts, then one chapter per station (who acts, how long, what happens, key points, what if late) and common questions. A bar slides in after the hero with "station n of N" and reading progress. The shipping chapter is shown, tagged "with a physical product", in the general guide (Settings) or a deal with a product, and left out entirely when opened from a digital deal.
 2. **Creator reply (48 hours).** Accept and sign, decline with a reason, or ask once for more time. A time request goes back to the brand, who approves (and pays) or lets the offer go.
 3. **Payment (24 hours).** If the brand's wallet is short, the deal waits for a top-up; a top-up pays waiting deals by itself. Paid money is held in escrow.
 4. **Product (only when there is one).** The brand ships and enters tracking; the creator confirms receipt or reports a problem with photos.
@@ -790,6 +807,9 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-14 | Offer builder header redesign (🟡 not yet device-tested): the brand now always sees which step they are on: a step rail where the current step is a white capsule with its icon, name and «2/3», done steps a teal check (tap to go back), coming steps their icon in a circle; the save state reads as words; scrolling down hides the close/creator row and keeps only the rail. Straight bottom edge. | 5.2, 5.3 (Journey F) |
+| 2026-10-14 | Offer builder polish (🟡 not yet device-tested): compact navy header that reaches the top edge with a thin three-part step bar; the bottom bar is now a floating navy card with the total (a dimmed $0.00 until a service is picked) and a "Continue" that wakes up only once something is picked; the review step drops the boarding pass for a clean business deal card (parties, deliverables, total, three key terms, escrow note, full contract link) and a slimmer press-and-hold capsule pinned to the bottom. Arabic plural forms (two, few, many) now read correctly on phones. | 5.2, 5.3 (Journey F) |
+| 2026-10-14 | Direct offers (🟡 awaiting device and live-server testing): brands start an offer from a creator's public profile ("Request a direct service" replaces "Save to shortlist" in the bottom bar; the heart still saves). New offer builder: a check before anything (with a calm blocked page and its fix), three steps (services, brief, review) under a navy ticket with live server pricing and quiet autosave of a draft, a boarding-pass review with contract, wallet hold and the deal journey, press-and-hold to sign, a price-changed sheet, continue-draft sheet, and a "Sent" page with the reply countdown and a prefilled top-up when the wallet is short. New "How a deal completes" guide for both roles (from the builder and Settings), with the shipping chapter only where a product can ship. | 5.2, 5.3 (Journey F) |
 | 2026-10-13 | Setting add-ons on a price: under Extras, each price offers the add-ons Sada allows for its service (rush delivery, extra revision, exclusivity, paid-ads usage, link in bio, pinned post), each switched on with its fixed fee and, where it has one, its duration (exclusivity's single 14-day term shown as text). The media kit's price details now show each add-on with its own icon and its duration (for example "Pinned post · 30 days") next to its fee. | 5.2 (My prices, media kit prices), 7.3 |
 | 2026-10-13 | Prices now understand the six add-ons of Sada's new add-on list (rush delivery, extra revision, exclusivity, paid-ads usage, link in bio, pinned post), all fixed fees with no percentage option. Wherever a price's add-ons are listed (media kit, Home), they follow that order, and a kind this app version doesn't know yet is skipped. Setting the new add-ons on a price comes next. | 5.2 (media kit prices) |
 | 2026-10-13 | Direct deals navigation: the deals tab now has its own pages for both roles (deals list, one deal, and strikes for creators), each a "coming soon" page for now. Deal notifications and inbox entries open that deal with the list underneath; "strikes cleared" opens the creator's strikes (brands land in the inbox). Links are checked against the approved list first. | 5.2, 5.3 (Journey F, notifications) |

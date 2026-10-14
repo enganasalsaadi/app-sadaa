@@ -367,7 +367,7 @@ const mapRating = (dto: DealRatingDto): DealRating => ({
   creator: mapRatingSide(dto.influencer),
 });
 
-const mapBrief = (dto: DealBriefDto): DealBrief => ({
+export const mapBrief = (dto: DealBriefDto): DealBrief => ({
   hashtags: dto.hashtags,
   mentions: dto.mentions,
   talkingPoints: dto.talking_points,

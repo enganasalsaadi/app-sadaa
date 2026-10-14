@@ -6,7 +6,8 @@ import type { DeviceSyncState } from './deviceSync';
 import { needsDeviceSync, parseDeviceSyncState } from './deviceSync';
 import type { RegisterDevicePayload } from './notificationTypes';
 
-async function getPersistentDeviceId(): Promise<string> {
+/** Stable per install; also the signer device on deal signatures (send, accept). */
+export async function getPersistentDeviceId(): Promise<string> {
   const saved = appStorage.get(StorageKeys.DEVICE_ID_STORAGE_KEY);
   if (saved) return saved;
   const deviceId = await getUniqueId();

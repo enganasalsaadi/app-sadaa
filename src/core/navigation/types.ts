@@ -199,9 +199,12 @@ export interface ExploreParams {
   focusSearch?: boolean;
 }
 
-/** Channel (validated by finance) and amount of the top-up being repeated. */
+/**
+ * Amount (and channel, validated by finance) the top-up starts with: a repeated top-up
+ * carries both, a deal's shortfall only the amount.
+ */
 export interface TopUpPrefill {
-  channel: string;
+  channel?: string;
   amount: Money;
 }
 
@@ -226,6 +229,30 @@ export type CreatorProfileSource = 'link' | 'app' | 'search';
 export type PublicStackParamList = {
   /** Public media kit (contract §17.4), from a `/c/{slug}` link or in-app. */
   MediaKitPublic: { slug: string; source: CreatorProfileSource };
+};
+
+/** Which side reads the deal guide (marketplace `DealRole`). */
+export type DealGuideRole = 'brand' | 'creator';
+
+/**
+ * `general`: from a profile or the FAQ, every chapter (shipping tagged «with a product»).
+ * `deal`: from inside a deal, shipping only when it has a product.
+ */
+export type DealGuideParams = {
+  role: DealGuideRole;
+  context: 'general' | 'deal';
+  hasProduct?: boolean;
+};
+
+/** Signed-in root screens of Direct Deals that sit above the tabs (marketplace). */
+export type DealFlowStackParamList = {
+  /**
+   * Brand offer builder for one creator; `draftId` reopens a saved draft, `rateCardIds`
+   * carries the services already picked on the media kit.
+   */
+  OfferBuilder: { slug: string; draftId?: string; rateCardIds?: string[] };
+  /** «How a deal completes», one page per role. */
+  DealGuide: DealGuideParams;
 };
 
 /**
@@ -321,6 +348,9 @@ export type WithdrawStackScreenProps<T extends keyof WithdrawStackParamList> = C
 
 export type PublicStackScreenProps<T extends keyof PublicStackParamList> =
   NativeStackScreenProps<PublicStackParamList, T>;
+
+export type DealFlowStackScreenProps<T extends keyof DealFlowStackParamList> =
+  NativeStackScreenProps<DealFlowStackParamList, T>;
 
 export type DevShowcaseStackScreenProps<T extends keyof DevShowcaseStackParamList> =
   NativeStackScreenProps<DevShowcaseStackParamList, T>;

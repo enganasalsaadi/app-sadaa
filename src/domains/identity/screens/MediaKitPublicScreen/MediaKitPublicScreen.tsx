@@ -26,10 +26,7 @@ const Footer = memo<{ vm: MediaKitPublicScreenModel }>(({ vm }) => {
           priceFrom={vm.priceFrom}
           total={vm.services.total}
           selectedCount={vm.services.selected.size}
-          isShortlisted={vm.isShortlisted}
-          saving={vm.savingShortlist}
-          onSave={vm.onSaveToShortlist}
-          onOpenShortlist={vm.onOpenShortlist}
+          onStartOffer={vm.onStartOffer}
         />
       );
     case 'none':

@@ -5,6 +5,8 @@
 export { BrandHomeNavigator } from './navigation/BrandHomeNavigator';
 export { CreatorHomeNavigator } from './navigation/CreatorHomeNavigator';
 export { BrandDealsNavigator, CreatorDealsNavigator } from './navigation/DealsNavigator';
+export { OfferBuilderScreen } from './screens/OfferBuilderScreen';
+export { DealGuideScreen } from './screens/DealGuideScreen';
 export {
   DealStatusPill,
   DealProgress,
