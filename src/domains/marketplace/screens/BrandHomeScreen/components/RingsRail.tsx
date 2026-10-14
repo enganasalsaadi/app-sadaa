@@ -1,8 +1,7 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Pressable, Text } from '@/shared/ui';
+import { Box, Pressable, Rail, Text } from '@/shared/ui';
 import type { ExploreCreator } from '../../../types/explore';
 import { CreatorMedia } from './CreatorMedia';
 
@@ -60,16 +59,12 @@ const Ring = memo<{ creator: ExploreCreator; onOpen: (creator: ExploreCreator) =
 
 /** New / recently viewed: story rings in a row, the lightest rail on the page. */
 const RingsRailComponent: React.FC<RingsRailProps> = ({ creators, onOpen }) => {
-  const { spacing } = useTheme();
-  const styles = useStyles(() => ({
-    content: { paddingHorizontal: spacing.xl, gap: spacing.sm },
-  }), [spacing]);
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.content}>
+    <Rail gap="sm">
       {creators.map(creator => (
         <Ring key={creator.slug} creator={creator} onOpen={onOpen} />
       ))}
-    </ScrollView>
+    </Rail>
   );
 };
 

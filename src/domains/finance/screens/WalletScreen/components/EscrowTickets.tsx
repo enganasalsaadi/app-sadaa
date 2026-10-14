@@ -1,10 +1,9 @@
 import React, { memo, useMemo } from 'react';
-import { ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { ShieldCheck } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
-import { Box, MoneyText, Notice, Skeleton, Text, useLayoutInView } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { Box, MoneyText, Notice, Rail, Skeleton, Text, useLayoutInView } from '@/shared/ui';
 import { EscrowFlowCard } from '../../../components';
 import type { EscrowFlowNode } from '../../../components';
 import type { WalletScreenModel } from '../hooks/useWalletScreen';
@@ -27,24 +26,11 @@ interface EscrowTicketsProps {
  */
 const EscrowTicketsComponent: React.FC<EscrowTicketsProps> = ({ vm }) => {
   const { t } = useTranslation();
-  const { colors, sizes, spacing, shadows, typography } = useTheme();
+  const { colors, sizes, spacing, typography } = useTheme();
   const { role, copy, escrows: section, hidden } = vm;
   const data = section.escrows;
   const incoming = role === 'creator';
   const rail = useLayoutInView({ track: true });
-
-  const styles = useStyles(
-    () => ({
-      // The scroll view clips: the vertical pad keeps the tickets' shadow whole.
-      rail: {
-        paddingHorizontal: spacing.xl,
-        paddingTop: spacing.xs,
-        paddingBottom: (shadows.card.shadowOffset?.height ?? 0) + (shadows.card.shadowRadius ?? 0),
-        gap: spacing.md,
-      },
-    }),
-    [shadows, spacing],
-  );
 
   const explainerNodes = useMemo<Nodes>(() => {
     const wallet: EscrowFlowNode = { key: 'wallet', kind: 'wallet', label: t('finance.wallet.escrowCard.walletNode') };
@@ -106,17 +92,11 @@ const EscrowTicketsComponent: React.FC<EscrowTicketsProps> = ({ vm }) => {
             </WalletSectionTitle>
           </Box>
           <Animated.View ref={rail.ref} onLayout={rail.onLayout}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.rail}
-            snapToInterval={TICKET_WIDTH + spacing.md}
-            decelerationRate="fast"
-          >
+          <Rail shadow="card" snapInterval={TICKET_WIDTH + spacing.md}>
             {data?.items.map(escrow => (
               <EscrowTicket key={escrow.id} escrow={escrow} incoming={incoming} hidden={hidden} active={rail.visible} />
             ))}
-          </ScrollView>
+          </Rail>
           </Animated.View>
         </Box>
       );

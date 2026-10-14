@@ -31,8 +31,8 @@ const ResumeSheetComponent: React.FC = () => {
   return (
     // Swiping it away keeps the draft: starting over deletes it, so that needs the button.
     <BottomSheet visible={showResume && phase === 'building'} onClose={onResume}>
-      <Box px="xl" pb="2xl" gap="lg">
-        <Box style={styles.mark}>
+      <Box px="xl" pb="2xl" gap="lg" align='center'>
+        <Box style={styles.mark} align="center" justify="center">
           <History size={sizes.icon.sm} color={colors.interactive.main} />
         </Box>
         <SheetTitle title={t('marketplace.offer.resume.title', { name: creatorName })} body={t('marketplace.offer.resume.body')} />
@@ -46,11 +46,12 @@ const ResumeSheetComponent: React.FC = () => {
         <Text variant="caption" color={colors.text.tertiary}>
           {t('marketplace.offer.resume.fine', { days: DEAL_DRAFT_TTL_DAYS })}
         </Text>
-        <Box gap="sm">
+        
+      </Box>
+      <Box gap="sm" px="xl">
           <CustomButton title={t('marketplace.offer.resume.resume')} size="lg" fullWidth onPress={onResume} />
           <CustomButton title={t('marketplace.offer.resume.fresh')} variant="ghost" fullWidth onPress={onStartFresh} />
         </Box>
-      </Box>
     </BottomSheet>
   );
 };

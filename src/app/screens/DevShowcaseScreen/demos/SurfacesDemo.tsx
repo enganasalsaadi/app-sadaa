@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Text, Card, Pressable } from '@/shared/ui';
+import { Box, Text, Card, Pressable, Rail } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
 import { formatMoney } from '@/core/i18n';
 import type { Money } from '@/core/money';
@@ -8,10 +8,11 @@ import { useDisclosure } from '../hooks/useDisclosure';
 
 /** Dev mock only — an escrow balance preview, not a real wallet value. */
 const MOCK_ESCROW_BALANCE: Money = { amount: 125000, currency: 'USD' };
+const RAIL_ITEMS = [1, 2, 3, 4];
 
 const SurfacesDemoComponent: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, sizes } = useTheme();
   const { visible: cardSelected, toggle: onToggleSelected } = useDisclosure();
 
   const formattedBalance = useMemo(
@@ -59,6 +60,19 @@ const SurfacesDemoComponent: React.FC = () => {
           {t('devShowcase.cards.pressableBody')}
         </Text>
       </Card>
+
+      <Box gap="sm">
+        <Text variant="label" color={colors.text.secondary}>
+          {t('devShowcase.cards.railTitle')}
+        </Text>
+        <Rail shadow="card" bleed>
+          {RAIL_ITEMS.map(item => (
+            <Card key={item} width={sizes.thumbnail.lg}>
+              <Text variant="bodyMedium">{t('devShowcase.cards.railItem', { count: item })}</Text>
+            </Card>
+          ))}
+        </Rail>
+      </Box>
 
       <Card bg={colors.money.soft} borderColor={colors.money.soft}>
         <Text variant="bodySmall" color={colors.money.text}>

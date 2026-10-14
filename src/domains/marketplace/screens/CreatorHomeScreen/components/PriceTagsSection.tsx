@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Plus, Tags } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
-import { Box, Card, CustomButton, Notice, SectionHeader, Skeleton, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { Box, Card, CustomButton, Notice, Rail, SectionHeader, Skeleton, Text } from '@/shared/ui';
 import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 import { PRICE_TAG_HEIGHT, PRICE_TAG_WIDTH, PriceTag } from './PriceTag';
 
@@ -59,10 +58,6 @@ const NoRates = memo<{ onAdd: () => void }>(({ onAdd }) => {
  */
 const PriceTagsSectionComponent: React.FC<PriceTagsSectionProps> = ({ rates, onEdit }) => {
   const { t } = useTranslation();
-  const styles = useStyles(({ spacing }) => ({
-    // Room for the tags' lean and shadow, and the rail runs to the screen edges.
-    rail: { paddingHorizontal: spacing.xl, paddingVertical: spacing.md, gap: spacing.md },
-  }));
   const hasRows = rates.rows.length > 0;
 
   const renderBody = () => {
@@ -93,13 +88,14 @@ const PriceTagsSectionComponent: React.FC<PriceTagsSectionProps> = ({ rates, onE
         </Box>
       );
     }
+    // Room for the tags' lean; their drop is drawn inside each tag.
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.rail}>
+      <Rail py="md">
         {rates.rows.map((row, index) => (
           <PriceTag key={row.key} row={row} index={index} onPress={onEdit} />
         ))}
         <PriceTag row={null} index={rates.rows.length} onPress={onEdit} />
-      </ScrollView>
+      </Rail>
     );
   };
 

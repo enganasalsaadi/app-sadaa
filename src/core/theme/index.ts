@@ -50,3 +50,5 @@ export type {
 } from './types';
 
 export type {ScreenCategory} from './utils/responsive';
+export {shadowBleed} from './utils/shadowBleed';
+export type {ShadowBleed} from './utils/shadowBleed';

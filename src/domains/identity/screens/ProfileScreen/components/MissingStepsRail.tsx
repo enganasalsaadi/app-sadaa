@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { ScrollView, type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Pressable, SectionHeader, Text } from '@/shared/ui';
+import { Box, Pressable, Rail, SectionHeader, Text } from '@/shared/ui';
 import type { ProfileStepTarget } from '../../../constants/profileSteps';
 import type { ProfileStep } from '../../../utils/profileOrbit';
 
@@ -115,11 +115,6 @@ interface MissingStepsRailProps {
 /** "Complete your profile": one ticket per missing step, most points first (bounded, ≤ 8). */
 const MissingStepsRailComponent: React.FC<MissingStepsRailProps> = ({ steps, onStepPress }) => {
   const { t } = useTranslation();
-  const styles = useStyles(({ spacing }) => ({
-    // Bottom room so the ticket shadow is not clipped by the scroll view.
-    content: { paddingHorizontal: spacing.xl, paddingBottom: spacing.sm, gap: spacing.md },
-  }));
-
   const summary = useMemo(() => {
     const points = steps.reduce((sum, step) => (step.state === 'review' ? sum : sum + step.points), 0);
     return t('account.profile.tickets.summary', {
@@ -133,11 +128,11 @@ const MissingStepsRailComponent: React.FC<MissingStepsRailProps> = ({ steps, onS
       <Box px="xl">
         <SectionHeader title={t('account.profile.completeTitle')} subtitle={summary} />
       </Box>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.content}>
+      <Rail>
         {steps.map(step => (
           <Ticket key={step.key} step={step} onPress={onStepPress} />
         ))}
-      </ScrollView>
+      </Rail>
     </Box>
   );
 };

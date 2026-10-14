@@ -1,10 +1,9 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MapPin } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
-import { Box, Pressable, SocialPlatformIcon, Text } from '@/shared/ui';
+import { Box, Pressable, Rail, SocialPlatformIcon, Text } from '@/shared/ui';
 import type { MediaKitServicesModel } from '../../hooks/useMediaKitServices';
 import type { ServiceGroup } from '../../utils/mediaKitShowcase';
 import { MediaKitRise } from './MediaKitRise';
@@ -89,10 +88,7 @@ const MediaKitRatesComponent: React.FC<MediaKitRatesProps> = ({ services, select
   const { colors, sizes } = useTheme();
   const { groups, activeGroup, onGroupChange, showAll, onShowAll, onShowByPlatform, view, fastestDays } = services;
   const styles = useStyles(
-    ({ spacing, radii, borderWidths, colors: palette }) => ({
-      // Edge to edge, so pills scroll under the screen edge instead of stopping at the gutter.
-      filter: { flexGrow: 0, marginHorizontal: -spacing.xl },
-      filterContent: { paddingHorizontal: spacing.xl, paddingVertical: spacing.xs, gap: spacing.sm },
+    ({ radii, borderWidths, colors: palette }) => ({
       more: {
         minHeight: sizes.button.md,
         borderRadius: radii.lg,
@@ -123,11 +119,11 @@ const MediaKitRatesComponent: React.FC<MediaKitRatesProps> = ({ services, select
       />
       {groups.length > 1 ? (
         <MediaKitRise>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.filter}
-            contentContainerStyle={styles.filterContent}
+          {/* Edge to edge, so pills scroll under the screen edge instead of stopping at the gutter. */}
+          <Rail
+            shadow="card"
+            gap="sm"
+            bleed
             accessibilityRole="tablist"
             accessibilityLabel={t('account.mediaKit.showcase.services.tabsA11y')}
           >
@@ -139,7 +135,7 @@ const MediaKitRatesComponent: React.FC<MediaKitRatesProps> = ({ services, select
                 onPress={onGroupChange}
               />
             ))}
-          </ScrollView>
+          </Rail>
         </MediaKitRise>
       ) : null}
       <Box key={viewKey} gap="md">

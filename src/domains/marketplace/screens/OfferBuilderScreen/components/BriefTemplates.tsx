@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import { ScrollView, type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CalendarHeart, Megaphone, MessageSquareQuote, Rocket, TicketPercent, Wand2, type LucideIcon } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
-import { Box, Pressable, Text } from '@/shared/ui';
+import { Box, Pressable, Rail, Text } from '@/shared/ui';
 import { BRIEF_TEMPLATES, type BriefTemplateKey } from '../hooks/useOfferBrief';
 
 const TEMPLATE = {
@@ -31,9 +31,7 @@ const BriefTemplatesComponent: React.FC<BriefTemplatesProps> = ({ onApply }) => 
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const styles = useStyles(
-    ({ radii, spacing, shadows }): Record<'bleed' | 'shelf' | 'card' | 'mark', ViewStyle> => ({
-      bleed: { marginHorizontal: -spacing.xl },
-      shelf: { gap: spacing.sm, paddingHorizontal: spacing.xl, paddingVertical: spacing.xs },
+    ({ radii, spacing, shadows }): Record<'card' | 'mark', ViewStyle> => ({
       card: {
         width: sizes.thumbnail.lg + spacing['2xl'],
         padding: spacing.md,
@@ -63,8 +61,7 @@ const BriefTemplatesComponent: React.FC<BriefTemplatesProps> = ({ onApply }) => 
         </Text>
       </Box>
       {/* Bleeds to the screen edges like a shelf; the body's gutter is undone here. */}
-      <Box style={styles.bleed}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.shelf}>
+      <Rail shadow="card" gap="sm" bleed>
           {BRIEF_TEMPLATES.map(key => {
             const { icon: Icon, title, body } = TEMPLATE[key];
             return (
@@ -88,8 +85,7 @@ const BriefTemplatesComponent: React.FC<BriefTemplatesProps> = ({ onApply }) => 
               </Pressable>
             );
           })}
-        </ScrollView>
-      </Box>
+      </Rail>
     </Box>
   );
 };

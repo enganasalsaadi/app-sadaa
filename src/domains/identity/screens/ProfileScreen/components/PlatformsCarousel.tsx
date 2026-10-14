@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { ScrollView, type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
 import { AtSign, Check, Plus } from 'lucide-react-native';
@@ -8,7 +8,7 @@ import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import type { PlatformResource } from '@/domains/auth';
 import { isSocialPlatform } from '@/shared/utils';
-import { Box, GradientSurface, Pressable, SectionHeader, Skeleton, SocialPlatformIcon, StatusPill, Text } from '@/shared/ui';
+import { Box, GradientSurface, Pressable, Rail, SectionHeader, Skeleton, SocialPlatformIcon, StatusPill, Text } from '@/shared/ui';
 import { PLATFORM_STATUS_PILL } from '../../../constants/platformStatus';
 
 const CARD_WIDTH = moderateScale(216);
@@ -146,8 +146,7 @@ const PlatformsCarouselComponent: React.FC<PlatformsCarouselProps> = ({ platform
   const { t } = useTranslation();
   const { colors, sizes, spacing } = useTheme();
   const styles = useStyles(
-    ({ spacing: space, borderWidths }): Record<'content' | 'add', ViewStyle> => ({
-      content: { paddingHorizontal: space.xl, paddingBottom: space.sm, gap: space.md },
+    ({ borderWidths }): Record<'add', ViewStyle> => ({
       add: {
         width: ADD_WIDTH,
         height: CARD_HEIGHT,
@@ -169,13 +168,7 @@ const PlatformsCarouselComponent: React.FC<PlatformsCarouselProps> = ({ platform
           action={{ label: t('account.profile.platforms.manage'), onPress: onOpen }}
         />
       </Box>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToInterval={CARD_WIDTH + spacing.md}
-        contentContainerStyle={styles.content}
-      >
+      <Rail shadow="card" snapInterval={CARD_WIDTH + spacing.md}>
         {isLoading
           ? SKELETON_CARDS.map(key => <Skeleton key={key} width={CARD_WIDTH} height={CARD_HEIGHT} borderRadius="xl" />)
           : sorted.map(platform => <PlatformCard key={platform.id} platform={platform} onPress={onOpen} />)}
@@ -197,7 +190,7 @@ const PlatformsCarouselComponent: React.FC<PlatformsCarouselProps> = ({ platform
             {t('account.profile.platforms.add')}
           </Text>
         </Pressable>
-      </ScrollView>
+      </Rail>
     </Box>
   );
 };

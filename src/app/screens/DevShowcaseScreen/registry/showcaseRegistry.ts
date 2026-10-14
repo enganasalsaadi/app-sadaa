@@ -96,7 +96,7 @@ export const SHOWCASE_ENTRIES = {
   surfaces: {
     category: 'foundations',
     titleKey: 'devShowcase.sections.cards',
-    covers: ['Box', 'Card', 'Pressable'],
+    covers: ['Box', 'Card', 'Pressable', 'Rail'],
   },
   brandLogo: {
     category: 'foundations',

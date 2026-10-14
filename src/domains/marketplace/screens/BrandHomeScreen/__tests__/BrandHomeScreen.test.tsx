@@ -112,6 +112,7 @@ jest.mock('@/shared/ui', () => {
     MoneyText: stub('MoneyText'),
     Notice: stub('Notice'),
     Pressable: stub('Pressable'),
+    Rail: stub('Rail'),
     Skeleton: stub('Skeleton'),
     SocialPlatformIcon: stub('SocialPlatformIcon'),
     StaggerIn,

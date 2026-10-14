@@ -1,9 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, MoneyText, Pressable, Text, TierBadge } from '@/shared/ui';
+import { Box, MoneyText, Pressable, Rail, Text, TierBadge } from '@/shared/ui';
 import { PRICE_LOCK_FALLBACK, PRICE_LOCK_LABEL } from '../../../constants/priceLock';
 import type { ExploreCreator } from '../../../types/explore';
 import { followersOf, nicheCityOf } from '../../../utils/creatorText';
@@ -117,29 +116,13 @@ const Tile = memo<{ creator: ExploreCreator; onOpen: (creator: ExploreCreator) =
  * niche · city, and a two-figure strip (followers on their platform, starting price).
  */
 const VerifiedTilesComponent: React.FC<VerifiedTilesProps> = ({ creators, onOpen }) => {
-  const { spacing, shadows } = useTheme();
-  const styles = useStyles(() => ({
-    // The scroll view clips: the bottom pad keeps the tiles' shadow whole.
-    content: {
-      paddingHorizontal: spacing.xl,
-      paddingTop: spacing.xs,
-      paddingBottom: (shadows.card.shadowOffset?.height ?? 0) + (shadows.card.shadowRadius ?? 0),
-      gap: spacing.md,
-    },
-  }), [spacing, shadows]);
-
+  const { spacing } = useTheme();
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.content}
-      snapToInterval={TILE_WIDTH + spacing.md}
-      decelerationRate="fast"
-    >
+    <Rail shadow="card" snapInterval={TILE_WIDTH + spacing.md}>
       {creators.map(creator => (
         <Tile key={creator.slug} creator={creator} onOpen={onOpen} />
       ))}
-    </ScrollView>
+    </Rail>
   );
 };
 

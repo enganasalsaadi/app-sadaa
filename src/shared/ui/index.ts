@@ -50,6 +50,8 @@ export { ChipGroup } from './ChipGroup';
 export type { ChipGroupItem, ChipGroupProps } from './ChipGroup';
 export { ChipRow } from './ChipRow';
 export type { ChipRowProps } from './ChipRow';
+export { Rail } from './Rail';
+export type { RailProps } from './Rail';
 export { ToastCard, toastConfig } from './ToastCard';
 export type { ToastCardProps, ToastType } from './ToastCard';
 export { SelectionModal } from './SelectionModal';

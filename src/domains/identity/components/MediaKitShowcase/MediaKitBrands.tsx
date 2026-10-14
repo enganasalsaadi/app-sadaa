@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { FlatList, useWindowDimensions, type ListRenderItem } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck } from 'lucide-react-native';
-import { moderateScale, useStyles, useTheme } from '@/core/theme';
+import { moderateScale, shadowBleed, useStyles, useTheme } from '@/core/theme';
 import { Box, Image, Text } from '@/shared/ui';
 import type { MediaKitWorkedWith, MediaKitWorkedWithBrand } from '../../types/mediaKit';
 import { MediaKitSectionTitle } from './MediaKitSectionTitle';
@@ -84,16 +84,14 @@ const MediaKitBrandsComponent: React.FC<{ workedWith: MediaKitWorkedWith }> = ({
   const { spacing, shadows } = useTheme();
   const cardWidth = Math.round(width * CARD_SHARE);
   const styles = useStyles(
-    () => ({
-      list: { flexGrow: 0, marginHorizontal: -spacing.xl },
-      // The list clips: the pads keep the cards' shadow whole.
-      content: {
-        paddingHorizontal: spacing.xl,
-        paddingTop: spacing.xs,
-        paddingBottom: (shadows.card.shadowOffset?.height ?? 0) + (shadows.card.shadowRadius ?? 0),
-        gap: spacing.md,
-      },
-    }),
+    () => {
+      // The list clips: room inside for the cards' shadow, taken back off its margins.
+      const room = shadowBleed(shadows.card);
+      return {
+        list: { flexGrow: 0, marginHorizontal: -spacing.xl, marginTop: -room.top, marginBottom: -room.bottom },
+        content: { paddingHorizontal: spacing.xl, paddingTop: room.top, paddingBottom: room.bottom, gap: spacing.md },
+      };
+    },
     [spacing, shadows],
   );
   const renderItem = useCallback<ListRenderItem<MediaKitWorkedWithBrand>>(

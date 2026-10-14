@@ -1,9 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
-import { Pressable, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { Pressable, Rail, Text } from '@/shared/ui';
 import type { BrandHomeScreenModel } from '../hooks/useBrandHomeScreen';
 
 type Category = BrandHomeScreenModel['categories'][number];
@@ -59,26 +58,14 @@ const CategoryChipsComponent: React.FC<CategoryChipsProps> = ({
   onBrowseAll,
 }) => {
   const { t } = useTranslation();
-  const { spacing } = useTheme();
-  const styles = useStyles(() => ({
-    // `flexGrow: 0` keeps the row at its height instead of floating mid-screen.
-    row: { flexGrow: 0 },
-    content: { paddingHorizontal: spacing.xl, gap: spacing.sm },
-  }), [spacing]);
-
   if (categories.length === 0) return null;
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.row}
-      contentContainerStyle={styles.content}
-    >
+    <Rail gap="sm">
       <ChipButton label={t('marketplace.brandHome.allCategories')} filled onPress={onBrowseAll} />
       {categories.map(category => (
         <CategoryChip key={category.value} category={category} onOpen={onOpenCategory} />
       ))}
-    </ScrollView>
+    </Rail>
   );
 };
 

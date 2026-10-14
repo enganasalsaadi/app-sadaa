@@ -37,7 +37,11 @@ export const motion = {
     signSwing: 3400,
     /** Deal journey: one run of the comet from the current station to the next. */
     comet: 2600,
+    /** Offer service card: one leg of the faint platform glyphs' drift (a picked card feels alive). */
+    decorDrift: 8000,
   },
+  /** One heart floating up off a service card the moment it is picked. */
+  pickBurst: 900,
   spring: {
     damping: 18,
     stiffness: 180,
@@ -57,6 +61,9 @@ export const opacity = {
   disabled: 0.5,
   pressed: 0.7,
   pressedSubtle: 0.85,
+  /** Background glyphs behind content: felt, never read. `decorActive` on a selected surface. */
+  decor: 0.09,
+  decorActive: 0.14,
 } as const;
 
 /** Lucide `strokeWidth` steps; icons never pick their own. */
