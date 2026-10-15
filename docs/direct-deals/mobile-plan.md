@@ -96,15 +96,17 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 
 ## P3 — M3 القوائم والتفاصيل (الدوران)
 
-- **P3.0 (M)** تصميم: قائمة + تفاصيل (هيرو الحالة + العداد + «الخطوة التالية») → موافقة.
-- **P3.1 (M)** `BrandDeals` + `CreatorDeals` (SuperList، تبويبات مجموعات الحالة، مسودات للبراند فقط).
-- **P3.2 (M)** `BrandDealDetail` + `CreatorDealDetail`: هيكل بفتحات أقسام (Hero / Items / Shipping / Upsells / Dispute / Rating). الأقسام تُملأ في المراحل التالية.
-- **P3.3 (S)** `Timeline` بارز داخل التفاصيل: `DealJourney` من P2.4 يُغذّى من حالة الصفقة (المحطة الحالية + `due_at`) ومن `getTimeline` (وقت كل محطة منجزة، الفاعل، الملاحظة/السبب؛ صفوف الملاحظات `from==to` كأحداث داخل بطاقة محطتها) — شفافية = ثقة. + زر دليل الصفقة + شاشة `Contract`.
+- ✅ **P3.0 (M)** (2026-10-14؛ `design-previews/deals.html` قسم «المعتمد» M1–M4) تصميم: قائمة A «لوحة الدور» + هيرو «المدار» B في التفاصيل للدورين؛ خلفية الهيرو `brandGlow` + parallax مثل المحفظة والبروفايل (المحتوى يختفي تحت الجسم عند التمرير).
+- ✅ **P3.1 (M)** (2026-10-14؛ `BrandDealsScreen` / `CreatorDealsScreen` → `DealsBoard`، `useDealsList`، `constants/dealList`) `BrandDeals` + `CreatorDeals` (SuperList، تبويبات مجموعات الحالة: علامة نشطة/مسودات/منتهية، مؤثر جديدة/جارية/منتهية — استعلام لكل تبويب بـ `status[]` وعدّاده من `meta.total`؛ كومة «دورك الآن» `DealTurnStack` محسوبة محلياً من `dealNextStep` (تلميح UX)؛ تذكرة `DealTicket`: `DealTimerBar` (يمتلئ بما مضى من المهلة، كهرماني تحت 12 س، خطوط عند التوقف) + `DealStepper` (ضغط/سحب → فقاعة + haptic) + سطر «التالي»). شارة الإنذار مؤجلة لـ P8.1.
+- ✅ **P3.2 (M)** (2026-10-14؛ `BrandDealDetailScreen` / `CreatorDealDetailScreen` → `DealDetailView` + `useDealDetail`) `BrandDealDetail` + `CreatorDealDetail`: هيرو `DealOrbit` (Skia: قوس حتى الآن، حلقة المهلة، مذنّب يتوقف خارج الشاشة/مع تقليل الحركة، نزاع أحمر، متوقفة رمادية بـ ✕) + فتحات أقسام `DealDetailSectionKey` (`next` / `stage` / `items` / `brief`؛ Shipping P5 · Upsells P9 · Dispute P8 · Rating P10 تُضاف كحالات). الشريط السفلي مخفي حتى P4.
+- ✅ **P3.3 (S)** (2026-10-14؛ `dealStation` / `groupTimelineByStation` / `useDealStationCopy` بنص المؤثر الخاص / `DealContractScreen` + `parseContractDocument`) `Timeline` بارز داخل التفاصيل: `DealJourney` من P2.4 يُغذّى من حالة الصفقة (المحطة الحالية + `due_at`) ومن `getTimeline` (وقت كل محطة منجزة، الفاعل، الملاحظة/السبب؛ صفوف الملاحظات `from==to` كأحداث داخل بطاقة محطتها) — شفافية = ثقة. + زر دليل الصفقة + شاشة `Contract`.
 
 ## P4 — M4 الرد والدفع
 
-- **P4.1 (M)** المؤثر: قبول (ورقة توقيع «أوافق وألتزم») / اعتذار (4 أسباب، `other` يتطلب نص) / طلب تمديد.
-- **P4.2 (M)** البراند: رد على التمديد، تمويل يدوي، عجز → شاشات TopUp، سحب العرض. `deal_deadline_passed` → «انتهى العرض» + refetch.
+- ✅ **P4.0** (2026-10-15؛ `design-previews/deal-respond.html`) تصميم «الفتيل»: شريط قرار سفلي بفتيل المهلة على حافته (كهرماني تحت 12 س) + **اسحب لتوقّع** (اتجاه B) لكل توقيع + قسيمة الالتزامات المثقوبة؛ تجميد المحفظة → زر الدعم؛ القبول يعرض قيمة الصفقة كما هي.
+  - **إعادة تصميم الشريط** (2026-10-15؛ `design-previews/deal-dock.html`، اتجاه B «مسطرة الساعات»): شريط ممتد ملتصق بالأسفل (`Layout footerBehavior="docked"`) = لوح وقت (وجه الطرف الآخر + نقطة حيّة، العدّاد خانات، مسطرة شَرطة/ساعة، كهرماني تحت 12 س) فوق لوح إجراءات؛ السحب زر مؤطّر + «لم يُخصم شيء بعد». **السحب للتوقيع استُبدل بالضغط المطوّل** (`DealHoldToSign`، نفس توقيع عرض البراند) لأنه لا يعمل جيداً على أندرويد.
+- ✅ **P4.1 (M)** (2026-10-15؛ `DealRespondDock` + `DealSignSheet` / `DealDeclineSheet` / `DealExtensionSheet` + `DealDayRuler` + `DealHoldToSign` على `useDealRespond` داخل `useDealDetail`) المؤثر: قبول (ورقة توقيع «أوافق وألتزم») / اعتذار (4 أسباب، `other` يتطلب نص) / طلب تمديد. (`delivery_days` = المجموع الجديد: الحالي+1…+14 من `deliveryHours` (`dealExtensionRange`)، السبب 3–500؛ القبول/التمديد يرسلان `device_id`؛ رسالة القبول حسب `meta.funding.funded`؛ زر «مهلة» يختفي إن وُجد `extension`.)
+- ✅ **P4.2 (M)** (2026-10-15؛ `DealExtensionRequestCard` + `DealFundingCard` في فتحة `next` + `DealReasonSheet`) البراند: رد على التمديد، تمويل يدوي، عجز → شاشات TopUp، سحب العرض. `deal_deadline_passed` → «انتهى العرض» + refetch. (`useDealAction` يأخذ `conflictCopy` لنص التطبيق؛ idempotency لـ accept/extension/extension approve/fund/withdraw؛ `fund` يفشل بـ `422 insufficient_funds` (toast من baseQuery) أو `409 wallet_frozen` → refetch لـ `funding` الجديد؛ `dealFundingState` = frozen → الدعم · short → TopUp بـ `funding.missing` (إن سمح `top_up_wallet`) · ready → «موّل الآن»؛ السحب متاح في `pending_influencer` + `awaiting_payment` (في التمديد «ارفض» يلغي)، سبب اختياري ≤500؛ إخفاء شريط التبويبات في صفحة الصفقة.)
 
 ## P6 — M6 المسودات والمراجعة
 - **P6.1 (M)** المؤثر `DraftUpload` لكل بند: ملفات 1–10 + كابشن ≤2200 + تقدم الرفع.

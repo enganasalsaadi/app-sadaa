@@ -33,7 +33,7 @@ Runs while native splash (symbol only) stays up:
 - `Main` = bottom tabs (`app/navigation/MainTabs`; `FloatingBottomBar` reads `title`/`tabBarIcon` options), 5 per role:
   - brand: Explore · Campaigns · Messages · Wallet · Account
   - creator: Home · Deals · Messages · Wallet · Profile
-- Real tabs: `HomeTab` (marketplace) · `DealsTab` (marketplace: `BrandDealsNavigator` / `CreatorDealsNavigator`, `DealsStackParamList` `Deals` / `DealDetail {id}` / `Strikes` creator-only; `DealsComingSoonScreen` per route until P3) · `WalletTab` (finance: `CreatorWalletNavigator` / `BrandWalletNavigator`, role picked here) · `SettingsTab` (identity). `MessagesTab` = `ComingSoonTabScreen` until built.
+- Real tabs: `HomeTab` (marketplace) · `DealsTab` (marketplace: `BrandDealsNavigator` / `CreatorDealsNavigator`, `DealsStackParamList` `Deals` / `DealDetail {id}` / `DealContract {id}` / `Strikes` creator-only, still `DealsComingSoonScreen` until P8.1) · `WalletTab` (finance: `CreatorWalletNavigator` / `BrandWalletNavigator`, role picked here) · `SettingsTab` (identity). `MessagesTab` = `ComingSoonTabScreen` until built.
 - Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
 
 ## App.tsx

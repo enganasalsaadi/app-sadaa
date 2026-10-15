@@ -295,6 +295,25 @@ export interface ThemeColors {
     /** Soft shadow drawn under a price tag. */
     tagShadow: string;
   };
+  /**
+   * Deals (approved 2026-10-14): the journey orbit on the navy detail hero and the navy
+   * «your turn» passes stacked behind the front one in the list.
+   */
+  deal: {
+    /** Full journey ring and the arc drawn from the first station up to now. */
+    orbitTrack: string;
+    orbitArc: string;
+    /** Inner ring: how much of the current station's window has gone. */
+    windowTrack: string;
+    windowFill: string;
+    /** Stations not reached yet, and every ring of a stopped deal. */
+    stationIdle: string;
+    stopped: string;
+    /** The comet heading for the next station. */
+    comet: string;
+    /** The two passes peeking behind the front «your turn» pass, nearest first. */
+    passBehind: string[][];
+  };
 }
 
 const NAVY = '#1C3349';
@@ -367,6 +386,15 @@ const PROFILE_ORBIT = {
   spotlightSeat: 'rgba(255, 255, 255, 0.1)',
 };
 
+const DEAL_ORBIT = {
+  orbitTrack: 'rgba(255, 255, 255, 0.14)',
+  orbitArc: '#6FC0CF',
+  windowTrack: 'rgba(255, 255, 255, 0.08)',
+  windowFill: '#9FD3DC',
+  stationIdle: 'rgba(255, 255, 255, 0.4)',
+  stopped: 'rgba(255, 255, 255, 0.3)',
+  comet: WHITE,
+};
 const STOREFRONT_SHEEN = [
   'rgba(159, 211, 220, 0)',
   'rgba(159, 211, 220, 0.5)',
@@ -571,6 +599,13 @@ export const lightColors: ThemeColors = {
     audience: [NAVY, '#397D8C', '#6FC0CF', '#9FD3DC', '#2D6B78', '#C9D6E0'],
     tagShadow: 'rgba(28, 51, 73, 0.14)',
   },
+  deal: {
+    ...DEAL_ORBIT,
+    passBehind: [
+      ['#27506A', '#397D8C'],
+      ['#397D8C', '#6FC0CF'],
+    ],
+  },
 };
 
 export const darkColors: ThemeColors = {
@@ -732,6 +767,13 @@ export const darkColors: ThemeColors = {
     string: 'rgba(201, 214, 224, 0.45)',
     audience: ['#6FC0CF', '#397D8C', '#2D6B78', '#9FD3DC', '#1F4E5A', '#C9D6E0'],
     tagShadow: 'rgba(0, 0, 0, 0.45)',
+  },
+  deal: {
+    ...DEAL_ORBIT,
+    passBehind: [
+      [NAVY, '#1F4A5C'],
+      ['#1F4A5C', '#2D6B78'],
+    ],
   },
 };
 

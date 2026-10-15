@@ -12,19 +12,19 @@ Catalog of what exists — reuse for behaviour, never as the look of a new desig
 
 ## Primitives & Layout
 
-- `Box Text Pressable Card Image`. `Card` = borderless + soft navy `card` shadow + press spring by default (`border.card` hairline in dark).
+- `Box Text Pressable Card Image`. `Pressable scaleOnPress` hands `style` flex / alignSelf / position / offsets / zIndex to its scale wrapper (so `CustomButton style={{flex: 1}}` really splits a row). `Card` = borderless + soft navy `card` shadow + press spring by default (`border.card` hairline in dark).
 - `Layout`:
   - `mode` scroll|static · `surface` · `padding` · `header` config → `ScreenHeader`
   - `headerBehavior` fixed|hideOnScroll|collapse|overlay
   - `hero`: edge-to-edge; header fades in once hero scrolled away. `heroBackdrop="brand"` = navy gradient behind transparent hero, stretches on pull-down, body slides over as rounded sheet. `"brandGlow"` = darker live gradient + drifting `GlowOrbs` — the one tab-root hero (creator Home, Wallet, Profile; pair with `parallax`, hero `pb="4xl"` clears the sheet). `"brandOpen"` = live gradient, hero draws its own edge (media kit); keep the hero `static`. `heroBehavior="parallax"`.
   - `sticky` (filter row pinned under header)
-  - `footer={<LayoutFooter primary secondary tertiary top />}` (`secondary.variant` ghost|secondary; `tertiary` ghost), pinned above keyboard; `footerBehavior` divider|elevate|reveal (reveal = floats over the body, hidden until the hero is partly scrolled away)
+  - `footer={<LayoutFooter primary secondary tertiary top />}` (`secondary.variant` ghost|secondary; `tertiary` ghost), pinned above keyboard; `footerBehavior` divider|elevate|reveal|docked (reveal = floats over the body, hidden until the hero is partly scrolled away; docked = always raised surface + hairline + lift, insets included)
   - `overlay` (FAB slot). Behaviours scroll-mode only. Safe-area edges + status bar automatic (inside `HeroSheet` too). Logic `resolveLayout`, scroll motion `useHeaderMotion`.
 - `ScreenHeader`: `variant` solid|brand|transparent · `backIcon` back|close (✕ on a flow's first step) · `actions` ≤ 2 icons with `badge` (`glass` = glass tile on navy bars) · `leading` = start-aligned content instead of centred title (bar aligned to `xl` gutter, fades in with overlay header; Home/Profile pinned identity).
 
 ## Controls & building blocks
 
-- `CustomButton` (`variant` incl. `onBrand` + `glass` for navy) · `CustomInput` (`suffix`, `showCount` = text area) · `PhoneInput` (libphonenumber, E.164) · `BottomSheet` (`onDismissed`: fires once gone; open native picker only then on iOS) · `SelectionModal` · `DateRangePicker` (`range="past"` for statements) · `GalleryModal`.
+- `CustomButton` (`variant` incl. `onBrand` + `glass` for navy) · `CustomInput` (`suffix`, `showCount` = text area) · `PhoneInput` (libphonenumber, E.164) · `BottomSheet` (`onDismissed`: fires once gone; open native picker only then on iOS; `header` / `footer` = pinned white slots with hairlines around the scrolling middle, pair with `bg={colors.layout.base}` for a sunken body) · `SelectionModal` · `DateRangePicker` (`range="past"` for statements) · `GalleryModal`.
 - `SuperList` (`emptyDescription` / `emptyAction` for "Clear filters") · `FloatingBottomBar`.
 - `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`variant` outline|tile — tile = discovery shortcut pill; `icon`, `dropdown`, `onClear` = filter chip) · `ChipRow` (filter row pinned under header, above `SuperList`) · `Rail` (every other sideways row: `shadow` token → room inside + same amount off its margins, so item shadows aren't clipped and layout doesn't move; `bleed` undoes the parent `xl` gutter; `snapInterval`; `py` = layout room for leaning items). Never hand-roll a horizontal `ScrollView` (it clips shadows; default `flexGrow:1` floats it mid-screen). A `FlatList`/`SuperList` rail → same math via `shadowBleed(shadows.x)` (`@/core/theme`) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
 - `ListRow`/`ListGroup` (settings/menu rows; `selected` = single-choice row with radio mark) · `SectionHeader` `Divider` `KeyValueRow` (summaries, money emphasis).

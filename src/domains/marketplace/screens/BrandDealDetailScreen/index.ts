@@ -1,0 +1,1 @@
+export { BrandDealDetailScreen } from './BrandDealDetailScreen';

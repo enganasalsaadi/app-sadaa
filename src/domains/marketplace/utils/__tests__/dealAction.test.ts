@@ -41,7 +41,7 @@ describe('settleDealAction', () => {
     expect(notify).not.toHaveBeenCalled();
   });
 
-  it('shows the server message on a conflict', async () => {
+  it('reports a conflict', async () => {
     const notify = jest.fn();
     const outcome = await settleDealAction(
       async () => {
@@ -51,7 +51,9 @@ describe('settleDealAction', () => {
       notify,
     );
 
-    expect(notify).toHaveBeenCalledWith('The offer has closed');
+    expect(notify).toHaveBeenCalledWith(
+      expect.objectContaining({ code: 'deal_deadline_passed', message: 'The offer has closed' }),
+    );
     expect(outcome).toMatchObject({ ok: false, conflict: true, error: { code: 'deal_deadline_passed' } });
   });
 

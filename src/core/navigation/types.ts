@@ -147,6 +147,8 @@ export type DealsStackParamList = {
   /** Brand: needs action / active / drafts / closed · creator: new offers / active / closed. */
   Deals: undefined;
   DealDetail: { id: string };
+  /** The deal's signed contract and its addenda. */
+  DealContract: { id: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
 };

@@ -29,6 +29,14 @@ export const DEFAULT_DEAL_WINDOWS: DealWindows = {
 
 /** The creator's one deadline extension goes at most this far (`deals.limits.max_extension_days`). */
 export const DEAL_MAX_EXTENSION_DAYS = 14;
+/** How long the brand has to answer that extension (`deals.sla_hours.extension_answer`). */
+export const DEAL_EXTENSION_ANSWER_HOURS = 48;
+
+/** Server rules for the respond forms (`DeclineDealRequest`, `RequestDealExtensionRequest`, `WithdrawDealRequest`). */
+export const DEAL_RESPOND_LIMITS = {
+  maxNoteLength: 500,
+  minExtensionReasonLength: 3,
+} as const;
 /** How long an untouched draft lives server-side (`deals.limits.draft_ttl_days`). */
 export const DEAL_DRAFT_TTL_DAYS = 30;
 /** How many times the brand may ask for a corrected live link. */

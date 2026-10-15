@@ -1,6 +1,8 @@
 const Z_INDICES = {
   hide: -1,
   base: 0,
+  // Above siblings drawn earlier in the same layer (labels over a canvas).
+  raised: 1,
   dropdown: 10,
   sticky: 20,
   header: 30,

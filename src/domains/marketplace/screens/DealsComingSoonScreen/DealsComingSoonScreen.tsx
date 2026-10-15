@@ -8,8 +8,6 @@ import type { DealRole } from '../../types';
 interface DealsComingSoonScreenProps {
   /** Titles the screen like the role's tab. */
   role: DealRole;
-  /** The tab's root has nowhere to go back to. */
-  isRoot?: boolean;
 }
 
 const TAB_TITLE_KEY = {
@@ -18,17 +16,14 @@ const TAB_TITLE_KEY = {
 } as const satisfies Record<DealRole, ParseKeys>;
 
 /**
- * Stands in for every `DealsTab` route until its screen lands (direct deals P3+), so deal
- * pushes already open the tab with the list underneath instead of a dead navigate.
+ * Stands in for a `DealsTab` route whose screen hasn't landed yet (creator strikes, P8.1), so its
+ * pushes and links already open the tab instead of a dead navigate.
  */
-const DealsComingSoonScreenComponent: React.FC<DealsComingSoonScreenProps> = ({
-  role,
-  isRoot = false,
-}) => {
+const DealsComingSoonScreenComponent: React.FC<DealsComingSoonScreenProps> = ({ role }) => {
   const { t } = useTranslation();
 
   return (
-    <Layout mode="static" header={{ title: t(TAB_TITLE_KEY[role]), showBackButton: !isRoot }}>
+    <Layout mode="static" header={{ title: t(TAB_TITLE_KEY[role]) }}>
       <EmptyState
         icon={Briefcase}
         title={t('tabs.comingSoon.title')}

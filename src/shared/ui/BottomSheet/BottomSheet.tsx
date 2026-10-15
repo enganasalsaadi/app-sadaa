@@ -29,6 +29,13 @@ interface BottomSheetProps {
   fullScreen?: boolean;
   muted?: boolean;
   /**
+   * Pinned over the content on the sheet's own surface, with the handle and a hairline under it.
+   * With `bg` on the page color this reads as a white header over a sunken body.
+   */
+  header?: React.ReactNode;
+  /** Pinned under the content on the sheet's surface (the sheet's CTA), hairline above, insets included. */
+  footer?: React.ReactNode;
+  /**
    * After the sheet has fully left the screen. Open the next native screen (an image or
    * file picker) from here: iOS can't present one while a modal is still dismissing.
    */
@@ -45,6 +52,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   bg,
   fullScreen = false,
   muted = false,
+  header,
+  footer,
   onDismissed,
 }) => {
   const { t } = useTranslation();
@@ -117,10 +126,22 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     [sheetAnim],
   );
 
-  const backgroundColor = bg ?? colors.navigation.bottomSheet.background;
+  const surface = colors.navigation.bottomSheet.background;
+  const backgroundColor = bg ?? surface;
   // Android draws the gesture bar over the sheet, so pad a little extra.
   const bottomSpacer =
     insets.bottom + (Platform.OS === 'android' ? spacing.xl : 0);
+
+  const handle = showHandle ? (
+    <Box align="center" pt="md" pb="sm">
+      <Box
+        width={sizes.sheetHandle.width}
+        height={sizes.sheetHandle.height}
+        borderRadius="full"
+        bg={colors.navigation.bottomSheet.handle}
+      />
+    </Box>
+  ) : null;
 
   return (
     <Modal
@@ -154,22 +175,35 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             borderTopEndRadius="xl"
             overflow="hidden"
           >
-            {showHandle && (
-              <Box align="center" pt="md" pb="sm">
-                <Box
-                  width={sizes.sheetHandle.width}
-                  height={sizes.sheetHandle.height}
-                  borderRadius="full"
-                  bg={colors.navigation.bottomSheet.handle}
-                />
+            {header ? (
+              <Box
+                bg={surface}
+                borderBottomWidth="hairline"
+                borderColor={colors.border.default}
+              >
+                {handle}
+                {header}
               </Box>
+            ) : (
+              handle
             )}
             {children}
-            {insets.bottom > 0 && (
+            {footer ? (
               <Box
-                height={bottomSpacer}
-                bg={muted ? undefined : colors.surface.main}
-              />
+                bg={surface}
+                borderTopWidth="hairline"
+                borderColor={colors.border.default}
+              >
+                {footer}
+                {insets.bottom > 0 && <Box height={bottomSpacer} />}
+              </Box>
+            ) : (
+              insets.bottom > 0 && (
+                <Box
+                  height={bottomSpacer}
+                  bg={muted ? undefined : colors.surface.main}
+                />
+              )
             )}
           </Box>
         </Animated.View>

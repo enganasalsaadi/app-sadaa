@@ -52,6 +52,7 @@ export const API_ERROR_CODES = [
   'kyc_required',
   'domain_verification_cooldown',
   'wallet_frozen',
+  'insufficient_funds',
   'wallet_closed',
   'currency_not_supported',
   'fx_rate_stale',

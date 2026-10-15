@@ -39,6 +39,8 @@ export const motion = {
     comet: 2600,
     /** Offer service card: one leg of the faint platform glyphs' drift (a picked card feels alive). */
     decorDrift: 8000,
+    /** Deal decision bar: one breath of the ruler's tick for the hour running now. */
+    rulerPulse: 1000,
   },
   /** One heart floating up off a service card the moment it is picked. */
   pickBurst: 900,
@@ -64,6 +66,9 @@ export const opacity = {
   /** Background glyphs behind content: felt, never read. `decorActive` on a selected surface. */
   decor: 0.09,
   decorActive: 0.14,
+  /** How much of a deadline has gone, behind a deal's status line; its stripes while paused. */
+  windowFill: 0.18,
+  windowStripe: 0.16,
 } as const;
 
 /** Lucide `strokeWidth` steps; icons never pick their own. */

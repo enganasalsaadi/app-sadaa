@@ -40,8 +40,10 @@ export type LayoutHeaderBehavior = 'fixed' | 'hideOnScroll' | 'collapse' | 'over
  * - `elevate`: blends with the screen at rest, lifts onto a raised surface while content is under it.
  * - `reveal` (scroll mode): hidden at rest so the hero shows whole; floats in on a raised surface
  *   once the hero is partly scrolled away, and leaves again back at the top.
+ * - `docked`: always on a raised surface under a hairline with a light lift, home-indicator area
+ *   included (a decision bar the page always hands off to).
  */
-export type LayoutFooterBehavior = 'divider' | 'elevate' | 'reveal';
+export type LayoutFooterBehavior = 'divider' | 'elevate' | 'reveal' | 'docked';
 
 export interface LayoutPadding {
   x?: SpacingToken;

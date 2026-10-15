@@ -13,7 +13,8 @@ import {
 } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Avatar, Box, MoneyText, Pressable, Text } from '@/shared/ui';
-import type { DealRetentionTerm, DealShippingMode } from '../../../types/deal';
+import { DEAL_RETENTION_LABEL } from '../../../constants/dealCopy';
+import type { DealShippingMode } from '../../../types/deal';
 import type { DealQuoteLine } from '../../../types/dealOffer';
 import { monogramOf } from '../../../utils/creatorText';
 import { formatDuration, quotePaceHours } from '../../../utils/offerDuration';
@@ -21,14 +22,6 @@ import { useOfferBuilder } from '../OfferBuilderContext';
 
 const FACE = moderateScale(44);
 const SWAP = moderateScale(32);
-
-const RETENTION_LABEL = {
-  '24h': 'marketplace.offer.retention.24h',
-  '30d': 'marketplace.offer.retention.30d',
-  '90d': 'marketplace.offer.retention.90d',
-  '180d': 'marketplace.offer.retention.180d',
-  permanent: 'marketplace.offer.retention.permanent',
-} as const satisfies Record<DealRetentionTerm, string>;
 
 const SHIPPING_LABEL = {
   none: 'marketplace.offer.review.noShipping',
@@ -95,7 +88,7 @@ const DealLine = memo<{ line: DealQuoteLine }>(({ line }) => {
   const { colors } = useTheme();
   const terms = [
     ...line.addons.map(addon => t('marketplace.offer.review.addon', { label: addon.label })),
-    line.retention ? t(RETENTION_LABEL[line.retention]) : null,
+    line.retention ? t(DEAL_RETENTION_LABEL[line.retention]) : null,
     t('marketplace.offer.units.revisions', { count: line.revisions }),
   ].filter((part): part is string => part !== null);
   return (

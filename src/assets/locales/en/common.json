@@ -2014,6 +2014,495 @@
         }
       }
     },
+    "deals": {
+      "activeCount_one": "{{count}} active deal",
+      "activeCount_other": "{{count}} active deals",
+      "newOffers_one": "{{count}} new offer waiting for you",
+      "newOffers_other": "{{count}} new offers waiting for you",
+      "guide": "Deal guide",
+      "tabsLabel": "Deal groups",
+      "tabCount": "{{label}} {{count}}",
+      "tabs": {
+        "active": "Active",
+        "drafts": "Drafts",
+        "closed": "Closed",
+        "new": "New",
+        "ongoing": "Ongoing"
+      },
+      "loadFailed": "Couldn't load your deals",
+      "empty": {
+        "brandActive": {
+          "title": "No active deals yet",
+          "hint": "Find a creator and send your first offer from their media kit."
+        },
+        "drafts": {
+          "title": "No drafts",
+          "hint": "An offer you start and leave is kept here for 30 days."
+        },
+        "closed": {
+          "title": "Nothing closed yet",
+          "hint": "Completed and cancelled deals stay here with their contract."
+        },
+        "creatorNew": {
+          "title": "No new offers",
+          "hint": "Keep your rate cards fresh: brands send offers straight from them."
+        },
+        "creatorActive": {
+          "title": "No ongoing deals",
+          "hint": "Offers you accept move here."
+        },
+        "explore": "Find creators"
+      },
+      "turn": {
+        "title": "Your turn · {{count}}",
+        "hint": "Swipe for the next one",
+        "position": "{{index}} of {{count}}",
+        "unitHours_one": "hour",
+        "unitHours_other": "hours",
+        "unitDays_one": "day",
+        "unitDays_other": "days",
+        "unitMinutes_one": "min",
+        "unitMinutes_other": "min"
+      },
+      "station": {
+        "sign": "Sign",
+        "reply": "Reply",
+        "escrow": "Escrow",
+        "ship": "Shipping",
+        "make": "Create",
+        "review": "Review",
+        "publish": "Publish",
+        "done": "Done"
+      },
+      "stepper": "Deal stages. Tap or slide to see what happens at each.",
+      "timer": {
+        "left": "left",
+        "paused": "Timer paused",
+        "closedOn": "Closed {{date}}",
+        "minutes_one": "{{count}} minute",
+        "minutes_other": "{{count}} minutes"
+      },
+      "nextLabel": "Next",
+      "actor": {
+        "you": "You",
+        "other": "{{name}}",
+        "sada": "Sada"
+      },
+      "nextCard": "Next step · {{actor}}",
+      "next": {
+        "brandDraft": {
+          "title": "Finish the draft and send it",
+          "body": "{{name}} sees nothing until you sign."
+        },
+        "brandWaitReply": {
+          "title": "Escrow is held once {{name}} accepts",
+          "body": "Nothing is charged before then. No reply in time and the offer expires at no cost."
+        },
+        "brandAnswerExtension": {
+          "title": "{{name}} asked for more time: approve or decline",
+          "body": "Approving adds an addendum with the new delivery window. Declining keeps the offer as it is."
+        },
+        "brandFund": {
+          "title": "Top up so the amount is held",
+          "body": "{{name}} accepted. Complete your balance before the window ends or the deal is cancelled at no cost."
+        },
+        "brandEscrowLocked": {
+          "title": "The amount is held in escrow",
+          "body": "{{name}} can start now. It isn't released before you approve and the post is verified."
+        },
+        "brandShip": {
+          "title": "Ship the product and add the tracking number",
+          "body": "{{name}}'s delivery timer starts only after receipt."
+        },
+        "brandWaitReceipt": {
+          "title": "Waiting for {{name}} to confirm receipt",
+          "body": "The delivery timer starts once the product arrives."
+        },
+        "brandAnswerIssue": {
+          "title": "Confirm a reshipment or cancel at no cost",
+          "body": "{{name}} reported a problem with the shipment. Timers are paused until you decide."
+        },
+        "brandWaitDraft": {
+          "title": "{{name}} uploads the draft for your review",
+          "body": "We'll notify you as soon as it arrives."
+        },
+        "brandReviewDraft": {
+          "title": "Review the draft",
+          "body": "Not reviewed in time? It's approved automatically."
+        },
+        "brandWaitPublish": {
+          "title": "{{name}} publishes and sends the link",
+          "body": "You check the live post as soon as the link arrives."
+        },
+        "brandVerifyPost": {
+          "title": "Check the live post",
+          "body": "Not checked in time? It's verified automatically and the amount is released."
+        },
+        "creatorReply": {
+          "title": "Read the brief, then accept or decline",
+          "body": "Accepting signs the contract and {{name}} holds the amount in escrow. You can ask once for more time."
+        },
+        "creatorWaitExtension": {
+          "title": "Waiting for {{name}} to answer your extension",
+          "body": "The offer stays open until {{name}} decides."
+        },
+        "creatorWaitFund": {
+          "title": "{{name}} holds the amount in escrow",
+          "body": "Don't start before it's held. Not held in time and the offer is cancelled."
+        },
+        "creatorEscrowLocked": {
+          "title": "The amount is held: you can start",
+          "body": "It's released to you after approval and post verification."
+        },
+        "creatorWaitShip": {
+          "title": "Waiting for {{name}} to ship the product",
+          "body": "Your delivery timer starts when you confirm receipt."
+        },
+        "creatorReceive": {
+          "title": "Confirm you received the shipment",
+          "body": "Or report a problem. Your delivery timer starts when you confirm."
+        },
+        "creatorWaitIssue": {
+          "title": "Waiting for {{name}} to decide on the shipment",
+          "body": "Your timers are paused until then."
+        },
+        "creatorSubmitDraft": {
+          "title": "Upload the draft for {{name}} to review",
+          "body": "Each deliverable has its own countdown. Missing it with nothing delivered cancels the contract."
+        },
+        "creatorWaitReview": {
+          "title": "{{name}} is reviewing your draft",
+          "body": "Not reviewed in time? It's approved automatically."
+        },
+        "creatorPublish": {
+          "title": "Publish and send the live link",
+          "body": "Post the approved version exactly as it is."
+        },
+        "creatorWaitVerify": {
+          "title": "{{name}} is checking your post",
+          "body": "Not checked in time? It's verified automatically and your money is released."
+        },
+        "dispute": {
+          "title": "The dispute is with Sada's team",
+          "body": "Timers are paused until the decision. Add your evidence while the window is open."
+        },
+        "rate": {
+          "title": "Rate your experience with {{name}}",
+          "body": "Ratings show once both sides answer or the window closes."
+        },
+        "done": {
+          "title": "The deal is complete",
+          "body": "Escrow is released and the deal is closed."
+        }
+      },
+      "stage": {
+        "title": "Stage",
+        "guide": "Guide",
+        "noEvents": "Nothing recorded here yet",
+        "eventMeta": "{{actor}} · {{time}}"
+      },
+      "orbit": {
+        "label": "Deal journey. Station {{index}} of {{count}}: {{name}}",
+        "now": "Now",
+        "left": "left",
+        "paused": "Paused",
+        "done": "Completed",
+        "stopped": "Stopped",
+        "disputed": "In dispute"
+      },
+      "dossier": {
+        "title": "Offer file",
+        "summary": "{{items}} · {{mode}}",
+        "items_zero": "No items",
+        "items_one": "1 item",
+        "items_two": "2 items",
+        "items_few": "{{count}} items",
+        "items_many": "{{count}} items",
+        "items_other": "{{count}} items",
+        "blocks": {
+          "itemsBrand": "What you ordered",
+          "itemsCreator": "What's asked of you",
+          "script": "Ad content — what to say",
+          "tags": "Tags and mentions",
+          "files": "Attached files · {{count}}",
+          "logistics": "Delivery and shipping"
+        },
+        "delivery": "Delivery in {{duration}}",
+        "revisionsLeft": "{{revisions}} left",
+        "avoid": "Avoid",
+        "tapToCopy": "Tap any tag to copy it.",
+        "promo": "Promo code",
+        "promoCreator": "Promo code for your followers",
+        "link": "Tracking link",
+        "copy": "Copy",
+        "copied": "Copied",
+        "copyValue": "Copy {{value}}",
+        "kind": {
+          "image": "Image",
+          "video": "Video",
+          "document": "File"
+        },
+        "fileA11y": "{{kind}}: {{name}}",
+        "fileGone": "No longer available",
+        "filesNote": "Photos open here; videos and files open soon with the drafts viewer.",
+        "mode": "Deal type",
+        "duration": "Work time",
+        "durationHint": "Starts when the product arrives.",
+        "sent": "Sent on",
+        "total": "Total"
+      },
+      "outcome": {
+        "title": "How it ended",
+        "declined": "The offer was declined. Nothing was charged.",
+        "expired": "No reply in time, so the offer expired. Nothing was charged.",
+        "cancelled_pre_escrow": "Cancelled before any amount was held.",
+        "cancelled_payment_timeout": "The balance wasn't completed in time, so the deal was cancelled at no cost.",
+        "cancelled_by_brand": "The brand cancelled; the held amount was settled under the contract.",
+        "cancelled_with_kill_fee": "Cancelled with the contract's cancellation fee paid to the creator.",
+        "cancelled_by_influencer": "The creator withdrew; the full amount went back to the brand.",
+        "cancelled_shipping_timeout": "The product wasn't shipped in time; the deal was cancelled and the amount refunded.",
+        "creator_defaulted": "Nothing was delivered in time; the contract was cancelled and the amount refunded.",
+        "resolved_refund": "The dispute was settled with a refund to the brand.",
+        "resolved_split": "The dispute was settled by splitting the amount."
+      },
+      "note": {
+        "shipped": "Product shipped",
+        "shipment_updated": "Shipment details updated",
+        "upsell_proposed": "Extra work proposed",
+        "upsell_accepted": "Extra work accepted",
+        "upsell_voided": "Extra work request closed",
+        "upsell_unfunded": "Extra work not funded in time",
+        "retention_reported": "Post reported missing or changed",
+        "retention_restored": "Post restored",
+        "retention_contested": "Report contested",
+        "retention_confirmed": "Restore confirmed",
+        "retention_rejected": "Restore rejected",
+        "retention_escalated": "Sent to Sada's team",
+        "retention_auto_confirmed": "Restore confirmed automatically",
+        "retention_clawback": "Amount returned to the brand",
+        "rating_window_opened": "Rating opened",
+        "rating_submitted": "Rating sent",
+        "ratings_revealed": "Ratings revealed",
+        "dispute_evidence_added": "Evidence added",
+        "dispute_evidence_reopened": "Evidence window reopened"
+      },
+      "creatorStage": {
+        "sign": {
+          "title": "{{name}} signed and sent the offer",
+          "what": "Prices, brief and files are locked into one contract. Nothing binds you until you accept.",
+          "you": "Read the brief and the contract."
+        },
+        "reply": {
+          "title": "Your reply",
+          "what": "Accept as is or decline. You can ask once for more time and the brand decides. Prices aren't negotiated.",
+          "you": "Reply within {{duration}} or the offer expires."
+        },
+        "escrow": {
+          "title": "The amount is held in escrow",
+          "what": "{{name}} holds {{amount}} in Sada's escrow. It reaches you once your work is approved and the post verified.",
+          "you": "Wait for the hold before you start."
+        },
+        "ship": {
+          "title": "The product is on its way",
+          "what": "{{name}} ships the product with a tracking number. Your delivery timer starts only when you confirm receipt.",
+          "you": "Confirm receipt, or report a problem with the shipment."
+        },
+        "make": {
+          "title": "You create the content",
+          "what": "Upload a draft for every deliverable ({{items}}) in the app; each has its own countdown.",
+          "you": "Missing the deadline with nothing delivered cancels the contract."
+        },
+        "review": {
+          "title": "{{name}} reviews your draft",
+          "what": "Approve it, or ask for a change within the agreed revision rounds.",
+          "you": "If {{name}} doesn't review within {{duration}}, it's approved automatically."
+        },
+        "publish": {
+          "title": "You publish and send the link",
+          "what": "Post exactly the approved version, then paste the live link in the app.",
+          "you": "{{name}} checks the post; not checked within {{duration}} means it's verified automatically."
+        },
+        "done": {
+          "title": "Your money is released",
+          "what": "Once verified, your share goes to your wallet, ready to withdraw.",
+          "you": "Keep the post up for the agreed period."
+        }
+      },
+      "detail": {
+        "loadFailed": "Couldn't load this deal",
+        "contract": "Contract",
+        "guide": "Deal guide"
+      },
+      "contract": {
+        "title": "Contract",
+        "loadFailed": "Couldn't load the contract",
+        "language": "Contract language",
+        "arabic": "العربية",
+        "english": "English",
+        "governs": "The Arabic text governs.",
+        "issued": "Issued {{date}}",
+        "parties": "Parties",
+        "brand": "Brand",
+        "creator": "Creator",
+        "verified": "Verified identity",
+        "unverified": "Identity not verified",
+        "deliverables": "Deliverables",
+        "payment": "Payment",
+        "total": "Total",
+        "commission": "Sada commission",
+        "killFee": "Cancellation fee",
+        "freeCancel": "Free cancel window",
+        "schedule": "Schedule",
+        "reply": "Reply within",
+        "delivery": "Delivery within",
+        "shipping": "Shipping",
+        "terms": "Terms",
+        "signatures": "Signatures",
+        "signedBy": "Signed by {{party}}",
+        "notSigned": "{{party}} has not signed yet",
+        "fingerprint": "Fingerprint",
+        "fingerprintHint": "Any change to the text changes this fingerprint.",
+        "copyFingerprint": "Copy fingerprint",
+        "copied": "Fingerprint copied",
+        "addenda": "Addenda",
+        "addendum": "Addendum {{number}}",
+        "addendumType": {
+          "deadline_extension": "Deadline extension",
+          "upsell": "Extra work",
+          "other": "Addendum"
+        }
+      },
+      "respond": {
+        "closed": "The offer has closed — we refreshed the deal",
+        "dock": {
+          "clock": {
+            "offer": "Offer closes in",
+            "waiting": "Waiting for a reply",
+            "extension": "Time to answer the extension"
+          },
+          "accept": "Accept · {{amount}}",
+          "decline": "Decline",
+          "extension": "More time",
+          "approve": "Approve & sign",
+          "reject": "Decline",
+          "withdraw": "Withdraw offer",
+          "withdrawFree": "Nothing charged yet — withdrawing is free before acceptance",
+          "fund": "Fund now",
+          "fundShort": "Fund",
+          "topUp": "Top up {{amount}}",
+          "support": "Contact support"
+        },
+        "hold": {
+          "hint": "Keep holding until the ring fills",
+          "a11yHint": "Press and hold for a second to sign"
+        },
+        "slip": {
+          "value": "Deal value · {{items}}",
+          "times": "{{title}} × {{count}}",
+          "perItem": "{{value}} per deliverable",
+          "contract": "Read the full contract"
+        },
+        "accept": {
+          "title": "I agree and commit",
+          "body": "What you sign with {{name}}",
+          "held": "Held by Sada before you start",
+          "delivery": "Deliver within {{duration}}",
+          "afterProduct": "The clock starts once you receive the product",
+          "hold": "Press and hold to sign",
+          "holdCaption": "Your signature is binding · the money is held by Sada before you start",
+          "holdA11y": "Sign the offer"
+        },
+        "decline": {
+          "title": "Decline the offer",
+          "body": "Pick a reason — it helps {{name}} send a better fit next time",
+          "reasons": {
+            "schedule_full": "My schedule is full",
+            "not_a_fit": "Not a fit for my content",
+            "vacation": "On vacation",
+            "other": "Something else"
+          },
+          "noteLabel": "Reason",
+          "notePlaceholder": "Say why, briefly…",
+          "pickError": "Pick a reason",
+          "noteError": "Write the reason so we can send it",
+          "noStrike": "Declining before you accept records no strike.",
+          "submit": "Send"
+        },
+        "extension": {
+          "title": "Ask for more time",
+          "body": "Once per deal · up to {{days}} more",
+          "dayWord_one": "day",
+          "dayWord_other": "days",
+          "added": "+{{count}}",
+          "was": "Was {{duration}}",
+          "rulerA11y": "New delivery time",
+          "reasonLabel": "Why do you need more time?",
+          "reasonPlaceholder": "e.g. The shoot needs the venue closed for a day",
+          "reasonError": "Tell the brand why",
+          "note": "Asking signs the contract now with the new time. {{name}} has {{duration}} to answer — if it's declined, the offer is cancelled.",
+          "hold": "Press and hold to send",
+          "holdCaption": "Signs the contract + the time addendum"
+        },
+        "request": {
+          "overline": "Extension request",
+          "who": "Asked for more time · contract already signed",
+          "title": "Delivery within {{to}} instead of {{from}}",
+          "from": "In your offer",
+          "to": "Asked {{duration}}",
+          "added": "+{{duration}}"
+        },
+        "approve": {
+          "title": "Approve {{duration}}",
+          "body": "Your signature approves the addendum and holds the money now",
+          "held": "Held in escrow",
+          "from": "From your wallet · released only after the post is verified",
+          "newDelivery": "Delivery becomes {{duration}}",
+          "shortfall": "If your balance is short, you have {{duration}} to top up before the offer is cancelled",
+          "hold": "Press and hold to sign & fund",
+          "holdCaption": "Signs the time addendum"
+        },
+        "reject": {
+          "title": "Decline the extension?",
+          "body": "The offer is cancelled, nothing is charged, and we'll tell {{name}}.",
+          "submit": "Decline and close the offer"
+        },
+        "withdraw": {
+          "title": "Withdraw the offer?",
+          "body": "Nothing is charged and we'll tell {{name}} you withdrew it. This can't be undone.",
+          "submit": "Withdraw offer"
+        },
+        "reason": {
+          "label": "Reason (optional)",
+          "placeholder": "Sent to {{name}} with the notice",
+          "cancel": "Keep it"
+        },
+        "funding": {
+          "short": "Your wallet is short for this deal",
+          "ready": "Your balance covers this deal",
+          "frozenTitle": "This deal can't be funded right now",
+          "of": "of {{amount}} held in escrow",
+          "covered": "Covered",
+          "missing": "Missing",
+          "clock": "Then the offer cancels itself, no fees",
+          "auto": "Top up and the deal funds itself once the top-up is approved.",
+          "readyBody": "Tap «Fund now» to hold the money in escrow.",
+          "frozen": "Your wallet is paused, so the money can't be held. Contact support to reactivate it before time runs out.",
+          "topUpLocked": "Top-ups aren't available for your account right now.",
+          "supportMessage": "Hi, my wallet is frozen and I can't fund deal {{id}}."
+        },
+        "toast": {
+          "accepted": "Deal signed — the money is held by Sada",
+          "acceptedUnfunded": "Deal signed — waiting for the brand to fund it",
+          "declined": "We sent your answer",
+          "extensionSent": "We sent your request to the brand",
+          "extensionApproved": "New time approved and money held",
+          "extensionApprovedUnfunded": "New time approved — fund the deal to start",
+          "extensionRejected": "Extension declined and offer closed",
+          "withdrawn": "Offer withdrawn",
+          "funded": "Money held in escrow"
+        }
+      }
+    },
     "guide": {
       "title": "How does a deal get completed?",
       "kicker": "Deal guide · {{audience}}",
@@ -3008,6 +3497,7 @@
       "toastActionMessage": "Creator removed from shortlist",
       "toastUndoneMessage": "Creator saved back",
       "openBottomSheet": "Open bottom sheet",
+      "openFramedSheet": "Open framed sheet",
       "sheetTitle": "Confirm action",
       "sheetBody": "This is a mock confirmation sheet for preview only.",
       "sheetConfirm": "Got it",

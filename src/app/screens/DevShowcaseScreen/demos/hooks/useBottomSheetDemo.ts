@@ -6,6 +6,7 @@ import { useDisclosure } from '../../hooks/useDisclosure';
 export const useBottomSheetDemo = () => {
   const { t } = useTranslation();
   const sheet = useDisclosure();
+  const framed = useDisclosure();
   const selection = useDisclosure();
   const [selected, setSelected] = useState<string | number | null>(null);
 
@@ -27,5 +28,5 @@ export const useBottomSheetDemo = () => {
     [t],
   );
 
-  return { sheet, selection, selected, setSelected, items };
+  return { sheet, framed, selection, selected, setSelected, items };
 };

@@ -31,6 +31,49 @@ const PRESS_IDLE_TIMEOUT_MS = 100;
 // Fallback defer when requestIdleCallback is unavailable (older iOS/Android engines).
 const PRESS_FALLBACK_DELAY_MS = 50;
 
+/**
+ * With `scaleOnPress` the press lives inside a scaling wrapper: how the element sits in its parent
+ * (flex share, self alignment, absolute position) must reach that wrapper, or it is lost.
+ */
+const splitOuterStyle = (
+  style: ViewStyle | undefined,
+): { outer: ViewStyle; inner: ViewStyle | undefined } => {
+  if (!style) return { outer: {}, inner: style };
+  const {
+    flex,
+    flexGrow,
+    flexShrink,
+    flexBasis,
+    alignSelf,
+    position,
+    top,
+    bottom,
+    start,
+    end,
+    zIndex,
+    ...inner
+  } = style;
+  const outer: Mutable<ViewStyle> = {};
+  if (flex !== undefined) outer.flex = flex;
+  if (flexGrow !== undefined) outer.flexGrow = flexGrow;
+  if (flexShrink !== undefined) outer.flexShrink = flexShrink;
+  if (flexBasis !== undefined) outer.flexBasis = flexBasis;
+  if (alignSelf !== undefined) outer.alignSelf = alignSelf;
+  if (position !== undefined) outer.position = position;
+  if (top !== undefined) outer.top = top;
+  if (bottom !== undefined) outer.bottom = bottom;
+  if (start !== undefined) outer.start = start;
+  if (end !== undefined) outer.end = end;
+  if (zIndex !== undefined) outer.zIndex = zIndex;
+  if (Object.keys(outer).length === 0) return { outer, inner: style };
+  // A wrapper given a share of the parent hands it on to the press surface.
+  const grows =
+    outer.flex !== undefined ||
+    outer.flexGrow !== undefined ||
+    outer.flexBasis !== undefined;
+  return { outer, inner: grows ? { ...inner, flexGrow: 1 } : inner };
+};
+
 interface PressableProps
   extends Omit<RNPressableProps, 'style'>,
     BoxStyleProps {
@@ -148,6 +191,8 @@ const PressableComponent: React.FC<PressableProps> = ({
     [disabled, externalPress, scaleOnPress],
   );
 
+  const split = useMemo(() => splitOuterStyle(style), [style]);
+
   const wrapperStyle = useMemo<ViewStyle>(() => {
     const s: Mutable<ViewStyle> = {};
     if (flexProp !== undefined) s.flex = flexProp;
@@ -158,8 +203,9 @@ const PressableComponent: React.FC<PressableProps> = ({
     if (minHeight !== undefined) s.minHeight = minHeight;
     if (maxWidth !== undefined) s.maxWidth = maxWidth;
     if (maxHeight !== undefined) s.maxHeight = maxHeight;
-    return s;
+    return { ...s, ...split.outer };
   }, [
+    split.outer,
     flexProp,
     alignSelf,
     width,
@@ -199,7 +245,7 @@ const PressableComponent: React.FC<PressableProps> = ({
           style={({ pressed }) => [
             computedStyle,
             pressed && { opacity: activeOpacity },
-            style,
+            split.inner,
           ]}
           {...rest}
         >

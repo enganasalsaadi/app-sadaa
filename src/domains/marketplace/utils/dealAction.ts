@@ -14,14 +14,14 @@ export type DealActionOutcome =
   | { ok: false; error: AppApiError; conflict: boolean };
 
 /**
- * One tap of a deal action. A conflict shows the server message (the mutation already refetches
+ * One tap of a deal action. A conflict is reported (the mutation already refetches
  * the deal) and drops the idempotency key: the user decides again on the new state. Every other
  * failure goes back to the screen (422 → fields, inline errors).
  */
 export const settleDealAction = async (
   send: (idempotencyKey?: string) => Promise<DealActionResult>,
   intent: IdempotentAction | null,
-  notifyConflict: (message: string) => void,
+  notifyConflict: (error: AppApiError) => void,
 ): Promise<DealActionOutcome> => {
   try {
     const result = intent ? await intent.run(key => send(key)) : await send();
@@ -31,7 +31,7 @@ export const settleDealAction = async (
     const conflict = isDealConflictError(error);
     if (conflict) {
       intent?.reset();
-      notifyConflict(error.message);
+      notifyConflict(error);
     }
     return { ok: false, error, conflict };
   }

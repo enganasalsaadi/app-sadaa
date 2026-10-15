@@ -87,14 +87,18 @@ const LayoutFooterSlotComponent: React.FC<LayoutFooterSlotProps> = ({
     return withTiming(hidden > HIDDEN_CONTENT_EPSILON ? 1 : 0, { duration: motion.duration.fast });
   });
 
-  const dividerStyle = useAnimatedStyle(() => ({
-    opacity: behavior === 'divider' ? covering.value : 0,
-  }));
+  const dividerStyle = useAnimatedStyle(() => {
+    if (behavior === 'docked') return { opacity: 1 };
+    return { opacity: behavior === 'divider' ? covering.value : 0 };
+  });
 
   const liftOpacity = lift.shadowOpacity ?? 0;
   const liftElevation = lift.elevation ?? 0;
   const containerStyle = useAnimatedStyle(() => {
     if (behavior === 'divider') return {};
+    if (behavior === 'docked') {
+      return { backgroundColor: raised, shadowOpacity: liftOpacity, elevation: liftElevation };
+    }
     // A floating footer always sits over content, so it is always raised.
     const lifted = behavior === 'reveal' ? 1 : covering.value;
     return {
