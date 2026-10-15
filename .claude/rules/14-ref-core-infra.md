@@ -21,7 +21,7 @@ paths:
 ## Uploads (`@/core/upload`)
 
 - 3-step deal uploads (contract §uploads): `uploadFile({ source, policy, requestSlot, onProgress, signal })` → `file_id`; rejects only `UploadError.failure` (`type size empty slot transfer canceled`, `cause` = API error, `maxBytes`). `isRetryableFailure`.
-- `useFileUploads({ policy, requestSlot, limit })`: multi-file set, `entries` / `fileIds` / `add` (returns dropped) / `retry` (fresh slot) / `remove` / `clear`, aborts on unmount.
+- `useFileUploads({ policy, requestSlot, limit })`: multi-file set, `entries` / `fileIds` / `add` (returns dropped) / `retry` (fresh slot) / `remove` / `move(key, toIndex)` (submit order) / `clear`, aborts on unmount.
 - Core holds no limits: domain passes `UploadPolicy` (`DEAL_UPLOAD_POLICY[purpose]`, `DEAL_UPLOAD_LIMIT`) + a `requestSlot` wrapping its slot mutation (`transformResponse: mapUploadSlot`, `.unwrap()`). PUT streams from disk via `react-native-blob-util`; signed URL never logged/persisted. Tests: root `__mocks__/react-native-blob-util.ts` (`fakePuts`, `fakeStat`) + explicit `jest.mock('react-native-blob-util')`.
 
 ## Feedback UI

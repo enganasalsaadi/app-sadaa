@@ -106,6 +106,25 @@ it('frees a place under the limit when a file is removed', () => {
   expect(dropped).toBe(0);
 });
 
+it('moves a file to another place and submits ids in the new order', async () => {
+  mount();
+  act(() => {
+    current().add([file('a.jpg'), file('b.jpg'), file('c.jpg')]);
+  });
+  await settle(() => {
+    call(0).resolve('id-a');
+    call(1).resolve('id-b');
+    call(2).resolve('id-c');
+  });
+  const keyOf = (index: number) => current().entries[index]?.key ?? '';
+  act(() => current().move(keyOf(2), 0));
+  expect(current().fileIds).toEqual(['id-c', 'id-a', 'id-b']);
+  act(() => current().move(keyOf(0), 9));
+  expect(current().fileIds).toEqual(['id-a', 'id-b', 'id-c']);
+  act(() => current().move('missing', 0));
+  expect(current().fileIds).toEqual(['id-a', 'id-b', 'id-c']);
+});
+
 it('marks a failure with its reason and cause, and retries with a fresh upload', async () => {
   mount();
   act(() => {

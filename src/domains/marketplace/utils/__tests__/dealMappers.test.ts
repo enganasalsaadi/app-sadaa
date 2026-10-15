@@ -9,6 +9,7 @@ import type {
   DealPublicationDto,
   DealRetentionCaseDto,
   DealTimelineRowDto,
+  DealUpsellQuoteDto,
 } from '../../types/dealDto';
 import {
   mapBrandActiveDeal,
@@ -24,6 +25,7 @@ import {
   mapDealRetentionCase,
   mapDealStrikes,
   mapDealTimelineRow,
+  mapDealUpsellQuote,
   mapDealsPage,
 } from '../dealMappers';
 
@@ -797,5 +799,41 @@ describe('mapDealActionResult', () => {
       publication: null,
       upsellId: null,
     });
+  });
+});
+
+describe('mapDealUpsellQuote', () => {
+  const dto: DealUpsellQuoteDto = {
+    kind: { key: 'extra_revision', label: 'Extra revision' },
+    item_id: 'item-1',
+    title: 'Instagram reel',
+    amount_usd: '15.00',
+    revisions: { from: 2, to: 3 },
+    total_usd: { from: '300.00', to: '315.00' },
+    wallet: { balance_usd: '10.00', shortfall_usd: '5.00', is_sufficient: false },
+  };
+
+  it('maps the extra round price, rounds and wallet shortfall to cents', () => {
+    expect(mapDealUpsellQuote(dto)).toEqual({
+      kind: { key: 'extra_revision', label: 'Extra revision' },
+      itemId: 'item-1',
+      title: 'Instagram reel',
+      amount: { amount: 1500, currency: 'USD' },
+      revisions: { from: 2, to: 3 },
+      total: { from: { amount: 30000, currency: 'USD' }, to: { amount: 31500, currency: 'USD' } },
+      wallet: {
+        balance: { amount: 1000, currency: 'USD' },
+        shortfall: { amount: 500, currency: 'USD' },
+        isSufficient: false,
+      },
+    });
+  });
+
+  it('keeps an unknown kind readable and throws on a malformed amount', () => {
+    expect(mapDealUpsellQuote({ ...dto, kind: { key: 'mystery', label: 'Mystery' } }).kind).toEqual({
+      key: null,
+      label: 'Mystery',
+    });
+    expect(() => mapDealUpsellQuote({ ...dto, amount_usd: '15,00' })).toThrow();
   });
 });

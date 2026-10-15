@@ -40,6 +40,8 @@ export interface FileUploads {
   retry(key: string): void;
   /** Cancels an in-flight upload; the unused slot expires server-side. */
   remove(key: string): void;
+  /** Puts a file at another place in the set (the submit order, e.g. a post's carousel). */
+  move(key: string, toIndex: number): void;
   /** Cancels everything (after submit, or the user starts over). */
   clear(): void;
 }
@@ -150,6 +152,17 @@ export const useFileUploads = ({ policy, requestSlot, limit }: FileUploadsConfig
     setEntries(prev => prev.filter(entry => entry.key !== key));
   }, []);
 
+  const move = useCallback((key: string, toIndex: number) => {
+    setEntries(prev => {
+      const from = prev.findIndex(entry => entry.key === key);
+      const moving = prev[from];
+      if (!moving) return prev;
+      const rest = prev.filter(entry => entry.key !== key);
+      const at = Math.min(Math.max(toIndex, 0), rest.length);
+      return [...rest.slice(0, at), moving, ...rest.slice(at)];
+    });
+  }, []);
+
   const clear = useCallback(() => {
     controllers.current.forEach(controller => controller.abort());
     controllers.current.clear();
@@ -176,7 +189,8 @@ export const useFileUploads = ({ policy, requestSlot, limit }: FileUploadsConfig
       add,
       retry,
       remove,
+      move,
       clear,
     };
-  }, [entries, limit, add, retry, remove, clear]);
+  }, [entries, limit, add, retry, remove, move, clear]);
 };

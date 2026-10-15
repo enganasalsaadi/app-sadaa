@@ -391,6 +391,16 @@ export interface DealFundingDto {
   missing_usd: string;
 }
 
+export interface DealUpsellQuoteDto {
+  kind: DealLabeledDto;
+  item_id: string | null;
+  title: string | null;
+  amount_usd: string;
+  revisions: { from: number; to: number } | null;
+  total_usd: { from: string; to: string };
+  wallet: { balance_usd: string; shortfall_usd: string; is_sufficient: boolean };
+}
+
 /** Success `meta` of a deal action; each key only on the actions that send it. */
 export interface DealActionMetaDto {
   funding?: DealFundingDto;

@@ -625,6 +625,25 @@ export interface DealRef {
   id: string;
 }
 
+/** One deliverable of a deal, from the viewer's side (drafts, publications). */
+export interface DealItemRef extends DealRef {
+  itemId: string;
+}
+
+/**
+ * What an upsell would cost before the brand signs it (`upsells/quote`, M8): the server's price,
+ * new deal total and the wallet's shortfall. `revisions` only on an extra revision round.
+ */
+export interface DealUpsellQuote {
+  kind: Labeled<DealUpsellKind>;
+  itemId: string | null;
+  title: string | null;
+  amount: Money;
+  revisions: { from: number; to: number } | null;
+  total: { from: Money; to: Money };
+  wallet: { balance: Money; shortfall: Money; isSufficient: boolean };
+}
+
 export interface DealListArgs {
   role: DealRole;
   /** Empty or missing = every status the role can see (creators never see drafts). */

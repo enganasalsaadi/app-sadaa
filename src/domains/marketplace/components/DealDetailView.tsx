@@ -17,6 +17,7 @@ import type { DealStationView } from '../utils/dealStation';
 import type { DealStationEvents } from '../utils/dealTimelineEvents';
 import { DealDetailHero } from './DealDetailHero';
 import { DealDetailSkeleton } from './DealDetailSkeleton';
+import { DealDeliverables } from './DealDeliverables';
 import { DealDossier } from './DealDossier';
 import { DealExtensionRequestCard } from './DealExtensionRequestCard';
 import { DealFundingCard } from './DealFundingCard';
@@ -30,7 +31,11 @@ import { DealStageCard } from './DealStageCard';
  * The detail's section slots, in the order a role reads them. Later phases add theirs here
  * (shipping P5, upsells P9, dispute P8, rating P10) with a case in `DetailSection`.
  */
-export type DealDetailSectionKey = 'next' | 'dossier' | 'stage';
+export type DealDetailSectionKey =
+  | 'next'
+  | 'deliverables'
+  | 'dossier'
+  | 'stage';
 
 export interface DealDetailViewProps {
   vm: DealDetailModel;
@@ -92,9 +97,23 @@ const DetailSection = memo<{
         );
       }
       return vm.next ? (
-        <DealNextStepCard step={vm.next} name={party.name ?? ''} />
+        <DealNextStepCard
+          step={vm.next}
+          name={party.name ?? ''}
+          action={vm.focusItem?.action ?? null}
+          itemId={vm.focusItem?.itemId ?? null}
+          onAction={vm.openItem}
+        />
       ) : null;
     }
+    case 'deliverables':
+      return vm.deliverables ? (
+        <DealDeliverables
+          items={vm.deliverables}
+          role={vm.role}
+          onOpen={vm.openItem}
+        />
+      ) : null;
     case 'stage':
       return (
         <StageSection

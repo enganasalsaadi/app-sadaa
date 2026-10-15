@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   Modal,
   Animated,
-  KeyboardAvoidingView,
   StyleSheet,
   Platform,
   useWindowDimensions,
 } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { motion, useTheme } from '@/core/theme';
@@ -155,10 +155,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       {/* Overlay — pointerEvents none so touches reach the dismiss area below */}
       <Animated.View pointerEvents="none" style={overlayStyle} />
 
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoiding}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      {/* keyboard-controller follows the Modal's own window on Android too; RN's version did nothing
+          there under edge-to-edge, so the sheet's CTA ended up behind the keyboard. */}
+      <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior="padding">
         <Pressable
           flex={1}
           onPress={onClose}

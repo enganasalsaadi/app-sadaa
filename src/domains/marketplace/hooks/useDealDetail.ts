@@ -4,6 +4,7 @@ import { navigate, type DealsStackScreenProps } from '@/core/navigation';
 import { useGetDealQuery, useGetDealTimelineQuery } from '../api/dealsApi';
 import { DEAL_STATUS_META } from '../constants/dealStatus';
 import type { DealRole } from '../types';
+import { dealDeliverableAction } from '../utils/dealDrafts';
 import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
@@ -15,9 +16,15 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * One deal from the viewer's side (handoff M3): the deal (`funding` for the brand while
  * awaiting payment), its history sorted into stations, where it sits on the journey, the next
  * step, and which station's card is open (the current one until the user picks another; a deal
- * moving on brings it back), and the answer/payment actions (P4). Pull to refresh reads both again.
+ * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable's
+ * rounds (P6, `openItem` from the role's screen: creators hand in, brands review). Pull to refresh
+ * reads both again.
  */
-export const useDealDetail = (role: DealRole, id: string) => {
+export const useDealDetail = (
+  role: DealRole,
+  id: string,
+  openItem: (itemId: string) => void,
+) => {
   const navigation = useNavigation<Navigation>();
   const ref = useMemo(() => ({ role, id }), [id, role]);
   const detail = useGetDealQuery(ref, { refetchOnMountOrArgChange: true });
@@ -95,6 +102,17 @@ export const useDealDetail = (role: DealRole, id: string) => {
   );
 
   const status = deal?.status.key ?? null;
+  // Rounds only exist once the work has started; the first deliverable waiting on the viewer
+  // gets the next-step button.
+  const deliverables = status === 'in_progress' && deal ? deal.items : null;
+  const focusItem = useMemo(() => {
+    for (const item of deliverables ?? []) {
+      const action = dealDeliverableAction(item, role);
+      if (action !== null && action !== 'view') return { itemId: item.id, action };
+    }
+    return null;
+  }, [deliverables, role]);
+
   const stopped =
     status !== null && DEAL_STATUS_META[status].outcome === 'stopped';
 
@@ -117,6 +135,9 @@ export const useDealDetail = (role: DealRole, id: string) => {
     openContract,
     openGuide,
     respond,
+    deliverables,
+    focusItem,
+    openItem,
   };
 };
 

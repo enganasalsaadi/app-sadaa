@@ -17,4 +17,5 @@ paths:
 - **Network security:** release = HTTPS + system CAs only (`main/res/xml`); debug override `android/app/src/debug/res/xml` (cleartext + user CAs). iOS ATS keeps only `NSAllowsLocalNetworking`.
 - **Permission strings** localized in `ios/Sadaa/{en,ar}.lproj/InfoPlist.strings` — keep in sync with Info.plist.
 - **`IOS_APP_STORE_ID`** (`.env*`) empty until first App Store release → force-update button opens App Store home until set.
+- **`react-native-video`** (P6 draft review, 2026-10-15): native; after install `cd ios && pod install` + rebuild both apps. Plays server-signed deal file URLs only. Installs need `--legacy-peer-deps` (fast-image peer conflict below).
 - **`react-native-fast-image`** outdated (legacy-peer-deps + TS shim). Replace with `expo-image`/RN `Image` later in a dedicated refactor; all images go through `@/shared/ui` `Image` so the swap touches one file.

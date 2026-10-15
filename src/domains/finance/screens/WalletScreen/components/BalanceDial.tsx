@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react-native';
 import type { Money } from '@/core/money';
-import { motion, moderateScale, useStyles, useTheme } from '@/core/theme';
+import { motion, moderateScale, useStyles, useTheme, type ThemeColors } from '@/core/theme';
 import { Box, MoneyText, Pressable, Skeleton, Text } from '@/shared/ui';
 import type { WalletTileTarget } from '../../../constants';
 import type { WalletDialKind, WalletDialSegment, WalletHeroStatus } from '../hooks/useWalletHero';
@@ -89,11 +89,12 @@ interface DialArcProps {
   index: number;
   selectedKey: string;
   size: number;
+  /** Read outside `<Canvas>`: Skia's reconciler doesn't carry React context, so `useTheme()` throws here. */
+  colors: ThemeColors;
 }
 
 /** Draws in once (staggered); the picked arc thickens, the others fade back. */
-const DialArc = memo<DialArcProps>(({ arc, index, selectedKey, size }) => {
-  const { colors } = useTheme();
+const DialArc = memo<DialArcProps>(({ arc, index, selectedKey, size, colors }) => {
   const reduceMotion = useReducedMotion();
   const k = size / VIEW;
   const rest =
@@ -321,7 +322,7 @@ const BalanceDialComponent: React.FC<BalanceDialProps> = ({
           <DashPathEffect intervals={BEZEL_DASH.map(v => v * k)} />
         </Path>
         {arcs.map((arc, index) => (
-          <DialArc key={arc.key} arc={arc} index={index} selectedKey={selectedKey} size={size} />
+          <DialArc key={arc.key} arc={arc} index={index} selectedKey={selectedKey} size={size} colors={colors} />
         ))}
       </Canvas>
 

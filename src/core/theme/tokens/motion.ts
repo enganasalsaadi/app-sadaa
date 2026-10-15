@@ -13,6 +13,10 @@ export const motion = {
     roll: 1100,
     /** Stagger rise of one section. */
     rise: 600,
+    /** A draft file «developing»: the veil easing to the next upload share. */
+    develop: 400,
+    /** The «handed in» seal turning once before it settles. */
+    seal: 1600,
   },
   /** Delay between siblings of a stagger rise. */
   stagger: 60,

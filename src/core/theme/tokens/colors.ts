@@ -314,6 +314,24 @@ export interface ThemeColors {
     /** The two passes peeking behind the front «your turn» pass, nearest first. */
     passBehind: string[][];
   };
+  /**
+   * Draft rounds (P6): the creator's film contact sheet (sprocket holes, the navy veil a file
+   * «develops» from while it uploads, the teal scan line at its edge) and the brand's review
+   * stage (ticks under the video, played share, playhead, the amber note pins).
+   */
+  draft: {
+    film: string;
+    filmHole: string;
+    filmBorder: string;
+    veil: string;
+    scan: string;
+    addFill: string;
+    tick: string;
+    tickPlayed: string;
+    playhead: string;
+    pin: string;
+    onPin: string;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -394,6 +412,18 @@ const DEAL_ORBIT = {
   stationIdle: 'rgba(255, 255, 255, 0.4)',
   stopped: 'rgba(255, 255, 255, 0.3)',
   comet: WHITE,
+};
+const DRAFT = {
+  filmHole: 'rgba(255, 255, 255, 0.14)',
+  filmBorder: 'rgba(255, 255, 255, 0.35)',
+  veil: 'rgba(19, 38, 58, 0.72)',
+  scan: '#6FC0CF',
+  addFill: 'rgba(111, 192, 207, 0.18)',
+  tick: 'rgba(255, 255, 255, 0.22)',
+  tickPlayed: '#6FC0CF',
+  playhead: WHITE,
+  pin: '#FDB022',
+  onPin: NAVY_DEEP,
 };
 const STOREFRONT_SHEEN = [
   'rgba(159, 211, 220, 0)',
@@ -606,6 +636,7 @@ export const lightColors: ThemeColors = {
       ['#397D8C', '#6FC0CF'],
     ],
   },
+  draft: { ...DRAFT, film: '#13263A' },
 };
 
 export const darkColors: ThemeColors = {
@@ -775,6 +806,7 @@ export const darkColors: ThemeColors = {
       ['#1F4A5C', '#2D6B78'],
     ],
   },
+  draft: { ...DRAFT, film: '#081019' },
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>

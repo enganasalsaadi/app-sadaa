@@ -6,8 +6,8 @@ import {
 } from '../../components/DealDetailView';
 import { useBrandDealDetailScreen } from './hooks/useBrandDealDetailScreen';
 
-/** Brand reading order: the next step, the full offer file as sent (prices included), then the station card with its history. */
-const SECTIONS: readonly DealDetailSectionKey[] = ['next', 'dossier', 'stage'];
+/** Brand reading order: the next step, the deliverables while the work is on, the full offer file as sent (prices included), then the station card with its history. */
+const SECTIONS: readonly DealDetailSectionKey[] = ['next', 'deliverables', 'dossier', 'stage'];
 
 /** Deal detail from the brand's side (Detail archetype on the navy orbit hero). */
 const BrandDealDetailScreenComponent: React.FC = () => {

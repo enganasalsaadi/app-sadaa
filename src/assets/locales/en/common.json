@@ -2501,6 +2501,182 @@
           "withdrawn": "Offer withdrawn",
           "funded": "Money held in escrow"
         }
+      },
+      "drafts": {
+        "rounds": {
+          "a11y": "Round {{current}} of {{total}}"
+        },
+        "pin": {
+          "file": "File {{file}}",
+          "fileAt": "File {{file}} · {{time}}"
+        },
+        "next": {
+          "submit": "Hand in the draft",
+          "review": "Review the draft",
+          "approveAsIs": "Decide on the round",
+          "view": "View the round"
+        },
+        "deliverables": {
+          "title": "Delivery track",
+          "paused": "Clock paused",
+          "due": "{{time}} left",
+          "autoApprove": "Auto-approved in {{time}}",
+          "a11y": "{{action}} · {{title}}",
+          "action": {
+            "submit": "Hand in round {{round}}",
+            "review": "Review",
+            "approveAsIs": "Decide",
+            "view": "View"
+          }
+        },
+        "upload": {
+          "title": "Round {{round}}",
+          "subtitle": "{{item}} · {{brand}}",
+          "fuse": "{{time}} left",
+          "loadFailed": "Couldn't load the round",
+          "captionError": "Write the caption as it will be posted",
+          "toast": "Round {{round}} handed in for review",
+          "ask": {
+            "title": "The brand asked for changes on round {{round}}"
+          },
+          "sheet": {
+            "count": "{{files}} of {{max}} files",
+            "add": "Add",
+            "addA11y": "Add photos or video from your gallery",
+            "reorder": "Long-press a file, then tap its new place",
+            "moving": "Pick the new place",
+            "remove": "Remove the file",
+            "removeA11y": "Remove file {{index}}",
+            "retry": "Try again",
+            "failed": "Upload failed",
+            "type": "Unsupported type",
+            "size": "Over {{size}}",
+            "empty": "The file is empty",
+            "limit": "Up to {{max}} files per round",
+            "filesError": "Add at least one file",
+            "pickFailed": "Couldn't open your gallery",
+            "a11yFrame": "File {{index}}",
+            "a11yUploading": "File {{index}}, uploading {{percent}}%",
+            "a11yFailed": "File {{index}}, upload failed: {{reason}}"
+          },
+          "caption": {
+            "label": "How the caption will look",
+            "placeholder": "Write the caption as it will be posted…",
+            "fromBrief": "From the brief:",
+            "insert": "Add {{token}} to the caption",
+            "included": "{{token}} is in the caption",
+            "full": "The caption is full, no room to add more"
+          },
+          "dock": {
+            "rounds": "Revision rounds",
+            "left": "Left for the brand: {{remaining}} of {{allowed}}",
+            "submit": "Hand in round {{round}}",
+            "waiting": "Uploading · {{done}} of {{total}} · {{percent}}",
+            "fix": "Fix the failed files first",
+            "waitingToast": "Wait until the files finish uploading",
+            "fixToast": "Retry or remove the failed files"
+          },
+          "sent": {
+            "title": "Round {{round}} handed in",
+            "review": "{{brand}} has {{time}} to review it, or it's approved automatically.",
+            "paused": "The review is paused."
+          },
+          "discard": {
+            "title": "Leave without handing in?",
+            "body": "The files you picked and the caption will be lost.",
+            "confirm": "Leave the round",
+            "stay": "Keep working"
+          }
+        },
+        "review": {
+          "title": "{{name}} · Round {{round}}",
+          "submitted": "Handed in {{date}}",
+          "fuse": "then approved automatically",
+          "fusePaused": "Review paused",
+          "file": "File {{index}} of {{total}} · {{kind}}",
+          "kind": {
+            "video": "Video",
+            "image": "Photo"
+          },
+          "play": "Play",
+          "pause": "Pause",
+          "scrubber": "Video timeline, {{time}} of {{total}}",
+          "scrubberHint": "Long-press to pin a note at this second",
+          "hint": "Long-press the bar to pin a note at that second",
+          "addWhole": "Note on the whole file",
+          "fileA11y": "File {{index}} · {{kind}}",
+          "pinMarker": "Note at {{time}}",
+          "caption": "Caption",
+          "noCaption": "No caption",
+          "notes": "Your notes",
+          "notesEmpty": "No notes yet. Long-press the video bar, or add a note on the whole file.",
+          "removePin": "Remove the note",
+          "history": "Earlier rounds",
+          "historyRound": "Round {{round}} · {{decision}}",
+          "noDraft": "No draft handed in yet",
+          "unavailable": "This file is no longer available",
+          "loadFailed": "Couldn't load the draft",
+          "noteError": "Write what needs to change",
+          "pinError": "Write the note",
+          "dock": {
+            "revise": "Ask for changes",
+            "left": "{{remaining}} of {{allowed}} left",
+            "extra": "Extra round",
+            "extraHint": "Rounds used up",
+            "approve": "Hold to approve",
+            "approveCaption": "Once approved, the item moves to publishing",
+            "approveA11y": "Approve round {{round}}",
+            "approveHint": "Keep holding until the ring fills",
+            "approving": "Approving…",
+            "asIs": "Hold to approve as it is",
+            "asIsCaption": "Approves round {{round}} without waiting for the changes"
+          },
+          "asIs": {
+            "title": "The revision window ended without a new round",
+            "body": "You can approve round {{round}} as it is, or wait for the new round."
+          },
+          "waiting": "You asked for changes on this round. Waiting for round {{round}}.",
+          "revision": {
+            "title": "Ask for changes on round {{round}}",
+            "body": "Write what needs to change. Your pinned notes go with it.",
+            "label": "What needs to change?",
+            "placeholder": "Say clearly what needs to change…",
+            "pins": "Your pinned notes",
+            "cost": "This uses one of the rounds left ({{remaining}} of {{allowed}}).",
+            "costLast": "This uses the last revision round in the package. After it: approve, or ask for an extra round.",
+            "send": "Send the request"
+          },
+          "pinSheet": {
+            "titleAt": "Note at {{time}}",
+            "titleWhole": "Note on file {{file}}",
+            "body": "File {{file}} · {{kind}}",
+            "placeholder": "What should change here?",
+            "add": "Pin the note",
+            "limit": "Up to {{max}} notes per request"
+          },
+          "extra": {
+            "title": "Revision rounds used up",
+            "body": "Every agreed round is used. You can ask for an extra round at {{name}}'s fixed price; it joins the contract once {{name}} accepts.",
+            "card": "Extra revision round",
+            "plusOne": "+1",
+            "on": "On “{{item}}”",
+            "rounds": "Rounds {{from}} → {{to}}",
+            "hold": "Hold to ask for the round",
+            "holdCaption": "Held from your wallet on acceptance · nothing charged now",
+            "holdHint": "Keep holding until the ring fills",
+            "holdA11y": "Ask for an extra revision round",
+            "sending": "Sending…",
+            "short": "Your balance is {{amount}} short",
+            "topUp": "Top up {{amount}}",
+            "unavailable": "{{name}}'s package has no extra round. You can approve this round.",
+            "back": "Back to the review"
+          },
+          "toast": {
+            "approved": "Round approved. Next: publishing",
+            "revision": "Change request sent",
+            "extra": "Extra round requested, waiting for {{name}} to accept"
+          }
+        }
       }
     },
     "guide": {

@@ -60,6 +60,7 @@ import {
   type DealStrikes,
   type DealTimelineRow,
   type DealUpsell,
+  type DealUpsellQuote,
   type Labeled,
   type Timestamp,
 } from '../types/deal';
@@ -95,6 +96,7 @@ import type {
   DealStrikesMetaDto,
   DealTimelineRowDto,
   DealUpsellDto,
+  DealUpsellQuoteDto,
 } from '../types/dealDto';
 
 // DTO → domain for every Direct Deals resource (rule 04). Unknown enum values become `null`
@@ -465,6 +467,20 @@ export const mapDealDraft = (dto: DealDraftDto): DealDraft => ({
       note: pin.note,
     })),
     reviewedAt: toTimestampOrNull(dto.review.reviewed_at),
+  },
+});
+
+export const mapDealUpsellQuote = (dto: DealUpsellQuoteDto): DealUpsellQuote => ({
+  kind: toLabeled(DEAL_UPSELL_KIND, dto.kind),
+  itemId: dto.item_id,
+  title: dto.title,
+  amount: parseUsd(dto.amount_usd),
+  revisions: dto.revisions,
+  total: { from: parseUsd(dto.total_usd.from), to: parseUsd(dto.total_usd.to) },
+  wallet: {
+    balance: parseUsd(dto.wallet.balance_usd),
+    shortfall: parseUsd(dto.wallet.shortfall_usd),
+    isSufficient: dto.wallet.is_sufficient,
   },
 });
 

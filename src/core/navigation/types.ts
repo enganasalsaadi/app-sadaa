@@ -149,6 +149,10 @@ export type DealsStackParamList = {
   DealDetail: { id: string };
   /** The deal's signed contract and its addenda. */
   DealContract: { id: string };
+  /** Creator only: hand in a deliverable's draft round, or look at the one waiting for review. */
+  DealDraftUpload: { id: string; itemId: string };
+  /** Brand only: review a deliverable's latest round (pins, approve, ask for changes). */
+  DealDraftReview: { id: string; itemId: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
 };

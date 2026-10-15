@@ -6,6 +6,8 @@ import { BrandDealsScreen } from '../screens/BrandDealsScreen';
 import { CreatorDealDetailScreen } from '../screens/CreatorDealDetailScreen';
 import { CreatorDealsScreen } from '../screens/CreatorDealsScreen';
 import { DealContractScreen } from '../screens/DealContractScreen';
+import { DealDraftReviewScreen } from '../screens/DealDraftReviewScreen';
+import { DealDraftUploadScreen } from '../screens/DealDraftUploadScreen';
 import { DealsComingSoonScreen } from '../screens/DealsComingSoonScreen';
 
 const Stack = createNativeStackNavigator<DealsStackParamList>();
@@ -17,21 +19,23 @@ const CreatorContract: React.FC = () => <DealContractScreen role="creator" />;
 /** Strikes land with P8.1; until then the route keeps pushes and links working. */
 const CreatorStrikesPending: React.FC = () => <DealsComingSoonScreen role="creator" />;
 
-/** Brand `DealsTab` (rule 01: MainTabs picks the role's navigator, screens never branch on it). */
+/** Brand `DealsTab` (rule 01: MainTabs picks the role's navigator, screens never branch on it); reviews draft rounds (P6). */
 export const BrandDealsNavigator: React.FC = () => (
   <Stack.Navigator screenOptions={SCREEN_OPTIONS}>
     <Stack.Screen name="Deals" component={BrandDealsScreen} />
     <Stack.Screen name="DealDetail" component={BrandDealDetailScreen} />
     <Stack.Screen name="DealContract" component={BrandContract} />
+    <Stack.Screen name="DealDraftReview" component={DealDraftReviewScreen} />
   </Stack.Navigator>
 );
 
-/** Creator `DealsTab`: the brand's routes plus strikes (brands never see them, M8). */
+/** Creator `DealsTab`: the shared routes, handing in draft rounds (P6) and strikes (brands never see them, M8). */
 export const CreatorDealsNavigator: React.FC = () => (
   <Stack.Navigator screenOptions={SCREEN_OPTIONS}>
     <Stack.Screen name="Deals" component={CreatorDealsScreen} />
     <Stack.Screen name="DealDetail" component={CreatorDealDetailScreen} />
     <Stack.Screen name="DealContract" component={CreatorContract} />
+    <Stack.Screen name="DealDraftUpload" component={DealDraftUploadScreen} />
     <Stack.Screen name="Strikes" component={CreatorStrikesPending} />
   </Stack.Navigator>
 );

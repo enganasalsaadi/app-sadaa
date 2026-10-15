@@ -6,8 +6,8 @@ import {
 } from '../../components/DealDetailView';
 import { useCreatorDealDetailScreen } from './hooks/useCreatorDealDetailScreen';
 
-/** Creator reading order: the next step, the offer file (read before accepting), then the station card with its history. */
-const SECTIONS: readonly DealDetailSectionKey[] = ['next', 'dossier', 'stage'];
+/** Creator reading order: the next step, the deliverables while the work is on, the offer file (read before accepting), then the station card with its history. */
+const SECTIONS: readonly DealDetailSectionKey[] = ['next', 'deliverables', 'dossier', 'stage'];
 
 /** Deal detail from the creator's side (Detail archetype on the navy orbit hero). */
 const CreatorDealDetailScreenComponent: React.FC = () => {
