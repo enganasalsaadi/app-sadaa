@@ -9,6 +9,7 @@ import { dealItemStage, type DealItemStage } from '../utils/dealPublish';
 import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
+import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
 
 type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
@@ -19,7 +20,7 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * step, and which station's card is open (the current one until the user picks another; a deal
  * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable
  * (`openItem` from the role's screen, by the item's stage: draft rounds (P6) until approved, then
- * publishing (P7)). Pull to refresh reads both again.
+ * publishing (P7)) and the mutual rating once it completes (P10). Pull to refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
@@ -102,6 +103,8 @@ export const useDealDetail = (
     openContract,
   );
 
+  const rating = useDealRating(role, id, deal?.rating ?? null);
+
   const status = deal?.status.key ?? null;
   // Rounds only exist once the work has started; the first deliverable waiting on the viewer
   // gets the next-step button.
@@ -145,6 +148,7 @@ export const useDealDetail = (
     openContract,
     openGuide,
     respond,
+    rating,
     deliverables,
     focusItem,
     openItem,

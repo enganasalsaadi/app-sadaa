@@ -17,6 +17,7 @@ import {
   type DealReasonFormValues,
 } from '../schemas/dealRespondSchema';
 import type { Deal, DealFunding, DealRole } from '../types';
+import { reportDealFailure } from '../utils/dealAction';
 import type { DealActionOutcome } from '../utils/dealAction';
 import {
   dealDockKind,
@@ -42,17 +43,6 @@ const REASON_FIELDS = { reason: 'reason' } as const;
 
 /** Before any extension is possible the form still needs a shape; the sheet never opens on it. */
 const NO_RANGE: DealExtensionRange = { current: 0, min: 1, max: 1 };
-
-/** Failures nobody else reports: 422 toasts in baseQuery, 403/5xx/offline have global UI. */
-const reportFailure = (error: AppApiError) => {
-  if (
-    error.statusCode === 400 ||
-    error.statusCode === 404 ||
-    error.statusCode === 409
-  ) {
-    toastService.error(error.message);
-  }
-};
 
 /**
  * Responding to and paying for an offer (handoff M4): which decision bar the deal shows, its
@@ -200,7 +190,7 @@ export const useDealRespond = (
         setSheet(null);
         return false;
       }
-      if (!onFields?.(outcome.error)) reportFailure(outcome.error);
+      if (!onFields?.(outcome.error)) reportDealFailure(outcome.error);
       return false;
     },
     [],
@@ -320,7 +310,7 @@ export const useDealRespond = (
       return;
     }
     if (outcome.conflict) return;
-    reportFailure(outcome.error);
+    reportDealFailure(outcome.error);
     // Still short or frozen: the detail's `funding` says by how much now.
     refetch();
   }, [refetch, runFund, t]);

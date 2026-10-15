@@ -1,5 +1,6 @@
 import { normalizeApiError } from '@/core/api';
 import type { AppApiError, IdempotentAction } from '@/core/api';
+import { toastService } from '@/core/toast';
 import type { DealActionResult } from '../types/deal';
 
 /**
@@ -34,5 +35,16 @@ export const settleDealAction = async (
       notifyConflict(error);
     }
     return { ok: false, error, conflict };
+  }
+};
+
+/** Failures nobody else reports: 422 toasts in baseQuery, 403/5xx/offline have global UI. */
+export const reportDealFailure = (error: AppApiError) => {
+  if (
+    error.statusCode === 400 ||
+    error.statusCode === 404 ||
+    error.statusCode === 409
+  ) {
+    toastService.error(error.message);
   }
 };

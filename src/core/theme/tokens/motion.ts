@@ -53,6 +53,12 @@ export const motion = {
     stiffness: 180,
     mass: 1,
   },
+  /** The wax seal pressed onto a sealed rating: lands heavy, settles with one small give. */
+  stampSpring: {
+    damping: 11,
+    stiffness: 170,
+    mass: 1,
+  },
   /** Bouncier spring for the tab-bar lens: liquid, a small overshoot. */
   lensSpring: {
     damping: 14,
@@ -73,6 +79,9 @@ export const opacity = {
   /** How much of a deadline has gone, behind a deal's status line; its stripes while paused. */
   windowFill: 0.18,
   windowStripe: 0.16,
+  /** The question cards still to come, peeking behind the one in front: nearest, then furthest. */
+  deckNear: 0.75,
+  deckFar: 0.45,
 } as const;
 
 /** Lucide `strokeWidth` steps; icons never pick their own. */

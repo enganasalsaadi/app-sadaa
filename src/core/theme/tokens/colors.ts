@@ -354,6 +354,20 @@ export interface ThemeColors {
     okBorder: string;
     okText: string;
   };
+  /**
+   * Mutual rating (P10): your sealed envelope (navy, two faint flap folds), the wax seal pressed on
+   * it (teal-light core to navy rim, a dashed inner ring), and the score pads' lifted shadow. Navy
+   * in both modes, like the hero.
+   */
+  rating: {
+    envelope: [string, string];
+    fold: string;
+    wax: [string, string, string];
+    waxRim: string;
+    padGlow: string;
+    /** Questions already answered on the progress dashes. */
+    dashDone: string;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -462,6 +476,12 @@ const LIVE = {
   okFill: 'rgba(111, 192, 207, 0.14)',
   okBorder: 'rgba(111, 192, 207, 0.35)',
   okText: '#BDE6EE',
+};
+const RATING = {
+  envelope: ['#27506A', NAVY] as [string, string],
+  fold: 'rgba(255, 255, 255, 0.12)',
+  wax: ['#6FC0CF', '#27506A', NAVY] as [string, string, string],
+  waxRim: 'rgba(255, 255, 255, 0.4)',
 };
 const STOREFRONT_SHEEN = [
   'rgba(159, 211, 220, 0)',
@@ -676,6 +696,7 @@ export const lightColors: ThemeColors = {
   },
   draft: { ...DRAFT, film: '#13263A' },
   live: LIVE,
+  rating: { ...RATING, padGlow: 'rgba(57, 125, 140, 0.45)', dashDone: '#9FD3DC' },
 };
 
 export const darkColors: ThemeColors = {
@@ -847,6 +868,7 @@ export const darkColors: ThemeColors = {
   },
   draft: { ...DRAFT, film: '#081019' },
   live: LIVE,
+  rating: { ...RATING, padGlow: 'rgba(0, 0, 0, 0.5)', dashDone: '#2D6B78' },
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>

@@ -2869,6 +2869,110 @@
           "required": "Write what needs fixing",
           "send": "Send fix request"
         }
+      },
+      "rating": {
+        "level": {
+          "1": "Poor",
+          "2": "Fair",
+          "3": "Good",
+          "4": "Very good",
+          "5": "Excellent"
+        },
+        "criterion": {
+          "content_quality": {
+            "title": "Content quality",
+            "hint": "Did the content meet the brief's standard?"
+          },
+          "timeliness": {
+            "title": "On time",
+            "hint": "Did drafts and posts arrive within the agreed deadline?"
+          },
+          "communication": {
+            "title": "Communication",
+            "hint": "Were replies quick and clear throughout the deal?"
+          },
+          "brief_clarity": {
+            "title": "Brief clarity",
+            "hint": "Was what they wanted clear from the start?"
+          },
+          "review_speed": {
+            "title": "Review speed",
+            "hint": "Were drafts and posts reviewed on time?"
+          },
+          "request_clarity": {
+            "title": "Clear revision asks",
+            "hint": "Were revision notes specific and easy to act on?"
+          }
+        },
+        "sheet": {
+          "title": "How was working with {{name}}?",
+          "private": "Private until both ratings open together",
+          "progress": "{{current}} / {{total}}",
+          "progressA11y": "Question {{current}} of {{total}}",
+          "back": "Back",
+          "skip": "Skip rating",
+          "padA11y": "{{score}} of 5, {{level}}",
+          "summary": "Your rating",
+          "summaryHint": "Tap a score to change it",
+          "editA11y": "Change {{criterion}}, now {{score}}",
+          "commentLabel": "Note (optional)",
+          "commentPlaceholder": "What went well? What could be better?",
+          "seal": "Seal rating",
+          "privacy": "{{name}} sees it only at the reveal"
+        },
+        "skip": {
+          "title": "Skipping is final",
+          "body": "You can't rate {{name}} for this deal later. You'll still see what they said about you at the reveal.",
+          "back": "Go back and rate",
+          "confirm": "Skip anyway"
+        },
+        "sealed": {
+          "title": "Your rating is sealed",
+          "body": "Both open together once {{name}} rates you.",
+          "bodyBoth": "Both are in — they open now.",
+          "timer": "Opens within {{duration}} at most",
+          "timerBody": "After that, whatever arrived opens even if they don't rate you.",
+          "done": "Back to the deal"
+        },
+        "envelope": {
+          "mine": "Your rating",
+          "sealed": "Sealed",
+          "theirs": "{{name}}'s rating",
+          "waiting": "Not in yet",
+          "arrived": "In, sealed"
+        },
+        "invite": {
+          "title": "Rate your experience with {{name}}",
+          "meta": "{{count}} questions · under a minute",
+          "tease": "{{name}} already rated you — rate back to open both now",
+          "cta": "Start rating"
+        },
+        "card": {
+          "title": "Mutual rating",
+          "chip": "{{duration}} to reveal",
+          "foot": "Both open as soon as {{name}} rates you, or within {{duration}} at most.",
+          "closing": "The window closed — the reveal is on its way. Pull to refresh."
+        },
+        "reveal": {
+          "aboutYou": "What {{name}} said about you",
+          "revealedOn": "Revealed {{date}}",
+          "skipped": "{{name}} skipped the rating",
+          "none": "No rating from {{name}}",
+          "mine": "Your rating of {{name}}",
+          "mineSkipped": "Skipped",
+          "mineNone": "Not rated",
+          "overallA11y": "Average {{value}} of 5"
+        },
+        "clock": {
+          "unitDays_one": "day",
+          "unitDays_other": "days",
+          "unitHours_one": "hour",
+          "unitHours_other": "hours",
+          "a11y": "Closes in {{duration}}"
+        },
+        "toast": {
+          "skipped": "Rating skipped"
+        }
       }
     },
     "guide": {

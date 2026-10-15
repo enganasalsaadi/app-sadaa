@@ -474,6 +474,12 @@ export interface DealContract extends DealContractDocument {
   addenda: DealAddendum[];
 }
 
+/** `POST …/rating`: exactly the role's three criteria, 1–5 each; the note is optional. */
+export interface DealRatingRequest {
+  scores: Partial<Record<DealRatingCriterion, number>>;
+  comment?: string;
+}
+
 /** The caller's own rating, returned by submit / skip. */
 export interface DealRatingEntry {
   id: string;

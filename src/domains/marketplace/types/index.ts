@@ -89,6 +89,7 @@ export type {
   DealAddendum,
   DealContract,
   DealRatingEntry,
+  DealRatingRequest,
   BrandActiveDeal,
   DealStrike,
   DealStrikes,

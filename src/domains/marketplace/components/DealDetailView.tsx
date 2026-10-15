@@ -23,16 +23,18 @@ import { DealExtensionRequestCard } from './DealExtensionRequestCard';
 import { DealFundingCard } from './DealFundingCard';
 import { DealNextStepCard } from './DealNextStepCard';
 import { DealOutcomeCard } from './DealOutcomeCard';
+import { DealRatingSection } from './DealRatingSection';
 import { DealRespondDock } from './DealRespondDock';
 import { DealRespondSheets } from './DealRespondSheets';
 import { DealStageCard } from './DealStageCard';
 
 /**
  * The detail's section slots, in the order a role reads them. Later phases add theirs here
- * (shipping P5, upsells P9, dispute P8, rating P10) with a case in `DetailSection`.
+ * (shipping P5, upsells P9, dispute P8) with a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
   | 'next'
+  | 'rating'
   | 'deliverables'
   | 'dossier'
   | 'stage';
@@ -96,7 +98,8 @@ const DetailSection = memo<{
           />
         );
       }
-      return vm.next ? (
+      // The rating section carries its own invite (P10).
+      return vm.next && vm.next.key !== 'rate' ? (
         <DealNextStepCard
           step={vm.next}
           name={party.name ?? ''}
@@ -106,6 +109,8 @@ const DetailSection = memo<{
         />
       ) : null;
     }
+    case 'rating':
+      return <DealRatingSection rating={vm.rating} party={party} />;
     case 'deliverables':
       return vm.deliverables ? (
         <DealDeliverables
