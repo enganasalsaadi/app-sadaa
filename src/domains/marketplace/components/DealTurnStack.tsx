@@ -185,7 +185,6 @@ const TurnPass = memo<TurnPassProps>(({ deal, role, onPress }) => {
             bg={colors.glass.fill}
             borderWidth="thin"
             borderColor={colors.glass.border}
-            flex={1}
             alignSelf="flex-start"
           >
             <Text

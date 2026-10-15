@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useGetMediaKitQuery, useGetMediaKitStatsQuery } from '../api/mediaKitApi';
 import type { MediaKitCardShare, MediaKitCardStatus } from '../components/MediaKitShare';
 import type { StatsPeriod } from '../types/mediaKit';
@@ -29,18 +29,25 @@ export const useMediaKitCard = (): MediaKitCardModel => {
   const { data: stats } = useGetMediaKitStatsQuery(HOME_STATS_PERIOD);
   const share = useMediaKitShareActions();
 
-  const { data: kit, refetch: refetchKit } = kitQuery;
+  const { data: kit, isError, refetch: refetchKit } = kitQuery;
 
   const onRetry = useCallback(() => {
     refetchKit();
   }, [refetchKit]);
 
-  return {
-    status: kit ? 'ready' : kitQuery.isError ? 'error' : 'loading',
-    linkLabel: kit ? formatLinkLabel(kit.public_url) : undefined,
-    isPublic: kit ? kit.is_public : null,
-    noActivity: stats ? hasNoActivity(buildMediaKitTiles(stats)) : false,
-    share,
-    onRetry,
-  };
+  const status: MediaKitCardStatus = kit ? 'ready' : isError ? 'error' : 'loading';
+  const noActivity = useMemo(() => (stats ? hasNoActivity(buildMediaKitTiles(stats)) : false), [stats]);
+
+  // Stable while nothing changed: Home's hero, pass and share bar are memoised on it.
+  return useMemo(
+    () => ({
+      status,
+      linkLabel: kit ? formatLinkLabel(kit.public_url) : undefined,
+      isPublic: kit ? kit.is_public : null,
+      noActivity,
+      share,
+      onRetry,
+    }),
+    [kit, noActivity, onRetry, share, status],
+  );
 };

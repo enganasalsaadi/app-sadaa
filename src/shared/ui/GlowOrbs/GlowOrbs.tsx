@@ -1,15 +1,11 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, type LayoutChangeEvent } from 'react-native';
 import { Canvas, Circle, Group, RadialGradient, Skia, vec } from '@shopify/react-native-skia';
 import {
-  cancelAnimation,
-  Easing,
   useDerivedValue,
+  useFrameCallback,
   useReducedMotion,
   useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import { motion, useTheme } from '@/core/theme';
@@ -27,6 +23,13 @@ const LIGHTS = [
 ] as const;
 
 type LightDef = (typeof LIGHTS)[number];
+const [END, START, HIGHLIGHT] = LIGHTS;
+const DRIFT_MS = motion.loop.heroDrift;
+/**
+ * The lights move a few pixels a second, so redrawing them 20 times a second looks the same
+ * as 60 and leaves the GPU two frames in three: every redraw repaints the whole hero canvas.
+ */
+const REDRAW_MS = 50;
 
 // Skia interpolates unpremultiplied: fading to `transparent` (black) would muddy the glow.
 const clearOf = (color: string) => {
@@ -35,7 +38,14 @@ const clearOf = (color: string) => {
   return c;
 };
 
-const EASE = Easing.inOut(Easing.sin);
+/** 0 → 1 → 0 over two legs, eased in and out (`Easing.inOut(Easing.sin)`), forever. */
+const driftPhase = (elapsed: number, leg: number): number => {
+  'worklet';
+  const t = (elapsed / leg) % 2;
+  const p = t > 1 ? 2 - t : t;
+  return (1 - Math.cos(Math.PI * p)) / 2;
+};
+
 // Solid core, long soft edge: reads like a blurred light, never like a disc.
 const STOPS = [0, 0.3, 1];
 
@@ -53,7 +63,8 @@ const Light = memo<LightProps>(({ def, color, width, height, isRTL, phase }) => 
   const cx = width * (isRTL ? 1 - def.x : def.x);
   const cy = height * def.y;
   const r = width * def.r;
-  const center = vec(cx, cy);
+  const center = useMemo(() => vec(cx, cy), [cx, cy]);
+  const colors = useMemo(() => [color, color, clearOf(color)], [color]);
   const transform = useDerivedValue(() => [
     { translateX: dir * def.drift.x * width * phase.value },
     { translateY: def.drift.y * width * phase.value },
@@ -63,7 +74,7 @@ const Light = memo<LightProps>(({ def, color, width, height, isRTL, phase }) => 
   return (
     <Group transform={transform} origin={center} opacity={def.opacity}>
       <Circle c={center} r={r}>
-        <RadialGradient c={center} r={r} colors={[color, color, clearOf(color)]} positions={STOPS} />
+        <RadialGradient c={center} r={r} colors={colors} positions={STOPS} />
       </Circle>
     </Group>
   );
@@ -74,7 +85,7 @@ const Light = memo<LightProps>(({ def, color, width, height, isRTL, phase }) => 
  * teal-family lights that drift very slowly, one of the three allowed loops (rule 09
  * §3.1). No outlines or shapes. Reduced motion holds them still. Fills its parent,
  * draws nothing until measured, never takes touches. Belongs over navy only.
- * `paused` freezes them in place: every frame redraws the canvas, so a hero that is off
+ * `paused` freezes them in place: every redraw repaints the canvas, so a hero that is off
  * screen or on a tab in the background must not keep the GPU busy.
  */
 const GlowOrbsComponent: React.FC<{ paused?: boolean }> = ({ paused = false }) => {
@@ -85,19 +96,23 @@ const GlowOrbsComponent: React.FC<{ paused?: boolean }> = ({ paused = false }) =
   const start = useSharedValue(0);
   const highlight = useSharedValue(0);
 
+  const elapsed = useSharedValue(0);
+  const drawnAt = useSharedValue(-REDRAW_MS);
+
+  // One clock for all three lights; it keeps its time across pauses so they resume in place.
+  const frame = useFrameCallback(info => {
+    elapsed.value += info.timeSincePreviousFrame ?? 0;
+    if (elapsed.value - drawnAt.value < REDRAW_MS) return;
+    drawnAt.value = elapsed.value;
+    end.value = driftPhase(elapsed.value, DRIFT_MS * END.pace);
+    start.value = driftPhase(elapsed.value, DRIFT_MS * START.pace);
+    highlight.value = driftPhase(elapsed.value, DRIFT_MS * HIGHLIGHT.pace);
+  }, false);
+
   useEffect(() => {
-    if (reduceMotion || paused) return;
-    const phases = [end, start, highlight];
-    phases.forEach((phase, index) => {
-      const leg = motion.loop.heroDrift * (LIGHTS[index]?.pace ?? 1);
-      // Resumes where a pause left it: back to the start at the same pace, then the drift.
-      phase.value = withSequence(
-        withTiming(0, { duration: leg * phase.value, easing: EASE }),
-        withRepeat(withTiming(1, { duration: leg, easing: EASE }), -1, true),
-      );
-    });
-    return () => phases.forEach(phase => cancelAnimation(phase));
-  }, [end, highlight, paused, reduceMotion, start]);
+    frame.setActive(!reduceMotion && !paused);
+    return () => frame.setActive(false);
+  }, [frame, paused, reduceMotion]);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
@@ -105,16 +120,15 @@ const GlowOrbsComponent: React.FC<{ paused?: boolean }> = ({ paused = false }) =
   }, []);
 
   const { width, height } = size;
-  const [endDef, startDef, highlightDef] = LIGHTS;
 
   return (
     <Box style={StyleSheet.absoluteFill} pointerEvents="none" onLayout={onLayout}>
       {width > 0 && height > 0 ? (
         <Canvas style={StyleSheet.absoluteFill}>
-          <Light def={endDef} color={colors.glass.glowSecondary} width={width} height={height} isRTL={isRTL} phase={end} />
-          <Light def={startDef} color={colors.glass.glowPrimary} width={width} height={height} isRTL={isRTL} phase={start} />
+          <Light def={END} color={colors.glass.glowSecondary} width={width} height={height} isRTL={isRTL} phase={end} />
+          <Light def={START} color={colors.glass.glowPrimary} width={width} height={height} isRTL={isRTL} phase={start} />
           <Light
-            def={highlightDef}
+            def={HIGHLIGHT}
             color={colors.glass.glowHighlight}
             width={width}
             height={height}

@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { motion, useTheme } from '@/core/theme';
 import { Box } from '../primitives/Box';
+import { useScreenFocused } from '../motion/useScreenFocused';
 
 export interface LiveDotProps {
   /** Fill of the dot and its ripples (a hue `main`, or a glass icon color on navy). */
@@ -42,18 +43,21 @@ const Ripple = memo<{ progress: SharedValue<number>; color: string; size: number
 
 /**
  * A dot that means "happening now": two ripples leave it half a cycle apart, forever
- * (one of the three allowed loops). Reduced motion leaves the still dot. Decorative:
- * the text next to it carries the meaning.
+ * (one of the three allowed loops), resting while its screen is blurred. Reduced motion
+ * leaves the still dot. Decorative: the text next to it carries the meaning.
  */
 const LiveDotComponent: React.FC<LiveDotProps> = ({ color, size }) => {
   const { sizes } = useTheme();
   const reduceMotion = useReducedMotion();
+  const focused = useScreenFocused();
   const diameter = size ?? sizes.control.dot;
   const first = useSharedValue(0);
   const second = useSharedValue(0);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || !focused) return;
+    first.value = 0;
+    second.value = 0;
     const cycle = withTiming(1, { duration: motion.loop.statusPulse, easing: EASE_OUT });
     first.value = withRepeat(cycle, -1, false);
     second.value = withDelay(motion.loop.statusPulse / 2, withRepeat(cycle, -1, false));
@@ -61,7 +65,7 @@ const LiveDotComponent: React.FC<LiveDotProps> = ({ color, size }) => {
       cancelAnimation(first);
       cancelAnimation(second);
     };
-  }, [first, second, reduceMotion]);
+  }, [first, second, focused, reduceMotion]);
 
   return (
     <Box

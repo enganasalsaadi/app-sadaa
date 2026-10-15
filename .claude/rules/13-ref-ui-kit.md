@@ -35,8 +35,8 @@ Catalog of what exists — reuse for behaviour, never as the look of a new desig
 
 - `HeroBackdrop` + `GlassCard` (Skia, built for navy backdrops; theme via `useGlassCardStyle()` outside `<Canvas>`).
 - `GradientSurface`: `brand` navy hero gradient, no glass · `live` darker dashboard gradient · `premium` soft gold highlight card.
-- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; `paused` freezes them — `LayoutHeroBackdrop` pauses while the screen is blurred or the hero is scrolled away, since tab roots stay mounted and every frame redraws the canvas).
-- `LiveDot` (pulsing dot) · `LiveIsland` (blocker pill) · `AnimatedNumber` (digits roll once) · `MoneyFlow` (mint dots: money on its way) · `SmartBorder` (teal sheen, system suggestions only) · `StaggerIn` (sections rise once).
+- `GlowOrbs` (Skia: three diffuse teal-family lights drifting slowly, no outlines; fills parent; one frame clock redrawing at 20 fps (drift is a few px/s, looks identical, a third of the GPU); `paused` freezes them — `LayoutHeroBackdrop` pauses while the screen is blurred or the hero is scrolled away, since tab roots stay mounted and every redraw repaints the canvas).
+- `LiveDot` (pulsing dot, rests while its screen is blurred via `useScreenFocused`) · `LiveIsland` (blocker pill) · `AnimatedNumber` (digits roll once) · `MoneyFlow` (mint dots: money on its way) · `SmartBorder` (teal sheen, system suggestions only) · `StaggerIn` (sections rise once).
 
 ## Money & Sada parts
 
