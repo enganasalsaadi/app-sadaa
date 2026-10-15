@@ -5,6 +5,7 @@ import { useGetDealQuery, useGetDealTimelineQuery } from '../api/dealsApi';
 import { DEAL_STATUS_META } from '../constants/dealStatus';
 import type { DealRole } from '../types';
 import { dealDeliverableAction } from '../utils/dealDrafts';
+import { dealItemStage, type DealItemStage } from '../utils/dealPublish';
 import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
@@ -16,14 +17,14 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * One deal from the viewer's side (handoff M3): the deal (`funding` for the brand while
  * awaiting payment), its history sorted into stations, where it sits on the journey, the next
  * step, and which station's card is open (the current one until the user picks another; a deal
- * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable's
- * rounds (P6, `openItem` from the role's screen: creators hand in, brands review). Pull to refresh
- * reads both again.
+ * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable
+ * (`openItem` from the role's screen, by the item's stage: draft rounds (P6) until approved, then
+ * publishing (P7)). Pull to refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
   id: string,
-  openItem: (itemId: string) => void,
+  openItemAt: (itemId: string, stage: DealItemStage) => void,
 ) => {
   const navigation = useNavigation<Navigation>();
   const ref = useMemo(() => ({ role, id }), [id, role]);
@@ -112,6 +113,15 @@ export const useDealDetail = (
     }
     return null;
   }, [deliverables, role]);
+
+  const items = deal?.items;
+  const openItem = useCallback(
+    (itemId: string) => {
+      const item = items?.find(entry => entry.id === itemId);
+      if (item) openItemAt(itemId, dealItemStage(item));
+    },
+    [items, openItemAt],
+  );
 
   const stopped =
     status !== null && DEAL_STATUS_META[status].outcome === 'stopped';

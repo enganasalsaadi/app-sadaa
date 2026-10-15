@@ -25,6 +25,8 @@ const ACTION_LABEL = {
   submit: 'marketplace.deals.drafts.deliverables.action.submit',
   review: 'marketplace.deals.drafts.deliverables.action.review',
   approveAsIs: 'marketplace.deals.drafts.deliverables.action.approveAsIs',
+  publish: 'marketplace.deals.publish.deliverables.publish',
+  verify: 'marketplace.deals.publish.deliverables.verify',
   view: 'marketplace.deals.drafts.deliverables.action.view',
 } as const satisfies Record<DealDeliverableAction, ParseKeys>;
 
@@ -34,21 +36,20 @@ export interface DealDeliverablesProps {
   onOpen: (itemId: string) => void;
 }
 
-/** «Due in…» for the side that must act; the brand's review window ends in an automatic approval. */
-const useDueLine = (
-  item: DealItem,
-  action: DealDeliverableAction | null,
-  role: DealRole,
-) => {
+/**
+ * «Due in…» for the side that must act; the brand's review and verify windows end in an automatic
+ * approval / verification.
+ */
+const useDueLine = (item: DealItem, action: DealDeliverableAction | null) => {
   const { t } = useTranslation();
   const now = useClock(MINUTE_MS);
   if (item.timerPaused)
     return t('marketplace.deals.drafts.deliverables.paused');
   if (item.dueAt === null || action === null || action === 'view') return null;
   const left = formatRemaining(t, timerSecondsLeft(item.dueAt, now));
-  return role === 'brand' && action === 'review'
-    ? t('marketplace.deals.drafts.deliverables.autoApprove', { time: left })
-    : t('marketplace.deals.drafts.deliverables.due', { time: left });
+  if (action === 'review') return t('marketplace.deals.drafts.deliverables.autoApprove', { time: left });
+  if (action === 'verify') return t('marketplace.deals.publish.deliverables.autoVerify', { time: left });
+  return t('marketplace.deals.drafts.deliverables.due', { time: left });
 };
 
 const DeliverableRow = memo<{
@@ -59,7 +60,7 @@ const DeliverableRow = memo<{
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const action = dealDeliverableAction(item, role);
-  const due = useDueLine(item, action, role);
+  const due = useDueLine(item, action);
   const hue = resolveHue(colors, getDealItemStatusMeta(item.status.key).tone);
   const StatusIcon = item.status.key
     ? DEAL_ITEM_STATUS_ICON[item.status.key]

@@ -2677,6 +2677,198 @@
             "extra": "Extra round requested, waiting for {{name}} to accept"
           }
         }
+      },
+      "publish": {
+        "platform": {
+          "instagram": "Instagram",
+          "tiktok": "TikTok",
+          "youtube": "YouTube",
+          "facebook": "Facebook",
+          "telegram": "Telegram"
+        },
+        "next": {
+          "publish": "Hand in the post link",
+          "verify": "Check the post"
+        },
+        "deliverables": {
+          "publish": "Publish",
+          "verify": "Check",
+          "autoVerify": "Auto-verified in {{time}}"
+        },
+        "reason": {
+          "invalid": {
+            "title": "That link isn't valid",
+            "body": "Open the post, tap Share then Copy link, and paste it here as is."
+          },
+          "platformMismatch": {
+            "title": "That link isn't from {{platform}}",
+            "body": "This deliverable goes on {{platform}}. Copy the link from the {{platform}} app itself."
+          },
+          "handleMismatch": {
+            "title": "That link is from another account",
+            "body": "The post must come from your account named in the contract. Open it from your account and copy its link."
+          },
+          "taken": {
+            "title": "That post is used for another deliverable",
+            "body": "Each deliverable needs its own post. Publish this one, then paste its link."
+          }
+        },
+        "link": {
+          "label": "Post link",
+          "optional": "Post link (optional)",
+          "placeholder": "https://",
+          "required": "Paste the post link",
+          "paste": "Paste",
+          "pasteA11y": "Paste the link from the clipboard",
+          "pasteEmpty": "No link on the clipboard",
+          "detected": "{{platform}} link · Sada will check it's your account",
+          "waiting": "Paste the link from the post's Share button",
+          "noPlatform": "This deliverable has no platform; the link is optional"
+        },
+        "creator": {
+          "itemOf": "Deliverable {{index}} of {{total}}",
+          "lamp": "ON AIR",
+          "lampOn": "Ready to hand in",
+          "lampOff": "Add the link and at least one screenshot",
+          "hero": {
+            "title": "Is your post live?",
+            "body": "Paste the link and attach a screenshot; {{brand}} then checks it.",
+            "fixTitle": "Send the link again",
+            "fixBody": "{{brand}} asked for a fix · {{time}} left",
+            "fixPaused": "{{brand}} asked for a fix"
+          },
+          "ask": {
+            "title": "{{brand}}'s note",
+            "count": "Fix request {{used}} of {{allowed}}",
+            "previous": "Previous submission #{{sequence}}"
+          },
+          "proofs": {
+            "title": "Proof screenshots",
+            "count": "{{count}} / {{max}}",
+            "add": "Add a screenshot",
+            "addMore": "Add a screenshot\n(optional)",
+            "hint": "A screenshot of the post on your account showing the account name and date. Kept as deal evidence.",
+            "required": "Attach at least one screenshot",
+            "limit": "Up to {{max}} screenshots",
+            "pickFailed": "Couldn't open your photos",
+            "type": "Photos only",
+            "size": "Over {{size}}",
+            "empty": "The file is empty",
+            "failed": "Not uploaded",
+            "a11y": "Screenshot {{index}}",
+            "a11yUploading": "Screenshot {{index}}, uploading {{percent}}",
+            "a11yFailed": "Screenshot {{index}} not uploaded: {{reason}}",
+            "retry": "Upload the screenshot again",
+            "remove": "Remove screenshot {{index}}"
+          },
+          "dock": {
+            "due": "Publish window: {{time}} left",
+            "paused": "Clock paused",
+            "submit": "Hand in the link",
+            "resubmit": "Hand in the link again",
+            "uploading": "Uploading screenshots… {{percent}}",
+            "fix": "A screenshot didn't upload; retry or remove it",
+            "waitingToast": "Wait for the screenshots to upload",
+            "fixToast": "Fix the screenshot that didn't upload first"
+          },
+          "toast": "Post handed in; {{brand}} is checking it now",
+          "aired": {
+            "title": "Post handed in",
+            "body": "{{brand}} is checking the link now. If they don't answer in time it's verified automatically.",
+            "link": "Link",
+            "noLink": "No link",
+            "open": "Open the post on the platform",
+            "openBlocked": "This link can't be opened from the app",
+            "proofs": "Proof screenshots",
+            "proofsOpen_one": "View the proof screenshot",
+            "proofsOpen_other": "View {{count}} proof screenshots",
+            "auto": "Auto-verified in",
+            "paused": "Clock paused",
+            "back": "Back to the deal",
+            "verifiedTitle": "Verified",
+            "verifiedBody": "{{brand}} verified your post on {{date}}.",
+            "verifiedNoDate": "{{brand}} verified your post.",
+            "stamp": "Verified"
+          },
+          "early": "It's not time to publish yet",
+          "discard": {
+            "title": "Leave the hand-in?",
+            "body": "The link and screenshots you added won't be saved.",
+            "confirm": "Leave",
+            "stay": "Keep going"
+          },
+          "loadFailed": "Couldn't load this deliverable"
+        },
+        "brand": {
+          "onAir": "Live",
+          "open": "Open",
+          "openA11y": "Open the post in {{platform}}",
+          "openBlocked": "This link can't be opened from the app",
+          "noLink": "No link · no platform on this deliverable",
+          "account": {
+            "unchecked": "Account not checked",
+            "uncheckedBody": "Sada couldn't read the account from the link. Check the screenshots and make sure they're from {{name}}'s account.",
+            "checked": "Account matches the contract",
+            "checkedBody": "Sada checked the link is from {{handle}}."
+          },
+          "proofs": {
+            "title": "Proof screenshots",
+            "zoom": "Tap to zoom",
+            "a11y": "Screenshot {{index}} of {{total}}, tap to zoom",
+            "unavailable": "Screenshot unavailable"
+          },
+          "fuse": {
+            "title": "Auto-verified in",
+            "hint": "If you don't answer before the window ends, the post counts as verified.",
+            "paused": "Clock paused"
+          },
+          "history": {
+            "title": "Submission history",
+            "current": "Current submission",
+            "waiting": "Waiting on you",
+            "proofs_one": "{{count}} screenshot",
+            "proofs_other": "{{count}} screenshots"
+          },
+          "banner": {
+            "fixRequested": "Waiting for a new link from {{name}}",
+            "waitingPost": "Waiting for {{name}} to publish",
+            "verified": "Post verified"
+          },
+          "empty": "No link handed in yet",
+          "release": "Last deliverable · confirming completes the deal and releases escrow to the creator",
+          "dock": {
+            "verify": "Press and hold to confirm the post",
+            "complete": "Press and hold to complete the deal",
+            "caption": "The post is live and from the right account",
+            "hint": "Press and hold until the ring closes",
+            "a11y": "Confirm the post for {{item}}",
+            "verifying": "Confirming…",
+            "fix": "Ask for a link fix",
+            "fixLeft": "({{count}} left)"
+          },
+          "toast": {
+            "verified": "Post confirmed",
+            "completed": "Deal completed; the creator has been paid",
+            "fix": "Fix request sent"
+          },
+          "loadFailed": "Couldn't load the post"
+        },
+        "fix": {
+          "title": "What's wrong with the post?",
+          "body": "The deliverable goes back to the creator to send a correct link within a short window.",
+          "tries": "This is fix request {{n}} of {{allowed}}",
+          "last": "This is the last fix request for this deliverable",
+          "chips": {
+            "broken": "The link doesn't open the post",
+            "removed": "The post was deleted or archived",
+            "otherAccount": "The post is from another account",
+            "brief": "It's missing what the brief asked for"
+          },
+          "label": "Your note to the creator",
+          "placeholder": "Explain what needs fixing",
+          "required": "Write what needs fixing",
+          "send": "Send fix request"
+        }
       }
     },
     "guide": {

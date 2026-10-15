@@ -115,8 +115,10 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 - **مدخل** «مسار التسليم» (`DealDeliverables`، قسم `deliverables` أثناء `in_progress`) + زر في بطاقة الخطوة التالية للبند الذي ينتظر المستخدم.
 
 ## P7 — M7 النشر والتحقق
-- **P7.1 (S)** المؤثر `PublishProof`: رابط + 1–3 لقطات، تفسير `deal_live_url_invalid` حسب `meta.reason`.
-- **P7.2 (S)** البراند: تحقق / طلب تصحيح (حد 2)، شارة «الحساب غير مُتحقق» عند `handle_checked=false`.
+- ✅ **P7.0** (2026-10-15؛ `design-previews/deal-publish.html`) تصميم: المؤثر A «على الهواء» (لمبة ON AIR تشتعل عند الجاهزية، حقل رابط بشكل شريط عنوان يتعرف على المنصة، لقطات بشكل شاشات هاتف «تتحمّض»، بعد التسليم دائرة بث) · البراند A «غرفة البث» (بطاقة زجاجية للمنشور + شارة الحساب، فتيل الاعتماد التلقائي، ضغط مطوّل للتأكيد) · ورقة «اطلب تصحيح» برقائق سريعة.
+- ✅ **P7.1 (S)** (2026-10-15؛ `DealPublishScreen` على `useDealPublishScreen`، مسار `DealPublish {id, itemId}` للمؤثر) المؤثر `PublishProof`: رابط + 1–3 لقطات، تفسير `deal_live_url_invalid` حسب `meta.reason`. (`dealPublishApi`: slot `items/{item}/proof-uploads` + `getDealItemPublications` (وسم `DealHistory`)؛ النشر عبر `runDealAction` `items/{item}/publish` بـ `toPublishBody`؛ فحص محلي بنفس رموز السيرفر (`checkLiveUrl`: `invalid` / `platform_mismatch`، نطاقات `DEAL_LIVE_HOSTS` مطابقة لـ `LiveUrlInspector`)؛ رفض السيرفر → `readLiveUrlReason` (+ `deal_live_url_taken` → `taken`) خطأ على الحقل باسم السبب + اهتزاز؛ الرابط اختياري لبند بلا منصة؛ ملاحظة التصحيح من آخر إرسال `fix_requested`؛ `verifying_live` / `verified` → شاشة «على الهواء» / ختم.)
+- ✅ **P7.2 (S)** (2026-10-15؛ `DealPublicationReviewScreen` على `useDealPublicationReviewScreen`، مسار `DealPublicationReview {id, itemId}` للبراند) البراند: تحقق / طلب تصحيح (حد 2)، شارة «الحساب غير مُتحقق» عند `handle_checked=false`. («افتح» عبر `safeLiveUrl` (قائمة نطاقات مسموحة، قاعدة 07)؛ التأكيد بالضغط المطوّل `items/{item}/verify` (بلا idempotency كالسيرفر)، آخر بند → سطر mint بقيمة الصفقة و toast الإكمال؛ التصحيح `items/{item}/fix` `{note}` ≤2000 + رقائق؛ `fix_requests_left=0` يخفي الزر؛ 409 `deal_fix_limit` → رسالة السيرفر + إعادة جلب.)
+- **مدخل**: `dealDeliverableAction` يضيف `publish` / `verify`؛ `useDealDetail` يفتح البند حسب `dealItemStage` (المسودات حتى الاعتماد، ثم النشر).
 
 ## P10 — M10 التقييم
 - **P10.1 (S)** ورقة تقييم لكل دور (3 معايير) + تخطي + إخفاء حتى الكشف.

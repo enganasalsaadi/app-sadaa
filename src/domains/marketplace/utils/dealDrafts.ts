@@ -6,11 +6,12 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
 /**
- * What a deliverable asks of the viewer (P6): the creator hands in a round, the brand reviews it
- * (or takes the last round as it is when the creator ran past the revision window), or there is
- * a round to look at. `null` = nothing handed in yet and nothing to do.
+ * What a deliverable asks of the viewer: the creator hands in a round (P6) or the live link (P7),
+ * the brand reviews a round (or takes the last one as it is when the creator ran past the revision
+ * window) or verifies the post, or there is something to look at. `null` = nothing handed in yet
+ * and nothing to do.
  */
-export type DealDeliverableAction = 'submit' | 'review' | 'approveAsIs' | 'view';
+export type DealDeliverableAction = 'submit' | 'review' | 'approveAsIs' | 'publish' | 'verify' | 'view';
 
 export const dealDeliverableAction = (
   item: Pick<DealItem, 'status' | 'approveAsIsAvailable'>,
@@ -20,6 +21,8 @@ export const dealDeliverableAction = (
   if (actions.includes('submitDraft')) return 'submit';
   if (actions.includes('reviewDraft')) return 'review';
   if (actions.includes('approveAsIs')) return 'approveAsIs';
+  if (actions.includes('publish')) return 'publish';
+  if (actions.includes('verifyPost')) return 'verify';
   return item.status.key === null || item.status.key === 'pending' ? null : 'view';
 };
 

@@ -153,6 +153,10 @@ export type DealsStackParamList = {
   DealDraftUpload: { id: string; itemId: string };
   /** Brand only: review a deliverable's latest round (pins, approve, ask for changes). */
   DealDraftReview: { id: string; itemId: string };
+  /** Creator only: hand in a deliverable's live link + proof screenshots, or watch it on air. */
+  DealPublish: { id: string; itemId: string };
+  /** Brand only: verify a deliverable's live post or ask for a fix. */
+  DealPublicationReview: { id: string; itemId: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
 };

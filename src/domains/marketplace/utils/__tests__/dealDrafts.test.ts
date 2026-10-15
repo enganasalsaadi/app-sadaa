@@ -61,6 +61,13 @@ describe('dealDeliverableAction', () => {
     expect(dealDeliverableAction(item(null), 'creator')).toBeNull();
   });
 
+  it('asks the creator to publish an approved item and the brand to verify the live post', () => {
+    expect(dealDeliverableAction(item('approved_to_publish'), 'creator')).toBe('publish');
+    expect(dealDeliverableAction(item('verifying_live'), 'brand')).toBe('verify');
+    expect(dealDeliverableAction(item('verifying_live'), 'creator')).toBe('view');
+    expect(dealDeliverableAction(item('verified'), 'brand')).toBe('view');
+  });
+
   it('lets either side look at a round once one exists', () => {
     expect(dealDeliverableAction(item('draft_submitted'), 'creator')).toBe('view');
     expect(dealDeliverableAction(item('approved_to_publish'), 'brand')).toBe('view');

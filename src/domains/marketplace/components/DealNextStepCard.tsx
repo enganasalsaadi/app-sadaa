@@ -16,6 +16,8 @@ const ACTION_LABEL = {
   submit: 'marketplace.deals.drafts.next.submit',
   review: 'marketplace.deals.drafts.next.review',
   approveAsIs: 'marketplace.deals.drafts.next.approveAsIs',
+  publish: 'marketplace.deals.publish.next.publish',
+  verify: 'marketplace.deals.publish.next.verify',
   view: 'marketplace.deals.drafts.next.view',
 } as const satisfies Record<DealDeliverableAction, ParseKeys>;
 

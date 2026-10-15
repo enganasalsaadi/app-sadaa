@@ -332,6 +332,28 @@ export interface ThemeColors {
     pin: string;
     onPin: string;
   };
+  /**
+   * Going live (P7) over the navy hero: the «ON AIR» lamp dark and lit, the broadcast rings around
+   * a handed-in post, the link well on glass, and the account badges (amber = not checked, teal =
+   * matches the contract). Same in both modes: the hero is navy in both.
+   */
+  live: {
+    lampOff: string;
+    lampOffFill: string;
+    lampOffBorder: string;
+    lampOn: string;
+    lampOnFill: string;
+    ring: string;
+    /** Faint broadcast circles behind the lamp. */
+    wave: string;
+    well: string;
+    warnFill: string;
+    warnBorder: string;
+    warnText: string;
+    okFill: string;
+    okBorder: string;
+    okText: string;
+  };
 }
 
 const NAVY = '#1C3349';
@@ -424,6 +446,22 @@ const DRAFT = {
   playhead: WHITE,
   pin: '#FDB022',
   onPin: NAVY_DEEP,
+};
+const LIVE = {
+  lampOff: 'rgba(255, 255, 255, 0.4)',
+  lampOffFill: 'rgba(0, 0, 0, 0.12)',
+  lampOffBorder: 'rgba(255, 255, 255, 0.22)',
+  lampOn: '#6FC0CF',
+  lampOnFill: 'rgba(111, 192, 207, 0.18)',
+  ring: '#6FC0CF',
+  wave: 'rgba(111, 192, 207, 0.18)',
+  well: 'rgba(0, 0, 0, 0.18)',
+  warnFill: 'rgba(253, 176, 34, 0.16)',
+  warnBorder: 'rgba(253, 176, 34, 0.45)',
+  warnText: '#FFD58A',
+  okFill: 'rgba(111, 192, 207, 0.14)',
+  okBorder: 'rgba(111, 192, 207, 0.35)',
+  okText: '#BDE6EE',
 };
 const STOREFRONT_SHEEN = [
   'rgba(159, 211, 220, 0)',
@@ -637,6 +675,7 @@ export const lightColors: ThemeColors = {
     ],
   },
   draft: { ...DRAFT, film: '#13263A' },
+  live: LIVE,
 };
 
 export const darkColors: ThemeColors = {
@@ -807,6 +846,7 @@ export const darkColors: ThemeColors = {
     ],
   },
   draft: { ...DRAFT, film: '#081019' },
+  live: LIVE,
 };
 
 export const createColors = (isDark: boolean): ThemeColors =>
