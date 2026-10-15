@@ -4,6 +4,7 @@ import type { DealDraft, DealItemRef, DealUpsellQuote } from '../types/deal';
 import type { DealDraftDto, DealUpsellQuoteDto } from '../types/dealDto';
 import { mapDealDraft, mapDealUpsellQuote } from '../utils/dealMappers';
 import { buildDealUrl } from '../utils/dealQuery';
+import { toUpsellBody } from './dealUpsellApi';
 
 const itemPath = (itemId: string, action: string) => `items/${itemId}/${action}`;
 
@@ -38,7 +39,7 @@ export const dealDraftsApi = baseApi.injectEndpoints({
       query: ({ dealId, itemId }) => ({
         url: buildDealUrl({ role: 'brand', id: dealId }, 'upsells/quote'),
         method: 'POST',
-        body: { kind: 'extra_revision', item_id: itemId },
+        body: toUpsellBody({ kind: 'extra_revision', itemId }),
       }),
       transformResponse: (dto: DealUpsellQuoteDto) => mapDealUpsellQuote(dto),
     }),

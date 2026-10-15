@@ -157,6 +157,8 @@ export type DealsStackParamList = {
   DealPublish: { id: string; itemId: string };
   /** Brand only: verify a deliverable's live post or ask for a fix. */
   DealPublicationReview: { id: string; itemId: string };
+  /** Brand only: add a service or an add-on to a running deal (an addendum the creator signs). */
+  DealUpsellBuilder: { id: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
 };

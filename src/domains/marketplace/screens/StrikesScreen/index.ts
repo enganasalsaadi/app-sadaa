@@ -1,0 +1,1 @@
+export { StrikesScreen } from './StrikesScreen';

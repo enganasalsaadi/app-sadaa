@@ -6,8 +6,8 @@ import type { AddonType } from '@/core/api';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { ADDON_ICONS } from '@/domains/identity';
 import { Box, MoneyText, Pressable, Text } from '@/shared/ui';
-import type { OfferAddon } from '../../../utils/offerServices';
-import { formatDays, formatDuration } from '../../../utils/offerDuration';
+import type { OfferAddon } from '../utils/offerServices';
+import { formatDays, formatDuration } from '../utils/offerDuration';
 
 const TILE = moderateScale(28);
 

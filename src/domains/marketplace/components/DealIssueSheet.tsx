@@ -46,7 +46,7 @@ const ReasonTile = memo<{
   const styles = useStyles(
     ({ radii, borderWidths, spacing }): Record<'tile', ViewStyle> => ({
       tile: {
-        width: '31%',
+        width: moderateScale(170),
         minHeight: TILE_HEIGHT,
         padding: spacing.sm,
         gap: spacing.xs,
@@ -72,7 +72,7 @@ const ReasonTile = memo<{
       accessibilityLabel={t(def.label)}
     >
       <Icon
-        size={sizes.icon.sm}
+        size={sizes.icon.md}
         color={locked ? colors.icon.disabled : selected ? colors.interactive.main : colors.text.secondary}
       />
       <Text

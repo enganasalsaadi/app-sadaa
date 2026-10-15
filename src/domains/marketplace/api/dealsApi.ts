@@ -35,7 +35,8 @@ interface DealEnvelopeDto {
 
 /**
  * What else moves when a deal does: the lists (status changes tab), its history (new rows,
- * addenda), the brand home's active deals and the escrow money. Each refetches only if on screen.
+ * addenda), the brand home's active deals, the escrow money and the creator's strikes (a
+ * withdrawal records one). Each refetches only if on screen.
  */
 export const dealChangedTags = (id: string) =>
   [
@@ -46,16 +47,20 @@ export const dealChangedTags = (id: string) =>
     'WalletEscrow',
     'WalletEarnings',
     { type: 'WalletTransaction', id: 'LIST' },
+    'DealStrikes',
   ] as const;
 
 /**
  * A `deal_*` push only says the deal moved (M11): refetch it and everything that moves with it.
- * The kind is open-ended (`deal_<kind>`), so the link alone decides. Strikes have no cache yet.
+ * The kind is open-ended (`deal_<kind>`), so the link alone decides; `sada://strikes` (a strike
+ * cleared) refetches the strikes list only.
  */
-export const dealPushTags = (target: PushTarget | null) =>
-  target?.kind === 'deal'
-    ? ([{ type: 'Deal', id: target.dealId }, ...dealChangedTags(target.dealId)] as const)
-    : [];
+export const dealPushTags = (target: PushTarget | null) => {
+  if (target?.kind === 'deal') {
+    return [{ type: 'Deal', id: target.dealId }, ...dealChangedTags(target.dealId)] as const;
+  }
+  return target?.kind === 'strikes' ? (['DealStrikes'] as const) : [];
+};
 
 /** Direct Deals reads + every action answering the full deal (handoff §0, M3). Both roles. */
 export const dealsApi = baseApi.injectEndpoints({

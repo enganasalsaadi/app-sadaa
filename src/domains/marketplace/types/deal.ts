@@ -670,6 +670,15 @@ export interface DealUpsellQuote {
   wallet: { balance: Money; shortfall: Money; isSufficient: boolean };
 }
 
+/**
+ * What the brand adds mid-deal (M8): one more deliverable from the creator's rate cards, an add-on
+ * on a deliverable already in the deal, or one more revision round on it. Quoted, then signed.
+ */
+export type DealUpsellRequest =
+  | { kind: 'deliverable'; rateCardId: string; quantity: number; addons: readonly string[] }
+  | { kind: 'addon'; itemId: string; addonType: string }
+  | { kind: 'extra_revision'; itemId: string };
+
 export interface DealListArgs {
   role: DealRole;
   /** Empty or missing = every status the role can see (creators never see drafts). */

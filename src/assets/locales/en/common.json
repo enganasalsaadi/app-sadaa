@@ -3202,6 +3202,150 @@
           "reported": "Report sent to {{name}}",
           "addressSaved": "Address saved"
         }
+      },
+      "changes": {
+        "reasonLabel": "Reason",
+        "reasonError": "Pick a reason",
+        "noteLabel": "Note (optional)",
+        "notePlaceholder": "A few words, if you like…",
+        "cancel": {
+          "link": "Cancel the deal",
+          "title": "Cancel the deal",
+          "body": "With {{name}}",
+          "held": "Held in escrow",
+          "freeFor": "Free for",
+          "freeBody": "Work hasn't started, so nothing is charged. The deal closes and {{name}} is notified.",
+          "parts": {
+            "refund": "Back to your wallet",
+            "creator": "{{name}}'s compensation",
+            "creatorCaption": "Work has started",
+            "fee": "Platform fee",
+            "feeCaption": "Taken from the compensation"
+          },
+          "changedTitle": "The cancel terms changed",
+          "changedBody": "Compensation was {{from}} and is now {{to}}. Check the numbers, then confirm again.",
+          "disputeTitle": "This deal can't be cancelled directly now",
+          "disputeBody": "Work has been handed in, so the only way to end the deal is a dispute, where Sada's team decides on the evidence. Disputes open from the deal page soon.",
+          "disputeHeld": "Held amount",
+          "disputeHeldCaption": "Stays in escrow until the ruling",
+          "back": "Back",
+          "holdFree": "Press and hold to cancel",
+          "holdPay": "Hold to cancel and pay {{amount}}",
+          "captionFree": "Nothing is charged · cancelling is final",
+          "captionPay": "Cancelling is final and can't be undone",
+          "reasons": {
+            "no_longer_needed": "No longer needed",
+            "budget_changed": "Budget changed",
+            "timing_changed": "Timing changed",
+            "other": "Something else"
+          }
+        },
+        "withdraw": {
+          "link": "Withdraw from the deal",
+          "linkCaption": "Withdrawing records a strike on your account",
+          "linkCaptionFree": "Withdrawing now records no strike",
+          "title": "Withdraw from the deal",
+          "body": "With {{name}}",
+          "strikeTitle": "Withdrawing now records a strike",
+          "strikeBody_one": "You have {{count}} active strike. The new one lasts {{days}} days, then clears.",
+          "strikeBody_other": "You have {{count}} active strikes. The new one lasts {{days}} days, then clears.",
+          "strikeBodyClean": "Your record is clean. The new strike lasts {{days}} days, then clears.",
+          "strikeBodyPlain": "The strike stays on your account for a while, then clears on its own.",
+          "noStrike": "Withdrawing now records no strike.",
+          "freeTitle": "The free cancel is open",
+          "freeBody": "The product didn't arrive on time. Cancel from shipping with no strike.",
+          "freeAction": "Cancel for free",
+          "hold": "Press and hold to withdraw",
+          "holdCaption": "Withdrawing is final and {{name}} is notified",
+          "strikesLink": "What are strikes?",
+          "reasons": {
+            "schedule_conflict": "My schedule is full",
+            "personal": "Personal reasons",
+            "brief_concern": "Concerns about the brief",
+            "other": "Something else"
+          }
+        },
+        "upsells": {
+          "title": "Addenda",
+          "add": "Add a service or add-on",
+          "line": "{{title}} × {{count}}",
+          "addonLine": "{{label}} · {{title}}",
+          "fallbackTitle": "Addition",
+          "pendingTitle": "Your addendum is waiting on {{name}}",
+          "withdraw": "Withdraw addendum",
+          "withdrawTitle": "Withdraw the addendum?",
+          "withdrawBody": "Nothing is charged, and {{name}} is notified.",
+          "withdrawConfirm": "Withdraw",
+          "keep": "Keep it",
+          "paper": {
+            "title": "Contract addendum",
+            "from": "Requested by {{name}}",
+            "total": "Deal value",
+            "expiresIn": "Request expires in",
+            "paused": "Your review timer is paused until you answer",
+            "decline": "Decline",
+            "hold": "Press and hold to agree and sign",
+            "holdCaption": "It joins your contract and the amount is held in escrow",
+            "a11y": "Contract addendum from {{name}}: {{title}}, {{amount}}"
+          },
+          "decline": {
+            "title": "Decline the addendum",
+            "submit": "Decline the request",
+            "caption": "Your original deal carries on as it is",
+            "reasons": {
+              "schedule_full": "My schedule is full",
+              "not_a_fit": "Not a fit for me",
+              "other": "Something else"
+            }
+          },
+          "toast": {
+            "proposed": "Addendum sent to {{name}}",
+            "accepted": "Addendum signed and added to your deal",
+            "declined": "Addendum declined",
+            "withdrawn": "Addendum withdrawn"
+          }
+        },
+        "toast": {
+          "cancelled": "The deal is cancelled",
+          "withdrew": "You withdrew from the deal"
+        }
+      },
+      "upsellBuilder": {
+        "title": "Add to the deal",
+        "kinds": {
+          "deliverable": "New service",
+          "deliverableBody": "One more reel or story from {{name}}'s services",
+          "addon": "Add-on on an item",
+          "addonBody": "Like reposting rights on an item already in the deal"
+        },
+        "servicesTitle": "Pick from {{name}}'s services",
+        "itemsTitle": "On which item?",
+        "addonsTitle": "What to add?",
+        "noServicesTitle": "No services to add",
+        "noServicesBody": "{{name}} has no priced services open right now.",
+        "noAddons": "No add-ons left for this item",
+        "pickHint": "Pick something to see the price",
+        "total": "Deal value after adding",
+        "walletOk": "Your balance covers it · nothing is charged until {{name}} accepts",
+        "walletShort": "Your wallet is {{amount}} short",
+        "topUp": "Top up {{amount}}",
+        "hold": "Press and hold to send the addendum",
+        "holdCaption": "{{name}} agrees or declines it",
+        "quoteFailed": "Couldn't price this addition",
+        "closed": "Nothing can be added to this deal right now",
+        "loadFailed": "Couldn't load the deal"
+      },
+      "strikes": {
+        "title": "My strikes",
+        "active_one": "active strike",
+        "active_other": "active strikes",
+        "expiresIn_one": "Clears in {{count}} day",
+        "expiresIn_other": "Clears in {{count}} days",
+        "footnote": "A strike counts for {{days}} days from its date, then clears on its own.",
+        "emptyTitle": "Your record is clean",
+        "emptyBody": "Keep to your delivery dates and nothing shows here. Withdrawing from a running deal records a strike.",
+        "loadFailed": "Couldn't load your strikes",
+        "a11y": "{{reason}}, {{date}}, {{remaining}}"
       }
     },
     "guide": {

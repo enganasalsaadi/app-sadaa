@@ -7,7 +7,7 @@ import { Box, StaggerIn, Text } from '@/shared/ui';
 import { quoteLineTotal } from '../../../utils/dealOfferMappers';
 import { useOfferBuilder } from '../OfferBuilderContext';
 import { DeliverySection } from './DeliverySection';
-import { ServiceCard } from './ServiceCard';
+import { ServiceCard } from '../../../components/ServiceCard';
 import { ShippingSection } from './ShippingSection';
 
 /** Step 1: what the brand buys (rate cards, quantity, add-ons), whether a product ships, and when. */

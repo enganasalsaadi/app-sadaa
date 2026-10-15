@@ -9,9 +9,11 @@ import { dealItemStage, type DealItemStage } from '../utils/dealPublish';
 import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
+import { useDealCancel } from './useDealCancel';
 import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
 import { useDealShipping } from './useDealShipping';
+import { useDealUpsells } from './useDealUpsells';
 
 type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
 
@@ -21,7 +23,9 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * step, and which station's card is open (the current one until the user picks another; a deal
  * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable
  * (`openItem` from the role's screen, by the item's stage: draft rounds (P6) until approved, then
- * publishing (P7)), shipping the product (P5) and the mutual rating once it completes (P10). Pull to refresh reads both again.
+ * publishing (P7)), shipping the product (P5), the mutual rating once it completes (P10), and
+ * the changes mid-deal (P8): addenda, the brand's cancel and the creator's withdrawal. Pull to
+ * refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
@@ -108,6 +112,9 @@ export const useDealDetail = (
 
   const rating = useDealRating(role, id, deal?.rating ?? null);
 
+  const cancel = useDealCancel(role, id, deal, shipping.opens.cancel);
+  const upsells = useDealUpsells(role, id, deal);
+
   const status = deal?.status.key ?? null;
   // Rounds only exist once the work has started; the first deliverable waiting on the viewer
   // gets the next-step button.
@@ -153,6 +160,8 @@ export const useDealDetail = (
     respond,
     shipping,
     rating,
+    cancel,
+    upsells,
     deliverables,
     focusItem,
     openItem,

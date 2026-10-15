@@ -17,6 +17,8 @@ import type { DealStationView } from '../utils/dealStation';
 import type { DealStationEvents } from '../utils/dealTimelineEvents';
 import { DealDetailHero } from './DealDetailHero';
 import { DealDetailSkeleton } from './DealDetailSkeleton';
+import { DealChangesSection } from './DealChangesSection';
+import { DealChangesSheets } from './DealChangesSheets';
 import { DealDeliverables } from './DealDeliverables';
 import { DealDossier } from './DealDossier';
 import { DealExtensionRequestCard } from './DealExtensionRequestCard';
@@ -30,18 +32,21 @@ import { DealShippingDock } from './DealShippingDock';
 import { DealShippingSection } from './DealShippingSection';
 import { DealShippingSheets } from './DealShippingSheets';
 import { DealStageCard } from './DealStageCard';
+import { DealUpsellSection } from './DealUpsellSection';
 
 /**
  * The detail's section slots, in the order a role reads them. Later phases add theirs here
- * (upsells P9, dispute P8) with a case in `DetailSection`.
+ * (dispute P9) with a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
   | 'next'
+  | 'upsell'
   | 'rating'
   | 'deliverables'
   | 'shipping'
   | 'dossier'
-  | 'stage';
+  | 'stage'
+  | 'changes';
 
 export interface DealDetailViewProps {
   vm: DealDetailModel;
@@ -117,6 +122,14 @@ const DetailSection = memo<{
         />
       ) : null;
     }
+    case 'upsell':
+      return vm.stopped ? null : (
+        <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
+      );
+    case 'changes':
+      return vm.stopped ? null : (
+        <DealChangesSection role={vm.role} upsells={vm.upsells} cancel={vm.cancel} />
+      );
     case 'rating':
       return <DealRatingSection rating={vm.rating} party={party} />;
     case 'deliverables':
@@ -252,6 +265,12 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         hasContract={vm.hasContract}
       />
       <DealShippingSheets deal={deal} shipping={vm.shipping} />
+      <DealChangesSheets
+        deal={deal}
+        role={vm.role}
+        cancel={vm.cancel}
+        upsells={vm.upsells}
+      />
     </>
   );
 };

@@ -193,11 +193,15 @@ describe('dealPushTags', () => {
       'WalletEscrow',
       'WalletEarnings',
       { type: 'WalletTransaction', id: 'LIST' },
+      'DealStrikes',
     ]);
   });
 
+  it('refetches the strikes list on a strikes link', () => {
+    expect(dealPushTags({ kind: 'strikes' })).toEqual(['DealStrikes']);
+  });
+
   it('ignores other links and pushes without one', () => {
-    expect(dealPushTags({ kind: 'strikes' })).toEqual([]);
     expect(dealPushTags({ kind: 'wallet' })).toEqual([]);
     expect(dealPushTags(null)).toEqual([]);
   });

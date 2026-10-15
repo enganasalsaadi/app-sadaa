@@ -1,14 +1,14 @@
-import React, { memo, useCallback } from 'react';
-import type { ViewStyle } from 'react-native';
+import React, { memo } from 'react';
 import { Controller, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Check, Info } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, Pressable, Text } from '@/shared/ui';
+import { Info } from 'lucide-react-native';
+import { useTheme } from '@/core/theme';
+import { Box, CustomButton, CustomInput, Text } from '@/shared/ui';
 import { DEAL_DECLINE_REASON_DEF } from '../constants/dealRespond';
 import { DEAL_RESPOND_LIMITS } from '../constants/dealOffer';
 import type { DealDeclineFormValues } from '../schemas/dealRespondSchema';
-import { DEAL_DECLINE_REASON, type DealDeclineReason } from '../types';
+import { DEAL_DECLINE_REASON } from '../types';
+import { DealReasonTiles } from './DealReasonTiles';
 import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealDeclineSheetProps {
@@ -19,97 +19,6 @@ export interface DealDeclineSheetProps {
   onSubmit: () => void;
   submitting: boolean;
 }
-
-interface ReasonTileProps {
-  reason: DealDeclineReason;
-  selected: boolean;
-  onPick: (reason: DealDeclineReason) => void;
-}
-
-const ReasonTile = memo<ReasonTileProps>(({ reason, selected, onPick }) => {
-  const { t } = useTranslation();
-  const { colors, sizes } = useTheme();
-  const def = DEAL_DECLINE_REASON_DEF[reason];
-  const Icon = def.icon;
-  const styles = useStyles(
-    ({
-      radii,
-      spacing,
-      borderWidths,
-    }): Record<'tile' | 'icon' | 'check', ViewStyle> => ({
-      tile: {
-        flexBasis: '47%',
-        flexGrow: 1,
-        minHeight: sizes.thumbnail.md,
-        padding: spacing.md,
-        gap: spacing.sm,
-        justifyContent: 'space-between',
-        borderRadius: radii.lg,
-        borderWidth: borderWidths.md,
-        borderColor: selected ? colors.interactive.main : colors.border.default,
-        backgroundColor: selected
-          ? colors.interactive.soft
-          : colors.surface.main,
-      },
-      icon: {
-        width: sizes.icon.xl,
-        height: sizes.icon.xl,
-        borderRadius: radii.md,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: selected
-          ? colors.interactive.main
-          : colors.surface.elevated,
-      },
-      check: {
-        position: 'absolute',
-        top: spacing.md,
-        end: spacing.md,
-        width: sizes.icon.md,
-        height: sizes.icon.md,
-        borderRadius: radii.full,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: colors.interactive.main,
-      },
-    }),
-    [
-      colors.border.default,
-      colors.interactive.main,
-      colors.interactive.soft,
-      colors.surface.elevated,
-      colors.surface.main,
-      selected,
-      sizes,
-    ],
-  );
-  const onPress = useCallback(() => onPick(reason), [onPick, reason]);
-  return (
-    <Pressable
-      style={styles.tile}
-      scaleOnPress
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityState={{ selected }}
-      accessibilityLabel={t(def.label)}
-    >
-      <Box style={styles.icon}>
-        <Icon
-          size={sizes.icon.sm}
-          color={selected ? colors.text.onAccent : colors.icon.secondary}
-        />
-      </Box>
-      <Text variant="buttonSmall" color={colors.text.primary}>
-        {t(def.label)}
-      </Text>
-      {selected ? (
-        <Box style={styles.check}>
-          <Check size={sizes.icon.xs} color={colors.text.onAccent} />
-        </Box>
-      ) : null}
-    </Pressable>
-  );
-});
 
 /** The note field only exists for «other»; it watches the reason so the tiles don't re-render on typing. */
 const OtherNote = memo<{ control: Control<DealDeclineFormValues> }>(
@@ -177,23 +86,13 @@ const DealDeclineSheetComponent: React.FC<DealDeclineSheetProps> = ({
         control={control}
         name="reason"
         render={({ field: { value, onChange }, fieldState }) => (
-          <Box gap="xs" accessibilityRole="radiogroup">
-            <Box row wrap gap="sm">
-              {DEAL_DECLINE_REASON.map(reason => (
-                <ReasonTile
-                  key={reason}
-                  reason={reason}
-                  selected={value === reason}
-                  onPick={onChange}
-                />
-              ))}
-            </Box>
-            {fieldState.error?.message ? (
-              <Text variant="caption" color={colors.status.danger.text}>
-                {fieldState.error.message}
-              </Text>
-            ) : null}
-          </Box>
+          <DealReasonTiles
+            reasons={DEAL_DECLINE_REASON}
+            defs={DEAL_DECLINE_REASON_DEF}
+            value={value}
+            onChange={onChange}
+            error={fieldState.error?.message}
+          />
         )}
       />
       <OtherNote control={control} />

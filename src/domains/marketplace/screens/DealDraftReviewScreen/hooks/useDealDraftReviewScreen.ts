@@ -10,6 +10,7 @@ import { useAppSelector } from '@/core/store';
 import { toastService } from '@/core/toast';
 import { selectUser } from '@/domains/auth';
 import { useGetDealItemDraftsQuery, useQuoteExtraRevisionMutation } from '../../../api/dealDraftsApi';
+import { toUpsellBody } from '../../../api/dealUpsellApi';
 import { useGetDealQuery } from '../../../api/dealsApi';
 import { DEAL_DRAFT_LIMITS } from '../../../constants/dealDrafts';
 import { useDealAction } from '../../../hooks/useDealAction';
@@ -180,7 +181,7 @@ export const useDealDraftReviewScreen = () => {
   const onRequestExtra = useCallback(async (): Promise<boolean> => {
     const deviceId = await getPersistentDeviceId();
     const outcome = await runUpsell('upsells', {
-      body: { kind: 'extra_revision', item_id: itemId, device_id: deviceId },
+      body: toUpsellBody({ kind: 'extra_revision', itemId }, deviceId),
     });
     if (outcome.ok) {
       toastService.success(t('marketplace.deals.drafts.review.toast.extra', { name: creatorName }));

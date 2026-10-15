@@ -102,6 +102,7 @@ export type {
   DealRef,
   DealItemRef,
   DealUpsellQuote,
+  DealUpsellRequest,
   DealListArgs,
   DealsPage,
   DealFunding,

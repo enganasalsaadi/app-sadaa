@@ -239,6 +239,7 @@ export const baseApi = createApi({
     'Deal',
     'DealList',
     'DealHistory',
+    'DealStrikes',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

@@ -47,6 +47,8 @@ const DealShippingDockComponent: React.FC<DealShippingDockProps> = ({ shipping }
             size="md"
             fullWidth
             leftIcon={<Truck />}
+            // Without the creator's address the server answers 409 `deal_address_missing`.
+            disabled={view.address === null}
             onPress={shipping.opens.ship}
           />
         );
