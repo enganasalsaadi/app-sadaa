@@ -9,6 +9,7 @@ import { useCreatorDealDetailScreen } from './hooks/useCreatorDealDetailScreen';
 /** Creator reading order: the next step, the deliverables while the work is on, the offer file (read before accepting), then the station card with its history. */
 const SECTIONS: readonly DealDetailSectionKey[] = [
   'next',
+  'dispute',
   'upsell',
   'rating',
   'deliverables',

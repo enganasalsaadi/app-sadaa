@@ -23,13 +23,20 @@ const REASON_FIELDS = { reason: 'reason', note: 'note' } as const;
 
 /**
  * Ending a running deal from the deal page (handoff M8). Brand: cancel on the server's current
- * terms (`cancellation.brand`: free, a kill fee, or dispute only), sending the outcome it saw;
+ * terms (`cancellation.brand`: free, a kill fee, or dispute only, which hands over to the dispute
+ * sheet), sending the outcome it saw;
  * moved terms come back as a conflict, the deal refetches and a banner shows the old and new
  * compensation before the brand confirms again. Creator: withdraw, which records a strike (the
  * sheet says so with the active count), unless the free shipping cancel is open — then the sheet
  * points there instead. Both are press-and-hold with one idempotency key per intent (rule 06).
  */
-export const useDealCancel = (role: DealRole, id: string, deal: Deal | null, openFreeCancel: () => void) => {
+export const useDealCancel = (
+  role: DealRole,
+  id: string,
+  deal: Deal | null,
+  openFreeCancel: () => void,
+  openDispute: () => void,
+) => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
   const ref = useMemo(() => ({ role, id }), [id, role]);
@@ -77,6 +84,8 @@ export const useDealCancel = (role: DealRole, id: string, deal: Deal | null, ope
     setVisible(false);
   }, []);
   const goFreeCancel = useCallback(() => closeThen(openFreeCancel), [closeThen, openFreeCancel]);
+  /** Dispute-only terms: the way out is the dispute sheet. */
+  const goDispute = useCallback(() => closeThen(openDispute), [closeThen, openDispute]);
   const openStrikes = useCallback(() => closeThen(() => navigation.navigate('Strikes')), [closeThen, navigation]);
 
   const terms = deal?.cancellation?.brand ?? null;
@@ -136,6 +145,7 @@ export const useDealCancel = (role: DealRole, id: string, deal: Deal | null, ope
     terms,
     parts,
     changedFrom,
+    goDispute,
     // Creator
     strike: deal?.cancellation?.creator.strike ?? false,
     strikes: strikes.data ?? null,

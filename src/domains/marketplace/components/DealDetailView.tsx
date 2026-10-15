@@ -20,6 +20,8 @@ import { DealDetailSkeleton } from './DealDetailSkeleton';
 import { DealChangesSection } from './DealChangesSection';
 import { DealChangesSheets } from './DealChangesSheets';
 import { DealDeliverables } from './DealDeliverables';
+import { DealDisputeCard } from './DealDisputeCard';
+import { DealDisputeSheet } from './DealDisputeSheet';
 import { DealDossier } from './DealDossier';
 import { DealExtensionRequestCard } from './DealExtensionRequestCard';
 import { DealFundingCard } from './DealFundingCard';
@@ -36,10 +38,11 @@ import { DealUpsellSection } from './DealUpsellSection';
 
 /**
  * The detail's section slots, in the order a role reads them. Later phases add theirs here
- * (dispute P9) with a case in `DetailSection`.
+ * (retention P9.2) with a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
   | 'next'
+  | 'dispute'
   | 'upsell'
   | 'rating'
   | 'deliverables'
@@ -88,6 +91,8 @@ const DetailSection = memo<{
   const party = vm.role === 'brand' ? deal.creator : deal.brand;
   switch (section) {
     case 'next': {
+      // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
+      if (vm.dispute.showCard) return null;
       if (vm.stopped) return <DealOutcomeCard deal={deal} />;
       // While the product ships, the waybill is the next step (P5).
       if (vm.shipping.view && vm.shipping.view.phase !== 'received' && vm.shipping.view.phase !== 'address') {
@@ -122,13 +127,15 @@ const DetailSection = memo<{
         />
       ) : null;
     }
+    case 'dispute':
+      return <DealDisputeCard dispute={vm.dispute} role={vm.role} />;
     case 'upsell':
       return vm.stopped ? null : (
         <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
       );
     case 'changes':
       return vm.stopped ? null : (
-        <DealChangesSection role={vm.role} upsells={vm.upsells} cancel={vm.cancel} />
+        <DealChangesSection role={vm.role} upsells={vm.upsells} cancel={vm.cancel} dispute={vm.dispute} />
       );
     case 'rating':
       return <DealRatingSection rating={vm.rating} party={party} />;
@@ -271,6 +278,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         cancel={vm.cancel}
         upsells={vm.upsells}
       />
+      <DealDisputeSheet deal={deal} role={vm.role} dispute={vm.dispute} />
     </>
   );
 };

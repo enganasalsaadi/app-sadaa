@@ -10,6 +10,7 @@ import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
 import { useDealCancel } from './useDealCancel';
+import { useDealDispute } from './useDealDispute';
 import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
 import { useDealShipping } from './useDealShipping';
@@ -24,8 +25,8 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * moving on brings it back), the answer/payment actions (P4) and the way into each deliverable
  * (`openItem` from the role's screen, by the item's stage: draft rounds (P6) until approved, then
  * publishing (P7)), shipping the product (P5), the mutual rating once it completes (P10), and
- * the changes mid-deal (P8): addenda, the brand's cancel and the creator's withdrawal. Pull to
- * refresh reads both again.
+ * the changes mid-deal (P8): addenda, the brand's cancel and the creator's withdrawal, and the
+ * dispute (P9.1): opening one and the way into its file. Pull to refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
@@ -112,7 +113,8 @@ export const useDealDetail = (
 
   const rating = useDealRating(role, id, deal?.rating ?? null);
 
-  const cancel = useDealCancel(role, id, deal, shipping.opens.cancel);
+  const dispute = useDealDispute(role, id, deal);
+  const cancel = useDealCancel(role, id, deal, shipping.opens.cancel, dispute.open);
   const upsells = useDealUpsells(role, id, deal);
 
   const status = deal?.status.key ?? null;
@@ -162,6 +164,7 @@ export const useDealDetail = (
     rating,
     cancel,
     upsells,
+    dispute,
     deliverables,
     focusItem,
     openItem,

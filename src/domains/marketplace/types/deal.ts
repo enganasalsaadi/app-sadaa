@@ -412,6 +412,19 @@ export interface DealDisputeDetail extends DealDispute {
   entries: DealDisputeEntry[];
 }
 
+/** What the viewer points at as evidence (`refs[]`): a file already on the deal or a courier-issue photo. */
+export type DealDisputeRefInput =
+  | { type: 'file'; id: string }
+  | { type: 'shipment_photo'; shipmentId: string; index: number };
+
+/** One evidence entry as sent: the note (required by the server), own uploads, links, refs. */
+export interface DealEvidenceInput {
+  note: string;
+  links: readonly string[];
+  fileIds: readonly string[];
+  refs: readonly DealDisputeRefInput[];
+}
+
 export interface DealRetentionWindow {
   itemId: string;
   endsAt: Timestamp | null;

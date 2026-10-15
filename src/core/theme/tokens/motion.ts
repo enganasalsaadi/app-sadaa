@@ -17,6 +17,8 @@ export const motion = {
     develop: 400,
     /** The «handed in» seal turning once before it settles. */
     seal: 1600,
+    /** A dispute's scales tipping once toward the side the ruling favoured. */
+    tilt: 1400,
   },
   /** Delay between siblings of a stagger rise. */
   stagger: 60,
@@ -45,6 +47,8 @@ export const motion = {
     decorDrift: 8000,
     /** Deal decision bar: one breath of the ruler's tick for the hour running now. */
     rulerPulse: 1000,
+    /** Dispute file: one leg of the scales' slow sway while the case is weighed. */
+    scalesSway: 6000,
   },
   /** One heart floating up off a service card the moment it is picked. */
   pickBurst: 900,

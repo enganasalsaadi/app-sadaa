@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react-native';
+import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, CustomButton, MoneyText, Pressable, SectionHeader, StatusPill, Text } from '@/shared/ui';
 import type { DealCancelModel } from '../hooks/useDealCancel';
+import type { DealDisputeModel } from '../hooks/useDealDispute';
 import type { DealUpsellsModel } from '../hooks/useDealUpsells';
 import type { DealRole } from '../types';
 import { dealUpsellTone, formatUpsellLine } from '../utils/dealUpsell';
@@ -12,20 +14,22 @@ export interface DealChangesSectionProps {
   role: DealRole;
   upsells: DealUpsellsModel;
   cancel: DealCancelModel;
+  dispute: DealDisputeModel;
 }
 
 /**
  * The bottom of the deal page: addenda already answered, the brand's way to add a service or
- * add-on while the window is open, and the quiet way out (cancel for the brand, withdraw for the
- * creator), kept low and plain so it is never tapped by accident.
+ * add-on while the window is open, then the quiet ways out (open a dispute; cancel for the brand,
+ * withdraw for the creator), kept low and plain so they are never tapped by accident.
  */
-const DealChangesSectionComponent: React.FC<DealChangesSectionProps> = ({ role, upsells, cancel }) => {
+const DealChangesSectionComponent: React.FC<DealChangesSectionProps> = ({ role, upsells, cancel, dispute }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const { history, canPropose } = upsells;
   const brand = role === 'brand';
   const leave = brand ? cancel.canCancel : cancel.canWithdraw;
-  if (history.length === 0 && !canPropose && !leave) return null;
+  const contest = dispute.canOpen;
+  if (history.length === 0 && !canPropose && !leave && !contest) return null;
 
   return (
     <Box gap="lg">
@@ -55,6 +59,25 @@ const DealChangesSectionComponent: React.FC<DealChangesSectionProps> = ({ role, 
           leftIcon={<Plus size={sizes.icon.sm} color={colors.interactive.main} />}
           onPress={upsells.openBuilder}
         />
+      ) : null}
+      {contest ? (
+        <Pressable
+          onPress={dispute.open}
+          accessibilityRole="button"
+          accessibilityLabel={t('marketplace.deals.dispute.link')}
+        >
+          <Box align="center" gap="xs" py="md">
+            <Text variant="buttonSmall" color={colors.status.danger.text}>
+              {t('marketplace.deals.dispute.link')}
+            </Text>
+            <Text variant="caption" color={colors.text.tertiary}>
+              {t('marketplace.deals.dispute.linkCaption', {
+                count: dispute.disputesLeft,
+                remaining: formatNumber(dispute.disputesLeft),
+              })}
+            </Text>
+          </Box>
+        </Pressable>
       ) : null}
       {leave ? (
         <Pressable

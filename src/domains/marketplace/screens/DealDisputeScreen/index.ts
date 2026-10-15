@@ -1,0 +1,1 @@
+export { DealDisputeScreen } from './DealDisputeScreen';

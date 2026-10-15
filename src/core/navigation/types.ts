@@ -159,6 +159,8 @@ export type DealsStackParamList = {
   DealPublicationReview: { id: string; itemId: string };
   /** Brand only: add a service or an add-on to a running deal (an addendum the creator signs). */
   DealUpsellBuilder: { id: string };
+  /** Both: the deal's dispute file (evidence from both sides, the ruling). */
+  DealDispute: { id: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
 };

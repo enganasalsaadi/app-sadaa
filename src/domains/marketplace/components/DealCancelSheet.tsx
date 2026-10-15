@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CircleX, Gavel } from 'lucide-react-native';
+import { CircleX, Flag, Gavel } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import type { Money } from '@/core/money';
 import { useTheme } from '@/core/theme';
@@ -20,7 +20,7 @@ export interface DealCancelSheetProps {
 /**
  * The brand ending a running deal (M8), on the server's current terms: «التسوية» shows where the
  * held money goes (wallet, compensation, fee), then a reason and a press-and-hold. Dispute-only
- * terms explain why there is no button (the dispute flow ships with P9.1). New terms arriving
+ * terms explain why, and the button hands over to the dispute sheet (P9.1). New terms arriving
  * mid-sheet show the old and new compensation before the brand confirms again.
  */
 const DealCancelSheetComponent: React.FC<DealCancelSheetProps> = ({ cancel, deal }) => {
@@ -51,6 +51,15 @@ const DealCancelSheetComponent: React.FC<DealCancelSheetProps> = ({ cancel, deal
       tone="danger"
       icon={CircleX}
       onComplete={cancel.onConfirm}
+    />
+  ) : outcomeKey === 'dispute_only' ? (
+    <CustomButton
+      title={t('marketplace.deals.changes.cancel.openDispute')}
+      variant="danger"
+      size="lg"
+      fullWidth
+      leftIcon={<Flag size={sizes.icon.sm} color={colors.text.onAccent} />}
+      onPress={cancel.goDispute}
     />
   ) : (
     <CustomButton
