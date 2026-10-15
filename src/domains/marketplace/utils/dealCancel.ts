@@ -1,5 +1,5 @@
 import type { Money } from '@/core/money';
-import type { DealCancelOutcome, DealCancellation, DealStrike } from '../types/deal';
+import type { DealCancelOutcome, DealCancellation, DealStrike, DealStrikes } from '../types/deal';
 
 type BrandTerms = NonNullable<DealCancellation['brand']>;
 
@@ -52,5 +52,22 @@ export const strikeLife = (strike: Pick<DealStrike, 'occurredAt' | 'expiresAt'>,
   return {
     daysLeft: Math.ceil(left / DAY_MS),
     share: span > 0 ? Math.min(1, left / span) : 0,
+  };
+};
+
+/**
+ * The deal board's strike warning: how many strikes still count and the days until the soonest
+ * clears. `null` when none is live (the server count and the list both say so).
+ */
+export const strikesAlert = (
+  strikes: Pick<DealStrikes, 'items' | 'activeCount'>,
+  now: number,
+): { count: number; daysLeft: number } | null => {
+  const live = strikes.items.filter(strike => strike.expiresAt > now);
+  if (strikes.activeCount <= 0 || live.length === 0) return null;
+  const soonest = Math.min(...live.map(strike => strike.expiresAt));
+  return {
+    count: strikes.activeCount,
+    daysLeft: strikeLife({ occurredAt: now, expiresAt: soonest }, now).daysLeft,
   };
 };

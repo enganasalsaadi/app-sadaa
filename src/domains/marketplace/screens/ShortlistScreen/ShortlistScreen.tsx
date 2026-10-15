@@ -28,14 +28,19 @@ const ShortlistScreenComponent: React.FC = () => {
     item: { paddingBottom: spacing.md },
   }));
 
-  const { openCreator, removeCreator } = vm;
+  const { openCreator, removeCreator, requestOffer } = vm;
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<ExploreCreator>) => (
       <Box style={styles.item}>
-        <CreatorCard creator={item} onPress={openCreator} onToggleShortlist={removeCreator} />
+        <CreatorCard
+          creator={item}
+          onPress={openCreator}
+          onToggleShortlist={removeCreator}
+          onRequestOffer={requestOffer}
+        />
       </Box>
     ),
-    [openCreator, removeCreator, styles.item],
+    [openCreator, removeCreator, requestOffer, styles.item],
   );
 
   return (

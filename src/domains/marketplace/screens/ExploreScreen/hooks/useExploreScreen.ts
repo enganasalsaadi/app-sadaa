@@ -49,7 +49,7 @@ export const useExploreScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Screen['navigation']>();
   const { params } = useRoute<Screen['route']>();
-  const { openCreator, toggleShortlist } = useCreatorCardActions();
+  const { openCreator, toggleShortlist, requestOffer } = useCreatorCardActions();
 
   const [filters, setFilters] = useState<ExploreFilters>(() => params?.filters ?? {});
   const [search, setSearch] = useState(() => params?.filters?.q ?? '');
@@ -277,6 +277,7 @@ export const useExploreScreen = () => {
     emptyAction,
     openCreator,
     toggleShortlist,
+    requestOffer,
   };
 };
 

@@ -39,14 +39,19 @@ const ExploreScreenComponent: React.FC = () => {
     item: { paddingBottom: spacing.md },
   }));
 
-  const { openCreator, toggleShortlist } = vm;
+  const { openCreator, toggleShortlist, requestOffer } = vm;
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<ExploreCreator>) => (
       <Box style={styles.item}>
-        <CreatorCard creator={item} onPress={openCreator} onToggleShortlist={toggleShortlist} />
+        <CreatorCard
+          creator={item}
+          onPress={openCreator}
+          onToggleShortlist={toggleShortlist}
+          onRequestOffer={requestOffer}
+        />
       </Box>
     ),
-    [openCreator, styles.item, toggleShortlist],
+    [openCreator, requestOffer, styles.item, toggleShortlist],
   );
 
   return (

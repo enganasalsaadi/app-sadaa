@@ -1960,6 +1960,7 @@
         "body": "Every stage in detail: who acts, how long it takes, and what if someone is late"
       },
       "mediaKitCta": "Request a direct service",
+      "cardCta": "Request a direct service from {{name}}",
       "retention": {
         "24h": "Stays up 24 hours",
         "30d": "Stays up 30 days",
@@ -3616,7 +3617,12 @@
         "emptyTitle": "Your record is clean",
         "emptyBody": "Keep to your delivery dates and nothing shows here. Withdrawing from a running deal records a strike.",
         "loadFailed": "Couldn't load your strikes",
-        "a11y": "{{reason}}, {{date}}, {{remaining}}"
+        "a11y": "{{reason}}, {{date}}, {{remaining}}",
+        "banner_one": "You have an active strike",
+        "banner_other": "You have {{count}} active strikes",
+        "bannerSoonest": "Soonest: {{when}}",
+        "bannerHint": "Opens my strikes",
+        "bannerA11y": "{{title}}, {{when}}"
       }
     },
     "guide": {

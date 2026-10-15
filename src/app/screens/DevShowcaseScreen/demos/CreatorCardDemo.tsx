@@ -8,13 +8,14 @@ const CreatorCardDemoComponent: React.FC = () => {
 
   return (
     <Box gap="md">
-      {demo.cards.map(creator => (
+      {demo.cards.map((creator, index) => (
         <CreatorCard
           key={creator.slug}
           creator={creator}
           selected={demo.selected.has(creator.slug)}
           onPress={demo.toggleSelected}
           onToggleShortlist={demo.toggleShortlist}
+          onRequestOffer={index < demo.cards.length - 1 ? demo.requestOffer : undefined}
         />
       ))}
     </Box>

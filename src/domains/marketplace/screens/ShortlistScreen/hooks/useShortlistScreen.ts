@@ -17,7 +17,7 @@ type Navigation = HomeStackScreenProps<'Shortlist'>['navigation'];
 export const useShortlistScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
-  const { openCreator, setShortlist } = useCreatorCardActions();
+  const { openCreator, setShortlist, requestOffer } = useCreatorCardActions();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data, isFetching, isError, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } =
@@ -77,5 +77,6 @@ export const useShortlistScreen = () => {
     emptyAction,
     openCreator,
     removeCreator,
+    requestOffer,
   };
 };

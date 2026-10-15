@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toastService } from '@/core/toast';
 import type { ExploreCreator } from '@/domains/marketplace';
 import { MOCK_AVATAR_GROUP, MOCK_CREATOR_PRICE } from '../mockData';
 
@@ -21,7 +22,7 @@ const toggleSlug = (set: ReadonlySet<string>, slug: string): ReadonlySet<string>
 /**
  * Dev-only cards: a verified creator with a visible price, a new one whose price is
  * locked, one with no tier or platform. ❤️ toggles locally; pressing a row card toggles it
- * in the comparison set, like brand matching.
+ * in the comparison set, like brand matching. The offer disc (all but the last card) only toasts.
  */
 export const useCreatorCardDemo = () => {
   const { t } = useTranslation();
@@ -107,5 +108,11 @@ export const useCreatorCardDemo = () => {
     [],
   );
 
-  return { cards, selected, toggleShortlist, toggleSelected };
+  const requestOffer = useCallback(
+    (creator: ExploreCreator) =>
+      toastService.info(t('marketplace.offer.cardCta', { name: creator.displayName })),
+    [t],
+  );
+
+  return { cards, selected, toggleShortlist, toggleSelected, requestOffer };
 };

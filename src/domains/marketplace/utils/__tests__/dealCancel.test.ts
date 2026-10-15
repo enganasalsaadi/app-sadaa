@@ -1,6 +1,6 @@
 import type { Money } from '@/core/money';
-import type { DealCancellation } from '../../types';
-import { dealSettlement, strikeLife, toCancelBody, toReasonBody } from '../dealCancel';
+import type { DealCancellation, DealStrike } from '../../types';
+import { dealSettlement, strikeLife, strikesAlert, toCancelBody, toReasonBody } from '../dealCancel';
 
 const usd = (amount: number): Money => ({ amount, currency: 'USD' });
 const TOTAL = usd(15000);
@@ -72,5 +72,31 @@ describe('strikeLife', () => {
 
   it('caps the share at a full fuse', () => {
     expect(strikeLife(strike, -DAY).share).toBe(1);
+  });
+});
+
+describe('strikesAlert', () => {
+  const DAY = 86_400_000;
+  const strike = (id: string, expiresAt: number): DealStrike => ({
+    id,
+    dealId: 'd1',
+    reason: { key: 'withdrew', label: 'Withdrew' },
+    occurredAt: 0,
+    expiresAt,
+  });
+
+  it('counts the active strikes and the days until the soonest clears', () => {
+    const strikes = { activeCount: 2, items: [strike('a', 40 * DAY), strike('b', 12 * DAY)] };
+    expect(strikesAlert(strikes, DAY / 2)).toEqual({ count: 2, daysLeft: 12 });
+  });
+
+  it('skips strikes already past their date', () => {
+    const strikes = { activeCount: 1, items: [strike('a', DAY), strike('b', 30 * DAY)] };
+    expect(strikesAlert(strikes, 2 * DAY)).toEqual({ count: 1, daysLeft: 28 });
+  });
+
+  it('is null with a clean record', () => {
+    expect(strikesAlert({ activeCount: 0, items: [] }, 0)).toBeNull();
+    expect(strikesAlert({ activeCount: 1, items: [strike('a', DAY)] }, 2 * DAY)).toBeNull();
   });
 });

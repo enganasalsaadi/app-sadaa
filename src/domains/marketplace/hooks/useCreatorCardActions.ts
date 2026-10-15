@@ -1,14 +1,15 @@
 import { useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { normalizeApiError } from '@/core/api';
-import { push, type PublicStackParamList } from '@/core/navigation';
+import { navigate, push, type DealFlowStackParamList, type PublicStackParamList } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { useSetShortlistedMutation } from '../api/shortlistApi';
 import type { ExploreCreator } from '../types/explore';
 
 /**
  * Card taps shared by Home rails, Explore and the Shortlist: open the public Media Kit
- * (views beacon `src=search`) and toggle ❤️. The toggle is optimistic in every cached list.
+ * (views beacon `src=search`), toggle ❤️ and start a direct offer (the builder's preflight
+ * decides whether it can go ahead). The toggle is optimistic in every cached list.
  */
 export const useCreatorCardActions = () => {
   const { t } = useTranslation();
@@ -20,6 +21,11 @@ export const useCreatorCardActions = () => {
       source: 'search',
     };
     push('MediaKitPublic', params);
+  }, []);
+
+  const requestOffer = useCallback((creator: ExploreCreator) => {
+    const params: DealFlowStackParamList['OfferBuilder'] = { slug: creator.slug };
+    navigate('OfferBuilder', params);
   }, []);
 
   // One request per creator at a time: a second tap waits for the first to settle.
@@ -54,5 +60,5 @@ export const useCreatorCardActions = () => {
     [setShortlist],
   );
 
-  return { openCreator, toggleShortlist, setShortlist };
+  return { openCreator, toggleShortlist, setShortlist, requestOffer };
 };

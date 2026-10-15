@@ -47,6 +47,8 @@ export interface DealsBoardProps<T extends string> {
   vm: DealsBoardModel<T>;
   emptyIcon: LucideIcon;
   errorMessage: string;
+  /** Account-level warning above «your turn» (creator strikes); scrolls with the tickets and owns its spacing. */
+  notice?: React.ReactElement | null;
 }
 
 /**
@@ -57,6 +59,7 @@ const DealsBoardComponent = <T extends string>({
   vm,
   emptyIcon,
   errorMessage,
+  notice,
 }: DealsBoardProps<T>) => {
   const onScroll = useJSScrollHandler();
   const { role, openDeal } = vm;
@@ -113,10 +116,15 @@ const DealsBoardComponent = <T extends string>({
         emptyAction={vm.emptyAction}
         errorMessage={errorMessage}
         ListHeaderComponent={
-          vm.showTurn ? (
-            <Box style={styles.turn}>
-              <DealTurnStack deals={vm.turn} role={role} onPress={openDeal} />
-            </Box>
+          notice || vm.showTurn ? (
+            <>
+              {notice}
+              {vm.showTurn ? (
+                <Box style={styles.turn}>
+                  <DealTurnStack deals={vm.turn} role={role} onPress={openDeal} />
+                </Box>
+              ) : null}
+            </>
           ) : null
         }
         ListSkeletonComponent={<DealTicketsSkeleton />}

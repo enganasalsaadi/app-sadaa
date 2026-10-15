@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BadgeCheck, CircleCheck, Lock, MapPin, Zap } from 'lucide-react-native';
+import { BadgeCheck, CircleCheck, Handshake, Lock, MapPin, Zap } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
@@ -9,6 +9,7 @@ import {
   Card,
   Image,
   MoneyText,
+  Pressable,
   SocialPlatformIcon,
   StatusPill,
   Text,
@@ -34,6 +35,8 @@ export interface CreatorCardProps {
   onPress: (creator: ExploreCreator) => void;
   /** ❤️ toggle; omit where there is no shortlist. */
   onToggleShortlist?: (creator: ExploreCreator) => void;
+  /** Starts a direct offer (brand only; the builder runs the preflight). Omit to hide the button. */
+  onRequestOffer?: (creator: ExploreCreator) => void;
 }
 
 type Part = { creator: ExploreCreator };
@@ -219,9 +222,40 @@ const RowBody = memo<Part>(({ creator }) => {
   );
 });
 
+/** Teal disc at the card's bottom-end corner (approved 2026-10-16): straight to the offer builder. */
+const RequestOfferButton = memo<{ name: string; onPress: () => void }>(({ name, onPress }) => {
+  const { t } = useTranslation();
+  const { colors, sizes } = useTheme();
+  return (
+    <Pressable
+      onPress={onPress}
+      width={sizes.iconButton.md}
+      height={sizes.iconButton.md}
+      align="center"
+      justify="center"
+      hitSlop={sizes.hitSlop.sm}
+      scaleOnPress
+      accessibilityRole="button"
+      accessibilityLabel={t('marketplace.offer.cardCta', { name })}
+    >
+      <Box
+        width={sizes.button.sm}
+        height={sizes.button.sm}
+        borderRadius="full"
+        align="center"
+        justify="center"
+        bg={colors.interactive.soft}
+      >
+        <Handshake size={sizes.icon.sm} color={colors.interactive.main} />
+      </Box>
+    </Pressable>
+  );
+});
+
 /**
  * Creator result (handoff `CreatorCard`) for Explore and Shortlist: photo beside the details.
- * The ❤️ sits beside the card, not inside it, so screen readers reach both buttons.
+ * The ❤️ (top-end) and the offer disc (bottom-end) sit beside the card, not inside it, so screen
+ * readers reach every button.
  * List item — keep it memoised and pass stable handlers.
  */
 const CreatorCardComponent: React.FC<CreatorCardProps> = ({
@@ -229,12 +263,15 @@ const CreatorCardComponent: React.FC<CreatorCardProps> = ({
   selected,
   onPress,
   onToggleShortlist,
+  onRequestOffer,
 }) => {
   const styles = useStyles(({ spacing }) => ({
     heart: { position: 'absolute' as const, top: spacing.xs, end: spacing.xs },
+    offer: { position: 'absolute' as const, bottom: spacing.xs, end: spacing.xs },
   }), []);
   const press = useCallback(() => onPress(creator), [creator, onPress]);
   const toggle = useCallback(() => onToggleShortlist?.(creator), [creator, onToggleShortlist]);
+  const requestOffer = useCallback(() => onRequestOffer?.(creator), [creator, onRequestOffer]);
 
   return (
     <Box>
@@ -244,6 +281,11 @@ const CreatorCardComponent: React.FC<CreatorCardProps> = ({
       {onToggleShortlist ? (
         <Box style={styles.heart}>
           <ShortlistHeart selected={creator.isShortlisted} onToggle={toggle} />
+        </Box>
+      ) : null}
+      {onRequestOffer ? (
+        <Box style={styles.offer}>
+          <RequestOfferButton name={creator.displayName} onPress={requestOffer} />
         </Box>
       ) : null}
     </Box>
