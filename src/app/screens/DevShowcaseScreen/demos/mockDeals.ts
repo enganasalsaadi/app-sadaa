@@ -72,7 +72,9 @@ export const buildMockDeal = ({
     itemsCount,
     total,
     shippingMode: labeled(shipping ? 'gift' : 'none'),
-    shipping: shipping ? { shipBy: null, reshipsLeft: 1, freeCancelFrom: null, shipments: [] } : null,
+    shipping: shipping
+      ? { shipBy: null, reshipsLeft: 1, freeCancelFrom: null, shipments: [], address: null, addressEditable: false }
+      : null,
     cancellation: null,
     deliveryHours: 120,
     requestedDeliveryDays: null,

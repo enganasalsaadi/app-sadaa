@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileText } from 'lucide-react-native';
 import type { Money } from '@/core/money';
@@ -26,6 +26,8 @@ export interface DealSignSheetProps {
   onSign: () => Promise<boolean>;
   /** Opens the full contract once the sheet is gone; hidden without one. */
   onContract?: () => void;
+  /** Under the slip (the delivery address line on accept). */
+  children?: ReactNode;
 }
 
 /**
@@ -47,6 +49,7 @@ const DealSignSheetComponent: React.FC<DealSignSheetProps> = ({
   holdA11y,
   onSign,
   onContract,
+  children,
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -75,6 +78,7 @@ const DealSignSheetComponent: React.FC<DealSignSheetProps> = ({
         lines={lines}
         notchColor={colors.layout.base}
       />
+      {children}
       {onContract ? (
         <Pressable
           row

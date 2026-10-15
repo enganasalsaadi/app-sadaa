@@ -285,11 +285,31 @@ export interface DealShipment {
   } | null;
 }
 
+/**
+ * Where the product goes (B5.1): given by the creator when signing. The brand reads it only while
+ * it has to ship; lists never carry it. PII: never logged or stored on the device (rule 07).
+ */
+export interface DealShippingAddress {
+  recipientName: string;
+  /** E.164, a Syrian mobile. */
+  phone: string;
+  governorate: { id: string; label: string } | null;
+  city: string;
+  area: string;
+  addressLine: string;
+  landmark: string | null;
+  notes: string | null;
+  updatedAt: Timestamp | null;
+}
+
 export interface DealShipping {
   shipBy: Timestamp | null;
   reshipsLeft: number;
   freeCancelFrom: Timestamp | null;
   shipments: DealShipment[];
+  address: DealShippingAddress | null;
+  /** Creator only: the address can still change (nothing in transit). */
+  addressEditable: boolean;
 }
 
 export interface DealCancellation {
@@ -708,12 +728,13 @@ export type DealActionPath =
   // both (brand pulls back an offer / creator withdraws with a strike; shipping cancel is per role)
   | 'withdraw'
   | 'shipment/cancel'
+  | 'shipping-address'
   | 'dispute/withdraw';
 
 export interface DealActionArgs {
   ref: DealRef;
   path: DealActionPath;
-  /** `PUT` only for editing a shipment. */
+  /** `PUT` only for editing a shipment or the delivery address. */
   method?: 'POST' | 'PUT';
   body?: Record<string, unknown>;
   /** Money / binding actions (rule 06): accept, fund, cancel, upsells, extension approve. */

@@ -27,9 +27,14 @@ import {
   type DealExtensionRange,
 } from '../utils/dealRespond';
 import { useDealAction } from './useDealAction';
+import { useDealAddressForm } from './useDealAddressForm';
 
-/** The sheets of P4: the creator's answer, the brand's answer to an extension, pulling an offer back. */
+/**
+ * The sheets of P4: the creator's answer, the brand's answer to an extension, pulling an offer
+ * back. With a product, signing (accept / extension) first asks where it ships (`address`, B5.1).
+ */
 export type DealRespondSheet =
+  | 'address'
   | 'accept'
   | 'decline'
   | 'extension'
@@ -40,6 +45,7 @@ export type DealRespondSheet =
 const DECLINE_FIELDS = { reason: 'reason', note: 'note' } as const;
 const EXTENSION_FIELDS = { delivery_days: 'days', reason: 'reason' } as const;
 const REASON_FIELDS = { reason: 'reason' } as const;
+const ADDRESS_PREFIX = 'shipping_address.';
 
 /** Before any extension is possible the form still needs a shape; the sheet never opens on it. */
 const NO_RANGE: DealExtensionRange = { current: 0, min: 1, max: 1 };
@@ -82,20 +88,29 @@ export const useDealRespond = (
   const fundingState = dealFundingState(funding);
   const canTopUp = user?.capabilities?.top_up_wallet?.allowed === true;
 
+  const hasProduct =
+    deal !== null &&
+    deal.shippingMode.key !== null &&
+    deal.shippingMode.key !== 'none';
+  const address = useDealAddressForm();
+
   const [sheet, setSheet] = useState<DealRespondSheet | null>(null);
   const close = useCallback(() => setSheet(null), []);
 
-  // The contract opens once the sheet has left the screen (iOS can't push under a dismissing modal).
+  // The contract or the next sheet opens once this one has left the screen (iOS can't present
+  // under a dismissing modal).
   const contractNext = useRef(false);
+  const queued = useRef<DealRespondSheet | null>(null);
+  /** Which signature the address step leads to. */
+  const afterAddress = useRef<'accept' | 'extension'>('accept');
   const onContract = useCallback(() => {
     contractNext.current = true;
     setSheet(null);
   }, []);
-  const onSheetDismissed = useCallback(() => {
-    if (!contractNext.current) return;
-    contractNext.current = false;
-    openContract();
-  }, [openContract]);
+  const goTo = useCallback((next: DealRespondSheet) => {
+    queued.current = next;
+    setSheet(null);
+  }, []);
 
   const declineSchema = useMemo(() => createDealDeclineSchema(t), [t]);
   const declineForm = useForm<DealDeclineFormValues>({
@@ -127,12 +142,10 @@ export const useDealRespond = (
   const open = useCallback(
     (next: DealRespondSheet) => {
       switch (next) {
+        case 'address':
+          break;
         case 'decline':
           resetDeclineForm({ reason: null, note: '' });
-          break;
-        case 'extension':
-          resetExtendIntent();
-          resetExtensionForm({ days: range?.min ?? NO_RANGE.min, reason: '' });
           break;
         case 'withdraw':
           resetWithdrawIntent();
@@ -141,6 +154,9 @@ export const useDealRespond = (
         case 'rejectExtension':
           resetReasonForm({ reason: '' });
           break;
+        // Reset when the creator starts (`signing`): coming back from the address keeps the pick
+        // and the idempotency key of the same intent.
+        case 'extension':
         case 'accept':
         case 'approveExtension':
           break;
@@ -151,27 +167,57 @@ export const useDealRespond = (
       }
       setSheet(next);
     },
-    [
-      range,
-      resetDeclineForm,
-      resetExtendIntent,
-      resetExtensionForm,
-      resetReasonForm,
-      resetWithdrawIntent,
-    ],
+    [resetDeclineForm, resetReasonForm, resetWithdrawIntent],
   );
+
+  const onSheetDismissed = useCallback(() => {
+    if (contractNext.current) {
+      contractNext.current = false;
+      openContract();
+      return;
+    }
+    const next = queued.current;
+    queued.current = null;
+    if (next) open(next);
+  }, [open, openContract]);
+
+  // With a product the signature waits for the address: the last one used fills the form.
+  const startFromLast = address.startFromLast;
+  const signing = useCallback(
+    (target: 'accept' | 'extension') => {
+      if (target === 'extension') {
+        resetExtendIntent();
+        resetExtensionForm({ days: range?.min ?? NO_RANGE.min, reason: '' });
+      }
+      if (!hasProduct) {
+        open(target);
+        return;
+      }
+      afterAddress.current = target;
+      startFromLast();
+      open('address');
+    },
+    [hasProduct, open, range, resetExtendIntent, resetExtensionForm, startFromLast],
+  );
+  const addressSubmit = address.handleSubmit;
+  const onAddressContinue = useMemo(
+    () => addressSubmit(() => goTo(afterAddress.current)),
+    [addressSubmit, goTo],
+  );
+  const backToAddress = useCallback(() => goTo('address'), [goTo]);
 
   const opens = useMemo(
     () =>
       ({
-        accept: () => open('accept'),
+        address: () => open('address'),
+        accept: () => signing('accept'),
         decline: () => open('decline'),
-        extension: () => open('extension'),
+        extension: () => signing('extension'),
         approveExtension: () => open('approveExtension'),
         rejectExtension: () => open('rejectExtension'),
         withdraw: () => open('withdraw'),
       } satisfies Record<DealRespondSheet, () => void>),
-    [open],
+    [open, signing],
   );
 
   /** Success → close + toast; conflict → close (already toasted, deal refetched); else the sheet stays. */
@@ -197,11 +243,27 @@ export const useDealRespond = (
   );
 
   // — Creator ————————————————————————————————————————————————————————
+  const toAddress = address.toBody;
+  const applyAddressErrors = address.applyErrors;
+  /** The signature's address part: sent with a product, and a refused field goes back to the form. */
+  const shippingBody = useCallback(
+    () => (hasProduct ? { shipping_address: toAddress() } : {}),
+    [hasProduct, toAddress],
+  );
+  const addressRefused = useCallback(
+    (error: AppApiError) => {
+      if (!hasProduct || !applyAddressErrors(error, ADDRESS_PREFIX)) return false;
+      goTo('address');
+      return true;
+    },
+    [applyAddressErrors, goTo, hasProduct],
+  );
+
   const runAccept = accept.run;
   const onAccept = useCallback(async (): Promise<boolean> => {
     const deviceId = await getPersistentDeviceId();
     const outcome = await runAccept('accept', {
-      body: { device_id: deviceId },
+      body: { device_id: deviceId, ...shippingBody() },
     });
     const funded = outcome.ok ? outcome.result.funding?.funded ?? true : true;
     return settle(
@@ -209,8 +271,9 @@ export const useDealRespond = (
       funded
         ? t('marketplace.deals.respond.toast.accepted')
         : t('marketplace.deals.respond.toast.acceptedUnfunded'),
+      addressRefused,
     );
-  }, [runAccept, settle, t]);
+  }, [addressRefused, runAccept, settle, shippingBody, t]);
 
   const runDecline = decline.run;
   const setDeclineError = declineForm.setError;
@@ -238,7 +301,12 @@ export const useDealRespond = (
           async ({ days, reason }) => {
             const deviceId = await getPersistentDeviceId();
             const outcome = await runExtend('extension', {
-              body: { delivery_days: days, reason, device_id: deviceId },
+              body: {
+                delivery_days: days,
+                reason,
+                device_id: deviceId,
+                ...shippingBody(),
+              },
             });
             resolve(
               settle(
@@ -249,14 +317,22 @@ export const useDealRespond = (
                     error,
                     EXTENSION_FIELDS,
                     setExtensionError,
-                  ),
+                  ) || addressRefused(error),
               ),
             );
           },
           () => resolve(false),
         )();
       }),
-    [extensionSubmit, runExtend, setExtensionError, settle, t],
+    [
+      addressRefused,
+      extensionSubmit,
+      runExtend,
+      setExtensionError,
+      settle,
+      shippingBody,
+      t,
+    ],
   );
 
   // — Brand ——————————————————————————————————————————————————————————
@@ -339,6 +415,10 @@ export const useDealRespond = (
     close,
     onContract,
     onSheetDismissed,
+    hasProduct,
+    address,
+    onAddressContinue,
+    backToAddress,
     range,
     ask,
     funding,

@@ -134,7 +134,7 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 
 ## الشريحة B — الحالات الخاصة
 
-- **P5 — M5 الشحن (M)**: البراند إدخال/تعديل/إعادة شحن/إلغاء · المؤثر استلام / مشكلة (صور 1–5) / إلغاء مجاني. قسم في التفاصيل.
+- ✅ **P5 — M5 الشحن (M)** (2026-10-15؛ اتجاه A «البوليصة»، `design-previews/deal-shipping.html`؛ قسم `shipping` في `DealDetailView` للدورين + `DealShippingDock` + `DealShippingSheets` على `useDealShipping` داخل `useDealDetail`): البراند إدخال/تعديل/إعادة شحن (`shipment` POST/PUT، شركات سريعة + «أخرى»، رابط https فقط) / إلغاء مع استرداد (ضغط مطوّل، idempotent) · المؤثر استلام (ضغط مطوّل) / مشكلة (صور 1–5 multipart `reportShipmentIssue`، «متأخر» مقفل حتى `delayed_report_from`) / إلغاء مجاني (ضغط مطوّل، idempotent). عنوان التوصيل (B5.1، `docs/direct-deals/backend-shipping-address.md`): يُطلب قبل توقيع القبول/التمديد عند وجود منتج (`shipping_address` في الجسم، تعبئة من `GET /influencer/shipping-address`)، تعديل عبر `PUT …/shipping-address`. `utils/dealShipping` + `schemas/dealShippingSchema` + اختبارات. غير مُختبر على جهاز أو سيرفر حي.
 - **P8.1 — M8 الإلغاء (M)**: البراند ورقة إلغاء تقرأ `cancellation.brand` (مجاني / Kill fee 40% / نزاع فقط) + `expected_outcome`؛ المؤثر انسحاب مع تحذير Strike + شاشة `Strikes`.
 - **P8.2 — M8 Upsells (M)**: `UpsellBuilder` يعيد استخدام `DealLinesPicker` + quote؛ المؤثر قبول/رفض؛ عجز الرصيد → TopUp.
 - **P9.1 — M9 النزاع (M)**: فتح نزاع + أدلة (ملفات/روابط/صور الشحن) + عرض الحكم.

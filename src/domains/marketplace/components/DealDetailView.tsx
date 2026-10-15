@@ -26,16 +26,20 @@ import { DealOutcomeCard } from './DealOutcomeCard';
 import { DealRatingSection } from './DealRatingSection';
 import { DealRespondDock } from './DealRespondDock';
 import { DealRespondSheets } from './DealRespondSheets';
+import { DealShippingDock } from './DealShippingDock';
+import { DealShippingSection } from './DealShippingSection';
+import { DealShippingSheets } from './DealShippingSheets';
 import { DealStageCard } from './DealStageCard';
 
 /**
  * The detail's section slots, in the order a role reads them. Later phases add theirs here
- * (shipping P5, upsells P9, dispute P8) with a case in `DetailSection`.
+ * (upsells P9, dispute P8) with a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
   | 'next'
   | 'rating'
   | 'deliverables'
+  | 'shipping'
   | 'dossier'
   | 'stage';
 
@@ -80,6 +84,10 @@ const DetailSection = memo<{
   switch (section) {
     case 'next': {
       if (vm.stopped) return <DealOutcomeCard deal={deal} />;
+      // While the product ships, the waybill is the next step (P5).
+      if (vm.shipping.view && vm.shipping.view.phase !== 'received' && vm.shipping.view.phase !== 'address') {
+        return null;
+      }
       const { respond } = vm;
       // While the brand decides, the decision itself is the next step (P4).
       if (respond.dock === 'brandExtension' && respond.ask) {
@@ -119,6 +127,10 @@ const DetailSection = memo<{
           onOpen={vm.openItem}
         />
       ) : null;
+    case 'shipping':
+      return vm.stopped ? null : (
+        <DealShippingSection deal={deal} role={vm.role} shipping={vm.shipping} />
+      );
     case 'stage':
       return (
         <StageSection
@@ -142,7 +154,8 @@ const DetailSection = memo<{
  * Deal detail, shared by both roles' screens (approved 2026-10-14): the navy orbit hero the body
  * slides over (same hero behaviour as Wallet and Profile; the overlay header pins the name once
  * it scrolls away), then the role's sections. While the deal waits on the viewer's answer or money
- * (P4) the decision bar is pinned below and its sheets open over the page.
+ * (P4), or on the product's shipping (P5), the decision bar is pinned below and its sheets open
+ * over the page.
  */
 const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
   vm,
@@ -195,6 +208,8 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         footer={
           vm.respond.dock ? (
             <DealRespondDock deal={deal} respond={vm.respond} />
+          ) : vm.shipping.dock ? (
+            <DealShippingDock shipping={vm.shipping} />
           ) : undefined
         }
         hero={
@@ -236,6 +251,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         respond={vm.respond}
         hasContract={vm.hasContract}
       />
+      <DealShippingSheets deal={deal} shipping={vm.shipping} />
     </>
   );
 };

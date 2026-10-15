@@ -71,6 +71,7 @@ export type {
   DealShipmentPhoto,
   DealShipment,
   DealShipping,
+  DealShippingAddress,
   DealCancellation,
   DealExtension,
   DealUpsell,

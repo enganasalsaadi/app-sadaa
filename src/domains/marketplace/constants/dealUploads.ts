@@ -36,3 +36,8 @@ export const DEAL_UPLOAD_LIMIT = {
   retention_report: 3,
   retention_restore: 3,
 } as const satisfies Record<DealFilePurpose, number>;
+
+/** Shipping-issue photos (M5): sent with the report itself (multipart), not through upload slots. */
+export const DEAL_ISSUE_PHOTO_POLICY = {
+  rules: [KIND_RULE.image],
+} as const satisfies UploadPolicy;

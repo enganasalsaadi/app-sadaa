@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, type ReactNode } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Controller, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -21,10 +21,14 @@ import { DealHoldToSign } from './DealHoldToSign';
 export interface DealExtensionSheetProps {
   visible: boolean;
   onClose: () => void;
+  /** Fires once gone: the address sheet opens next after a refused address. */
+  onDismissed?: () => void;
   brandName: string;
   range: DealExtensionRange;
   control: Control<DealExtensionFormValues>;
   onSign: () => Promise<boolean>;
+  /** Under the reason (the delivery address line with a product). */
+  children?: ReactNode;
 }
 
 /** The picked total, big, with how many days it adds. Watches `days` alone. */
@@ -82,10 +86,12 @@ const DaysFigure = memo<{
 const DealExtensionSheetComponent: React.FC<DealExtensionSheetProps> = ({
   visible,
   onClose,
+  onDismissed,
   brandName,
   range,
   control,
   onSign,
+  children,
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -93,6 +99,7 @@ const DealExtensionSheetComponent: React.FC<DealExtensionSheetProps> = ({
     <DealSheetFrame
       visible={visible}
       onClose={onClose}
+      onDismissed={onDismissed}
       title={t('marketplace.deals.respond.extension.title')}
       body={t('marketplace.deals.respond.extension.body', {
         days: formatDays(t, DEAL_MAX_EXTENSION_DAYS),
@@ -157,6 +164,7 @@ const DealExtensionSheetComponent: React.FC<DealExtensionSheetProps> = ({
           </Text>
         </Box>
       </Box>
+      {children}
     </DealSheetFrame>
   );
 };

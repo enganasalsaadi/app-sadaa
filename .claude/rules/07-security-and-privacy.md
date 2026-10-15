@@ -16,7 +16,7 @@ No `console.log` of tokens, headers, phones, wallet data, API bodies. Logs only 
 ## Input & content
 
 - Every form validated by yup schema; server re-validates.
-- User URLs (social links, proof links) validated against host allow-list before `Linking`. `WebViewScreen` loads allow-listed hosts only.
+- User URLs (social links, proof links) validated against host allow-list before `Linking`. Exception (approved 2026-10-15): courier tracking links open when well-formed https (`safeTrackingUrl`). `WebViewScreen` loads allow-listed hosts only.
 - Uploads: MIME + size check client-side, upload via signed URL/endpoint from api layer. Original quality; no recompression of review drafts.
 - Deep links / push payloads: parse → typed route + params → validate → `navigate`. Never a raw screen name from payload.
 

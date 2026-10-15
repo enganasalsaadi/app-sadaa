@@ -331,6 +331,43 @@ describe('mapDeal', () => {
     expect(deal.shipping?.shipments[0]?.issue?.answerBy).toBeNull();
   });
 
+  it('maps the delivery address and defaults it on servers that predate it', () => {
+    const base = dealDto();
+    const withAddress = mapDeal({
+      ...base,
+      shipping: base.shipping && {
+        ...base.shipping,
+        address: {
+          recipient_name: 'Reem',
+          phone: '+963944123456',
+          governorate: { id: 'g1', label: 'Damascus' },
+          city: 'Damascus',
+          area: 'Mezzeh',
+          address_line: 'Jalaa St, building 12',
+          landmark: '',
+          notes: null,
+          updated_at: T0,
+        },
+        address_editable: true,
+      },
+    });
+
+    expect(withAddress.shipping?.address).toEqual({
+      recipientName: 'Reem',
+      phone: '+963944123456',
+      governorate: { id: 'g1', label: 'Damascus' },
+      city: 'Damascus',
+      area: 'Mezzeh',
+      addressLine: 'Jalaa St, building 12',
+      landmark: null,
+      notes: null,
+      updatedAt: T0_MS,
+    });
+    expect(withAddress.shipping?.addressEditable).toBe(true);
+    expect(mapDeal(base).shipping?.address).toBeNull();
+    expect(mapDeal(base).shipping?.addressEditable).toBe(false);
+  });
+
   it('renames the influencer side to creator', () => {
     const deal = mapDeal(dealDto());
 

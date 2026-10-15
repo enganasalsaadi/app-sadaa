@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 import Svg, { Circle } from 'react-native-svg';
-import { PenLine } from 'lucide-react-native';
+import { PenLine, type LucideIcon } from 'lucide-react-native';
 import { HAPTIC_TAP_MS } from '@/core/config';
 import { moderateScale, motion, useStyles, useTheme } from '@/core/theme';
 import { Box, LiveDot, Pressable, Text } from '@/shared/ui';
@@ -46,6 +46,10 @@ export interface DealHoldToSignProps {
   sending?: boolean;
   /** On the button while busy; the label otherwise. */
   sendingLabel?: string;
+  /** `danger`: the hold ends something (a cancel), red instead of the primary fill. */
+  tone?: 'primary' | 'danger';
+  /** In the ring; a pen for signatures by default. */
+  icon?: LucideIcon;
 }
 
 /**
@@ -62,8 +66,11 @@ const DealHoldToSignComponent: React.FC<DealHoldToSignProps> = ({
   onComplete,
   sending = false,
   sendingLabel,
+  tone = 'primary',
+  icon: Icon = PenLine,
 }) => {
   const { colors, sizes, isRTL } = useTheme();
+  const fill = colors.button[tone];
   const [early, setEarly] = useState(false);
   const [running, setRunning] = useState(false);
   const busy = sending || running;
@@ -163,7 +170,7 @@ const DealHoldToSignComponent: React.FC<DealHoldToSignProps> = ({
           gap="md"
           height={BUTTON_HEIGHT}
           px="lg"
-          bg={busy ? colors.status.success.text : colors.button.primary.bg}
+          bg={busy ? colors.status.success.text : fill.bg}
           onPressIn={onPressIn}
           onPressOut={onPressOut}
           disabled={busy}
@@ -205,7 +212,7 @@ const DealHoldToSignComponent: React.FC<DealHoldToSignProps> = ({
                     cx={RING / 2}
                     cy={RING / 2}
                     r={RADIUS}
-                    stroke={colors.button.primary.text}
+                    stroke={fill.text}
                     strokeWidth={RING_STROKE}
                     strokeLinecap="round"
                     strokeDasharray={`${LENGTH} ${LENGTH}`}
@@ -213,16 +220,9 @@ const DealHoldToSignComponent: React.FC<DealHoldToSignProps> = ({
                     fill="none"
                   />
                 </Svg>
-                <PenLine
-                  size={sizes.icon.sm}
-                  color={colors.button.primary.text}
-                />
+                <Icon size={sizes.icon.sm} color={fill.text} />
               </Box>
-              <Text
-                variant="button"
-                color={colors.button.primary.text}
-                numberOfLines={1}
-              >
+              <Text variant="button" color={fill.text} numberOfLines={1}>
                 {label}
               </Text>
             </>

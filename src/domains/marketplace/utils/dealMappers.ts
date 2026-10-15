@@ -54,6 +54,7 @@ import {
   type DealRole,
   type DealShipment,
   type DealShipping,
+  type DealShippingAddress,
   type DealsPage,
   type DealSignature,
   type DealStrike,
@@ -89,6 +90,7 @@ import type {
   DealRatingSideDto,
   DealRetentionCaseDto,
   DealShipmentDto,
+  DealShippingAddressDto,
   DealShippingDto,
   DealsPageDto,
   DealSignatureDto,
@@ -217,11 +219,25 @@ const mapShipment = (dto: DealShipmentDto): DealShipment => ({
   },
 });
 
+export const mapShippingAddress = (dto: DealShippingAddressDto): DealShippingAddress => ({
+  recipientName: dto.recipient_name,
+  phone: dto.phone,
+  governorate: dto.governorate && { id: dto.governorate.id, label: dto.governorate.label },
+  city: dto.city,
+  area: dto.area,
+  addressLine: dto.address_line,
+  landmark: dto.landmark || null,
+  notes: dto.notes || null,
+  updatedAt: toTimestampOrNull(dto.updated_at),
+});
+
 const mapShipping = (dto: DealShippingDto): DealShipping => ({
   shipBy: toTimestampOrNull(dto.ship_by),
   reshipsLeft: dto.reships_left,
   freeCancelFrom: toTimestampOrNull(dto.free_cancel_from),
   shipments: dto.shipments.map(mapShipment),
+  address: dto.address ? mapShippingAddress(dto.address) : null,
+  addressEditable: dto.address_editable ?? false,
 });
 
 const mapCancellation = ({ brand, influencer }: DealCancellationDto): DealCancellation => ({

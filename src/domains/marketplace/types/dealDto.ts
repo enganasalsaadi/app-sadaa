@@ -92,11 +92,26 @@ export interface DealShipmentDto {
   } | null;
 }
 
+export interface DealShippingAddressDto {
+  recipient_name: string;
+  phone: string;
+  governorate: { id: string; label: string } | null;
+  city: string;
+  area: string;
+  address_line: string;
+  landmark: string | null;
+  notes: string | null;
+  updated_at: string | null;
+}
+
 export interface DealShippingDto {
   ship_by: string | null;
   reships_left: number;
   free_cancel_from: string | null;
   shipments: DealShipmentDto[];
+  /** B5.1; absent on servers that predate it. */
+  address?: DealShippingAddressDto | null;
+  address_editable?: boolean;
 }
 
 export interface DealCancellationDto {

@@ -90,6 +90,8 @@ const withProduct = (status: DealStatus, received: boolean | null) =>
       reshipsLeft: 1,
       freeCancelFrom: null,
       shipments: received === null ? [] : [shipment(received ? NOW : null)],
+      address: null,
+      addressEditable: false,
     },
   });
 

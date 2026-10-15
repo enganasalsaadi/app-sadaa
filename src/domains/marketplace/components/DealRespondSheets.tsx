@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useDealSlipCopy } from '../hooks/useDealSlipCopy';
 import type { DealRespondModel } from '../hooks/useDealRespond';
 import type { Deal } from '../types';
+import { DealAddressLine } from './DealAddressLine';
+import { DealAddressSheet } from './DealAddressSheet';
 import { DealDeclineSheet } from './DealDeclineSheet';
 import { DealExtensionSheet } from './DealExtensionSheet';
 import { DealReasonSheet } from './DealReasonSheet';
@@ -14,7 +16,7 @@ export interface DealRespondSheetsProps {
   hasContract: boolean;
 }
 
-/** Every P4 sheet for the deal page; the model decides which one is up. */
+/** Every P4 sheet for the deal page (+ the P5 address step); the model decides which one is up. */
 const DealRespondSheetsComponent: React.FC<DealRespondSheetsProps> = ({
   deal,
   respond,
@@ -26,6 +28,9 @@ const DealRespondSheetsComponent: React.FC<DealRespondSheetsProps> = ({
   const brandName = deal.brand.name ?? '';
   const creatorName = deal.creator.name ?? '';
   const onContract = hasContract ? respond.onContract : undefined;
+  const addressLine = respond.hasProduct ? (
+    <DealAddressLine form={respond.address} onChange={respond.backToAddress} />
+  ) : null;
 
   return (
     <>
@@ -44,7 +49,9 @@ const DealRespondSheetsComponent: React.FC<DealRespondSheetsProps> = ({
         holdA11y={t('marketplace.deals.respond.accept.holdA11y')}
         onSign={respond.onAccept}
         onContract={onContract}
-      />
+      >
+        {addressLine}
+      </DealSignSheet>
       <DealSignSheet
         visible={sheet === 'approveExtension'}
         onClose={respond.close}
@@ -63,6 +70,15 @@ const DealRespondSheetsComponent: React.FC<DealRespondSheetsProps> = ({
         onSign={respond.onApproveExtension}
         onContract={onContract}
       />
+      <DealAddressSheet
+        visible={sheet === 'address'}
+        onClose={respond.close}
+        onDismissed={respond.onSheetDismissed}
+        form={respond.address}
+        purpose="sign"
+        brandName={brandName}
+        onSubmit={respond.onAddressContinue}
+      />
       <DealDeclineSheet
         visible={sheet === 'decline'}
         onClose={respond.close}
@@ -75,11 +91,14 @@ const DealRespondSheetsComponent: React.FC<DealRespondSheetsProps> = ({
         <DealExtensionSheet
           visible={sheet === 'extension'}
           onClose={respond.close}
+          onDismissed={respond.onSheetDismissed}
           brandName={brandName}
           range={respond.range}
           control={respond.extensionControl}
           onSign={respond.onExtension}
-        />
+        >
+          {addressLine}
+        </DealExtensionSheet>
       ) : null}
       <DealReasonSheet
         kind={
