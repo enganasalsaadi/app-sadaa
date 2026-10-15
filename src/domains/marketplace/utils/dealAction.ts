@@ -38,6 +38,16 @@ export const settleDealAction = async (
   }
 };
 
+/**
+ * A write that doesn't answer the deal (retention, dispute) hit a `deal_*` conflict: the server
+ * says why (its mutation already refetched the deal). `true` when it was one.
+ */
+export const toastDealConflict = (error: AppApiError): boolean => {
+  if (!isDealConflictError(error)) return false;
+  toastService.error(error.message);
+  return true;
+};
+
 /** Failures nobody else reports: 422 toasts in baseQuery, 403/5xx/offline have global UI. */
 export const reportDealFailure = (error: AppApiError) => {
   if (

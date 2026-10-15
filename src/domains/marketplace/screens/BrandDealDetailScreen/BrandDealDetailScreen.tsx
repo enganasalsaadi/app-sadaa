@@ -10,10 +10,12 @@ import { useBrandDealDetailScreen } from './hooks/useBrandDealDetailScreen';
 const SECTIONS: readonly DealDetailSectionKey[] = [
   'next',
   'dispute',
+  'retentionCases',
   'upsell',
   'rating',
   'deliverables',
   'shipping',
+  'retention',
   'dossier',
   'stage',
   'changes',

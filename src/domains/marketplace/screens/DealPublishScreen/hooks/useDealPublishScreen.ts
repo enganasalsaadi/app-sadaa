@@ -5,13 +5,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { applyServerFieldErrors } from '@/core/api';
 import { useDiscardGuard } from '@/core/hooks';
 import { formatDate, formatNumber } from '@/core/i18n';
 import type { DealsStackParamList, DealsStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
-import { useFileUploads, type UploadSource } from '@/core/upload';
+import { useFileUploads } from '@/core/upload';
 import { isolateLtr, isolateText } from '@/shared/utils';
 import { useGetDealQuery } from '../../../api/dealsApi';
 import { useGetDealItemPublicationsQuery, useRequestProofUploadSlotMutation } from '../../../api/dealPublishApi';
@@ -33,6 +32,7 @@ import {
   toPublishBody,
   windowShare,
 } from '../../../utils/dealPublish';
+import { pickScreenshots } from '../../../utils/dealScreenshots';
 import { formatRemaining, timerSecondsLeft } from '../../../utils/dealTimer';
 import type { PublishSubmitState } from '../components/PublishDock';
 
@@ -86,20 +86,7 @@ export const useDealPublishScreen = () => {
       return;
     }
     try {
-      // Original quality: a screenshot is evidence and must stay readable (rule 07).
-      const response = await launchImageLibrary({
-        mediaType: 'photo',
-        quality: 1,
-        assetRepresentationMode: 'current',
-        selectionLimit: remaining,
-      });
-      if (response.didCancel) return;
-      if (response.errorCode) throw new Error(response.errorCode);
-      const sources = (response.assets ?? []).flatMap<UploadSource>(asset =>
-        asset.uri
-          ? [{ uri: asset.uri, name: asset.fileName ?? asset.uri, mime: asset.type ?? null, size: asset.fileSize ?? null }]
-          : [],
-      );
+      const sources = await pickScreenshots(remaining);
       if (sources.length === 0) return;
       setProofsError(null);
       if (add(sources) > 0) {

@@ -30,6 +30,9 @@ import { DealOutcomeCard } from './DealOutcomeCard';
 import { DealRatingSection } from './DealRatingSection';
 import { DealRespondDock } from './DealRespondDock';
 import { DealRespondSheets } from './DealRespondSheets';
+import { DealRetentionCases } from './DealRetentionCases';
+import { DealRetentionSection } from './DealRetentionSection';
+import { DealRetentionSheets } from './DealRetentionSheets';
 import { DealShippingDock } from './DealShippingDock';
 import { DealShippingSection } from './DealShippingSection';
 import { DealShippingSheets } from './DealShippingSheets';
@@ -37,16 +40,18 @@ import { DealStageCard } from './DealStageCard';
 import { DealUpsellSection } from './DealUpsellSection';
 
 /**
- * The detail's section slots, in the order a role reads them. Later phases add theirs here
- * (retention P9.2) with a case in `DetailSection`.
+ * The detail's section slots, in the order a role reads them. Later phases add theirs here with
+ * a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
   | 'next'
   | 'dispute'
+  | 'retentionCases'
   | 'upsell'
   | 'rating'
   | 'deliverables'
   | 'shipping'
+  | 'retention'
   | 'dossier'
   | 'stage'
   | 'changes';
@@ -129,6 +134,10 @@ const DetailSection = memo<{
     }
     case 'dispute':
       return <DealDisputeCard dispute={vm.dispute} role={vm.role} />;
+    case 'retentionCases':
+      return <DealRetentionCases retention={vm.retention} />;
+    case 'retention':
+      return <DealRetentionSection deal={deal} retention={vm.retention} />;
     case 'upsell':
       return vm.stopped ? null : (
         <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
@@ -279,6 +288,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         upsells={vm.upsells}
       />
       <DealDisputeSheet deal={deal} role={vm.role} dispute={vm.dispute} />
+      <DealRetentionSheets deal={deal} retention={vm.retention} />
     </>
   );
 };

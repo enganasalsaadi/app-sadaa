@@ -5,12 +5,15 @@ import { Plus } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Pressable, Text } from '@/shared/ui';
-import { DealProofPhone, PROOF_PHONE_RATIO } from '../../../components/DealProofPhone';
+import { DealProofPhone, PROOF_PHONE_RATIO } from './DealProofPhone';
 import type { ProofFrame } from '../hooks/useProofFrames';
 
 const PLUS = moderateScale(40);
 
-export interface ProofShotsProps {
+export interface DealProofShotsProps {
+  /** Overline above the row, and the line under it when nothing is wrong. */
+  title: string;
+  hint: string;
   frames: ProofFrame[];
   max: number;
   error: string | null;
@@ -55,9 +58,19 @@ const Shot = memo<{
 
 /**
  * Up to three screenshots as phone screens side by side; the next free one is a dashed «add»
- * slot (optional once one is in), any left after it stay faint.
+ * slot (optional once one is in), any left after it stay faint. Proof of a live post (P7) and
+ * the retention report / restore (P9.2).
  */
-const ProofShotsComponent: React.FC<ProofShotsProps> = ({ frames, max, error, onAdd, onRemove, onRetry }) => {
+const DealProofShotsComponent: React.FC<DealProofShotsProps> = ({
+  title,
+  hint,
+  frames,
+  max,
+  error,
+  onAdd,
+  onRemove,
+  onRetry,
+}) => {
   const { t } = useTranslation();
   const { colors, sizes, spacing } = useTheme();
   const { width: screen } = useWindowDimensions();
@@ -104,7 +117,7 @@ const ProofShotsComponent: React.FC<ProofShotsProps> = ({ frames, max, error, on
     <Box gap="sm">
       <Box row align="center" justify="space-between">
         <Text variant="overline" color={colors.text.tertiary}>
-          {t('marketplace.deals.publish.creator.proofs.title')}
+          {title}
         </Text>
         <Text variant="caption" color={colors.text.tertiary}>
           {t('marketplace.deals.publish.creator.proofs.count', {
@@ -140,10 +153,10 @@ const ProofShotsComponent: React.FC<ProofShotsProps> = ({ frames, max, error, on
         ))}
       </Box>
       <Text variant="caption" color={error ? colors.status.warning.text : colors.text.tertiary}>
-        {error ?? t('marketplace.deals.publish.creator.proofs.hint')}
+        {error ?? hint}
       </Text>
     </Box>
   );
 };
 
-export const ProofShots = memo(ProofShotsComponent);
+export const DealProofShots = memo(DealProofShotsComponent);

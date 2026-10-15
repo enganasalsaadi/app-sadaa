@@ -13,6 +13,7 @@ import { useDealCancel } from './useDealCancel';
 import { useDealDispute } from './useDealDispute';
 import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
+import { useDealRetention } from './useDealRetention';
 import { useDealShipping } from './useDealShipping';
 import { useDealUpsells } from './useDealUpsells';
 
@@ -26,7 +27,8 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * (`openItem` from the role's screen, by the item's stage: draft rounds (P6) until approved, then
  * publishing (P7)), shipping the product (P5), the mutual rating once it completes (P10), and
  * the changes mid-deal (P8): addenda, the brand's cancel and the creator's withdrawal, and the
- * dispute (P9.1): opening one and the way into its file. Pull to refresh reads both again.
+ * dispute (P9.1): opening one and the way into its file, then post retention once it completes
+ * (P9.2): each post's time online and the reports on it. Pull to refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
@@ -116,6 +118,7 @@ export const useDealDetail = (
   const dispute = useDealDispute(role, id, deal);
   const cancel = useDealCancel(role, id, deal, shipping.opens.cancel, dispute.open);
   const upsells = useDealUpsells(role, id, deal);
+  const retention = useDealRetention(role, id, deal);
 
   const status = deal?.status.key ?? null;
   // Rounds only exist once the work has started; the first deliverable waiting on the viewer
@@ -165,6 +168,7 @@ export const useDealDetail = (
     cancel,
     upsells,
     dispute,
+    retention,
     deliverables,
     focusItem,
     openItem,

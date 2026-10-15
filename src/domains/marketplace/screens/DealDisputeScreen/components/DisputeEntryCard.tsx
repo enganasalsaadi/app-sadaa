@@ -8,7 +8,7 @@ import { useStyles, useTheme } from '@/core/theme';
 import { Box, Pressable, Text } from '@/shared/ui';
 import { isolateLtr } from '@/shared/utils';
 import type { DealDisputeEntry, DealFile, DealFilePurpose } from '../../../types';
-import { EvidenceTile, type EvidenceTileKind } from './EvidenceTile';
+import { EvidenceTile, type EvidenceTileKind } from '../../../components/EvidenceTile';
 
 const TIME_FORMAT: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' };
 

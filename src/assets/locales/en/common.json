@@ -3454,6 +3454,133 @@
           "toast": "Dispute withdrawn; the deal resumes"
         }
       },
+      "retention": {
+        "title": "Post retention",
+        "reasons": {
+          "deleted": "Post deleted",
+          "made_private": "Made private",
+          "edited": "Content changed",
+          "other": "Something else"
+        },
+        "span": {
+          "24h": "24 hours",
+          "30d": "30 days",
+          "90d": "90 days",
+          "180d": "180 days",
+          "permanent": "for good"
+        },
+        "life": {
+          "running": "Retention running",
+          "reported": "Report open",
+          "done": "Period complete",
+          "permanent": "Permanent",
+          "of": "{{title}} · left of {{span}}",
+          "until": "{{title}} · until {{date}}",
+          "permanentBrand": "{{title}} · you can report until {{date}}",
+          "permanentCreator": "{{title}} · stays up for good",
+          "kept": "The post stayed up {{span}} as agreed",
+          "keptPlain": "The post stayed up for the whole agreed period",
+          "brandHint": "You can report it if the post is deleted, made private or changed before the period ends.",
+          "creatorHint": "Keep the post up as published until the period ends. Deleting or hiding it can record a strike.",
+          "report": "Report a problem with the post",
+          "a11y": "{{state}}, {{remaining}}"
+        },
+        "shots": {
+          "title": "Screenshots",
+          "waiting": "Wait for the screenshots to finish uploading",
+          "fix": "Remove or retry the screenshot that did not upload"
+        },
+        "report": {
+          "title": "Report the post",
+          "body": "{{name}} will be asked to restore the post or reply within {{hours}} hours.",
+          "reasonLabel": "What happened?",
+          "noteLabel": "Note",
+          "notePlaceholder": "e.g. the link says “post unavailable”",
+          "noteHint": "Optional; required with “Something else”",
+          "noteRequired": "Say what happened to the post",
+          "shotsHint": "1 to 3 screenshots showing the problem as you see it.",
+          "send": "Send report",
+          "toast": "Report sent. {{name}} has {{hours}} hours to reply."
+        },
+        "restore": {
+          "title": "Restore the post",
+          "body": "Attach screenshots showing the post is up again, and add the link if it changed.",
+          "urlLabel": "Post link",
+          "urlPlaceholder": "https://instagram.com/…",
+          "urlHint": "Optional. We check it is on your account.",
+          "shotsHint": "1 to 3 screenshots of the post live on your account.",
+          "send": "Send to {{name}}",
+          "contestInstead": "Contest instead",
+          "toast": "Restore sent. {{name}} has {{hours}} hours to confirm."
+        },
+        "contest": {
+          "title": "Contest the report",
+          "body": "Explain why the report is wrong. The Sada team decides after reading both sides.",
+          "warning": "If the violation is upheld, a strike may be recorded and part of the amount taken back.",
+          "noteLabel": "Your reply",
+          "notePlaceholder": "e.g. the post is still live on my account",
+          "required": "Write why you contest it",
+          "send": "Send contest",
+          "toast": "Your contest was sent to the Sada team."
+        },
+        "reject": {
+          "title": "Reject the restore",
+          "body": "Explain what is still missing. The Sada team decides after reading both sides.",
+          "noteLabel": "Reason",
+          "notePlaceholder": "e.g. the post is up but the promo caption was removed",
+          "required": "Write why you reject it",
+          "send": "Reject and send to the team",
+          "toast": "The report went to the Sada team."
+        },
+        "confirm": {
+          "toast": "Report closed. Thanks for confirming."
+        },
+        "case": {
+          "title": {
+            "awaitingCreator": {
+              "brand": "Waiting for {{name}} to reply",
+              "creator": "{{name}} reported a problem with your post"
+            },
+            "awaitingBrand": {
+              "brand": "Post restored — check it",
+              "creator": "Restore sent, waiting for confirmation"
+            },
+            "escalated": "With the Sada team",
+            "restored": "Report closed: the post is back",
+            "upheld": "Team decision: report upheld",
+            "dismissed": "Team decision: report dismissed"
+          },
+          "reason": "“{{reason}}”",
+          "reportedOn": "{{title}} · reported {{date}}",
+          "you": "You",
+          "team": "Sada team",
+          "reportShots": "Report screenshots",
+          "restoreShots": "Restore screenshots",
+          "shotA11y": "Screenshot {{index}}",
+          "openLink": "Open the post",
+          "linkCopied": "Link copied",
+          "handleChecked": "Account matches",
+          "handleUnchecked": "Account could not be checked",
+          "clawbackBrand": "Taken back from {{name}}",
+          "clawbackBrandNote": "Added to your wallet; shows in your statement as “Clawback”.",
+          "clawbackCreator": "Taken back from your balance",
+          "clawbackCreatorNote": "Deducted from your wallet; shows in your statement as “Clawback”.",
+          "escalatedNote": "The Sada team reviews the report and replies, then tells you both the decision.",
+          "clock": {
+            "answerBrand": "{{name}} has to reply in",
+            "answerCreator": "Time to reply",
+            "answerAfter": "After that the report goes to the Sada team.",
+            "confirmBrand": "Time to confirm",
+            "confirmCreator": "{{name}} has to confirm in",
+            "confirmAfter": "After that the report closes and the post counts as restored."
+          },
+          "restore": "I restored it",
+          "contest": "Contest",
+          "confirm": "Confirm restore",
+          "reject": "Reject",
+          "rejectNote": "Rejecting sends the report to the Sada team to decide."
+        }
+      },
       "upsellBuilder": {
         "title": "Add to the deal",
         "kinds": {

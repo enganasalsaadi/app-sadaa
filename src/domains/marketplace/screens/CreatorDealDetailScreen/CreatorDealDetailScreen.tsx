@@ -10,10 +10,12 @@ import { useCreatorDealDetailScreen } from './hooks/useCreatorDealDetailScreen';
 const SECTIONS: readonly DealDetailSectionKey[] = [
   'next',
   'dispute',
+  'retentionCases',
   'upsell',
   'rating',
   'deliverables',
   'shipping',
+  'retention',
   'dossier',
   'stage',
   'changes',

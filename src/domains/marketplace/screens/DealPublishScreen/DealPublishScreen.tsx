@@ -7,13 +7,13 @@ import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { Box, ConfirmSheet, EmptyState, ErrorState, Layout, Skeleton, StaggerIn } from '@/shared/ui';
 import { DEAL_UPLOAD_LIMIT } from '../../constants/dealUploads';
 import { LiveLinkField } from './components/LiveLinkField';
-import { ProofShots } from './components/ProofShots';
+import { DealProofShots } from '../../components/DealProofShots';
 import { PublishDock } from './components/PublishDock';
 import { PublishFixTicket } from './components/PublishFixTicket';
 import { PublishHero } from './components/PublishHero';
 import { PublishOnAir } from './components/PublishOnAir';
 import { useDealPublishScreen } from './hooks/useDealPublishScreen';
-import { useProofFrames } from './hooks/useProofFrames';
+import { useProofFrames } from '../../hooks/useProofFrames';
 
 const ON_AIR_EDGES: Edge[] = ['left', 'right'];
 const SKELETON = { bar: moderateScale(62), shot: moderateScale(180) };
@@ -110,7 +110,9 @@ const DealPublishScreenComponent: React.FC = () => {
           <StaggerIn gap="xl">
             {vm.ask && vm.fixes ? <PublishFixTicket brand={vm.brand} ask={vm.ask} fixes={vm.fixes} /> : null}
             <LiveLinkField control={vm.control} platform={vm.platform} onPaste={vm.onPaste} />
-            <ProofShots
+            <DealProofShots
+              title={t('marketplace.deals.publish.creator.proofs.title')}
+              hint={t('marketplace.deals.publish.creator.proofs.hint')}
               frames={frames}
               max={DEAL_UPLOAD_LIMIT.proof}
               error={vm.proofsError}
