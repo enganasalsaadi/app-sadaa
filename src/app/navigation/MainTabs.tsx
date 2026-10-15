@@ -26,6 +26,7 @@ import {
   CreatorDealsNavigator,
   CreatorHomeNavigator,
   useBrandDealsBadge,
+  useCreatorDealsBadge,
 } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
@@ -93,9 +94,11 @@ export const MainTabs: React.FC = () => {
   const userType = useAppSelector(selectUserType);
   const isCreator = userType === 'influencer';
   const tabs = isCreator ? CREATOR_TABS : BRAND_TABS;
-  // Brand only: deals waiting on the brand, from the cached Brand Home (0 hides it).
+  // Deals waiting on the viewer (0 hides it): brand from the cached Brand Home, creator from its
+  // own summary read.
   const brandDealsBadge = useBrandDealsBadge();
-  const dealsBadge = isCreator ? 0 : brandDealsBadge;
+  const creatorDealsBadge = useCreatorDealsBadge(isCreator);
+  const dealsBadge = isCreator ? creatorDealsBadge : brandDealsBadge;
 
   const options = useMemo(
     () =>

@@ -132,6 +132,30 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 - ✅ **P11.3 (S)** (2026-10-15) المحفظة: `stage` في تذاكر الـ escrow + `clawback` + CTA `kyc_required` عند السحب. (`stage_label` يحل محل نص الـ pill (اللون من حالة الحجز)؛ `clawback` نوعه حسب الاتجاه (`byDirection`)؛ `BlockedNotice onVerify` → `KycScreen`.)
 - ✅ **P11.4 (S)** (2026-10-15) المديا كيت: `highlights.completed_campaigns` + `worked_with`. (كانا مبنيين منذ Media Kit v2: بلاطة الحملات تظهر عند > 0، `MediaKitBrands` بعنوان `total_brands`؛ تحديث التعليقات فقط.)
 
+## P12 — Creator Home «دورك» (المؤثر) 🔜
+
+**الفجوة (2026-10-16):** البراند عنده «صفقاتك» في الرئيسية + Badge على تبويب الصفقات. المؤثر عنده لا شيء: `MainTabs` يثبّت `dealsBadge = 0` للمؤثر، و`CreatorHomeScreen` يستبعد الصفقات صراحةً (لا API)، ولا يوجد `GET /influencer/home` ولا `needs_action_count` للمؤثر. المؤثر هو من يتحرك أكثر في الصفقة (رد، استلام، مسودة، نشر، استعادة، تقييم) ← فتح التطبيق يجب أن يجيب فوراً: «شو المطلوب مني الآن؟».
+
+- ✅ **P12.0 (باك إند — B14، 2026-10-16)** `GET /influencer/deals/summary` (اختاروا المسار البديل؛ `/influencer/home` الكامل = P12.1–P12.4 واجهة فقط). `brand.logo` = avatar البراند. الصيغة أدناه كانت المقترحة: بنفس عقد البراند §5.1:
+  - `active_deals: { needs_action_count, total_count, items[≤10] } | null` (`null` = لم يستلم عرضاً قط ← ترحيب). عنصر: `id, brand {name, logo}, status {key,label}, stage, total, due_at, needs_action, action {key,label}`. ترتيب: `needs_action` أولاً ثم أقرب `due_at`.
+  - مفاتيح `action` للمؤثر: `reply_offer` · `confirm_receipt` · `submit_draft` · `revise_draft` · `publish` · `fix_live_url` · `answer_upsell` · `add_evidence` · `restore_post` · `rate`.
+  - `counts: { new_offers, pending_upsells, live_strikes }` (اختياري، يوفّر طلبات).
+  - `needs_action_count` = **مصدر Badge التبويب** (لا يُحسب client-side، rule 06).
+- ✅ **P12.1 (S، 2026-10-16، لم يُرسل commit)** `getCreatorDealSummary` + `CreatorDealSummary`/`CreatorActiveDeal` + mapper + وسم `CreatorDealSummary` في `dealChangedTags` + اختبارات. (الخطة الأصلية: `CreatorHome` / `CreatorActiveDeal` + DTO + mapper (صف بمبلغ تالف يُسقط كالبراند؛ توحيد مع `mapBrandActiveDeal` إن تطابق الشكل) + وسم `CreatorHome` ضمن `dealChangedTags` و`dealPushTags` (كل فعل/push صفقة يحدّثه) + اختبارات mapper.)
+  - **بديل مؤقت إن تأخر B14** (يُحذف عند وصوله): الصفحة الأولى من `getDeals` (role creator، حالات `OPEN_SENT`) + `dealNextStep`/`isDealOnYou` ← الصفوف والعدد. العدد تقريبي (صفحة واحدة؛ «+9» إن وُجدت صفحة تالية) ← تلميح UX فقط.
+- ✅ **P12.2 (S)** (2026-10-16، غير مرفوع) Badge تبويب صفقات المؤثر: `useCreatorDealsBadge(enabled)` يشترك بنفسه في `getCreatorDealSummary` (مو كاش Home فقط) → يظهر العدد قبل ما يركّب Home ويتحدّث مع كل فعل/push عبر وسم `CreatorDealSummary`؛ `MainTabs` يستبدل الـ `0`.
+- ✅ **P12.3 (M)** قسم «دورك» في `CreatorHomeScreen` عبر `/sada-screen` (صفحة بيضاء، اتجاهان في `design-previews/creator-home-deals.html`، موافقة صريحة قبل الكود؛ لا يرث شكل «صفقاتك» عند البراند). المحتوى:
+  - **الفعل الأهم الآن:** بطاقة واحدة (أو مجموعة «1 من n») بالفعل + اسم البراند + عدّاد `due_at` (موقوف = `null`) + زر يفتح صفحة الصفقة على الفعل.
+  - **عروض جديدة:** شريط بالعدد ← تبويب الصفقات على «جديدة».
+  - **متتبعات الجاري:** مراحل المؤثر (اتفاق ← شحن ← مسودة ← نشر ← تحقق ← تم)، نزاع أحمر، «كل صفقاتك (n)».
+  - **تنبيهات:** مخالفات فعّالة (`strikesAlert` الموجود) · ملحق بانتظار ردك · بلاغ بقاء منشور مفتوح · نافذة أدلة نزاع.
+  - **الحالات:** skeleton · ترحيب (`null`: «أول عرض بالطريق» + ربط بخطوات الجاهزية/الأسعار) · هادئ (لا شيء عليك: «الكرة عند البراند» + أقرب حدث) · خطأ ← القسم يختفي (لا صفحة فارغة).
+  - المكان في الصفحة يُحسم في الكونسبت (المرشح: تحت البطل مباشرة، فوق الجاهزية).
+- ✅ **P12.4 (S)** سطر المال: «محجوز لك» (escrow) + «تحرّر» → المحفظة، من API المحفظة الموجود عبر barrel الـ finance (أو حقل `escrow` من B14 إن أضافوه). مبالغ مخفية/دقيقة حسب 09b. تنبيه KYC فقط لما يوجد رصيد قابل للسحب و`withdraw_funds.reason = kyc_required`.
+- ✅ **P12.5 (S)** إغلاق: تسجيل الأجزاء في DevShowcase · `docs/mobile-architecture.md` (§5.2 + §5.3 رحلة المؤثر + Change Log) · tsc + lint + test.
+
+**أسئلة مفتوحة:** (1) ننتظر B14 أم نبدأ بالبديل المؤقت؟ (2) هل تدخل P12.4 (المال) في النسخة الأولى أم بعدها؟
+
 ## الشريحة B — الحالات الخاصة
 
 - ✅ **P5 — M5 الشحن (M)** (2026-10-15؛ اتجاه A «البوليصة»، `design-previews/deal-shipping.html`؛ قسم `shipping` في `DealDetailView` للدورين + `DealShippingDock` + `DealShippingSheets` على `useDealShipping` داخل `useDealDetail`): البراند إدخال/تعديل/إعادة شحن (`shipment` POST/PUT، شركات سريعة + «أخرى»، رابط https فقط) / إلغاء مع استرداد (ضغط مطوّل، idempotent) · المؤثر استلام (ضغط مطوّل) / مشكلة (صور 1–5 multipart `reportShipmentIssue`، «متأخر» مقفل حتى `delayed_report_from`) / إلغاء مجاني (ضغط مطوّل، idempotent). عنوان التوصيل (B5.1، `docs/direct-deals/backend-shipping-address.md`): يُطلب قبل توقيع القبول/التمديد عند وجود منتج (`shipping_address` في الجسم، تعبئة من `GET /influencer/shipping-address`)، تعديل عبر `PUT …/shipping-address`. `utils/dealShipping` + `schemas/dealShippingSchema` + اختبارات. غير مُختبر على جهاز أو سيرفر حي.
@@ -144,11 +168,11 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 
 ## الترتيب المقترح
 
-`P0 → P1 → P2 → P3 → P4 → P6 → P7 → P10 → P11` (شريحة A، قابلة للتجربة على الجهاز) ثم `P5 → P8 → P9`.
+`P0 → P1 → P2 → P3 → P4 → P6 → P7 → P10 → P11` (شريحة A، قابلة للتجربة على الجهاز) ثم `P5 → P8 → P9` ثم `P12` (B14 ← P12.1 → P12.2 → P12.3 → P12.4 → P12.5).
 
 ## قرارات معتمدة (2026-10-13)
 
-1. **تبويب «صفقاتي»** في الشريط السفلي للدورين + Badge بـ `needs_action_count`. Brand Home يبقي `active_deals` معاينة سريعة، «عرض الكل» → تبويب صفقاتي.
+1. **تبويب «صفقاتي»** في الشريط السفلي للدورين + Badge بـ `needs_action_count` (المؤثر: 🔜 P12). Brand Home يبقي `active_deals` معاينة سريعة، «عرض الكل» → تبويب صفقاتي.
 2. **USD فقط** كما يرجعه السيرفر. لا تحويل ولا معادل SYP (العقود بالدولار).
 3. **`Idempotency-Key` (uuid v4)** لكل الأفعال المالية والحساسة: `fund`, `cancel`, `upsells`, `accept` (+ `withdraw`, `extension` approve) عبر `createIdempotentAction`.
 4. **التصميم:** المكونات الموجودة تُعاد استخدامها كمنطق فقط؛ الشكل يُحدَّث ليطابق مستوى الصفحات المعاد تصميمها (Home, Wallet, Profile, Media Kit). ستارت أب فخم، جريء، حي.

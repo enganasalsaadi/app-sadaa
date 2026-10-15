@@ -51,5 +51,6 @@ export {
 } from './api/dealsApi';
 export { useDealAction } from './hooks/useDealAction';
 export { useBrandDealsBadge } from './hooks/useBrandDealsBadge';
+export { useCreatorDealsBadge } from './hooks/useCreatorDealsBadge';
 export { useDealPushRefresh } from './hooks/useDealPushRefresh';
 export type { UseDealActionOptions } from './hooks/useDealAction';

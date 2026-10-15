@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-16 | Deal loose ends (🟡 not yet device or live-server tested): brands can start a direct offer from a handshake disc on every creator row in Explore and the Shortlist; creators with active strikes see an amber strip on the deal board (count, when the soonest clears) that opens their strikes. | 5.2, 5.3 (Journeys A4c, A4d, F, notifications) |
+| **Last updated** | 2026-10-16 | Creator Home «Your turn» (🟡 not yet device or live-server tested): a deals section on the creator Home, a held-money line and an ID-check nudge, plus a badge on the Deals tab. | 5.2, 5.3 (Journeys A4, F) |
 | 2026-10-15 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
@@ -348,6 +348,10 @@ APP LAUNCH
     │       · profile strength (five pieces + next step,
     │       "complete" at 100%) · your audience (bar by platform, accounts, + add)
     │       · your prices as swing tags (+ new) → My prices; empty ones invite the next step
+    │     · "Your turn" (deals): the deals waiting on the creator as swipeable cards with
+    │       the time left · counts of new offers, add-ons and active strikes · welcome or
+    │       quiet card when nothing waits → Deals tab / the deal
+    │     · "Held for you" money line (when money is held) → Wallet · ID-check nudge → ID check
     │     scrolled: navy bar pinned with photo, name, tier and the bell
     │     ├── Media kit: all insights                                🟡 built, awaiting device and live-server testing
     │     │     period switch (7 / 30 / 90 days) · numbers vs the previous period
@@ -529,7 +533,14 @@ APP LAUNCH
 - **Profile strength:** a white card with the completion percentage in large teal type and one line on why it matters. Five pieces (Your info → Photo → Platforms → Prices → ID) light up teal as they are done; the next one is outlined. The single next useful step sits in a row (for example "Add your prices +10%") that opens the right page. At 100% the card stays as "Your profile is complete" with a gold check.
 - **Your audience:** one bar split by platform shows where the followers are, then one row per linked account in the same shade: platform mark, name and handle, a status label only when something needs attention (a review problem first, otherwise "not available"), followers and tier. The primary account comes first with a "Primary" label. A dashed "Add platform" row closes the list; "Manage" opens the list. With no linked account: "No platforms linked yet" and an Add button.
 - **Your prices:** every saved price is a swing tag on a sideways rail (platform, service, package, the price large), each hanging a little crooked, closed by a dashed "New rate" tag. Tapping any tag, or "Edit", opens My prices. With no prices: "Your list is empty", why it matters, and "Add your prices".
-- **Refresh and errors:** pulling down refreshes everything on the page. Each section loads and fails on its own, with its own retry, so one slow answer never blanks the whole screen. Wallet, offers and deals stay off Home until those services exist.
+- **Your turn 🟡 (deals):** a section under the prices that shows the creator what needs them right now, so they don't have to open the Deals tab to find out. The line under the title counts the deals waiting on them and those moving without them, both from the service; "All deals" opens the Deals tab.
+  - *Cards:* one navy card per deal waiting on the creator, soonest first: the brand's logo and name, the work and its price, what to do in large type (the service's wording), a bar and time left (amber under a day; "Clock paused" when the service froze it), and one button that names the action ("Open the offer", "I got the package", "Upload the draft", "Open the notes", "Publish now", "Fix the link", "Answer the add-on", "Add your evidence", "Restore the post", "Rate the brand"). Swipe the card or tap the dots to see the next deal.
+  - *Chips:* small counters for new offers, add-ons waiting for an answer and active strikes (a strike is a chip, never a banner); new offers and add-ons open the Deals tab, strikes open the strikes page.
+  - *Nothing waits:* a calm card ("Nothing waits on you · The ball is with the brands right now") with the soonest upcoming deadline when there is one.
+  - *First time:* a creator with no deals yet sees a welcome card ("Your first offer is on its way") with two shortcuts: set prices and link accounts.
+  - *Loading and errors:* a skeleton holds the space; if the service fails the section stays out and returns on pull. A deal notification refreshes it by itself. The Deals tab icon carries a badge with the number of deals waiting on the creator.
+- **Held for you 🟡 (money):** under Your turn, one tappable line shows the money held for the creator in deals (hidden when the creator hid amounts on the Wallet tab) and opens the Wallet. It shows only while something is held. When the creator has money to withdraw but still hasn't verified their identity, a short amber note with a "Verify ID" button opens the ID check; frozen or closed wallets keep their own message and this note stays quiet. While the wallet loads, or if it fails, neither shows.
+- **Refresh and errors:** pulling down refreshes everything on the page. Each section loads and fails on its own, with its own retry, so one slow answer never blanks the whole screen. Offers stay off Home until that service exists.
 - **Brands** have their own Home (Journey A4b).
 
 #### Journey A4b: The brand Home 🟡
@@ -911,6 +922,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-16 | Creator Home «Your turn» built (🟡 not yet device or live-server tested): the deals waiting on the creator as swipeable action cards with time left, counters for new offers, add-ons and active strikes, welcome and quiet cards; a «Held for you» money line (hidden amounts respected) that opens the Wallet; an ID-check nudge when there is money to withdraw but identity isn't verified; a badge on the Deals tab for waiting deals. | 5.2, 5.3 (Journeys A4, F) |
 | 2026-10-16 | Deal loose ends (🟡 not yet device or live-server tested): a teal handshake disc on every creator row in Explore and the Shortlist opens the offer builder for that creator (same pre-check as the public profile); the creator deal board shows an amber strikes strip (active count, days until the soonest clears, opens the strikes page) only while a strike is active. Notifications text corrected: the strikes page is built and strikes reload with every deal notice. | 5.2, 5.3 (Journeys A4c, A4d, F, notifications) |
 | 2026-10-15 | Post retention built (🟡 not yet device or live-server tested): after completion a keep-up ring per post (drawn once; permanent and finished states) with the brand's report link; report sheet (reason, note required for other, 1–3 screenshots); case cards near the top for both roles (tinted status band, report, restore link with account check, notes, team note, clawback, deadline countdown); creator restore (screenshots + optional link checked like publishing) or contest; brand confirm or reject with a note. Restore links open only on known platforms, otherwise copied. Publishing's screenshot row is now shared with retention. | 4.4, 4.5, 5.2, 5.3 (Journey F) |
 | 2026-10-15 | Disputes built (🟡 not yet device or live-server tested): open from the deal page or the brand's dispute-only cancel sheet (own reasons, 20–2,000 character statement, strike warning for creators, hold to open, closed state with support); a navy dispute slip on the deal page; a new dispute file with scales over the held amount (sway while weighed, one tip on the ruling), evidence window or ruling split, statement and both sides' evidence on one spine; add-evidence sheet (required note, files, https links, courier photos, per-side caps); withdraw by the opener. Evidence links open only on known platforms, otherwise copied. | 4.4, 4.5, 5.2, 5.3 (Journey F) |

@@ -189,6 +189,7 @@ describe('dealPushTags', () => {
       { type: 'DealList', id: 'LIST' },
       { type: 'DealHistory', id: '01J' },
       'BrandHome',
+      'CreatorDealSummary',
       'Wallet',
       'WalletEscrow',
       'WalletEarnings',

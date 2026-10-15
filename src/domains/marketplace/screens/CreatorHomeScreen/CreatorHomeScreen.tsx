@@ -7,6 +7,8 @@ import { Box, Layout, StaggerIn } from '@/shared/ui';
 import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
 import { AudienceSection } from './components/AudienceSection';
 import { CreatorHomeBar } from './components/CreatorHomeBar';
+import { EscrowLine } from './components/EscrowLine';
+import { HomeDeals } from './components/HomeDeals';
 import { PriceTagsSection } from './components/PriceTagsSection';
 import { ReadinessSection } from './components/ReadinessSection';
 import { ShareBar } from './components/ShareBar';
@@ -18,9 +20,10 @@ import { WatchGrid } from './components/WatchGrid';
  * brands meet it. Navy hero with drifting lights (only the tilted pass and the one blocker
  * hanging from it as a sign) behind a transparent header that pins the identity once the
  * hero scrolls away; the body slides over it as a sheet. Then, rising in one by one and
- * always present (each has its own empty state): who's looking in the last 30 days with
- * the share bar, how ready the storefront is, the audience by platform and the price tags. Sections without an API
- * (wallet, offers, deals) stay out until it exists.
+ * always present (each has its own empty state): «your turn» (the deals waiting on the creator;
+ * leaves only if its read fails) with the money held for them and a KYC nudge under it, who's looking in the last 30 days with the share bar, how ready
+ * the storefront is, the audience by platform and the price tags. Sections without an API (wallet)
+ * stay out until it exists.
  */
 const CreatorHomeScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -76,6 +79,17 @@ const CreatorHomeScreenComponent: React.FC = () => {
     >
       <Box pt="2xl" pb="5xl">
         <StaggerIn gap="3xl">
+          {vm.homeDeals.deals.kind !== 'hidden' ? (
+            <HomeDeals homeDeals={vm.homeDeals} openRates={vm.openRates} openPlatforms={vm.openPlatforms} />
+          ) : null}
+          {vm.walletGlance.escrow || vm.walletGlance.kycNudge ? (
+            <EscrowLine
+              glance={vm.walletGlance}
+              hidden={vm.amountsHidden}
+              onOpenWallet={vm.openWallet}
+              onOpenKyc={vm.openKyc}
+            />
+          ) : null}
           <Box px="xl" gap="lg">
             <WatchGrid kpis={vm.kpis} onOpenInsights={vm.openInsights} />
             <ShareBar mediaKit={vm.mediaKit} onOpenPreview={vm.openPreview} />

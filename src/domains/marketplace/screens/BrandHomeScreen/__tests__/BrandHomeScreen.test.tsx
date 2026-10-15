@@ -76,7 +76,7 @@ jest.mock('react-native-linear-gradient', () => {
 });
 
 const mockNextStep = jest.fn();
-jest.mock('../hooks/useNextStepDeck', () => ({
+jest.mock('../../../hooks/useNextStepDeck', () => ({
   useNextStepDeck: () => ({ gesture: {}, drag: { value: 0 }, enter: { value: 0 }, index: 0, next: mockNextStep }),
 }));
 

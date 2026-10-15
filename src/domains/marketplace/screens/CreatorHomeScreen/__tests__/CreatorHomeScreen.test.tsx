@@ -144,6 +144,16 @@ jest.mock('@/domains/identity', () => {
   };
 });
 
+// The deck pulls in gesture handler; its own states are covered by the pure `creatorHomeDeals` utils.
+jest.mock('../components/HomeDeals', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return { HomeDeals: (props: object) => createElement('HomeDeals', props) };
+});
+jest.mock('../components/EscrowLine', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return { EscrowLine: (props: object) => createElement('EscrowLine', props) };
+});
+
 const mockModel: { current: CreatorHomeScreenModel | null } = { current: null };
 jest.mock('../hooks/useCreatorHomeScreen', () => ({
   useCreatorHomeScreen: () => mockModel.current,
@@ -241,6 +251,18 @@ const model = (overrides: Partial<CreatorHomeScreenModel> = {}): CreatorHomeScre
     isError: false,
     retry: jest.fn(),
   },
+  homeDeals: {
+    deals: { kind: 'hidden' },
+    counts: null,
+    openDeal: jest.fn(),
+    openDeals: jest.fn(),
+    openStrikes: jest.fn(),
+    refresh: jest.fn(),
+  } as unknown as CreatorHomeScreenModel['homeDeals'],
+  walletGlance: { escrow: null, kycNudge: false },
+  amountsHidden: false,
+  openWallet: jest.fn(),
+  openKyc: jest.fn(),
   refreshing: false,
   onRefresh: jest.fn(),
   openProfile: jest.fn(),
@@ -284,6 +306,40 @@ const watchGrid = (root: ReactTestInstance) =>
   pressables(root).find(node =>
     /^marketplace\.creatorHome\.(storefront\.watch\.a11y|kpi\.retry)/.test(String(node.props.accessibilityLabel)),
   );
+
+describe('CreatorHomeScreen — your turn', () => {
+  it('leaves the section out when its read failed, and keeps the rest of Home', () => {
+    const { root } = render();
+    expect(root.findAll(isHost('HomeDeals'))).toHaveLength(0);
+    expect(root.findAll(isHost('Layout'))).toHaveLength(1);
+  });
+
+  it('shows the section for every state the server can answer with', () => {
+    const base = model().homeDeals;
+    const kinds = [{ kind: 'loading' }, { kind: 'welcome' }, { kind: 'quiet', totalCount: 1, nextUp: null }] as const;
+    kinds.forEach(deals => {
+      const { root } = render({ homeDeals: { ...base, deals } });
+      expect(root.findAll(isHost('HomeDeals'))).toHaveLength(1);
+    });
+  });
+});
+
+describe('CreatorHomeScreen — held money', () => {
+  it('leaves the line out when nothing is held and no KYC nudge applies', () => {
+    const { root } = render();
+    expect(root.findAll(isHost('EscrowLine'))).toHaveLength(0);
+  });
+
+  it('shows the line for held money or the KYC nudge', () => {
+    [
+      { escrow: { amount: 4500, currency: 'USD' as const }, kycNudge: false },
+      { escrow: null, kycNudge: true },
+    ].forEach(walletGlance => {
+      const { root } = render({ walletGlance });
+      expect(root.findAll(isHost('EscrowLine'))).toHaveLength(1);
+    });
+  });
+});
 
 describe('CreatorHomeScreen — chrome', () => {
   it('slides the body over the glowing navy hero under a transparent overlay header', () => {

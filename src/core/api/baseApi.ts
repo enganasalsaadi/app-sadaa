@@ -233,6 +233,7 @@ export const baseApi = createApi({
     'WalletEscrow',
     'WalletEarnings',
     'BrandHome',
+    'CreatorDealSummary',
     'ExploreCreators',
     'ExploreFilters',
     'Shortlist',

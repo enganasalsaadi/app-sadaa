@@ -1489,6 +1489,66 @@
         "loadFailed": "تعذّر تحميل أسعارك",
         "newTag": "سعر جديد",
         "tagA11y": "{{service}}، {{where}}: {{price}}. تعديل أسعارك"
+      },
+      "escrow": {
+          "label": "محجوز لك",
+          "kycAction": "وثّق هويتك"
+        },
+        "deals": {
+        "title": "دورك",
+        "waiting": "{{count}} تنتظرك",
+        "moving": "{{count}} تمشي بدونك",
+        "seeAll": "كل الصفقات",
+        "left": "باقي {{time}}",
+        "paused": "المهلة متوقفة",
+        "position": "{{index}} من {{count}}",
+        "nextLabel": "الصفقة التالية",
+        "deckHint": "اسحب البطاقة أو اضغط النقاط لترى الصفقة التالية",
+        "cardLabel": "{{name}}: {{action}}",
+        "cta": {
+          "replyOffer": "افتح العرض",
+          "confirmReceipt": "وصلني الطرد",
+          "submitDraft": "ارفع المسودة",
+          "reviseDraft": "افتح الملاحظات",
+          "publish": "انشر الآن",
+          "fixLiveUrl": "صحّح الرابط",
+          "answerUpsell": "ردّ على الملحق",
+          "addEvidence": "أضف دليلك",
+          "restorePost": "أعد المنشور",
+          "rate": "قيّم البراند",
+          "open": "افتح الصفقة"
+        },
+        "chips": {
+          "newOffers_zero": "عروض جديدة",
+          "newOffers_one": "عرض جديد",
+          "newOffers_two": "عرضان جديدان",
+          "newOffers_few": "عروض جديدة",
+          "newOffers_many": "عرضاً جديداً",
+          "newOffers_other": "عرض جديد",
+          "pendingUpsells_zero": "ملاحق تنتظر ردّك",
+          "pendingUpsells_one": "ملحق ينتظر ردّك",
+          "pendingUpsells_two": "ملحقان ينتظران ردّك",
+          "pendingUpsells_few": "ملاحق تنتظر ردّك",
+          "pendingUpsells_many": "ملحقاً ينتظر ردّك",
+          "pendingUpsells_other": "ملحق ينتظر ردّك",
+          "liveStrikes_zero": "مخالفات فعّالة",
+          "liveStrikes_one": "مخالفة فعّالة",
+          "liveStrikes_two": "مخالفتان فعّالتان",
+          "liveStrikes_few": "مخالفات فعّالة",
+          "liveStrikes_many": "مخالفة فعّالة",
+          "liveStrikes_other": "مخالفة فعّالة"
+        },
+        "quiet": {
+          "title": "ما في شي ينتظرك",
+          "message": "الكرة عند البراند الآن",
+          "nextUp": "الأقرب: {{name}} · باقي {{time}}"
+        },
+        "welcome": {
+          "title": "أول عرض بالطريق",
+          "message": "لما يوصلك أول عرض ستجد هنا بطاقة تقول لك ماذا تفعل. جهّز واجهتك ليجدك البراند.",
+          "setRates": "حدّد أسعارك",
+          "linkPlatforms": "اربط حساباتك"
+        }
       }
     },
     "brandHome": {

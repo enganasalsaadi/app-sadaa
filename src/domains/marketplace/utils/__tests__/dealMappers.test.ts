@@ -1,5 +1,7 @@
 import type {
   BrandActiveDealDto,
+  CreatorActiveDealDto,
+  CreatorDealSummaryDto,
   DealContractDto,
   DealDisputeDto,
   DealDraftDto,
@@ -13,6 +15,8 @@ import type {
 } from '../../types/dealDto';
 import {
   mapBrandActiveDeal,
+  mapCreatorActiveDeal,
+  mapCreatorDealSummary,
   mapDeal,
   mapDealActionResult,
   mapDealContract,
@@ -55,7 +59,13 @@ const itemDto = (overrides: Partial<DealItemDto> = {}): DealItemDto => ({
   package_value: null,
   unit_price_usd: '120.00',
   addons: [
-    { type: 'boost', label: 'Boost', price_usd: '30.00', options: { days: 3 }, upsell_id: null },
+    {
+      type: 'boost',
+      label: 'Boost',
+      price_usd: '30.00',
+      options: { days: 3 },
+      upsell_id: null,
+    },
   ],
   total_usd: '150.00',
   delivery_days: 5,
@@ -74,7 +84,9 @@ const itemDto = (overrides: Partial<DealItemDto> = {}): DealItemDto => ({
   ...overrides,
 });
 
-const disputeDto = (overrides: Partial<DealDisputeDto> = {}): DealDisputeDto => ({
+const disputeDto = (
+  overrides: Partial<DealDisputeDto> = {},
+): DealDisputeDto => ({
   id: 'd1',
   status: { key: 'resolved', label: 'Resolved' },
   opened_by: 'brand',
@@ -101,7 +113,9 @@ const disputeDto = (overrides: Partial<DealDisputeDto> = {}): DealDisputeDto => 
   ...overrides,
 });
 
-const retentionCaseDto = (overrides: Partial<DealRetentionCaseDto> = {}): DealRetentionCaseDto => ({
+const retentionCaseDto = (
+  overrides: Partial<DealRetentionCaseDto> = {},
+): DealRetentionCaseDto => ({
   id: 'r1',
   item_id: 'i1',
   reason: { key: 'deleted', label: 'Deleted' },
@@ -134,7 +148,11 @@ const dealDto = (overrides: Partial<DealDto> = {}): DealDto => ({
   status: { key: 'in_progress', label: 'In progress' },
   stage: { key: 'draft_submitted', label: 'Draft in review' },
   brand: { name: 'Cafe Sham', avatar_url: null },
-  creator: { slug: 'reem', name: 'Reem', avatar_url: 'https://cdn.example/a.jpg' },
+  creator: {
+    slug: 'reem',
+    name: 'Reem',
+    avatar_url: 'https://cdn.example/a.jpg',
+  },
   items: [itemDto()],
   items_count: 1,
   total_usd: '150.00',
@@ -173,7 +191,11 @@ const dealDto = (overrides: Partial<DealDto> = {}): DealDto => ({
       platform_fee_usd: '3.00',
       creator_net_usd: '27.00',
     },
-    influencer: { withdraw_available: true, strike: true, refund_usd: '150.00' },
+    influencer: {
+      withdraw_available: true,
+      strike: true,
+      refund_usd: '150.00',
+    },
   },
   delivery_hours: 120,
   requested_delivery_days: 5,
@@ -212,8 +234,14 @@ const dealDto = (overrides: Partial<DealDto> = {}): DealDto => ({
   ],
   upsell_window: { open: false, closed_reason: null, pending_upsell_id: 'u1' },
   dispute: disputeDto(),
-  dispute_window: { open: false, closed_reason: 'deal_disputed', disputes_left: 0 },
-  retention: [{ item_id: 'i1', ends_at: T0, report_available: true, open_case_id: null }],
+  dispute_window: {
+    open: false,
+    closed_reason: 'deal_disputed',
+    disputes_left: 0,
+  },
+  retention: [
+    { item_id: 'i1', ends_at: T0, report_available: true, open_case_id: null },
+  ],
   retention_cases: [retentionCaseDto()],
   rating: {
     open: false,
@@ -237,7 +265,9 @@ const dealDto = (overrides: Partial<DealDto> = {}): DealDto => ({
     promo_code: 'SADA10',
     tracking_link: null,
   },
-  brief_attachments: [fileDto({ id: 'b1', kind: 'document', mime: 'application/pdf' })],
+  brief_attachments: [
+    fileDto({ id: 'b1', kind: 'document', mime: 'application/pdf' }),
+  ],
   due_at: null,
   sent_at: T0,
   funded_at: T0,
@@ -296,7 +326,10 @@ describe('mapDeal', () => {
 
     expect(deal.origin).toBe('direct');
     expect(deal.status).toEqual({ key: 'in_progress', label: 'In progress' });
-    expect(deal.stage).toEqual({ key: 'draft_submitted', label: 'Draft in review' });
+    expect(deal.stage).toEqual({
+      key: 'draft_submitted',
+      label: 'Draft in review',
+    });
     expect(deal.shippingMode.key).toBe('gift');
     expect(deal.items[0]?.retention).toBe('30d');
     expect(deal.extension?.status).toBe('pending');
@@ -310,7 +343,12 @@ describe('mapDeal', () => {
         origin: 'campaign',
         status: { key: 'archived_v9', label: 'Archived' },
         stage: null,
-        items: [itemDto({ retention: '7d', status: { key: 'mystery', label: 'Mystery' } })],
+        items: [
+          itemDto({
+            retention: '7d',
+            status: { key: 'mystery', label: 'Mystery' },
+          }),
+        ],
       }),
     );
 
@@ -371,7 +409,10 @@ describe('mapDeal', () => {
   it('renames the influencer side to creator', () => {
     const deal = mapDeal(dealDto());
 
-    expect(deal.contract?.signatures.map(s => s.party)).toEqual(['brand', 'creator']);
+    expect(deal.contract?.signatures.map(s => s.party)).toEqual([
+      'brand',
+      'creator',
+    ]);
     expect(deal.rating?.creator).toEqual({ answered: false, revealed: null });
   });
 
@@ -432,7 +473,11 @@ describe('mapDeal', () => {
             platform_fee_usd: null,
             creator_net_usd: null,
           },
-          influencer: { withdraw_available: false, strike: false, refund_usd: null },
+          influencer: {
+            withdraw_available: false,
+            strike: false,
+            refund_usd: null,
+          },
         },
       }),
     );
@@ -451,17 +496,23 @@ describe('mapDeal', () => {
   });
 
   it('throws on malformed money instead of showing a wrong amount', () => {
-    expect(() => mapDeal(dealDto({ total_usd: '150' + ',00' }))).toThrow(TypeError);
+    expect(() => mapDeal(dealDto({ total_usd: '150' + ',00' }))).toThrow(
+      TypeError,
+    );
   });
 
   it('throws on a malformed required timestamp', () => {
-    expect(() => mapDeal(dealDto({ created_at: 'yesterday' }))).toThrow(TypeError);
+    expect(() => mapDeal(dealDto({ created_at: 'yesterday' }))).toThrow(
+      TypeError,
+    );
   });
 });
 
 describe('mapDealFile', () => {
   it('nulls unknown kinds and statuses', () => {
-    expect(mapDealFile(fileDto({ kind: 'audio', status: 'scanning', url: null }))).toEqual({
+    expect(
+      mapDealFile(fileDto({ kind: 'audio', status: 'scanning', url: null })),
+    ).toEqual({
       id: 'f1',
       kind: null,
       name: 'cut.mp4',
@@ -487,7 +538,9 @@ describe('mapDealRetentionCase', () => {
   });
 
   it('leaves clawback null when nothing moved', () => {
-    expect(mapDealRetentionCase(retentionCaseDto({ clawback_usd: null })).clawback).toBeNull();
+    expect(
+      mapDealRetentionCase(retentionCaseDto({ clawback_usd: null })).clawback,
+    ).toBeNull();
   });
 });
 
@@ -504,7 +557,12 @@ describe('mapDealDisputeDetail', () => {
             files: [fileDto()],
             refs: [
               { type: 'file', id: 'f9', purpose: 'draft', file: null },
-              { type: 'shipment_photo', shipment_id: 's1', index: 0, url: null },
+              {
+                type: 'shipment_photo',
+                shipment_id: 's1',
+                index: 0,
+                url: null,
+              },
             ],
             created_at: T0,
           },
@@ -534,7 +592,9 @@ describe('mapDealDisputeDetail', () => {
 });
 
 describe('mapDealTimelineRow', () => {
-  const row = (overrides: Partial<DealTimelineRowDto> = {}): DealTimelineRowDto => ({
+  const row = (
+    overrides: Partial<DealTimelineRowDto> = {},
+  ): DealTimelineRowDto => ({
     id: 't1',
     subject: { type: 'deal', id: '01J' },
     from: { key: 'awaiting_payment', label: 'Awaiting payment' },
@@ -573,9 +633,10 @@ describe('mapDealTimelineRow', () => {
 
     expect(note.isNote).toBe(true);
     expect(note.subject).toEqual({ type: 'item', id: 'i1' });
-    expect(mapDealTimelineRow(row({ subject: { type: 'item', id: 'i1' } })).subject.type).toBe(
-      'item',
-    );
+    expect(
+      mapDealTimelineRow(row({ subject: { type: 'item', id: 'i1' } })).subject
+        .type,
+    ).toBe('item');
   });
 
   it('treats the first row (no from) as a change', () => {
@@ -627,7 +688,11 @@ describe('mapDealDraft', () => {
       review: null,
     };
 
-    expect(mapDealDraft(dto)).toMatchObject({ round: 1, review: null, submittedAt: T0_MS });
+    expect(mapDealDraft(dto)).toMatchObject({
+      round: 1,
+      review: null,
+      submittedAt: T0_MS,
+    });
   });
 });
 
@@ -755,6 +820,84 @@ describe('mapBrandActiveDeal', () => {
   });
 });
 
+const creatorRow = (
+  overrides: Partial<CreatorActiveDealDto> = {},
+): CreatorActiveDealDto => ({
+  id: '01J',
+  status: { key: 'pending_influencer', label: 'Awaiting you' },
+  stage: null,
+  brand: { name: 'Cafe Sham', logo: 'https://cdn/logo.png' },
+  title: 'Instagram Reel +2',
+  total_usd: '150.00',
+  due_at: T0,
+  needs_action: true,
+  action: { key: 'reply_offer', label: 'Reply to the offer' },
+  ...overrides,
+});
+
+describe('mapCreatorActiveDeal', () => {
+  it('maps a Creator Home row', () => {
+    expect(mapCreatorActiveDeal(creatorRow())).toEqual({
+      id: '01J',
+      status: { key: 'pending_influencer', label: 'Awaiting you' },
+      stage: null,
+      brand: { name: 'Cafe Sham', avatarUrl: 'https://cdn/logo.png' },
+      title: 'Instagram Reel +2',
+      total: usd(15000),
+      dueAt: T0_MS,
+      needsAction: true,
+      action: { key: 'reply_offer', label: 'Reply to the offer' },
+    });
+  });
+
+  it('keeps a quiet row without action or deadline', () => {
+    const row = mapCreatorActiveDeal(
+      creatorRow({ needs_action: false, action: null, due_at: null }),
+    );
+    expect(row).toMatchObject({
+      needsAction: false,
+      action: null,
+      dueAt: null,
+    });
+  });
+});
+
+describe('mapCreatorDealSummary', () => {
+  const counts = { new_offers: 2, pending_upsells: 1, live_strikes: 0 };
+
+  it('keeps the welcome state as null', () => {
+    const dto: CreatorDealSummaryDto = { active_deals: null, counts };
+    expect(mapCreatorDealSummary(dto).activeDeals).toBeNull();
+  });
+
+  it('keeps the server counts and drops a row with bad money and keeps an unknown action', () => {
+    const dto: CreatorDealSummaryDto = {
+      active_deals: {
+        needs_action_count: 3,
+        total_count: 5,
+        items: [
+          creatorRow(),
+          creatorRow({ id: 'bad', total_usd: 'abc' }),
+          creatorRow({
+            id: 'new',
+            action: { key: 'from_the_future', label: 'x' },
+          }),
+        ],
+      },
+      counts,
+    };
+    const summary = mapCreatorDealSummary(dto);
+    expect(summary.activeDeals?.needsActionCount).toBe(3);
+    expect(summary.activeDeals?.totalCount).toBe(5);
+    expect(summary.activeDeals?.items.map(i => i.id)).toEqual(['01J', 'new']);
+    expect(summary.counts).toEqual({
+      newOffers: 2,
+      pendingUpsells: 1,
+      liveStrikes: 0,
+    });
+  });
+});
+
 describe('mapDealStrikes', () => {
   it('maps the list with its meta', () => {
     expect(
@@ -789,7 +932,13 @@ describe('mapDealStrikes', () => {
 describe('mapDealsPage', () => {
   it('maps each deal and camel-cases the page meta', () => {
     const page = mapDealsPage({
-      items: [dealDto(), dealDto({ id: '02J', status: { key: 'brand_new_status', label: 'New' } })],
+      items: [
+        dealDto(),
+        dealDto({
+          id: '02J',
+          status: { key: 'brand_new_status', label: 'New' },
+        }),
+      ],
       meta: { current_page: 1, last_page: 3, total: 41 },
     });
 
@@ -804,11 +953,19 @@ describe('mapDealsPage', () => {
 describe('mapDealDetail', () => {
   it('maps the brand funding preview while awaiting payment', () => {
     const detail = mapDealDetail(dealDto(), {
-      funding: { funded: false, reason: 'insufficient_funds', missing_usd: '42.50' },
+      funding: {
+        funded: false,
+        reason: 'insufficient_funds',
+        missing_usd: '42.50',
+      },
     });
 
     expect(detail.deal.id).toBe('01J');
-    expect(detail.funding).toEqual({ funded: false, reason: 'insufficient_funds', missing: usd(4250) });
+    expect(detail.funding).toEqual({
+      funded: false,
+      reason: 'insufficient_funds',
+      missing: usd(4250),
+    });
   });
 
   it('leaves funding null when the server sends none', () => {
@@ -820,11 +977,23 @@ describe('mapDealActionResult', () => {
   it('maps the per-action extras', () => {
     const result = mapDealActionResult(dealDto(), {
       upsell_id: 'u9',
-      draft: { id: 'd1', item_id: 'i1', round: 2, caption: null, submitted_at: T0, files: [], review: null },
+      draft: {
+        id: 'd1',
+        item_id: 'i1',
+        round: 2,
+        caption: null,
+        submitted_at: T0,
+        files: [],
+        review: null,
+      },
     });
 
     expect(result.upsellId).toBe('u9');
-    expect(result.draft).toMatchObject({ id: 'd1', round: 2, submittedAt: T0_MS });
+    expect(result.draft).toMatchObject({
+      id: 'd1',
+      round: 2,
+      submittedAt: T0_MS,
+    });
     expect(result.publication).toBeNull();
     expect(result.funding).toBeNull();
   });
@@ -847,7 +1016,11 @@ describe('mapDealUpsellQuote', () => {
     amount_usd: '15.00',
     revisions: { from: 2, to: 3 },
     total_usd: { from: '300.00', to: '315.00' },
-    wallet: { balance_usd: '10.00', shortfall_usd: '5.00', is_sufficient: false },
+    wallet: {
+      balance_usd: '10.00',
+      shortfall_usd: '5.00',
+      is_sufficient: false,
+    },
   };
 
   it('maps the extra round price, rounds and wallet shortfall to cents', () => {
@@ -857,7 +1030,10 @@ describe('mapDealUpsellQuote', () => {
       title: 'Instagram reel',
       amount: { amount: 1500, currency: 'USD' },
       revisions: { from: 2, to: 3 },
-      total: { from: { amount: 30000, currency: 'USD' }, to: { amount: 31500, currency: 'USD' } },
+      total: {
+        from: { amount: 30000, currency: 'USD' },
+        to: { amount: 31500, currency: 'USD' },
+      },
       wallet: {
         balance: { amount: 1000, currency: 'USD' },
         shortfall: { amount: 500, currency: 'USD' },
@@ -867,7 +1043,10 @@ describe('mapDealUpsellQuote', () => {
   });
 
   it('keeps an unknown kind readable and throws on a malformed amount', () => {
-    expect(mapDealUpsellQuote({ ...dto, kind: { key: 'mystery', label: 'Mystery' } }).kind).toEqual({
+    expect(
+      mapDealUpsellQuote({ ...dto, kind: { key: 'mystery', label: 'Mystery' } })
+        .kind,
+    ).toEqual({
       key: null,
       label: 'Mystery',
     });

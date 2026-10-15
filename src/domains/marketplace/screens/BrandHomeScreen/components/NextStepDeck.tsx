@@ -7,7 +7,7 @@ import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 import { DealFace } from '../../../components/DealFace';
 import type { BrandActiveDeal } from '../../../types';
-import { useNextStepDeck } from '../hooks/useNextStepDeck';
+import { useNextStepDeck } from '../../../hooks/useNextStepDeck';
 import { NextStepCard } from './NextStepCard';
 
 /** Room under the card: the next card's peek line, then the far card's edge. */

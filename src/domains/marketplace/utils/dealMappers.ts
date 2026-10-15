@@ -1,6 +1,7 @@
 import { parseUsd, parseUsdOrNull } from '@/core/money';
 import {
   BRAND_DEAL_ACTION,
+  CREATOR_DEAL_ACTION,
   DEAL_ACTOR,
   DEAL_CANCEL_OUTCOME,
   DEAL_DECLINE_REASON,
@@ -26,6 +27,8 @@ import {
   DEAL_UPSELL_KIND,
   DEAL_UPSELL_STATUS,
   type BrandActiveDeal,
+  type CreatorActiveDeal,
+  type CreatorDealSummary,
   type Deal,
   type DealAddendum,
   type DealAddon,
@@ -67,6 +70,8 @@ import {
 } from '../types/deal';
 import type {
   BrandActiveDealDto,
+  CreatorActiveDealDto,
+  CreatorDealSummaryDto,
   DealActionMetaDto,
   DealAddonDto,
   DealBriefDto,
@@ -558,6 +563,38 @@ export const mapBrandActiveDeal = (dto: BrandActiveDealDto): BrandActiveDeal => 
   dueAt: toTimestampOrNull(dto.due_at),
   needsAction: dto.needs_action,
   action: toLabeledOrNull(BRAND_DEAL_ACTION, dto.action),
+});
+
+export const mapCreatorActiveDeal = (dto: CreatorActiveDealDto): CreatorActiveDeal => ({
+  id: dto.id,
+  status: toLabeled(DEAL_STATUS, dto.status),
+  stage: toLabeledOrNull(DEAL_ITEM_STATUS, dto.stage),
+  brand: { name: dto.brand.name, avatarUrl: dto.brand.logo },
+  title: dto.title,
+  total: parseUsd(dto.total_usd),
+  dueAt: toTimestampOrNull(dto.due_at),
+  needsAction: dto.needs_action,
+  action: toLabeledOrNull(CREATOR_DEAL_ACTION, dto.action),
+});
+
+/** A row with malformed money is dropped rather than shown wrong (rule 06); counts stay the server's. */
+export const mapCreatorDealSummary = (dto: CreatorDealSummaryDto): CreatorDealSummary => ({
+  activeDeals: dto.active_deals && {
+    needsActionCount: dto.active_deals.needs_action_count,
+    totalCount: dto.active_deals.total_count,
+    items: dto.active_deals.items.flatMap(item => {
+      try {
+        return [mapCreatorActiveDeal(item)];
+      } catch {
+        return [];
+      }
+    }),
+  },
+  counts: {
+    newOffers: dto.counts.new_offers,
+    pendingUpsells: dto.counts.pending_upsells,
+    liveStrikes: dto.counts.live_strikes,
+  },
 });
 
 const mapStrike = (dto: DealStrikeDto): DealStrike => ({

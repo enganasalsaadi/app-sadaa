@@ -7,7 +7,9 @@ import {
   useMediaKitCard,
   type ProfileStepTarget,
 } from '@/domains/identity';
+import { useAmountsHidden, useWalletGlance } from '@/domains/finance';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
+import { useCreatorHomeDeals } from './useCreatorHomeDeals';
 import {
   HOME_NOTICE_DEF,
   resolveHomeNotice,
@@ -29,6 +31,9 @@ export const useCreatorHomeScreen = () => {
   const navigation = useNavigation<Navigation>();
   const overview = useCreatorOverview();
   const mediaKit = useMediaKitCard();
+  const homeDeals = useCreatorHomeDeals();
+  const walletGlance = useWalletGlance();
+  const { hidden: amountsHidden } = useAmountsHidden();
   const [refreshing, setRefreshing] = useState(false);
   // Read once per mount: Home is a tab root, remounted often enough for a greeting.
   const [dayPart] = useState(() => resolveDayPart(new Date().getHours()));
@@ -55,6 +60,7 @@ export const useCreatorHomeScreen = () => {
       }),
     [navigation],
   );
+  const openWallet = useCallback(() => navigation.navigate('WalletTab'), [navigation]);
   const openKyc = useCallback(
     () => navigation.navigate('SettingsTab', { screen: 'KycScreen', initial: false }),
     [navigation],
@@ -139,14 +145,15 @@ export const useCreatorHomeScreen = () => {
   );
 
   const { refresh } = overview;
+  const { refresh: refreshDeals } = homeDeals;
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await refresh();
+      await Promise.all([refresh(), refreshDeals()]);
     } finally {
       setRefreshing(false);
     }
-  }, [refresh]);
+  }, [refresh, refreshDeals]);
 
   return {
     hero,
@@ -154,6 +161,11 @@ export const useCreatorHomeScreen = () => {
     unreadNotifications: overview.unreadNotifications,
     notice,
     mediaKit,
+    homeDeals,
+    walletGlance,
+    amountsHidden,
+    openWallet,
+    openKyc,
     completion: overview.completion,
     platforms: overview.platforms,
     rates: overview.rates,

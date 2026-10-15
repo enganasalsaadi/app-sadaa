@@ -378,6 +378,29 @@ export interface BrandActiveDealDto {
   action: DealLabeledDto | null;
 }
 
+/** `GET /influencer/deals/summary`: the creator's open deals. */
+export interface CreatorActiveDealDto {
+  id: string;
+  status: DealLabeledDto;
+  stage: DealLabeledDto | null;
+  brand: { name: string | null; logo: string | null };
+  title: string;
+  total_usd: string;
+  due_at: string | null;
+  needs_action: boolean;
+  action: DealLabeledDto | null;
+}
+
+export interface CreatorDealSummaryDto {
+  /** `null` only when the creator never got an offer (welcome state). */
+  active_deals: {
+    needs_action_count: number;
+    total_count: number;
+    items: CreatorActiveDealDto[];
+  } | null;
+  counts: { new_offers: number; pending_upsells: number; live_strikes: number };
+}
+
 export interface DealStrikeDto {
   id: string;
   deal_id: string;

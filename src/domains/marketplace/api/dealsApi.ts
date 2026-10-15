@@ -35,7 +35,7 @@ interface DealEnvelopeDto {
 
 /**
  * What else moves when a deal does: the lists (status changes tab), its history (new rows,
- * addenda), the brand home's active deals, the escrow money and the creator's strikes (a
+ * addenda), the brand home's and creator summary's active deals, the escrow money and the creator's strikes (a
  * withdrawal records one). Each refetches only if on screen.
  */
 export const dealChangedTags = (id: string) =>
@@ -43,6 +43,7 @@ export const dealChangedTags = (id: string) =>
     { type: 'DealList', id: 'LIST' },
     { type: 'DealHistory', id },
     'BrandHome',
+    'CreatorDealSummary',
     'Wallet',
     'WalletEscrow',
     'WalletEarnings',

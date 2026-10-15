@@ -1433,6 +1433,54 @@
         "loadFailed": "Couldn't load your rates",
         "newTag": "New rate",
         "tagA11y": "{{service}}, {{where}}: {{price}}. Edit your rates"
+      },
+      "escrow": {
+          "label": "Held for you",
+          "kycAction": "Verify ID"
+        },
+        "deals": {
+        "title": "Your turn",
+        "waiting": "{{count}} waiting for you",
+        "moving": "{{count}} moving without you",
+        "seeAll": "All deals",
+        "left": "{{time}} left",
+        "paused": "Clock paused",
+        "position": "{{index}} of {{count}}",
+        "nextLabel": "Next deal",
+        "deckHint": "Swipe the card or tap the dots to see the next deal",
+        "cardLabel": "{{name}}: {{action}}",
+        "cta": {
+          "replyOffer": "Open the offer",
+          "confirmReceipt": "I got the package",
+          "submitDraft": "Upload the draft",
+          "reviseDraft": "Open the notes",
+          "publish": "Publish now",
+          "fixLiveUrl": "Fix the link",
+          "answerUpsell": "Answer the add-on",
+          "addEvidence": "Add your evidence",
+          "restorePost": "Restore the post",
+          "rate": "Rate the brand",
+          "open": "Open the deal"
+        },
+        "chips": {
+          "newOffers_one": "new offer",
+          "newOffers_other": "new offers",
+          "pendingUpsells_one": "add-on waiting for you",
+          "pendingUpsells_other": "add-ons waiting for you",
+          "liveStrikes_one": "active strike",
+          "liveStrikes_other": "active strikes"
+        },
+        "quiet": {
+          "title": "Nothing waits on you",
+          "message": "The ball is with the brands right now",
+          "nextUp": "Up next: {{name}} · {{time}} left"
+        },
+        "welcome": {
+          "title": "Your first offer is on its way",
+          "message": "When it lands, one card here tells you what to do next. Get your storefront ready so brands find you.",
+          "setRates": "Set your prices",
+          "linkPlatforms": "Link your accounts"
+        }
       }
     },
     "brandHome": {

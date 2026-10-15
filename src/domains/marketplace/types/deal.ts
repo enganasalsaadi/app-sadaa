@@ -135,6 +135,21 @@ export const BRAND_DEAL_ACTION = [
 ] as const;
 export type BrandDealAction = (typeof BRAND_DEAL_ACTION)[number];
 
+/** Creator Home «your turn» keys (`GET /influencer/deals/summary`). */
+export const CREATOR_DEAL_ACTION = [
+  'reply_offer',
+  'confirm_receipt',
+  'submit_draft',
+  'revise_draft',
+  'publish',
+  'fix_live_url',
+  'answer_upsell',
+  'add_evidence',
+  'restore_post',
+  'rate',
+] as const;
+export type CreatorDealAction = (typeof CREATOR_DEAL_ACTION)[number];
+
 export const DEAL_STRIKE_REASON = ['withdrew', 'defaulted', 'dispute_lost', 'retention_violation'] as const;
 export type DealStrikeReason = (typeof DEAL_STRIKE_REASON)[number];
 
@@ -536,6 +551,30 @@ export interface BrandActiveDeal {
   dueAt: Timestamp | null;
   needsAction: boolean;
   action: Labeled<BrandDealAction> | null;
+}
+
+/** Creator Home open-deal row: «needs you» first, then soonest `dueAt`. */
+export interface CreatorActiveDeal {
+  id: string;
+  status: Labeled<DealStatus>;
+  stage: Labeled<DealItemStatus> | null;
+  brand: DealParty;
+  title: string;
+  total: Money;
+  /** Deadline of `action`, else the deal's next deadline. */
+  dueAt: Timestamp | null;
+  needsAction: boolean;
+  action: Labeled<CreatorDealAction> | null;
+}
+
+/** Creator Home «your turn»: `activeDeals` is `null` only before the first offer ever (welcome). */
+export interface CreatorDealSummary {
+  activeDeals: {
+    needsActionCount: number;
+    totalCount: number;
+    items: CreatorActiveDeal[];
+  } | null;
+  counts: { newOffers: number; pendingUpsells: number; liveStrikes: number };
 }
 
 export interface DealStrike {
