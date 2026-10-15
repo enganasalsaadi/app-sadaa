@@ -130,11 +130,15 @@ export const AddMethodCard = memo<{ onAdd: () => void; error?: string }>(
   },
 );
 
-/** Blocked by the server: every reason, then when the next withdrawal opens. */
+/**
+ * Blocked by the server: every reason, then when the next withdrawal opens. Missing KYC
+ * (B13 §5.5: deals pay out without it, withdrawing needs it) adds the way to verify.
+ */
 export const BlockedNotice = memo<{
   reasons: readonly string[];
   nextAllowedMs: number | null;
-}>(({ reasons, nextAllowedMs }) => {
+  onVerify: (() => void) | null;
+}>(({ reasons, nextAllowedMs, onVerify }) => {
   const { t } = useTranslation();
   return (
     <Box gap="sm">
@@ -146,6 +150,7 @@ export const BlockedNotice = memo<{
             ? reasons.map(reason => `• ${reason}`).join('\n')
             : t('finance.withdraw.amount.blockedFallback')
         }
+        action={onVerify ? { label: t('finance.withdraw.amount.verifyToWithdraw'), onPress: onVerify } : undefined}
       />
       {nextAllowedMs !== null ? (
         <Box row>

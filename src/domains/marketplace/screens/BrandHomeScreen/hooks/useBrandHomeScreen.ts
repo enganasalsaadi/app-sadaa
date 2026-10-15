@@ -10,7 +10,9 @@ import { useGetBrandHomeQuery } from '../../../api/brandHomeApi';
 import { useGetExploreFiltersQuery } from '../../../api/exploreApi';
 import { BRAND_HOME_ISLAND, resolveCategoryIcon } from '../../../constants/brandHome';
 import { useCreatorCardActions } from '../../../hooks/useCreatorCardActions';
+import type { BrandActiveDeal, DealParty } from '../../../types';
 import type { BrandHomeRail } from '../../../types/explore';
+import { splitActiveDeals } from '../../../utils/brandHomeDeals';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
 
 type Navigation = HomeStackScreenProps<'BrandHomeScreen'>['navigation'];
@@ -23,6 +25,28 @@ const HOME_STALE_SECONDS = 120;
 const HOME_STALE_MS = HOME_STALE_SECONDS * 1000;
 
 export type BrandHomeStatus = 'loading' | 'error' | 'ready';
+
+/** Faces on the «no deals in progress» card: real creators from the rails, at most two. */
+const WELCOME_FACES = 2;
+
+/**
+ * The «your deals» section: a skeleton while Home loads; nothing on error (the rest of Home
+ * still works, a pull brings it back); a welcome when no deal is open; else the next-step card
+ * (deals waiting on the brand) over the tracker list (the rest). Counts are the server's.
+ */
+export type BrandHomeDeals =
+  | { kind: 'loading' }
+  | { kind: 'hidden' }
+  | { kind: 'welcome'; faces: DealParty[] }
+  | {
+      kind: 'deals';
+      waiting: BrandActiveDeal[];
+      moving: BrandActiveDeal[];
+      needsActionCount: number;
+      movingCount: number;
+      /** Every open deal, when the server sent fewer rows than that; else `null`. */
+      moreCount: number | null;
+    };
 
 export const useBrandHomeScreen = () => {
   const { t } = useTranslation();
@@ -88,6 +112,14 @@ export const useBrandHomeScreen = () => {
   );
   const browseAll = useCallback(() => openExplore(), [openExplore]);
 
+  // `initial: false` keeps the deals list under the deal, so back lands there.
+  const openDeal = useCallback(
+    (id: string) =>
+      navigation.navigate('DealsTab', { screen: 'DealDetail', params: { id }, initial: false }),
+    [navigation],
+  );
+  const openDeals = useCallback(() => navigation.navigate('DealsTab'), [navigation]);
+
   const categoryOptions = filtersQuery.data?.categories;
   const categories = useMemo(
     () =>
@@ -116,10 +148,13 @@ export const useBrandHomeScreen = () => {
       title: islandDto.title,
       message: islandDto.body,
       hint: islandDto.ctaLabel,
-      onPress: () =>
-        navigation.navigate('SettingsTab', { screen: def.screen, initial: false }),
+      onPress: () => {
+        const { target } = def;
+        if (target.tab === 'topUp') openTopUp();
+        else navigation.navigate('SettingsTab', { screen: target.screen, initial: false });
+      },
     };
-  }, [islandDto, navigation]);
+  }, [islandDto, navigation, openTopUp]);
 
   const companyName = home?.companyName || user?.display_name || null;
   const governorate = home?.governorate?.label ?? null;
@@ -137,6 +172,36 @@ export const useBrandHomeScreen = () => {
     }),
     [canTopUp, companyName, dayPart, governorate, status, t, wallet],
   );
+
+  const activeDeals = home?.activeDeals;
+  const rails = home?.rails;
+  const deals = useMemo((): BrandHomeDeals => {
+    if (status === 'loading') return { kind: 'loading' };
+    if (status === 'error') return { kind: 'hidden' };
+    if (!activeDeals) {
+      // A creator can sit on several rails: one face each.
+      const withPhoto = new Map(
+        (rails ?? [])
+          .flatMap(rail => rail.items)
+          .filter(creator => creator.avatarUrl)
+          .map(creator => [creator.slug, creator] as const),
+      );
+      const faces = [...withPhoto.values()]
+        .slice(0, WELCOME_FACES)
+        .map(({ displayName, avatarUrl }) => ({ name: displayName, avatarUrl }));
+      return { kind: 'welcome', faces };
+    }
+    const { waiting, moving } = splitActiveDeals(activeDeals.items);
+    const { needsActionCount, totalCount } = activeDeals;
+    return {
+      kind: 'deals',
+      waiting,
+      moving,
+      needsActionCount,
+      movingCount: Math.max(0, totalCount - needsActionCount),
+      moreCount: totalCount > activeDeals.items.length ? totalCount : null,
+    };
+  }, [activeDeals, rails, status]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -157,7 +222,10 @@ export const useBrandHomeScreen = () => {
     hero,
     island,
     hidden,
-    rails: home?.rails ?? [],
+    rails: rails ?? [],
+    deals,
+    openDeal,
+    openDeals,
     hasSupport: !!supportUrl,
     unreadNotifications: user?.unread_notifications_count ?? 0,
     refreshing,

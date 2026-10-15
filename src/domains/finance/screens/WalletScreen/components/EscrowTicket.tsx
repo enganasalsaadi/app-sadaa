@@ -32,7 +32,8 @@ interface EscrowTicketProps {
 }
 
 /**
- * One held deal as a boarding ticket: who it is with, the deal, the escrow status, then —
+ * One held deal as a boarding ticket: who it is with, the deal, where the deal stands (the
+ * escrow status for a hold with no deal; the hold's tone either way), then —
  * past the tear — the amount with the rising chevrons and what releases it.
  */
 const EscrowTicketComponent: React.FC<EscrowTicketProps> = ({ escrow, incoming, hidden, active }) => {
@@ -94,7 +95,7 @@ const EscrowTicketComponent: React.FC<EscrowTicketProps> = ({ escrow, incoming, 
           </Box>
         </Box>
         <Box alignSelf="flex-start">
-          <StatusPill label={escrow.status_label} tone={pill?.tone ?? 'neutral'} icon={pill?.icon} size="sm" />
+          <StatusPill label={escrow.stage_label ?? escrow.status_label} tone={pill?.tone ?? 'neutral'} icon={pill?.icon} size="sm" />
         </Box>
       </Box>
 

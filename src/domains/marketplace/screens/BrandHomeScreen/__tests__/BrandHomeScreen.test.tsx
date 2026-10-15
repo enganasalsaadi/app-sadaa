@@ -1,6 +1,7 @@
 import React from 'react';
 import { act, create } from 'react-test-renderer';
 import type { ReactTestInstance } from 'react-test-renderer';
+import type { BrandActiveDeal } from '../../../types';
 import type { ExploreCreator } from '../../../types/explore';
 import type { BrandHomeScreenModel } from '../hooks/useBrandHomeScreen';
 import { BrandHomeScreen } from '../BrandHomeScreen';
@@ -13,6 +14,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('@/core/i18n', () => ({
   formatNumber: (value: number) => String(value),
+  formatMoney: ({ amount }: { amount: number }) => `$${(amount / 100).toFixed(2)}`,
 }));
 
 jest.mock('@/core/theme', () => {
@@ -48,12 +50,16 @@ jest.mock('react-native-reanimated', () => {
       View: ({ children, ...props }: { children?: React.ReactNode }) =>
         createElement('AnimatedView', props, children),
     },
+    cancelAnimation: () => undefined,
+    Easing: { inOut: () => undefined, sin: undefined },
     interpolate: () => 1,
     useReducedMotion: () => false,
     useSharedValue: (value: number) => ({ value }),
     useAnimatedStyle: () => ({}),
+    withRepeat: () => 1,
     withSequence: () => 1,
     withSpring: () => 1,
+    withTiming: () => 1,
   };
 });
 
@@ -68,6 +74,14 @@ jest.mock('react-native-linear-gradient', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return ({ children }: { children?: React.ReactNode }) => createElement('LinearGradient', null, children);
 });
+
+const mockNextStep = jest.fn();
+jest.mock('../hooks/useNextStepDeck', () => ({
+  useNextStepDeck: () => ({ gesture: {}, drag: { value: 0 }, enter: { value: 0 }, index: 0, next: mockNextStep }),
+}));
+
+const mockNow = Date.parse('2026-10-15T09:00:00Z');
+jest.mock('../../../hooks/useClock', () => ({ useClock: () => mockNow }));
 
 const mockDeckNext = jest.fn();
 jest.mock('../hooks/useStoryDeck', () => ({
@@ -104,6 +118,7 @@ jest.mock('@/shared/ui', () => {
   return {
     Badge: stub('Badge'),
     Box: stub('Box'),
+    CustomButton: stub('CustomButton'),
     EmptyState: stub('EmptyState'),
     GradientSurface: stub('GradientSurface'),
     Image: stub('Image'),
@@ -118,6 +133,7 @@ jest.mock('@/shared/ui', () => {
     StaggerIn,
     Text: stub('Text'),
     TierBadge: stub('TierBadge'),
+    useScreenFocused: () => true,
   };
 });
 
@@ -218,6 +234,63 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
   openCategory: jest.fn(),
   openRail: jest.fn(),
   browseAll: jest.fn(),
+  deals: { kind: 'hidden' },
+  openDeal: jest.fn(),
+  openDeals: jest.fn(),
+  ...overrides,
+});
+
+const HOUR = 3_600_000;
+const activeDeal = (overrides: Partial<BrandActiveDeal> = {}): BrandActiveDeal => ({
+  id: 'd1',
+  status: { key: 'negotiating_deadline', label: 'Extension asked' },
+  stage: null,
+  creator: { name: 'Lana', avatarUrl: null, slug: null },
+  title: 'Instagram reel ×2',
+  total: { amount: 24000, currency: 'USD' },
+  dueAt: mockNow + 6 * HOUR,
+  needsAction: true,
+  action: { key: 'answer_extension', label: 'Answer the extension' },
+  ...overrides,
+});
+const waitingDeals = [
+  activeDeal(),
+  activeDeal({
+    id: 'd2',
+    creator: { name: 'Sara', avatarUrl: null, slug: null },
+    status: { key: 'awaiting_payment', label: 'Awaiting payment' },
+    total: { amount: 9000, currency: 'USD' },
+    dueAt: mockNow + 50 * HOUR,
+    action: { key: 'fund', label: 'Pay to start' },
+  }),
+];
+const movingDeals = [
+  activeDeal({
+    id: 'd3',
+    creator: { name: 'Nour', avatarUrl: null, slug: null },
+    status: { key: 'in_progress', label: 'In progress' },
+    stage: { key: 'verifying_live', label: 'Checking the post' },
+    needsAction: false,
+    action: null,
+  }),
+  activeDeal({
+    id: 'd4',
+    creator: { name: 'Ahmad', avatarUrl: null, slug: null },
+    status: { key: 'disputed', label: 'Dispute' },
+    needsAction: false,
+    action: null,
+    dueAt: null,
+  }),
+];
+const dealsModel = (
+  overrides: Partial<Extract<BrandHomeScreenModel['deals'], { kind: 'deals' }>> = {},
+): BrandHomeScreenModel['deals'] => ({
+  kind: 'deals',
+  waiting: waitingDeals,
+  moving: movingDeals,
+  needsActionCount: 2,
+  movingCount: 8,
+  moreCount: 10,
   ...overrides,
 });
 
@@ -426,5 +499,77 @@ describe('BrandHomeScreen — states', () => {
     byLabel(root, 'marketplace.brandHome.support.action')?.props.onPress();
     expect(vm.contactSupport).toHaveBeenCalled();
     expect(byLabel(render({ hasSupport: false }).root, 'marketplace.brandHome.support.action')).toBeUndefined();
+  });
+});
+
+describe('BrandHomeScreen — your deals', () => {
+  it('leads with the next step: the server action, time left, one named button that opens the deal', () => {
+    const { root, vm } = render({ deals: dealsModel() });
+    const text = textOf(root);
+    expect(text).toContain('marketplace.brandHome.deals.waiting:{"count":2}');
+    expect(text).toContain('marketplace.brandHome.deals.moving:{"count":8}');
+    expect(text).toContain('Answer the extension');
+    expect(text).toContain('marketplace.brandHome.deals.next.position:{"index":1,"count":2}');
+    expect(text).toContain('Instagram reel ×2 · $240.00');
+    expect(text).toContain('marketplace.brandHome.deals.next.left:');
+    // The next card peeks from behind.
+    expect(text).toContain('marketplace.brandHome.deals.next.peek:{"name":"Sara","action":"Pay to start"}');
+    const cta = byLabel(root, 'marketplace.brandHome.deals.next.cardLabel:{"name":"Lana","action":"Answer the extension"}');
+    expect(textOf(cta as ReactTestInstance)).toContain('marketplace.brandHome.deals.cta.answerExtension');
+    cta?.props.onPress();
+    expect(vm.openDeal).toHaveBeenCalledWith('d1');
+    byLabel(root, 'marketplace.brandHome.deals.next.nextLabel')?.props.onPress();
+    expect(mockNextStep).toHaveBeenCalled();
+  });
+
+  it('puts the rest on trackers: server labels, a red stop for a dispute, each row opens its deal', () => {
+    const { root, vm } = render({ deals: dealsModel() });
+    const rows = root
+      .findAll(isHost('Pressable'))
+      .filter(n => String(n.props.accessibilityLabel).startsWith('marketplace.brandHome.deals.rowLabel:'));
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.props.accessibilityLabel).toContain('marketplace.brandHome.deals.stops.publish · Checking the post');
+    expect(textOf(rows[1] as ReactTestInstance)).toContain('Dispute');
+    rows[0]?.props.onPress();
+    expect(vm.openDeal).toHaveBeenCalledWith('d3');
+    const more = root
+      .findAll(isHost('Pressable'))
+      .find(n => textOf(n) === 'marketplace.brandHome.deals.seeAllCount:{"count":10}');
+    more?.props.onPress();
+    expect(vm.openDeals).toHaveBeenCalled();
+  });
+
+  it('has no arrow or peek with a single waiting deal, and no footer when every deal is shown', () => {
+    const { root } = render({ deals: dealsModel({ waiting: waitingDeals.slice(0, 1), moreCount: null }) });
+    expect(byLabel(root, 'marketplace.brandHome.deals.next.nextLabel')).toBeUndefined();
+    expect(textOf(root)).not.toContain('marketplace.brandHome.deals.next.peek');
+    expect(textOf(root)).not.toContain('marketplace.brandHome.deals.seeAllCount');
+  });
+
+  it('says «all smooth» when nothing waits on the brand', () => {
+    const { root } = render({ deals: dealsModel({ waiting: [], needsActionCount: 0 }) });
+    const text = textOf(root);
+    expect(text).toContain('marketplace.brandHome.deals.calm.title');
+    expect(text).not.toContain('marketplace.brandHome.deals.waiting');
+    expect(text).not.toContain('marketplace.brandHome.deals.next.label');
+  });
+
+  it('shows the pause when the server froze the clock', () => {
+    const { root } = render({
+      deals: dealsModel({ waiting: [activeDeal({ dueAt: null })] }),
+    });
+    expect(textOf(root)).toContain('marketplace.brandHome.deals.next.paused');
+  });
+
+  it('welcomes a brand with no open deal and sends it to Explore', () => {
+    const { root, vm } = render({ deals: { kind: 'welcome', faces: [] } });
+    expect(textOf(root)).toContain('marketplace.brandHome.deals.welcome.title');
+    root.find(isHost('CustomButton')).props.onPress();
+    expect(vm.browseAll).toHaveBeenCalled();
+  });
+
+  it('hides the section quietly when Home fails', () => {
+    const { root } = render({ deals: { kind: 'hidden' } });
+    expect(textOf(root)).not.toContain('marketplace.brandHome.deals.title');
   });
 });

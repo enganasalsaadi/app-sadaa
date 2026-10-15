@@ -198,7 +198,13 @@ describe('mapBrandHome', () => {
       available: { amount: 125000, currency: 'USD' },
       availableSypApprox: { amount: 18750000, currency: 'SYP' },
     });
-    expect(home.island).toEqual({ type: 'verify_account', title: 'Verify', body: 'See prices', ctaLabel: 'Start' });
+    expect(home.island).toEqual({
+      type: 'verify_account',
+      title: 'Verify',
+      body: 'See prices',
+      ctaLabel: 'Start',
+      waitingDeals: null,
+    });
     expect(home.supportWhatsappUrl).toBe('https://wa.me/963962401604');
     expect(home.viewPrices).toEqual({ allowed: false, reason: 'kyc_required' });
   });
@@ -225,6 +231,83 @@ describe('mapBrandHome', () => {
     expect(home.wallet.availableSypApprox).toBeNull();
     expect(home.island).toBeNull();
     expect(home.supportWhatsappUrl).toBeNull();
+  });
+
+  it('maps the fund_deals island with its waiting deals', () => {
+    const home = mapBrandHome(
+      homeDto({
+        island: {
+          type: 'fund_deals',
+          title: 'Fund',
+          body: '1 offer waits',
+          cta: { label: 'Top up', action: 'top_up' },
+          meta: { count: 1, expires_at: '2026-10-16T09:00:00+03:00' },
+        },
+      }),
+    );
+    expect(home.island?.waitingDeals).toEqual({
+      count: 1,
+      expiresAt: Date.parse('2026-10-16T09:00:00+03:00'),
+    });
+  });
+
+  it('ignores meta on other islands and a bad expiry', () => {
+    const other = mapBrandHome(
+      homeDto({
+        island: {
+          type: 'verify_account',
+          title: 'Verify',
+          body: '',
+          cta: { label: 'Start', action: 'verify_account' },
+          meta: { count: 3, expires_at: null },
+        },
+      }),
+    );
+    expect(other.island?.waitingDeals).toBeNull();
+    const bad = mapBrandHome(
+      homeDto({
+        island: {
+          type: 'fund_deals',
+          title: 'Fund',
+          body: '',
+          cta: { label: 'Top up', action: 'top_up' },
+          meta: { count: 2, expires_at: 'soon' },
+        },
+      }),
+    );
+    expect(bad.island?.waitingDeals).toEqual({ count: 2, expiresAt: null });
+  });
+
+  it('maps active deals, keeps the server counts and drops a row with bad money', () => {
+    const row = {
+      id: '01J',
+      status: { key: 'in_progress', label: 'In progress' },
+      stage: { key: 'draft_submitted', label: 'Draft submitted' },
+      creator: { slug: 'reem', name: 'Reem', avatar_url: null },
+      title: 'Instagram Reel +2',
+      total_usd: '150.00',
+      due_at: '2026-10-15T09:00:00+03:00',
+      needs_action: true,
+      action: { key: 'review_draft', label: 'Review the draft' },
+    };
+    const home = mapBrandHome(
+      homeDto({
+        active_deals: {
+          needs_action_count: 2,
+          total_count: 12,
+          items: [row, { ...row, id: '01K', total_usd: 'abc' }],
+        },
+      }),
+    );
+    expect(home.activeDeals?.needsActionCount).toBe(2);
+    expect(home.activeDeals?.totalCount).toBe(12);
+    expect(home.activeDeals?.items.map(item => item.id)).toEqual(['01J']);
+    expect(home.activeDeals?.items[0]?.action).toEqual({ key: 'review_draft', label: 'Review the draft' });
+  });
+
+  it('hides active deals when the server sends none', () => {
+    expect(mapBrandHome(homeDto()).activeDeals).toBeNull();
+    expect(mapBrandHome(homeDto({ active_deals: null })).activeDeals).toBeNull();
   });
 });
 

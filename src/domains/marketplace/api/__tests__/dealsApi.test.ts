@@ -3,7 +3,7 @@ import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
 import { initSecureStorage } from '@/core/storage';
 import { toastService } from '@/core/toast';
 import type { DealDto } from '../../types/dealDto';
-import { dealsApi } from '../dealsApi';
+import { dealPushTags, dealsApi } from '../dealsApi';
 
 const T0 = '2026-10-15T09:00:00+03:00';
 const REF = { role: 'brand', id: '01J' } as const;
@@ -179,5 +179,26 @@ describe('dealsApi', () => {
     ).rejects.toMatchObject({ status: 403 });
 
     expect(toast).not.toHaveBeenCalled();
+  });
+});
+
+describe('dealPushTags', () => {
+  it('refetches the deal and everything that moves with it', () => {
+    expect(dealPushTags({ kind: 'deal', dealId: '01J' })).toEqual([
+      { type: 'Deal', id: '01J' },
+      { type: 'DealList', id: 'LIST' },
+      { type: 'DealHistory', id: '01J' },
+      'BrandHome',
+      'Wallet',
+      'WalletEscrow',
+      'WalletEarnings',
+      { type: 'WalletTransaction', id: 'LIST' },
+    ]);
+  });
+
+  it('ignores other links and pushes without one', () => {
+    expect(dealPushTags({ kind: 'strikes' })).toEqual([]);
+    expect(dealPushTags({ kind: 'wallet' })).toEqual([]);
+    expect(dealPushTags(null)).toEqual([]);
   });
 });

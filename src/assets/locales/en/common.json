@@ -420,6 +420,7 @@
     "wallet": "Wallet",
     "account": "Account",
     "myProfile": "Profile",
+    "waiting": "{{title}}, {{count}} waiting on you",
     "comingSoon": {
       "title": "Coming soon",
       "message": "We're building this section. It's on its way."
@@ -1479,6 +1480,50 @@
         "body": "The Sada team is on WhatsApp for any question.",
         "action": "Contact support",
         "message": "Hi, I need help with Sada."
+      },
+      "deals": {
+        "title": "Your deals",
+        "waiting": "{{count}} waiting on you",
+        "moving": "{{count}} moving without you",
+        "seeAll": "All your deals",
+        "seeAllCount": "All your deals ({{count}})",
+        "next": {
+          "label": "Your next step",
+          "position": "{{index}} of {{count}}",
+          "nextLabel": "Next deal",
+          "peek": "Next: {{name}} · {{action}}",
+          "left": "{{time}} left",
+          "paused": "Timer paused",
+          "hint": "Swipe the card or tap the arrow for the next deal",
+          "cardLabel": "{{name}}: {{action}}"
+        },
+        "cta": {
+          "fund": "Pay {{amount}}",
+          "answerExtension": "Reply now",
+          "answerIssue": "Answer the issue",
+          "ship": "Confirm shipping",
+          "reviewDraft": "Review the draft",
+          "verifyPost": "Verify the post",
+          "addEvidence": "Add your evidence",
+          "open": "Open the deal"
+        },
+        "lane": "Moving without you",
+        "stops": {
+          "agree": "Agree",
+          "prepare": "Prepare",
+          "publish": "Publish",
+          "done": "Done"
+        },
+        "rowLabel": "{{name}}, {{amount}}, {{stage}}",
+        "calm": {
+          "title": "All your deals are running smoothly",
+          "message": "Nothing needs you right now"
+        },
+        "welcome": {
+          "title": "No deals in progress right now",
+          "message": "Pick a creator, send an offer at their price, and follow every step from here.",
+          "cta": "Discover creators"
+        }
       }
     },
     "shortlist": {
@@ -3660,6 +3705,7 @@
         "limits": "Minimum {{min}} · up to {{max}} a day · one withdrawal every {{days}} days",
         "blockedTitle": "You can't withdraw right now",
         "blockedFallback": "The server didn't accept this withdrawal. Try again later.",
+        "verifyToWithdraw": "Verify to withdraw",
         "nextAllowed": "Next withdrawal opens in",
         "quoteFailed": "Couldn't price this withdrawal.",
         "quote": {

@@ -69,6 +69,7 @@ export const WALLET_TRANSACTION_TYPES = [
   'admin_adjustment',
   'promo_credit',
   'reversal',
+  'clawback',
 ] as const;
 export type WalletTransactionType = (typeof WALLET_TRANSACTION_TYPES)[number];
 
@@ -213,6 +214,9 @@ export interface WalletEscrowDto {
   status: string;
   status_label: string;
   release_hint?: string | null;
+  /** B13 §5.3: slowest item's status while `in_progress`, else the deal status; `null` without a deal. */
+  stage?: string | null;
+  stage_label?: string | null;
   held_at: string;
 }
 
@@ -235,6 +239,8 @@ export interface WalletEscrow {
   status_label: string;
   /** What releases the money at the deal's current stage. */
   release_hint: string | null;
+  /** Where the deal is (server label, "Draft submitted"); `null` without a deal. */
+  stage_label: string | null;
   held_at: string;
 }
 

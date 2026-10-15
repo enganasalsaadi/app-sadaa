@@ -177,6 +177,7 @@ const mapEscrow = (dto: WalletEscrowDto): WalletEscrow => ({
   status: toEscrowStatus(dto.status),
   status_label: dto.status_label,
   release_hint: dto.release_hint || null,
+  stage_label: dto.stage_label || null,
   held_at: dto.held_at,
 });
 

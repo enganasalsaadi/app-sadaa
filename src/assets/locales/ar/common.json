@@ -420,6 +420,7 @@
     "wallet": "المحفظة",
     "account": "حسابي",
     "myProfile": "ملفي",
+    "waiting": "{{title}}، {{count}} تنتظرك",
     "comingSoon": {
       "title": "قريباً",
       "message": "نعمل على هذا القسم، وسيصلك قريباً."
@@ -1547,6 +1548,50 @@
         "body": "فريق صدى جاهز على واتساب لأي سؤال.",
         "action": "تواصل مع الدعم",
         "message": "مرحباً، أحتاج مساعدة في صدى."
+      },
+      "deals": {
+        "title": "صفقاتك",
+        "waiting": "{{count}} تنتظرك",
+        "moving": "{{count}} تمشي بدونك",
+        "seeAll": "كل صفقاتك",
+        "seeAllCount": "كل صفقاتك ({{count}})",
+        "next": {
+          "label": "خطوتك التالية",
+          "position": "{{index}} من {{count}}",
+          "nextLabel": "الصفقة التالية",
+          "peek": "التالية: {{name}} · {{action}}",
+          "left": "باقي {{time}}",
+          "paused": "المهلة متوقفة",
+          "hint": "اسحب البطاقة أو اضغط السهم لترى الصفقة التالية",
+          "cardLabel": "{{name}}: {{action}}"
+        },
+        "cta": {
+          "fund": "ادفع {{amount}}",
+          "answerExtension": "رد الآن",
+          "answerIssue": "رد على المشكلة",
+          "ship": "أكّد الشحن",
+          "reviewDraft": "راجع المسودة",
+          "verifyPost": "تحقق من النشر",
+          "addEvidence": "أضف دليلك",
+          "open": "افتح الصفقة"
+        },
+        "lane": "تمشي بدونك",
+        "stops": {
+          "agree": "اتفاق",
+          "prepare": "تجهيز",
+          "publish": "نشر",
+          "done": "تم"
+        },
+        "rowLabel": "{{name}}، {{amount}}، {{stage}}",
+        "calm": {
+          "title": "كل صفقاتك تسير بسلاسة",
+          "message": "لا إجراءات مطلوبة منك الآن"
+        },
+        "welcome": {
+          "title": "لا توجد صفقات جارية الآن",
+          "message": "اختر مؤثراً، أرسل له عرضاً بسعره، وتابع كل خطوة من هذا المكان.",
+          "cta": "اكتشف المؤثرين"
+        }
       }
     },
     "shortlist": {
@@ -3820,6 +3865,7 @@
         "limits": "الحد الأدنى {{min}} · حتى {{max}} يومياً · سحب واحد كل {{days}} أيام",
         "blockedTitle": "لا يمكن السحب الآن",
         "blockedFallback": "لم يقبل الخادم هذا السحب. حاول لاحقاً.",
+        "verifyToWithdraw": "وثّق هويتك للسحب",
         "nextAllowed": "السحب التالي متاح بعد",
         "quoteFailed": "تعذّر حساب هذا السحب.",
         "quote": {

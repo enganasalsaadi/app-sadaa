@@ -1,7 +1,7 @@
 export { Box, Text, Pressable, Card, Image, Avatar, Thumbnail, Banner } from './primitives';
 export type { BoxProps, CardProps, ImageProps, OnLoadEvent } from './primitives';
 export { Layout, LayoutFooter, useLayoutInView, useLayoutScrollY } from './Layout';
-export { useLoopClock } from './motion';
+export { useLoopClock, useScreenFocused } from './motion';
 export type {
   LayoutProps,
   LayoutMode,

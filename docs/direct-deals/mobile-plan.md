@@ -127,10 +127,10 @@ BrandDealDetail ──► Contract / Timeline             └ تقييم
 > **نهاية الشريحة A**: صفقة رقمية كاملة تعمل من العرض حتى الإكمال والتقييم.
 
 ## P11 — التكاملات (M11 + B13)
-- **P11.1 (S)** إشعارات `deal_*` → تفاصيل الصفقة + refetch.
-- **P11.2 (M)** Brand Home: شريط `active_deals` + جزيرة `fund_deals`.
-- **P11.3 (S)** المحفظة: `stage` في تذاكر الـ escrow + `clawback` + CTA `kyc_required` عند السحب.
-- **P11.4 (S)** المديا كيت: `highlights.completed_campaigns` + `worked_with`.
+- ✅ **P11.1 (S)** (2026-10-15) إشعارات `deal_*` → تفاصيل الصفقة + refetch. (المسار كان جاهزاً من P0.5؛ `useDealPushRefresh` في `App.tsx`: أي push برابط صفقة (استلام أو نقر) يبطل `Deal` + `dealChangedTags` عبر `dealPushTags`، داخل الدومين لتفادي دورة auth ↔ marketplace؛ strikes بلا كاش بعد.)
+- ✅ **P11.2 (M)** Brand Home: شريط `active_deals` + جزيرة `fund_deals`. (2026-10-15: البيانات — `BrandHome.activeDeals` عبر `mapBrandActiveDeal` (صف بمبلغ تالف يُسقط) + `island.waitingDeals`؛ جزيرة `fund_deals` → TopUp. القسم «صفقاتك» (دمج معتمد، `design-previews/brand-home-deals-v2.html`): `NextStepDeck` (بطاقة «خطوتك التالية» لما `needsAction`، «1 من 3»، سهم/سحب `useNextStepDeck`) + `DealTrackList` (متتبع اتفاق ← تجهيز ← نشر ← تم عبر `dealTrack`، نزاع أحمر، «كل صفقاتك (n)» إذا `total_count` > الصفوف) + `DealsCalmCard` + `DealsWelcome` (`active_deals: null`) + `HomeDealsSkeleton`؛ خطأ → القسم يختفي. Badge تبويب الصفقات = `needs_action_count` من كاش Brand Home (`useBrandDealsBadge` → `tabBarBadge` → `TabBadge`). الجزيرة انتقلت تحت سطر المحفظة. غير مُختبر على جهاز.)
+- ✅ **P11.3 (S)** (2026-10-15) المحفظة: `stage` في تذاكر الـ escrow + `clawback` + CTA `kyc_required` عند السحب. (`stage_label` يحل محل نص الـ pill (اللون من حالة الحجز)؛ `clawback` نوعه حسب الاتجاه (`byDirection`)؛ `BlockedNotice onVerify` → `KycScreen`.)
+- ✅ **P11.4 (S)** (2026-10-15) المديا كيت: `highlights.completed_campaigns` + `worked_with`. (كانا مبنيين منذ Media Kit v2: بلاطة الحملات تظهر عند > 0، `MediaKitBrands` بعنوان `total_brands`؛ تحديث التعليقات فقط.)
 
 ## الشريحة B — الحالات الخاصة
 

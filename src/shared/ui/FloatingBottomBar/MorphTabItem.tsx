@@ -9,11 +9,16 @@ import Animated, {
 import { motion, useStyles, useTheme } from '@/core/theme';
 import { Box, Pressable, Text } from '../primitives';
 import { MORPH_ACTIVE_GROW, MORPH_LABEL_MAX } from './constants';
+import { TabBadge } from './TabBadge';
 
 interface MorphTabItemProps {
   isActive: boolean;
   label: string;
   icon: React.ReactNode;
+  /** Amber count on the icon; 0 = none. */
+  badge: number;
+  /** Spoken label (the count included); defaults to `label`. */
+  accessibilityLabel?: string;
   onPress: () => void;
 }
 
@@ -24,7 +29,14 @@ interface MorphTabItemProps {
  * Capsule and label are plain views: both an animated opacity and `entering` layout animations
  * left them at opacity 0 on device, so only the width springs.
  */
-const MorphTabItemComponent: React.FC<MorphTabItemProps> = ({ isActive, label, icon, onPress }) => {
+const MorphTabItemComponent: React.FC<MorphTabItemProps> = ({
+  isActive,
+  label,
+  icon,
+  badge,
+  accessibilityLabel,
+  onPress,
+}) => {
   const { colors } = useTheme();
   const reduceMotion = useReducedMotion();
   const progress = useSharedValue(isActive ? 1 : 0);
@@ -59,10 +71,13 @@ const MorphTabItemComponent: React.FC<MorphTabItemProps> = ({ isActive, label, i
         scaleOnPress
         accessibilityRole="tab"
         accessibilityState={{ selected: isActive }}
-        accessibilityLabel={label}
+        accessibilityLabel={accessibilityLabel ?? label}
       >
         {isActive ? <Box style={styles.pill} pointerEvents="none" /> : null}
-        {icon}
+        <Box>
+          {icon}
+          <TabBadge count={badge} />
+        </Box>
         {isActive ? (
           <Text
             variant="buttonSmall"

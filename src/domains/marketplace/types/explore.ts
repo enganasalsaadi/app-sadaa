@@ -3,6 +3,8 @@ import type { FollowerTierId } from '@/core/config';
 import type { Money } from '@/core/money';
 import type { ExploreFilters, ExploreSortParam } from '@/core/navigation';
 import type { PriceLockReason } from '@/domains/identity';
+import type { BrandActiveDeal, Timestamp } from './deal';
+import type { BrandActiveDealDto } from './dealDto';
 
 // Route params (Explore prefill) live in core navigation; the domain reads them as its own.
 export type { ExploreFilters };
@@ -30,6 +32,7 @@ export const BRAND_HOME_ISLAND_TYPES = [
   'kyc_rejected',
   'verify_account',
   'verification_pending',
+  'fund_deals',
   'complete_profile',
 ] as const;
 export type BrandHomeIslandType = (typeof BRAND_HOME_ISLAND_TYPES)[number];
@@ -119,6 +122,14 @@ export interface BrandHomeDto {
     title: string;
     body: string;
     cta: { label: string; action: string };
+    /** B13: `null` for every type except `fund_deals`; absent on older servers. */
+    meta?: { count: number; expires_at: string | null } | null;
+  } | null;
+  /** B13 §5.1: `null` when the brand has no open deal; absent on older servers. */
+  active_deals?: {
+    needs_action_count: number;
+    total_count: number;
+    items: BrandActiveDealDto[];
   } | null;
   rails: {
     key: string;
@@ -208,6 +219,15 @@ export interface BrandHomeIsland {
   title: string;
   body: string;
   ctaLabel: string;
+  /** `fund_deals` only: accepted offers waiting for money, the first to lapse at `expiresAt`. */
+  waitingDeals: { count: number; expiresAt: Timestamp | null } | null;
+}
+
+/** B13 §5.1: open deals (≤ 10 shown); the counts cover every open deal. */
+export interface BrandActiveDeals {
+  needsActionCount: number;
+  totalCount: number;
+  items: BrandActiveDeal[];
 }
 
 export interface BrandHomeRail {
@@ -224,6 +244,8 @@ export interface BrandHome {
   /** Display only: the wallet tab reads `/wallet`. SYP is `null` when the rate is stale. */
   wallet: { available: Money; availableSypApprox: Money | null };
   island: BrandHomeIsland | null;
+  /** `null` = no open deal: the strip hides. */
+  activeDeals: BrandActiveDeals | null;
   /** Non-empty rails only, in server order. */
   rails: BrandHomeRail[];
   /** Allow-listed WhatsApp link, else `null` (card hidden). */

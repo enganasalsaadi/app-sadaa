@@ -326,6 +326,18 @@ describe('mapWalletEscrows', () => {
     expect(escrows.items[0]?.counterparty?.name).toBe('Zara Home');
     expect(escrows.items[1]?.status).toBeNull();
   });
+
+  it('carries the deal stage label, null when the hold has no deal', () => {
+    const escrows = mapWalletEscrows({
+      items: [
+        escrowDto({ stage: 'draft_submitted', stage_label: 'Draft submitted' }),
+        escrowDto({ id: '01JHOLD2', stage: null, stage_label: null }),
+        escrowDto({ id: '01JHOLD3' }),
+      ],
+      meta: { current_page: 1, last_page: 1, total: 3 },
+    });
+    expect(escrows.items.map(item => item.stage_label)).toEqual(['Draft submitted', null, null]);
+  });
 });
 
 describe('mapWalletEarnings', () => {

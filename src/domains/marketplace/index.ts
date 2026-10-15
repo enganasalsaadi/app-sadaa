@@ -50,4 +50,6 @@ export {
   useGetDealContractQuery,
 } from './api/dealsApi';
 export { useDealAction } from './hooks/useDealAction';
+export { useBrandDealsBadge } from './hooks/useBrandDealsBadge';
+export { useDealPushRefresh } from './hooks/useDealPushRefresh';
 export type { UseDealActionOptions } from './hooks/useDealAction';

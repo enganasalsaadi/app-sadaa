@@ -33,8 +33,8 @@ export interface FloatingBottomBarProps extends BottomTabBarProps {
 /**
  * Floating navy glass bar in two looks (`variant`). Content scrolls
  * behind it and shows through the blur; it slides away on scroll-down and
- * returns on scroll-up. Label and icon come from each screen's `title` /
- * `tabBarIcon` options, so the navigator owns the role-specific tab set.
+ * returns on scroll-up. Label, icon and count come from each screen's `title` /
+ * `tabBarIcon` / numeric `tabBarBadge` options, so the navigator owns the role-specific tab set.
  * Inner screens remove it with `useHideBottomBar()`.
  */
 export const FloatingBottomBar: React.FC<FloatingBottomBarProps> = ({
@@ -121,6 +121,8 @@ export const FloatingBottomBar: React.FC<FloatingBottomBarProps> = ({
                 key={route.key}
                 isActive={isFocused}
                 label={options?.title ?? route.name}
+                badge={typeof options?.tabBarBadge === 'number' ? options.tabBarBadge : 0}
+                accessibilityLabel={options?.tabBarAccessibilityLabel}
                 icon={options?.tabBarIcon?.({
                   focused: isFocused,
                   color: isFocused

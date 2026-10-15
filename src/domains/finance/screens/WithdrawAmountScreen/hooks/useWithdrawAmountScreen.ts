@@ -68,6 +68,12 @@ export const useWithdrawAmountScreen = () => {
   );
 
   const reasons = useMemo(() => blockReasons.map(reason => formatReasonLabel(reason, t)), [blockReasons, t]);
+  const needsKyc = blockReasons.some(reason => reason.code === 'kyc_required');
+  // KYC lives in the account stack; `initial: false` keeps its root underneath.
+  const goToKyc = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'KycScreen', initial: false }),
+    [navigation],
+  );
 
   const nextAllowedMs = useMemo(() => {
     if (!nextAllowedAt) return null;
@@ -164,6 +170,7 @@ export const useWithdrawAmountScreen = () => {
     limitsLabel,
     blocked,
     reasons,
+    openKyc: needsKyc ? goToKyc : null,
     nextAllowedMs,
     quoteView,
     quoteDimmed: quoteStatus === 'loading',

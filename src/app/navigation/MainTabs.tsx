@@ -25,6 +25,7 @@ import {
   BrandHomeNavigator,
   CreatorDealsNavigator,
   CreatorHomeNavigator,
+  useBrandDealsBadge,
 } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
@@ -72,8 +73,11 @@ const renderMorphTabBar = (props: BottomTabBarProps) => (
 const buildTabOptions = (
   title: string,
   Icon: LucideIcon,
+  badge?: { count: number; label: string },
 ): BottomTabNavigationOptions => ({
   title,
+  tabBarBadge: badge?.count,
+  tabBarAccessibilityLabel: badge?.label,
   tabBarIcon: ({ focused, color, size }) => (
     <Icon
       size={size}
@@ -89,10 +93,21 @@ export const MainTabs: React.FC = () => {
   const userType = useAppSelector(selectUserType);
   const isCreator = userType === 'influencer';
   const tabs = isCreator ? CREATOR_TABS : BRAND_TABS;
+  // Brand only: deals waiting on the brand, from the cached Brand Home (0 hides it).
+  const brandDealsBadge = useBrandDealsBadge();
+  const dealsBadge = isCreator ? 0 : brandDealsBadge;
 
   const options = useMemo(
-    () => tabs.map(tab => buildTabOptions(t(tab.titleKey), tab.icon)),
-    [tabs, t],
+    () =>
+      tabs.map(tab => {
+        const title = t(tab.titleKey);
+        const badge =
+          tab.name === 'DealsTab' && dealsBadge > 0
+            ? { count: dealsBadge, label: t('tabs.waiting', { title, count: dealsBadge }) }
+            : undefined;
+        return buildTabOptions(title, tab.icon, badge);
+      }),
+    [dealsBadge, tabs, t],
   );
 
   return (

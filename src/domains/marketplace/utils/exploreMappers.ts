@@ -1,11 +1,13 @@
 import { FOLLOWER_TIERS, type FollowerTierId } from '@/core/config';
 import type { Money } from '@/core/money';
 import { toPriceLockReason } from '@/domains/identity';
+import { mapBrandActiveDeal } from './dealMappers';
 import { parseExploreParams } from './exploreQuery';
 import {
   BRAND_HOME_ISLAND_TYPES,
   BRAND_HOME_RAIL_KEYS,
   EXPLORE_SORTS,
+  type BrandActiveDeals,
   type BrandHome,
   type BrandHomeDto,
   type BrandHomeIsland,
@@ -133,7 +135,35 @@ const mapIsland = (dto: BrandHomeDto['island']): BrandHomeIsland | null => {
   if (!includes<BrandHomeIslandType>(BRAND_HOME_ISLAND_TYPES, dto.type)) {
     return null;
   }
-  return { type: dto.type, title: dto.title, body: dto.body, ctaLabel: dto.cta.label };
+  const meta = dto.type === 'fund_deals' ? dto.meta : null;
+  const expiresAt = meta?.expires_at ? Date.parse(meta.expires_at) : NaN;
+  return {
+    type: dto.type,
+    title: dto.title,
+    body: dto.body,
+    ctaLabel: dto.cta.label,
+    waitingDeals: meta
+      ? { count: meta.count, expiresAt: Number.isNaN(expiresAt) ? null : expiresAt }
+      : null,
+  };
+};
+
+/** A row with malformed money is dropped rather than shown wrong (rule 06); counts stay the server's. */
+const mapActiveDeals = (dto: BrandHomeDto['active_deals']): BrandActiveDeals | null => {
+  if (!dto) {
+    return null;
+  }
+  return {
+    needsActionCount: dto.needs_action_count,
+    totalCount: dto.total_count,
+    items: dto.items.flatMap(item => {
+      try {
+        return [mapBrandActiveDeal(item)];
+      } catch {
+        return [];
+      }
+    }),
+  };
 };
 
 const mapRails = (dtos: BrandHomeDto['rails']): BrandHomeRail[] =>
@@ -163,6 +193,7 @@ export const mapBrandHome = (dto: BrandHomeDto): BrandHome => ({
     ),
   },
   island: mapIsland(dto.island),
+  activeDeals: mapActiveDeals(dto.active_deals),
   rails: mapRails(dto.rails),
   supportWhatsappUrl: toSupportWhatsappUrl(dto.support.whatsapp_url),
   viewPrices: {

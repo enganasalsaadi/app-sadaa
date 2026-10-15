@@ -417,4 +417,5 @@ export const SHOWCASE_EXEMPT = {
   useLayoutInView: 'scroll visibility hook (reveal progress + loop pause), no UI',
   useLayoutScrollY: 'read-only access to the Layout scroll offset for custom headers, no UI',
   useLoopClock: 'pausable UI-thread loop phase for animated scenes, no UI',
+  useScreenFocused: 'focus flag that pauses loops on blurred tabs, no UI',
 } as const satisfies Partial<Record<UiExportName, string>>;

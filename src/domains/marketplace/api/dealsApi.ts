@@ -1,4 +1,5 @@
 import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
+import type { PushTarget } from '@/core/notification';
 import type {
   DealActionArgs,
   DealActionResult,
@@ -46,6 +47,15 @@ export const dealChangedTags = (id: string) =>
     'WalletEarnings',
     { type: 'WalletTransaction', id: 'LIST' },
   ] as const;
+
+/**
+ * A `deal_*` push only says the deal moved (M11): refetch it and everything that moves with it.
+ * The kind is open-ended (`deal_<kind>`), so the link alone decides. Strikes have no cache yet.
+ */
+export const dealPushTags = (target: PushTarget | null) =>
+  target?.kind === 'deal'
+    ? ([{ type: 'Deal', id: target.dealId }, ...dealChangedTags(target.dealId)] as const)
+    : [];
 
 /** Direct Deals reads + every action answering the full deal (handoff §0, M3). Both roles. */
 export const dealsApi = baseApi.injectEndpoints({

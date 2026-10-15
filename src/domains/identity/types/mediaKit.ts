@@ -45,9 +45,9 @@ export interface PublicRateCard extends Omit<RateCard, 'price_usd' | 'addons'> {
 }
 
 /**
- * Media Kit v2 (contract §17.11). `highlights`, `audience`, `worked_with` and
- * `top_portfolio_items` are stubbed server-side (`null` / `[]`) until their data sources ship:
- * their sections stay hidden and light up without an app release.
+ * Media Kit v2 (contract §17.11). `highlights` (completed deals count) and `worked_with` are live
+ * since Direct Deals B13 §5.4; `audience` and `top_portfolio_items` stay stubbed (`null` / `[]`).
+ * Empty sections stay hidden and light up without an app release.
  */
 export interface MediaKitCity {
   key: string;
@@ -103,7 +103,10 @@ export interface MediaKitWorkedWithBrand {
 }
 
 export interface MediaKitWorkedWith {
-  /** All brands, including those beyond `items` or hidden by their own privacy setting. */
+  /**
+   * All brands, including those beyond `items` or hidden by their own privacy setting
+   * (`show_on_creator_profiles`): `items` shorter than this is normal.
+   */
   total_brands: number;
   items: MediaKitWorkedWithBrand[];
 }

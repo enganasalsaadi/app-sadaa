@@ -123,6 +123,9 @@ export interface ThemeColors {
       lensFaint: string;
       /** Morph bar (brand tabs): the active tab's teal capsule that grows to show its label. */
       activePill: string;
+      /** Count on a tab (deals waiting on the user): amber on the navy bar, dark digits. */
+      badge: string;
+      onBadge: string;
     };
     bottomSheet: { background: string; handle: string };
   };
@@ -608,6 +611,8 @@ export const lightColors: ThemeColors = {
       lens: 'rgba(255, 255, 255, 0.16)',
       lensFaint: 'rgba(255, 255, 255, 0.05)',
       activePill: 'rgba(111, 192, 207, 0.24)',
+      badge: darkStatus.warning.main,
+      onBadge: ON_TEAL_DARK,
     },
     bottomSheet: { background: WHITE, handle: '#C3CDD7' },
   },
@@ -780,6 +785,8 @@ export const darkColors: ThemeColors = {
       lens: 'rgba(255, 255, 255, 0.14)',
       lensFaint: 'rgba(255, 255, 255, 0.04)',
       activePill: 'rgba(111, 192, 207, 0.26)',
+      badge: darkStatus.warning.main,
+      onBadge: ON_TEAL_DARK,
     },
     bottomSheet: { background: '#122131', handle: '#30495F' },
   },

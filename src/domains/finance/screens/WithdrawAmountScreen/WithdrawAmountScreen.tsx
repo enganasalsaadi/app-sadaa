@@ -136,6 +136,7 @@ const WithdrawAmountScreenComponent: React.FC = () => {
             <BlockedNotice
               reasons={vm.reasons}
               nextAllowedMs={vm.nextAllowedMs}
+              onVerify={vm.openKyc}
             />
           ) : null}
 

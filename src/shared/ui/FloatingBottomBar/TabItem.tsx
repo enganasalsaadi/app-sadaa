@@ -1,11 +1,16 @@
 import React, { memo } from 'react';
 import { useTheme } from '@/core/theme';
-import { Pressable, Text } from '../primitives';
+import { Box, Pressable, Text } from '../primitives';
+import { TabBadge } from './TabBadge';
 
 interface TabItemProps {
   isActive: boolean;
   label: string;
   icon: React.ReactNode;
+  /** Amber count on the icon; 0 = none. */
+  badge: number;
+  /** Spoken label (the count included); defaults to `label`. */
+  accessibilityLabel?: string;
   onPress: () => void;
 }
 
@@ -14,6 +19,8 @@ const TabItemComponent: React.FC<TabItemProps> = ({
   isActive,
   label,
   icon,
+  badge,
+  accessibilityLabel,
   onPress,
 }) => {
   const { colors } = useTheme();
@@ -27,9 +34,12 @@ const TabItemComponent: React.FC<TabItemProps> = ({
       justify="center"
       accessibilityRole="tab"
       accessibilityState={{ selected: isActive }}
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
     >
-      {icon}
+      <Box>
+        {icon}
+        <TabBadge count={badge} />
+      </Box>
       <Text
         variant="caption"
         mt="xs"

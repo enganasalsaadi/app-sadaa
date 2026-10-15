@@ -14,6 +14,7 @@ import type { WalletLineStatus, WalletTransaction, WalletTransactionType } from 
 /** What a line did to the money: picks the badge (rule 09 §2.1 ledger row and receipt). */
 export type LineKind = 'in' | 'out' | 'hold' | 'fee' | 'other';
 
+/** `byDirection`: the same type is money in for one side and out for the other. */
 const TYPE_KIND = {
   top_up: 'in',
   escrow_hold: 'hold',
@@ -29,7 +30,9 @@ const TYPE_KIND = {
   admin_adjustment: 'other',
   promo_credit: 'in',
   reversal: 'other',
-} as const satisfies Record<WalletTransactionType, LineKind>;
+  // Retention clawback (A1): taken from the creator, returned to the brand.
+  clawback: 'byDirection',
+} as const satisfies Record<WalletTransactionType, LineKind | 'byDirection'>;
 
 export const LINE_KIND_ICON = {
   in: ArrowDownLeft,
@@ -47,8 +50,11 @@ export const LINE_STATUS_PILL = {
 } as const satisfies Record<WalletLineStatus, { tone: HueTone; icon: LucideIcon }>;
 
 /** An unknown type falls back to the direction. */
-export const lineKind = (line: WalletTransaction): LineKind =>
-  line.type ? TYPE_KIND[line.type] : line.direction === 'credit' ? 'in' : 'out';
+export const lineKind = (line: WalletTransaction): LineKind => {
+  const kind = line.type ? TYPE_KIND[line.type] : 'byDirection';
+  if (kind !== 'byDirection') return kind;
+  return line.direction === 'credit' ? 'in' : 'out';
+};
 
 /** Badge fill + icon: mint only for money in (rule 08), info for escrow, neutral otherwise. */
 export const lineBadgeColors = (kind: LineKind, colors: ThemeColors): { bg: string; icon: string } =>
