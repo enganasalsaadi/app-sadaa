@@ -6516,9 +6516,9 @@
     "semantic_hash": ""
   },
   "docs/mobile-architecture.md": {
-    "mtime": 1792165916.5803716,
-    "seen": 1792166028.236591,
-    "ast_hash": "56cb0554e3d489245446188df6ad8b37",
+    "mtime": 1792192214.0703657,
+    "seen": 1792193007.458006,
+    "ast_hash": "04897f12e042380adfa7dd0c37ff286e",
     "semantic_hash": ""
   },
   "docs/mobile-contract.md": {
@@ -10224,9 +10224,9 @@
     "semantic_hash": ""
   },
   "docs/mobile-changelog.md": {
-    "mtime": 1792165916.5805564,
-    "seen": 1792166028.236592,
-    "ast_hash": "2b463603bb75d81dc05e9eed025f257e",
+    "mtime": 1792192208.4125915,
+    "seen": 1792193007.458007,
+    "ast_hash": "5b08c6f5a1a2979dd332dc6e620bd943",
     "semantic_hash": ""
   },
   "src/app/navigation/TabScreenInsets.tsx": {
@@ -10290,9 +10290,9 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792189573.7085109,
-    "seen": 1792189625.353683,
-    "ast_hash": "51c0431e7a68f05a7ce602717ab78da0",
+    "mtime": 1792192980.5966492,
+    "seen": 1792193007.4580128,
+    "ast_hash": "5dfceda225fb5e0bfc0a7ded4e8c8c04",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
@@ -10350,9 +10350,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/__tests__/brandCampaignsApi.test.ts": {
-    "mtime": 1792188350.3762097,
-    "seen": 1792188418.476515,
-    "ast_hash": "8d8842080e6d31ff17e1b10cff788af9",
+    "mtime": 1792192921.4320345,
+    "seen": 1792193007.457477,
+    "ast_hash": "9f5a2b5ba6bef7f1b4060cfe0bd8cd9d",
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/__tests__/creatorCampaignsApi.test.ts": {
@@ -10362,9 +10362,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/brandCampaignsApi.ts": {
-    "mtime": 1792188122.0429704,
-    "seen": 1792188418.476518,
-    "ast_hash": "8e0033a6b7e32ee89225b1b4715dd077",
+    "mtime": 1792192818.513994,
+    "seen": 1792193007.457482,
+    "ast_hash": "718444357b06b847bfb55a9adc4f49ce",
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/creatorCampaignsApi.ts": {
@@ -10434,9 +10434,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignQuery.ts": {
-    "mtime": 1792188122.038152,
-    "seen": 1792188418.476799,
-    "ast_hash": "3308518ace67ac33fbe36afa569edd01",
+    "mtime": 1792192801.5289114,
+    "seen": 1792193007.457792,
+    "ast_hash": "7b7c2aad460d598065140ded11a40713",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignComingSoon.tsx": {
@@ -10509,6 +10509,48 @@
     "mtime": 1792189444.2970822,
     "seen": 1792189625.35285,
     "ast_hash": "7169954ac465e5f542ad0f557dfd6177",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/constants/campaignDraft.ts": {
+    "mtime": 1792192696.2802248,
+    "seen": 1792193007.4575639,
+    "ast_hash": "8ebefe1645914c82f886a7da3a50814f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useCampaignDraft.ts": {
+    "mtime": 1792192905.4326463,
+    "seen": 1792193007.457578,
+    "ast_hash": "661671d09021a111998b55d096220f51",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/types/campaignDraft.ts": {
+    "mtime": 1792192712.09146,
+    "seen": 1792193007.457761,
+    "ast_hash": "4ad62ef4f8f068f16501ea02003982e8",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignDraft.test.ts": {
+    "mtime": 1792192957.7338102,
+    "seen": 1792193007.457768,
+    "ast_hash": "989ff33794b200ea2a10562853c66a94",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignDraftSync.test.ts": {
+    "mtime": 1792192893.5182633,
+    "seen": 1792193007.457769,
+    "ast_hash": "20a8b84d50ff1f9c1e38486ffd4c2dd8",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignDraft.ts": {
+    "mtime": 1792192733.5512996,
+    "seen": 1792193007.457788,
+    "ast_hash": "208b13c2b18fc0996c826bb2f090800b",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignDraftSync.ts": {
+    "mtime": 1792192905.4323246,
+    "seen": 1792193007.457789,
+    "ast_hash": "b636302d405a526105bdf4445c991d4d",
     "semantic_hash": ""
   }
 }

@@ -173,6 +173,77 @@ describe('brandCampaignsApi', () => {
     expect(toast).not.toHaveBeenCalled();
   });
 
+  it('creates a draft from the title and caches it without a read', async () => {
+    const { spy } = mockServer(() => json(201, { success: true, message: 'ok', data: detailDto({ id: 'c9', status: { key: 'draft', label: 'Draft' } }), meta: {} }));
+    const store = makeStore();
+
+    const created = await store
+      .dispatch(brandCampaignsApi.endpoints.createCampaign.initiate({ title: 'Ramadan' }))
+      .unwrap();
+    await settle();
+
+    expect(created.id).toBe('c9');
+    const post = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'POST');
+    expect(new URL(post?.url ?? '').pathname).toMatch(/\/brand\/campaigns$/);
+    expect(await post?.clone().json()).toEqual({ title: 'Ramadan' });
+    expect(brandCampaignsApi.endpoints.getCampaign.select('c9')(store.getState()).data?.status.key).toBe('draft');
+  });
+
+  it('autosaves a part with PUT and refreshes the cached campaign without a read', async () => {
+    const { spy } = mockServer(() => ok(detailDto({ missing: ['schedule'], title: 'Renamed' })));
+    const store = makeStore();
+    const detail = store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
+    await detail;
+
+    await store
+      .dispatch(brandCampaignsApi.endpoints.updateCampaign.initiate({ id: 'c1', body: { title: 'Renamed' } }))
+      .unwrap();
+    await settle();
+
+    const put = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'PUT');
+    expect(new URL(put?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1$/);
+    expect(await put?.clone().json()).toEqual({ title: 'Renamed' });
+    expect(readCampaign(store)?.missing).toEqual(['schedule']);
+    expect(detailReads(spy)).toBe(1);
+    detail.unsubscribe();
+  });
+
+  it('refetches the campaign when an autosave finds it no longer editable', async () => {
+    const { spy, state } = mockServer(() => fail(409, 'campaign_not_editable', 'Locked'));
+    const store = makeStore();
+    const detail = store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
+    await detail;
+    state.detailStatus = 'pending_review';
+
+    await expect(
+      store.dispatch(brandCampaignsApi.endpoints.updateCampaign.initiate({ id: 'c1', body: { title: 'x y z' } })).unwrap(),
+    ).rejects.toMatchObject({ status: 409 });
+    await settle();
+
+    expect(detailReads(spy)).toBe(2);
+    expect(readCampaign(store)?.status.key).toBe('pending_review');
+    detail.unsubscribe();
+  });
+
+  it('deletes a draft and refreshes the list', async () => {
+    const { spy } = mockServer(() => ok(null));
+    const store = makeStore();
+    const list = store.dispatch(brandCampaignsApi.endpoints.getCampaigns.initiate({}));
+    await list;
+
+    await store.dispatch(brandCampaignsApi.endpoints.deleteCampaign.initiate('c1')).unwrap();
+    await settle();
+
+    const del = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'DELETE');
+    expect(new URL(del?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1$/);
+    const listReads = spy.mock.calls.filter(([input]) => {
+      const request = input as Request;
+      return request.method === 'GET' && new URL(request.url).pathname.endsWith('/brand/campaigns');
+    });
+    expect(listReads).toHaveLength(2);
+    list.unsubscribe();
+  });
+
   it('flags the feature as off when a campaign call answers feature_disabled', async () => {
     jest.spyOn(global, 'fetch').mockImplementation(async () => fail(404, 'feature_disabled', 'Off'));
     const store = makeStore();

@@ -21,6 +21,9 @@ const subPathOf = (base: string, id: string, subPath?: string) => {
   return subPath ? `${url}/${subPath.split('/').map(encodeURIComponent).join('/')}` : url;
 };
 
+/** `POST /brand/campaigns` creates a draft. */
+export const BRAND_CAMPAIGNS_URL = BRAND_CAMPAIGNS;
+
 /** `/brand/campaigns/{id}[/sub/path]`, every segment encoded. */
 export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history') =>
   subPathOf(BRAND_CAMPAIGNS, id, path);

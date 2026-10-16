@@ -16,6 +16,7 @@ import type {
   CampaignHistoryRowDto,
   CampaignPageDto,
 } from '../types/campaignDto';
+import type { CampaignDraftRequest } from '../types/campaignDraft';
 import { isCampaignConflictError } from '../utils/campaignAction';
 import {
   mapCampaignActionResult,
@@ -23,7 +24,11 @@ import {
   mapCampaignHistoryRow,
   mapCampaignsPage,
 } from '../utils/campaignMappers';
-import { buildBrandCampaignUrl, buildBrandCampaignsUrl } from '../utils/campaignQuery';
+import {
+  BRAND_CAMPAIGNS_URL,
+  buildBrandCampaignUrl,
+  buildBrandCampaignsUrl,
+} from '../utils/campaignQuery';
 
 /** A `withMeta` action response: the campaign in `data`, the `submit` wallet check maybe in `meta`. */
 interface CampaignActionEnvelopeDto {
@@ -64,6 +69,50 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       transformResponse: (rows: CampaignHistoryRowDto[]) => rows.map(mapCampaignHistoryRow),
       providesTags: (_result, _error, id) => [{ type: 'CampaignHistory', id }],
     }),
+    /** Starts a draft from the first part (the title); answers the full campaign, which seeds the cache. */
+    createCampaign: builder.mutation<CampaignDetail, CampaignDraftRequest>({
+      query: body => ({ url: BRAND_CAMPAIGNS_URL, method: 'POST', body }),
+      transformResponse: (dto: CampaignDetailDto) => mapCampaignDetail(dto),
+      async onQueryStarted(_body, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(brandCampaignsApi.util.upsertQueryData('getCampaign', data.id, data));
+        } catch {
+          // The draft engine classifies the failure (limit, validation, network).
+        }
+      },
+      invalidatesTags: result =>
+        result ? [{ type: 'CampaignList', id: 'LIST' }, 'BrandHome'] : [],
+    }),
+    /**
+     * Autosave of one wizard part. Success replaces the cached campaign (its `missing[]` moves the
+     * steps) without touching the list: the wizard sits above it, and leaving invalidates once.
+     */
+    updateCampaign: builder.mutation<CampaignDetail, { id: string; body: CampaignDraftRequest }>({
+      query: ({ id, body }) => ({ url: buildBrandCampaignUrl(id), method: 'PUT', body }),
+      transformResponse: (dto: CampaignDetailDto) => mapCampaignDetail(dto),
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(brandCampaignsApi.util.upsertQueryData('getCampaign', data.id, data));
+        } catch {
+          // The draft engine classifies the failure.
+        }
+      },
+      invalidatesTags: (_result, error, { id }) =>
+        error && isCampaignConflictError(normalizeApiError(error)) ? [{ type: 'Campaign', id }] : [],
+    }),
+    /** Drafts only; a `campaign_not_draft` conflict refetches the campaign the screen thought was a draft. */
+    deleteCampaign: builder.mutation<void, string>({
+      query: id => ({ url: buildBrandCampaignUrl(id), method: 'DELETE' }),
+      transformResponse: () => undefined,
+      invalidatesTags: (_result, error, id) =>
+        !error
+          ? [...campaignChangedTags(id)]
+          : isCampaignConflictError(normalizeApiError(error))
+            ? [{ type: 'Campaign', id }, ...campaignChangedTags(id)]
+            : [],
+    }),
     /**
      * Any lifecycle action answering the full campaign. Success replaces the cached detail with
      * `data` (no refetch; `duplicate` caches the new campaign); a `campaign_*` conflict (409)
@@ -102,5 +151,8 @@ export const {
   useGetCampaignsInfiniteQuery,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
+  useCreateCampaignMutation,
+  useUpdateCampaignMutation,
+  useDeleteCampaignMutation,
   useRunCampaignActionMutation,
 } = brandCampaignsApi;
