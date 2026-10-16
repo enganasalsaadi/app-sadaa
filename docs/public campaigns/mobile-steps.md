@@ -53,7 +53,10 @@
 
 ## PC0 — الأساس (بدون UI)
 
-- **PC0.1 (M · S5)** الأنواع + DTO + mappers: `CAMPAIGN_STATUS` (11) + `APPLICATION_STATUS` (8) + `Campaign` (brand) / `CreatorCampaign` / `Quote` / `Timers` / `SeatFreed` / `Recruiting` / `Funding` / `ApplicantCard` / `CreatorApplication` / `HistoryRow` / `Eligibility`. خرائط `Record<…>` (tone/icon/tab group). اختبارات mappers + خرائط.
+- ✅ **PC0.1 (M · S5)** 2026-10-17 — الأنواع + DTO + mappers: `CAMPAIGN_STATUS` (11) + `APPLICATION_STATUS` (8) + `Campaign` (brand) / `CreatorCampaign` / `Quote` / `Timers` / `SeatFreed` / `Recruiting` / `Funding` / `ApplicantCard` / `CreatorApplication` / `HistoryRow` / `Eligibility`. خرائط `Record<…>` (tone/icon/tab group). اختبارات mappers + خرائط.
+  - الملفات: `marketplace/types/{campaign,campaignDto}.ts` · `utils/campaignMappers.ts` + `campaignStatus.ts` · `constants/{campaignStatus,campaignStatusIcons}.ts` (+ `CAMPAIGN_TAB_STATUSES` / `APPLICATION_TAB_STATUSES` لفلتر `status[]`) · اختبارات في `utils/__tests__/campaign*.test.ts`.
+  - التفاصيل: القائمة = `Campaign`، التفصيل وردود POST = `CampaignDetail` (+ timers/privateBrief/attachments). `Funding` = نفس `DealFunding`. `recruiting.status` يقبل نصاً أو `{key,label}` (العقد غامض). مساعدات `oneOf/toLabeled/toTimestamp*` صارت مُصدَّرة من `dealMappers.ts`.
+  - بوابات: tsc + eslint (marketplace) + jest marketplace (518) نظيفة.
 - **PC0.2 (M · S5)** `brandCampaignsApi` + `creatorCampaignsApi`: list/detail/history فقط + tags (`Campaign`, `CampaignList`, `CampaignHistory`, `CampaignApplication*`) + `ApiErrorCode` لكل أكواد §8 + hook `useCampaignAction` (409 → toast + refetch، replace cache من `data`). + كشف العلم: `useCampaignsEnabled` (من home/summary) + `feature_disabled` → flag في slice. اختبارات.
 - **PC0.3 (S · S5)** الملاحة: حسم القرار 1 → routes في `core/navigation/types.ts` + navigator لكل دور (شاشات placeholder) + deep link `sada://campaigns/{id}` + `PushTarget` campaign.
 - **PC0.4 (S · S5)** جنس المؤثر: picker في `PersonalInfoScreen` (`PATCH /influencer/profile`) + خطوة onboarding 2 (اختياري). شرط لـ `gender_required`.

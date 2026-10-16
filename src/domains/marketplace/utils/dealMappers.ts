@@ -109,20 +109,20 @@ import type {
 // DTO → domain for every Direct Deals resource (rule 04). Unknown enum values become `null`
 // (labels still render); malformed money or required timestamps throw instead of showing wrong data.
 
-const oneOf = <T extends string>(values: readonly T[], value: unknown): T | null =>
+export const oneOf = <T extends string>(values: readonly T[], value: unknown): T | null =>
   typeof value === 'string' && (values as readonly string[]).includes(value) ? (value as T) : null;
 
-const toLabeled = <K extends string>(values: readonly K[], dto: DealLabeledDto): Labeled<K> => ({
+export const toLabeled = <K extends string>(values: readonly K[], dto: DealLabeledDto): Labeled<K> => ({
   key: oneOf(values, dto.key),
   label: dto.label,
 });
 
-const toLabeledOrNull = <K extends string>(
+export const toLabeledOrNull = <K extends string>(
   values: readonly K[],
   dto: DealLabeledDto | null,
 ): Labeled<K> | null => (dto === null ? null : toLabeled(values, dto));
 
-const toTimestamp = (iso: string): Timestamp => {
+export const toTimestamp = (iso: string): Timestamp => {
   const ms = Date.parse(iso);
   if (Number.isNaN(ms)) {
     throw new TypeError('Malformed deal timestamp from the server');
@@ -130,7 +130,7 @@ const toTimestamp = (iso: string): Timestamp => {
   return ms;
 };
 
-const toTimestampOrNull = (iso: string | null | undefined): Timestamp | null =>
+export const toTimestampOrNull = (iso: string | null | undefined): Timestamp | null =>
   iso == null ? null : toTimestamp(iso);
 
 /** The server calls the creator side `influencer`. */

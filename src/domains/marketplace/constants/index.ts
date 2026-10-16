@@ -12,3 +12,25 @@ export {
 export type { DealPhase, DealOutcome, DealStatusMeta, DealItemStatusMeta } from './dealStatus';
 export { DEAL_STATUS_ICON, UNKNOWN_DEAL_STATUS_ICON, DEAL_ITEM_STATUS_ICON, DEAL_DRAFT_REVIEW_ICON } from './statusIcons';
 export { DEAL_UPLOAD_POLICY, DEAL_UPLOAD_LIMIT } from './dealUploads';
+export {
+  CAMPAIGN_TABS,
+  CAMPAIGN_STATUS_META,
+  UNKNOWN_CAMPAIGN_STATUS_META,
+  CAMPAIGN_TAB_STATUSES,
+  APPLICATION_TABS,
+  APPLICATION_STATUS_META,
+  UNKNOWN_APPLICATION_STATUS_META,
+  APPLICATION_TAB_STATUSES,
+} from './campaignStatus';
+export type {
+  CampaignTab,
+  CampaignStatusMeta,
+  ApplicationTab,
+  ApplicationStatusMeta,
+} from './campaignStatus';
+export {
+  CAMPAIGN_STATUS_ICON,
+  UNKNOWN_CAMPAIGN_STATUS_ICON,
+  APPLICATION_STATUS_ICON,
+  UNKNOWN_APPLICATION_STATUS_ICON,
+} from './campaignStatusIcons';

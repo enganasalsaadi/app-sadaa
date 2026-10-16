@@ -5220,9 +5220,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/index.ts": {
-    "mtime": 1791909290.7085989,
-    "seen": 1792158021.192578,
-    "ast_hash": "f379068bbc6f5dccdea935d6db22f2e6",
+    "mtime": 1792187504.7018754,
+    "seen": 1792187684.812768,
+    "ast_hash": "a2b737739dcced33e4dd31e22741da1e",
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/statusIcons.ts": {
@@ -5310,9 +5310,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/index.ts": {
-    "mtime": 1792103548.4273484,
-    "seen": 1792158021.192713,
-    "ast_hash": "2ddee2be3f8da3c6722352d41ef9b9b7",
+    "mtime": 1792187490.433123,
+    "seen": 1792187684.8129432,
+    "ast_hash": "f80364cf6bb32e0deaa6c406bad4a0c8",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealStatus.test.ts": {
@@ -5328,9 +5328,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/index.ts": {
-    "mtime": 1791908424.4782295,
-    "seen": 1792158021.192738,
-    "ast_hash": "2c5b0745c8eef54cb6a105436d6b029a",
+    "mtime": 1792187520.6658497,
+    "seen": 1792187684.812978,
+    "ast_hash": "d57b527813e88fb193ad12f2ac15f2a5",
     "semantic_hash": ""
   },
   "src/domains/notifications/api/notificationsApi.ts": {
@@ -9906,9 +9906,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealMappers.ts": {
-    "mtime": 1792103592.1103141,
-    "seen": 1792158021.1927302,
-    "ast_hash": "473d8dd445ea21e06d4530ac73134297",
+    "mtime": 1792187447.8321335,
+    "seen": 1792187684.8129668,
+    "ast_hash": "37f427c2c2af2136cef1547b6cdf8610",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealNextStep.ts": {
@@ -10290,15 +10290,63 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792187102.4628193,
-    "seen": 1792187139.9285572,
-    "ast_hash": "e093c966a2247c5564f30e180993d8c3",
+    "mtime": 1792187660.2616754,
+    "seen": 1792187684.813183,
+    "ast_hash": "341733c12502f68bc20593cad692082e",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
     "mtime": 1792186820.6352074,
     "seen": 1792187139.9285572,
     "ast_hash": "1d461695923de9d2dbbd672aed759529",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/constants/campaignStatus.ts": {
+    "mtime": 1792187504.6966512,
+    "seen": 1792187684.812758,
+    "ast_hash": "dbe8fffdb9f1f958eec66b96d6338771",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/constants/campaignStatusIcons.ts": {
+    "mtime": 1792187504.6993978,
+    "seen": 1792187684.812759,
+    "ast_hash": "59c4335748c7b6f76008a1084b77b209",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/types/campaign.ts": {
+    "mtime": 1792187435.3986113,
+    "seen": 1792187684.812939,
+    "ast_hash": "575cc5dd0840127329f25772fa31a022",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/types/campaignDto.ts": {
+    "mtime": 1792187490.4241197,
+    "seen": 1792187684.8129401,
+    "ast_hash": "711184ea59639f9570239aec690a0fa5",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignMappers.test.ts": {
+    "mtime": 1792187607.478891,
+    "seen": 1792187684.812945,
+    "ast_hash": "52fc6035158d225229e38c786df5a88f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignStatus.test.ts": {
+    "mtime": 1792187520.6680999,
+    "seen": 1792187684.812945,
+    "ast_hash": "1da51b87c405d86c1b481e2219a1ed34",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignMappers.ts": {
+    "mtime": 1792187481.7376785,
+    "seen": 1792187684.81296,
+    "ast_hash": "d70ff111dc41af0fca23e9e9de8ab891",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignStatus.ts": {
+    "mtime": 1792187520.663356,
+    "seen": 1792187684.812961,
+    "ast_hash": "ead5bbed09a5765caf3df947eac07263",
     "semantic_hash": ""
   }
 }
