@@ -10,7 +10,6 @@ import { Pressable } from '@/shared/ui/primitives/Pressable';
 import { useUpdatePreferencesMutation } from '../../api/accountApi';
 import { appStorage, StorageKeys } from '@/core/storage';
 import { toastService } from '@/core/toast';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 
 const LANGUAGES = ['en', 'ar'] as const;
 
@@ -24,7 +23,6 @@ const LanguageScreenComponent: React.FC = () => {
     },
   }));
   const [updatePreferences] = useUpdatePreferencesMutation();
-  useHideBottomBar();
 
   const currentLang = i18n.language?.startsWith('ar') ? 'ar' : 'en';
 

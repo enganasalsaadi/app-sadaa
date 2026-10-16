@@ -13,7 +13,6 @@ import {
   ListRow,
   Notice,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { PlatformAccountSheet, type PlatformResource } from '@/domains/auth';
 import { usePlatformDetailScreen, type PlatformDetailModel } from './hooks/usePlatformDetailScreen';
 import { PlatformAccountCard } from './components/PlatformAccountCard';
@@ -94,7 +93,6 @@ const PlatformDetailScreenComponent: React.FC = () => {
   const { colors, sizes } = useTheme();
   const vm = usePlatformDetailScreen();
   const { platform } = vm;
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <PlatformDetailSkeleton />

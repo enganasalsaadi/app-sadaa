@@ -4,7 +4,6 @@ import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, Layout, SuperList, Text } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { WalletDayGroupSkeleton } from '../../components';
 import { StatusFilterChips } from '../../components/StatusFilterChips';
 import { WithdrawalDayGroup } from './components/WithdrawalDayGroup';
@@ -37,7 +36,6 @@ const WithdrawalsEnd = memo(() => {
 const WithdrawalsScreenComponent: React.FC = () => {
   const onScroll = useJSScrollHandler();
   const vm = useWithdrawalsScreen();
-  useHideBottomBar();
 
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.xs, paddingBottom: spacing['5xl'] },

@@ -53,7 +53,7 @@ export interface SuperListProps<T> {
   // ─── Scroll restoration (persisted via MMKV across restarts) ──────────
   scrollRestorationKey?: string;
 
-  // ─── Scroll integration (wires into FloatingBottomBar / ScrollContext) ─
+  // ─── Scroll integration (wires into ScrollContext) ─────────────────────
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   scrollEventThrottle?: number;
 

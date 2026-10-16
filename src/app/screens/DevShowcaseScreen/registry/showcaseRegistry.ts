@@ -406,7 +406,7 @@ export const SHOWCASE_EXEMPT = {
     'body of DateRangePicker for use inside an existing modal',
   SKIA_ICON_PATHS: 'path data for Skia canvases',
   ICON_VIEWBOX: 'path data for Skia canvases',
-  FloatingBottomBar: 'tab bar, always visible on the Main tabs',
+  MainTabBar: 'tab bar, docked under every tab root screen',
   ErrorBoundary: 'rendered by SuperList',
   SkeletonItem: 'rendered by SuperList while loading',
   SkeletonList: 'rendered by SuperList while loading',

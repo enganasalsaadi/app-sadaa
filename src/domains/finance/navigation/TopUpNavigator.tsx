@@ -2,7 +2,6 @@ import React from 'react';
 import { FormProvider } from 'react-hook-form';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { TopUpStackParamList } from '@/core/navigation';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardSheet } from '../components/DiscardSheet';
 import { TopUpFlowContext, useTopUpFlowState } from '../hooks/useTopUpFlow';
 import { TopUpAmountScreen } from '../screens/TopUpAmountScreen';
@@ -20,7 +19,6 @@ const SCREEN_OPTIONS = { headerShown: false } as const;
  */
 export const TopUpNavigator: React.FC = () => {
   const { form, flow, guard } = useTopUpFlowState();
-  useHideBottomBar();
 
   return (
     <FormProvider {...form}>

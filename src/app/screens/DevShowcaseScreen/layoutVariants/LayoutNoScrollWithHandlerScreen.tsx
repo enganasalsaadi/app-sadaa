@@ -12,8 +12,7 @@ const ROW_COUNT = 20;
  * Layout gallery variant: `mode="static"` opts out of Layout's built-in
  * scroll view. When a screen needs its own scrollable (e.g. to embed a
  * `SuperList`) it must wire `useScrollHandler()` into that scrollable itself
- * so the shared `ScrollContext` (and anything reacting to it, like
- * `FloatingBottomBar`'s auto-hide) still receives scroll updates.
+ * so the shared `ScrollContext` still receives scroll updates.
  */
 const LayoutNoScrollWithHandlerScreenComponent: React.FC = () => {
   const { t } = useTranslation();

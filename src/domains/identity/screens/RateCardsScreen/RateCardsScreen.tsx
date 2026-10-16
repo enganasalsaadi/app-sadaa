@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { CircleDollarSign, Link2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Box, ErrorState, Layout, LayoutFooter, ListGroup, ListRow, Notice, Skeleton } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { RateGroupSection } from './components/RateGroupSection';
 import { useRateCardsScreen, type RateCardsScreenModel } from './hooks/useRateCardsScreen';
 
@@ -59,7 +58,6 @@ const RateCardsScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useRateCardsScreen();
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <RateCardsSkeleton />

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
 import { formatNumber } from '@/core/i18n';
 import { Box, ChipGroup, ErrorState, FormSection, Layout, LayoutFooter, Text } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { useNichesScreen } from './hooks/useNichesScreen';
 
@@ -12,7 +11,6 @@ const NichesScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useNichesScreen();
-  useHideBottomBar();
 
   return (
     <>

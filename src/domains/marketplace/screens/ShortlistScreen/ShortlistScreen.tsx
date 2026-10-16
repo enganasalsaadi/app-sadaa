@@ -5,7 +5,6 @@ import { Heart } from 'lucide-react-native';
 import { useStyles } from '@/core/theme';
 import { Box, Layout, SuperList } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { CreatorCard } from '../../components/CreatorCard';
 import { CreatorRowsSkeleton } from '../../components/CreatorRowsSkeleton';
 import type { ExploreCreator } from '../../types/explore';
@@ -21,7 +20,6 @@ const ShortlistScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = useShortlistScreen();
-  useHideBottomBar();
 
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.xs, paddingBottom: spacing['5xl'] },

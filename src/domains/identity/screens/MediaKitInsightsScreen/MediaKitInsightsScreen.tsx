@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   Box,
   ErrorState,
@@ -23,7 +22,6 @@ import { TopWorkCard } from './components/TopWorkCard';
  * Sections whose data is empty stay hidden (§17.7); Share is the one primary.
  */
 const MediaKitInsightsScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useMediaKitInsightsScreen();

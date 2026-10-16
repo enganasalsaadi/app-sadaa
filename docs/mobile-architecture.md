@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-16 | Creator Home «Your turn» (🟡 not yet device or live-server tested): a deals section on the creator Home, a held-money line and an ID-check nudge, plus a badge on the Deals tab. | 5.2, 5.3 (Journeys A4, F) |
+| **Last updated** | 2026-10-16 | Bottom tab bar redesign (🟡 not yet device-tested): docked, main screens only, teal rail. Before that: Creator Home «Your turn» (🟡 not yet device or live-server tested): a deals section on the creator Home, a held-money line and an ID-check nudge, plus a badge on the Deals tab. | 5.2, 5.3 (Journeys A4, F) |
 | 2026-10-15 |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
@@ -331,10 +331,10 @@ APP LAUNCH
 │     with reading progress · one chapter per station · questions · shipping chapter
 │     only where a product can ship
 │
-└── MAIN APP (bottom tab bar: floating rounded glass capsule; page content
-    │   shows blurred through it; slides away on scroll down, back on scroll up;
-    │   hidden on inner screens; active tab shown in teal; brands: icon pill whose
-    │   active tab widens to show its name 🟡)                                       ✅
+└── MAIN APP (bottom tab bar: docked at the bottom edge, never over the page;
+    │   shows only on each tab's main screen; icon + name on every tab; active
+    │   tab in a teal squircle, a teal rail on the bar's top edge stretches to
+    │   the tab being pressed 🟡)                                                    ✅
     │   Five tabs, different per role:
     │     brand:   Home · My campaigns · Messages · Wallet · Account
     │     creator: Home · Deals · Messages · Wallet · My profile
@@ -558,7 +558,7 @@ APP LAUNCH
 - **Save (❤️):** fills at once and pops; if the service refuses (for example the 200-creator limit), it springs back and a message explains why. A creator saved in one place shows as saved everywhere.
 - **Help:** a closing line opens Sada support on WhatsApp; hidden when the service sends no support link, never inside a deal.
 - **Loading and errors:** a skeleton of the deck and rows holds the space while Home loads; a failure shows a banner with Retry and a dash for the balance; if every row is empty, a note invites the brand to explore all creators. Pulling down refreshes. Because each Home visit counts as an impression for the creators shown, the app asks the service again on return only when the page is more than two minutes old.
-- **Tab bar (brands):** a navy pill of icons; the active tab widens into a teal capsule that shows its name. The deals tab carries an amber count of the deals waiting on the brand only (the service's number, "9+" above nine; read out with the tab's name), updated whenever Home refreshes. Creators keep the bar with icon and name on every tab.
+- **Tab bar:** the same docked bar for both roles: icon and name on every tab, the active one in a teal squircle under a teal rail that stretches toward the tab being pressed. The deals tab carries an amber count of the deals waiting on the brand only (the service's number, "9+" above nine; read out with the tab's name), updated whenever Home refreshes.
 
 #### Journey A4c: Explore creators 🟡
 - **Search:** type a name, a niche or a city in Arabic or English (for example "مطاعم دمشق"); results update a moment after typing stops. One letter is not enough to search; up to 60 characters.
@@ -922,6 +922,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-16 | New bottom tab bar for both roles (🟡 not yet device-tested): docked at the bottom edge so it never covers the page, shown only on each tab's main screen (every inner screen and deep-linked detail hides it), icon and name on every tab, the active tab in a teal squircle under a teal rail that stretches toward the tab under the finger and catches up when it opens. Only part of the iPhone home-bar space is kept under it; Android keeps the full navigation-bar space; hidden while the Android keyboard is open. | 5.2 |
 | 2026-10-16 | Creator Home «Your turn» built (🟡 not yet device or live-server tested): the deals waiting on the creator as swipeable action cards with time left, counters for new offers, add-ons and active strikes, welcome and quiet cards; a «Held for you» money line (hidden amounts respected) that opens the Wallet; an ID-check nudge when there is money to withdraw but identity isn't verified; a badge on the Deals tab for waiting deals. | 5.2, 5.3 (Journeys A4, F) |
 | 2026-10-16 | Deal loose ends (🟡 not yet device or live-server tested): a teal handshake disc on every creator row in Explore and the Shortlist opens the offer builder for that creator (same pre-check as the public profile); the creator deal board shows an amber strikes strip (active count, days until the soonest clears, opens the strikes page) only while a strike is active. Notifications text corrected: the strikes page is built and strikes reload with every deal notice. | 5.2, 5.3 (Journeys A4c, A4d, F, notifications) |
 | 2026-10-15 | Post retention built (🟡 not yet device or live-server tested): after completion a keep-up ring per post (drawn once; permanent and finished states) with the brand's report link; report sheet (reason, note required for other, 1–3 screenshots); case cards near the top for both roles (tinted status band, report, restore link with account check, notes, team note, clawback, deadline countdown); creator restore (screenshots + optional link checked like publishing) or contest; brand confirm or reject with a note. Restore links open only on known platforms, otherwise copied. Publishing's screenshot row is now shared with retention. | 4.4, 4.5, 5.2, 5.3 (Journey F) |
@@ -931,4 +932,3 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 | 2026-10-15 | Brand Home «your deals» built (🟡 not yet device or live-server tested): under the money line, a navy «your next step» card per deal waiting on the brand (who, the work and price, the service's action in large type, time left, one button naming the action that opens the deal; «1 of 3», arrow or swipe for the next with the next card peeking behind), a calm «all smooth» card when nothing waits, and every other open deal as a row on an Agree ← Prepare ← Publish ← Done tracker (red at a dispute, «All your deals (n)» when more exist). No open deal shows a welcome with «Discover creators»; loading shows a matching skeleton; a Home failure just hides the section. The next-step card from the service moved up under the money line. The brands' deals tab shows an amber count of the deals waiting on them. | 5.2, 5.3 (Journey A4b) |
 | 2026-10-15 | Mutual rating built (🟡 not yet device or live-server tested): a completed deal invites each side to rate the other blind for 7 days, one question card at a time (five tall score pads, back and skip on the card), then a summary with an optional note and «seal»; the seal presses onto your envelope beside the other side's waiting one with a clock until they open. Skipping asks first (it is final). After the reveal, what was said about you comes first with bars and the note; your own rating is a row that opens. | 5.3 (Journey F) |
 | 2026-10-15 | Creator «post handed in» screen polished (🟡 not yet device-tested): the navy background now runs to the bottom edge of the phone, the summary sits centred with the back button just above the home bar (scrolls on short screens and large text), the time bar is a plain progress line (no handle that looked draggable), the link opens the post on its platform (known platforms only), the screenshots show as thumbnails that open full screen, and a Latin brand name no longer scrambles the Arabic sentence. | 5.3 (Journey F) |
-| 2026-10-15 | Publishing and verifying built (🟡 not yet device or live-server tested): after a draft is approved, creators hand in the live link and 1–3 screenshots under an «ON AIR» lamp (platform detected from the link, refused links explained, brand's fix note first, then an on-air screen until confirmed); brands check the post on a glass card (open link on known platforms only, «account not checked» when Sada couldn't match it), zoom the screenshots, see the auto-confirm fuse and the record, then press and hold to confirm (completing the deal on the last one) or ask for a fix (2 per deliverable). | 5.2, 5.3 (Journey F) |

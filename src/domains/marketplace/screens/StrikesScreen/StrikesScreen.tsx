@@ -5,7 +5,6 @@ import { ShieldCheck } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
 import { Box, EmptyState, ErrorState, Layout, Skeleton, StaggerIn, Text } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { StrikeCard } from './components/StrikeCard';
 import { useStrikesScreen } from './hooks/useStrikesScreen';
 
@@ -17,7 +16,6 @@ const StrikesScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useStrikesScreen();
-  useHideBottomBar();
   const title = t('marketplace.deals.strikes.title');
   const { strikes } = vm;
 

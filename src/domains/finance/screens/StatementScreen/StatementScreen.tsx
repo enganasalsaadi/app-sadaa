@@ -5,7 +5,6 @@ import { Eye, EyeOff } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, Layout, SuperList, Text } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { WalletDayGroup, WalletDayGroupSkeleton } from '../../components';
 import type { WalletRole } from '../../types';
 import { StatementFilters } from './components/StatementFilters';
@@ -57,7 +56,6 @@ const StatementEnd = memo(() => {
 const StatementScreenComponent: React.FC<StatementScreenProps> = ({ role }) => {
   const onScroll = useJSScrollHandler();
   const vm = useStatementScreen(role);
-  useHideBottomBar();
 
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.xs, paddingBottom: spacing['5xl'] },

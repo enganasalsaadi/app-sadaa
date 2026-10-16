@@ -24,7 +24,7 @@ Catalog of existing parts. Reuse for behaviour, never as look of new design (rul
 ## Controls & building blocks
 
 - `CustomButton` (`variant` incl. `onBrand` + `glass` for navy) · `CustomInput` (`suffix`, `showCount` = text area) · `PhoneInput` (libphonenumber, E.164) · `BottomSheet` (`onDismissed`: fires once gone; iOS: open native picker only then; `header` / `footer` = pinned white slots w/ hairlines around scrolling middle, pair w/ `bg={colors.layout.base}` for sunken body) · `SelectionModal` · `DateRangePicker` (`range="past"` for statements) · `GalleryModal`.
-- `SuperList` (`emptyDescription` / `emptyAction` for "Clear filters") · `FloatingBottomBar`.
+- `SuperList` (`emptyDescription` / `emptyAction` for "Clear filters") · `MainTabBar`.
 - `IconButton` `FAB` `SegmentedControl` `Tabs` · `Chip` (`variant` outline|tile, tile = discovery shortcut pill; `icon`, `dropdown`, `onClear` = filter chip) · `ChipRow` (filter row pinned under header, above `SuperList`) · `Rail` (all other sideways rows: `shadow` token → room inside + same amount off margins, so item shadows not clipped, layout no shift; `bleed` undoes parent `xl` gutter; `snapInterval`; `py` = layout room for leaning items). Never hand-roll horizontal `ScrollView` (clips shadows; default `flexGrow:1` floats it mid-screen). `FlatList`/`SuperList` rail → same math via `shadowBleed(shadows.x)` (`@/core/theme`) · `Switch` `Checkbox` `Radio`/`RadioGroup` `SearchBar`.
 - `ListRow`/`ListGroup` (settings/menu rows; `selected` = single-choice row w/ radio mark) · `SectionHeader` `Divider` `KeyValueRow` (summaries, money emphasis).
 - `Badge` `StatusPill` (any `HueTone` via `resolveHue` from `@/core/theme`) `Tag` `ProgressBar` (`surface="brand"` on navy) `Accordion` `AvatarGroup`.
@@ -60,13 +60,13 @@ No `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}
 
 ## Bottom bar
 
-`FloatingBottomBar variant`: `lens` (creators: icon + label, white-glass lens springs between tabs) · `morph` (brands: icon pill, active tab widens to teal capsule w/ label). Both hide on scroll; content scrolls behind → tab roots need bottom padding. `useHideBottomBar()` on inner screens.
+`MainTabBar` (both roles): docked in-flow, never over content, no hide-on-scroll; teal squircle on active icon + elastic rail (`TabRail`: leading edge darts, trailing follows; finger-down pre-stretch). `visible` from `isOnTabRoot` in `MainTabs` (inner screens hide it automatically, no per-screen hook); tab screens get bottom inset 0 while docked, so tab roots need no extra bottom padding. Hidden while Android keyboard is up.
 
 ## Theme
 
-`useTheme()`, `useStyles()`, `useResponsiveValue()`; `moderateScale/fontScale` only for sizes w/o tokens. Font Tajawal. Colors: hue groups `{main,text,soft}` (`brand interactive money premium status.*`): `.text` text, `.main` fills/icons. Spacing `xs sm md lg xl 2xl … 7xl`. Typography `h1–h4 title body bodyMedium bodySmall caption button buttonSmall overline label`. Motion timings `motion` (`@/core/theme`). SVG via `react-native-svg-transformer` (import `.svg` as components).
+`useTheme()`, `useStyles()`, `useResponsiveValue()`; `moderateScale/fontScale` only for sizes w/o tokens. Font Tajawal. Colors: hue groups `{main,text,soft}` (`brand interactive money premium status.*`): `.text` text, `.main` fills/icons. Spacing `xs sm md lg xl 2xl … 7xl`. Typography `h1–h4 title body bodyMedium bodySmall caption button buttonSmall overline tabLabel tabLabelActive label`. Motion timings `motion` (`@/core/theme`). SVG via `react-native-svg-transformer` (import `.svg` as components).
 
 ## Not verified on device
 
 - CustomInput/PhoneInput still hand-pick `row-reverse`/`textAlign` by `isRTL` (post Navy Trust migration).
-- v4 visuals (radii, borderless cards, hero lights, lens, live parts) checked by typecheck/tests only. Unchecked: Android `card` shadow tint, Skia light cost, reduced motion.
+- v4 visuals (radii, borderless cards, hero lights, tab rail, live parts) checked by typecheck/tests only. Unchecked: Android `card` shadow tint, Skia light cost, reduced motion.

@@ -30,7 +30,7 @@ Runs while native splash (symbol only) stays up:
 
 - One branch per status: `Maintenance` | `ForceUpdate` | `ChooseLanguage` | `Onboarding` | `Auth` | `OnboardingResume` | `Suspended` | `Main`.
 - `OnboardingScreen` finishes via `completeOnboarding` from `useAppBootstrap` (passed as prop).
-- `Main` = bottom tabs (`app/navigation/MainTabs`; `FloatingBottomBar` reads `title`/`tabBarIcon` options), 5 per role:
+- `Main` = bottom tabs (`app/navigation/MainTabs`; `MainTabBar` reads `title`/`tabBarIcon`/`tabBarBadge` options; shown only on each tab's main screen via `isOnTabRoot` (`app/navigation/tabRoot.ts`, by route name: new tab stack → add its main screen there), 5 per role:
   - brand: Explore · Campaigns · Messages · Wallet · Account
   - creator: Home · Deals · Messages · Wallet · Profile
 - Real tabs: `HomeTab` (marketplace) · `DealsTab` (marketplace: `BrandDealsNavigator` / `CreatorDealsNavigator`, `DealsStackParamList` `Deals` / `DealDetail {id}` / `DealContract {id}` / `Strikes` creator-only, still `DealsComingSoonScreen` until P8.1) · `WalletTab` (finance: `CreatorWalletNavigator` / `BrandWalletNavigator`, role picked here) · `SettingsTab` (identity). `MessagesTab` = `ComingSoonTabScreen` until built.

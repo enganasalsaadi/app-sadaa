@@ -4811,6 +4811,8 @@
       "buttonLabel": "نص الزر",
       "buttonSmallLabel": "نص الزر الصغير",
       "overlineLabel": "عنوان علوي",
+      "tabLabelLabel": "عنوان تبويب",
+      "tabLabelActiveLabel": "عنوان تبويب · نشط",
       "labelLabel": "تسمية الحقل",
       "amountSmallLabel": "$125.00",
       "amountLabel": "$1,250.00",

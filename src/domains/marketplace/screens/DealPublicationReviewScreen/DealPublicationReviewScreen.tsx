@@ -3,7 +3,6 @@ import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck, Radio } from 'lucide-react-native';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { Box, ErrorState, Layout, Skeleton, StaggerIn, Text } from '@/shared/ui';
 import { LiveRoomHero } from './components/LiveRoomHero';
 import { ProofReel } from './components/ProofReel';
@@ -60,7 +59,6 @@ const StatusBanner = memo<{ text: string; verified: boolean }>(({ text, verified
  * fuse and the record of submissions; press and hold to confirm, or ask for a fix.
  */
 const DealPublicationReviewScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const vm = useDealPublicationReviewScreen();
   const { deal, item, fixes } = vm;

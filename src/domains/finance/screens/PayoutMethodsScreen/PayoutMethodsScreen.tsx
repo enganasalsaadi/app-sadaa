@@ -14,7 +14,6 @@ import {
   SectionHeader,
   Text,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { PayoutChannelSheet } from '../../components/PayoutChannelSheet';
 import { PayoutMethodRow } from '../../components/PayoutMethodRow';
 import { PayoutMethodsSkeleton } from '../../components/PayoutMethodsSkeleton';
@@ -60,7 +59,6 @@ const MethodsList: React.FC<{ vm: PayoutMethodsScreenModel }> = memo(({ vm }) =>
 const PayoutMethodsScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const vm = usePayoutMethodsScreen();
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <Box gap="2xl">

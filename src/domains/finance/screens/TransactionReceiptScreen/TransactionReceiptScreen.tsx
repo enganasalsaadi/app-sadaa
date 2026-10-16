@@ -16,7 +16,6 @@ import {
   StatusPill,
   Text,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ReportLink } from '../../components/ReportLink';
 import { LINE_KIND_ICON, lineBadgeColors } from '../../constants/walletLineLook';
 import {
@@ -142,7 +141,6 @@ const ReceiptSkeleton = memo(() => {
 const TransactionReceiptScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const vm = useTransactionReceiptScreen();
-  useHideBottomBar();
   const { view } = vm;
 
   const body = (() => {

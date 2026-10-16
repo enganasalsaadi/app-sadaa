@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { moderateScale } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { Box, ConfirmSheet, ErrorState, Layout, Skeleton, StaggerIn } from '@/shared/ui';
 import { DealItemFuse } from '../../components/DealItemFuse';
 import { DEAL_DRAFT_LIMITS } from '../../constants/dealDrafts';
@@ -29,7 +28,6 @@ const UploadSkeleton = memo(() => (
  * will show it, and the hand-in bar. A handed-in round shows its seal and stays read only.
  */
 const DealDraftUploadScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const vm = useDealDraftUploadScreen();
   const uploadFrames = useUploadFrames(vm.uploads.entries, vm.durations);

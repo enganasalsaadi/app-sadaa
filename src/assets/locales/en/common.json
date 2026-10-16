@@ -4580,6 +4580,8 @@
       "buttonLabel": "Button label",
       "buttonSmallLabel": "Small button label",
       "overlineLabel": "OVERLINE",
+      "tabLabelLabel": "Tab label",
+      "tabLabelActiveLabel": "Tab label · active",
       "labelLabel": "Field label",
       "amountSmallLabel": "$125.00",
       "amountLabel": "$1,250.00",

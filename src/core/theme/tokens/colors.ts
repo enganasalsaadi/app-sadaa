@@ -101,29 +101,23 @@ export interface ThemeColors {
 
   navigation: {
     tabBar: {
-      /** Icon + label on the navy glass capsule (≥ 4.5:1 on the tint in both modes). */
-      active: string;
-      inactive: string;
+      /** Docked bar surface (approved 2026-10-16); also the navigator's card colour. */
       background: string;
-      /** Floating navy-glass bar (approved 2026-10-06): native blur material per mode (iOS only). */
-      blurMaterial: 'light' | 'dark';
-      /** Navy tint over the blur, so labels keep contrast over any content. */
-      glassTint: string;
-      /** Opaque navy when the OS reduces transparency. */
-      glassFallback: string;
-      /** Specular rim: bright top edge fading to a faint bottom edge. */
-      glassRim: string;
-      glassRimFaint: string;
-      /** Hairline outline so the capsule separates from white content (light) and navy (dark). */
-      glassBorder: string;
-      /** Drop shadow, drawn only outside the capsule so it never tints the glass. */
-      glassShadow: string;
-      /** Liquid lens under the active tab (v4): white glass, bright top fading down. */
-      lens: string;
-      lensFaint: string;
-      /** Morph bar (brand tabs): the active tab's teal capsule that grows to show its label. */
-      activePill: string;
-      /** Count on a tab (deals waiting on the user): amber on the navy bar, dark digits. */
+      /** Teal: the active icon (≥ 3:1 on `activeFill`) and the elastic rail on the top edge. */
+      active: string;
+      /** Active label (≥ 4.5:1 on `background`). */
+      activeLabel: string;
+      /** Squircle behind the active icon. */
+      activeFill: string;
+      /** Idle icon (≥ 3:1) and idle label (≥ 4.5:1) on `background`. */
+      inactive: string;
+      inactiveLabel: string;
+      /** Soft glow under the rail. */
+      railGlow: string;
+      /** Upward shadow + 1px top rim that lift the bar off the page. */
+      shadow: string;
+      rim: string;
+      /** Count on a tab (deals waiting on the user): amber, dark digits, ringed in `background`. */
       badge: string;
       onBadge: string;
     };
@@ -598,19 +592,15 @@ export const lightColors: ThemeColors = {
 
   navigation: {
     tabBar: {
-      active: '#6FC0CF',
-      inactive: '#A5B5C4',
       background: WHITE,
-      blurMaterial: 'dark',
-      glassTint: 'rgba(28, 51, 73, 0.96)',
-      glassFallback: '#1C3349',
-      glassRim: 'rgba(255, 255, 255, 0.30)',
-      glassRimFaint: 'rgba(255, 255, 255, 0.04)',
-      glassBorder: 'rgba(11, 22, 34, 0.30)',
-      glassShadow: 'rgba(15, 29, 43, 0.18)',
-      lens: 'rgba(255, 255, 255, 0.16)',
-      lensFaint: 'rgba(255, 255, 255, 0.05)',
-      activePill: 'rgba(111, 192, 207, 0.24)',
+      active: lightInteractive.main,
+      activeLabel: lightInteractive.text,
+      activeFill: lightInteractive.soft,
+      inactive: lightText.tertiary,
+      inactiveLabel: lightText.secondary,
+      railGlow: 'rgba(57, 125, 140, 0.45)',
+      shadow: 'rgba(15, 29, 43, 0.08)',
+      rim: 'rgba(15, 29, 43, 0.05)',
       badge: darkStatus.warning.main,
       onBadge: ON_TEAL_DARK,
     },
@@ -772,19 +762,15 @@ export const darkColors: ThemeColors = {
 
   navigation: {
     tabBar: {
-      active: '#6FC0CF',
-      inactive: '#A5B5C4',
       background: '#122131',
-      blurMaterial: 'dark',
-      glassTint: 'rgba(28, 51, 73, 0.92)',
-      glassFallback: '#1C3349',
-      glassRim: 'rgba(255, 255, 255, 0.22)',
-      glassRimFaint: 'rgba(255, 255, 255, 0.04)',
-      glassBorder: 'rgba(255, 255, 255, 0.10)',
-      glassShadow: 'rgba(0, 0, 0, 0.55)',
-      lens: 'rgba(255, 255, 255, 0.14)',
-      lensFaint: 'rgba(255, 255, 255, 0.04)',
-      activePill: 'rgba(111, 192, 207, 0.26)',
+      active: darkInteractive.main,
+      activeLabel: darkInteractive.text,
+      activeFill: darkInteractive.soft,
+      inactive: darkText.tertiary,
+      inactiveLabel: darkText.secondary,
+      railGlow: 'rgba(111, 192, 207, 0.40)',
+      shadow: 'rgba(0, 0, 0, 0.45)',
+      rim: '#22384C',
       badge: darkStatus.warning.main,
       onBadge: ON_TEAL_DARK,
     },

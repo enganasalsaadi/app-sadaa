@@ -36,7 +36,7 @@ Reuse **code plumbing** when fits; restyle/replace look freely. New layout needs
 | Celebration | `HeroBackdrop` + Skia canvas + staggered entering | `BrandWelcomeScreen` |
 | List | `Layout mode="static"` + `SuperList` + skeleton/empty/error | `LayoutListStatesScreen` |
 | Detail | `Layout header` + `footer={<LayoutFooter />}` | — |
-| Tab root | data hook + pull-to-refresh + tab-bar hide on scroll | `CreatorHomeScreen`, `BrandHomeScreen` |
+| Tab root | data hook + pull-to-refresh (docked tab bar, insets handled) | `CreatorHomeScreen`, `BrandHomeScreen` |
 | Money | rule 09b | `finance/screens/WalletScreen` |
 | Money wizard | nested native-stack under one `FormProvider` + flow context; one `createIdempotentAction()` per wizard; discard guard on leave; last step = review w/ per-section Edit (`popTo`); success → `replace` w/ request detail | `finance/navigation/TopUpNavigator`; gallery `LayoutMoneyWizardScreen` |
 
@@ -68,7 +68,7 @@ Screens show **only real data** (no placeholder stats); sections w/o API stay ou
 | Money flow | `MoneyFlow` | money in transit, escrow |
 | Smart border | `SmartBorder` | system suggestions (smart match, AI) |
 | Hero lights | `GlowOrbs` | ambient light in navy areas |
-| Liquid lens | `FloatingBottomBar` | active tab |
+| Elastic rail | `MainTabBar` (`TabRail`) | active tab |
 | Stagger rise | `StaggerIn` | sections on mount |
 | Press spring | `Pressable scaleOnPress` (`Card onPress` default) | tappable surfaces |
 

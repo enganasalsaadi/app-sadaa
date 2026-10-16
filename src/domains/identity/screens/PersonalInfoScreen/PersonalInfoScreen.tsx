@@ -10,7 +10,6 @@ import {
   Layout,
   LayoutFooter,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { LockedPhoneField } from '../../components/LockedPhoneField';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
@@ -148,7 +147,6 @@ const PersonalInfoForm: React.FC<{ vm: PersonalInfoScreenModel }> = memo(({ vm }
 const PersonalInfoScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const vm = usePersonalInfoScreen();
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <ProfileFormSkeleton />

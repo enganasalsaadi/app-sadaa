@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   DealDetailView,
   type DealDetailSectionKey,
@@ -23,7 +22,6 @@ const SECTIONS: readonly DealDetailSectionKey[] = [
 
 /** Deal detail from the brand's side (Detail archetype on the navy orbit hero). */
 const BrandDealDetailScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const vm = useBrandDealDetailScreen();
   return <DealDetailView vm={vm} sections={SECTIONS} />;
 };

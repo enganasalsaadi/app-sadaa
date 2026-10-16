@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { Plus } from 'lucide-react-native';
 import { Layout, SuperList } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
 import { PlatformAccountSheet, type PlatformResource } from '@/domains/auth';
 import { usePlatformsScreen } from './hooks/usePlatformsScreen';
@@ -16,7 +15,6 @@ const PlatformsScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = usePlatformsScreen();
-  useHideBottomBar();
 
   const { openPlatform } = vm;
   const renderItem = useCallback(

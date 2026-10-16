@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Box, ErrorState, Layout, Skeleton, Text } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { VerificationAttemptCard } from '../../components/VerificationAttemptCard';
 import { VerificationMethodList } from '../../components/VerificationMethodList';
 import { VerifiedSection } from './components/VerifiedSection';
@@ -75,7 +74,6 @@ const CompanyVerificationScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useCompanyVerificationScreen();
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <VerificationSkeleton />

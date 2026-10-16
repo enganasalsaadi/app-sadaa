@@ -53,6 +53,9 @@ const BASE_TYPOGRAPHY = {
     letterSpacing: 0.5,
   },
   overline: { fontSize: 10, lineHeight: 14, weight: 'medium', letterSpacing: 1.5 },
+  /** Bottom tab labels: idle medium, active bold on the same metrics so switching never shifts the row. */
+  tabLabel: { fontSize: 11, lineHeight: 14, weight: 'medium', letterSpacing: 0.2 },
+  tabLabelActive: { fontSize: 11, lineHeight: 14, weight: 'bold', letterSpacing: 0.2 },
   label: { fontSize: 16, lineHeight: 20, weight: 'regular', letterSpacing: 0.1 },
   amountSmall: {
     fontSize: 14,

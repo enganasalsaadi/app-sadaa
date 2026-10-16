@@ -5,7 +5,6 @@ import { Layout, LayoutFooter } from '@/shared/ui/Layout';
 import { Box } from '@/shared/ui/primitives/Box';
 import { CustomInput } from '@/shared/ui/CustomInput';
 import { useChangePassword } from './hooks/useChangePassword';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 
 const ChangePasswordScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -18,7 +17,6 @@ const ChangePasswordScreenComponent: React.FC = () => {
     formState: { errors },
   } = form;
 
-  useHideBottomBar();
 
   const required = t('validation.required');
   const newPassword = watch('new_password');

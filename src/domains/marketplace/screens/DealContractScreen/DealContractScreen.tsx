@@ -11,7 +11,6 @@ import {
   StaggerIn,
   Text,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import type { DealRole } from '../../types';
 import { ContractAddendumCard } from './components/ContractAddendumCard';
 import { ContractPaper } from './components/ContractPaper';
@@ -39,7 +38,6 @@ const DealContractScreenComponent: React.FC<DealContractScreenProps> = ({
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const vm = useDealContractScreen(role);
-  useHideBottomBar();
   const { contract, view } = vm;
   const names = useMemo(
     () => ({

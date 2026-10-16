@@ -4,7 +4,6 @@ import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { useStyles } from '@/core/theme';
 import { Box, Layout, Notice, SearchBar, SuperList } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { CreatorCard } from '../../components/CreatorCard';
 import { CreatorRowsSkeleton } from '../../components/CreatorRowsSkeleton';
 import { PriceLockSheet } from '../../components/PriceLockSheet';
@@ -32,7 +31,6 @@ const ExploreScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = useExploreScreen();
-  useHideBottomBar();
 
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.xs, paddingBottom: spacing['5xl'] },

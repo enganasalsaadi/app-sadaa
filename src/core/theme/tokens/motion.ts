@@ -63,10 +63,16 @@ export const motion = {
     stiffness: 170,
     mass: 1,
   },
-  /** Bouncier spring for the tab-bar lens: liquid, a small overshoot. */
-  lensSpring: {
-    damping: 14,
-    stiffness: 160,
+  /** Tab rail, leading edge: darts to the pressed tab, barely any overshoot. */
+  railLeadSpring: {
+    damping: 26,
+    stiffness: 420,
+    mass: 1,
+  },
+  /** Tab rail, trailing edge: follows late with a rubbery give (the inchworm). */
+  railTrailSpring: {
+    damping: 13,
+    stiffness: 150,
     mass: 1,
   },
   pressScale: 0.96,

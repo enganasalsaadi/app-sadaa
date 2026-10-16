@@ -9,7 +9,7 @@ const SIZE = moderateScale(18);
 const OFFSET = moderateScale(-7);
 
 /**
- * Amber count on a tab icon, ringed in the bar's navy so it reads as cut out of the icon.
+ * Amber count on a tab icon, ringed in the bar's surface so it reads as cut out of the icon.
  * Zero renders nothing; above 9 it reads `9+`. Decorative: the tab's label speaks the count.
  */
 const TabBadgeComponent: React.FC<{ count: number }> = ({ count }) => {
@@ -28,7 +28,7 @@ const TabBadgeComponent: React.FC<{ count: number }> = ({ count }) => {
         justifyContent: 'center',
         backgroundColor: palette.navigation.tabBar.badge,
         borderWidth: borderWidths.md,
-        borderColor: palette.navigation.tabBar.glassFallback,
+        borderColor: palette.navigation.tabBar.background,
       },
     }),
     [],

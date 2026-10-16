@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { FileText, Scale, Undo2 } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   Box,
   ConfirmSheet,
@@ -47,7 +46,6 @@ export interface DealDisputeScreenProps {
  * adds evidence while the window is open; the opener may withdraw.
  */
 const DealDisputeScreenComponent: React.FC<DealDisputeScreenProps> = ({ role }) => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const vm = useDealDisputeScreen(role);

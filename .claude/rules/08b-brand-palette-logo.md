@@ -3,7 +3,7 @@ paths:
   - "src/core/theme/tokens/**"
   - "src/assets/images/logo/**"
   - "src/shared/ui/BrandLogo/**"
-  - "src/shared/ui/FloatingBottomBar/**"
+  - "src/shared/ui/MainTabBar/**"
   - "src/shared/ui/GlassCard/**"
   - "src/shared/ui/GlowOrbs/**"
   - "scripts/**"
@@ -64,7 +64,7 @@ fill `rgba(255,255,255,.15)` / `.07` · border `.28` / `.18` · badge `.18` / `.
 
 ## Bottom tab bar
 
-Look free (rule 09 §0). Lessons: white glass blends into white screens; view `shadow` lost on Android w/o background (draw in Skia); Android native blur ignores rounded clips (grey rect). Active/inactive labels ≥ 4.5:1 on backdrop. Hidden on inner screens via `useHideBottomBar()`.
+Look free (rule 09 §0). Current (2026-10-16): `MainTabBar`, docked in-flow (bottom-tabs v7 ends screens above it), surface slab + rounded top corners, `boxShadow` lift + 1px rim (`tabBar.shadow` / `rim`), active icon in `activeFill` squircle, elastic teal rail on top edge. Lessons: white glass blends into white screens; view `shadow` lost on Android w/o background (draw in Skia or `boxShadow` on a filled view); Android native blur ignores rounded clips (grey rect); animated opacity stuck at 0 on device in tab items (animate transforms). Active/inactive labels ≥ 4.5:1, icons ≥ 3:1 on `background`. Shown only on tab main screens (`isOnTabRoot`, by route name), tab screens get bottom inset 0 while docked (`TabScreenInsets`). Bottom pad: iOS `IOS_INSET_SHARE` of inset, Android full inset.
 
 ## Logo (Concept C — Concentric Echo, geometry v4, FINAL — changes need explicit user approval)
 

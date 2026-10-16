@@ -21,7 +21,6 @@ import {
   Text,
   Timeline,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ReportLink } from '../../components/ReportLink';
 import { useTopUpDetailScreen, type TopUpDetailScreenModel } from './hooks/useTopUpDetailScreen';
 
@@ -131,7 +130,6 @@ const TopUpDetailScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useTopUpDetailScreen();
-  useHideBottomBar();
   const { view } = vm;
 
   const body = (() => {

@@ -4,6 +4,7 @@ import {
   type BottomTabBarProps,
   type BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
+import type { RouteProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
 import {
@@ -31,9 +32,10 @@ import {
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
 import { BrandWalletNavigator, CreatorWalletNavigator } from '@/domains/finance';
-import { FloatingBottomBar } from '@/shared/ui';
+import { MainTabBar } from '@/shared/ui';
 import { ScrollProvider } from '@/shared/context/ScrollContext';
-import { BottomBarProvider } from '@/shared/context/BottomBarContext';
+import { isOnTabRoot } from './tabRoot';
+import { TabScreenInsets } from './TabScreenInsets';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
@@ -66,10 +68,19 @@ const CREATOR_TABS: readonly MainTabDef[] = [
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },
 ];
 
-const renderLensTabBar = (props: BottomTabBarProps) => <FloatingBottomBar {...props} />;
-const renderMorphTabBar = (props: BottomTabBarProps) => (
-  <FloatingBottomBar {...props} variant="morph" />
-);
+// Same docked bar for both roles; it shows only while the focused tab sits on its main screen.
+const renderTabBar = (props: BottomTabBarProps) => {
+  const focused = props.state.routes[props.state.index];
+  return <MainTabBar {...props} visible={focused ? isOnTabRoot(focused) : true} />;
+};
+
+const renderTabScreen = ({
+  route,
+  children,
+}: {
+  route: RouteProp<RootTabParamList>;
+  children: React.ReactElement;
+}) => <TabScreenInsets docked={isOnTabRoot(route)}>{children}</TabScreenInsets>;
 
 const buildTabOptions = (
   title: string,
@@ -115,25 +126,24 @@ export const MainTabs: React.FC = () => {
 
   return (
     <ScrollProvider>
-      <BottomBarProvider>
-        <Tab.Navigator
-          initialRouteName="HomeTab"
-          tabBar={isCreator ? renderLensTabBar : renderMorphTabBar}
-          // `animation: 'fade'` here races freezeOnBlur (rn-screens 4.24 + React 19):
-          // the cross-fade can finish before the thawed tab commits its first frame,
-          // leaving an intermittent blank screen. Instant switch avoids the race.
-          screenOptions={{ headerShown: false, animation: 'none' }}
-        >
-          {tabs.map((tab, index) => (
-            <Tab.Screen
-              key={tab.name}
-              name={tab.name}
-              component={tab.component}
-              options={options[index]}
-            />
-          ))}
-        </Tab.Navigator>
-      </BottomBarProvider>
+      <Tab.Navigator
+        initialRouteName="HomeTab"
+        tabBar={renderTabBar}
+        screenLayout={renderTabScreen}
+        // `animation: 'fade'` here races freezeOnBlur (rn-screens 4.24 + React 19):
+        // the cross-fade can finish before the thawed tab commits its first frame,
+        // leaving an intermittent blank screen. Instant switch avoids the race.
+        screenOptions={{ headerShown: false, animation: 'none' }}
+      >
+        {tabs.map((tab, index) => (
+          <Tab.Screen
+            key={tab.name}
+            name={tab.name}
+            component={tab.component}
+            options={options[index]}
+          />
+        ))}
+      </Tab.Navigator>
     </ScrollProvider>
   );
 };

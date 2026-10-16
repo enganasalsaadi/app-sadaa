@@ -10,7 +10,6 @@ import {
   LayoutFooter,
   Skeleton,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   useSettingsVerificationFlow,
   useVerificationChrome,
@@ -157,7 +156,6 @@ const SocialProofView: React.FC<{ flow: VerificationFlow }> = memo(({ flow }) =>
 
 /** Settings stack, under the picker. */
 export const SocialProofScreen: React.FC = memo(() => {
-  useHideBottomBar();
   return <SocialProofView flow={useSettingsVerificationFlow()} />;
 });
 

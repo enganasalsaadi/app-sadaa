@@ -19,6 +19,8 @@ const LABEL_KEY = {
   button: 'devShowcase.typography.buttonLabel',
   buttonSmall: 'devShowcase.typography.buttonSmallLabel',
   overline: 'devShowcase.typography.overlineLabel',
+  tabLabel: 'devShowcase.typography.tabLabelLabel',
+  tabLabelActive: 'devShowcase.typography.tabLabelActiveLabel',
   label: 'devShowcase.typography.labelLabel',
   amountSmall: 'devShowcase.typography.amountSmallLabel',
   amount: 'devShowcase.typography.amountLabel',

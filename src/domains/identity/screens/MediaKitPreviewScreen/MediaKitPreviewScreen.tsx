@@ -3,7 +3,6 @@ import { RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Settings2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ErrorState, Layout, LayoutFooter, Notice } from '@/shared/ui';
 import { MediaKitShareNotice } from '../../components/MediaKitShare';
 import {
@@ -67,7 +66,6 @@ const ShareFooter = memo<{ vm: MediaKitPreviewScreenModel }>(({ vm }) => {
  * heart: the server never offers shortlisting on the creator's own kit.
  */
 const MediaKitPreviewScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useMediaKitPreviewScreen();

@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
 import { Box, ErrorState, InlineError, Layout, LayoutFooter, Skeleton } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   useSettingsVerificationFlow,
   useVerificationChrome,
@@ -137,7 +136,6 @@ const DomainEmailView: React.FC<{ flow: VerificationFlow }> = memo(({ flow }) =>
 
 /** Settings stack, under the picker. */
 export const DomainEmailScreen: React.FC = memo(() => {
-  useHideBottomBar();
   return <DomainEmailView flow={useSettingsVerificationFlow()} />;
 });
 

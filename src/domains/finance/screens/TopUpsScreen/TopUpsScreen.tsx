@@ -5,7 +5,6 @@ import { Plus } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, Layout, SuperList, Text } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { WalletDayGroupSkeleton } from '../../components';
 import { StatusFilterChips } from '../../components/StatusFilterChips';
 import { TopUpDayGroup } from './components/TopUpDayGroup';
@@ -38,7 +37,6 @@ const TopUpsEnd = memo(() => {
 const TopUpsScreenComponent: React.FC = () => {
   const onScroll = useJSScrollHandler();
   const vm = useTopUpsScreen();
-  useHideBottomBar();
 
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.xs, paddingBottom: spacing['5xl'] },

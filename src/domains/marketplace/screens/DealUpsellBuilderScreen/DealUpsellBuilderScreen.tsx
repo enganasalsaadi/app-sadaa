@@ -13,7 +13,6 @@ import {
   Text,
   type SegmentedOption,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { AddonRow } from '../../components/AddonRow';
 import { ServiceCard } from '../../components/ServiceCard';
 import { UpsellDock } from './components/UpsellDock';
@@ -29,7 +28,6 @@ const DealUpsellBuilderScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const vm = useDealUpsellBuilderScreen();
-  useHideBottomBar();
   const title = t('marketplace.deals.upsellBuilder.title');
   const { quote, line, creatorName } = vm;
 

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Controller } from 'react-hook-form';
 import { EyeOff, Link2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   Box,
   ConfirmSheet,
@@ -98,7 +97,6 @@ const SettingsForm: React.FC<{ vm: MediaKitSettingsScreenModel }> = memo(({ vm }
 
 /** Detail archetype: the media kit link (live-checked slug) and who can see the kit. */
 const MediaKitSettingsScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const vm = useMediaKitSettingsScreen();

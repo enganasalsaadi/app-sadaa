@@ -9,7 +9,6 @@ import type {
 } from '@/core/navigation';
 import { useTheme } from '@/core/theme';
 import { Box, ErrorState, InlineError, Layout, LayoutFooter, Text } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { KycCard } from '../../components/KycCard';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
@@ -138,7 +137,6 @@ type WizardRoute = RouteProp<BrandWizardStackParamList, 'BrandKycDocument'>;
 
 /** Settings stack: creators, and brands from the picker (the Profile entry predates it: company). */
 export const KycScreen: React.FC = memo(() => {
-  useHideBottomBar();
   const documentGroup = useRoute<SettingsRoute>().params?.documentGroup ?? 'company';
   return <KycView flow={useSettingsVerificationFlow()} documentGroup={documentGroup} />;
 });

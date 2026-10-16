@@ -2,7 +2,6 @@ import React from 'react';
 import { FormProvider } from 'react-hook-form';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { WithdrawStackParamList } from '@/core/navigation';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardSheet } from '../components/DiscardSheet';
 import { useWithdrawFlowState, WithdrawFlowContext } from '../hooks/useWithdrawFlow';
 import { WithdrawAmountScreen } from '../screens/WithdrawAmountScreen';
@@ -18,7 +17,6 @@ const SCREEN_OPTIONS = { headerShown: false } as const;
  */
 export const WithdrawNavigator: React.FC = () => {
   const { form, flow, guard } = useWithdrawFlowState();
-  useHideBottomBar();
 
   return (
     <FormProvider {...form}>

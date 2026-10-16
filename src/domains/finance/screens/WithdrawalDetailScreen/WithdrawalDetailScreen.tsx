@@ -15,7 +15,6 @@ import {
   StaggerIn,
   Timeline,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { ReportLink } from '../../components/ReportLink';
 import { DetailRowsCard, WithdrawalDetailSkeleton, WithdrawalHead } from './components/WithdrawalDetailParts';
 import { useWithdrawalDetailScreen, type WithdrawalDetailScreenModel } from './hooks/useWithdrawalDetailScreen';
@@ -46,7 +45,6 @@ const WithdrawalDetailScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const vm = useWithdrawalDetailScreen();
-  useHideBottomBar();
   const { view } = vm;
 
   const sections = view

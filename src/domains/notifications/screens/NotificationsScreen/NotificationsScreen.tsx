@@ -4,7 +4,6 @@ import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { BellOff, CheckCheck } from 'lucide-react-native';
 import { Layout, SuperList } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import {
   useNotificationsScreen,
   type NotificationRowModel,
@@ -18,7 +17,6 @@ const NotificationsScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = useNotificationsScreen();
-  useHideBottomBar();
 
   const { onPressItem } = vm;
   const renderItem = useCallback(

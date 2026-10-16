@@ -11,7 +11,6 @@ import {
   LayoutFooter,
   Notice,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
 import { RateCardLockedSummary, RateCardPickers } from './components/RateCardPickers';
@@ -44,7 +43,6 @@ const RateCardEditorScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const vm = useRateCardEditorScreen();
-  useHideBottomBar();
 
   const ready = !vm.isLoading && !vm.isError && !vm.isNotFound && !vm.noFreeSlot;
   const body = vm.isLoading ? (

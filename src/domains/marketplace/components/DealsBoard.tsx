@@ -68,6 +68,7 @@ const DealsBoardComponent = <T extends string>({
       paddingHorizontal: spacing.xl,
       paddingTop: spacing.sm,
       paddingBottom: spacing['7xl'] * 1.5,
+      // backgroundColor: 'red',
     },
     item: { paddingBottom: spacing.md },
     turn: { paddingBottom: spacing['2xl'] },

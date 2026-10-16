@@ -10,7 +10,6 @@ import {
   Layout,
   LayoutFooter,
 } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardChangesSheet } from '../../components/DiscardChangesSheet';
 import { LockedPhoneField } from '../../components/LockedPhoneField';
 import { ProfileFormSkeleton } from '../../components/ProfileFormSkeleton';
@@ -115,7 +114,6 @@ const CompanyInfoForm: React.FC<{ vm: CompanyInfoScreenModel }> = memo(({ vm }) 
 const CompanyInfoScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const vm = useCompanyInfoScreen();
-  useHideBottomBar();
 
   const body = vm.isLoading ? (
     <ProfileFormSkeleton />

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import type { Edge } from 'react-native-safe-area-context';
 import { Radio } from 'lucide-react-native';
 import { moderateScale } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { Box, ConfirmSheet, EmptyState, ErrorState, Layout, Skeleton, StaggerIn } from '@/shared/ui';
 import { DEAL_UPLOAD_LIMIT } from '../../constants/dealUploads';
 import { LiveLinkField } from './components/LiveLinkField';
@@ -35,7 +34,6 @@ const PublishSkeleton = memo(() => (
  * the hand-in bar. A handed-in post shows its broadcast ring until verified.
  */
 const DealPublishScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const vm = useDealPublishScreen();
   const frames = useProofFrames(vm.uploads.entries);

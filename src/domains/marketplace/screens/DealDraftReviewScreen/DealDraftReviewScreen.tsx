@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Clapperboard } from 'lucide-react-native';
 import { moderateScale } from '@/core/theme';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { Box, EmptyState, ErrorState, Layout, Skeleton, StaggerIn } from '@/shared/ui';
 import { ReviewBanner } from './components/ReviewBanner';
 import { ReviewCaption } from './components/ReviewCaption';
@@ -31,7 +30,6 @@ const ReviewSkeleton = memo(() => (
  * for changes (an extra round once they're used up). Earlier rounds stay below as the record.
  */
 const DealDraftReviewScreenComponent: React.FC = () => {
-  useHideBottomBar();
   const { t } = useTranslation();
   const vm = useDealDraftReviewScreen();
   const { deal, item, rounds, latest, file, mode } = vm;

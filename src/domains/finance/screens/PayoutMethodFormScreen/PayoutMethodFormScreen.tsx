@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchX, Trash2 } from 'lucide-react-native';
 import { Box, EmptyState, ErrorState, Layout, LayoutFooter } from '@/shared/ui';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import { DiscardSheet } from '../../components/DiscardSheet';
 import { PayoutChannelSheet } from '../../components/PayoutChannelSheet';
 import { PayoutFormSkeleton } from './components/PayoutFormSkeleton';
@@ -19,7 +18,6 @@ import { usePayoutMethodFormScreen } from './hooks/usePayoutMethodFormScreen';
 const PayoutMethodFormScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const vm = usePayoutMethodFormScreen();
-  useHideBottomBar();
 
   const ready = !vm.isLoading && !vm.isError && !vm.isNotFound && vm.channel !== null;
   const body = vm.isLoading ? (

@@ -5,7 +5,6 @@ import { useTheme, useStyles, moderateScale } from '@/core/theme';
 import { Layout } from '@/shared/ui/Layout';
 import { Box } from '@/shared/ui/primitives/Box';
 import { useGetConfigQuery } from '@/core/api';
-import { useHideBottomBar } from '@/shared/context/BottomBarContext';
 import type { SettingsStackScreenProps } from '@/core/navigation';
 
 type Props = SettingsStackScreenProps<'WebViewScreen'>;
@@ -24,7 +23,6 @@ const WebViewScreenComponent: React.FC<Props> = ({ route }) => {
     },
   }));
   const [loading, setLoading] = useState(true);
-  useHideBottomBar();
 
   const { data: config } = useGetConfigQuery();
 

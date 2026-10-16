@@ -20,10 +20,6 @@ jest.mock('@/core/theme', () => {
   return { useTheme: () => ({ colors: tokens, sizes: tokens, isRTL: false }) };
 });
 
-jest.mock('@/shared/context/BottomBarContext', () => ({
-  useHideBottomBar: jest.fn(),
-}));
-
 jest.mock('lucide-react-native', () => {
   const { createElement } = jest.requireActual<{
     createElement: typeof React.createElement;
