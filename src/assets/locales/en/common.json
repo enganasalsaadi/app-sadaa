@@ -1324,7 +1324,74 @@
   },
   "marketplace": {
     "campaign": {
-      "detailTitle": "Campaign"
+      "detailTitle": "Campaign",
+      "wizard": {
+        "closedWithDraft": "Your campaign was saved as a draft",
+        "steps": {
+          "idea": "Idea",
+          "requirements": "Requirements",
+          "money": "Money & seats",
+          "review": "Review"
+        },
+        "header": {
+          "close": "Close the wizard",
+          "newTitle": "New campaign",
+          "saving": "Saving…",
+          "saved": "Saved",
+          "saveFailed": "Not saved",
+          "stepA11y": "Step {{step}}: {{label}}",
+          "stepMissingA11y": "Step {{step}}: {{label}} — incomplete"
+        },
+        "strip": {
+          "retry": "Retry",
+          "leave": "Leave",
+          "saveFailed": "Couldn't save your changes. Check your connection."
+        },
+        "dock": {
+          "back": "Previous step",
+          "next": "Next",
+          "review": "Review"
+        },
+        "leave": {
+          "title": "Unsaved changes",
+          "body": "We couldn't save your latest edits, and leaving now may lose them.",
+          "confirm": "Leave without saving",
+          "stay": "Stay"
+        },
+        "idea": {
+          "cover": {
+            "label": "Campaign cover",
+            "note": "One image · jpg / png / webp up to 20MB",
+            "add": "Add a cover image",
+            "change": "Change",
+            "remove": "Remove",
+            "uploading": "Uploading the cover…",
+            "retry": "Retry",
+            "discard": "Discard",
+            "waiting": "Waiting for the cover to finish uploading",
+            "needTitle": "Write the campaign title first, then add the cover",
+            "failed": "Couldn't upload the cover",
+            "errType": "Unsupported format. Use jpg, png or webp.",
+            "errSize": "The image is larger than 20MB",
+            "errEmpty": "The file is empty"
+          },
+          "title": {
+            "label": "Campaign title",
+            "note": "Shown at the top of the screen",
+            "placeholder": "e.g. Ramadan coffee launch campaign"
+          },
+          "titleRule": "{{min}} to {{max}} characters",
+          "activity": {
+            "label": "Activity type",
+            "failed": "Couldn't load the activity types"
+          },
+          "teaser": {
+            "label": "Public announcement",
+            "audience": "Every creator sees this",
+            "placeholder": "What do you want from creators, and why should they apply?"
+          }
+        }
+      }
     },
     "deal": {
       "phase": {
@@ -1447,10 +1514,10 @@
         "tagA11y": "{{service}}, {{where}}: {{price}}. Edit your rates"
       },
       "escrow": {
-          "label": "Held for you",
-          "kycAction": "Verify ID"
-        },
-        "deals": {
+        "label": "Held for you",
+        "kycAction": "Verify ID"
+      },
+      "deals": {
         "title": "Your turn",
         "waiting": "{{count}} waiting for you",
         "moving": "{{count}} moving without you",
@@ -2126,6 +2193,7 @@
       "newOffers_one": "{{count}} new offer waiting for you",
       "newOffers_other": "{{count}} new offers waiting for you",
       "guide": "Deal guide",
+      "newCampaign": "New campaign",
       "tabsLabel": "Deal groups",
       "tabCount": "{{label}} {{count}}",
       "tabs": {

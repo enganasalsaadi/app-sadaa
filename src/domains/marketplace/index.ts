@@ -7,6 +7,7 @@ export { CreatorHomeNavigator } from './navigation/CreatorHomeNavigator';
 export { BrandDealsNavigator, CreatorDealsNavigator } from './navigation/DealsNavigator';
 export { CreatorOpportunitiesNavigator } from './navigation/OpportunitiesNavigator';
 export { OfferBuilderScreen } from './screens/OfferBuilderScreen';
+export { CampaignWizardScreen } from './screens/CampaignWizardScreen';
 export { DealGuideScreen } from './screens/DealGuideScreen';
 export {
   DealStatusPill,

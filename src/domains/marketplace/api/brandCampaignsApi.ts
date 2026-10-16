@@ -1,8 +1,12 @@
 import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
+import { mapUploadSlot } from '@/core/upload';
+import type { UploadSlot, UploadSlotDto, UploadSlotRequest } from '@/core/upload';
 import type {
   CampaignActionArgs,
   CampaignActionResult,
   CampaignDetail,
+  CampaignFile,
+  CampaignFilePurpose,
   CampaignHistoryRow,
   CampaignListArgs,
   CampaignPage,
@@ -13,6 +17,7 @@ import type {
   CampaignActionMetaDto,
   CampaignDetailDto,
   CampaignDto,
+  CampaignFileDto,
   CampaignHistoryRowDto,
   CampaignPageDto,
 } from '../types/campaignDto';
@@ -21,11 +26,13 @@ import { isCampaignConflictError } from '../utils/campaignAction';
 import {
   mapCampaignActionResult,
   mapCampaignDetail,
+  mapCampaignFile,
   mapCampaignHistoryRow,
   mapCampaignsPage,
 } from '../utils/campaignMappers';
 import {
   BRAND_CAMPAIGNS_URL,
+  buildBrandCampaignFilesUrl,
   buildBrandCampaignUrl,
   buildBrandCampaignsUrl,
 } from '../utils/campaignQuery';
@@ -113,6 +120,58 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
             ? [{ type: 'Campaign', id }, ...campaignChangedTags(id)]
             : [],
     }),
+    /** Step 1 of an upload (contract §3.2 Files): the signed slot for one cover or brief file. */
+    requestCampaignFileSlot: builder.mutation<
+      UploadSlot,
+      { id: string; purpose: CampaignFilePurpose; request: UploadSlotRequest }
+    >({
+      query: ({ id, purpose, request }) => ({
+        url: buildBrandCampaignFilesUrl(id),
+        method: 'POST',
+        body: { purpose, ...request },
+      }),
+      transformResponse: (dto: UploadSlotDto) => mapUploadSlot(dto),
+    }),
+    /** Step 3, after the PUT: the file joins the campaign (a new cover replaces the old one server-side). */
+    completeCampaignFile: builder.mutation<CampaignFile, { id: string; fileId: string }>({
+      query: ({ id, fileId }) => ({
+        url: buildBrandCampaignFilesUrl(id, fileId, 'complete'),
+        method: 'POST',
+      }),
+      transformResponse: (dto: CampaignFileDto) => mapCampaignFile(dto),
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        try {
+          const { data: file } = await queryFulfilled;
+          dispatch(
+            brandCampaignsApi.util.updateQueryData('getCampaign', id, campaign => {
+              if (file.purpose === 'cover') campaign.cover = file;
+              else if (file.purpose === 'brief' && !campaign.attachments.some(entry => entry.id === file.id)) {
+                campaign.attachments.push(file);
+              }
+            }),
+          );
+        } catch {
+          // The upload flow reports the failure.
+        }
+      },
+    }),
+    removeCampaignFile: builder.mutation<void, { id: string; fileId: string }>({
+      query: ({ id, fileId }) => ({ url: buildBrandCampaignFilesUrl(id, fileId), method: 'DELETE' }),
+      transformResponse: () => undefined,
+      async onQueryStarted({ id, fileId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(
+            brandCampaignsApi.util.updateQueryData('getCampaign', id, campaign => {
+              if (campaign.cover?.id === fileId) campaign.cover = null;
+              campaign.attachments = campaign.attachments.filter(entry => entry.id !== fileId);
+            }),
+          );
+        } catch {
+          // The caller restores what it hid.
+        }
+      },
+    }),
     /**
      * Any lifecycle action answering the full campaign. Success replaces the cached detail with
      * `data` (no refetch; `duplicate` caches the new campaign); a `campaign_*` conflict (409)
@@ -154,5 +213,8 @@ export const {
   useCreateCampaignMutation,
   useUpdateCampaignMutation,
   useDeleteCampaignMutation,
+  useRequestCampaignFileSlotMutation,
+  useCompleteCampaignFileMutation,
+  useRemoveCampaignFileMutation,
   useRunCampaignActionMutation,
 } = brandCampaignsApi;

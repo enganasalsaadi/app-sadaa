@@ -3,7 +3,7 @@ import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
 import { initSecureStorage } from '@/core/storage';
 import { toastService } from '@/core/toast';
 import { campaignFlagReducer } from '../../store/campaignFlagSlice';
-import { detailDto, historyRowDto } from '../../utils/__fixtures__/campaignDto';
+import { detailDto, fileDto, historyRowDto } from '../../utils/__fixtures__/campaignDto';
 import { brandCampaignsApi, campaignChangedTags } from '../brandCampaignsApi';
 
 const makeStore = () =>
@@ -242,6 +242,81 @@ describe('brandCampaignsApi', () => {
     });
     expect(listReads).toHaveLength(2);
     list.unsubscribe();
+  });
+
+  it('asks for a cover slot with the purpose and the picked file, and maps the signed target', async () => {
+    const { spy } = mockServer(() =>
+      json(201, {
+        success: true,
+        message: 'ok',
+        data: {
+          file_id: 'f9',
+          kind: 'image',
+          upload: { method: 'PUT', url: 'https://s3/put', headers: { 'Content-Type': 'image/jpeg' }, expires_at: '2026-10-17T10:00:00+03:00' },
+        },
+        meta: {},
+      }),
+    );
+    const store = makeStore();
+
+    const slot = await store
+      .dispatch(
+        brandCampaignsApi.endpoints.requestCampaignFileSlot.initiate({
+          id: 'c1',
+          purpose: 'cover',
+          request: { name: 'cover.jpg', mime: 'image/jpeg', size: 2048 },
+        }),
+      )
+      .unwrap();
+
+    expect(slot).toMatchObject({ fileId: 'f9', url: 'https://s3/put', headers: { 'Content-Type': 'image/jpeg' } });
+    const post = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'POST');
+    expect(new URL(post?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1\/files$/);
+    expect(await post?.clone().json()).toEqual({ purpose: 'cover', name: 'cover.jpg', mime: 'image/jpeg', size: 2048 });
+  });
+
+  it('puts a confirmed cover into the cached campaign, replacing the old one', async () => {
+    const { spy } = mockServer(() => ok(fileDto({ id: 'f2', url: 'https://cdn/new' })));
+    const store = makeStore();
+    const detail = store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
+    await detail;
+    expect(readCampaign(store)?.cover?.id).toBe('f1');
+
+    await store.dispatch(brandCampaignsApi.endpoints.completeCampaignFile.initiate({ id: 'c1', fileId: 'f2' })).unwrap();
+
+    const post = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'POST');
+    expect(new URL(post?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1\/files\/f2\/complete$/);
+    expect(readCampaign(store)?.cover).toMatchObject({ id: 'f2', url: 'https://cdn/new' });
+    expect(detailReads(spy)).toBe(1);
+    detail.unsubscribe();
+  });
+
+  it('adds a confirmed brief file to the attachments once', async () => {
+    mockServer(() => ok(fileDto({ id: 'f7', purpose: 'brief' })));
+    const store = makeStore();
+    const detail = store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
+    await detail;
+
+    await store.dispatch(brandCampaignsApi.endpoints.completeCampaignFile.initiate({ id: 'c1', fileId: 'f7' })).unwrap();
+    await store.dispatch(brandCampaignsApi.endpoints.completeCampaignFile.initiate({ id: 'c1', fileId: 'f7' })).unwrap();
+
+    expect(readCampaign(store)?.attachments.filter(file => file.id === 'f7')).toHaveLength(1);
+    expect(readCampaign(store)?.cover?.id).toBe('f1');
+    detail.unsubscribe();
+  });
+
+  it('clears the cached cover once the server deleted it', async () => {
+    const { spy } = mockServer(() => ok(null));
+    const store = makeStore();
+    const detail = store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
+    await detail;
+
+    await store.dispatch(brandCampaignsApi.endpoints.removeCampaignFile.initiate({ id: 'c1', fileId: 'f1' })).unwrap();
+
+    const del = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'DELETE');
+    expect(new URL(del?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1\/files\/f1$/);
+    expect(readCampaign(store)?.cover).toBeNull();
+    detail.unsubscribe();
   });
 
   it('flags the feature as off when a campaign call answers feature_disabled', async () => {

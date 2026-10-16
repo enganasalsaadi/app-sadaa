@@ -38,7 +38,7 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
   const [values, setValues] = useState<CampaignDraftValues>(emptyDraftValues);
   const [sync, setSync] = useState(IDLE_SYNC);
   const [ready, setReady] = useState(initialCampaignId === null);
-  const { data: campaign, error: loadError } = useGetCampaignQuery(campaignId ?? skipToken);
+  const { data: campaign, error: loadError, refetch } = useGetCampaignQuery(campaignId ?? skipToken);
 
   const valuesRef = useRef(values);
   const readyRef = useRef(ready);
@@ -101,6 +101,15 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
     [campaign],
   );
 
+  // Resolves true when the draft exists and nothing blocks saving, so a step can move on.
+  const flush = useCallback(async () => {
+    await syncer.flush();
+    return syncer.canContinue();
+  }, [syncer]);
+  const reload = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   const hasRefusal = Object.keys(sync.refused).length > 0;
   let saveState: CampaignDraftSaveState = 'idle';
   if (sync.failure || hasRefusal) saveState = 'error';
@@ -120,7 +129,9 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
     failure: sync.failure,
     /** Parts the server refused (422), by part, with the server's field messages. */
     refused: sync.refused,
-    flush: syncer.flush,
+    flush,
     retry: syncer.retry,
+    /** After a failed first load of a draft that was opened by id. */
+    reload,
   };
 };

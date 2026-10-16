@@ -274,6 +274,11 @@ export type DealFlowStackParamList = {
    * carries the services already picked on the media kit.
    */
   OfferBuilder: { slug: string; draftId?: string; rateCardIds?: string[] };
+  /**
+   * Brand campaign wizard. No params = a new campaign; `campaignId` opens a draft: `resume` jumps
+   * to the first step that still needs something, `duplicate` starts at the first step.
+   */
+  CampaignWizard: { campaignId?: string; source?: 'resume' | 'duplicate' } | undefined;
   /** «How a deal completes», one page per role. */
   DealGuide: DealGuideParams;
 };

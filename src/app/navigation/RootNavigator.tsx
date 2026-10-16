@@ -37,7 +37,7 @@ import {
 } from '@/domains/auth';
 import { useAppSelector } from '@/core/store';
 import { BRAND_KYC_STEP_SCREENS, MediaKitPublicScreen } from '@/domains/identity';
-import { DealGuideScreen, OfferBuilderScreen } from '@/domains/marketplace';
+import { CampaignWizardScreen, DealGuideScreen, OfferBuilderScreen } from '@/domains/marketplace';
 import { MainTabs } from './MainTabs';
 
 type RootStackParamList = {
@@ -125,6 +125,13 @@ export const RootNavigator: React.FC<Props> = ({
         <Stack.Screen
           name="OfferBuilder"
           component={OfferBuilderScreen}
+          options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
+        />
+      )}
+      {appStatus === AppStatus.AUTHENTICATED && userType === 'brand' && (
+        <Stack.Screen
+          name="CampaignWizard"
+          component={CampaignWizardScreen}
           options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
         />
       )}

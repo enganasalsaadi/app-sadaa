@@ -219,3 +219,34 @@ describe('draft syncer: failures', () => {
     expect(states[states.length - 1]).toMatchObject({ pending: false, saving: false });
   });
 });
+
+describe('draft syncer: canContinue', () => {
+  it('is false before the draft exists and true once it is saved', async () => {
+    const { syncer } = setup();
+    expect(syncer.canContinue()).toBe(false);
+    syncer.want(sections({ title: 'Ramadan' }));
+    await syncer.flush();
+    expect(syncer.canContinue()).toBe(true);
+  });
+
+  it('stays false when creating hit the draft limit, and again true after a retry', async () => {
+    const { create, syncer } = setup();
+    create.mockRejectedValueOnce(apiError(422, 'campaign_draft_limit'));
+    syncer.want(sections({ title: 'Ramadan' }));
+    await syncer.flush();
+    expect(syncer.canContinue()).toBe(false);
+
+    await syncer.retry();
+    expect(syncer.canContinue()).toBe(true);
+  });
+
+  it('is false while a conflict blocks the queue', async () => {
+    const { update, syncer } = setup();
+    syncer.want(sections({ title: 'Ramadan' }));
+    await syncer.flush();
+    update.mockRejectedValueOnce(apiError(409, 'campaign_not_editable'));
+    syncer.want(sections({ title: 'Ramadan', seatsTotal: 3 }));
+    await syncer.flush();
+    expect(syncer.canContinue()).toBe(false);
+  });
+});

@@ -1,4 +1,5 @@
 import {
+  buildBrandCampaignFilesUrl,
   buildBrandCampaignsUrl,
   buildBrandCampaignUrl,
   buildCreatorApplicationsUrl,
@@ -17,6 +18,12 @@ describe('campaignQuery', () => {
     expect(buildBrandCampaignUrl('a/b')).toBe('/brand/campaigns/a%2Fb');
     expect(buildBrandCampaignUrl('c1', 'seats/reopen')).toBe('/brand/campaigns/c1/seats/reopen');
     expect(buildBrandCampaignUrl('c1', 'zero-applicants/extend')).toBe('/brand/campaigns/c1/zero-applicants/extend');
+  });
+
+  it('builds the file slot, confirm and delete urls', () => {
+    expect(buildBrandCampaignFilesUrl('c1')).toBe('/brand/campaigns/c1/files');
+    expect(buildBrandCampaignFilesUrl('c1', 'f 2')).toBe('/brand/campaigns/c1/files/f%202');
+    expect(buildBrandCampaignFilesUrl('c1', 'f2', 'complete')).toBe('/brand/campaigns/c1/files/f2/complete');
   });
 
   it('keeps the feed to the two server filters', () => {

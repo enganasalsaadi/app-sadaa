@@ -28,6 +28,10 @@ export const BRAND_CAMPAIGNS_URL = BRAND_CAMPAIGNS;
 export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history') =>
   subPathOf(BRAND_CAMPAIGNS, id, path);
 
+/** `/brand/campaigns/{id}/files[/{file}[/complete]]`: the upload slot, its confirmation, its removal. */
+export const buildBrandCampaignFilesUrl = (id: string, fileId?: string, step?: 'complete') =>
+  subPathOf(BRAND_CAMPAIGNS, id, ['files', fileId, step].filter(Boolean).join('/'));
+
 export const buildBrandCampaignsUrl = ({ statuses }: CampaignListArgs, page: number) =>
   withPage(BRAND_CAMPAIGNS, repeated('status', statuses), page);
 

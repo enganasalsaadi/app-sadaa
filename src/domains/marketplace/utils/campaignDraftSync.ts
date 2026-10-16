@@ -57,6 +57,8 @@ export interface CampaignDraftSyncer {
   flush: () => Promise<void>;
   /** After freeing a draft (`limit`) or reloading (`conflict`): drop the block and try again. */
   retry: () => Promise<void>;
+  /** The draft exists on the server and nothing blocks the queue: later steps can save too. */
+  canContinue: () => boolean;
 }
 
 const INITIAL: CampaignDraftSyncState = { saving: false, pending: false, failure: null, refused: {} };
@@ -196,5 +198,6 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
       setState({ failure: null });
       await flush();
     },
+    canContinue: () => campaignId !== null && state.failure === null,
   };
 };

@@ -27,6 +27,8 @@ export interface LookupsResponse {
   governorates: LookupOption[];
   business_types: LookupOption[];
   niches: LookupOption[];
+  /** The campaign's activity type (`ecommerce`, `restaurant_cafe`…); ids match `CAMPAIGN_ACTIVITY_TYPE`. */
+  campaign_activity_types: LookupOption[];
   social_platforms: SocialPlatformLookup[];
   /** Keyed by tier id, not an array. */
   follower_tiers: Partial<Record<FollowerTierId, FollowerTier>>;

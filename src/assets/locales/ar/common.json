@@ -1372,7 +1372,74 @@
   },
   "marketplace": {
     "campaign": {
-      "detailTitle": "الحملة"
+      "detailTitle": "الحملة",
+      "wizard": {
+        "closedWithDraft": "حُفظت حملتك كمسودة",
+        "steps": {
+          "idea": "الفكرة",
+          "requirements": "المطلوب",
+          "money": "المال والمقاعد",
+          "review": "المراجعة"
+        },
+        "header": {
+          "close": "إغلاق المعالج",
+          "newTitle": "حملة جديدة",
+          "saving": "يحفظ…",
+          "saved": "تم الحفظ",
+          "saveFailed": "لم تُحفظ",
+          "stepA11y": "الخطوة {{step}}: {{label}}",
+          "stepMissingA11y": "الخطوة {{step}}: {{label}} — ناقصة"
+        },
+        "strip": {
+          "retry": "إعادة",
+          "leave": "خروج",
+          "saveFailed": "تعذّر حفظ التغييرات. تحقق من اتصالك."
+        },
+        "dock": {
+          "back": "الخطوة السابقة",
+          "next": "التالي",
+          "review": "المراجعة"
+        },
+        "leave": {
+          "title": "تغييرات غير محفوظة",
+          "body": "لم نتمكن من حفظ آخر تعديلاتك، وقد تضيع إن خرجت الآن.",
+          "confirm": "خروج دون حفظ",
+          "stay": "ابقَ"
+        },
+        "idea": {
+          "cover": {
+            "label": "غلاف الحملة",
+            "note": "صورة واحدة · jpg / png / webp حتى 20MB",
+            "add": "أضف صورة الغلاف",
+            "change": "تغيير",
+            "remove": "حذف",
+            "uploading": "نرفع الغلاف…",
+            "retry": "إعادة",
+            "discard": "تجاهل",
+            "waiting": "ننتظر انتهاء رفع الغلاف",
+            "needTitle": "اكتب عنوان الحملة أولاً، ثم أضف الغلاف",
+            "failed": "تعذّر رفع الغلاف",
+            "errType": "الصيغة غير مدعومة. استخدم jpg أو png أو webp.",
+            "errSize": "الصورة أكبر من 20MB",
+            "errEmpty": "الملف فارغ"
+          },
+          "title": {
+            "label": "عنوان الحملة",
+            "note": "يظهر في أعلى الشاشة",
+            "placeholder": "مثال: حملة إطلاق قهوة رمضان"
+          },
+          "titleRule": "من {{min}} إلى {{max}} حرفاً",
+          "activity": {
+            "label": "نوع النشاط",
+            "failed": "تعذّر تحميل أنواع النشاط"
+          },
+          "teaser": {
+            "label": "الإعلان العام",
+            "audience": "يراه كل المؤثرين",
+            "placeholder": "ماذا تريد من المؤثرين، ولماذا يجب أن يتقدموا؟"
+          }
+        }
+      }
     },
     "deal": {
       "phase": {
@@ -1503,10 +1570,10 @@
         "tagA11y": "{{service}}، {{where}}: {{price}}. تعديل أسعارك"
       },
       "escrow": {
-          "label": "محجوز لك",
-          "kycAction": "وثّق هويتك"
-        },
-        "deals": {
+        "label": "محجوز لك",
+        "kycAction": "وثّق هويتك"
+      },
+      "deals": {
         "title": "دورك",
         "waiting": "{{count}} تنتظرك",
         "moving": "{{count}} تمشي بدونك",
@@ -2250,6 +2317,7 @@
       "newOffers_many": "{{count}} عرضاً جديداً بانتظار ردك",
       "newOffers_other": "{{count}} عرض جديد بانتظار ردك",
       "guide": "دليل الصفقة",
+      "newCampaign": "حملة جديدة",
       "tabsLabel": "مجموعات الصفقات",
       "tabCount": "{{label}} {{count}}",
       "tabs": {

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { BookOpenText } from 'lucide-react-native';
+import { BookOpenText, Plus } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import {
   Box,
@@ -19,6 +19,8 @@ export interface DealsListHeaderProps<T extends string> {
   tab: T;
   onTab: (tab: T) => void;
   onGuide: () => void;
+  /** Brand only, and only while Public Campaigns are on: starts a new campaign. */
+  onNewCampaign?: () => void;
 }
 
 /**
@@ -32,6 +34,7 @@ const DealsListHeaderComponent = <T extends string>({
   tab,
   onTab,
   onGuide,
+  onNewCampaign,
 }: DealsListHeaderProps<T>) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -69,12 +72,22 @@ const DealsListHeaderComponent = <T extends string>({
             {subtitle}
           </Text>
         </Box>
-        <IconButton
-          icon={BookOpenText}
-          variant="outline"
-          onPress={onGuide}
-          accessibilityLabel={t('marketplace.deals.guide')}
-        />
+        <Box row gap="sm">
+          {onNewCampaign ? (
+            <IconButton
+              icon={Plus}
+              variant="soft"
+              onPress={onNewCampaign}
+              accessibilityLabel={t('marketplace.deals.newCampaign')}
+            />
+          ) : null}
+          <IconButton
+            icon={BookOpenText}
+            variant="outline"
+            onPress={onGuide}
+            accessibilityLabel={t('marketplace.deals.guide')}
+          />
+        </Box>
       </Box>
       <SegmentedControl
         options={options}
