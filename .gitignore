@@ -82,3 +82,5 @@ yarn-error.log
 
 # /sada-screen local HTML previews (never committed)
 /design-previews
+
+/graphify-out/cache

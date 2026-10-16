@@ -15,7 +15,7 @@ paths:
 
 # 08b — Brand Palette (raw values), Tab Bar, Logo, Assets
 
-Raw values live ONLY in `src/core/theme/tokens/**`. Roles and usage: rule 08.
+Raw values ONLY in `src/core/theme/tokens/**`. Roles/usage: rule 08.
 
 ## Hues (light · dark)
 
@@ -24,7 +24,7 @@ Raw values live ONLY in `src/core/theme/tokens/**`. Roles and usage: rule 08.
 | `brand` | `#1C3349` | bg `#0B1622` |
 | `interactive` | `#397D8C` · text `#347482` · soft `#E3F0F2` | `#6FC0CF` · CTA `#5FAFBF` (on-CTA `#06121C`) · soft `#16303A` |
 | `money` | `#12B886` · text `#087F5B` · soft `#E3F8F0` | `#3DDBA5` · soft `#0F2E2A` |
-| `premium` | fill `#D9B46A` · text `#8A6A24` · soft `#FBF3E2` | `#E6C47E` (fine as text) · soft `#2E2716` |
+| `premium` | fill `#D9B46A` · text `#8A6A24` · soft `#FBF3E2` | `#E6C47E` (OK as text) · soft `#2E2716` |
 
 Text shades on white (≥ 4.5:1): `interactive.text #347482` 5.29 · `money.text #087F5B` 5.0 · `premium.text #8A6A24` 5.04 · `success.text #067647` 5.69 · `warning.text #B54708` 5.43 · `danger.text #B42318` 6.57 · `info.text #175CD3` 5.99 · `neutral.text #667085` 4.97. Mustard `#D9B46A` on white ~2:1.
 
@@ -64,24 +64,24 @@ fill `rgba(255,255,255,.15)` / `.07` · border `.28` / `.18` · badge `.18` / `.
 
 ## Bottom tab bar
 
-Look free (rule 09 §0). Technical lessons: white glass blends into white screens; view `shadow` is lost on Android without a background (draw it in Skia); Android native blur ignores rounded clips (grey rectangle). Active/inactive labels ≥ 4.5:1 on their backdrop. Hidden on inner screens via `useHideBottomBar()`.
+Look free (rule 09 §0). Lessons: white glass blends into white screens; view `shadow` lost on Android w/o background (draw in Skia); Android native blur ignores rounded clips (grey rect). Active/inactive labels ≥ 4.5:1 on backdrop. Hidden on inner screens via `useHideBottomBar()`.
 
 ## Logo (Concept C — Concentric Echo, geometry v4, FINAL — changes need explicit user approval)
 
-- Symbol viewBox `0 0 100 100`, arcs ±50° per side, round caps, arc group rotated **−20°** around the dot (dot not rotated). Fade A: inner → outer `stroke-opacity` 50/75/100% (40% rejected). Tiers: lg radii `19/30/41` stroke 6 dot 9 · md `22/38` stroke 8 dot 10 (75/100) · sm `30` stroke 11 dot 12 (100).
+- Symbol viewBox `0 0 100 100`, arcs ±50°/side, round caps, arc group rotated **−20°** around dot (dot not rotated). Fade A: inner → outer `stroke-opacity` 50/75/100% (40% rejected). Tiers: lg radii `19/30/41` stroke 6 dot 9 · md `22/38` stroke 8 dot 10 (75/100) · sm `30` stroke 11 dot 12 (100).
 - Source of truth: `python3 scripts/logo/gen.py` (never hand-edit SVGs). Glyphs `scripts/logo/wordmark-glyphs.svg`. Wordmark = Tajawal ExtraBold outlines (HarfBuzz), mint dot r=5 at ص counter centre.
-- **Logo palette, 5 colors only:** Navy `#1C3349`, Teal `#397D8C`, Mint `#12B886`, BG `#F5F7F9` (Mustard `#D9B46A` not used in logo). No dark tints, no `#FFF`, no new hexes; gradients = `stroke-opacity` only. Limit applies to logo assets only.
+- **Logo palette, 5 colors only:** Navy `#1C3349`, Teal `#397D8C`, Mint `#12B886`, BG `#F5F7F9` (Mustard `#D9B46A` not in logo). No dark tints, no `#FFF`, no new hexes; gradients = `stroke-opacity` only. Limit = logo assets only.
 - Meaning: left arcs = brand reach (navy), right arcs = creator resonance & trust (teal), dot = escrow/money (mint).
 - On light: left navy, right teal, dot mint. On navy: navy arcs → BG `#F5F7F9`, dot mint.
 - **App icon (locked, option A):** navy bg, left arcs BG, right arcs teal, mint dot, fade A (teal-on-navy ≈ 2.8:1 accepted; don't "fix" to all-BG). **Dark lockup** right arcs stay teal — must match icon.
-- Wordmark «صدى» Tajawal ExtraBold, navy on light / BG on navy, mint dot inside ص loop. English "Sada": glyphs `scripts/logo/wordmark-glyphs-en.svg`, mint dot r=5 inside bowl of `d` (rejected: first-`a` counter, end period). Same colours, symbol, −20° tilt (+20° rejected). EN lockup: symbol left, height 1.2× cap height, gap 0.23× cap height, centred on cap height. Never combine «صدى» + "Sada" in one lockup.
+- Wordmark «صدى» Tajawal ExtraBold, navy on light / BG on navy, mint dot in ص loop. English "Sada": glyphs `scripts/logo/wordmark-glyphs-en.svg`, mint dot r=5 in bowl of `d` (rejected: first-`a` counter, end period). Same colours, symbol, −20° tilt (+20° rejected). EN lockup: symbol left, height 1.2× cap height, gap 0.23× cap height, centred on cap height. Never combine «صدى» + "Sada" in one lockup.
 - AR lockup: symbol on reading-start side (right), height 1.2× font-size, gap 0.23× font-size, centred on ص body.
 - Symbol tiers: ≥ 48px 3 arcs · 24–32px 2 arcs · 16px 1 arc. Mono (print): single color, no opacity.
 - Clear space ¼ symbol height each side; lockup min 24px screen / 8mm print; symbol min 16px (`symbol-sm`).
 - Files `src/assets/images/logo/`: `logo-full-{light,dark}.svg`, `logo-full-en-{light,dark}.svg`, `wordmark-en-{light,dark}.svg`, `symbol-{lg,md,sm}.svg`, `symbol-{lg,md,sm}-dark.svg` (on navy), `wordmark-{light,dark}.svg`, `symbol-mono.svg` (`currentColor`), `app-icon.svg` (1024 full-bleed navy; OS masks corners). `BrandLogo/logoAspect.ts` generated by `gen.py` (never edit). `BrandLogo` picks artwork by mode, tier by height, «صدى»/"Sada" by language.
 - **Native bootsplash:** symbol only (`symbol-lg-dark`, 112pt/dp) on navy, no wordmark (native can't follow in-app language).
-- Native assets (iOS AppIcon, Android mipmaps + adaptive foreground, Play icon, bootsplash, Android notification icon): `python3 scripts/logo/native.py` after any logo change; never hand-edit PNGs.
+- Native assets (iOS AppIcon, Android mipmaps + adaptive foreground, Play icon, bootsplash, Android notification icon): run `python3 scripts/logo/native.py` after any logo change; never hand-edit PNGs.
 
 ## Brand book
 
-`docs/brand/sada-brand-book.html` (AR/EN toggle) + `sada-brand-book-ar.pdf` / `-en.pdf`, generated by `python3 scripts/brand/build.py` from `scripts/brand/template.html`; logos + Tajawal inlined at build (never paste logo SVG into template). Any change to rule 08/08b (colors, type, radii, logo) → update template + rebuild in same change.
+`docs/brand/sada-brand-book.html` (AR/EN toggle) + `sada-brand-book-ar.pdf` / `-en.pdf`, generated by `python3 scripts/brand/build.py` from `scripts/brand/template.html`; logos + Tajawal inlined at build (never paste logo SVG into template). Any rule 08/08b change (colors, type, radii, logo) → update template + rebuild in same change.

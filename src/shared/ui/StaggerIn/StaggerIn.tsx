@@ -13,7 +13,8 @@ export interface StaggerInProps {
 /**
  * Stacks its children and lets them rise in one after another on first mount
  * (rule 09 §3.1, dashboard sections). Entering animations run once and follow the
- * system reduced-motion setting. Children that render `null` keep no slot.
+ * system reduced-motion setting. `null` / `false` children keep no slot, but a component child
+ * that renders `null` still does (and still gets `gap` around it): skip it before passing it in.
  */
 const StaggerInComponent: React.FC<StaggerInProps> = ({ children, gap }) => {
   const items = Children.toArray(children).filter(isValidElement);

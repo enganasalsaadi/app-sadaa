@@ -26,7 +26,7 @@ Present to the user, in this order:
    - `<html lang="ar" dir="rtl">`; Tajawal from Google Fonts; `<link rel="stylesheet" href="../.claude/skills/sada-screen/preview-kit.css">`. Phone frames `390×844` (radius 44) side by side; each root `<div class="sd">` / `<div class="sd dark">` — show light and dark.
    - Colors and font from the kit vars only. Kit classes (`hero`, `lights`, `glass`, `sheet`, `card`, `tabbar`, …) mirror today's look — don't default to them; write fresh CSS for layout, shape, depth, tab bar included. CSS transitions/`:active` for the signature motion where cheap; otherwise a one-line caption under the frame. 44pt targets.
    - Real Arabic copy, realistic data (amounts as `formatMoney` prints them), real tab bar for tab roots, every status the screen can show at least once.
-   - Two directions → two frames (labelled A / B). One frame per role variant (memory: brand vs creator screens differ). Key states (loading skeleton, empty) as small extra frames when designed.
+   - One direction → one frame (A / B only when the user asks for options). One frame per role variant (memory: brand vs creator screens differ). Key states (loading skeleton, empty) as small extra frames when designed.
    - Keep it static and cheap: no JS frameworks, no build step. Iterate on this file until approved; the approved preview is the visual target for Phase 3 and the Phase 4 self-review.
 3. **Structure notes**: every field, the primary action, secondary actions — short list next to the preview.
 4. **States**: loading / empty / error / submitting / 422 / keyboard (rule 09 §4) — one line each.

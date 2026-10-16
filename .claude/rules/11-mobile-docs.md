@@ -1,6 +1,11 @@
 # 11 — Mobile Docs (MANDATORY, Definition of Done)
 
-Screen, flow, permission, or business rule changes → update `docs/mobile-architecture.md` in the **same change**, plain English, + Pitch sections if new value + Change Log.
+Screen, flow, permission, or business rule changes → update `docs/mobile-architecture.md` **once per phase / before commit** (batch the phase's changes; not after every edit), plain English, + Pitch sections if new value + Change Log.
+
+Token-cheap editing (file ~170KB — never Read it whole):
+- `grep -n '^##' docs/mobile-architecture.md` → Read only the target section's line range → targeted Edit.
+- Change Log keeps the **latest 10 rows**; adding a row → move the oldest to the top of the table in `docs/mobile-changelog.md` (archive, never read unless asked).
+- `docs/mobile-contract.md` = backend-owned API contract (LOCKED, mirrored in backend plan) → never edit/split; `grep -n '^## '` → Read the needed § only.
 
 | Change | Section |
 |---|---|

@@ -36,7 +36,10 @@ B2B influencer marketplace, Syria-first, Arabic-first. Replaces email/WhatsApp/p
 | `13-ref-ui-kit` | every `@/shared/ui` part, screen chrome, wizards, lists, theme hooks | UI files |
 | `14-ref-core-infra` | baseApi, toasts, errors, storage, form/data helpers, money format | core, `api/` `hooks/` `schemas/` `store/` |
 | `15-ref-auth-identity` | login, onboarding, verification, deletion, suspension, push prompt, inbox | auth / identity / notifications |
-| `16-ref-finance-deals` | deal parts, wallet, top-ups, payouts, withdrawals | finance / marketplace |
+| `16-ref-deals` | deal types, api, parts, board, detail page | marketplace deal files |
+| `16b`–`16d` | deal phases: respond+shipping (P4–5) · drafts+publish (P6–7) · changes+disputes+retention (P8–9) | phase files |
+| `16e-ref-discovery` | Brand Home, Explore, Shortlist, price lock | discovery files |
+| `16f-ref-finance` | wallet, top-ups, payouts, withdrawals | finance |
 | `17-ref-native-env` | env, Firebase, app links, network security, store ids, native gaps | ios / android / `.env*` / config |
 
 Most rules are lint-enforced (`.eslintrc.js`). A rule blocks you → stop and ask; never disable a lint rule inline.
@@ -83,15 +86,17 @@ src/
 3. Screen folder + `hooks/use<Name>Screen.ts`; UI only from `@/shared/ui`.
 4. i18n keys in **both** `ar` and `en`.
 5. Route in `core/navigation/types.ts` + domain navigator; export from domain `index.ts` if others need it.
-6. `npx tsc --noEmit && npm run lint && npm test`.
-7. `docs/mobile-architecture.md` + Change Log (rule 11).
+6. Iterate with targeted gates; full `npx tsc --noEmit && npm run lint && npm test` once at phase end (rule 05).
+7. `docs/mobile-architecture.md` + Change Log once per phase (rule 11).
 
 ## Token discipline
 
 - Output: no greetings, filler, recaps. No RN/React basics unless asked. Show only changed code/diffs.
 - Tier 2/3 work (hooks, slices, navigation, native bridges, Gradle/Xcode, Reanimated, perf): 2-bullet plan before code.
-- Mechanical work (find files, logs, `package.json`, adb/xcrun) → fast subagent (`model: haiku` / cavecrew). Main model for native, build, animation, perf.
+- Subagents start cold (re-load rules + context) → cost more than a direct `grep`/`graphify query`. Do it inline by default. Subagent only for a wide multi-file sweep whose dumps you don't need (cavecrew / `model: haiku`), or when the user asks. Never for one file, one grep, logs, `package.json`.
 - Never read `node_modules/ ios/Pods/ ios/build/ android/build/ android/.gradle/`. Large TSX: skim skeleton first, then targeted read. Build logs: grep only (`grep -i "error:"`, `grep -A 15 -B 5 "FAILED"`). Metro: JS stack trace only.
 - Production-ready first time: loading/error states, effect cleanup, strict types, no `TODO`s.
-- Self-verify silently (`npx tsc --noEmit` + lint) before reporting.
+- Self-verify silently (targeted gates, rule 05) before reporting.
+- Bug fix: locate from the user's description / stack trace (`file:line`) → grep the symbol → Read only that range. Never re-read whole screens to hunt.
+- Graph auto-refreshes after each turn (Stop hook, no LLM). `graphify query` result looks stale → `graphify update .` yourself.
 - UI validation mirrors backend limits (`maxLength`, etc.).

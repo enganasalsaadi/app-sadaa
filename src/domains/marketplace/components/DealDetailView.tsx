@@ -87,6 +87,13 @@ const StageSection = memo<StageSectionProps>(
   },
 );
 
+/** Same test as `DealChangesSection`'s own: anything to show at the bottom of the page. */
+const hasChanges = ({ role, upsells, cancel, dispute }: DealDetailModel): boolean =>
+  upsells.history.length > 0 ||
+  upsells.canPropose ||
+  (role === 'brand' ? cancel.canCancel : cancel.canWithdraw) ||
+  dispute.canOpen;
+
 const DetailSection = memo<{
   section: DealDetailSectionKey;
   deal: Deal;
@@ -94,89 +101,106 @@ const DetailSection = memo<{
   vm: DealDetailModel;
 }>(({ section, deal, station, vm }) => {
   const party = vm.role === 'brand' ? deal.creator : deal.brand;
-  switch (section) {
-    case 'next': {
-      // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
-      if (vm.dispute.showCard) return null;
-      if (vm.stopped) return <DealOutcomeCard deal={deal} />;
-      // While the product ships, the waybill is the next step (P5).
-      if (vm.shipping.view && vm.shipping.view.phase !== 'received' && vm.shipping.view.phase !== 'address') {
-        return null;
-      }
-      const { respond } = vm;
-      // While the brand decides, the decision itself is the next step (P4).
-      if (respond.dock === 'brandExtension' && respond.ask) {
-        return (
-          <DealExtensionRequestCard creator={deal.creator} ask={respond.ask} />
-        );
-      }
-      if (respond.dock === 'brandFunding') {
-        return (
-          <DealFundingCard
-            funding={respond.funding}
-            state={respond.fundingState}
-            total={deal.total}
-            dueAt={deal.dueAt}
-            canTopUp={respond.canTopUp}
+
+  // Every empty section returns null here, never from its component: a component that renders
+  // nothing still gets the spacing Box below and opens a gap on the page.
+  function sectionContent(): React.ReactElement | null {
+    switch (section) {
+      case 'next': {
+        // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
+        if (vm.dispute.showCard) return null;
+        if (vm.stopped) return <DealOutcomeCard deal={deal} />;
+        // While the product ships, the waybill is the next step (P5).
+        if (vm.shipping.view && vm.shipping.view.phase !== 'received' && vm.shipping.view.phase !== 'address') {
+          return null;
+        }
+        const { respond } = vm;
+        // While the brand decides, the decision itself is the next step (P4).
+        if (respond.dock === 'brandExtension' && respond.ask) {
+          return (
+            <DealExtensionRequestCard creator={deal.creator} ask={respond.ask} />
+          );
+        }
+        if (respond.dock === 'brandFunding') {
+          return (
+            <DealFundingCard
+              funding={respond.funding}
+              state={respond.fundingState}
+              total={deal.total}
+              dueAt={deal.dueAt}
+              canTopUp={respond.canTopUp}
+            />
+          );
+        }
+        // The rating section carries its own invite (P10).
+        return vm.next && vm.next.key !== 'rate' ? (
+          <DealNextStepCard
+            step={vm.next}
+            name={party.name ?? ''}
+            action={vm.focusItem?.action ?? null}
+            itemId={vm.focusItem?.itemId ?? null}
+            onAction={vm.openItem}
           />
-        );
+        ) : null;
       }
-      // The rating section carries its own invite (P10).
-      return vm.next && vm.next.key !== 'rate' ? (
-        <DealNextStepCard
-          step={vm.next}
-          name={party.name ?? ''}
-          action={vm.focusItem?.action ?? null}
-          itemId={vm.focusItem?.itemId ?? null}
-          onAction={vm.openItem}
-        />
-      ) : null;
-    }
-    case 'dispute':
-      return <DealDisputeCard dispute={vm.dispute} role={vm.role} />;
-    case 'retentionCases':
-      return <DealRetentionCases retention={vm.retention} />;
-    case 'retention':
-      return <DealRetentionSection deal={deal} retention={vm.retention} />;
-    case 'upsell':
-      return vm.stopped ? null : (
-        <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
-      );
-    case 'changes':
-      return vm.stopped ? null : (
-        <DealChangesSection role={vm.role} upsells={vm.upsells} cancel={vm.cancel} dispute={vm.dispute} />
-      );
-    case 'rating':
-      return <DealRatingSection rating={vm.rating} party={party} />;
-    case 'deliverables':
-      return vm.deliverables ? (
-        <DealDeliverables
-          items={vm.deliverables}
-          role={vm.role}
-          onOpen={vm.openItem}
-        />
-      ) : null;
-    case 'shipping':
-      return vm.stopped ? null : (
-        <DealShippingSection deal={deal} role={vm.role} shipping={vm.shipping} />
-      );
-    case 'stage':
-      return (
-        <StageSection
-          deal={deal}
-          vm={vm}
-          station={station}
-          funding={vm.funding}
-          events={vm.events}
-        />
-      );
-    case 'dossier':
-      return <DealDossier deal={deal} role={vm.role} />;
-    default: {
-      const _exhaustive: never = section;
-      return _exhaustive;
+      case 'dispute':
+        return vm.dispute.showCard ? (
+          <DealDisputeCard dispute={vm.dispute} role={vm.role} />
+        ) : null;
+      case 'retentionCases':
+        return vm.retention.cases.length > 0 ? (
+          <DealRetentionCases retention={vm.retention} />
+        ) : null;
+      case 'retention':
+        return vm.retention.hasLives ? (
+          <DealRetentionSection deal={deal} retention={vm.retention} />
+        ) : null;
+      case 'upsell':
+        return vm.stopped || !vm.upsells.pending ? null : (
+          <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
+        );
+      case 'changes':
+        return vm.stopped || !hasChanges(vm) ? null : (
+          <DealChangesSection role={vm.role} upsells={vm.upsells} cancel={vm.cancel} dispute={vm.dispute} />
+        );
+      case 'rating':
+        return vm.rating.view ? (
+          <DealRatingSection rating={vm.rating} party={party} />
+        ) : null;
+      case 'deliverables':
+        return vm.deliverables && vm.deliverables.length > 0 ? (
+          <DealDeliverables
+            items={vm.deliverables}
+            role={vm.role}
+            onOpen={vm.openItem}
+          />
+        ) : null;
+      case 'shipping':
+        return vm.stopped || !vm.shipping.view ? null : (
+          <DealShippingSection deal={deal} role={vm.role} shipping={vm.shipping} />
+        );
+      case 'stage':
+        return station.stages[vm.selected] ? (
+          <StageSection
+            deal={deal}
+            vm={vm}
+            station={station}
+            funding={vm.funding}
+            events={vm.events}
+          />
+        ) : null;
+      case 'dossier':
+        return <DealDossier deal={deal} role={vm.role} />;
+      default: {
+        const _exhaustive: never = section;
+        return _exhaustive;
+      }
     }
   }
+
+  const node = sectionContent();
+  if (!node) return null;
+  return <Box mb="xl">{node}</Box>;
 });
 
 /**
@@ -262,7 +286,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         }}
       >
         <Box px="xl" pt="2xl" pb="5xl">
-          <StaggerIn gap="2xl">
+          <StaggerIn>
             {sections.map(section => (
               <DetailSection
                 key={section}

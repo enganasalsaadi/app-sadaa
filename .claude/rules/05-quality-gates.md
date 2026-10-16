@@ -1,6 +1,9 @@
 # 05 — Quality Gates
 
-Done only when `npx tsc --noEmit && npm run lint && npm test` pass + `docs/mobile-architecture.md` updated when screen/flow/permission/business rule changed (rule 11).
+Gates in two tiers (output = errors only):
+- **While iterating:** `npx tsc --noEmit 2>&1 | grep -E "error TS" | head -30` · `npx eslint <changed files>` · `npx jest --findRelatedTests <changed files> --silent` (only when logic/tests touched).
+- **Done (end of phase / before commit), once:** `npx tsc --noEmit && npm run lint && npm test` all pass + docs per rule 11.
+- Required tests (§Tests) are written with the code, never deferred.
 
 ## Strict TS
 
