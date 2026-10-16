@@ -8046,9 +8046,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealsBoard.tsx": {
-    "mtime": 1792099535.1270165,
-    "seen": 1792158021.192559,
-    "ast_hash": "8f5a352af05a49801f191dd87fa85444",
+    "mtime": 1792173143.8572793,
+    "seen": 1792187139.928142,
+    "ast_hash": "1b9b686f7e4c1fa85dbf3d9299bda195",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealsListHeader.tsx": {
@@ -10248,9 +10248,9 @@
     "semantic_hash": ""
   },
   "src/shared/ui/MainTabBar/MainTabBar.tsx": {
-    "mtime": 1792165847.912662,
-    "seen": 1792166028.236471,
-    "ast_hash": "151bd51b66f2ac10cfbc6e49170e369d",
+    "mtime": 1792166453.372289,
+    "seen": 1792187139.928438,
+    "ast_hash": "703cd865308472f8dfcfaaac9ecae460",
     "semantic_hash": ""
   },
   "src/shared/ui/MainTabBar/MainTabItem.tsx": {
@@ -10281,6 +10281,24 @@
     "mtime": 1792165695.4151597,
     "seen": 1792166028.236475,
     "ast_hash": "b5ad6b84803e7bae7fdc11a71c796a5a",
+    "semantic_hash": ""
+  },
+  "docs/public campaigns/mobile-plan.md": {
+    "mtime": 1792186811.7723832,
+    "seen": 1792187139.928556,
+    "ast_hash": "121426034df89da5f2b5e9bf63a19532",
+    "semantic_hash": ""
+  },
+  "docs/public campaigns/mobile-steps.md": {
+    "mtime": 1792187102.4628193,
+    "seen": 1792187139.9285572,
+    "ast_hash": "e093c966a2247c5564f30e180993d8c3",
+    "semantic_hash": ""
+  },
+  "docs/public campaigns/public-campaigns.md": {
+    "mtime": 1792186820.6352074,
+    "seen": 1792187139.9285572,
+    "ast_hash": "1d461695923de9d2dbbd672aed759529",
     "semantic_hash": ""
   }
 }
