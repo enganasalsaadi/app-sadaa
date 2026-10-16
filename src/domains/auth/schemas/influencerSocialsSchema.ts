@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 import type { TFunction } from 'i18next';
 import type { SocialPlatform } from '@/shared/utils';
-import { FOLLOWER_TIERS } from '../store';
-import type { FollowerTierId } from '../store';
+import { FOLLOWER_TIERS, INFLUENCER_GENDERS } from '../store';
+import type { FollowerTierId, InfluencerGender } from '../store';
 import { INFLUENCER_MAX_NICHES } from '../constants/influencerOnboarding';
 
 const HANDLE_MAX_LENGTH = 255;
@@ -34,6 +34,8 @@ export interface PlatformAccountFormValues {
 export interface InfluencerSocialsFormValues {
   niches: string[];
   platforms: PlatformAccountFormValues[];
+  /** Optional; `null` = not told. */
+  gender: InfluencerGender | null;
 }
 
 /**
@@ -118,4 +120,5 @@ export const createInfluencerSocialsSchema = (
         list => new Set(list?.map(item => item.platform)).size === (list?.length ?? 0),
       )
       .required(),
+    gender: yup.mixed<InfluencerGender>().oneOf(INFLUENCER_GENDERS).nullable().default(null).defined(),
   });

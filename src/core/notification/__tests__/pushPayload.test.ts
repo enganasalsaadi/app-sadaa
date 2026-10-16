@@ -73,6 +73,27 @@ describe('parsePushPayload', () => {
     ).toEqual({ kind: 'strikes' });
   });
 
+  it('reads campaign links by id (Public Campaigns CM11), whatever the campaign push', () => {
+    expect(
+      parsePushPayload({
+        type: 'campaign_approved',
+        entity_id: '01JE7Q3RTV',
+        deep_link: 'sada://campaigns/01JE7Q3RTV',
+      }),
+    ).toEqual({ type: null, target: { kind: 'campaign', campaignId: '01JE7Q3RTV' } });
+  });
+
+  it.each([
+    ['a campaign without id', 'sada://campaigns/'],
+    ['the campaign list', 'sada://campaigns'],
+    ['the applicants sub-link of the plan', 'sada://campaigns/01JE7/applications'],
+    ['a campaign id with a path', 'sada://campaigns/01JE7/../x'],
+    ['a campaign id with a query', 'sada://campaigns/01JE7?x=1'],
+    ['an application link', 'sada://applications/01JE7'],
+  ])('ignores %s', (_label, deep_link) => {
+    expect(parsePushPayload({ deep_link }).target).toBeNull();
+  });
+
   it('keeps an unknown type as null but still reads the link', () => {
     expect(parsePushPayload({ type: 'deal_paid', deep_link: 'sada://kyc' })).toEqual({
       type: null,

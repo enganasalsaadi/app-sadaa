@@ -24,7 +24,7 @@ import { useAppSelector } from '@/core/store';
 import { selectIsAuthenticated } from '@/domains/auth';
 import { usePushNavigation } from '@/domains/notifications';
 import { useAppLinkNavigation } from '@/domains/identity';
-import { useDealPushRefresh } from '@/domains/marketplace';
+import { useCampaignPushRefresh, useDealPushRefresh } from '@/domains/marketplace';
 import { appLinkManager } from '@/core/linking';
 import { GlobalErrorModal } from '@/shared/ui/GlobalErrorModal';
 import { NetworkSnackbar } from '@/shared/ui/NetworkSnackbar';
@@ -39,6 +39,7 @@ const AppContent: React.FC = () => {
   useDeviceRegistration(isAuthenticated);
   usePushRefresh(isAuthenticated);
   useDealPushRefresh(isAuthenticated);
+  useCampaignPushRefresh(isAuthenticated);
   // Taps route only into the signed-in tabs; a launch tap waits for them.
   usePushNavigation(status === AppStatus.AUTHENTICATED);
   // `/c/{slug}` links open over the tabs or Login; other gates keep the link ≤ 30 s.

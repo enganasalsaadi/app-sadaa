@@ -214,4 +214,12 @@ export type {
   CampaignPageMeta,
   CampaignPage,
   ApplicantsPage,
+  CampaignListArgs,
+  CreatorFeedArgs,
+  CreatorApplicationsArgs,
+  CampaignActionPath,
+  CampaignActionBody,
+  CampaignActionRequest,
+  CampaignActionArgs,
+  CampaignActionResult,
 } from './campaign';

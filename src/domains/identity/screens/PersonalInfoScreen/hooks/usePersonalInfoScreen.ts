@@ -6,7 +6,11 @@ import { useDiscardGuard } from '@/core/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import { toastService } from '@/core/toast';
-import { formatPhoneForDisplay } from '@/domains/auth';
+import {
+  formatPhoneForDisplay,
+  isInfluencerGender,
+  useInfluencerGenderItems,
+} from '@/domains/auth';
 import {
   useGetUserProfileQuery,
   useUpdateInfluencerProfileMutation,
@@ -18,12 +22,20 @@ import {
 } from '../../../schemas/personalInfoSchema';
 import { toPersonalInfoForm, toPersonalInfoPatch } from '../../../utils/profilePatch';
 
-const EMPTY: PersonalInfoFormValues = { fullName: '', email: '', governorate: '', area: '', bio: '' };
+const EMPTY: PersonalInfoFormValues = {
+  fullName: '',
+  email: '',
+  governorate: '',
+  gender: '',
+  area: '',
+  bio: '',
+};
 
 const SERVER_FIELD_MAP = {
   full_name: 'fullName',
   email: 'email',
   governorate: 'governorate',
+  gender: 'gender',
   area: 'area',
   bio: 'bio',
 } as const satisfies Record<string, keyof PersonalInfoFormValues>;
@@ -34,11 +46,12 @@ export const usePersonalInfoScreen = () => {
   const schema = useMemo(() => createPersonalInfoSchema(t), [t]);
   const details = useGetUserProfileQuery();
   const governorates = useLookupItems('governorates');
+  const genderItems = useInfluencerGenderItems();
   const [updateProfile, { isLoading: isSaving }] = useUpdateInfluencerProfileMutation();
   const onContactSupport = useSupportContact();
   const [saved, setSaved] = useState(false);
 
-  const { control, handleSubmit, reset, setError, setFocus, formState } =
+  const { control, handleSubmit, reset, setError, setFocus, setValue, formState } =
     useForm<PersonalInfoFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
@@ -84,6 +97,13 @@ export const usePersonalInfoScreen = () => {
     })();
   }, [handleSubmit, savedValues, updateProfile, setError, t]);
 
+  const onChangeGender = useCallback(
+    (next: string) => {
+      if (isInfluencerGender(next)) setValue('gender', next, { shouldDirty: true });
+    },
+    [setValue],
+  );
+
   const focusEmail = useCallback(() => setFocus('email'), [setFocus]);
   const focusBio = useCallback(() => setFocus('bio'), [setFocus]);
 
@@ -97,6 +117,8 @@ export const usePersonalInfoScreen = () => {
   return {
     control,
     governorates,
+    genderItems,
+    onChangeGender,
     phone: phone ? formatPhoneForDisplay(phone) : '',
     onContactSupport,
     focusEmail,

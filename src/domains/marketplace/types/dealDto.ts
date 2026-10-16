@@ -399,6 +399,8 @@ export interface CreatorDealSummaryDto {
     items: CreatorActiveDealDto[];
   } | null;
   counts: { new_offers: number; pending_upsells: number; live_strikes: number };
+  /** Contract §6.3: `null` = flag off. Only presence is read here; the strip comes with the feed step. */
+  campaigns?: { feed_count: number; new_invites: number; open_applications: number } | null;
 }
 
 export interface DealStrikeDto {

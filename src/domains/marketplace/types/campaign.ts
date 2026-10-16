@@ -498,3 +498,54 @@ export interface ApplicantsPage extends CampaignPage<ApplicantCard> {
   counts: Record<ApplicantCountKey, number>;
   recruiting: CampaignRecruiting | null;
 }
+
+/** Brand list tabs send the statuses of the group (`CAMPAIGN_TAB_STATUSES`). */
+export interface CampaignListArgs {
+  statuses?: CampaignStatus[];
+}
+
+/** Server-side feed filters only; the API has no platform / price / shipping filters (plan §0). */
+export interface CreatorFeedArgs {
+  activityTypes?: CampaignActivityType[];
+  pricingModel?: CampaignPricingModel | null;
+}
+
+export interface CreatorApplicationsArgs {
+  statuses?: ApplicationStatus[];
+}
+
+/** Lifecycle actions answering the full campaign (contract §3.3), relative to `/brand/campaigns/{id}`. */
+export type CampaignActionPath =
+  | 'submit'
+  | 'seats'
+  | 'seats/reopen'
+  | 'seats/reduce'
+  | 'deadline'
+  | 'reopen'
+  | 'zero-applicants/extend'
+  | 'cancel'
+  | 'close'
+  | 'duplicate';
+
+/** Wire body of a lifecycle action: `seats` is a count, the deadline an ISO time with offset. */
+export interface CampaignActionBody {
+  seats?: number;
+  apply_deadline_at?: string;
+  reason?: string;
+}
+
+export interface CampaignActionRequest {
+  body?: CampaignActionBody;
+}
+
+export interface CampaignActionArgs extends CampaignActionRequest {
+  id: string;
+  path: CampaignActionPath;
+  idempotencyKey?: string;
+}
+
+/** `wallet` only comes with `submit` (low balance = a warning banner, never a block). */
+export interface CampaignActionResult {
+  campaign: CampaignDetail;
+  wallet: CampaignWallet | null;
+}

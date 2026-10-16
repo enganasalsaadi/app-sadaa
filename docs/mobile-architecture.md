@@ -8,8 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-16 | Bottom tab bar redesign (🟡 not yet device-tested): docked, main screens only, teal rail. Before that: Creator Home «Your turn» (🟡 not yet device or live-server tested): a deals section on the creator Home, a held-money line and an ID-check nudge, plus a badge on the Deals tab. | 5.2, 5.3 (Journeys A4, F) |
-| 2026-10-15 |
+| **Last updated** | 2026-10-17 | Public campaigns foundation (🟡 not yet device or live-server tested): campaign pages and the notification link are wired as "coming soon" placeholders, creators get an Opportunities tab, and an optional gender choice is added. The brand campaign wizard is designed and approved, not built. Before that: Bottom tab bar redesign (🟡 not yet device-tested). |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -337,7 +336,8 @@ APP LAUNCH
     │   the tab being pressed 🟡)                                                    ✅
     │   Five tabs, different per role:
     │     brand:   Home · My campaigns · Messages · Wallet · Account
-    │     creator: Home · Deals · Messages · Wallet · My profile
+    │     creator: Home · Deals · Opportunities · Wallet · My profile
+    │       (Opportunities takes the place of Messages while the service has campaigns open)
     ├── Home (creator) dashboard                                 🟡 built, awaiting device and live-server testing
     │     "Storefront": navy hero: greeting + name (beside the bell) · open / closed dot
     │       · tilted pass card (photo or add-photo slot, name, verified, tier, handle,
@@ -430,6 +430,8 @@ APP LAUNCH
     │     └── Strikes (creator only): active count · one fuse card per
     │           strike with days left · clean-record state            🟡 built
     ├── Messages tab                                             🟡 "coming soon" page   🔜
+    ├── Opportunities tab (creator)                              🟡 "coming soon" page; open campaigns arrive in a later phase   🔜
+    │     └── Campaign page (brand: from My campaigns · creator: from Opportunities)  🟡 "coming soon" placeholder, opened by the notification link
     ├── Wallet tab (same layout, each role's own words)          🟡 built, awaiting device and live-server testing
     │     balance dial on the navy hero (eye hides every amount) · the one blocker
     │     · money held in escrow as tickets · payout method (creator) · monthly tide
@@ -469,7 +471,7 @@ APP LAUNCH
           └── Delete my account (password-confirmed)             ✅
 ```
 
-**Planned tabs 🔜:** brands and creators will get **separate tab sets** suited to their jobs, for example *Home · Campaigns · Deals · Wallet · Profile* for brands and *Home · Opportunities · Deals · Wallet · Profile* for creators. Tabs for analytics, messages and notifications follow as those features arrive.
+**Tabs and campaigns 🟡:** brands and creators have **separate tab sets**. Brands: *Home · My campaigns · Messages · Wallet · Account*; the My campaigns tab will later split into «My campaigns | My deals». Creators: *Home · Deals · Opportunities · Wallet · My profile*. Messages stays brand-only for now. Tabs for analytics and notifications follow as those features arrive.
 
 ### 5.3 Core journeys in plain English
 
@@ -488,6 +490,7 @@ APP LAUNCH
      - **Too many lookups:** "Try again in X minutes", and manual entry is still allowed.
    - **Manually chosen tiers are marked "Under review"** until the Sada team approves them. They still count for applying to campaigns, and brands see the "under review" label.
    - The creator can mark one platform as **primary**. If they don't, Sada uses their biggest account.
+   - **Gender (optional).** The same step asks for the creator's gender (male or female) or lets them skip it. It is saved with the platforms and only matters for campaigns that target one gender; without it, those campaigns tell the creator what is missing.
    - Unsaved platform entries are kept on the device, so closing the app doesn't lose the work.
 4. **Set prices (optional).** For each linked platform the app lists the services Sada offers there (for example reel, story, feed post on Instagram), plus in-person services such as an on-site visit. The creator ticks what they offer, picks the package (for example story frames or video length) and sets a price between $5 and $50,000. Delivery time, revisions and the rest take sensible defaults they can change later from My prices. They can skip this step: like every optional registration step, the skip button sits in the fixed bottom bar under the main button, with a one-line note above it, so it is always visible without scrolling.
 5. **Verify identity (optional).** They upload the front and back of their national ID (photo or PDF, up to 10 MB). Skipping is allowed (same always-visible skip button in the bottom bar) and registration still completes. Verification raises trust with brands.
@@ -506,7 +509,7 @@ APP LAUNCH
 
 #### Journey A3: Editing your own details (different for creators and brands) 🟡
 - **Creators and brands edit different things.** The edit button in the Profile header, and the matching "complete your profile" cards, open the right page for the role.
-- **Creator, "Personal info":** full name, email (optional), governorate, area (optional) and a short bio (optional, up to 300 characters, with a live counter). The bio is public on the media kit, so it can't carry contact details: links, @handles, emails and phone numbers (also written in Arabic digits, with spaces or as "dot com") are flagged under the field as the creator types, and the service has the final say when saving. Everything opens filled in with what is saved.
+- **Creator, "Personal info":** full name, email (optional), governorate, gender (optional, male or female), area (optional) and a short bio (optional, up to 300 characters, with a live counter). The bio is public on the media kit, so it can't carry contact details: links, @handles, emails and phone numbers (also written in Arabic digits, with spaces or as "dot com") are flagged under the field as the creator types, and the service has the final say when saving. Everything opens filled in with what is saved.
 - **Brand, "Company info":** company name, email, business type, governorate and social links (Instagram, Facebook, TikTok first, the rest behind "More links"). Links are checked against each platform's real addresses, like at registration. Email changes apply at once.
 - **Brand, "Show my brand on creators' profiles" (🟡, My profile, under Company):** one switch, on by default. When a creator lists the brands they have worked with on their media kit, a brand that turned this off is left out of the list (it still counts in the creator's total). The switch changes at once and goes back with a short message if the save fails; if the setting can't load, a retry is offered instead of showing a guessed value. Creators never see this row. No visible effect yet: "worked with" stays hidden until deals go live.
 - **The phone number can't be changed in the app**, because it is the account's identity. It is shown locked, with a "contact support to change your number" link that opens WhatsApp with a ready message.
@@ -680,6 +683,13 @@ Every status shows the server's own wording with an icon and colour, never colou
 Deal notifications lead somewhere safe: every deal notice (and the matching inbox entry) opens that deal in the deals tab with the deal board underneath, and a "strikes cleared" notice opens the creator's strikes. A deal notice only says something changed, so receiving or tapping one reloads that deal, the deal lists, its history, the brand Home, the money held in escrow and the creator's strikes; a "strikes cleared" notice reloads the strikes alone.
 
 Deal files (drafts, publishing screenshots, brief files, dispute evidence, keep-up reports) all go up the same way, built and tested ahead of the screens: the app checks type and size on the phone first (video MP4, MOV or WebM up to 300 MB; JPG, PNG or WebP photos up to 20 MB; PDF up to 20 MB where allowed, e.g. brief and evidence; publishing and keep-up proofs are photos only), then sends the original file straight to secure storage with a live progress bar. Each file uploads on its own, can be removed or retried, and stops cleanly if the user leaves the screen. Nothing is compressed.
+
+#### Journey F2: Public campaigns 🟡 foundation built, brand wizard designed (not built)
+A brand can publish one campaign that many creators apply to, instead of asking creators one by one. Creators see it in their Opportunities tab, apply with their own price or the fixed one, and each chosen creator gets a normal direct deal. Today only the plumbing is in the app; nothing here is usable yet.
+- **Built (🟡):** the app understands campaign states, prices and a campaign notification or link opens the campaign page for each role (a "coming soon" page). If the service says campaigns are closed, the Opportunities tab goes back to the Messages page.
+- **Designed and approved, not built 🔜 (the brand campaign wizard):** four steps with the same header and step capsules as the offer builder, the campaign name replacing the title. (1) Idea: name, kind of activity, short teaser. (2) Required: the work wanted from each creator, who it is for, and one question for shipping with three choices: no product, product without return (a gift), or product with return (a sample). Choosing a product widens the gap before the drop from 5 to 10 days. (3) Money and seats: how creators are paid, the price, the number of creators and the apply deadline; the figure shown is what the creator receives, with the total and Sada's fee beside it, and the "maximum hold" estimate only appears from this step. (4) Review: every field with a warning on anything missing, and an optional private brief (hashtags, links, promo code) that creators only see after the campaign is funded. A floating "Preview" button shows the creator's card. The draft saves by itself; up to 20 drafts.
+- **After sending (designed):** an "under review" screen, and a "changes requested" state that shows the team's note and takes the brand back to the step to fix. A resume sheet opens only when picking a previous draft or an incomplete-draft notification; "New campaign" goes straight to step 1.
+- **Not enough balance is a warning, not a block:** the brand can send the campaign and fund it later.
 
 #### Journey G: Deleting an account ✅
 - **Where:** "Delete my account" is in Settings, on the Suspended screen, and in the header of every registration step. Anyone who can create an account can delete it, even halfway through registration or while suspended (an Apple requirement).
@@ -875,7 +885,7 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 - 🟡 Opening a creator's shared link inside the app (their public profile, with a counted view, prices locked with the next step for anyone who isn't a verified brand): built, awaiting testing. Web links need Sada's permanent public web address and the app's identity registered with it.
 
 **🔜 Then: marketplace core (the revenue engine)**
-- Campaign Brief Builder, open campaigns, applications and direct offers.
+- Campaign Brief Builder, open campaigns, applications and direct offers. 🟡 Public campaigns: foundation (states, service connection, tabs, notification link, creator gender) built; the brand wizard is designed and approved, the rest comes phase by phase.
 - Smart matching, hyper-local filters, compare up to 3 creators.
 - Offer, accept or negotiate, and the full deal pipeline with in-app draft review.
 - Proof-of-publishing submission and verification.
@@ -922,6 +932,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-17 | Public campaigns foundation (🟡 not yet device or live-server tested): campaign pages and the notification link wired as "coming soon" placeholders for both roles, a new Opportunities tab for creators (replacing Messages while campaigns are open), an optional gender choice in creator registration and Personal info. The brand campaign wizard is designed and approved (four steps, one three-choice shipping question, review, changes requested, resume sheet) but not built. | Header, 5.2, 5.3 (Journeys A, A3, new F2), 7.3 |
 | 2026-10-16 | New bottom tab bar for both roles (🟡 not yet device-tested): docked at the bottom edge so it never covers the page, shown only on each tab's main screen (every inner screen and deep-linked detail hides it), icon and name on every tab, the active tab in a teal squircle under a teal rail that stretches toward the tab under the finger and catches up when it opens. Only part of the iPhone home-bar space is kept under it; Android keeps the full navigation-bar space; hidden while the Android keyboard is open. | 5.2 |
 | 2026-10-16 | Creator Home «Your turn» built (🟡 not yet device or live-server tested): the deals waiting on the creator as swipeable action cards with time left, counters for new offers, add-ons and active strikes, welcome and quiet cards; a «Held for you» money line (hidden amounts respected) that opens the Wallet; an ID-check nudge when there is money to withdraw but identity isn't verified; a badge on the Deals tab for waiting deals. | 5.2, 5.3 (Journeys A4, F) |
 | 2026-10-16 | Deal loose ends (🟡 not yet device or live-server tested): a teal handshake disc on every creator row in Explore and the Shortlist opens the offer builder for that creator (same pre-check as the public profile); the creator deal board shows an amber strikes strip (active count, days until the soonest clears, opens the strikes page) only while a strike is active. Notifications text corrected: the strikes page is built and strikes reload with every deal notice. | 5.2, 5.3 (Journeys A4c, A4d, F, notifications) |
@@ -931,4 +942,3 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 | 2026-10-15 | Product shipping built (🟡 not yet device or live-server tested): a waybill card on the deal page (courier, big tracking number with copy, barcode, track link opened only when https, day 1–7 counter toward the delay report, green «received» stamp); delivery address asked when signing a deal with a product (prefilled from the last one, changeable until it ships, shown to the brand only while shipping); brand ship / edit / re-ship / cancel with refund; creator hold to confirm receipt, problem report with 1–5 photos, free cancel when the server opens it. | 4.5, 5.3 (Journey F) |
 | 2026-10-15 | Brand Home «your deals» built (🟡 not yet device or live-server tested): under the money line, a navy «your next step» card per deal waiting on the brand (who, the work and price, the service's action in large type, time left, one button naming the action that opens the deal; «1 of 3», arrow or swipe for the next with the next card peeking behind), a calm «all smooth» card when nothing waits, and every other open deal as a row on an Agree ← Prepare ← Publish ← Done tracker (red at a dispute, «All your deals (n)» when more exist). No open deal shows a welcome with «Discover creators»; loading shows a matching skeleton; a Home failure just hides the section. The next-step card from the service moved up under the money line. The brands' deals tab shows an amber count of the deals waiting on them. | 5.2, 5.3 (Journey A4b) |
 | 2026-10-15 | Mutual rating built (🟡 not yet device or live-server tested): a completed deal invites each side to rate the other blind for 7 days, one question card at a time (five tall score pads, back and skip on the card), then a summary with an optional note and «seal»; the seal presses onto your envelope beside the other side's waiting one with a clock until they open. Skipping asks first (it is final). After the reveal, what was said about you comes first with bars and the note; your own rating is a row that opens. | 5.3 (Journey F) |
-| 2026-10-15 | Creator «post handed in» screen polished (🟡 not yet device-tested): the navy background now runs to the bottom edge of the phone, the summary sits centred with the back button just above the home bar (scrolls on short screens and large text), the time bar is a plain progress line (no handle that looked draggable), the link opens the post on its platform (known platforms only), the screenshots show as thumbnails that open full screen, and a Latin brand name no longer scrambles the Arabic sentence. | 5.3 (Journey F) |

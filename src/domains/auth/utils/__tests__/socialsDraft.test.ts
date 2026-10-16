@@ -12,7 +12,11 @@ const account = {
 describe('parseSocialsDraft', () => {
   it('restores a draft saved for the same phone', () => {
     const raw = JSON.stringify({ phone: PHONE, niches: ['beauty'], platforms: [account] });
-    expect(parseSocialsDraft(raw, PHONE)).toEqual({ niches: ['beauty'], platforms: [account] });
+    expect(parseSocialsDraft(raw, PHONE)).toEqual({
+      niches: ['beauty'],
+      platforms: [account],
+      gender: null,
+    });
   });
 
   it('ignores a draft from another registration', () => {
@@ -26,7 +30,11 @@ describe('parseSocialsDraft', () => {
       niches: ['beauty', 3],
       platforms: [account, { platform: 'website', handle: 'x', followerTier: 'NANO' }, null],
     });
-    expect(parseSocialsDraft(raw, PHONE)).toEqual({ niches: ['beauty'], platforms: [account] });
+    expect(parseSocialsDraft(raw, PHONE)).toEqual({
+      niches: ['beauty'],
+      platforms: [account],
+      gender: null,
+    });
   });
 
   it('migrates drafts saved before the handle rename as manual tiers', () => {
@@ -42,6 +50,13 @@ describe('parseSocialsDraft', () => {
     const manual = { ...found, platform: 'tiktok', tierSource: 'manual' };
     const raw = JSON.stringify({ phone: PHONE, niches: [], platforms: [found, manual] });
     expect(parseSocialsDraft(raw, PHONE)?.platforms).toEqual([found]);
+  });
+
+  it('restores a valid gender and drops an unknown one', () => {
+    const draft = (gender: unknown) =>
+      JSON.stringify({ phone: PHONE, niches: [], platforms: [], gender });
+    expect(parseSocialsDraft(draft('female'), PHONE)?.gender).toBe('female');
+    expect(parseSocialsDraft(draft('other'), PHONE)?.gender).toBeNull();
   });
 
   it('survives corrupt JSON and missing input', () => {

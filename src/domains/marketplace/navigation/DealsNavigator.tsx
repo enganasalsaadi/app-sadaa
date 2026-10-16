@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { DealsStackParamList } from '@/core/navigation';
+import { BrandCampaignDetailScreen } from '../screens/BrandCampaignDetailScreen';
 import { BrandDealDetailScreen } from '../screens/BrandDealDetailScreen';
 import { BrandDealsScreen } from '../screens/BrandDealsScreen';
 import { CreatorDealDetailScreen } from '../screens/CreatorDealDetailScreen';
@@ -23,7 +24,7 @@ const CreatorContract: React.FC = () => <DealContractScreen role="creator" />;
 const BrandDispute: React.FC = () => <DealDisputeScreen role="brand" />;
 const CreatorDispute: React.FC = () => <DealDisputeScreen role="creator" />;
 
-/** Brand `DealsTab` (rule 01: MainTabs picks the role's navigator, screens never branch on it); reviews draft rounds (P6), verifies live posts (P7), adds to a running deal (M8) and follows its dispute (P9.1). */
+/** Brand `DealsTab` (rule 01: MainTabs picks the role's navigator, screens never branch on it); reviews draft rounds (P6), verifies live posts (P7), adds to a running deal (M8), follows its dispute (P9.1) and opens its campaigns (Public Campaigns). */
 export const BrandDealsNavigator: React.FC = () => (
   <Stack.Navigator screenOptions={SCREEN_OPTIONS}>
     <Stack.Screen name="Deals" component={BrandDealsScreen} />
@@ -33,6 +34,7 @@ export const BrandDealsNavigator: React.FC = () => (
     <Stack.Screen name="DealPublicationReview" component={DealPublicationReviewScreen} />
     <Stack.Screen name="DealUpsellBuilder" component={DealUpsellBuilderScreen} />
     <Stack.Screen name="DealDispute" component={BrandDispute} />
+    <Stack.Screen name="CampaignDetail" component={BrandCampaignDetailScreen} />
   </Stack.Navigator>
 );
 

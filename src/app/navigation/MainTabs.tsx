@@ -10,6 +10,7 @@ import type { ParseKeys } from 'i18next';
 import {
   Briefcase,
   CircleUser,
+  Compass,
   House,
   IdCard,
   Megaphone,
@@ -26,7 +27,9 @@ import {
   BrandHomeNavigator,
   CreatorDealsNavigator,
   CreatorHomeNavigator,
+  CreatorOpportunitiesNavigator,
   useBrandDealsBadge,
+  useCampaignsEnabled,
   useCreatorDealsBadge,
 } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
@@ -60,13 +63,31 @@ const BRAND_TABS: readonly MainTabDef[] = [
   { name: 'SettingsTab', titleKey: 'tabs.account', icon: CircleUser, component: SettingsNavigator },
 ];
 
-const CREATOR_TABS: readonly MainTabDef[] = [
+const MESSAGES_TAB: MainTabDef = {
+  name: 'MessagesTab',
+  titleKey: 'tabs.messages',
+  icon: MessageCircle,
+  component: MessagesPlaceholder,
+};
+
+/** The creator's third tab: public campaigns, or the Messages placeholder once the server says they're off. */
+const OPPORTUNITIES_TAB: MainTabDef = {
+  name: 'OpportunitiesTab',
+  titleKey: 'tabs.opportunities',
+  icon: Compass,
+  component: CreatorOpportunitiesNavigator,
+};
+
+const creatorTabs = (thirdTab: MainTabDef): readonly MainTabDef[] => [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: CreatorHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: CreatorDealsNavigator },
-  { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
+  thirdTab,
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: CreatorWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },
 ];
+
+const CREATOR_TABS_WITH_CAMPAIGNS = creatorTabs(OPPORTUNITIES_TAB);
+const CREATOR_TABS_WITHOUT_CAMPAIGNS = creatorTabs(MESSAGES_TAB);
 
 // Same docked bar for both roles; it shows only while the focused tab sits on its main screen.
 const renderTabBar = (props: BottomTabBarProps) => {
@@ -104,7 +125,13 @@ export const MainTabs: React.FC = () => {
   const { t } = useTranslation();
   const userType = useAppSelector(selectUserType);
   const isCreator = userType === 'influencer';
-  const tabs = isCreator ? CREATOR_TABS : BRAND_TABS;
+  // Hidden only once the server says campaigns are off: while the answer is loading (`null`) the
+  // tab stays, so a push tap on a cold start still finds its stack.
+  const campaignsOff = useCampaignsEnabled('creator') === false;
+  let tabs = BRAND_TABS;
+  if (isCreator) {
+    tabs = campaignsOff ? CREATOR_TABS_WITHOUT_CAMPAIGNS : CREATOR_TABS_WITH_CAMPAIGNS;
+  }
   // Deals waiting on the viewer (0 hides it): brand from the cached Brand Home, creator from its
   // own summary read.
   const brandDealsBadge = useBrandDealsBadge();

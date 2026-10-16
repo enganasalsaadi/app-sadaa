@@ -19,6 +19,7 @@ import {
   INFLUENCER_WIZARD_STEPS,
 } from '../../../constants/influencerOnboarding';
 import { useFollowerTierOptions } from '../../../hooks/useFollowerTierOptions';
+import { useInfluencerGenderItems } from '../../../hooks/useInfluencerGenderItems';
 import { useInfluencerOnboardingFlow } from '../../../hooks/useInfluencerOnboardingFlow';
 import {
   createInfluencerSocialsSchema,
@@ -31,7 +32,7 @@ import type {
   InfluencerSocialsFormValues,
   PlatformAccountFormValues,
 } from '../../../schemas';
-import { selectPendingPhone } from '../../../store';
+import { isInfluencerGender, selectPendingPhone } from '../../../store';
 import type { InfluencerOnboardingProgress } from '../../../store';
 import { platformRowErrors } from '../../../utils/socialLookup';
 import { socialsDraftStorage } from '../../../utils/socialsDraft';
@@ -60,7 +61,8 @@ const fromServer = (
         ]
       : [];
   });
-  return niches.length || platforms.length ? { niches, platforms } : null;
+  const gender = isInfluencerGender(profile?.gender) ? profile.gender : null;
+  return niches.length || platforms.length ? { niches, platforms, gender } : null;
 };
 
 interface SheetState {
@@ -80,7 +82,7 @@ export const useInfluencerSocialsScreen = () => {
   const [defaultValues] = useState<InfluencerSocialsFormValues>(
     () =>
       fromServer(progress?.profile) ??
-      socialsDraftStorage.load(draftOwner) ?? { niches: [], platforms: [] },
+      socialsDraftStorage.load(draftOwner) ?? { niches: [], platforms: [], gender: null },
   );
 
   const { control, handleSubmit, setError, setValue, formState } =
@@ -91,13 +93,15 @@ export const useInfluencerSocialsScreen = () => {
     });
   const niches = useWatch({ control, name: 'niches' });
   const platforms = useWatch({ control, name: 'platforms' });
+  const gender = useWatch({ control, name: 'gender' });
 
   useEffect(() => {
-    if (draftOwner) socialsDraftStorage.save(draftOwner, { niches, platforms });
-  }, [draftOwner, niches, platforms]);
+    if (draftOwner) socialsDraftStorage.save(draftOwner, { niches, platforms, gender });
+  }, [draftOwner, niches, platforms, gender]);
 
   const nicheItems = useLookupItems('niches');
   const tiers = useFollowerTierOptions();
+  const genderItems = useInfluencerGenderItems();
   const { data: lookups } = useGetLookupsQuery();
   const lookupPlatforms = lookups?.social_platforms;
   const supportsLookup = useCallback(
@@ -198,6 +202,13 @@ export const useInfluencerSocialsScreen = () => {
     [formState.isSubmitted, setValue],
   );
 
+  const onChangeGender = useCallback(
+    (next: string) => {
+      if (isInfluencerGender(next)) setValue('gender', next, { shouldDirty: true });
+    },
+    [setValue],
+  );
+
   const onSubmit = useCallback(() => {
     handleSubmit(async values => {
       setRowErrors({});
@@ -205,6 +216,7 @@ export const useInfluencerSocialsScreen = () => {
         () =>
           saveSocials({
             niches: values.niches,
+            ...(values.gender ? { gender: values.gender } : {}),
             // Any known tier is sent: the server ignores it when it holds
             // lookup data, and needs it otherwise (contract §5.2).
             platforms: values.platforms.map(account => ({
@@ -233,6 +245,9 @@ export const useInfluencerSocialsScreen = () => {
   return {
     niches,
     onChangeNiches,
+    gender,
+    genderItems,
+    onChangeGender,
     nicheItems,
     maxNiches: INFLUENCER_MAX_NICHES,
     nichesError: formState.errors.niches?.message,

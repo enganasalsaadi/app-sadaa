@@ -1,14 +1,13 @@
 import type {
   ApplicantCardDto,
   ApplicantsPageDto,
-  CampaignDetailDto,
-  CampaignFileDto,
   CampaignHistoryRowDto,
   CampaignQuoteDto,
   CampaignRecruitingDto,
   CreatorApplicationDto,
   CreatorCampaignDetailDto,
 } from '../../types/campaignDto';
+import { detailDto, fileDto, label, seatsDto, T0 } from '../__fixtures__/campaignDto';
 import {
   mapApplicantCard,
   mapApplicantsPage,
@@ -23,96 +22,9 @@ import {
   mapCreatorCampaignDetail,
 } from '../campaignMappers';
 
-const T0 = '2026-10-17T09:00:00+03:00';
 const T0_MS = Date.UTC(2026, 9, 17, 6);
 const HOUR = 3_600_000;
 const usd = (amount: number) => ({ amount, currency: 'USD' });
-// The wire key is `left`; the RTL lint bans it as a plain object key, so build it computed.
-const seatsDto = (total: number, free: number) => ({ total, ['left']: free });
-const label = (key: string) => ({ key, label: `L:${key}` });
-
-const fileDto = (overrides: Partial<CampaignFileDto> = {}): CampaignFileDto => ({
-  id: 'f1',
-  purpose: 'cover',
-  kind: 'image',
-  name: 'cover.jpg',
-  mime: 'image/jpeg',
-  size: 1024,
-  sha256: null,
-  status: 'ready',
-  url: 'https://cdn/x',
-  ...overrides,
-});
-
-const detailDto = (overrides: Partial<CampaignDetailDto> = {}): CampaignDetailDto => ({
-  id: 'c1',
-  status: label('open'),
-  title: 'Ramadan launch',
-  activity_type: label('restaurant_cafe'),
-  teaser: { requirements: 'Post a reel' },
-  cover: fileDto(),
-  pricing: {
-    model: label('fixed'),
-    seat_price_usd: '100.00',
-    bid_min_usd: null,
-    bid_max_usd: null,
-    budget_usd: '800.00',
-  },
-  seats_total: 5,
-  shipping_mode: label('gift'),
-  delivery_days: null,
-  drop_at: '2026-11-01T20:00:00+03:00',
-  drop: {
-    draft_due_at: '2026-10-29T20:00:00+03:00',
-    publish_opens_at: '2026-11-01T19:45:00+03:00',
-    min_gap_hours: 240,
-    latest_apply_deadline_at: '2026-10-22T20:00:00+03:00',
-  },
-  apply_deadline_at: T0,
-  deliverables: [
-    {
-      id: 'd1',
-      platform: label('instagram'),
-      service: label('reel'),
-      count: 2,
-      revisions: 1,
-      addons: ['link_in_bio'],
-    },
-  ],
-  targeting: { genders: ['female', 'other'], min_followers: 5000, cities: ['damascus'], niches: ['food'] },
-  budget_secured: true,
-  counters: { applications_open: 3, seats_occupied: 1 },
-  seat_freed: { free_seats: 1, reducible: 1, options: ['replace', 'reduce', 'bogus'], deadline_passed: false },
-  review_note: null,
-  duplicated_from_id: null,
-  missing: [],
-  published_at: T0,
-  created_at: T0,
-  updated_at: T0,
-  timers: {
-    accepting_applications: true,
-    deadline_passed: false,
-    ghost: { warns_at: T0, suspends_at: '2026-10-17T12:00:00+03:00' },
-    suspension: { ends_at: null, reopen_needs_deadline: true },
-    zero_applicants: {
-      decide_by: T0,
-      extend_available: true,
-      extend_to: '2026-10-21T09:00:00+03:00',
-      options: ['edit', 'extend', 'cancel'],
-    },
-  },
-  private_brief: {
-    hashtags: ['#a'],
-    mentions: ['@b'],
-    talking_points: ['hi'],
-    donts: [],
-    links: ['https://x.com'],
-    promo_code: 'SADA10',
-    tracking_link: null,
-  },
-  attachments: [fileDto({ id: 'f2', purpose: 'brief' })],
-  ...overrides,
-});
 
 describe('mapCampaignDetail', () => {
   it('parses money to USD minor units and timestamps to ms', () => {

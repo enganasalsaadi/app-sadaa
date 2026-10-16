@@ -200,4 +200,5 @@ export const mapBrandHome = (dto: BrandHomeDto): BrandHome => ({
     allowed: dto.capabilities.view_prices.allowed,
     reason: toPriceLockReason(dto.capabilities.view_prices.reason),
   },
+  campaignsEnabled: dto.active_campaigns != null,
 });

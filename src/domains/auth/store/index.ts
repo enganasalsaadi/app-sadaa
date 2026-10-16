@@ -43,6 +43,7 @@ export type {
   InfluencerStep1Request,
   InfluencerStep1Response,
   FollowerTierId,
+  InfluencerGender,
   InfluencerStep2Platform,
   PlatformResource,
   SocialLookupProfile,
@@ -71,4 +72,9 @@ export type {
   RateCardInput,
   RateCardPatch,
 } from './rateCardTypes';
-export { FOLLOWER_TIERS, PROFILE_STEP_KEYS } from './authTypes';
+export {
+  FOLLOWER_TIERS,
+  INFLUENCER_GENDERS,
+  isInfluencerGender,
+  PROFILE_STEP_KEYS,
+} from './authTypes';

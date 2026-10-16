@@ -42,6 +42,7 @@ export type PushTarget =
   | { kind: 'topUp'; topUpId: string }
   | { kind: 'withdrawal'; withdrawalId: string }
   | { kind: 'deal'; dealId: string }
+  | { kind: 'campaign'; campaignId: string }
   | { kind: 'strikes' };
 
 export interface ParsedPush {
@@ -80,6 +81,10 @@ const parseDeepLink = (link: unknown): PushTarget | null => {
   if (route === 'strikes' && id === undefined) return { kind: 'strikes' };
   if (route === 'deals' && id !== undefined && ENTITY_ID.test(id)) {
     return { kind: 'deal', dealId: id };
+  }
+  // Only the bare campaign link is sent; the applicants / drop sub-links of the plan don't exist (CM11).
+  if (route === 'campaigns' && id !== undefined && ENTITY_ID.test(id)) {
+    return { kind: 'campaign', campaignId: id };
   }
   if (route === 'platforms' && id !== undefined && ENTITY_ID.test(id)) {
     return { kind: 'platform', platformId: id };

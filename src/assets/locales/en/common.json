@@ -132,6 +132,8 @@
         "nichesHint": "Pick up to {{count}} that describe your content.",
         "platforms": "Your accounts",
         "platformsHint": "Add at least one account. Pick the follower range that fits today.",
+        "gender": "Gender",
+        "genderHint": "Some brands run campaigns for one gender. We only use this to check which campaigns you can apply to.",
         "addPlatform": "Add a platform",
         "editAccount": "Edit {{platform}} account",
         "removeAccount": "Remove {{platform}} account",
@@ -338,6 +340,10 @@
     "brandName": "Sada",
     "tagline": "Trust in every deal",
     "optional": "Optional",
+    "gender": {
+      "male": "Male",
+      "female": "Female"
+    },
     "replaceFile": "Replace file",
     "stepOf": "Step {{current}} of {{total}}",
     "fileSize": {
@@ -416,6 +422,7 @@
     "explore": "Explore",
     "campaigns": "Campaigns",
     "deals": "Deals",
+    "opportunities": "Opportunities",
     "messages": "Messages",
     "wallet": "Wallet",
     "account": "Account",
@@ -560,6 +567,8 @@
       "fullNamePlaceholder": "Your name as brands will see it",
       "email": "Email (optional)",
       "emailPlaceholder": "name@example.com",
+      "genderSection": "Gender",
+      "genderHint": "Some brands run campaigns for one gender. We only use this to check which campaigns you can apply to.",
       "locationSection": "Location",
       "governorate": "Governorate",
       "area": "Area (optional)",
@@ -1314,6 +1323,9 @@
     "days": "{{count}} days"
   },
   "marketplace": {
+    "campaign": {
+      "detailTitle": "Campaign"
+    },
     "deal": {
       "phase": {
         "offer": "Offer",

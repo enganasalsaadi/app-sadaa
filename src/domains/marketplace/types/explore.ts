@@ -131,6 +131,8 @@ export interface BrandHomeDto {
     total_count: number;
     items: BrandActiveDealDto[];
   } | null;
+  /** Contract §6.1: `null` = flag off or nothing active. Only presence is read here; the rail comes with the home strips. */
+  active_campaigns?: { needs_action_count: number; total_count: number } | null;
   rails: {
     key: string;
     title: string;
@@ -251,6 +253,8 @@ export interface BrandHome {
   /** Allow-listed WhatsApp link, else `null` (card hidden). */
   supportWhatsappUrl: string | null;
   viewPrices: { allowed: boolean; reason: PriceLockReason | null };
+  /** Public Campaigns flag (contract §1.2): `active_campaigns` is `null` while it is off. */
+  campaignsEnabled: boolean;
 }
 
 export interface SetShortlistedArgs {

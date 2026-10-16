@@ -1,4 +1,4 @@
-import type { BrandSocialLink, PlatformResource, User } from '@/domains/auth';
+import type { BrandSocialLink, InfluencerGender, PlatformResource, User } from '@/domains/auth';
 
 /** `GET /user/profile` influencer `profile` (contract §3.2). */
 export interface InfluencerProfileDetails {
@@ -6,6 +6,8 @@ export interface InfluencerProfileDetails {
   governorate: string | null;
   governorate_label: string | null;
   area: string | null;
+  /** `null` on accounts created before the field existed. */
+  gender: InfluencerGender | null;
   /** Public, ≤ 300 chars (contract §8.1, §17.11); `null` when unset. */
   bio: string | null;
   niches: string[];

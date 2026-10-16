@@ -132,6 +132,8 @@
         "nichesHint": "اختر حتى {{count}} مجالات تصف محتواك.",
         "platforms": "حساباتك",
         "platformsHint": "أضف حساباً واحداً على الأقل، واختر نطاق المتابعين الحالي.",
+        "gender": "الجنس",
+        "genderHint": "بعض العلامات تطلق حملات لجنس معيّن. نستخدمه فقط لنعرف أي الحملات يمكنك التقديم عليها.",
         "addPlatform": "أضف منصة",
         "editAccount": "تعديل حساب {{platform}}",
         "removeAccount": "حذف حساب {{platform}}",
@@ -338,6 +340,10 @@
     "brandName": "صدى",
     "tagline": "ثقة في كل صفقة",
     "optional": "اختياري",
+    "gender": {
+      "male": "ذكر",
+      "female": "أنثى"
+    },
     "replaceFile": "استبدال الملف",
     "stepOf": "الخطوة {{current}} من {{total}}",
     "fileSize": {
@@ -416,6 +422,7 @@
     "explore": "استكشاف",
     "campaigns": "حملاتي",
     "deals": "الصفقات",
+    "opportunities": "فرص",
     "messages": "الرسائل",
     "wallet": "المحفظة",
     "account": "حسابي",
@@ -568,6 +575,8 @@
       "fullNamePlaceholder": "اسمك كما ستراه الشركات",
       "email": "البريد الإلكتروني (اختياري)",
       "emailPlaceholder": "name@example.com",
+      "genderSection": "الجنس",
+      "genderHint": "بعض العلامات تطلق حملات لجنس معيّن. نستخدمه فقط لنعرف أي الحملات يمكنك التقديم عليها.",
       "locationSection": "الموقع",
       "governorate": "المحافظة",
       "area": "المنطقة (اختياري)",
@@ -1362,6 +1371,9 @@
     "days": "{{count}} أيام"
   },
   "marketplace": {
+    "campaign": {
+      "detailTitle": "الحملة"
+    },
     "deal": {
       "phase": {
         "offer": "العرض",

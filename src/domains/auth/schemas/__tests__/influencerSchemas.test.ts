@@ -138,6 +138,16 @@ describe('createInfluencerSocialsSchema', () => {
     isPrimary: false,
   };
 
+  it('treats gender as optional but limited to male / female', () => {
+    expect(() => schema.validateSync({ niches: ['a'], platforms: [account] })).not.toThrow();
+    expect(() =>
+      schema.validateSync({ niches: ['a'], platforms: [account], gender: 'female' }),
+    ).not.toThrow();
+    expect(() =>
+      schema.validateSync({ niches: ['a'], platforms: [account], gender: 'other' }),
+    ).toThrow();
+  });
+
   it('needs 1–3 niches and at least one platform', () => {
     expect(() => schema.validateSync({ niches: ['beauty'], platforms: [account] })).not.toThrow();
     expect(messageOf(() => schema.validateSync({ niches: [], platforms: [account] }))).toBe(

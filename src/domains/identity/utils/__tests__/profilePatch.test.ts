@@ -6,8 +6,11 @@ import {
 } from '../profilePatch';
 import type { UserProfileDetails } from '../../types/profile';
 
-// The auth barrel pulls in navigators; the real social-link helpers are all these mappers need.
-jest.mock('@/domains/auth', () => jest.requireActual('@/domains/auth/schemas/brandProfileSchema'));
+// The auth barrel pulls in navigators; the real social-link and gender helpers are all these mappers need.
+jest.mock('@/domains/auth', () => ({
+  ...jest.requireActual('@/domains/auth/schemas/brandProfileSchema'),
+  isInfluencerGender: jest.requireActual('@/domains/auth/store/authTypes').isInfluencerGender,
+}));
 
 const influencer: UserProfileDetails = {
   id: 'u1',
@@ -45,6 +48,7 @@ describe('toPersonalInfoForm / toPersonalInfoPatch', () => {
       fullName: 'Anas',
       email: '',
       governorate: 'damascus',
+      gender: '',
       area: '',
       bio: '',
     });
@@ -63,6 +67,25 @@ describe('toPersonalInfoForm / toPersonalInfoPatch', () => {
   it('clears an optional field with null', () => {
     const withArea = { ...saved, area: 'Mezzeh' };
     expect(toPersonalInfoPatch({ ...withArea, area: '  ' }, withArea)).toEqual({ area: null });
+  });
+
+  it('prefills a saved gender and reads an unknown value as not told', () => {
+    const withGender = (gender: unknown) =>
+      toPersonalInfoForm({
+        ...influencer,
+        profile: { ...influencer.profile, gender: gender as 'male' },
+      }).gender;
+    expect(withGender('female')).toBe('female');
+    expect(withGender(null)).toBe('');
+    expect(withGender('other')).toBe('');
+  });
+
+  it('sends a newly picked or changed gender, never a cleared one', () => {
+    expect(toPersonalInfoPatch({ ...saved, gender: 'female' }, saved)).toEqual({ gender: 'female' });
+    const female = { ...saved, gender: 'female' as const };
+    expect(toPersonalInfoPatch({ ...female, gender: 'male' }, female)).toEqual({ gender: 'male' });
+    expect(toPersonalInfoPatch(female, female)).toEqual({});
+    expect(toPersonalInfoPatch({ ...female, gender: '' }, female)).toEqual({});
   });
 
   it('prefills the saved bio', () => {

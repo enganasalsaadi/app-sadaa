@@ -1,4 +1,4 @@
-import { toSocialLinksForm, toSocialLinksPayload } from '@/domains/auth';
+import { isInfluencerGender, toSocialLinksForm, toSocialLinksPayload } from '@/domains/auth';
 import type {
   UpdateBrandProfileRequest,
   UpdateInfluencerProfileRequest,
@@ -14,6 +14,7 @@ export const toPersonalInfoForm = (details: UserProfileDetails): PersonalInfoFor
   fullName: details.profile.full_name ?? '',
   email: details.email ?? '',
   governorate: details.profile.governorate ?? '',
+  gender: isInfluencerGender(details.profile.gender) ? details.profile.gender : '',
   area: details.profile.area ?? '',
   bio: details.profile.bio ?? '',
 });
@@ -36,6 +37,8 @@ export const toPersonalInfoPatch = (
   if (fullName !== saved.fullName.trim()) patch.full_name = fullName;
   if (orNull(values.email) !== orNull(saved.email)) patch.email = orNull(values.email);
   if (values.governorate !== saved.governorate) patch.governorate = values.governorate;
+  // The server has no "unset": clearing the picker is never sent.
+  if (values.gender !== '' && values.gender !== saved.gender) patch.gender = values.gender;
   if (orNull(values.area) !== orNull(saved.area)) patch.area = orNull(values.area);
   if (orNull(values.bio) !== orNull(saved.bio)) patch.bio = orNull(values.bio);
   return patch;

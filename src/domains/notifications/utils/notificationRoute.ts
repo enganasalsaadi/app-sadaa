@@ -15,13 +15,15 @@ export type NotificationRoute =
   | { screen: 'TopUpDetail'; topUpId: string }
   | { screen: 'WithdrawalDetail'; withdrawalId: string }
   | { screen: 'DealDetail'; dealId: string }
+  | { screen: 'CampaignDetail'; campaignId: string; role: 'brand' | 'creator' }
   | { screen: 'Strikes' };
 
 /**
  * Platforms, payout methods, withdrawals and strikes are creator screens, top-ups and company
  * verification brand ones: the other role lands somewhere safe. A brand's KYC result opens the
  * verification picker, which shows the document's status beside the other methods. Every deal
- * push opens the deal (M11); both roles' Deals tabs host it.
+ * push opens the deal (M11); both roles' Deals tabs host it. A campaign link opens the brand's
+ * campaign in Deals or the creator's in Opportunities (same link, role picks the stack).
  */
 export const resolveNotificationRoute = (
   target: PushTarget | null,
@@ -55,6 +57,15 @@ export const resolveNotificationRoute = (
         : { screen: 'WalletTab' };
     case 'deal':
       return { screen: 'DealDetail', dealId: target.dealId };
+    case 'campaign':
+      if (userType === 'brand' || userType === 'influencer') {
+        return {
+          screen: 'CampaignDetail',
+          campaignId: target.campaignId,
+          role: userType === 'brand' ? 'brand' : 'creator',
+        };
+      }
+      return { screen: 'NotificationsScreen' };
     case 'strikes':
       return userType === 'influencer' ? { screen: 'Strikes' } : { screen: 'NotificationsScreen' };
     default: {
@@ -129,6 +140,13 @@ export const toTabParams = (route: NotificationRoute): NavigatorScreenParams<Roo
         screen: 'DealsTab',
         params: { screen: 'DealDetail', params: { id: route.dealId }, initial: false },
       };
+    case 'CampaignDetail': {
+      const params = { screen: 'CampaignDetail', params: { id: route.campaignId }, initial: false } as const;
+      // The feed (creator) or the deals list (brand) stays underneath.
+      return route.role === 'brand'
+        ? { screen: 'DealsTab', params }
+        : { screen: 'OpportunitiesTab', params };
+    }
     case 'Strikes':
       return { screen: 'DealsTab', params: { screen: 'Strikes', initial: false } };
     case 'KycScreen':

@@ -84,6 +84,21 @@ describe('resolveNotificationRoute', () => {
     expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'NotificationsScreen' });
   });
 
+  it('opens a campaign by role, the inbox when the role is unknown', () => {
+    const target = { kind: 'campaign', campaignId: '01JE7Q3RTV' } as const;
+    expect(resolveNotificationRoute(target, 'brand')).toEqual({
+      screen: 'CampaignDetail',
+      campaignId: '01JE7Q3RTV',
+      role: 'brand',
+    });
+    expect(resolveNotificationRoute(target, 'influencer')).toEqual({
+      screen: 'CampaignDetail',
+      campaignId: '01JE7Q3RTV',
+      role: 'creator',
+    });
+    expect(resolveNotificationRoute(target, null)).toEqual({ screen: 'NotificationsScreen' });
+  });
+
   it('does nothing without a target', () => {
     expect(resolveNotificationRoute(null, 'influencer')).toBeNull();
   });
@@ -178,6 +193,18 @@ describe('toTabParams', () => {
     expect(toTabParams({ screen: 'DealDetail', dealId: 'd1' })).toEqual({
       screen: 'DealsTab',
       params: { screen: 'DealDetail', params: { id: 'd1' }, initial: false },
+    });
+  });
+
+  it('opens a brand campaign in the deals tab, a creator one in the opportunities tab', () => {
+    const params = { screen: 'CampaignDetail', params: { id: 'c1' }, initial: false };
+    expect(toTabParams({ screen: 'CampaignDetail', campaignId: 'c1', role: 'brand' })).toEqual({
+      screen: 'DealsTab',
+      params,
+    });
+    expect(toTabParams({ screen: 'CampaignDetail', campaignId: 'c1', role: 'creator' })).toEqual({
+      screen: 'OpportunitiesTab',
+      params,
     });
   });
 

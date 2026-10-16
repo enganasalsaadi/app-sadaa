@@ -13,13 +13,14 @@ describe('isOnTabRoot', () => {
   });
 
   it('is true on each main screen', () => {
-    for (const name of ['BrandHomeScreen', 'CreatorHomeScreen', 'Deals', 'WalletScreen', 'ProfileScreen']) {
+    for (const name of ['BrandHomeScreen', 'CreatorHomeScreen', 'Deals', 'Opportunities', 'WalletScreen', 'ProfileScreen']) {
       expect(isOnTabRoot(tabShowing(name))).toBe(true);
     }
   });
 
   it('is false once a screen is pushed over the main one', () => {
     expect(isOnTabRoot(tabShowing('Deals', 'DealDetail'))).toBe(false);
+    expect(isOnTabRoot(tabShowing('Opportunities', 'CampaignDetail'))).toBe(false);
     expect(isOnTabRoot(tabShowing('WalletScreen', 'Withdraw'))).toBe(false);
   });
 

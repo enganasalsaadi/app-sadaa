@@ -18,6 +18,7 @@ import {
   type Campaign,
   type CampaignDeliverable,
   type CampaignDealRef,
+  type CampaignActionResult,
   type CampaignDetail,
   type CampaignDropPlan,
   type CampaignEligibility,
@@ -49,6 +50,8 @@ import type {
   ApplicantsPageDto,
   CampaignDealRefDto,
   CampaignDeliverableDto,
+  CampaignActionDataDto,
+  CampaignActionMetaDto,
   CampaignDetailDto,
   CampaignDropPlanDto,
   CampaignDto,
@@ -222,8 +225,17 @@ const mapWallet = (dto: CampaignWalletDto): CampaignWallet => ({
   isSufficient: dto.is_sufficient,
 });
 
-/** `/quote` and the wallet block on `/submit`'s meta. */
+/** `/quote`'s wallet block. */
 export const mapCampaignWallet = mapWallet;
+
+/** `submit` is the only action that adds a wallet check; it sits beside the campaign (`data` or `meta`). */
+export const mapCampaignActionResult = (
+  data: CampaignActionDataDto,
+  meta?: CampaignActionMetaDto,
+): CampaignActionResult => {
+  const wallet = meta?.wallet ?? data.wallet;
+  return { campaign: mapCampaignDetail(data), wallet: wallet ? mapWallet(wallet) : null };
+};
 
 export const mapCampaignQuote = (dto: CampaignQuoteDto): CampaignQuote => ({
   pricingModel: oneOf(CAMPAIGN_PRICING_MODEL, dto.pricing_model),

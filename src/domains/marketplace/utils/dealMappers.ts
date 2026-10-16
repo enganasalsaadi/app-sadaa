@@ -595,6 +595,7 @@ export const mapCreatorDealSummary = (dto: CreatorDealSummaryDto): CreatorDealSu
     pendingUpsells: dto.counts.pending_upsells,
     liveStrikes: dto.counts.live_strikes,
   },
+  campaignsEnabled: dto.campaigns != null,
 });
 
 const mapStrike = (dto: DealStrikeDto): DealStrike => ({

@@ -2,6 +2,7 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import type {
   DealsStackParamList,
   HomeStackParamList,
+  OpportunitiesStackParamList,
   SettingsStackParamList,
   WalletStackParamList,
 } from '@/core/navigation';
@@ -9,6 +10,7 @@ import type {
 type TabRootScreen =
   | keyof HomeStackParamList
   | keyof DealsStackParamList
+  | keyof OpportunitiesStackParamList
   | keyof WalletStackParamList
   | keyof SettingsStackParamList;
 
@@ -17,6 +19,7 @@ const TAB_ROOT_SCREENS: ReadonlySet<string> = new Set<TabRootScreen>([
   'BrandHomeScreen',
   'CreatorHomeScreen',
   'Deals',
+  'Opportunities',
   'WalletScreen',
   'ProfileScreen',
 ]);

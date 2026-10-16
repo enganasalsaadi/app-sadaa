@@ -162,9 +162,11 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
       // `deal_*` (dispute not open / not the opener) means the deal moved: the
       // deal action hook shows the message and refetches, like a 409.
       // `kyc_required` (deal quote / send) turns the offer builder into its verify gate.
+      // `creator_restricted` (campaign apply) shows the restriction banner, not a toast.
       if (
         normalizedError.code === 'phone_not_verified' ||
         normalizedError.code === 'kyc_required' ||
+        normalizedError.code === 'creator_restricted' ||
         normalizedError.code === 'account_suspended' ||
         normalizedError.code === 'gated_parameter' ||
         normalizedError.code?.startsWith('deal_')
@@ -241,6 +243,13 @@ export const baseApi = createApi({
     'DealList',
     'DealHistory',
     'DealStrikes',
+    'Campaign',
+    'CampaignList',
+    'CampaignHistory',
+    'CampaignApplication',
+    'CampaignApplicationList',
+    'CreatorCampaign',
+    'CreatorCampaignList',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

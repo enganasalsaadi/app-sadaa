@@ -575,6 +575,8 @@ export interface CreatorDealSummary {
     items: CreatorActiveDeal[];
   } | null;
   counts: { newOffers: number; pendingUpsells: number; liveStrikes: number };
+  /** Public Campaigns flag (contract §1.2): `campaigns` is `null` while it is off. */
+  campaignsEnabled: boolean;
 }
 
 export interface DealStrike {

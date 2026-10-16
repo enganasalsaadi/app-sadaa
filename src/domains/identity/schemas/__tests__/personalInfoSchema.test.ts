@@ -9,6 +9,7 @@ const valid: PersonalInfoFormValues = {
   fullName: 'Rama',
   email: '',
   governorate: 'damascus',
+  gender: '',
   area: '',
   bio: '',
 };
@@ -39,5 +40,17 @@ describe('personalInfoSchema bio', () => {
 
   it('accepts a clean bio', async () => {
     expect(await bioError('صانعة محتوى طعام من دمشق')).toBeUndefined();
+  });
+});
+
+describe('personalInfoSchema gender', () => {
+  it('accepts not told, male and female', async () => {
+    for (const gender of ['', 'male', 'female'] as const) {
+      await expect(schema.validate({ ...valid, gender })).resolves.toBeTruthy();
+    }
+  });
+
+  it('rejects anything else', async () => {
+    await expect(schema.validate({ ...valid, gender: 'other' })).rejects.toBeTruthy();
   });
 });

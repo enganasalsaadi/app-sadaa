@@ -1,5 +1,5 @@
 import { baseApi } from '@/core/api';
-import type { BrandSocialLink } from '@/domains/auth';
+import type { BrandSocialLink, InfluencerGender } from '@/domains/auth';
 import type { AvatarResponse, UserProfileDetails } from '../types/profile';
 import { toUserProfileDetails } from '../utils/profileDetails';
 
@@ -18,6 +18,8 @@ export interface UpdateInfluencerProfileRequest {
   email?: string | null;
   governorate?: string;
   area?: string | null;
+  /** Cannot be cleared once set. */
+  gender?: InfluencerGender;
   /** Trimmed server-side; `null` clears it. */
   bio?: string | null;
   niches?: string[];

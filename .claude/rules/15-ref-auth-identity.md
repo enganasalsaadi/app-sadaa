@@ -12,7 +12,7 @@ paths:
 - Login = phone + password (`HeroSheet`). Forgot password = 3-step wizard (phone → OTP → new password → back to Login prefilled).
 - Registration wizards run under `AppStatus.REGISTRATION_INCOMPLETE`; `RootNavigator` picks branch from server `userType`.
   - **Brand:** account → phone OTP → profile → optional verification picker (4 ways, below) → welcome.
-  - **Creator** (`constants/influencerOnboarding.ts`, `resolveInfluencerOnboardingStep`): account → phone OTP → niches (max 3) + platforms (draft in MMKV `INFLUENCER_SOCIALS_DRAFT` until saved) → optional rates (`price_usd` via `toPriceUsd`) → optional ID KYC (step 4, front + back) → welcome.
+  - **Creator** (`constants/influencerOnboarding.ts`, `resolveInfluencerOnboardingStep`): account → phone OTP → niches (max 3) + platforms + optional gender `male|female` (draft in MMKV `INFLUENCER_SOCIALS_DRAFT` until saved; gender chips via `useInfluencerGenderItems`, also used by `PersonalInfoScreen`, where `PATCH /influencer/profile` sends it only when set/changed, never cleared) → optional rates (`price_usd` via `toPriceUsd`) → optional ID KYC (step 4, front + back) → welcome.
 - KYC steps share `useFilePicker` (`@/shared/ui`) + `utils/kycSubmission` (skip = `is_skipped=1`; `kyc_already_*` on retry → `runStep` `resubmit` as skip).
 - Follower tiers use brand ladder `FOLLOWER_TIER_STYLE` (neutral → teal → navy → mustard for MEGA only).
 - OTP steps: `useOtpCodeForm` + `OtpCodeField`.

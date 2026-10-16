@@ -1,10 +1,14 @@
 import * as yup from 'yup';
 import type { TFunction } from 'i18next';
+import type { InfluencerGender } from '@/domains/auth';
 import { BIO_MAX_LENGTH, hasBioContactDetails } from '../utils/bioRules';
 
 /** Contract §8.1 limits. */
 export const FULL_NAME_MAX_LENGTH = 255;
 export const AREA_MAX_LENGTH = 255;
+
+/** `''` = not told. Typed against `InfluencerGender` so a new value fails the build; runtime stays free of the auth barrel. */
+const GENDER_CHOICES: readonly (InfluencerGender | '')[] = ['', 'male', 'female'];
 
 /** Creator's own details. Phone is the account identity and never part of the form. */
 export interface PersonalInfoFormValues {
@@ -12,6 +16,8 @@ export interface PersonalInfoFormValues {
   /** Optional; empty = no email. */
   email: string;
   governorate: string;
+  /** Optional; empty = not told. Once saved it can only be changed, not removed. */
+  gender: InfluencerGender | '';
   /** Optional; empty = no area. */
   area: string;
   /** Optional public bio; empty = no bio. */
@@ -29,6 +35,10 @@ export const createPersonalInfoSchema = (
       .max(FULL_NAME_MAX_LENGTH, t('validation.maxLength', { count: FULL_NAME_MAX_LENGTH })),
     email: yup.string().trim().default('').email(t('validation.invalidEmail')),
     governorate: yup.string().required(t('validation.selectOne')),
+    gender: yup
+      .mixed<InfluencerGender | ''>()
+      .oneOf(GENDER_CHOICES)
+      .defined(),
     area: yup
       .string()
       .trim()

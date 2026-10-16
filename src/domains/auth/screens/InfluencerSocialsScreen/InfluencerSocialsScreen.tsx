@@ -25,6 +25,9 @@ export const InfluencerSocialsScreen: React.FC = () => {
     nicheItems,
     maxNiches,
     nichesError,
+    gender,
+    genderItems,
+    onChangeGender,
     platforms,
     platformsError,
     rowErrors,
@@ -108,6 +111,19 @@ export const InfluencerSocialsScreen: React.FC = () => {
               fullWidth
             />
           ) : null}
+        </FormSection>
+
+        <FormSection
+          title={t('auth.influencerOnboarding.socials.gender')}
+          tag={t('common.optional')}
+          description={t('auth.influencerOnboarding.socials.genderHint')}
+        >
+          <ChipGroup
+            items={genderItems}
+            value={gender}
+            onChange={onChangeGender}
+            accessibilityLabel={t('auth.influencerOnboarding.socials.gender')}
+          />
         </FormSection>
 
         <InlineError error={error} />

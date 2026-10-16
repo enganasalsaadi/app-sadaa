@@ -75,6 +75,27 @@ const PersonalInfoForm: React.FC<{ vm: PersonalInfoScreenModel }> = memo(({ vm }
 
       <Controller
         control={control}
+        name="gender"
+        render={({ field: { value }, fieldState }) => (
+          <FormSection
+            title={t('account.personalInfo.genderSection')}
+            tag={t('common.optional')}
+            description={t('account.personalInfo.genderHint')}
+            error={fieldState.error?.message}
+          >
+            <ChipGroup
+              items={vm.genderItems}
+              value={value || null}
+              onChange={vm.onChangeGender}
+              disabled={vm.isSaving}
+              accessibilityLabel={t('account.personalInfo.genderSection')}
+            />
+          </FormSection>
+        )}
+      />
+
+      <Controller
+        control={control}
         name="governorate"
         render={({ field: { value, onChange }, fieldState }) => (
           <FormSection

@@ -343,10 +343,19 @@ export interface InfluencerStep2Platform {
   is_available?: boolean;
 }
 
+/** Creator gender (`GET /user/profile`, `PATCH /influencer/profile`, step-2). Old accounts have `null`. */
+export const INFLUENCER_GENDERS = ['male', 'female'] as const;
+export type InfluencerGender = (typeof INFLUENCER_GENDERS)[number];
+
+export const isInfluencerGender = (value: unknown): value is InfluencerGender =>
+  typeof value === 'string' && (INFLUENCER_GENDERS as readonly string[]).includes(value);
+
 // POST /onboarding/influencer/step-2 — replaces every platform on each call.
 export interface InfluencerStep2Request {
   niches: string[];
   platforms: InfluencerStep2Platform[];
+  /** Optional; gender-targeted public campaigns need it (`gender_required`). */
+  gender?: InfluencerGender;
 }
 
 /** PlatformResource (contract §5.1): a saved social account. */
@@ -413,6 +422,7 @@ export interface InfluencerProfileResource {
   governorate?: string | null;
   governorate_label?: string | null;
   area?: string | null;
+  gender?: InfluencerGender | null;
   niches?: string[];
   has_kyc_id?: boolean;
   platforms?: PlatformResource[];

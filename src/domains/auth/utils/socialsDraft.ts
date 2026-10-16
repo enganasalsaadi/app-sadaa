@@ -1,5 +1,6 @@
 import { appStorage, StorageKeys } from '@/core/storage';
 import { isFollowerTier, isInfluencerPlatform } from '../schemas';
+import { isInfluencerGender } from '../store';
 import type { InfluencerSocialsFormValues, PlatformAccountFormValues } from '../schemas';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -30,10 +31,11 @@ export const parseSocialsDraft = (
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!isRecord(parsed) || parsed.phone !== phone) return null;
-    const { niches, platforms } = parsed;
+    const { niches, platforms, gender } = parsed;
     return {
       niches: Array.isArray(niches) ? niches.filter((n): n is string => typeof n === 'string') : [],
       platforms: Array.isArray(platforms) ? platforms.flatMap(toAccount) : [],
+      gender: isInfluencerGender(gender) ? gender : null,
     };
   } catch {
     return null;

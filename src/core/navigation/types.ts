@@ -163,6 +163,15 @@ export type DealsStackParamList = {
   DealDispute: { id: string };
   /** Creator only: withdrawal strikes (`sada://strikes`). */
   Strikes: undefined;
+  /** Brand only: one of their campaigns (`sada://campaigns/{id}`). Creators open it in `OpportunitiesTab`. */
+  CampaignDetail: { id: string };
+};
+
+/** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */
+export type OpportunitiesStackParamList = {
+  Opportunities: undefined;
+  /** Id only, so a push or link can open it (`sada://campaigns/{id}`). */
+  CampaignDetail: { id: string };
 };
 
 /** `channel` = add a method of that channel (validated by finance); `id` = edit a saved one. */
@@ -311,6 +320,8 @@ export type RootTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
   /** Direct deals, both roles (marketplace). */
   DealsTab: NavigatorScreenParams<DealsStackParamList> | undefined;
+  /** Public campaigns feed: replaces `MessagesTab` for creators while campaigns are enabled. */
+  OpportunitiesTab: NavigatorScreenParams<OpportunitiesStackParamList> | undefined;
   /** Placeholder until the messaging domain lands. */
   MessagesTab: undefined;
   WalletTab: NavigatorScreenParams<WalletStackParamList> | undefined;
@@ -347,6 +358,12 @@ export type WalletStackScreenProps<T extends keyof WalletStackParamList> =
 export type DealsStackScreenProps<T extends keyof DealsStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<DealsStackParamList, T>,
+    BottomTabScreenProps<RootTabParamList>
+  >;
+
+export type OpportunitiesStackScreenProps<T extends keyof OpportunitiesStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<OpportunitiesStackParamList, T>,
     BottomTabScreenProps<RootTabParamList>
   >;
 

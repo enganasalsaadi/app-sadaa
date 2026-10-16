@@ -301,3 +301,12 @@ export interface ApplicantsPageDto extends CampaignPageDto<ApplicantCardDto> {
     recruiting?: CampaignRecruitingDto | null;
   };
 }
+
+/** `submit` adds the wallet check; the contract says "campaign + wallet", so accept it in `data` or `meta`. */
+export interface CampaignActionDataDto extends CampaignDetailDto {
+  wallet?: CampaignWalletDto | null;
+}
+
+export interface CampaignActionMetaDto {
+  wallet?: CampaignWalletDto | null;
+}

@@ -16,6 +16,7 @@ export {
 } from './constants/socialPlatforms';
 export { formatPhoneForDisplay } from './utils/formatPhoneForDisplay';
 export { useFollowerTierOptions } from './hooks/useFollowerTierOptions';
+export { useInfluencerGenderItems } from './hooks/useInfluencerGenderItems';
 export { formatClock } from './utils/formatClock';
 export { isKycAlreadySubmitted, toFormDataFile } from './utils/kycSubmission';
 export { toKycMethod } from './utils/kycMethod';
@@ -70,7 +71,7 @@ export {
   selectIsOnboardingComplete,
   selectIsSuspended,
 } from './store';
-export { PROFILE_STEP_KEYS } from './store';
+export { INFLUENCER_GENDERS, isInfluencerGender, PROFILE_STEP_KEYS } from './store';
 export type {
   User,
   AuthState,
@@ -79,6 +80,7 @@ export type {
   PlatformsReviewStatus,
   KycMethod,
   FollowerTierId,
+  InfluencerGender,
   ProfileStepKey,
   ProfileCompletion,
   ProfileCompletionStep,
