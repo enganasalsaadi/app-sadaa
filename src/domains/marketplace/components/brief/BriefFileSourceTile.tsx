@@ -6,7 +6,7 @@ import type { ParseKeys } from 'i18next';
 import { Plus } from 'lucide-react-native';
 import { iconStroke, moderateScale, motion, useStyles, useTheme } from '@/core/theme';
 import { Box, GradientSurface, Pressable, Text } from '@/shared/ui';
-import type { BriefFileSource } from '../hooks/useBriefAttachments';
+import type { BriefFileSource } from '../../utils/briefFiles';
 import { DocStackArt } from './DocStackArt';
 import { PhotoFanArt } from './PhotoFanArt';
 
@@ -31,13 +31,13 @@ const TILE = {
   { label: ParseKeys; hint: ParseKeys; Art: typeof PhotoFanArt; onBrand: boolean }
 >;
 
-interface FileSourceTileProps {
+interface BriefFileSourceTileProps {
   source: BriefFileSource;
   onChoose: (source: BriefFileSource) => void;
 }
 
 /** Half-width tile that draws what it picks: a photo fan on navy, or a paper stack. */
-const FileSourceTileComponent: React.FC<FileSourceTileProps> = ({ source, onChoose }) => {
+const BriefFileSourceTileComponent: React.FC<BriefFileSourceTileProps> = ({ source, onChoose }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -124,4 +124,4 @@ const FileSourceTileComponent: React.FC<FileSourceTileProps> = ({ source, onChoo
   );
 };
 
-export const FileSourceTile = memo(FileSourceTileComponent);
+export const BriefFileSourceTile = memo(BriefFileSourceTileComponent);

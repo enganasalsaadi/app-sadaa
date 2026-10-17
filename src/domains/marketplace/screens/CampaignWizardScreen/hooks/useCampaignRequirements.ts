@@ -7,6 +7,8 @@ import {
   CAMPAIGN_FOLLOWER_PRESETS,
   CAMPAIGN_TARGETING_LIMITS,
 } from '../../../constants/campaignRequirements';
+import { CAMPAIGN_SCHEDULE } from '../../../constants/campaignMoney';
+import type { DealShippingMode } from '../../../types/deal';
 import type { CampaignDraftValues } from '../../../types/campaignDraft';
 import {
   addDeliverable,
@@ -96,6 +98,7 @@ export const useCampaignRequirements = (
     (floor: string) => edit({ minFollowers: toggleFollowerFloor(values.minFollowers, Number(floor)) }),
     [edit, values.minFollowers],
   );
+  const chooseShipping = useCallback((shippingMode: DealShippingMode) => edit({ shippingMode }), [edit]);
   const setCities = useCallback((cities: string[]) => edit({ cities }), [edit]);
   const setNiches = useCallback((picked: string[]) => edit({ niches: picked }), [edit]);
 
@@ -131,6 +134,12 @@ export const useCampaignRequirements = (
     niches: niches.items,
     nichesLoading: niches.isLoading,
     targetingError: refusalMessage(refused.targeting, ['targeting', 'targeting.niches', 'targeting.min_followers']),
+    // shipping
+    shippingMode: values.shippingMode,
+    chooseShipping,
+    gapDigitalDays: CAMPAIGN_SCHEDULE.dropGapDigitalHours / 24,
+    gapShippedDays: CAMPAIGN_SCHEDULE.dropGapShippedHours / 24,
+    shippingError: refusalMessage(refused.shipping_mode, ['shipping_mode']),
   };
 };
 

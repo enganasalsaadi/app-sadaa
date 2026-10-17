@@ -7,7 +7,7 @@ import { useStyles, useTheme } from '@/core/theme';
 import { BottomSheet, Box, CustomButton, Text } from '@/shared/ui';
 import { DEAL_DRAFT_TTL_DAYS } from '../../../constants/dealOffer';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from './SheetTitle';
+import { SheetTitle } from '../../../components/SheetTitle';
 
 /** An unsent draft with this creator already exists: pick it up, or start over (the old one goes). */
 const ResumeSheetComponent: React.FC = () => {

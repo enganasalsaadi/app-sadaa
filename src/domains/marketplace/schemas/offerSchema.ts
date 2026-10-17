@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next';
 import type { AddonType } from '@/core/api';
 import { DEAL_BRIEF_LIMITS, DEAL_OFFER_LIMITS } from '../constants/dealOffer';
 import type { DealShippingMode } from '../types/deal';
+import { isBriefLink } from '../utils/briefEntries';
 import type { OfferFormValues, OfferLineValue } from '../utils/offerForm';
 
 /** Fields each step checks before moving on (the server re-validates everything on save and send). */
@@ -10,9 +11,6 @@ export const OFFER_STEP_FIELDS = {
   services: ['lines', 'shippingMode'],
   brief: ['promoCode', 'trackingLink'],
 } as const satisfies Record<string, readonly (keyof OfferFormValues)[]>;
-
-/** Same rule as the server (`url:http,https`): a scheme, a host with a dot, no spaces. */
-const TRACKING_LINK = /^https?:\/\/[^\s/$.?#][^\s]*\.[^\s]{2,}$/i;
 
 const briefList = () =>
   yup
@@ -54,5 +52,5 @@ export const createOfferSchema = (t: TFunction): yup.ObjectSchema<OfferFormValue
       .defined()
       .trim()
       .max(DEAL_BRIEF_LIMITS.maxTrackingLinkLength)
-      .test('trackingLink', t('marketplace.offer.brief.measure.linkError'), value => !value || TRACKING_LINK.test(value)),
+      .test('trackingLink', t('marketplace.offer.brief.measure.linkError'), value => !value || isBriefLink(value)),
   });

@@ -5,7 +5,7 @@ import { ShieldCheck } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { BottomSheet, Box, CustomButton, Text } from '@/shared/ui';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from './SheetTitle';
+import { SheetTitle } from '../../../components/SheetTitle';
 
 const SHEET_SHARE = 0.85;
 

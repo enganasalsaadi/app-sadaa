@@ -1,8 +1,8 @@
 import React, { memo, useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import type { BriefListField } from '../hooks/useOfferBrief';
-import { BriefEntryList } from './BriefEntryList';
+import { BriefEntryList } from '../../../components/brief/BriefEntryList';
+import type { BriefListField } from '../../../utils/briefEntries';
 
 interface BriefFieldEntriesProps {
   field: BriefListField;

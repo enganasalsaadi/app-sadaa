@@ -5,7 +5,7 @@ import { ArrowDown, TrendingUp } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { BottomSheet, Box, CustomButton, MoneyText, Text } from '@/shared/ui';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from './SheetTitle';
+import { SheetTitle } from '../../../components/SheetTitle';
 
 /** The rate card moved while the brand built the offer: old total struck through, the new one, choose. */
 const PriceChangedSheetComponent: React.FC = () => {

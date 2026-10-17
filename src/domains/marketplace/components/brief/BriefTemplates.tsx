@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CalendarHeart, Megaphone, MessageSquareQuote, Rocket, TicketPercent, Wand2, type LucideIcon } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, Pressable, Rail, Text } from '@/shared/ui';
-import { BRIEF_TEMPLATES, type BriefTemplateKey } from '../hooks/useOfferBrief';
+import { BRIEF_TEMPLATES, type BriefTemplateKey } from '../../utils/briefEntries';
 
 const TEMPLATE = {
   launch: { icon: Rocket, title: 'marketplace.offer.brief.template.launch.title', body: 'marketplace.offer.brief.template.launch.body' },

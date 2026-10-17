@@ -5,12 +5,15 @@ import { Box, Text } from '@/shared/ui';
 import { CampaignField } from './CampaignField';
 import { CatalogServiceSheet } from './CatalogServiceSheet';
 import { DeliverablesField } from './DeliverablesField';
+import { PrivateBriefRow } from './PrivateBriefRow';
+import { PrivateBriefSheet } from './PrivateBriefSheet';
+import { ShippingField } from './ShippingField';
 import { TargetingGates } from './TargetingGates';
 import { TargetingRanking } from './TargetingRanking';
 
 /**
  * Step 2, «the requirements»: what each creator delivers, who may apply (gates) and who is
- * preferred (ranking only). Shipping and the private brief join it in PC1.5.
+ * preferred (ranking only), whether a product is sent, and the optional private brief.
  */
 const RequirementsStepComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -44,7 +47,10 @@ const RequirementsStepComponent: React.FC = () => {
         </CampaignField>
         <TargetingRanking />
       </Box>
+      <ShippingField />
+      <PrivateBriefRow />
       <CatalogServiceSheet />
+      <PrivateBriefSheet />
     </Box>
   );
 };

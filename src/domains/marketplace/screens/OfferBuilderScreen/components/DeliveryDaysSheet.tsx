@@ -5,7 +5,7 @@ import { BottomSheet, Box, CustomButton, NumberStepper, Text } from '@/shared/ui
 import { DEAL_OFFER_LIMITS } from '../../../constants/dealOffer';
 import { formatDays } from '../../../utils/offerDuration';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from './SheetTitle';
+import { SheetTitle } from '../../../components/SheetTitle';
 
 /** A deadline longer than the creator's fastest, in whole days (server cap 90). */
 const DeliveryDaysSheetComponent: React.FC = () => {

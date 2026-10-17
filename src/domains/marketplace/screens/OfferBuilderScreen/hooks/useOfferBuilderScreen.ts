@@ -26,7 +26,8 @@ import {
 } from '../../../utils/dealOfferMappers';
 import { EMPTY_OFFER_FORM, offerFormFromDeal, toOfferInput, type OfferFormValues } from '../../../utils/offerForm';
 import { toOfferCreator, toOfferServices } from '../../../utils/offerServices';
-import { useBriefAttachments, type BriefFileSource } from './useBriefAttachments';
+import type { BriefFileSource } from '../../../utils/briefFiles';
+import { useBriefAttachments } from './useBriefAttachments';
 import { useOfferBrief } from './useOfferBrief';
 import { useOfferDraft } from './useOfferDraft';
 import { useOfferLines } from './useOfferLines';

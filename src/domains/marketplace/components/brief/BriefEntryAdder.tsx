@@ -2,7 +2,7 @@ import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react-native';
 import { Box, CustomInput, IconButton } from '@/shared/ui';
-import { DEAL_BRIEF_LIMITS } from '../../../constants/dealOffer';
+import { DEAL_BRIEF_LIMITS } from '../../constants/dealOffer';
 
 interface BriefEntryAdderProps {
   placeholder: string;

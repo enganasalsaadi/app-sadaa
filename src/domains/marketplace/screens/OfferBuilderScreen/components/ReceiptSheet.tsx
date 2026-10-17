@@ -4,7 +4,7 @@ import { formatMoney } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { BottomSheet, Box, CustomButton, MoneyText, Text } from '@/shared/ui';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from './SheetTitle';
+import { SheetTitle } from '../../../components/SheetTitle';
 
 /** The quote line by line, as the contract will print it. */
 const ReceiptSheetComponent: React.FC = () => {

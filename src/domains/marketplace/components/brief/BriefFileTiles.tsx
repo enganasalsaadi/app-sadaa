@@ -6,9 +6,7 @@ import { FileText, ImagePlus, Paperclip, RotateCw, X } from 'lucide-react-native
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Image, Pressable, Text } from '@/shared/ui';
-import { DEAL_UPLOAD_LIMIT } from '../../../constants/dealUploads';
-import { useOfferBuilder } from '../OfferBuilderContext';
-import type { BriefFileRow } from '../hooks/useBriefAttachments';
+import type { BriefFileRow, BriefFilesView } from '../../utils/briefFiles';
 import { BriefBlock } from './BriefBlock';
 
 const TILE = moderateScale(96);
@@ -17,16 +15,16 @@ const isImage = (mime: string | null) => mime !== null && mime.startsWith('image
 
 interface FileTileProps {
   row: BriefFileRow;
+  attachments: BriefFilesView;
 }
 
 /**
  * One reference file as a square tile: the image itself or a PDF card, a remove button, and
  * while uploading its progress (or why it failed, with retry).
  */
-const FileTile = memo<FileTileProps>(({ row }) => {
+const FileTile = memo<FileTileProps>(({ row, attachments }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const { attachments } = useOfferBuilder();
   const styles = useStyles(
     ({ radii, spacing }): Record<'tile' | 'remove' | 'veil', ViewStyle> => ({
       tile: {
@@ -69,7 +67,7 @@ const FileTile = memo<FileTileProps>(({ row }) => {
   const name = row.kind === 'attached' ? row.file.name : row.entry.source.name;
   const mime = row.kind === 'attached' ? row.file.mime : row.entry.source.mime;
   const uri = row.kind === 'attached' ? row.file.url : row.entry.source.uri;
-  const onRemove = () => (row.kind === 'attached' ? attachments.removeFile(row.file) : attachments.removeUpload(row.key));
+  const onRemove = () => (row.kind === 'attached' ? attachments.removeFile(row.file.id) : attachments.removeUpload(row.key));
   const failure = row.kind === 'upload' && row.entry.status === 'failed' ? row.entry.failure : null;
   const uploading = row.kind === 'upload' && row.entry.status !== 'failed';
   const failText =
@@ -131,12 +129,20 @@ const FileTile = memo<FileTileProps>(({ row }) => {
   );
 });
 
+interface BriefFileTilesProps {
+  attachments: BriefFilesView;
+  /** The files cap shown beside the title (5). */
+  max: number;
+  /** What happens to the files (differs between a signed deal and a campaign brief). */
+  caption: string;
+  onAdd: () => void;
+}
+
 /** Brief reference files (≤ 5 images / PDFs, ≤ 20 MB): tiles in a row, then «add file». */
-const BriefFilesComponent: React.FC = () => {
+const BriefFileTilesComponent: React.FC<BriefFileTilesProps> = ({ attachments, max, caption, onAdd }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const reduceMotion = useReducedMotion();
-  const { attachments, openFilesSheet } = useOfferBuilder();
   const styles = useStyles(
     ({ borderWidths, radii }): Record<'add', ViewStyle> => ({
       add: {
@@ -158,7 +164,7 @@ const BriefFilesComponent: React.FC = () => {
       icon={Paperclip}
       title={t('marketplace.offer.brief.files.title')}
       body={t('marketplace.offer.brief.files.body')}
-      count={t('marketplace.offer.brief.count', { count: attachments.count, max: DEAL_UPLOAD_LIMIT.brief })}
+      count={t('marketplace.offer.brief.count', { count: attachments.count, max })}
     >
       <Box row wrap gap="sm">
         {attachments.rows.map(row => (
@@ -168,14 +174,14 @@ const BriefFilesComponent: React.FC = () => {
             exiting={reduceMotion ? undefined : FadeOut}
             layout={reduceMotion ? undefined : LinearTransition}
           >
-            <FileTile row={row} />
+            <FileTile row={row} attachments={attachments} />
           </Animated.View>
         ))}
         {attachments.canAdd ? (
           <Pressable
             style={styles.add}
             scaleOnPress
-            onPress={openFilesSheet}
+            onPress={onAdd}
             accessibilityRole="button"
             accessibilityLabel={t('marketplace.offer.brief.files.add')}
           >
@@ -187,10 +193,10 @@ const BriefFilesComponent: React.FC = () => {
         ) : null}
       </Box>
       <Text variant="caption" color={colors.text.tertiary}>
-        {t('marketplace.offer.brief.files.caption')}
+        {caption}
       </Text>
     </BriefBlock>
   );
 };
 
-export const BriefFiles = memo(BriefFilesComponent);
+export const BriefFileTiles = memo(BriefFileTilesComponent);

@@ -1426,6 +1426,54 @@
             "hint": "Nobody is kept from applying, but matching creators are lifted higher.",
             "cities": "Cities",
             "niches": "Niches (up to {{max}})"
+          },
+          "shipping": {
+            "label": "Does it include a product?",
+            "tag": "Sent to the creator",
+            "none": {
+              "title": "No product",
+              "hint": "Content only"
+            },
+            "gift": {
+              "title": "With a product",
+              "hint": "No return · a gift"
+            },
+            "returnable": {
+              "title": "With a product",
+              "hint": "Returned · a sample"
+            },
+            "gap": "With a product the gap before the drop is {{shipped}} days instead of {{digital}}, and the creator's address is asked for once you select them."
+          },
+          "brief": {
+            "title": "Private brief",
+            "optional": "Optional",
+            "hint": "Hashtags, a discount code, files · revealed after funding",
+            "refused": "Needs a look",
+            "items_zero": "{{count}} items",
+            "items_one": "{{count}} item",
+            "items_two": "{{count}} items",
+            "items_few": "{{count}} items",
+            "items_many": "{{count}} items",
+            "items_other": "{{count}} items",
+            "files_zero": "{{count}} files",
+            "files_one": "{{count}} file",
+            "files_two": "{{count}} files",
+            "files_few": "{{count}} files",
+            "files_many": "{{count}} files",
+            "files_other": "{{count}} files",
+            "sheet": {
+              "title": "Private brief",
+              "body": "Everything for the creator you select: hashtags, talking points, a discount code and files. All optional.",
+              "lock": "Revealed to the creator only after funding. Until then applicants see it locked.",
+              "done": "Done",
+              "links": {
+                "title": "Reference links",
+                "body": "The product or offer page, as the creator will get it",
+                "placeholder": "https://"
+              },
+              "filesCaption": "Images or PDF · up to 20 MB each · revealed to the creator after funding",
+              "filesSheetBody": "The creator can refer to them after funding"
+            }
           }
         },
         "money": {

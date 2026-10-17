@@ -8,7 +8,7 @@ import { toastService } from '@/core/toast';
 import { CAMPAIGN_DRAFT_LIMITS } from '../../../constants/campaignDraft';
 import { useCampaignDraft } from '../../../hooks/useCampaignDraft';
 import { CAMPAIGN_ACTIVITY_TYPE } from '../../../types/campaign';
-import type { CampaignActivityType } from '../../../types/campaign';
+import type { CampaignActivityType, CampaignFile } from '../../../types/campaign';
 import { CAMPAIGN_WIZARD_STEP } from '../../../types/campaignDraft';
 import type { CampaignWizardStep } from '../../../types/campaignDraft';
 import { draftEntryStep } from '../../../utils/campaignDraft';
@@ -18,10 +18,13 @@ import {
   previousWizardStep,
   refusalMessage,
 } from '../../../utils/campaignWizard';
+import { useCampaignBrief } from './useCampaignBrief';
 import { useCampaignCover } from './useCampaignCover';
 import { useCampaignMoney } from './useCampaignMoney';
 import { useCampaignRequirements } from './useCampaignRequirements';
 import { useCampaignSchedule } from './useCampaignSchedule';
+
+const NO_FILES: readonly CampaignFile[] = [];
 
 type Navigation = DealFlowStackScreenProps<'CampaignWizard'>['navigation'];
 type Route = DealFlowStackScreenProps<'CampaignWizard'>['route'];
@@ -47,6 +50,7 @@ export const useCampaignWizardScreen = () => {
   const { values, edit, flush, campaign, campaignId, ready, refused, failure, retry } = draft;
   const cover = useCampaignCover(campaignId, campaign?.cover ?? null);
   const requirements = useCampaignRequirements(values, edit, refused);
+  const brief = useCampaignBrief(values, edit, refused, campaignId, campaign?.attachments ?? NO_FILES);
 
   const [step, setStep] = useState<CampaignWizardStep>('idea');
   const money = useCampaignMoney(values, edit, refused, campaignId, step);
@@ -116,12 +120,16 @@ export const useCampaignWizardScreen = () => {
       toastService.info(t('marketplace.campaign.wizard.idea.cover.waiting'));
       return;
     }
+    if (brief.attachments.busy) {
+      toastService.info(t('marketplace.offer.brief.files.waiting'));
+      return;
+    }
     setAdvancing(true);
     const saved = await flush();
     setAdvancing(false);
     const next = nextWizardStep(step);
     if (saved && next) setStep(next);
-  }, [advancing, cover.busy, flush, focusTitle, step, t, titleValid]);
+  }, [advancing, brief.attachments.busy, cover.busy, flush, focusTitle, step, t, titleValid]);
 
   const goToStep = useCallback(
     async (target: CampaignWizardStep) => {
@@ -208,6 +216,7 @@ export const useCampaignWizardScreen = () => {
     cover,
     pickCover,
     requirements,
+    brief,
     money,
     schedule,
   };

@@ -3,20 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { Ban, Hash, MessageCircle } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Box, StaggerIn, Text } from '@/shared/ui';
+import { BriefBlock } from '../../../components/brief/BriefBlock';
+import { BriefEntryAdder } from '../../../components/brief/BriefEntryAdder';
+import { BriefFileTiles } from '../../../components/brief/BriefFileTiles';
+import { BriefTemplates } from '../../../components/brief/BriefTemplates';
+import { BriefToneChips } from '../../../components/brief/BriefToneChips';
+import { DEAL_UPLOAD_LIMIT } from '../../../constants/dealUploads';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { BriefBlock } from './BriefBlock';
-import { BriefEntryAdder } from './BriefEntryAdder';
 import { BriefFieldEntries } from './BriefFieldEntries';
-import { BriefFiles } from './BriefFiles';
 import { BriefMeasure } from './BriefMeasure';
-import { BriefTemplates } from './BriefTemplates';
-import { BriefToneChips } from './BriefToneChips';
 
 /** Step 2: the brief. Every field is optional; a template fills the lists in one tap. */
 const BriefStepComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { creatorName, brief } = useOfferBuilder();
+  const { creatorName, brief, attachments, openFilesSheet } = useOfferBuilder();
   const { addEntry, applyTemplate } = brief;
   const addPoint = useCallback((raw: string) => addEntry('talkingPoints', raw), [addEntry]);
   const addDont = useCallback((raw: string) => addEntry('donts', raw), [addEntry]);
@@ -38,7 +39,7 @@ const BriefStepComponent: React.FC = () => {
         <BriefBlock icon={MessageCircle} title={t('marketplace.offer.brief.talk.title')} body={t('marketplace.offer.brief.talk.body')}>
           <BriefFieldEntries field="talkingPoints" look="points" />
           <BriefEntryAdder placeholder={t('marketplace.offer.brief.talk.placeholder')} onAdd={addPoint} />
-          <BriefToneChips />
+          <BriefToneChips active={brief.activeTone} onToggle={brief.toggleTone} />
         </BriefBlock>
         <BriefBlock icon={Ban} title={t('marketplace.offer.brief.donts.title')} body={t('marketplace.offer.brief.donts.body')}>
           <BriefFieldEntries field="donts" look="points" tone="avoid" />
@@ -69,7 +70,12 @@ const BriefStepComponent: React.FC = () => {
           </Box>
         </BriefBlock>
         <BriefMeasure />
-        <BriefFiles />
+        <BriefFileTiles
+          attachments={attachments}
+          max={DEAL_UPLOAD_LIMIT.brief}
+          caption={t('marketplace.offer.brief.files.caption')}
+          onAdd={openFilesSheet}
+        />
       </StaggerIn>
     </Box>
   );

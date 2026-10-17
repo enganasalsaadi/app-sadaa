@@ -6,7 +6,7 @@ import { useTheme } from '@/core/theme';
 import { Box, CustomInput } from '@/shared/ui';
 import { DEAL_BRIEF_LIMITS } from '../../../constants/dealOffer';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { BriefBlock } from './BriefBlock';
+import { BriefBlock } from '../../../components/brief/BriefBlock';
 
 /** How the brand measures the post: a discount code and a tracking link said in the content. */
 const BriefMeasureComponent: React.FC = () => {
