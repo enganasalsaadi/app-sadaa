@@ -1,6 +1,7 @@
 import { CAMPAIGN_MONEY_LIMITS, CAMPAIGN_SCHEDULE } from '../constants/campaignMoney';
 import type { CampaignDetail } from '../types/campaign';
 import type { Timestamp } from '../types/deal';
+import type { CampaignIsland } from './campaignDetail';
 import { damascusDayKey, damascusMoment } from './campaignSchedule';
 
 const MINUTE_MS = 60_000;
@@ -116,6 +117,47 @@ export const campaignMenuRows = (campaign: CampaignDetail, now: Timestamp): Camp
       return [row('duplicate')];
     default: {
       const _exhaustive: never = status;
+      return _exhaustive;
+    }
+  }
+};
+
+/** What the island offers (contract §3.4, §3.3 `seat_freed`): a decision each, not a menu entry. */
+export type CampaignIslandAction = 'reopen' | 'reopenSeat' | 'reduce' | 'extend' | 'edit' | 'cancel';
+
+/**
+ * The island's buttons, first = the lead one. The server's lists decide: `zero_applicants.options`
+ * (+4 days only while `extend_available`) and `seat_freed.options`. «Replace» is the applicants
+ * screen's job, so it isn't a button here; a ghost warning has nothing to press (deciding on the
+ * waiting applicant is that screen too).
+ */
+export const campaignIslandActions = (
+  island: CampaignIsland,
+  { timers, seatFreed }: Pick<CampaignDetail, 'timers' | 'seatFreed'>,
+): CampaignIslandAction[] => {
+  switch (island.kind) {
+    case 'suspended':
+      return ['reopen'];
+    case 'ghost':
+      return [];
+    case 'zeroApplicants': {
+      const zero = timers.zeroApplicants;
+      if (!zero) return [];
+      const actions: CampaignIslandAction[] = [];
+      if (zero.extendAvailable && zero.options.includes('extend')) actions.push('extend');
+      if (zero.options.includes('edit')) actions.push('edit');
+      if (zero.options.includes('cancel')) actions.push('cancel');
+      return actions;
+    }
+    case 'seatFreed': {
+      const options = seatFreed?.options ?? [];
+      const actions: CampaignIslandAction[] = [];
+      if (options.includes('reduce') && seatFreed !== null && seatFreed.reducible > 0) actions.push('reduce');
+      if (options.includes('reopen')) actions.push('reopenSeat');
+      return actions;
+    }
+    default: {
+      const _exhaustive: never = island;
       return _exhaustive;
     }
   }

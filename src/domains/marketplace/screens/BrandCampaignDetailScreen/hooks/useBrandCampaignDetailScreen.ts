@@ -15,13 +15,13 @@ const DRAFT_STATUSES: readonly CampaignStatus[] = ['draft', 'changes_requested']
 /** Statuses the team's note explains (it stays on the campaign after the decision). */
 const NOTE_STATUSES: readonly CampaignStatus[] = ['changes_requested', 'rejected', 'removed'];
 
-export type CampaignDetailDock = 'resume' | 'resubmit';
+export type CampaignDetailDock = 'resume' | 'resubmit' | 'reopen';
 
 /**
  * One campaign from the brand's side: its detail and its history (both re-read on open and by
  * pull-to-refresh), and which sections the status calls for. The wizard is the way back into a
- * draft; the «⋯» holds the lifecycle actions (`useCampaignLifecycle`). The island's own decisions
- * come with PC2.4.
+ * draft; the «⋯» holds the lifecycle actions and the island's buttons the system's decisions
+ * (`useCampaignLifecycle`). A suspended campaign repeats its one-tap reopen in the dock.
  */
 export const useBrandCampaignDetailScreen = () => {
   const { id } = useRoute<Route>().params;
@@ -55,9 +55,17 @@ export const useBrandCampaignDetailScreen = () => {
   const openWizard = useCallback(() => navigate('CampaignWizard', { campaignId: id, source: 'resume' }), [id]);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const lifecycle = useCampaignLifecycle(campaign, goBack);
+  const decide = lifecycle.decide;
+  const reopenFromDock = useCallback(() => decide('reopen'), [decide]);
 
   const isDraft = statusKey !== null && DRAFT_STATUSES.includes(statusKey);
-  const dock: CampaignDetailDock | null = isDraft ? (statusKey === 'changes_requested' ? 'resubmit' : 'resume') : null;
+  const dock: CampaignDetailDock | null = isDraft
+    ? statusKey === 'changes_requested'
+      ? 'resubmit'
+      : 'resume'
+    : statusKey === 'suspended'
+      ? 'reopen'
+      : null;
   const reviewNote =
     campaign && statusKey !== null && NOTE_STATUSES.includes(statusKey) ? campaign.reviewNote : null;
 
@@ -71,6 +79,7 @@ export const useBrandCampaignDetailScreen = () => {
     onRetry,
     goBack,
     openWizard,
+    reopenFromDock,
     lifecycle,
     dock,
     showReadiness: isDraft,

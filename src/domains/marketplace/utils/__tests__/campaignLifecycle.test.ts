@@ -1,11 +1,13 @@
 import { mapCampaignDetail } from '../campaignMappers';
 import {
+  campaignIslandActions,
   campaignMenuRows,
   deadlineInWindow,
   extendDeadlineWindow,
   freshDeadlineWindow,
   seatsAddable,
 } from '../campaignLifecycle';
+import type { CampaignIsland } from '../campaignDetail';
 import { damascusDayKey } from '../campaignSchedule';
 import { detailDto, label, T0 } from '../__fixtures__/campaignDto';
 
@@ -75,5 +77,43 @@ describe('freshDeadlineWindow + deadlineInWindow', () => {
     expect(range?.minDay).toBe('2026-10-17');
     expect(range && deadlineInWindow('2026-10-18', range)).toBe(Date.parse('2026-10-18T23:59:00+03:00'));
     expect(range && deadlineInWindow('2026-10-16', range)).toBeNull();
+  });
+});
+
+describe('campaignIslandActions', () => {
+  const zero: CampaignIsland = { kind: 'zeroApplicants', dueAt: now, windowMs: DAY };
+  const freed: CampaignIsland = { kind: 'seatFreed', freeSeats: 1 };
+  const timers = (zero_applicants: object | null) => ({
+    accepting_applications: true,
+    deadline_passed: true,
+    ghost: null,
+    suspension: null,
+    zero_applicants,
+  });
+  const zeroOptions = (extend_available: boolean, options: string[]) =>
+    campaign({ timers: timers({ decide_by: new Date(now).toISOString(), extend_available, extend_to: null, options }) });
+
+  it('offers a suspended campaign one tap to reopen, and a ghost warning nothing to press', () => {
+    const ghost: CampaignIsland = { kind: 'ghost', dueAt: now, windowMs: DAY };
+    expect(campaignIslandActions({ kind: 'suspended', dueAt: null, windowMs: DAY }, campaign())).toEqual(['reopen']);
+    expect(campaignIslandActions(ghost, campaign())).toEqual([]);
+  });
+
+  it('follows the server for an empty deadline, and drops +4 days once it is not available', () => {
+    expect(campaignIslandActions(zero, zeroOptions(true, ['edit', 'extend', 'cancel']))).toEqual([
+      'extend',
+      'edit',
+      'cancel',
+    ]);
+    expect(campaignIslandActions(zero, zeroOptions(false, ['edit', 'extend', 'cancel']))).toEqual(['edit', 'cancel']);
+    expect(campaignIslandActions(zero, zeroOptions(true, ['cancel']))).toEqual(['cancel']);
+  });
+
+  it('turns a freed seat into reduce / reopen from the server options, never «replace»', () => {
+    const options = (list: string[], reducible = 1) =>
+      campaign({ seat_freed: { free_seats: 1, reducible, options: list, deadline_passed: false } });
+    expect(campaignIslandActions(freed, options(['replace', 'reduce']))).toEqual(['reduce']);
+    expect(campaignIslandActions(freed, options(['reopen', 'reduce']))).toEqual(['reduce', 'reopenSeat']);
+    expect(campaignIslandActions(freed, options(['reduce'], 0))).toEqual([]);
   });
 });

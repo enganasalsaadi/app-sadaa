@@ -5,7 +5,7 @@ import { navigate } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { useDeleteCampaignMutation } from '../../../api/brandCampaignsApi';
 import { useCampaignAction } from '../../../hooks/useCampaignAction';
-import type { CampaignActionBody, CampaignDetail } from '../../../types/campaign';
+import type { CampaignActionBody, CampaignActionPath, CampaignDetail } from '../../../types/campaign';
 import { isCampaignConflictError } from '../../../utils/campaignAction';
 import {
   deadlineInWindow,
@@ -13,10 +13,18 @@ import {
   freshDeadlineWindow,
   seatsAddable,
   campaignMenuRows,
+  type CampaignIslandAction,
   type CampaignMenuAction,
 } from '../../../utils/campaignLifecycle';
 
-type LifecycleSheet = 'menu' | 'seats' | 'deadline' | 'end' | 'delete';
+type LifecycleSheet = 'menu' | 'seats' | 'deadline' | 'end' | 'delete' | 'reduce' | 'reopen' | 'extend';
+
+/** The two ways back to «open»: a suspended campaign, or a filled one whose seat was freed. */
+type ReopenPath = Extract<CampaignActionPath, 'reopen' | 'seats/reopen'>;
+
+/** Reopening asks for a new date only when the server says the old one can't stand (§3.3, §3.4). */
+const reopenNeedsDate = (campaign: CampaignDetail, path: ReopenPath): boolean =>
+  path === 'reopen' ? (campaign.timers.suspension?.reopenNeedsDeadline ?? false) : (campaign.seatFreed?.deadlinePassed ?? false);
 
 /** The seat / deadline answer refused because the campaign moved: re-read it, the user decides again. */
 const STALE_CODES = new Set(['campaign_has_occupied_seats', 'campaign_no_occupied_seats']);
@@ -24,9 +32,11 @@ const STALE_CODES = new Set(['campaign_has_occupied_seats', 'campaign_no_occupie
 /**
  * The campaign's «⋯» and the sheets behind it (contract §3.3): add seats (with a new deadline once
  * the old one passed), push the deadline, edit (the wizard's live form), copy, end it (close
- * recruiting once a seat is taken, cancel while none is) and delete a draft. One sheet at a time:
- * a row closes the menu and its sheet opens once the menu is gone. Every answer is the server's
- * campaign, which replaces the page; a conflict says why and re-reads it.
+ * recruiting once a seat is taken, cancel while none is) and delete a draft. The island's decisions
+ * (§3.4) share the sheets: reopen (a new date only when the server asks), +4 days, drop freed
+ * seats. One sheet at a time: a menu row closes the menu and its sheet opens once the menu is
+ * gone. Every answer is the server's campaign, which replaces the page; a conflict says why and
+ * re-reads it.
  */
 export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () => void) => {
   const { t } = useTranslation();
@@ -39,18 +49,21 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
   const [seats, setSeats] = useState(1);
   const [pickedDay, setPickedDay] = useState<string | null>(null);
   // Which sheet the calendar belongs to; kept while that sheet slides away, so its dates don't switch.
-  const [dateFor, setDateFor] = useState<'seats' | 'deadline'>('deadline');
+  const [dateFor, setDateFor] = useState<'seats' | 'deadline' | 'reopen'>('deadline');
+  const [reopenPath, setReopenPath] = useState<ReopenPath>('reopen');
   const afterMenu = useRef<(() => void) | null>(null);
 
   const rows = useMemo(() => (campaign ? campaignMenuRows(campaign, openedAt) : []), [campaign, openedAt]);
   const endAction: 'close' | 'cancel' = rows.some(entry => entry.action === 'close') ? 'close' : 'cancel';
   const maxSeats = campaign ? seatsAddable(campaign) : 0;
   const needsDeadline = campaign?.timers.deadlinePassed ?? false;
+  const reopenNeedsDeadline = campaign ? reopenNeedsDate(campaign, reopenPath) : false;
   const deadlineWindow = useMemo(() => {
     if (!campaign) return null;
     if (dateFor === 'seats') return needsDeadline ? freshDeadlineWindow(campaign, openedAt) : null;
+    if (dateFor === 'reopen') return reopenNeedsDeadline ? freshDeadlineWindow(campaign, openedAt) : null;
     return extendDeadlineWindow(campaign, openedAt);
-  }, [campaign, dateFor, needsDeadline, openedAt]);
+  }, [campaign, dateFor, needsDeadline, openedAt, reopenNeedsDeadline]);
   const pickedAt = pickedDay !== null && deadlineWindow ? deadlineInWindow(pickedDay, deadlineWindow) : null;
 
   const openMenu = useCallback(() => {
@@ -117,7 +130,7 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
 
   /** Runs one sheet's action; `true` closes the sheet. Refused-because-stale answers close it too. */
   const runFromSheet = useCallback(
-    async (path: 'seats' | 'deadline' | 'close' | 'cancel', body: CampaignActionBody | undefined, done: string) => {
+    async (path: CampaignActionPath, body: CampaignActionBody | undefined, done: string) => {
       const outcome = await action.run(path, body ? { body } : {});
       if (outcome.ok) {
         setSheet(null);
@@ -173,6 +186,93 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
     [endAction, runFromSheet, t],
   );
 
+  /** A decision the island's buttons carry: opens its sheet, or runs straight away when nothing is left to ask. */
+  const reopen = useCallback(
+    async (path: ReopenPath) => {
+      if (!campaign || action.isRunning) return;
+      const done = t('marketplace.campaign.detail.reopen.done');
+      setOpenedAt(Date.now());
+      if (!reopenNeedsDate(campaign, path)) {
+        await runFromSheet(path, undefined, done);
+        return;
+      }
+      setReopenPath(path);
+      setPickedDay(null);
+      setDateFor('reopen');
+      setSheet('reopen');
+    },
+    [action.isRunning, campaign, runFromSheet, t],
+  );
+
+  const confirmReopen = useCallback(async () => {
+    if (action.isRunning) return false;
+    if (reopenNeedsDeadline && pickedAt === null) {
+      toastService.info(t('marketplace.campaign.detail.deadlineSheet.pickFirst'));
+      return false;
+    }
+    const body: CampaignActionBody | undefined =
+      reopenNeedsDeadline && pickedAt !== null ? { apply_deadline_at: new Date(pickedAt).toISOString() } : undefined;
+    return runFromSheet(reopenPath, body, t('marketplace.campaign.detail.reopen.done'));
+  }, [action.isRunning, pickedAt, reopenNeedsDeadline, reopenPath, runFromSheet, t]);
+
+  const confirmReduce = useCallback(async () => {
+    if (!campaign || action.isRunning) return false;
+    const rest = campaign.seatsTotal - seats;
+    // Dropping the last seat ends the campaign (§3.3), so the words follow what will happen.
+    const done =
+      rest > 0
+        ? t('marketplace.campaign.detail.reduce.done', { total: rest })
+        : t('marketplace.campaign.detail.end.cancelled');
+    return runFromSheet('seats/reduce', { seats }, done);
+  }, [action.isRunning, campaign, runFromSheet, seats, t]);
+
+  const confirmExtend = useCallback(
+    () => runFromSheet('zero-applicants/extend', undefined, t('marketplace.campaign.detail.zeroExtend.done')),
+    [runFromSheet, t],
+  );
+
+  const submitReopen = useCallback(() => {
+    confirmReopen().catch(() => undefined);
+  }, [confirmReopen]);
+  const submitReduce = useCallback(() => {
+    confirmReduce().catch(() => undefined);
+  }, [confirmReduce]);
+  const submitExtend = useCallback(() => {
+    confirmExtend().catch(() => undefined);
+  }, [confirmExtend]);
+
+  const decide = useCallback(
+    (picked: CampaignIslandAction) => {
+      switch (picked) {
+        case 'reopen':
+          reopen('reopen').catch(() => undefined);
+          return;
+        case 'reopenSeat':
+          reopen('seats/reopen').catch(() => undefined);
+          return;
+        case 'reduce':
+          setSeats(1);
+          setSheet('reduce');
+          return;
+        case 'extend':
+          setSheet('extend');
+          return;
+        case 'edit':
+          navigate('CampaignWizard', { campaignId: id, source: 'edit' });
+          return;
+        case 'cancel':
+          setOpenedAt(Date.now());
+          setSheet('end');
+          return;
+        default: {
+          const _exhaustive: never = picked;
+          return _exhaustive;
+        }
+      }
+    },
+    [id, reopen],
+  );
+
   const confirmDelete = useCallback(async () => {
     if (!campaign || isDeleting) return;
     try {
@@ -196,6 +296,9 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
     deadlineVisible: sheet === 'deadline',
     endVisible: sheet === 'end',
     deleteVisible: sheet === 'delete',
+    reduceVisible: sheet === 'reduce',
+    reopenVisible: sheet === 'reopen',
+    extendVisible: sheet === 'extend',
     openMenu,
     close,
     onMenuDismissed,
@@ -216,6 +319,12 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
     submitDeadline,
     confirmEnd,
     confirmDelete,
+    reopenPath,
+    reopenNeedsDeadline,
+    decide,
+    submitReopen,
+    submitReduce,
+    submitExtend,
   };
 };
 

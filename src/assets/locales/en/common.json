@@ -1438,7 +1438,15 @@
           "seatFreed": {
             "title_one": "A seat was freed",
             "title_other": "{{count}} seats were freed",
-            "body": "A creator withdrew before work began. Replace them or reduce the seats."
+            "body": "A creator withdrew before work began. Decide what happens to the seat."
+          },
+          "actions": {
+            "reopen": "Reopen",
+            "reopenSeat": "Reopen applications",
+            "reduce": "Reduce seats",
+            "extend": "+4 days",
+            "edit": "Edit terms",
+            "cancel": "Cancel"
           },
           "unit": {
             "days": "days",
@@ -1486,7 +1494,8 @@
         },
         "dock": {
           "resume": "Finish the campaign",
-          "resubmit": "Edit and resubmit"
+          "resubmit": "Edit and resubmit",
+          "reopen": "Reopen"
         },
         "menu": {
           "title": "Campaign actions",
@@ -1544,6 +1553,31 @@
           "caption": "This can't be undone",
           "closed": "Recruiting closed",
           "cancelled": "Campaign cancelled"
+        },
+        "reopen": {
+          "title": "Reopen the campaign",
+          "body": "Pick a new application deadline before reopening.",
+          "seatTitle": "Reopen applications",
+          "seatBody": "Pick a new deadline so creators can apply for the free seat.",
+          "confirm": "Reopen",
+          "done": "Applications are open again"
+        },
+        "reduce": {
+          "title": "Reduce seats",
+          "body": "Drop the freed seats you don't want to fill.",
+          "a11y": "Seats to drop",
+          "cancels": "Dropping the last seat ends the campaign.",
+          "confirm_one": "Drop 1 seat",
+          "confirm_other": "Drop {{count}} seats",
+          "done": "Seats are now {{total}}"
+        },
+        "zeroExtend": {
+          "title": "Extend by 4 days",
+          "body": "Applications stay open until {{date}}. This can only be used once.",
+          "bodyNoDate": "Applications stay open 4 more days. This can only be used once.",
+          "confirm": "Extend 4 days",
+          "cancel": "Not now",
+          "done": "Deadline extended by 4 days"
         }
       },
       "wizard": {

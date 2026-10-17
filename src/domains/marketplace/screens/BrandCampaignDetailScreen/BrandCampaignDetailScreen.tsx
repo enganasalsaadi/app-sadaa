@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { RefreshControl, type ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import type { ParseKeys } from 'i18next';
 import { MoreHorizontal } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, ConfirmSheet, ErrorState, Layout, LayoutFooter, StaggerIn } from '@/shared/ui';
@@ -16,7 +17,16 @@ import { CampaignActionsSheet } from './components/CampaignActionsSheet';
 import { CampaignAddSeatsSheet } from './components/CampaignAddSeatsSheet';
 import { CampaignDeadlineSheet } from './components/CampaignDeadlineSheet';
 import { CampaignEndSheet } from './components/CampaignEndSheet';
-import { useBrandCampaignDetailScreen } from './hooks/useBrandCampaignDetailScreen';
+import { CampaignExtendSheet } from './components/CampaignExtendSheet';
+import { CampaignReduceSheet } from './components/CampaignReduceSheet';
+import { CampaignReopenSheet } from './components/CampaignReopenSheet';
+import { useBrandCampaignDetailScreen, type CampaignDetailDock } from './hooks/useBrandCampaignDetailScreen';
+
+const DOCK_LABEL = {
+  resume: 'marketplace.campaign.detail.dock.resume',
+  resubmit: 'marketplace.campaign.detail.dock.resubmit',
+  reopen: 'marketplace.campaign.detail.dock.reopen',
+} as const satisfies Record<CampaignDetailDock, ParseKeys>;
 
 /**
  * The brand's campaign page (`sada://campaigns/{id}`): the cover with the status and time left,
@@ -75,8 +85,9 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
           dock ? (
             <LayoutFooter
               primary={{
-                label: t(dock === 'resubmit' ? 'marketplace.campaign.detail.dock.resubmit' : 'marketplace.campaign.detail.dock.resume'),
-                onPress: vm.openWizard,
+                label: t(DOCK_LABEL[dock]),
+                onPress: dock === 'reopen' ? vm.reopenFromDock : vm.openWizard,
+                loading: dock === 'reopen' && lifecycle.isRunning,
               }}
             />
           ) : undefined
@@ -90,7 +101,7 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
       >
         <Box style={styles.sheet} px="xl" pt="xl" pb="5xl">
           {/* Spaces itself: it renders nothing most of the time, and a null child would still take a gap. */}
-          <CampaignIsland campaign={campaign} />
+          <CampaignIsland campaign={campaign} onAction={lifecycle.decide} busy={lifecycle.isRunning} />
           <StaggerIn gap="lg">
             {vm.reviewNote ? <CampaignReviewNoteCard note={vm.reviewNote} /> : null}
             {vm.showReadiness ? (
@@ -107,6 +118,9 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
       <CampaignAddSeatsSheet campaign={campaign} lifecycle={lifecycle} />
       <CampaignDeadlineSheet campaign={campaign} lifecycle={lifecycle} />
       <CampaignEndSheet campaign={campaign} lifecycle={lifecycle} />
+      <CampaignReduceSheet campaign={campaign} lifecycle={lifecycle} />
+      <CampaignReopenSheet lifecycle={lifecycle} />
+      <CampaignExtendSheet campaign={campaign} lifecycle={lifecycle} />
       <ConfirmSheet
         visible={lifecycle.deleteVisible}
         onClose={lifecycle.close}
