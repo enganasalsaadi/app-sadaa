@@ -7,10 +7,11 @@ import type { PushTarget } from '@/core/notification';
  * applications too: once selected, an application shows the linked deal's stage (CM6 `state`), and
  * `campaign_selected` / `campaign_drop_*` arrive with the deal's link. The brand's launch room lists those
  * deals, and a deal push can't name its campaign, so it stales every drop dashboard (only the one on
- * screen refetches). Other kinds touch nothing here.
+ * screen refetches). The shipping manifest follows the same way: a funded deal or an address entered
+ * adds or frees a parcel. Other kinds touch nothing here.
  */
 export const campaignPushTags = (target: PushTarget | null) => {
-  if (target?.kind === 'deal') return [{ type: 'CampaignApplicationList', id: 'LIST' }, 'CampaignDrop'] as const;
+  if (target?.kind === 'deal') return [{ type: 'CampaignApplicationList', id: 'LIST' }, 'CampaignDrop', 'CampaignShipping'] as const;
   if (target?.kind !== 'campaign') return [];
   const id = target.campaignId;
   return [
@@ -18,6 +19,7 @@ export const campaignPushTags = (target: PushTarget | null) => {
     { type: 'CampaignList', id: 'LIST' },
     { type: 'CampaignHistory', id },
     { type: 'CampaignDrop', id },
+    { type: 'CampaignShipping', id },
     'BrandHome',
     { type: 'CreatorCampaign', id },
     { type: 'CreatorCampaignList', id: 'FEED' },

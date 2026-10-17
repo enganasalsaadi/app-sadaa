@@ -111,7 +111,12 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
               <CampaignSeatsCard campaign={campaign} onReview={vm.openApplicants} />
             )}
             {vm.tools?.any ? (
-              <CampaignBatchToolsCard campaign={campaign} tools={vm.tools} onOpenDrop={vm.openDrop} />
+              <CampaignBatchToolsCard
+                campaign={campaign}
+                tools={vm.tools}
+                onOpenDrop={vm.openDrop}
+                onOpenShipping={vm.openShipping}
+              />
             ) : null}
             <CampaignTermsCard campaign={campaign} locked={vm.termsLocked} />
             <CampaignHistoryCard {...vm.history} />

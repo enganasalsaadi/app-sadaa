@@ -2056,6 +2056,10 @@
             "title": "Launch room",
             "pending": "Drop in {{remaining}}",
             "live": "Follow the creators on air"
+          },
+          "shipping": {
+            "title": "Shipping manifest",
+            "subtitle": "Send several creators' parcels at once"
           }
         }
       },
@@ -2124,6 +2128,80 @@
           "filtered": {
             "title": "Nobody in this state",
             "message": "Try another state or show all."
+          }
+        }
+      },
+      "shipping": {
+        "title": "Shipping manifest",
+        "subtitle": "{{title}} · {{parcels}}",
+        "parcels_one": "{{count}} parcel",
+        "parcels_other": "{{count}} parcels",
+        "loadFailed": "Couldn't load the shipping manifest",
+        "totals": {
+          "awaiting": "Waiting",
+          "ready": "Ready",
+          "blocked": "On hold",
+          "shipped": "Shipped"
+        },
+        "viewLog": "Viewing addresses is logged by the server. No export.",
+        "bulk": {
+          "label": "Courier for all",
+          "selectReady": "Select ready ({{total}})",
+          "clearReady": "Clear selection"
+        },
+        "parcel": {
+          "unnamed": "Creator",
+          "reship": "Re-ship · {{remaining}} left",
+          "ready": "Ready",
+          "locked": "On hold",
+          "failed": "Not shipped",
+          "sent": "Shipped",
+          "select": "Select {{name}} to ship",
+          "deselect": "Unselect {{name}}",
+          "lockedA11y": "{{name}} is on hold",
+          "fill": "Tap to enter the shipping details",
+          "courierPicked": "{{courier}} · add the tracking number",
+          "briefWindow": "The creator is reviewing the brief · shipping opens in {{remaining}}",
+          "briefWindowOpen": "The creator is reviewing the brief · shipping opens soon",
+          "addressMissing": "The creator hasn't added their address yet",
+          "stampSent": "Shipped",
+          "stampReshipped": "Re-shipped"
+        },
+        "address": {
+          "hidden": "Address hidden",
+          "reveal": "Show",
+          "hide": "Hide",
+          "revealA11y": "Show {{name}}'s address",
+          "hideA11y": "Hide {{name}}'s address",
+          "copy": "Copy {{name}}'s address"
+        },
+        "dock": {
+          "hold": "Hold to ship {{total}}",
+          "retry": "Resend the failed ({{total}})",
+          "sending": "Sending…",
+          "caption": "A number per parcel · no undo after sending",
+          "captionChunks": "{{chunks}} batches · no undo after sending",
+          "holdA11y": "Press and hold for a second to ship the selected parcels"
+        },
+        "toast": {
+          "sent": "{{shipped}} of {{total}} shipped",
+          "allSent": "All parcels shipped ({{total}})",
+          "someFailed": "{{shipped}} shipped, {{failed}} failed. Fix the failed ones and send again.",
+          "pickOne": "Select at least one parcel",
+          "fixFields": "Complete the details of the selected parcels"
+        },
+        "batchError": {
+          "title": "Couldn't send the batch",
+          "message": "{{message}} Nothing in the last batch shipped; you can try again."
+        },
+        "empty": {
+          "idle": {
+            "title": "Nothing is waiting to ship",
+            "message": "Every creator whose deal is funded and has no parcel yet shows here, and every parcel a creator reported as a problem."
+          },
+          "noShipping": {
+            "title": "This campaign ships nothing",
+            "message": "The campaign has no product, so there are no parcels."
           }
         }
       },

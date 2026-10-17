@@ -9,11 +9,7 @@ import { applyServerFieldErrors, normalizeApiError, type AppApiError } from '@/c
 import { toastService } from '@/core/toast';
 import { checkUpload, normalizeMime } from '@/core/upload';
 import { useReportShipmentIssueMutation } from '../api/dealShippingApi';
-import {
-  DEAL_COURIER_LABEL,
-  DEAL_SHIPPING_LIMITS,
-  type DealCourierChoice,
-} from '../constants/dealShipping';
+import { DEAL_SHIPPING_LIMITS, dealCourierLabels } from '../constants/dealShipping';
 import { DEAL_ISSUE_PHOTO_POLICY } from '../constants/dealUploads';
 import {
   createDealIssueSchema,
@@ -83,13 +79,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
   const [sheet, setSheet] = useState<DealShippingSheet | null>(null);
   const close = useCallback(() => setSheet(null), []);
 
-  const courierLabels = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(DEAL_COURIER_LABEL).map(([key, label]) => [key, t(label)]),
-      ) as Record<DealCourierChoice, string>,
-    [t],
-  );
+  const courierLabels = useMemo(() => dealCourierLabels(t), [t]);
 
   // — Forms ——————————————————————————————————————————————————————————
   const shipSchema = useMemo(() => createDealShipSchema(t), [t]);

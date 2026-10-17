@@ -187,6 +187,7 @@ export type DealsStackParamList = {
   };
   /** Brand only: the launch room of a campaign with a drop (Public Campaigns PC8). */
   CampaignDrop: { id: string };
+  CampaignShipping: { id: string };
 };
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */

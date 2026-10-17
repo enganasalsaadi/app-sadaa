@@ -2185,6 +2185,10 @@
             "title": "غرفة الإطلاق",
             "pending": "الدروب بعد {{remaining}}",
             "live": "تابع المؤثرين على الهواء"
+          },
+          "shipping": {
+            "title": "كشف الشحن",
+            "subtitle": "أرسل طرود عدة مؤثرين دفعة واحدة"
           }
         }
       },
@@ -2261,6 +2265,84 @@
           "filtered": {
             "title": "لا أحد في هذه الحالة",
             "message": "جرّب حالة أخرى أو اعرض الكل."
+          }
+        }
+      },
+      "shipping": {
+        "title": "كشف الشحن",
+        "subtitle": "{{title}} · {{parcels}}",
+        "parcels_zero": "لا طرود",
+        "parcels_one": "طرد واحد",
+        "parcels_two": "طردان",
+        "parcels_few": "{{count}} طرود",
+        "parcels_many": "{{count}} طرداً",
+        "parcels_other": "{{count}} طرد",
+        "loadFailed": "تعذّر تحميل كشف الشحن",
+        "totals": {
+          "awaiting": "بانتظار",
+          "ready": "جاهز",
+          "blocked": "موقوف",
+          "shipped": "شُحن"
+        },
+        "viewLog": "عرض العناوين مسجّل لدى الخادم، ولا تصدير.",
+        "bulk": {
+          "label": "شركة الكل",
+          "selectReady": "حدّد الجاهز ({{total}})",
+          "clearReady": "ألغِ التحديد"
+        },
+        "parcel": {
+          "unnamed": "مؤثر",
+          "reship": "إعادة شحن · تبقّى {{remaining}}",
+          "ready": "جاهز",
+          "locked": "موقوف",
+          "failed": "لم يُشحن",
+          "sent": "شُحن",
+          "select": "حدّد {{name}} للشحن",
+          "deselect": "ألغِ تحديد {{name}}",
+          "lockedA11y": "{{name}} موقوف",
+          "fill": "اضغط لإدخال بيانات الشحن",
+          "courierPicked": "{{courier}} · أكمل رقم التتبع",
+          "briefWindow": "المؤثر يراجع البريف · يُفتح الشحن بعد {{remaining}}",
+          "briefWindowOpen": "المؤثر يراجع البريف · الشحن يُفتح قريباً",
+          "addressMissing": "لم يُدخل المؤثر عنوانه بعد",
+          "stampSent": "شُحن الآن",
+          "stampReshipped": "أُعيد شحنه"
+        },
+        "address": {
+          "hidden": "العنوان مخفي",
+          "reveal": "اكشف",
+          "hide": "أخفِ",
+          "revealA11y": "اكشف عنوان {{name}}",
+          "hideA11y": "أخفِ عنوان {{name}}",
+          "copy": "نسخ عنوان {{name}}"
+        },
+        "dock": {
+          "hold": "اضغط مطولاً لشحن {{total}}",
+          "retry": "أعد إرسال المتعثّر ({{total}})",
+          "sending": "يُرسل…",
+          "caption": "الرقم لكل طرد · لا تراجع بعد الإرسال",
+          "captionChunks": "{{chunks}} دفعات · لا تراجع بعد الإرسال",
+          "holdA11y": "اضغط مطوّلاً لثانية لشحن الطرود المحددة"
+        },
+        "toast": {
+          "sent": "شُحن {{shipped}} من {{total}}",
+          "allSent": "شُحنت كل الطرود ({{total}})",
+          "someFailed": "شُحن {{shipped}} وتعثّر {{failed}}. عدّل المتعثّر وأعد إرساله.",
+          "pickOne": "حدّد طرداً واحداً على الأقل",
+          "fixFields": "أكمل بيانات الطرود المحددة"
+        },
+        "batchError": {
+          "title": "تعذّر إرسال الدفعة",
+          "message": "{{message}} لم يُشحن شيء من الدفعة الأخيرة، يمكنك إعادة المحاولة."
+        },
+        "empty": {
+          "idle": {
+            "title": "لا شيء ينتظر الشحن",
+            "message": "يظهر هنا كل مؤثر موّلت صفقته وبقي بلا طرد، وكل طرد أبلغ عنه المؤثر كمشكلة."
+          },
+          "noShipping": {
+            "title": "هذه الحملة بلا شحن",
+            "message": "الحملة بدون منتج، فلا طرود فيها."
           }
         }
       },

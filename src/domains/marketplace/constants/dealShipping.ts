@@ -1,4 +1,4 @@
-import type { ParseKeys } from 'i18next';
+import type { ParseKeys, TFunction } from 'i18next';
 import {
   ArrowLeftRight,
   Clock,
@@ -21,6 +21,15 @@ export const DEAL_COURIER_LABEL = {
   direct: 'marketplace.deals.shipping.couriers.direct',
   other: 'marketplace.deals.shipping.couriers.other',
 } as const satisfies Record<DealCourierChoice, ParseKeys>;
+
+/** The couriers' names in the current language, for the waybill label and the chips. */
+export const dealCourierLabels = (t: TFunction): Record<DealCourierChoice, string> => ({
+  alqadmous: t(DEAL_COURIER_LABEL.alqadmous),
+  aramex: t(DEAL_COURIER_LABEL.aramex),
+  syrianPost: t(DEAL_COURIER_LABEL.syrianPost),
+  direct: t(DEAL_COURIER_LABEL.direct),
+  other: t(DEAL_COURIER_LABEL.other),
+});
 
 /**
  * The creator's five shipping problems (server `DealShippingIssueReasonEnum`), as tiles.

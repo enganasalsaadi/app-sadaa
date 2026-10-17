@@ -228,15 +228,15 @@
     "semantic_hash": ""
   },
   "src/assets/locales/ar/common.json": {
-    "mtime": 1792261701.3458667,
-    "seen": 1792261778.504766,
-    "ast_hash": "f54eb4bce711da0b8ed46f79484eb922",
+    "mtime": 1792262776.8670783,
+    "seen": 1792262974.81617,
+    "ast_hash": "b619ac8b998f642ec8f48700e86d3680",
     "semantic_hash": ""
   },
   "src/assets/locales/en/common.json": {
-    "mtime": 1792261701.3466637,
-    "seen": 1792261778.504766,
-    "ast_hash": "39d536e77f62be8a6f4ca0839c249f15",
+    "mtime": 1792262776.8687372,
+    "seen": 1792262974.816171,
+    "ast_hash": "ea19c446a79cc1d799e3bdfea53b94fd",
     "semantic_hash": ""
   },
   "src/assets/lottie/bell.json": {
@@ -288,9 +288,9 @@
     "semantic_hash": "6c4b7ff2f8f93fea5abc8135808e3f78"
   },
   "src/core/api/baseApi.ts": {
-    "mtime": 1792261218.5556748,
-    "seen": 1792261778.5047748,
-    "ast_hash": "eb8ac0404a8669473c0913019bf59ec1",
+    "mtime": 1792262118.7211607,
+    "seen": 1792262974.81618,
+    "ast_hash": "0b647faa301a7975c372689689e46343",
     "semantic_hash": ""
   },
   "src/core/api/configApi.ts": {
@@ -420,9 +420,9 @@
     "semantic_hash": "28115a09d64c6ae31a7850e6d1cdee29"
   },
   "src/core/navigation/types.ts": {
-    "mtime": 1792261376.4101365,
-    "seen": 1792261778.504807,
-    "ast_hash": "a7da0c1ac1148fb5677e6ff07ce0f9f3",
+    "mtime": 1792262442.816245,
+    "seen": 1792262974.81621,
+    "ast_hash": "74ef708bdb2f53222d2c6d8c24c01ab4",
     "semantic_hash": ""
   },
   "src/core/notification/NotificationManager.ts": {
@@ -8178,9 +8178,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/dealShipping.ts": {
-    "mtime": 1792084180.5595262,
-    "seen": 1792158021.192576,
-    "ast_hash": "85c55f7f4b02b106b6d977caf9d1d5cf",
+    "mtime": 1792262547.0892146,
+    "seen": 1792262974.816728,
+    "ast_hash": "55e77b60b0d727530deb3384179e6734",
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/dealUploads.ts": {
@@ -8292,9 +8292,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealShipping.ts": {
-    "mtime": 1792255071.2451541,
-    "seen": 1792255242.7174258,
-    "ast_hash": "a6a3dbd6d01ca71045e30ef100dbe49d",
+    "mtime": 1792262547.08977,
+    "seen": 1792262974.81675,
+    "ast_hash": "59fbdda75802305527ca9cfd914dd907",
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealSlipCopy.ts": {
@@ -8364,9 +8364,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/navigation/DealsNavigator.tsx": {
-    "mtime": 1792261376.4106436,
-    "seen": 1792261778.5053802,
-    "ast_hash": "9ce5922856fc78d30cfbdf3a412d8c73",
+    "mtime": 1792262442.8167028,
+    "seen": 1792262974.816759,
+    "ast_hash": "2e5f8d6e9872c9ad5747dd0d92c0aa48",
     "semantic_hash": ""
   },
   "src/domains/marketplace/schemas/__tests__/dealCancelSchema.test.ts": {
@@ -10230,9 +10230,9 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792261738.561665,
-    "seen": 1792261778.505885,
-    "ast_hash": "d97bd4141fcd96c0d52e5db3a5cb5233",
+    "mtime": 1792262916.4722233,
+    "seen": 1792262974.8172748,
+    "ast_hash": "6a4edf5123e2b4091bf69cac2ee57497",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
@@ -10374,9 +10374,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignQuery.ts": {
-    "mtime": 1792261218.5550303,
-    "seen": 1792261778.5056682,
-    "ast_hash": "fea92d59909fcaf99ff79c09fb552761",
+    "mtime": 1792262118.7215393,
+    "seen": 1792262974.8170629,
+    "ast_hash": "30a2e3dde0512c2541ba7b9309db627c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignComingSoon.tsx": {
@@ -10398,9 +10398,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandCampaignDetailScreen/BrandCampaignDetailScreen.tsx": {
-    "mtime": 1792261609.7581632,
-    "seen": 1792261778.505413,
-    "ast_hash": "363f21c5b01d9849ef4ba742a4857bba",
+    "mtime": 1792262442.8173451,
+    "seen": 1792262974.8167949,
+    "ast_hash": "c1c6905c159647d4e2c0011c40845543",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandCampaignDetailScreen/index.ts": {
@@ -10434,15 +10434,15 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignPush.test.ts": {
-    "mtime": 1792261229.0389214,
-    "seen": 1792261778.505635,
-    "ast_hash": "64f40e0beddadde05bc440d4702ac6a0",
+    "mtime": 1792262432.3245168,
+    "seen": 1792262974.817028,
+    "ast_hash": "1acb0668863e9f5f256407309d13c6a7",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignPush.ts": {
-    "mtime": 1792261224.7355237,
-    "seen": 1792261778.5056682,
-    "ast_hash": "cabcb2fbc6c3abf107779dd16b1990fa",
+    "mtime": 1792262432.324429,
+    "seen": 1792262974.817062,
+    "ast_hash": "3aecd2c7c2dc72fa41ac01b2f0c8d8ee",
     "semantic_hash": ""
   },
   "src/domains/auth/hooks/useInfluencerGenderItems.ts": {
@@ -11214,9 +11214,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandCampaignDetailScreen/hooks/useBrandCampaignDetailScreen.ts": {
-    "mtime": 1792261609.7577405,
-    "seen": 1792261778.505418,
-    "ast_hash": "2c8023f88d7e433a5b2da0a3021e33c2",
+    "mtime": 1792262442.8170106,
+    "seen": 1792262974.8168,
+    "ast_hash": "68a154c034814e48dde8bfa47cb9012e",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignDetail.test.ts": {
@@ -12042,15 +12042,15 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/campaignBatchApi.ts": {
-    "mtime": 1792261218.565074,
-    "seen": 1792261778.5051992,
-    "ast_hash": "a11ac625e5fc62282dac9bb40d2b8a10",
+    "mtime": 1792262118.7263486,
+    "seen": 1792262974.816582,
+    "ast_hash": "158ffbd5fbd05a0198e2cab50b7239f7",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignBatchToolsCard.tsx": {
-    "mtime": 1792261701.3445978,
-    "seen": 1792261778.505216,
-    "ast_hash": "f7fd5aae1ec873333c42c344fe439227",
+    "mtime": 1792262442.82146,
+    "seen": 1792262974.8165991,
+    "ast_hash": "c146747a528d9cebc8400945bb3cac5c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/campaignDrop.ts": {
@@ -12144,9 +12144,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignBatchTools.test.ts": {
-    "mtime": 1792261663.31107,
-    "seen": 1792261778.5056262,
-    "ast_hash": "03e420265029b4b6b7521b1807b523d7",
+    "mtime": 1792262308.3522208,
+    "seen": 1792262974.81702,
+    "ast_hash": "70aa47f8eab13e7119579f80268e0849",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignDrop.test.ts": {
@@ -12162,9 +12162,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignBatchTools.ts": {
-    "mtime": 1792261609.7352073,
-    "seen": 1792261778.5056589,
-    "ast_hash": "e6560f1cbe88c1826fa86bf127d7ae7e",
+    "mtime": 1792262308.3331385,
+    "seen": 1792262974.817054,
+    "ast_hash": "4f81361fe731c17e65146396c3d9007b",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignDrop.ts": {
@@ -12177,6 +12177,138 @@
     "mtime": 1792261192.585609,
     "seen": 1792261778.505662,
     "ast_hash": "17c9348c23c23a3f67375f6c5fcb2335",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/schemas/__tests__/campaignShippingSchema.test.ts": {
+    "mtime": 1792262364.1030128,
+    "seen": 1792262974.816761,
+    "ast_hash": "b824f62a4fffd30aa39e5af60acd860f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/schemas/campaignShippingSchema.ts": {
+    "mtime": 1792262269.9305916,
+    "seen": 1792262974.816768,
+    "ast_hash": "2e58eccf8e9bb9ed6f3fd4b831a373fa",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/BrandCampaignShippingScreen.tsx": {
+    "mtime": 1792262830.0282729,
+    "seen": 1792262974.8168142,
+    "ast_hash": "7e1b87e3ad2165ff0b0b0c9e208dffda",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelAddress.tsx": {
+    "mtime": 1792262666.6221056,
+    "seen": 1792262974.8168151,
+    "ast_hash": "bedd08d558effe15b5c03ef0787f6969",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelForm.tsx": {
+    "mtime": 1792262687.0159576,
+    "seen": 1792262974.8168151,
+    "ast_hash": "80c11470d113e44222a39d6099097c75",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelHint.tsx": {
+    "mtime": 1792262708.4371297,
+    "seen": 1792262974.816816,
+    "ast_hash": "e2e038d7449f1d3e32a24adef59816c1",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelNotice.tsx": {
+    "mtime": 1792262708.436956,
+    "seen": 1792262974.816816,
+    "ast_hash": "862bb2f6c028c70ef7fbdb87869af982",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelSent.tsx": {
+    "mtime": 1792262708.4407392,
+    "seen": 1792262974.8168168,
+    "ast_hash": "84372a59df3fe00fd78fa824c73982b1",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ParcelTick.tsx": {
+    "mtime": 1792262666.6198552,
+    "seen": 1792262974.8168168,
+    "ast_hash": "7b15b65779065f18bd04459e5cc3be81",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ShippingBulkBar.tsx": {
+    "mtime": 1792262666.6175926,
+    "seen": 1792262974.816818,
+    "ast_hash": "9513148fc9d70b89a515c5efec99b53a",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ShippingDock.tsx": {
+    "mtime": 1792262730.627813,
+    "seen": 1792262974.816818,
+    "ast_hash": "a06c48a492377edd4dfc524436e43f66",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ShippingParcel.tsx": {
+    "mtime": 1792262776.8656757,
+    "seen": 1792262974.816819,
+    "ast_hash": "7863dc20c5d928b448f0f900fbb09cda",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ShippingSkeleton.tsx": {
+    "mtime": 1792262730.6294188,
+    "seen": 1792262974.816819,
+    "ast_hash": "3558f051a44a68bc67a73ad57281dd1c",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/components/ShippingTotals.tsx": {
+    "mtime": 1792262666.6149857,
+    "seen": 1792262974.81682,
+    "ast_hash": "d9ce7ad1696a8c439f926f766b457cc5",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/hooks/useBrandCampaignShippingScreen.ts": {
+    "mtime": 1792262916.471214,
+    "seen": 1792262974.81682,
+    "ast_hash": "4da0e91d69056c61c8a2b599ccfedd92",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignShippingScreen/index.ts": {
+    "mtime": 1792262730.6313224,
+    "seen": 1792262974.816821,
+    "ast_hash": "3b31a4f32d2cd4f319f03307a814780b",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/types/campaignShipping.ts": {
+    "mtime": 1792262093.5950792,
+    "seen": 1792262974.81701,
+    "ast_hash": "b1cbfb63ba7de1a5019210bb5ee9aaa2",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/types/campaignShippingDto.ts": {
+    "mtime": 1792262093.596928,
+    "seen": 1792262974.8170109,
+    "ast_hash": "978f5c6eb959257998700f1bb327f745",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignShipping.test.ts": {
+    "mtime": 1792262364.1027634,
+    "seen": 1792262974.817031,
+    "ast_hash": "4d1b57d34ac8d65979c21d750bdfcd7e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignShippingMappers.test.ts": {
+    "mtime": 1792262308.3565223,
+    "seen": 1792262974.817031,
+    "ast_hash": "1078a0a2457316bd887ba8c58860983b",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignShipping.ts": {
+    "mtime": 1792262219.7931023,
+    "seen": 1792262974.817065,
+    "ast_hash": "b1ae6bfa9b626d222c68452c3232321e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignShippingMappers.ts": {
+    "mtime": 1792262093.5990217,
+    "seen": 1792262974.817065,
+    "ast_hash": "2e8308a3cc5d5321b511abe6234924d0",
     "semantic_hash": ""
   }
 }
