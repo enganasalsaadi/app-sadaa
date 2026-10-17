@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { BookOpenText, Plus } from 'lucide-react-native';
+import { BookOpenText } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import {
   Box,
@@ -19,8 +19,8 @@ export interface DealsListHeaderProps<T extends string> {
   tab: T;
   onTab: (tab: T) => void;
   onGuide: () => void;
-  /** Brand only, and only while Public Campaigns are on: starts a new campaign. */
-  onNewCampaign?: () => void;
+  /** Replaces the plain title (brand with Public Campaigns on: the «campaigns | deals» switch). */
+  titleSlot?: React.ReactNode;
 }
 
 /**
@@ -34,7 +34,7 @@ const DealsListHeaderComponent = <T extends string>({
   tab,
   onTab,
   onGuide,
-  onNewCampaign,
+  titleSlot,
 }: DealsListHeaderProps<T>) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -56,14 +56,16 @@ const DealsListHeaderComponent = <T extends string>({
     <Box style={styles.header}>
       <Box row align="flex-end" justify="space-between" gap="md">
         <Box flex={1} gap="xs">
-          <Text
-            variant="h1"
-            color={colors.brand.text}
-            accessibilityRole="header"
-            numberOfLines={1}
-          >
-            {title}
-          </Text>
+          {titleSlot ?? (
+            <Text
+              variant="h1"
+              color={colors.brand.text}
+              accessibilityRole="header"
+              numberOfLines={1}
+            >
+              {title}
+            </Text>
+          )}
           <Text
             variant="bodySmall"
             color={colors.text.secondary}
@@ -73,14 +75,6 @@ const DealsListHeaderComponent = <T extends string>({
           </Text>
         </Box>
         <Box row gap="sm">
-          {onNewCampaign ? (
-            <IconButton
-              icon={Plus}
-              variant="soft"
-              onPress={onNewCampaign}
-              accessibilityLabel={t('marketplace.deals.newCampaign')}
-            />
-          ) : null}
           <IconButton
             icon={BookOpenText}
             variant="outline"

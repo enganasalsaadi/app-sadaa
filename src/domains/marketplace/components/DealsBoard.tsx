@@ -38,8 +38,6 @@ export interface DealsBoardModel<T extends string> {
   onRetry: () => void;
   openDeal: (id: string) => void;
   openGuide: () => void;
-  /** Brand with campaigns on: the header's «new campaign» button. */
-  openNewCampaign?: () => void;
   emptyTitle: string;
   emptyHint: string;
   emptyAction: EmptyStateAction | undefined;
@@ -51,6 +49,8 @@ export interface DealsBoardProps<T extends string> {
   errorMessage: string;
   /** Account-level warning above «your turn» (creator strikes); scrolls with the tickets and owns its spacing. */
   notice?: React.ReactElement | null;
+  /** Replaces the header's title (brand with campaigns on: the scope switch). */
+  titleSlot?: React.ReactNode;
 }
 
 /**
@@ -62,6 +62,7 @@ const DealsBoardComponent = <T extends string>({
   emptyIcon,
   errorMessage,
   notice,
+  titleSlot,
 }: DealsBoardProps<T>) => {
   const onScroll = useJSScrollHandler();
   const { role, openDeal } = vm;
@@ -97,7 +98,7 @@ const DealsBoardComponent = <T extends string>({
           tab={vm.tab}
           onTab={vm.setTab}
           onGuide={vm.openGuide}
-          onNewCampaign={vm.openNewCampaign}
+          titleSlot={titleSlot}
         />
       }
     >

@@ -1,18 +1,21 @@
 import React, { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Megaphone } from 'lucide-react-native';
-import { DealsBoard } from '../../components/DealsBoard';
-import { useBrandDealsScreen } from './hooks/useBrandDealsScreen';
+import { CampaignScopeSwitch } from '../../components/CampaignScopeSwitch';
+import { BrandCampaignsScreen } from '../BrandCampaignsScreen';
+import { BrandDealsBoard } from './components/BrandDealsBoard';
+import { useBrandDealsRoot } from './hooks/useBrandDealsRoot';
 
-/** Brand `DealsTab` root (List archetype): the deal board from the brand's side. */
+/**
+ * Brand `DealsTab` root: «My campaigns» and «My deals» as two faces under one switching title.
+ * With Public Campaigns off it is the deal board, as before.
+ */
 const BrandDealsScreenComponent: React.FC = () => {
-  const { t } = useTranslation();
-  const vm = useBrandDealsScreen();
+  const { scope, setScope, campaignsEnabled } = useBrandDealsRoot();
+  if (campaignsEnabled && scope === 'campaigns') {
+    return <BrandCampaignsScreen scope={scope} onScope={setScope} />;
+  }
   return (
-    <DealsBoard
-      vm={vm}
-      emptyIcon={Megaphone}
-      errorMessage={t('marketplace.deals.loadFailed')}
+    <BrandDealsBoard
+      titleSlot={campaignsEnabled ? <CampaignScopeSwitch scope={scope} onScope={setScope} /> : undefined}
     />
   );
 };

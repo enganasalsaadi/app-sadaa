@@ -1373,6 +1373,124 @@
   "marketplace": {
     "campaign": {
       "detailTitle": "الحملة",
+      "list": {
+        "scope": {
+          "campaigns": "حملاتي",
+          "deals": "صفقاتي"
+        },
+        "tabsLabel": "مجموعات الحملات",
+        "tabs": {
+          "drafts": "المسودات",
+          "review": "المراجعة",
+          "live": "المنشورة",
+          "finished": "المنتهية"
+        },
+        "count": {
+          "drafts_zero": "لا مسودات",
+          "drafts_one": "مسودة واحدة",
+          "drafts_two": "مسودتان",
+          "drafts_few": "{{count}} مسودات",
+          "drafts_many": "{{count}} مسودة",
+          "drafts_other": "{{count}} مسودة",
+          "review_zero": "لا حملات قيد المراجعة",
+          "review_one": "حملة قيد المراجعة",
+          "review_two": "حملتان قيد المراجعة",
+          "review_few": "{{count}} حملات قيد المراجعة",
+          "review_many": "{{count}} حملة قيد المراجعة",
+          "review_other": "{{count}} حملة قيد المراجعة",
+          "live_zero": "لا حملات منشورة",
+          "live_one": "حملة منشورة واحدة",
+          "live_two": "حملتان منشورتان",
+          "live_few": "{{count}} حملات منشورة",
+          "live_many": "{{count}} حملة منشورة",
+          "live_other": "{{count}} حملة منشورة",
+          "finished_zero": "لا حملات منتهية",
+          "finished_one": "حملة منتهية واحدة",
+          "finished_two": "حملتان منتهيتان",
+          "finished_few": "{{count}} حملات منتهية",
+          "finished_many": "{{count}} حملة منتهية",
+          "finished_other": "{{count}} حملة منتهية"
+        },
+        "waiting_zero": "لا طلبات تنتظرك",
+        "waiting_one": "طلب واحد ينتظرك",
+        "waiting_two": "طلبان ينتظرانك",
+        "waiting_few": "{{count}} طلبات تنتظرك",
+        "waiting_many": "{{count}} طلباً ينتظرك",
+        "waiting_other": "{{count}} طلب ينتظرك",
+        "applications_zero": "لا طلبات",
+        "applications_one": "طلب واحد",
+        "applications_two": "طلبان",
+        "applications_few": "{{count}} طلبات",
+        "applications_many": "{{count}} طلباً",
+        "applications_other": "{{count}} طلب",
+        "seats": "{{filled}}/{{total}} مقاعد",
+        "seatsA11y": "{{filled}} مقاعد ممتلئة من {{total}}",
+        "perSeat": "للمقعد",
+        "upTo": "حتى",
+        "secured": "الميزانية مؤمّنة",
+        "left": {
+          "days": "{{days}}ي {{hours}}س",
+          "hours": "{{hours}}س {{minutes}}د",
+          "minutes": "{{minutes}}د"
+        },
+        "ribbon": {
+          "suspended": "معلّقة — افتحها لإعادة الفتح",
+          "seatFreed": "مقعد فُرِّغ — قرّر ماذا تفعل",
+          "decide": "قرّر"
+        },
+        "cardA11y": "{{title}}، {{status}}",
+        "attention": {
+          "title": "تحتاج قرارك · {{count}}",
+          "suspended": "معلّقة — تحتاج إعادة فتح",
+          "seatFreed": "مقعد فُرِّغ — استبدل أو قلّص",
+          "changes": "الإدارة طلبت تعديلات",
+          "railA11y": "حملات تنتظر قرارك"
+        },
+        "readiness": "{{done}}/{{total}}",
+        "readinessA11y": "{{done}} من {{total}} أجزاء مكتملة",
+        "untitled": "حملة بلا عنوان",
+        "readyToSend": "جاهزة للإرسال",
+        "missing": "ناقص: {{items}}",
+        "moreMissing": "+{{count}}",
+        "resubmit": "عدّل وأعد الإرسال",
+        "draftMore": "خيارات المسودة",
+        "draftA11y": "{{title}}، {{status}}",
+        "draftsLimit": "{{count}} من {{max}} مسودة",
+        "finishedMeta": "{{filled}} من {{total}} مقاعد • {{date}}",
+        "loadFailed": "تعذّر تحميل حملاتك",
+        "empty": {
+          "drafts": {
+            "title": "لا مسودات",
+            "hint": "ابدأ حملة جديدة، ونحفظ عملك أولاً بأول."
+          },
+          "review": {
+            "title": "لا حملات قيد المراجعة",
+            "hint": "حين ترسل حملة تظهر هنا إلى أن تردّ الإدارة."
+          },
+          "live": {
+            "title": "لا حملات منشورة",
+            "hint": "الحملات المعتمدة تظهر هنا بمقاعدها وطلبات المؤثرين."
+          },
+          "finished": {
+            "title": "لا حملات منتهية",
+            "hint": "الحملات المكتملة أو الملغاة تُحفظ هنا."
+          }
+        },
+        "draftSheet": {
+          "resume": "تابع التعديل",
+          "resumeHint": "أكمل من حيث توقفت",
+          "duplicate": "تكرار",
+          "duplicateHint": "نسخة جديدة تبدأ منها",
+          "limitHint": "وصلت إلى حدّ 20 مسودة، احذف واحدة أولاً",
+          "delete": "حذف",
+          "deleteHint": "لا يمكن التراجع عنه",
+          "deleteTitle": "حذف هذه المسودة؟",
+          "deleteBody": "ستُحذف «{{title}}» نهائياً.",
+          "deleteConfirm": "حذف المسودة",
+          "keep": "إبقاء",
+          "deleted": "حُذفت المسودة"
+        }
+      },
       "wizard": {
         "closedWithDraft": "حُفظت حملتك كمسودة",
         "steps": {

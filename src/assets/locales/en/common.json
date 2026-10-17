@@ -1325,6 +1325,100 @@
   "marketplace": {
     "campaign": {
       "detailTitle": "Campaign",
+      "list": {
+        "scope": {
+          "campaigns": "My campaigns",
+          "deals": "My deals"
+        },
+        "tabsLabel": "Campaign groups",
+        "tabs": {
+          "drafts": "Drafts",
+          "review": "In review",
+          "live": "Live",
+          "finished": "Finished"
+        },
+        "count": {
+          "drafts_one": "{{count}} draft",
+          "drafts_other": "{{count}} drafts",
+          "review_one": "{{count}} campaign in review",
+          "review_other": "{{count}} campaigns in review",
+          "live_one": "{{count}} live campaign",
+          "live_other": "{{count}} live campaigns",
+          "finished_one": "{{count}} finished campaign",
+          "finished_other": "{{count}} finished campaigns"
+        },
+        "waiting_one": "{{count}} application waiting",
+        "waiting_other": "{{count}} applications waiting",
+        "applications_one": "{{count}} application",
+        "applications_other": "{{count}} applications",
+        "seats": "{{filled}}/{{total}} seats",
+        "seatsA11y": "{{filled}} of {{total}} seats filled",
+        "perSeat": "per seat",
+        "upTo": "up to",
+        "secured": "Budget secured",
+        "left": {
+          "days": "{{days}}d {{hours}}h",
+          "hours": "{{hours}}h {{minutes}}m",
+          "minutes": "{{minutes}}m"
+        },
+        "ribbon": {
+          "suspended": "Suspended — open it to reopen",
+          "seatFreed": "A seat freed up — decide what to do",
+          "decide": "Decide"
+        },
+        "cardA11y": "{{title}}, {{status}}",
+        "attention": {
+          "title": "Needs your decision · {{count}}",
+          "suspended": "Suspended — needs reopening",
+          "seatFreed": "Seat freed — replace or reduce",
+          "changes": "Admin asked for changes",
+          "railA11y": "Campaigns waiting on your decision"
+        },
+        "readiness": "{{done}}/{{total}}",
+        "readinessA11y": "{{done}} of {{total}} parts complete",
+        "untitled": "Untitled campaign",
+        "readyToSend": "Ready to send",
+        "missing": "Missing: {{items}}",
+        "moreMissing": "+{{count}}",
+        "resubmit": "Fix and resend",
+        "draftMore": "Draft options",
+        "draftA11y": "{{title}}, {{status}}",
+        "draftsLimit": "{{count}} of {{max}} drafts",
+        "finishedMeta": "{{filled}} of {{total}} seats • {{date}}",
+        "loadFailed": "Couldn't load your campaigns",
+        "empty": {
+          "drafts": {
+            "title": "No drafts",
+            "hint": "Start a new campaign; your work is saved as you go."
+          },
+          "review": {
+            "title": "Nothing in review",
+            "hint": "A campaign you send shows here until the admin answers."
+          },
+          "live": {
+            "title": "No live campaigns",
+            "hint": "Approved campaigns appear here with their seats and creator applications."
+          },
+          "finished": {
+            "title": "No finished campaigns",
+            "hint": "Completed or cancelled campaigns are kept here."
+          }
+        },
+        "draftSheet": {
+          "resume": "Continue editing",
+          "resumeHint": "Pick up where you left off",
+          "duplicate": "Duplicate",
+          "duplicateHint": "A new draft that starts from this one",
+          "limitHint": "You have 20 drafts; delete one first",
+          "delete": "Delete",
+          "deleteHint": "This can't be undone",
+          "deleteTitle": "Delete this draft?",
+          "deleteBody": "\"{{title}}\" will be deleted for good.",
+          "deleteConfirm": "Delete draft",
+          "keep": "Keep it",
+          "deleted": "Draft deleted"
+        }
+      },
       "wizard": {
         "closedWithDraft": "Your campaign was saved as a draft",
         "steps": {
