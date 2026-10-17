@@ -38,8 +38,9 @@ describe('draftSectionsOf', () => {
 
   it('sends only the chosen pricing model, amounts as two-decimal strings', () => {
     const fixed = draftSectionsOf(
-      values({ pricingModel: 'fixed', seatPrice: '100', bidMin: '5', bidMax: '9', budget: '' }),
+      values({ pricingModel: 'fixed', seatPrice: '100', bidMin: '5', bidMax: '9', budget: '300' }),
     );
+    // A budget belongs to bidding only: a fixed price clears it (the server refuses both together).
     expect(fixed.pricing).toEqual({ pricing_model: 'fixed', seat_price_usd: '100.00', budget_usd: null });
 
     const bidding = draftSectionsOf(
@@ -129,7 +130,7 @@ describe('dirtyDraftSections', () => {
     draftSectionsOf({ ...draftValuesFromCampaign(server()), ...patch });
 
   it('lists only the changed parts, in send order', () => {
-    expect(dirtyDraftSections(saved, edited({ budget: '900', shippingMode: 'none', title: 'New name' }))).toEqual([
+    expect(dirtyDraftSections(saved, edited({ seatPrice: '900', shippingMode: 'none', title: 'New name' }))).toEqual([
       'title',
       'shipping_mode',
       'pricing',
@@ -140,11 +141,15 @@ describe('dirtyDraftSections', () => {
     expect(dirtyDraftSections(saved, edited({ seatPrice: '100' }))).toEqual([]);
   });
 
+  it('ignores a budget typed while the price is fixed: only bidding carries one', () => {
+    expect(dirtyDraftSections(saved, edited({ budget: '900' }))).toEqual([]);
+  });
+
   it('skips a part the server already refused until it changes', () => {
-    const wanted = edited({ budget: '1' });
+    const wanted = edited({ seatPrice: '1' });
     const refused = { pricing: draftSectionKey(wanted.pricing) };
     expect(dirtyDraftSections(saved, wanted, refused)).toEqual([]);
-    expect(dirtyDraftSections(saved, edited({ budget: '2' }), refused)).toEqual(['pricing']);
+    expect(dirtyDraftSections(saved, edited({ seatPrice: '2' }), refused)).toEqual(['pricing']);
   });
 
   it('ignores a part that cannot be sent yet', () => {

@@ -19,6 +19,7 @@ import {
   refusalMessage,
 } from '../../../utils/campaignWizard';
 import { useCampaignCover } from './useCampaignCover';
+import { useCampaignRequirements } from './useCampaignRequirements';
 
 type Navigation = DealFlowStackScreenProps<'CampaignWizard'>['navigation'];
 type Route = DealFlowStackScreenProps<'CampaignWizard'>['route'];
@@ -43,6 +44,7 @@ export const useCampaignWizardScreen = () => {
   const draft = useCampaignDraft(params?.campaignId ?? null);
   const { values, edit, flush, campaign, campaignId, ready, refused, failure, retry } = draft;
   const cover = useCampaignCover(campaignId, campaign?.cover ?? null);
+  const requirements = useCampaignRequirements(values, edit, refused);
 
   const [step, setStep] = useState<CampaignWizardStep>('idea');
   const [advancing, setAdvancing] = useState(false);
@@ -201,6 +203,7 @@ export const useCampaignWizardScreen = () => {
     titleMax: CAMPAIGN_DRAFT_LIMITS.titleMax,
     cover,
     pickCover,
+    requirements,
   };
 };
 

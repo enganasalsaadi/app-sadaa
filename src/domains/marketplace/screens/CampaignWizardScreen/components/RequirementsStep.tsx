@@ -1,0 +1,52 @@
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/core/theme';
+import { Box, Text } from '@/shared/ui';
+import { CampaignField } from './CampaignField';
+import { CatalogServiceSheet } from './CatalogServiceSheet';
+import { DeliverablesField } from './DeliverablesField';
+import { TargetingGates } from './TargetingGates';
+import { TargetingRanking } from './TargetingRanking';
+
+/**
+ * Step 2, «the requirements»: what each creator delivers, who may apply (gates) and who is
+ * preferred (ranking only). Shipping and the private brief join it in PC1.5.
+ */
+const RequirementsStepComponent: React.FC = () => {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  return (
+    <Box px="xl" py="xl" gap="2xl">
+      <CampaignField label={t('marketplace.campaign.wizard.requirements.deliverables.label')}>
+        <DeliverablesField />
+      </CampaignField>
+      <Box gap="md">
+        <CampaignField
+          label={t('marketplace.campaign.wizard.requirements.gates.label')}
+          tag={t('marketplace.campaign.wizard.requirements.gates.tag')}
+          tagTone="premium"
+        >
+          <Text variant="bodySmall" color={colors.text.secondary}>
+            {t('marketplace.campaign.wizard.requirements.gates.hint')}
+          </Text>
+        </CampaignField>
+        <TargetingGates />
+      </Box>
+      <Box gap="md">
+        <CampaignField
+          label={t('marketplace.campaign.wizard.requirements.ranking.label')}
+          tag={t('marketplace.campaign.wizard.requirements.ranking.tag')}
+          tagTone="neutral"
+        >
+          <Text variant="bodySmall" color={colors.text.secondary}>
+            {t('marketplace.campaign.wizard.requirements.ranking.hint')}
+          </Text>
+        </CampaignField>
+        <TargetingRanking />
+      </Box>
+      <CatalogServiceSheet />
+    </Box>
+  );
+};
+
+export const RequirementsStep = memo(RequirementsStepComponent);

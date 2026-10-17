@@ -123,7 +123,8 @@ const pricingBody = (values: CampaignDraftValues): CampaignDraftRequest | undefi
       return {
         pricing_model: 'fixed',
         seat_price_usd: usdWire(values.seatPrice),
-        budget_usd: usdWire(values.budget),
+        // A budget only goes with bidding: the server refuses one on a fixed price (`campaign_pricing_conflict`).
+        budget_usd: null,
       };
     case 'bidding':
       return {

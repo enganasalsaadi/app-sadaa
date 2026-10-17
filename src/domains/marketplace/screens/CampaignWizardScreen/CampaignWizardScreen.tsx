@@ -8,6 +8,7 @@ import { CampaignWizardDock } from './components/CampaignWizardDock';
 import { CampaignWizardHeader } from './components/CampaignWizardHeader';
 import { IdeaStep } from './components/IdeaStep';
 import { LeaveSheet } from './components/LeaveSheet';
+import { RequirementsStep } from './components/RequirementsStep';
 import { CampaignWizardContext } from './CampaignWizardContext';
 import { useCampaignWizardScreen } from './hooks/useCampaignWizardScreen';
 
@@ -52,7 +53,7 @@ export const CampaignWizardScreen: React.FC = () => {
         footerBehavior="divider"
       >
         <Animated.View entering={reduceMotion ? undefined : FadeIn}>
-          {step === 'idea' ? <IdeaStep /> : <CampaignStepSoon />}
+          {step === 'idea' ? <IdeaStep /> : step === 'requirements' ? <RequirementsStep /> : <CampaignStepSoon />}
         </Animated.View>
       </Layout>
     );

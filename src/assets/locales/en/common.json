@@ -1390,6 +1390,41 @@
             "audience": "Every creator sees this",
             "placeholder": "What do you want from creators, and why should they apply?"
           }
+        },
+        "requirements": {
+          "deliverables": {
+            "label": "What does each creator deliver?",
+            "add": "Add a service from the catalog",
+            "addFirst": "Pick the first service from the catalog",
+            "count": "Quantity",
+            "revisions": "Edit rounds",
+            "addons": "Add-ons",
+            "remove": "Remove {{title}}",
+            "quota": "Units per creator",
+            "quotaA11y": "{{units}} of {{max}} units per creator",
+            "full": "Limit reached: {{max}} units per creator",
+            "catalogFailed": "Couldn't load the service catalog"
+          },
+          "sheet": {
+            "title": "Add a service",
+            "body": "Pick the platform, then tick the services you need.",
+            "platforms": "Platform",
+            "done": "Done"
+          },
+          "gates": {
+            "label": "Who can apply?",
+            "tag": "Requirements",
+            "hint": "Creators who don't meet these can't apply. Pick nothing and everyone can; platforms come from the services above.",
+            "gender": "Gender",
+            "followers": "Minimum followers"
+          },
+          "ranking": {
+            "label": "We prefer",
+            "tag": "Ranking only",
+            "hint": "Nobody is kept from applying, but matching creators are lifted higher.",
+            "cities": "Cities",
+            "niches": "Niches (up to {{max}})"
+          }
         }
       }
     },
