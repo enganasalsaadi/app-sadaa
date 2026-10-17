@@ -228,15 +228,15 @@
     "semantic_hash": ""
   },
   "src/assets/locales/ar/common.json": {
-    "mtime": 1792232120.3769166,
-    "seen": 1792232922.471942,
-    "ast_hash": "801eaeddadc3af52e8565ce674c0d4df",
+    "mtime": 1792234328.315634,
+    "seen": 1792234460.483249,
+    "ast_hash": "5f0c56bd75ba0e2a8a85b8e5076fdc4a",
     "semantic_hash": ""
   },
   "src/assets/locales/en/common.json": {
-    "mtime": 1792232120.3720477,
-    "seen": 1792232922.471943,
-    "ast_hash": "48916456e73a1669612d494143d7daa6",
+    "mtime": 1792234328.317932,
+    "seen": 1792234460.48325,
+    "ast_hash": "5b0c17496a4056d18d52fe7ada6ae834",
     "semantic_hash": ""
   },
   "src/assets/lottie/bell.json": {
@@ -8046,15 +8046,15 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealsBoard.tsx": {
-    "mtime": 1792194320.142902,
-    "seen": 1792194546.522049,
-    "ast_hash": "d0afd2ef2a3ab0e880b3fd40c1a1ff40",
+    "mtime": 1792234274.0005155,
+    "seen": 1792234460.4837508,
+    "ast_hash": "9e979a0b2adc35b0769797805b8dcc13",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealsListHeader.tsx": {
-    "mtime": 1792194320.142416,
-    "seen": 1792194546.5220501,
-    "ast_hash": "6c96298696c1e21d1414e9af883fe67d",
+    "mtime": 1792234274.0000663,
+    "seen": 1792234460.483752,
+    "ast_hash": "3f493da84bd9cc38190ae0b369dcd241",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/EvidenceTile.tsx": {
@@ -8490,15 +8490,15 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandDealsScreen/BrandDealsScreen.tsx": {
-    "mtime": 1791986213.831608,
-    "seen": 1792158021.1926038,
-    "ast_hash": "33f045036d6a40718702fb76c04c3357",
+    "mtime": 1792234274.0100205,
+    "seen": 1792234460.483828,
+    "ast_hash": "c7d835c59708f0456e6da935a82d803e",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandDealsScreen/hooks/useBrandDealsScreen.ts": {
-    "mtime": 1792194320.143292,
-    "seen": 1792194546.522112,
-    "ast_hash": "a80a78cfb7697732b72ad62d7684bc89",
+    "mtime": 1792234274.00077,
+    "seen": 1792234460.48383,
+    "ast_hash": "b00116e8ed92e3b0205be471a09b198c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/BrandDealsScreen/index.ts": {
@@ -10230,9 +10230,9 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792232885.6185522,
-    "seen": 1792232922.4729102,
-    "ast_hash": "8aa4a85caaa54cc02f81dc3f1f73b3a1",
+    "mtime": 1792234430.7126832,
+    "seen": 1792234460.484271,
+    "ast_hash": "2f8fa4e1072c2221d2efc3d694a5e331",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
@@ -11013,6 +11013,150 @@
     "mtime": 1792232538.3778746,
     "seen": 1792232922.472706,
     "ast_hash": "5eef5b472a57edbd965829984cff820e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignAttentionRail.tsx": {
+    "mtime": 1792234211.169208,
+    "seen": 1792234460.483685,
+    "ast_hash": "d54de4e7e1c8505f233f27feb2b284f2",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignCard.tsx": {
+    "mtime": 1792234160.6515641,
+    "seen": 1792234460.483686,
+    "ast_hash": "25fe9af87b59b3b6a1e3648a14437c35",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignCover.tsx": {
+    "mtime": 1792234346.1892753,
+    "seen": 1792234460.483687,
+    "ast_hash": "f0104e0757591ef87185252a2a2d0fd3",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignDeadlineChip.tsx": {
+    "mtime": 1792234126.0530906,
+    "seen": 1792234460.4836879,
+    "ast_hash": "0374020b98ad53d2f175997217a0f764",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignDraftCard.tsx": {
+    "mtime": 1792234192.951328,
+    "seen": 1792234460.4836879,
+    "ast_hash": "63a697b7504c590f2150c00baa5d3564",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignDraftSheet.tsx": {
+    "mtime": 1792234234.288592,
+    "seen": 1792234460.483689,
+    "ast_hash": "8955913f9716103e95ec654317c13855",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignFinishedRow.tsx": {
+    "mtime": 1792234211.1672127,
+    "seen": 1792234460.483689,
+    "ast_hash": "b30e74a5e357b4016153d2266f562a5b",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignGlassPill.tsx": {
+    "mtime": 1792234126.051352,
+    "seen": 1792234460.48369,
+    "ast_hash": "dea51c43a373ff580f651688bdfc2bf8",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignRibbon.tsx": {
+    "mtime": 1792234150.4156036,
+    "seen": 1792234460.483691,
+    "ast_hash": "eb196a0f85cbf4eb84e804cf73e31282",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignScopeSwitch.tsx": {
+    "mtime": 1792234234.2840922,
+    "seen": 1792234460.483692,
+    "ast_hash": "826f430bbe5e8c62f37fbde0798711d6",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignsListHeader.tsx": {
+    "mtime": 1792234234.2863677,
+    "seen": 1792234460.483692,
+    "ast_hash": "ef655e88f4f9884a3c4c955c6629e5a1",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignsSkeleton.tsx": {
+    "mtime": 1792234234.2907715,
+    "seen": 1792234460.4836931,
+    "ast_hash": "7a99c0ef40f0f80cabc573cfeeeeb323",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/ReadinessRing.tsx": {
+    "mtime": 1792234192.944705,
+    "seen": 1792234460.483755,
+    "ast_hash": "ce9a8fb930684955e8230f106a1b3a96",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/SeatPips.tsx": {
+    "mtime": 1792234126.054862,
+    "seen": 1792234460.483755,
+    "ast_hash": "a3b8eedfcc6c4adb4817f8f7191ebb9f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/constants/campaignList.ts": {
+    "mtime": 1792233972.136781,
+    "seen": 1792234460.483773,
+    "ast_hash": "392737b9f67d5d25bcc0915c57e565bf",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useCampaignDraftActions.ts": {
+    "mtime": 1792234031.972941,
+    "seen": 1792234460.483791,
+    "ast_hash": "665a5b7163782164cf8c74e25310b7d2",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useCampaignsList.ts": {
+    "mtime": 1792234368.5912647,
+    "seen": 1792234460.4837928,
+    "ast_hash": "76f2d75fcc9e3411f361bac071fa8790",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignsScreen/BrandCampaignsScreen.tsx": {
+    "mtime": 1792234257.1696777,
+    "seen": 1792234460.483824,
+    "ast_hash": "1fc5d0ee36c4af07c1f5ac087a70ca96",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignsScreen/hooks/useBrandCampaignsScreen.ts": {
+    "mtime": 1792234257.166296,
+    "seen": 1792234460.483825,
+    "ast_hash": "c96a2d34c3fb6cf96f5bb0a9c70b876f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandCampaignsScreen/index.ts": {
+    "mtime": 1792234257.172164,
+    "seen": 1792234460.483825,
+    "ast_hash": "fc641ae486ff25c9656f8aa08fe1caf5",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandDealsScreen/components/BrandDealsBoard.tsx": {
+    "mtime": 1792234274.006475,
+    "seen": 1792234460.483829,
+    "ast_hash": "c06c8473e3d3f874a9a3e33195abea67",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/BrandDealsScreen/hooks/useBrandDealsRoot.ts": {
+    "mtime": 1792234274.0080826,
+    "seen": 1792234460.483829,
+    "ast_hash": "9e6722ca4b40cd44c77072d8dd28e16c",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignList.test.ts": {
+    "mtime": 1792234086.1243293,
+    "seen": 1792234460.4840162,
+    "ast_hash": "6589e84af13a5144781230ea744d55ec",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignList.ts": {
+    "mtime": 1792234086.106333,
+    "seen": 1792234460.484042,
+    "ast_hash": "b79612a31eb5f1b4f3a74a3fecd02bd4",
     "semantic_hash": ""
   }
 }

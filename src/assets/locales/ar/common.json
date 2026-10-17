@@ -1491,6 +1491,80 @@
           "deleted": "حُذفت المسودة"
         }
       },
+      "detail": {
+        "loadFailed": "تعذّر فتح الحملة",
+        "island": {
+          "suspended": {
+            "title": "الحملة معلّقة",
+            "body": "انتظر متقدّم طويلاً دون قرار منك. تُلغى تلقائياً في {{date}}.",
+            "bodyNoDate": "انتظر متقدّم طويلاً دون قرار منك."
+          },
+          "zeroApplicants": {
+            "title": "انتهى الموعد بلا متقدمين",
+            "body": "اختر قبل الإلغاء التلقائي في {{date}}."
+          },
+          "ghost": {
+            "title": "متقدّم ينتظر قرارك",
+            "body": "تُعلَّق الحملة تلقائياً إن لم تقرّر قبل انتهاء المهلة."
+          },
+          "seatFreed": {
+            "title_zero": "{{count}} مقاعد فُرِّغت",
+            "title_one": "مقعد فُرِّغ",
+            "title_two": "مقعدان فُرِّغا",
+            "title_few": "{{count}} مقاعد فُرِّغت",
+            "title_many": "{{count}} مقعداً فُرِّغت",
+            "title_other": "{{count}} مقعد فُرِّغت",
+            "body": "انسحب مؤثر قبل بدء العمل. استبدله أو قلّص المقاعد."
+          },
+          "unit": {
+            "days": "أيام",
+            "hours": "ساعة",
+            "minutes": "دقيقة"
+          },
+          "ringA11y": "متبقٍّ {{value}} {{unit}}"
+        },
+        "readiness": {
+          "title": "جاهزية الحملة"
+        },
+        "seats": {
+          "title": "المقاعد",
+          "of": "/{{total}}",
+          "left": "مشغولة · المتبقي {{free}}",
+          "applications": "طلبات مفتوحة",
+          "price": "سعر المقعد",
+          "bidMax": "أعلى مزايدة"
+        },
+        "terms": {
+          "title": "الشروط",
+          "locked": "مقفلة بعد أول طلب",
+          "deadline": "موعد التقديم",
+          "schedule": "الجدولة",
+          "drop": "يُنشر في {{date}}",
+          "targeting": "الاستهداف",
+          "anyone": "مفتوح للجميع",
+          "shipping": "الشحن",
+          "revisions": "تعديل ×{{count}}"
+        },
+        "history": {
+          "title": "سجل الحملة",
+          "newest": "الأحدث أولاً",
+          "empty": "لا أحداث بعد",
+          "loadFailed": "تعذّر تحميل السجل",
+          "reason": {
+            "applied": "تقدّم مؤثر جديد",
+            "campaign_edited": "عُدّلت الحملة",
+            "seat_freed": "مقعد فُرِّغ",
+            "ghost_warning": "تنبيه: متقدّم ينتظر قرارك",
+            "deadline_reached": "انتهى موعد التقديم",
+            "zero_applicants": "انتهى الموعد بلا متقدمين",
+            "zero_applicants_extended": "مُدّد الموعد 4 أيام"
+          }
+        },
+        "dock": {
+          "resume": "أكمل الحملة",
+          "resubmit": "عدّل وأعد الإرسال"
+        }
+      },
       "wizard": {
         "closedWithDraft": "حُفظت حملتك كمسودة",
         "steps": {

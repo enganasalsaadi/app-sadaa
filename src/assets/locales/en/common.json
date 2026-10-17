@@ -1419,6 +1419,76 @@
           "deleted": "Draft deleted"
         }
       },
+      "detail": {
+        "loadFailed": "Couldn't open the campaign",
+        "island": {
+          "suspended": {
+            "title": "Campaign suspended",
+            "body": "An applicant waited too long for your decision. It cancels itself on {{date}}.",
+            "bodyNoDate": "An applicant waited too long for your decision."
+          },
+          "zeroApplicants": {
+            "title": "The deadline passed with no applicants",
+            "body": "Choose before it cancels itself on {{date}}."
+          },
+          "ghost": {
+            "title": "An applicant is waiting for your decision",
+            "body": "The campaign is suspended automatically if you don't decide before the time runs out."
+          },
+          "seatFreed": {
+            "title_one": "A seat was freed",
+            "title_other": "{{count}} seats were freed",
+            "body": "A creator withdrew before work began. Replace them or reduce the seats."
+          },
+          "unit": {
+            "days": "days",
+            "hours": "hours",
+            "minutes": "min"
+          },
+          "ringA11y": "{{value}} {{unit}} left"
+        },
+        "readiness": {
+          "title": "Campaign readiness"
+        },
+        "seats": {
+          "title": "Seats",
+          "of": "/{{total}}",
+          "left": "taken · {{free}} left",
+          "applications": "open applications",
+          "price": "price per seat",
+          "bidMax": "top bid"
+        },
+        "terms": {
+          "title": "Terms",
+          "locked": "Locked after the first application",
+          "deadline": "Application deadline",
+          "schedule": "Schedule",
+          "drop": "Goes live {{date}}",
+          "targeting": "Targeting",
+          "anyone": "Open to everyone",
+          "shipping": "Shipping",
+          "revisions": "Revisions ×{{count}}"
+        },
+        "history": {
+          "title": "Campaign history",
+          "newest": "Newest first",
+          "empty": "No events yet",
+          "loadFailed": "Couldn't load the history",
+          "reason": {
+            "applied": "A new creator applied",
+            "campaign_edited": "The campaign was edited",
+            "seat_freed": "A seat was freed",
+            "ghost_warning": "Heads up: an applicant is waiting for you",
+            "deadline_reached": "The application deadline passed",
+            "zero_applicants": "The deadline passed with no applicants",
+            "zero_applicants_extended": "Deadline extended by 4 days"
+          }
+        },
+        "dock": {
+          "resume": "Finish the campaign",
+          "resubmit": "Edit and resubmit"
+        }
+      },
       "wizard": {
         "closedWithDraft": "Your campaign was saved as a draft",
         "steps": {
