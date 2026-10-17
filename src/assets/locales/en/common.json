@@ -1419,6 +1419,71 @@
           "deleted": "Draft deleted"
         }
       },
+      "feed": {
+        "title": "Opportunities for you",
+        "segmentsLabel": "Opportunity sections",
+        "segments": {
+          "feed": "For you",
+          "saved": "Saved",
+          "applications": "My applications"
+        },
+        "subtitle_one": "1 campaign fits your profile",
+        "subtitle_other": "{{count}} campaigns fit your profile",
+        "loadFailed": "Couldn't load opportunities",
+        "filters": {
+          "open": "Filter opportunities",
+          "title": "Filter opportunities",
+          "activity": "Campaign type",
+          "activityFailed": "Couldn't load campaign types",
+          "pricing": "Pricing",
+          "pricingAll": "All",
+          "fixed": "Fixed price",
+          "bidding": "Bidding",
+          "apply": "Show results",
+          "reset": "Reset",
+          "clear": "Clear filters",
+          "activityMore": "{{label}} +{{count}}"
+        },
+        "card": {
+          "netFixed": "Your take · fixed price",
+          "netBidding": "Your take · bidding",
+          "seats": "{{free}} of {{total}} left",
+          "seatsA11y": "{{free}} of {{total}} seats left",
+          "deadline": {
+            "days_one": "{{count}} day to apply",
+            "days_other": "{{count}} days to apply",
+            "hours_one": "{{count}} hour to apply",
+            "hours_other": "{{count}} hours to apply",
+            "lastHour": "Last hour to apply"
+          },
+          "invited": "Invited",
+          "secured": "Budget secured",
+          "shipGift": "Product shipped to you",
+          "shipReturn": "Product to return",
+          "drop": "Drops {{date}}",
+          "moreDeliverables": "+{{count}}",
+          "save": "Save campaign",
+          "unsave": "Remove campaign from saved",
+          "saveFailed": "Couldn't update saved campaigns",
+          "a11y": "{{title}}, from {{brand}}, you take {{net}}",
+          "a11yRange": "{{title}}, from {{brand}}, you take {{min}} to {{max}}",
+          "deadlineBar": "Time left to apply"
+        },
+        "empty": {
+          "title": "No campaigns fit your profile yet",
+          "hint": "We only show what you can actually apply to. A new campaign that fits you will reach you by notification.",
+          "rules": {
+            "platform": "The required platform is linked to your account",
+            "followers": "Your followers reach the campaign minimum",
+            "gender": "Your gender is within the target"
+          },
+          "action": "Update your profile",
+          "filtered": {
+            "title": "No results for these filters",
+            "hint": "Try another type or clear the filters."
+          }
+        }
+      },
       "applicants": {
         "title": "Applicants",
         "loadFailed": "Couldn't load the applicants",

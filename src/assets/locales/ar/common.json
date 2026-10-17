@@ -1491,6 +1491,83 @@
           "deleted": "حُذفت المسودة"
         }
       },
+      "feed": {
+        "title": "فرص لك",
+        "segmentsLabel": "أقسام الفرص",
+        "segments": {
+          "feed": "لك",
+          "saved": "محفوظاتي",
+          "applications": "طلباتي"
+        },
+        "subtitle_zero": "لا توجد فرص حالياً",
+        "subtitle_one": "حملة واحدة تناسب ملفك",
+        "subtitle_two": "حملتان تناسبان ملفك",
+        "subtitle_few": "{{count}} حملات تناسب ملفك",
+        "subtitle_many": "{{count}} حملة تناسب ملفك",
+        "subtitle_other": "{{count}} حملة تناسب ملفك",
+        "loadFailed": "تعذّر تحميل الفرص",
+        "filters": {
+          "open": "تصفية الفرص",
+          "title": "تصفية الفرص",
+          "activity": "نوع الإعلان",
+          "activityFailed": "تعذّر تحميل أنواع الإعلان",
+          "pricing": "التسعير",
+          "pricingAll": "الكل",
+          "fixed": "سعر ثابت",
+          "bidding": "مزايدة",
+          "apply": "اعرض النتائج",
+          "reset": "إعادة ضبط",
+          "clear": "مسح التصفية",
+          "activityMore": "{{label}} +{{count}}"
+        },
+        "card": {
+          "netFixed": "صافيك · سعر ثابت",
+          "netBidding": "صافيك · مزايدة",
+          "seats": "{{free}} من {{total}} متاحة",
+          "seatsA11y": "{{free}} من {{total}} مقاعد متاحة",
+          "deadline": {
+            "days_zero": "آخر يوم للتقديم",
+            "days_one": "يوم للتقديم",
+            "days_two": "يومان للتقديم",
+            "days_few": "{{count}} أيام للتقديم",
+            "days_many": "{{count}} يوماً للتقديم",
+            "days_other": "{{count}} يوم للتقديم",
+            "hours_zero": "آخر ساعة للتقديم",
+            "hours_one": "ساعة للتقديم",
+            "hours_two": "ساعتان للتقديم",
+            "hours_few": "{{count}} ساعات للتقديم",
+            "hours_many": "{{count}} ساعة للتقديم",
+            "hours_other": "{{count}} ساعة للتقديم",
+            "lastHour": "آخر ساعة للتقديم"
+          },
+          "invited": "مدعو",
+          "secured": "ميزانية مؤمّنة",
+          "shipGift": "يصلك المنتج",
+          "shipReturn": "منتج للإعادة",
+          "drop": "إطلاق {{date}}",
+          "moreDeliverables": "+{{count}}",
+          "save": "احفظ الحملة",
+          "unsave": "أزل الحملة من المحفوظات",
+          "saveFailed": "تعذّر تحديث المحفوظات",
+          "a11y": "{{title}}، من {{brand}}، صافيك {{net}}",
+          "a11yRange": "{{title}}، من {{brand}}، صافيك من {{min}} إلى {{max}}",
+          "deadlineBar": "الوقت المتبقي للتقديم"
+        },
+        "empty": {
+          "title": "لا حملات تناسب ملفك الآن",
+          "hint": "نعرض لك فقط ما يمكنك التقديم عليه فعلاً. أي حملة جديدة تناسبك ستصلك بإشعار.",
+          "rules": {
+            "platform": "المنصة المطلوبة مربوطة بحسابك",
+            "followers": "متابعوك يبلغون الحد الأدنى للحملة",
+            "gender": "جنسك ضمن المستهدف"
+          },
+          "action": "حدّث ملفك الشخصي",
+          "filtered": {
+            "title": "لا نتائج بهذه التصفية",
+            "hint": "جرّب نوعاً آخر أو امسح التصفية."
+          }
+        }
+      },
       "applicants": {
         "title": "المتقدمون",
         "loadFailed": "تعذّر تحميل المتقدمين",

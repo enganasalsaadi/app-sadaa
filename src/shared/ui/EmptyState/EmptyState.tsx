@@ -20,6 +20,8 @@ export interface EmptyStateProps {
   icon: LucideIcon;
   title: string;
   message?: string;
+  /** Extra content between the message and the action (what the screen needs to explain). */
+  children?: React.ReactNode;
   action?: EmptyStateAction;
   tone?: EmptyStateTone;
 }
@@ -29,6 +31,7 @@ const EmptyStateComponent: React.FC<EmptyStateProps> = ({
   icon: Icon,
   title,
   message,
+  children,
   action,
   tone = 'neutral',
 }) => {
@@ -61,6 +64,7 @@ const EmptyStateComponent: React.FC<EmptyStateProps> = ({
           </Text>
         ) : null}
       </Box>
+      {children}
       {action ? (
         <CustomButton
           title={action.label}

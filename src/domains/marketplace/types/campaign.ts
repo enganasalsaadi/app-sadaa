@@ -361,7 +361,7 @@ export interface CreatorCampaign {
   brand: CreatorCampaignBrand;
   cover: CampaignFile | null;
   pricing: CreatorCampaignPricing;
-  seats: { total: number; left: number };
+  seats: { total: number; free: number };
   applyDeadlineAt: Timestamp | null;
   dropAt: Timestamp | null;
   deliveryDays: number | null;

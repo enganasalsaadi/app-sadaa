@@ -72,7 +72,59 @@ describe('creatorCampaignsApi', () => {
 
     expect(requestUrl(spy).pathname).toMatch(/\/influencer\/campaigns\/saved$/);
     expect(saved.data?.pages[0]?.items[0]?.bookmarked).toBe(true);
-    expect(detail.data?.seats.left).toBe(3);
+    expect(detail.data?.seats.free).toBe(3);
+  });
+
+  describe('setCampaignBookmarked', () => {
+    const cachedFeed = async (store: ReturnType<typeof makeStore>, bookmarked = false) => {
+      jest.spyOn(global, 'fetch').mockImplementationOnce(async () => page([creatorCampaignDto({ bookmarked })]));
+      await store.dispatch(creatorCampaignsApi.endpoints.getCampaignFeed.initiate({}));
+    };
+    const feedBookmark = (store: ReturnType<typeof makeStore>) =>
+      creatorCampaignsApi.endpoints.getCampaignFeed.select({})(store.getState()).data?.pages[0]?.items[0]?.bookmarked;
+
+    it('saves with POST and flips the loaded card', async () => {
+      const store = makeStore();
+      await cachedFeed(store);
+      const spy = jest.spyOn(global, 'fetch').mockImplementation(async () => ok(null));
+
+      await store.dispatch(creatorCampaignsApi.endpoints.setCampaignBookmarked.initiate({ id: 'c1', bookmarked: true }));
+
+      const request = spy.mock.calls.at(-1)?.[0] as Request;
+      expect(request.method).toBe('POST');
+      expect(new URL(request.url).pathname).toMatch(/\/influencer\/campaigns\/c1\/bookmark$/);
+      expect(feedBookmark(store)).toBe(true);
+    });
+
+    it('removes with DELETE and takes the card out of the saved list at once', async () => {
+      const store = makeStore();
+      await cachedFeed(store, true);
+      jest.spyOn(global, 'fetch').mockImplementationOnce(async () => page([creatorCampaignDto({ bookmarked: true })]));
+      await store.dispatch(creatorCampaignsApi.endpoints.getSavedCampaigns.initiate());
+      const spy = jest.spyOn(global, 'fetch').mockImplementation(async () => ok(null));
+
+      await store.dispatch(creatorCampaignsApi.endpoints.setCampaignBookmarked.initiate({ id: 'c1', bookmarked: false }));
+
+      expect((spy.mock.calls.at(-1)?.[0] as Request).method).toBe('DELETE');
+      expect(feedBookmark(store)).toBe(false);
+      const saved = creatorCampaignsApi.endpoints.getSavedCampaigns.select()(store.getState()).data;
+      expect(saved?.pages[0]?.items).toEqual([]);
+    });
+
+    it('puts the card back when the server refuses', async () => {
+      const store = makeStore();
+      await cachedFeed(store);
+      jest.spyOn(global, 'fetch').mockImplementation(async () =>
+        new Response(JSON.stringify({ success: false, message: 'gone', data: null, error_code: 'not_found' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      );
+
+      await store.dispatch(creatorCampaignsApi.endpoints.setCampaignBookmarked.initiate({ id: 'c1', bookmarked: true }));
+
+      expect(feedBookmark(store)).toBe(false);
+    });
   });
 
   it('reads my applications by tab and one application', async () => {

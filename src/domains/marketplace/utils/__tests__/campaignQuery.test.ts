@@ -6,6 +6,7 @@ import {
   buildBrandCampaignsUrl,
   buildBrandCampaignUrl,
   buildCreatorApplicationsUrl,
+  buildCreatorBookmarkUrl,
   buildCreatorFeedUrl,
 } from '../campaignQuery';
 
@@ -75,6 +76,7 @@ describe('campaignQuery', () => {
       '/influencer/campaigns?activity_type%5B%5D=fashion_beauty&pricing_model=fixed&page=3',
     );
     expect(buildCreatorFeedUrl({ pricingModel: null }, 1)).toBe('/influencer/campaigns?page=1');
+    expect(buildCreatorBookmarkUrl('a b')).toBe('/influencer/campaigns/a%20b/bookmark');
   });
 
   it('builds my applications by tab', () => {

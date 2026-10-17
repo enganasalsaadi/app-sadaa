@@ -79,6 +79,9 @@ export const buildCreatorSavedUrl = (page: number) => withPage(`${CREATOR_CAMPAI
 
 export const buildCreatorCampaignUrl = (id: string) => subPathOf(CREATOR_CAMPAIGNS, id);
 
+/** `POST` saves, `DELETE` removes; both idempotent. */
+export const buildCreatorBookmarkUrl = (id: string) => subPathOf(CREATOR_CAMPAIGNS, id, 'bookmark');
+
 export const buildCreatorApplicationsUrl = ({ statuses }: CreatorApplicationsArgs, page: number) =>
   withPage(CREATOR_APPLICATIONS, repeated('status', statuses), page);
 

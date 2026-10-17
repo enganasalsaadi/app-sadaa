@@ -41,6 +41,7 @@ export function SuperList<T>({
   emptyIcon,
   emptyDescription,
   emptyAction,
+  emptyContent,
   errorMessage,
   layout = 'list',
   overrideItemLayout,
@@ -105,11 +106,12 @@ export function SuperList<T>({
         message={isError ? errorMessage : emptyMessage}
         icon={emptyIcon}
         description={isError ? undefined : emptyDescription}
+        content={isError ? undefined : emptyContent}
         action={isError ? undefined : emptyAction}
         onRetry={onRetry}
       />
     ),
-    [isError, emptyMessage, emptyIcon, emptyDescription, emptyAction, errorMessage, onRetry],
+    [isError, emptyMessage, emptyIcon, emptyDescription, emptyContent, emptyAction, errorMessage, onRetry],
   );
 
   // Adds flexGrow:1 when empty so ListEmptyComponent stretches to fill the screen

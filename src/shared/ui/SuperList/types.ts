@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type {
   StyleProp,
   ViewStyle,
@@ -43,6 +43,8 @@ export interface SuperListProps<T> {
   emptyDescription?: string;
   /** Empty-state button, e.g. "Clear filters" on a filtered list. */
   emptyAction?: EmptyStateAction;
+  /** Extra content under the empty message, above its button (e.g. why nothing shows). */
+  emptyContent?: ReactNode;
   errorMessage?: string;
 
   // ─── Layout ────────────────────────────────────────────────────────────

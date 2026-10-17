@@ -303,7 +303,7 @@ describe('mapCreatorCampaignDetail', () => {
     expect(c.pricing.bid?.min.net).toEqual(usd(4500));
     expect(c.pricing.bid?.max.gross).toEqual(usd(12000));
     expect(c.pricing.fixed).toBeNull();
-    expect(c.seats).toEqual(seatsDto(5, 3));
+    expect(c.seats).toEqual({ total: 5, free: 3 });
   });
 
   it('exposes eligibility reasons, tolerating unknown ones and missing meta', () => {

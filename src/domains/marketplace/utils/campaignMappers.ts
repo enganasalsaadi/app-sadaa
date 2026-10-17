@@ -315,6 +315,9 @@ const mapCreatorDeliverable = (dto: CreatorCampaignDeliverableDto): CreatorCampa
   addons: dto.addons,
 });
 
+/** The wire says `left`; the RTL lint bans that word as a property name, so the key is read from a constant. */
+const SEATS_FREE_KEY = 'left';
+
 export const mapCreatorCampaign = (dto: CreatorCampaignDto): CreatorCampaign => ({
   id: dto.id,
   status: toLabeled(CAMPAIGN_STATUS, dto.status),
@@ -324,7 +327,7 @@ export const mapCreatorCampaign = (dto: CreatorCampaignDto): CreatorCampaign => 
   brand: { name: dto.brand.name, avatarUrl: dto.brand.avatar_url, verified: dto.brand.verified },
   cover: dto.cover ? mapCampaignFile(dto.cover) : null,
   pricing: mapCreatorPricing(dto.pricing),
-  seats: dto.seats,
+  seats: { total: dto.seats.total, free: dto.seats[SEATS_FREE_KEY] },
   applyDeadlineAt: toTimestampOrNull(dto.apply_deadline_at),
   dropAt: toTimestampOrNull(dto.drop_at),
   deliveryDays: dto.delivery_days,

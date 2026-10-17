@@ -9,6 +9,7 @@ interface ListEmptyStateProps {
   message?: string;
   icon?: LucideIcon;
   description?: string;
+  content?: React.ReactNode;
   action?: EmptyStateAction;
   onRetry?: () => void;
 }
@@ -18,6 +19,7 @@ export const ListEmptyState: React.FC<ListEmptyStateProps> = ({
   message,
   icon = SearchX,
   description,
+  content,
   action,
   onRetry,
 }) => {
@@ -31,6 +33,8 @@ export const ListEmptyState: React.FC<ListEmptyStateProps> = ({
       title={message ?? t('common.noResults')}
       message={description}
       action={action}
-    />
+    >
+      {content}
+    </EmptyState>
   );
 };

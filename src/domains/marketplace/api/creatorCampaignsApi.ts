@@ -22,10 +22,12 @@ import {
 import {
   buildCreatorApplicationsUrl,
   buildCreatorApplicationUrl,
+  buildCreatorBookmarkUrl,
   buildCreatorCampaignUrl,
   buildCreatorFeedUrl,
   buildCreatorSavedUrl,
 } from '../utils/campaignQuery';
+import { setBookmarkedIn } from '../utils/opportunities';
 
 const nextPage = ({ meta }: CampaignPage<unknown>) =>
   meta.currentPage < meta.lastPage ? meta.currentPage + 1 : undefined;
@@ -54,6 +56,53 @@ export const creatorCampaignsApi = baseApi.injectEndpoints({
       transformResponse: (dto: CreatorCampaignDetailDto) => mapCreatorCampaignDetail(dto),
       providesTags: (_result, _error, id) => [{ type: 'CreatorCampaign', id }],
     }),
+    /**
+     * Save / unsave one campaign. Every loaded copy flips at once (feed, saved, the page); a refusal
+     * puts them back and re-reads the feed, since a campaign that stopped recruiting can't be saved.
+     */
+    setCampaignBookmarked: builder.mutation<void, { id: string; bookmarked: boolean }>({
+      query: ({ id, bookmarked }) => ({
+        url: buildCreatorBookmarkUrl(id),
+        method: bookmarked ? 'POST' : 'DELETE',
+      }),
+      transformResponse: () => undefined,
+      async onQueryStarted({ id, bookmarked }, { dispatch, getState, queryFulfilled }) {
+        const state = getState();
+        const patches = [
+          ...creatorCampaignsApi.util.selectCachedArgsForQuery(state, 'getCampaignFeed').map(args =>
+            dispatch(
+              creatorCampaignsApi.util.updateQueryData('getCampaignFeed', args, draft => {
+                draft.pages.forEach(page => setBookmarkedIn(page.items, id, bookmarked));
+              }),
+            ),
+          ),
+          // Saving adds a row only the server can place (newest first), so that one is re-read after.
+          ...(bookmarked
+            ? []
+            : [
+                dispatch(
+                  creatorCampaignsApi.util.updateQueryData('getSavedCampaigns', undefined, draft => {
+                    draft.pages.forEach(page => {
+                      page.items = page.items.filter(item => item.id !== id);
+                    });
+                  }),
+                ),
+              ]),
+          dispatch(
+            creatorCampaignsApi.util.updateQueryData('getCreatorCampaign', id, draft => {
+              draft.bookmarked = bookmarked;
+            }),
+          ),
+        ];
+        try {
+          await queryFulfilled;
+          if (bookmarked) dispatch(creatorCampaignsApi.util.invalidateTags([{ type: 'CreatorCampaignList', id: 'SAVED' }]));
+        } catch {
+          patches.forEach(patch => patch.undo());
+          dispatch(creatorCampaignsApi.util.invalidateTags([{ type: 'CreatorCampaignList', id: 'FEED' }]));
+        }
+      },
+    }),
     getCampaignApplications: builder.infiniteQuery<
       CampaignPage<CreatorApplication>,
       CreatorApplicationsArgs,
@@ -77,6 +126,7 @@ export const {
   useGetCampaignFeedInfiniteQuery,
   useGetSavedCampaignsInfiniteQuery,
   useGetCreatorCampaignQuery,
+  useSetCampaignBookmarkedMutation,
   useGetCampaignApplicationsInfiniteQuery,
   useGetCampaignApplicationQuery,
 } = creatorCampaignsApi;
