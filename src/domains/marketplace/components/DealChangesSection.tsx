@@ -94,7 +94,7 @@ const DealChangesSectionComponent: React.FC<DealChangesSectionProps> = ({ role, 
             {brand ? null : (
               <Text variant="caption" color={colors.text.tertiary}>
                 {t(
-                  cancel.freeCancel
+                  cancel.penaltyFree
                     ? 'marketplace.deals.changes.withdraw.linkCaptionFree'
                     : 'marketplace.deals.changes.withdraw.linkCaption',
                 )}

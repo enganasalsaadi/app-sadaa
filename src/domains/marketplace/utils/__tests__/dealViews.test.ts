@@ -266,6 +266,25 @@ describe('groupTimelineByStation', () => {
     expect(grouped.review[2]?.note).toBe('upsell_proposed');
     expect(grouped.review[1]?.note).toBeNull();
   });
+
+  it('reads a campaign announcement off its note row, never a half-empty one', () => {
+    const note = (id: string, metadata: DealTimelineRow['metadata'], reason = 'campaign_announcement') =>
+      row(id, 'in_progress', { isNote: true, reason, metadata });
+    const grouped = groupTimelineByStation([
+      row('1', 'in_progress'),
+      note('2', { announcement_id: 'a1', body: 'Shoot at dusk', link: 'https://example.com/brief' }),
+      note('3', { body: '  ' }),
+      note('4', null),
+      note('5', { body: 'No link', link: 7 }),
+      note('6', { body: 'Wrong reason' }, 'mystery'),
+    ]);
+    const byId = Object.fromEntries(grouped.make.map(event => [event.id, event.announcement]));
+    expect(byId['2']).toEqual({ body: 'Shoot at dusk', link: 'https://example.com/brief' });
+    expect(byId['3']).toBeNull();
+    expect(byId['4']).toBeNull();
+    expect(byId['5']).toEqual({ body: 'No link', link: null });
+    expect(byId['6']).toBeNull();
+  });
 });
 
 describe('deal list tabs', () => {

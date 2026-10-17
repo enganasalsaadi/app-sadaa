@@ -9,12 +9,18 @@ const LINE_HEIGHT = moderateScale(10);
 /** Widths of the stand-in lines, as a share of the card: they only suggest text, nothing real is behind them. */
 const LINES = [0.92, 0.7, 0.84] as const;
 
+export interface CampaignBriefLockProps {
+  /** The reason it is shut, when the campaign page's own wording doesn't fit (the deal's file says its own). */
+  body?: string;
+}
+
 /**
  * The brand's private brief as a sealed block: grey bars where text would be and the reason it is shut.
  * The brief reaches a creator only after the brand funds their deal (contract §4.1), so nothing here is real content.
  */
-const CampaignBriefLockComponent: React.FC = () => {
+const CampaignBriefLockComponent: React.FC<CampaignBriefLockProps> = ({ body }) => {
   const { t } = useTranslation();
+  const reason = body ?? t('marketplace.campaign.opportunity.brief.body');
   const { colors, sizes } = useTheme();
   const styles = useStyles(
     ({ radii }): Record<'bar', ViewStyle> => ({
@@ -31,9 +37,7 @@ const CampaignBriefLockComponent: React.FC = () => {
       <Box
         gap="md"
         accessible
-        accessibilityLabel={`${t('marketplace.campaign.opportunity.brief.title')}. ${t(
-          'marketplace.campaign.opportunity.brief.body',
-        )}`}
+        accessibilityLabel={`${t('marketplace.campaign.opportunity.brief.title')}. ${reason}`}
       >
         <Box
           gap="sm"
@@ -67,7 +71,7 @@ const CampaignBriefLockComponent: React.FC = () => {
               {t('marketplace.campaign.opportunity.brief.title')}
             </Text>
             <Text variant="caption" color={colors.text.secondary}>
-              {t('marketplace.campaign.opportunity.brief.body')}
+              {reason}
             </Text>
           </Box>
         </Box>

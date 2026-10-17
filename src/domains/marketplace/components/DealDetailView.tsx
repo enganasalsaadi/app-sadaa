@@ -15,12 +15,15 @@ import type { DealDetailModel } from '../hooks/useDealDetail';
 import type { Deal, DealFunding } from '../types';
 import type { DealStationView } from '../utils/dealStation';
 import type { DealStationEvents } from '../utils/dealTimelineEvents';
+import { DealBriefExitCard } from './DealBriefExitCard';
+import { DealBriefExitSheet } from './DealBriefExitSheet';
 import { DealDetailHero } from './DealDetailHero';
 import { DealDetailSkeleton } from './DealDetailSkeleton';
 import { DealChangesSection } from './DealChangesSection';
 import { DealChangesSheets } from './DealChangesSheets';
 import { DealDeliverables } from './DealDeliverables';
 import { DealDisputeCard } from './DealDisputeCard';
+import { DealDropCard } from './DealDropCard';
 import { DealDisputeSheet } from './DealDisputeSheet';
 import { DealDossier } from './DealDossier';
 import { DealExtensionRequestCard } from './DealExtensionRequestCard';
@@ -44,7 +47,9 @@ import { DealUpsellSection } from './DealUpsellSection';
  * a case in `DetailSection`.
  */
 export type DealDetailSectionKey =
+  | 'briefExit'
   | 'next'
+  | 'drop'
   | 'dispute'
   | 'retentionCases'
   | 'upsell'
@@ -106,6 +111,10 @@ const DetailSection = memo<{
   // nothing still gets the spacing Box below and opens a gap on the page.
   function sectionContent(): React.ReactElement | null {
     switch (section) {
+      case 'briefExit':
+        return vm.briefExit.available && !vm.stopped ? <DealBriefExitCard exit={vm.briefExit} /> : null;
+      case 'drop':
+        return vm.drop && !vm.stopped ? <DealDropCard drop={vm.drop} role={vm.role} /> : null;
       case 'next': {
         // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
         if (vm.dispute.showCard) return null;
@@ -314,6 +323,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
       />
       <DealDisputeSheet deal={deal} role={vm.role} dispute={vm.dispute} />
       <DealRetentionSheets deal={deal} retention={vm.retention} />
+      {vm.role === 'creator' ? <DealBriefExitSheet exit={vm.briefExit} deal={deal} /> : null}
     </>
   );
 };

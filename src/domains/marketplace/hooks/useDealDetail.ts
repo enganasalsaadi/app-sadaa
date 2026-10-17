@@ -9,8 +9,10 @@ import { dealItemStage, type DealItemStage } from '../utils/dealPublish';
 import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { groupTimelineByStation } from '../utils/dealTimelineEvents';
+import { useDealBriefExit } from './useDealBriefExit';
 import { useDealCancel } from './useDealCancel';
 import { useDealDispute } from './useDealDispute';
+import { useDealDrop } from './useDealDrop';
 import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
 import { useDealRetention } from './useDealRetention';
@@ -28,7 +30,8 @@ type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
  * publishing (P7)), shipping the product (P5), the mutual rating once it completes (P10), and
  * the changes mid-deal (P8): addenda, the brand's cancel and the creator's withdrawal, and the
  * dispute (P9.1): opening one and the way into its file, then post retention once it completes
- * (P9.2): each post's time online and the reports on it. Pull to refresh reads both again.
+ * (P9.2): each post's time online and the reports on it, and the creator's clean exit from a linked
+ * deal (PC6.2), and the clock of a synchronized drop (PC6.3). Pull to refresh reads both again.
  */
 export const useDealDetail = (
   role: DealRole,
@@ -125,7 +128,9 @@ export const useDealDetail = (
   const rating = useDealRating(role, id, deal?.rating ?? null);
 
   const dispute = useDealDispute(role, id, deal);
-  const cancel = useDealCancel(role, id, deal, shipping.opens.cancel, dispute.open);
+  const briefExit = useDealBriefExit(role, id, deal);
+  const drop = useDealDrop(deal);
+  const cancel = useDealCancel(role, id, deal, shipping.opens.cancel, dispute.open, briefExit);
   const upsells = useDealUpsells(role, id, deal);
   const retention = useDealRetention(role, id, deal);
 
@@ -176,6 +181,8 @@ export const useDealDetail = (
     shipping,
     rating,
     cancel,
+    briefExit,
+    drop,
     upsells,
     dispute,
     retention,

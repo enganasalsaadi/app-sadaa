@@ -32,6 +32,8 @@ export interface DealShippingView {
   address: DealShippingAddress | null;
   addressEditable: boolean;
   shipBy: Timestamp | null;
+  /** Linked deal: the creator's brief review runs until then, so the brand can't ship yet (`null` = open now). */
+  shipOpensAt: Timestamp | null;
   reshipsLeft: number;
   /** Creator only: the free cancel (missed ship window or unanswered issue) is open now. */
   freeCancel: boolean;
@@ -60,6 +62,7 @@ export const dealShippingView = (
     address: shipping.address,
     addressEditable: role === 'creator' && shipping.addressEditable,
     shipBy: shipping.shipBy,
+    shipOpensAt: shipping.shipFrom !== null && shipping.shipFrom > now ? shipping.shipFrom : null,
     reshipsLeft: shipping.reshipsLeft,
     freeCancel:
       role === 'creator' &&

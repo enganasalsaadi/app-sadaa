@@ -15,6 +15,7 @@ import { DEAL_BRAND_CANCEL_REASON, DEAL_WITHDRAW_REASON, type Deal, type DealRol
 import { reportDealFailure } from '../utils/dealAction';
 import { dealSettlement, toCancelBody, toReasonBody } from '../utils/dealCancel';
 import { getDealActions } from '../utils/dealStatus';
+import type { DealBriefExitModel } from './useDealBriefExit';
 import { useDealAction } from './useDealAction';
 
 type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
@@ -28,7 +29,9 @@ const REASON_FIELDS = { reason: 'reason', note: 'note' } as const;
  * moved terms come back as a conflict, the deal refetches and a banner shows the old and new
  * compensation before the brand confirms again. Creator: withdraw, which records a strike (the
  * sheet says so with the active count), unless the free shipping cancel is open — then the sheet
- * points there instead. Both are press-and-hold with one idempotency key per intent (rule 06).
+ * points there instead — or a linked deal's brief exit is open (PC6.2): then the link goes straight
+ * to that sheet, since the strike path is refused (`deal_brief_exit_available`). Both are
+ * press-and-hold with one idempotency key per intent (rule 06).
  */
 export const useDealCancel = (
   role: DealRole,
@@ -36,6 +39,7 @@ export const useDealCancel = (
   deal: Deal | null,
   openFreeCancel: () => void,
   openDispute: () => void,
+  briefExit: Pick<DealBriefExitModel, 'available' | 'open'>,
 ) => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
@@ -65,13 +69,20 @@ export const useDealCancel = (
   const action = useDealAction(ref, { idempotent: true });
   const resetIntent = action.resetIntent;
   const resetForm = form.reset;
+  const exitAvailable = briefExit.available;
+  const openBriefExit = briefExit.open;
   const open = useCallback(() => {
+    // While the clean exit is open the strike path is closed to the creator.
+    if (exitAvailable) {
+      openBriefExit();
+      return;
+    }
     resetForm(EMPTY_REASON);
     resetIntent();
     setChangedFrom(null);
     setFreeOffered(false);
     setVisible(true);
-  }, [resetForm, resetIntent]);
+  }, [exitAvailable, openBriefExit, resetForm, resetIntent]);
   const close = useCallback(() => setVisible(false), []);
   /** Another sheet or screen opens only once this one is gone (iOS can't stack modals). */
   const onDismissed = useCallback(() => {
@@ -88,6 +99,8 @@ export const useDealCancel = (
   const goDispute = useCallback(() => closeThen(openDispute), [closeThen, openDispute]);
   const openStrikes = useCallback(() => closeThen(() => navigation.navigate('Strikes')), [closeThen, navigation]);
 
+  const strike = deal?.cancellation?.creator.strike ?? false;
+  const freeCancel = freeOffered || actions.includes('freeCancel');
   const terms = deal?.cancellation?.brand ?? null;
   const parts = useMemo(() => (terms && deal ? dealSettlement(terms, deal.total) : []), [deal, terms]);
 
@@ -119,6 +132,10 @@ export const useDealCancel = (
           case 'deal_free_cancel_available':
             setFreeOffered(true);
             return;
+          case 'deal_brief_exit_available':
+            // The window opened under the creator (an old read): hand over to the clean exit.
+            closeThen(openBriefExit);
+            return;
           default:
             setVisible(false);
             return;
@@ -127,7 +144,7 @@ export const useDealCancel = (
       if (!applyServerFieldErrors(outcome.error, REASON_FIELDS, setError)) reportDealFailure(outcome.error);
     })();
     return done;
-  }, [brand, deal?.total.currency, run, setError, submit, t, terms]);
+  }, [brand, closeThen, deal?.total.currency, openBriefExit, run, setError, submit, t, terms]);
 
   return {
     canCancel,
@@ -147,9 +164,11 @@ export const useDealCancel = (
     changedFrom,
     goDispute,
     // Creator
-    strike: deal?.cancellation?.creator.strike ?? false,
+    strike,
+    /** The link's caption: leaving costs nothing now (not funded yet, or a free way out is open). */
+    penaltyFree: !strike || exitAvailable || freeCancel,
     strikes: strikes.data ?? null,
-    freeCancel: freeOffered || actions.includes('freeCancel'),
+    freeCancel,
     goFreeCancel,
     openStrikes,
   };

@@ -193,7 +193,14 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
             : sheet === 'reship'
               ? t('marketplace.deals.shipping.toast.reshipped', { name: party })
               : t('marketplace.deals.shipping.toast.shipped', { name: party });
-        settle(outcome, success, error => applyServerFieldErrors(error, SHIP_FIELDS, setShipError));
+        settle(outcome, success, error => {
+          // The brief window was still open on the server (the clock ran early): it already toasted why.
+          if (error.code === 'campaign_brief_window_open') {
+            setSheet(null);
+            return true;
+          }
+          return applyServerFieldErrors(error, SHIP_FIELDS, setShipError);
+        });
       }),
     [courierLabels, party, runShip, setShipError, settle, sheet, shipSubmit, t],
   );

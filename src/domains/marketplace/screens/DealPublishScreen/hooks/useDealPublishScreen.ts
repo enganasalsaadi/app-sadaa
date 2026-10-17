@@ -20,6 +20,7 @@ import { useClock } from '../../../hooks/useClock';
 import { useDealAction } from '../../../hooks/useDealAction';
 import { createDealPublishSchema, type DealPublishFormValues } from '../../../schemas/dealPublishSchema';
 import { dealDeliverableAction } from '../../../utils/dealDrafts';
+import { dealPublishOpensAt } from '../../../utils/dealDrop';
 import {
   checkLiveUrl,
   dealFixAsk,
@@ -62,6 +63,9 @@ export const useDealPublishScreen = () => {
   const publications = useMemo(() => history.data ?? [], [history.data]);
   const latest = publications[0] ?? null;
   const composing = item !== null && dealDeliverableAction(item, 'creator') === 'publish';
+  // A drop keeps the live link shut until its opening moment; the screenshots can go up meanwhile.
+  const now = useClock(MINUTE_MS);
+  const opensAt = composing && deal ? dealPublishOpensAt(deal, now) : null;
   const ask = useMemo(() => (composing ? dealFixAsk(publications) : null), [composing, publications]);
   const fixes = useMemo(() => (item ? dealFixCount(item, publications) : null), [item, publications]);
   const platform = item?.platform ?? null;
@@ -112,7 +116,7 @@ export const useDealPublishScreen = () => {
   });
   const url = useWatch({ control, name: 'url' });
   const linkReady = url.trim() ? checkLiveUrl(url, platform) === null : !platform;
-  const lampOn = composing && linkReady && doneCount > 0 && submitState === 'ready';
+  const lampOn = composing && opensAt === null && linkReady && doneCount > 0 && submitState === 'ready';
 
   const onPaste = useCallback(async () => {
     const text = (await Clipboard.getString()).trim();
@@ -131,7 +135,9 @@ export const useDealPublishScreen = () => {
   const runAction = action.run;
   const clearUploads = uploads.clear;
   const { fileIds } = uploads;
+  const refetchDeal = detail.refetch;
   const onSubmit = useCallback(() => {
+    if (opensAt !== null) return;
     handleSubmit(
       async values => {
         if (entries.length === 0) {
@@ -151,6 +157,11 @@ export const useDealPublishScreen = () => {
           toastService.success(t('marketplace.deals.publish.creator.toast', { brand }));
           clearUploads();
           reset({ url: '' });
+          return;
+        }
+        // Too early by the server's clock: baseQuery toasted why; read the deal again for the true state.
+        if (outcome.error.code === 'campaign_drop_not_open') {
+          refetchDeal();
           return;
         }
         const reason = readLiveUrlReason(outcome.error);
@@ -176,10 +187,9 @@ export const useDealPublishScreen = () => {
         if (entries.length === 0) setProofsError(t('marketplace.deals.publish.creator.proofs.required'));
       },
     )();
-  }, [brand, clearUploads, entries.length, fileIds, handleSubmit, itemId, platformLabel, reset, runAction, setError, submitState, t]);
+  }, [brand, clearUploads, entries.length, fileIds, handleSubmit, itemId, opensAt, platformLabel, refetchDeal, reset, runAction, setError, submitState, t]);
 
   // — Clocks ————————————————————————————————————————————————————————
-  const now = useClock(MINUTE_MS);
   const dueLeft = item?.dueAt && !item.timerPaused ? formatRemaining(t, timerSecondsLeft(item.dueAt, now)) : null;
   const due = composing
     ? item?.timerPaused
@@ -251,7 +261,6 @@ export const useDealPublishScreen = () => {
   const guard = useDiscardGuard(composing && (entries.length > 0 || formState.isDirty));
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
 
-  const refetchDeal = detail.refetch;
   const refetchHistory = history.refetch;
   const onRetry = useCallback(() => {
     refetchDeal();
@@ -282,6 +291,7 @@ export const useDealPublishScreen = () => {
     submitState,
     progress,
     due,
+    opensIn: opensAt === null ? null : formatRemaining(t, timerSecondsLeft(opensAt, now)),
     isSubmitting: action.isRunning,
     onSubmit,
     goBack,

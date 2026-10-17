@@ -31,11 +31,31 @@ export type DealNoteReason = (typeof DEAL_NOTE_REASONS)[number];
 const isNoteReason = (value: string | null): value is DealNoteReason =>
   value !== null && (DEAL_NOTE_REASONS as readonly string[]).includes(value);
 
+/** A campaign announcement the brand sent to every creator on the campaign (contract §5.6). */
+export interface DealAnnouncement {
+  body: string;
+  /** https address as the brand typed it; shown, never opened (rule 07). */
+  link: string | null;
+}
+
+const ANNOUNCEMENT_REASON = 'campaign_announcement';
+
+const readText = (value: unknown): string | null =>
+  typeof value === 'string' && value.trim() !== '' ? value : null;
+
+/** The announcement a note row carries, `null` for any other row or a row without a readable body. */
+export const readAnnouncement = (row: Pick<DealTimelineRow, 'reason' | 'metadata'>): DealAnnouncement | null => {
+  if (row.reason !== ANNOUNCEMENT_REASON || row.metadata === null) return null;
+  const body = readText(row.metadata.body);
+  return body === null ? null : { body, link: readText(row.metadata.link) };
+};
+
 export interface DealTimelineEvent {
   id: string;
   /** Server status label; shown when `note` is `null`. */
   label: string;
   note: DealNoteReason | null;
+  announcement: DealAnnouncement | null;
   actor: Labeled<DealActor>;
   at: number;
   isNote: boolean;
@@ -88,6 +108,7 @@ export const groupTimelineByStation = (
       id: row.id,
       label: row.to.label,
       note: row.isNote && isNoteReason(row.reason) ? row.reason : null,
+      announcement: row.isNote ? readAnnouncement(row) : null,
       actor: row.actor,
       at: row.occurredAt,
       isNote: row.isNote,

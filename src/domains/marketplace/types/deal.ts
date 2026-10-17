@@ -840,6 +840,7 @@ export type DealActionPath =
   | 'decline'
   | 'extension'
   | 'shipment/receive'
+  | 'brief-exit'
   | DealItemPath<'drafts' | 'publish'>
   | `upsells/${string}/${'accept' | 'decline'}`
   // both (brand pulls back an offer / creator withdraws with a strike; shipping cancel is per role)

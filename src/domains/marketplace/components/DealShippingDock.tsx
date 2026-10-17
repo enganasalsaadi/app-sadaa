@@ -28,6 +28,9 @@ const DealShippingDockComponent: React.FC<DealShippingDockProps> = ({ shipping }
   const name = isolateText(shipping.party);
 
   const clock = ((): DealDockClock | null => {
+    if (dock === 'brandShip' && view.shipOpensAt !== null) {
+      return { dueAt: view.shipOpensAt, windowHours: null, lead: t('marketplace.deals.shipping.dock.opensClock') };
+    }
     if (dock === 'brandShip' && view.shipBy !== null) {
       return { dueAt: view.shipBy, windowHours: null, lead: t('marketplace.deals.shipping.dock.shipClock') };
     }
@@ -47,8 +50,9 @@ const DealShippingDockComponent: React.FC<DealShippingDockProps> = ({ shipping }
             size="md"
             fullWidth
             leftIcon={<Truck />}
-            // Without the creator's address the server answers 409 `deal_address_missing`.
-            disabled={view.address === null}
+            // Without the creator's address the server answers 409 `deal_address_missing`; inside the
+            // creator's brief window (linked deal) it answers 422 `campaign_brief_window_open`.
+            disabled={view.address === null || view.shipOpensAt !== null}
             onPress={shipping.opens.ship}
           />
         );

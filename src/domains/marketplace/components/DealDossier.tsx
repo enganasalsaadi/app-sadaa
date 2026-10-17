@@ -5,6 +5,7 @@ import { useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 import { useDealCopy } from '../hooks/useDealCopy';
 import type { Deal, DealRole } from '../types';
+import { CampaignBriefLock } from './CampaignBriefLock';
 import { DealDossierBlock } from './DealDossierBlock';
 import { DealDossierFiles } from './DealDossierFiles';
 import { DealDossierItem } from './DealDossierItem';
@@ -12,12 +13,16 @@ import { DealDossierLogistics } from './DealDossierLogistics';
 import { DealDossierScript } from './DealDossierScript';
 import { DealDossierTags } from './DealDossierTags';
 
-type DossierBlockKey = 'items' | 'script' | 'tags' | 'files' | 'logistics';
+type DossierBlockKey = 'items' | 'brief' | 'script' | 'tags' | 'files' | 'logistics';
 
 const BLOCK_TITLE = {
   items: {
     brand: 'marketplace.deals.dossier.blocks.itemsBrand',
     creator: 'marketplace.deals.dossier.blocks.itemsCreator',
+  },
+  brief: {
+    brand: 'marketplace.deals.dossier.blocks.brief',
+    creator: 'marketplace.deals.dossier.blocks.brief',
   },
   script: {
     brand: 'marketplace.deals.dossier.blocks.script',
@@ -63,6 +68,8 @@ const DealDossierComponent: React.FC<DealDossierProps> = ({ deal, role }) => {
       brief.trackingLink !== null);
   const blocks: DossierBlockKey[] = [
     ...(items.length > 0 ? (['items'] as const) : []),
+    // Linked deal, not funded yet: the private brief is sealed from the creator (PC6.2).
+    ...(deal.briefHidden ? (['brief'] as const) : []),
     ...(hasScript ? (['script'] as const) : []),
     ...(hasTags ? (['tags'] as const) : []),
     ...(files.length > 0 ? (['files'] as const) : []),
@@ -79,6 +86,8 @@ const DealDossierComponent: React.FC<DealDossierProps> = ({ deal, role }) => {
             ))}
           </Box>
         );
+      case 'brief':
+        return <CampaignBriefLock body={t('marketplace.deals.dossier.briefLocked')} />;
       case 'script':
         return brief ? (
           <DealDossierScript

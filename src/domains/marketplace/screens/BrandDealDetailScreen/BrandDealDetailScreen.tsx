@@ -8,6 +8,7 @@ import { useBrandDealDetailScreen } from './hooks/useBrandDealDetailScreen';
 /** Brand reading order: the next step, the deliverables while the work is on, the full offer file as sent (prices included), then the station card with its history. */
 const SECTIONS: readonly DealDetailSectionKey[] = [
   'next',
+  'drop',
   'dispute',
   'retentionCases',
   'upsell',

@@ -3439,6 +3439,51 @@
         "fromA11y": "From campaign: {{title}}",
         "openA11y": "Open campaign: {{title}}"
       },
+      "briefExit": {
+        "card": {
+          "title": "Review the brief before you go on",
+          "body": "The brief opened once the brand funded the deal. If it doesn't suit you, you can leave with no strike until {{until}}.",
+          "bodyOpen": "The brief opened once the brand funded the deal. If it doesn't suit you, you can leave with no strike as long as you haven't started work.",
+          "action": "Leave with no strike"
+        },
+        "sheet": {
+          "title": "Leave after reading the brief",
+          "body": "With {{name}}",
+          "cleanTitle": "A clean exit",
+          "cleanBody": "No strike is recorded on you, the brand gets its money back in full, and the seat goes back to the campaign.",
+          "hold": "Press and hold to leave",
+          "holdCaption": "Leaving is final and {{name}} is notified"
+        },
+        "toast": {
+          "left": "You left the deal with no strike"
+        }
+      },
+      "drop": {
+        "upcoming": {
+          "title": "The drop is {{date}}",
+          "creator": "Everyone posts at the same moment. The live link opens in {{time}}, so get your post ready now.",
+          "brand": "Creators post at the same moment. Posting opens for them in {{time}}."
+        },
+        "open": {
+          "title": "Posting is open, drop in {{time}}",
+          "creator": "Hand in your post link before the drop so it goes out with everyone else.",
+          "brand": "Creators can hand in their links now, and everyone goes live together at the drop."
+        },
+        "live": {
+          "title": "The drop has happened",
+          "body": "It was {{date}}."
+        },
+        "late": {
+          "title": "Behind on the drop",
+          "creator": "You missed the drop. Hand in your link now before the extra time runs out.",
+          "brand": "The creator is behind on the drop. The extra time is running, then the deal is handled automatically."
+        }
+      },
+      "announcement": {
+        "title": "Announcement from the brand",
+        "copy": "Copy the link",
+        "copied": "Link copied"
+      },
       "orbit": {
         "label": "Deal journey. Station {{index}} of {{count}}: {{name}}",
         "now": "Now",
@@ -3460,11 +3505,13 @@
         "blocks": {
           "itemsBrand": "What you ordered",
           "itemsCreator": "What's asked of you",
+          "brief": "Private brief",
           "script": "Ad content — what to say",
           "tags": "Tags and mentions",
           "files": "Attached files · {{count}}",
           "logistics": "Delivery and shipping"
         },
+        "briefLocked": "It opens as soon as the brand funds the deal, and you then have 24 hours to read it and leave with no strike if it doesn't suit you.",
         "delivery": "Delivery in {{duration}}",
         "revisionsLeft": "{{revisions}} left",
         "avoid": "Avoid",
@@ -4004,6 +4051,7 @@
             "paused": "Clock paused",
             "submit": "Hand in the link",
             "resubmit": "Hand in the link again",
+            "opensIn": "Posting opens in {{time}}",
             "uploading": "Uploading screenshots… {{percent}}",
             "fix": "A screenshot didn't upload; retry or remove it",
             "waitingToast": "Wait for the screenshots to upload",
@@ -4383,7 +4431,8 @@
           "receiveCaption": "Confirming starts the work clock",
           "problem": "A problem?",
           "freeCancel": "Press and hold to cancel for free",
-          "freeCancelCaption": "{{name}} missed the deadline. Cancelling doesn't affect your rating."
+          "freeCancelCaption": "{{name}} missed the deadline. Cancelling doesn't affect your rating.",
+          "opensClock": "Shipping opens in"
         },
         "toast": {
           "shipped": "Waybill sent to {{name}}",

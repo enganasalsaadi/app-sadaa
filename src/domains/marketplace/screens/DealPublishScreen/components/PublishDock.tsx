@@ -18,6 +18,8 @@ export interface PublishDockProps {
   /** «Publish window: 31 h left»; `null` while there is no clock. */
   due: string | null;
   state: PublishSubmitState;
+  /** «Opens in 12 min» while a drop keeps the live link shut; `null` once it is open. */
+  opensIn: string | null;
   /** 0–1 across the picked screenshots. */
   progress: number;
   /** After a fix request the button says «again». */
@@ -31,7 +33,7 @@ export interface PublishDockProps {
  * with their share; then it hands the link in. A plain press: the brand's confirmation is the
  * binding step.
  */
-const PublishDockComponent: React.FC<PublishDockProps> = ({ due, state, progress, resubmit, submitting, onSubmit }) => {
+const PublishDockComponent: React.FC<PublishDockProps> = ({ due, opensIn, state, progress, resubmit, submitting, onSubmit }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -82,13 +84,16 @@ const PublishDockComponent: React.FC<PublishDockProps> = ({ due, state, progress
       {state === 'ready' ? (
         <CustomButton
           title={
-            resubmit
-              ? t('marketplace.deals.publish.creator.dock.resubmit')
-              : t('marketplace.deals.publish.creator.dock.submit')
+            opensIn
+              ? t('marketplace.deals.publish.creator.dock.opensIn', { time: opensIn })
+              : resubmit
+                ? t('marketplace.deals.publish.creator.dock.resubmit')
+                : t('marketplace.deals.publish.creator.dock.submit')
           }
           size="lg"
           fullWidth
           loading={submitting}
+          disabled={opensIn !== null}
           onPress={onSubmit}
         />
       ) : (

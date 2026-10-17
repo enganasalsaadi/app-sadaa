@@ -11,6 +11,7 @@ import type { DealStationCopy } from '../hooks/useDealStationCopy';
 import type { DealJourneyStage, DealJourneyStatus } from '../utils/dealJourney';
 import type { DealStationState } from '../utils/dealStation';
 import type { DealTimelineEvent } from '../utils/dealTimelineEvents';
+import { DealAnnouncementRow } from './DealAnnouncementRow';
 import { JOURNEY_STATUS_LABEL } from './DealJourneyRail';
 
 const BADGE = moderateScale(32);
@@ -189,9 +190,13 @@ const DealStageCardComponent: React.FC<DealStageCardProps> = ({
 
       {events.length > 0 ? (
         <Box gap="md">
-          {events.map(event => (
-            <EventRow key={event.id} event={event} />
-          ))}
+          {events.map(event =>
+            event.announcement ? (
+              <DealAnnouncementRow key={event.id} event={event} />
+            ) : (
+              <EventRow key={event.id} event={event} />
+            ),
+          )}
         </Box>
       ) : status === 'done' || status === 'now' ? (
         <Text variant="caption" color={colors.text.tertiary}>

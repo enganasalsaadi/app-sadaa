@@ -87,6 +87,7 @@ const DealPublishScreenComponent: React.FC = () => {
         footer={
           <PublishDock
             due={vm.due}
+            opensIn={vm.opensIn}
             state={vm.submitState}
             progress={vm.progress}
             resubmit={vm.ask !== null}

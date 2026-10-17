@@ -132,6 +132,13 @@ describe('dealShippingView', () => {
     expect(dealShippingView(later, 'creator', NOW)?.freeCancel).toBe(false);
   });
 
+  it('holds the brand back until the creator\'s brief review ends (linked deal)', () => {
+    const reviewing = deal('product_shipping', { shipFrom: NOW + DAY });
+    expect(dealShippingView(reviewing, 'brand', NOW)?.shipOpensAt).toBe(NOW + DAY);
+    expect(dealShippingView(reviewing, 'brand', NOW + DAY)?.shipOpensAt).toBeNull();
+    expect(dealShippingView(deal('product_shipping'), 'brand', NOW)?.shipOpensAt).toBeNull();
+  });
+
   it('never lets the brand edit the address', () => {
     expect(dealShippingView(deal('product_shipping'), 'brand', NOW)?.addressEditable).toBe(false);
     expect(dealShippingView(deal('product_shipping'), 'creator', NOW)?.addressEditable).toBe(true);

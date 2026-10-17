@@ -228,15 +228,15 @@
     "semantic_hash": ""
   },
   "src/assets/locales/ar/common.json": {
-    "mtime": 1792253954.8828657,
-    "seen": 1792254201.776534,
-    "ast_hash": "54cdfa0a162613fbbf68985d34d77e50",
+    "mtime": 1792255107.8787131,
+    "seen": 1792255242.716838,
+    "ast_hash": "8acf1527e6d6457b9930873440ec3306",
     "semantic_hash": ""
   },
   "src/assets/locales/en/common.json": {
-    "mtime": 1792253954.8835535,
-    "seen": 1792254201.776535,
-    "ast_hash": "203d123a9f46797d7caa0b510aeb5564",
+    "mtime": 1792255115.0543423,
+    "seen": 1792255242.7168388,
+    "ast_hash": "14d15b956dde4833e286690c95453801",
     "semantic_hash": ""
   },
   "src/assets/lottie/bell.json": {
@@ -5304,21 +5304,21 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/deal.ts": {
-    "mtime": 1792188144.1107135,
-    "seen": 1792188418.476776,
-    "ast_hash": "fbcb754ba1f4b03e178e3a0e51050142",
+    "mtime": 1792254972.7182653,
+    "seen": 1792255242.7176661,
+    "ast_hash": "fc7288ba67ad8303d2d4727e923ebf9d",
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/index.ts": {
-    "mtime": 1792188088.6630702,
-    "seen": 1792188418.476779,
-    "ast_hash": "469f77661b9f6dc0b8676c0e1c73d87b",
+    "mtime": 1792254501.6968625,
+    "seen": 1792254715.187774,
+    "ast_hash": "8196ade553a0fd72daf5f8b3fbcb60bd",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealStatus.test.ts": {
-    "mtime": 1792084116.6495693,
-    "seen": 1792158021.1927218,
-    "ast_hash": "6401650c61fa81ef575b968c597831d1",
+    "mtime": 1792254527.6671925,
+    "seen": 1792254715.187798,
+    "ast_hash": "559867e59dd467bf46eb89e659cdeb95",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealStatus.ts": {
@@ -6732,9 +6732,9 @@
     "semantic_hash": ""
   },
   "src/app/screens/DevShowcaseScreen/demos/mockDeals.ts": {
-    "mtime": 1792084116.6469953,
-    "seen": 1792158021.192035,
-    "ast_hash": "6304a9809c9b8edda29ebfe1d019f601",
+    "mtime": 1792254527.6665556,
+    "seen": 1792254715.186883,
+    "ast_hash": "38b4718d6af823a2714114fdbecad294",
     "semantic_hash": ""
   },
   "src/core/api/__tests__/rateCardAddons.test.ts": {
@@ -7506,9 +7506,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealChangesSection.tsx": {
-    "mtime": 1792095238.645861,
-    "seen": 1792158021.192513,
-    "ast_hash": "73a6cc5b7dbc05f11f2f87edf84f41cd",
+    "mtime": 1792255055.1602697,
+    "seen": 1792255242.717309,
+    "ast_hash": "9e1c5165c4b8ac1ac5773df95175f15f",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealChangesSheets.tsx": {
@@ -7548,9 +7548,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDetailHero.tsx": {
-    "mtime": 1792011947.0365393,
-    "seen": 1792158021.192517,
-    "ast_hash": "0d320f732e885b2ac971c80175ccccfa",
+    "mtime": 1792254613.6992729,
+    "seen": 1792254715.187413,
+    "ast_hash": "fcbfa78716643d628fcbb31b19288ef4",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDetailSkeleton.tsx": {
@@ -7560,9 +7560,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDetailView.tsx": {
-    "mtime": 1792104522.990325,
-    "seen": 1792158021.192518,
-    "ast_hash": "732b699d2d8db42e4ce172046b63c8e7",
+    "mtime": 1792255062.8114197,
+    "seen": 1792255242.717314,
+    "ast_hash": "3be65ca3f1eb09c270d87f1085479280",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDisputeCard.tsx": {
@@ -7584,9 +7584,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDossier.tsx": {
-    "mtime": 1792014833.0239086,
-    "seen": 1792158021.19252,
-    "ast_hash": "d351c14deca09f1c0ed2ae2a14382b5a",
+    "mtime": 1792255081.416684,
+    "seen": 1792255242.717317,
+    "ast_hash": "4e9de38f4cf7d0fcfe045d0e03972feb",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealDossierBlock.tsx": {
@@ -7920,9 +7920,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealShippingDock.tsx": {
-    "mtime": 1792088161.7112432,
-    "seen": 1792158021.192548,
-    "ast_hash": "be1cfe8075be72c5d1451bba38599242",
+    "mtime": 1792255071.2443593,
+    "seen": 1792255242.717351,
+    "ast_hash": "a86cd0dd1e9d92f7c66da2b267fbde9f",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealShippingSection.tsx": {
@@ -7974,9 +7974,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealTicket.tsx": {
-    "mtime": 1791986735.1424177,
-    "seen": 1792158021.192553,
-    "ast_hash": "712308cec562482bb76dc86dad04f982",
+    "mtime": 1792254613.7003708,
+    "seen": 1792254715.187457,
+    "ast_hash": "a1b6cde0ca891464c5dca419e087a87c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/DealTicketsSkeleton.tsx": {
@@ -8232,9 +8232,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealCancel.ts": {
-    "mtime": 1792094213.848953,
-    "seen": 1792158021.192582,
-    "ast_hash": "14131b3a36a008af699ecd7a069e507e",
+    "mtime": 1792255055.1597638,
+    "seen": 1792255242.717421,
+    "ast_hash": "9b6c1ab6326d53aa3ab63a4a2615c2f0",
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealCopy.ts": {
@@ -8244,9 +8244,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealDetail.ts": {
-    "mtime": 1792097221.652346,
-    "seen": 1792158021.1925828,
-    "ast_hash": "a169866501c306c6c5d92bd2fbacfbc5",
+    "mtime": 1792255048.3287048,
+    "seen": 1792255242.717422,
+    "ast_hash": "a6d2f93373c9ac667d88970d7a1b14d4",
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealDispute.ts": {
@@ -8292,9 +8292,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealShipping.ts": {
-    "mtime": 1792084885.1586897,
-    "seen": 1792158021.192587,
-    "ast_hash": "a7784528872bd12933da8f11a73c2e3d",
+    "mtime": 1792255071.2451541,
+    "seen": 1792255242.7174258,
+    "ast_hash": "a6a3dbd6d01ca71045e30ef100dbe49d",
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useDealSlipCopy.ts": {
@@ -8706,9 +8706,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorDealDetailScreen/CreatorDealDetailScreen.tsx": {
-    "mtime": 1792165811.434264,
-    "seen": 1792166028.236214,
-    "ast_hash": "6f239e111ca456a6ace98ca5b3693b85",
+    "mtime": 1792255062.81228,
+    "seen": 1792255242.717551,
+    "ast_hash": "83c52987c989c0ec8d3771c4051fe125",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorDealDetailScreen/hooks/useCreatorDealDetailScreen.ts": {
@@ -9624,9 +9624,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/dealDto.ts": {
-    "mtime": 1792188144.111295,
-    "seen": 1792188418.476776,
-    "ast_hash": "01415f83a4e5bb27c1c3b1f848e183a4",
+    "mtime": 1792254496.9182944,
+    "seen": 1792254715.1877708,
+    "ast_hash": "7789d01c68fa753245a00dbe78631f01",
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/dealOffer.ts": {
@@ -9702,9 +9702,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealMappers.test.ts": {
-    "mtime": 1792103592.1106386,
-    "seen": 1792158021.192718,
-    "ast_hash": "e35a4ee827449d4bb5f7ce1b4411839c",
+    "mtime": 1792254575.885191,
+    "seen": 1792254715.1877928,
+    "ast_hash": "850d18530abc8a47dac0291015f1edcd",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealOfferMappers.test.ts": {
@@ -9744,9 +9744,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealShipping.test.ts": {
-    "mtime": 1792085266.9809725,
-    "seen": 1792158021.192721,
-    "ast_hash": "c3fbda933c4f25452c4aca610078ac1a",
+    "mtime": 1792255136.1122086,
+    "seen": 1792255242.717696,
+    "ast_hash": "f3c393244a7b4175c766f992a7d9f753",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealUpsell.test.ts": {
@@ -9756,9 +9756,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/dealViews.test.ts": {
-    "mtime": 1792084120.2057972,
-    "seen": 1792158021.192723,
-    "ast_hash": "30f7c7a494c24702374d6a7dc672750c",
+    "mtime": 1792254527.667685,
+    "seen": 1792254715.187799,
+    "ast_hash": "df628b25635d236f3c9988ea6751dd94",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/exploreFilters.test.ts": {
@@ -9846,9 +9846,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealMappers.ts": {
-    "mtime": 1792188144.112026,
-    "seen": 1792188418.476806,
-    "ast_hash": "737de60ce302202f618014880110371c",
+    "mtime": 1792254501.6964033,
+    "seen": 1792254715.187822,
+    "ast_hash": "d0e8f8ab028d8d7f39de20ae8c8b7ad1",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealNextStep.ts": {
@@ -9900,9 +9900,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealShipping.ts": {
-    "mtime": 1792084251.7651186,
-    "seen": 1792158021.192734,
-    "ast_hash": "bcab8859c4f943f1f381f3fa0ee6c34d",
+    "mtime": 1792255071.2439132,
+    "seen": 1792255242.717728,
+    "ast_hash": "ad125ac8c92d47af91352936011665b6",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/dealStation.ts": {
@@ -10230,9 +10230,9 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792254168.4538612,
-    "seen": 1792254201.7776058,
-    "ast_hash": "5bf30885e216172fe11c8046f3025af0",
+    "mtime": 1792255209.8180394,
+    "seen": 1792255242.717929,
+    "ast_hash": "5d5b8693170668c9164d62c5fcf3cb17",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
@@ -11718,9 +11718,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignBriefLock.tsx": {
-    "mtime": 1792252073.762688,
-    "seen": 1792252192.239271,
-    "ast_hash": "292a6cefa18ca6d1b9ab8eac7e7729d3",
+    "mtime": 1792255081.416064,
+    "seen": 1792255242.717282,
+    "ast_hash": "c4f8fe53e90b7bf1744aba2213db3212",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignPageSection.tsx": {
@@ -11871,6 +11871,54 @@
     "mtime": 1792253771.984973,
     "seen": 1792254201.777401,
     "ast_hash": "eecdfc3328cb59fc160f33220e599f9c",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/DealCampaignChip.tsx": {
+    "mtime": 1792254652.4229648,
+    "seen": 1792254715.187406,
+    "ast_hash": "923ad50b46f8f734d118e2bf11632bab",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/DealBriefExitCard.tsx": {
+    "mtime": 1792255018.2119741,
+    "seen": 1792255242.7173052,
+    "ast_hash": "f6031294b004cab00d85688226109cb4",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/DealBriefExitSheet.tsx": {
+    "mtime": 1792255030.5119455,
+    "seen": 1792255242.7173061,
+    "ast_hash": "e9b44a683d8cfe24ade83afec212998e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useDealBriefExit.ts": {
+    "mtime": 1792255004.7270496,
+    "seen": 1792255242.71742,
+    "ast_hash": "9dc9836ed0866500e97178b83d673068",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/schemas/__tests__/dealBriefExitSchema.test.ts": {
+    "mtime": 1792255136.117868,
+    "seen": 1792255242.717437,
+    "ast_hash": "03caced168d8fd782fb5026ffe1adf5a",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/schemas/dealBriefExitSchema.ts": {
+    "mtime": 1792254982.3369136,
+    "seen": 1792255242.717442,
+    "ast_hash": "c39cfa56b2339be002f527f5beb48002",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/dealBriefExit.test.ts": {
+    "mtime": 1792255171.9080167,
+    "seen": 1792255242.7176871,
+    "ast_hash": "95de142399bc1b478781f60baf775a76",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/dealBriefExit.ts": {
+    "mtime": 1792254982.3333817,
+    "seen": 1792255242.717719,
+    "ast_hash": "073c9d1f5071e490ca94ee186b2b5655",
     "semantic_hash": ""
   }
 }
