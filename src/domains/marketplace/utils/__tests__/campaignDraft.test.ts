@@ -8,6 +8,7 @@ import {
   draftSectionsOf,
   draftValuesFromCampaign,
   emptyDraftValues,
+  liveDraftSectionsOf,
   missingStep,
 } from '../campaignDraft';
 import { mapCampaignDetail } from '../campaignMappers';
@@ -199,5 +200,31 @@ describe('draftEntryStep', () => {
   it('resumes at the first incomplete step, else the review', () => {
     expect(draftEntryStep({ missing: ['deliverables', 'pricing'] }, 'resume')).toBe('requirements');
     expect(draftEntryStep({ missing: [] }, 'resume')).toBe('review');
+  });
+});
+
+describe('liveDraftSectionsOf', () => {
+  const baseline = draftValuesFromCampaign(server());
+
+  it('never sends seats or the deadline, and the drop only once it moved', () => {
+    const sections = liveDraftSectionsOf({ ...baseline, seatsTotal: 9, applyDeadlineAt: 0 }, baseline, false);
+    expect(sections.seats_total).toBeUndefined();
+    expect(sections.schedule).toEqual({ delivery_days: null });
+    const moved = baseline.dropAt === null ? 0 : baseline.dropAt + 3_600_000;
+    expect(liveDraftSectionsOf({ ...baseline, dropAt: moved }, baseline, false).schedule).toEqual({
+      delivery_days: null,
+      drop_at: new Date(moved).toISOString(),
+    });
+  });
+
+  it('switches from the drop to delivery days by clearing the drop', () => {
+    const sections = liveDraftSectionsOf({ ...baseline, dropAt: null, deliveryDays: 7 }, baseline, false);
+    expect(sections.schedule).toEqual({ delivery_days: 7, drop_at: null });
+  });
+
+  it('sends only the name and the announcement once the terms locked', () => {
+    const sections = liveDraftSectionsOf({ ...baseline, seatPrice: '500', teaser: 'New ask' }, baseline, true);
+    expect(Object.keys(sections)).toEqual(['title', 'teaser']);
+    expect(sections.teaser).toEqual({ teaser: { requirements: 'New ask' } });
   });
 });

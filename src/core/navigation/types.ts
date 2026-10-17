@@ -276,9 +276,10 @@ export type DealFlowStackParamList = {
   OfferBuilder: { slug: string; draftId?: string; rateCardIds?: string[] };
   /**
    * Brand campaign wizard. No params = a new campaign; `campaignId` opens a draft: `resume` jumps
-   * to the first step that still needs something, `duplicate` starts at the first step.
+   * to the first step that still needs something, `duplicate` starts at the first step, `edit`
+   * changes a published campaign (saved on «save», not as the brand types).
    */
-  CampaignWizard: { campaignId?: string; source?: 'resume' | 'duplicate' } | undefined;
+  CampaignWizard: { campaignId?: string; source?: 'resume' | 'duplicate' | 'edit' } | undefined;
   /** «How a deal completes», one page per role. */
   DealGuide: DealGuideParams;
 };

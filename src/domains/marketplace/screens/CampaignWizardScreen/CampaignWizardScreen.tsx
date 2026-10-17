@@ -24,18 +24,19 @@ export const CampaignWizardScreen: React.FC = () => {
   const { t } = useTranslation();
   const model = useCampaignWizardScreen();
   const reduceMotion = useReducedMotion();
-  const { ready, loadError, reload, onClose, step, inReview } = model;
+  const { ready, loadError, reload, onClose, step, inReview, live } = model;
+  const loadingTitle = t(live ? 'marketplace.campaign.wizard.live.title' : 'marketplace.campaign.wizard.header.newTitle');
 
   let body: React.ReactNode;
   if (loadError) {
     body = (
-      <Layout header={{ title: t('marketplace.campaign.wizard.header.newTitle'), backIcon: 'close', onBackPress: onClose }}>
+      <Layout header={{ title: loadingTitle, backIcon: 'close', onBackPress: onClose }}>
         <ErrorState error={loadError} onRetry={reload} />
       </Layout>
     );
   } else if (!ready) {
     body = (
-      <Layout header={{ title: t('marketplace.campaign.wizard.header.newTitle'), backIcon: 'close', onBackPress: onClose }}>
+      <Layout header={{ title: loadingTitle, backIcon: 'close', onBackPress: onClose }}>
         <Box px="xl" py="xl" gap="2xl">
           <Skeleton width="100%" height={COVER_HEIGHT} borderRadius="xl" />
           <Skeleton width="100%" height={TITLE_HEIGHT} borderRadius="md" />

@@ -250,3 +250,42 @@ describe('draft syncer: canContinue', () => {
     expect(syncer.canContinue()).toBe(false);
   });
 });
+
+describe('draft syncer: a live campaign (saves on flush only)', () => {
+  const manual = () => {
+    const update = jest.fn<Promise<CampaignDetail>, [string, CampaignDraftRequest]>(async () => campaign());
+    const states: CampaignDraftSyncState[] = [];
+    const syncer = createCampaignDraftSyncer({
+      create: jest.fn(),
+      update,
+      onChange: state => states.push(state),
+      onCreated: jest.fn(),
+      delayMs: null,
+    });
+    const opened = campaign();
+    syncer.seed(opened);
+    return { update, syncer, opened, last: () => states[states.length - 1] };
+  };
+
+  it('holds edits until flush, and says there is something unsaved', async () => {
+    const { update, syncer, opened } = manual();
+    expect(syncer.hasChanges()).toBe(false);
+    syncer.want(draftSectionsOf({ ...draftValuesFromCampaign(opened), teaser: 'New ask' }));
+    await jest.advanceTimersByTimeAsync(DELAY * 10);
+    expect(update).not.toHaveBeenCalled();
+    expect(syncer.hasChanges()).toBe(true);
+    await syncer.flush();
+    expect(update.mock.calls).toEqual([['c1', { teaser: { requirements: 'New ask' } }]]);
+    expect(syncer.hasChanges()).toBe(false);
+  });
+
+  it('forgets the refusals of parts that may no longer be sent', async () => {
+    const { update, syncer, opened, last } = manual();
+    update.mockRejectedValueOnce(apiError(422, 'campaign_field_locked'));
+    syncer.want(draftSectionsOf({ ...draftValuesFromCampaign(opened), seatPrice: '500' }));
+    await syncer.flush();
+    expect(last()?.refused.pricing?.error.code).toBe('campaign_field_locked');
+    syncer.forget(['pricing']);
+    expect(last()?.refused.pricing).toBeUndefined();
+  });
+});

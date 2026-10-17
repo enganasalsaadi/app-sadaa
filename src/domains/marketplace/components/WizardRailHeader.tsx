@@ -53,7 +53,8 @@ interface WizardRailHeaderProps<K extends string> {
  * Straight navy bar over a wizard, painted up behind the status bar. Top row: close, a centre slot,
  * a trailing slot. Below it the step rail, where the current step is a white capsule with its icon,
  * name and position. Scrolling down tucks the top row away so only the rail stays; scrolling back up
- * brings it back. An optional strip under the rail carries one blocker with its action.
+ * brings it back. An optional strip under the rail carries one blocker with its action. With a
+ * single step there is no rail: the bar is just the top row.
  */
 const WizardRailHeaderComponent = <K extends string>({
   steps,
@@ -101,7 +102,12 @@ const WizardRailHeaderComponent = <K extends string>({
     },
     [reduceMotion],
   );
-  const topRowStyle = useAnimatedStyle(() => ({ height: ROW * (1 - tuck.value), opacity: 1 - tuck.value }));
+  // A single step has no rail to keep, so the top row (with close) stays put.
+  const hasRail = steps.length > 1;
+  const topRowStyle = useAnimatedStyle(() => {
+    const hidden = hasRail ? tuck.value : 0;
+    return { height: ROW * (1 - hidden), opacity: 1 - hidden };
+  });
 
   const styles = useStyles(
     ({ borderWidths, radii, spacing }): Record<'shell' | 'clip' | 'topRow' | 'row' | 'side' | 'strip', ViewStyle> => ({
@@ -159,14 +165,16 @@ const WizardRailHeaderComponent = <K extends string>({
             </Box>
           </Box>
         </Animated.View>
-        <Box style={styles.row}>
-          {steps.map((step, index) => (
-            <React.Fragment key={step.key}>
-              {index > 0 ? <WizardRailConnector filled={index <= current} draws={index === current} /> : null}
-              <WizardRailStop step={step} position={`${index + 1}/${steps.length}`} onPress={onStepPress} />
-            </React.Fragment>
-          ))}
-        </Box>
+        {hasRail ? (
+          <Box style={styles.row}>
+            {steps.map((step, index) => (
+              <React.Fragment key={step.key}>
+                {index > 0 ? <WizardRailConnector filled={index <= current} draws={index === current} /> : null}
+                <WizardRailStop step={step} position={`${index + 1}/${steps.length}`} onPress={onStepPress} />
+              </React.Fragment>
+            ))}
+          </Box>
+        ) : null}
         {strip ? (
           <Box style={styles.strip} accessibilityRole="alert">
             <Box flex={1}>

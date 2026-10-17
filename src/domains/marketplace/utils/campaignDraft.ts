@@ -200,6 +200,41 @@ export const draftSectionsOf = (values: CampaignDraftValues): CampaignDraftSecti
   return sections;
 };
 
+/** What still changes once the terms lock at the first application (contract §3.3). */
+export const CAMPAIGN_UNLOCKED_SECTIONS: readonly CampaignDraftSection[] = ['title', 'teaser'];
+/** Everything else freezes with the terms. */
+export const CAMPAIGN_LOCKED_SECTIONS: readonly CampaignDraftSection[] = CAMPAIGN_DRAFT_SECTION.filter(
+  section => !CAMPAIGN_UNLOCKED_SECTIONS.includes(section),
+);
+
+/**
+ * The parts a live campaign's edit may send (`PUT` on `open/suspended/filled`). Seats and the
+ * deadline have their own actions, so they never go; the drop goes only when it changed (re-sending
+ * a past one fails validation); once the terms lock, only the name and the announcement go.
+ */
+export const liveDraftSectionsOf = (
+  values: CampaignDraftValues,
+  baseline: CampaignDraftValues,
+  locked: boolean,
+): CampaignDraftSections => {
+  const all = draftSectionsOf(values);
+  const sections: CampaignDraftSections = {};
+  const kept = locked ? CAMPAIGN_UNLOCKED_SECTIONS : CAMPAIGN_DRAFT_SECTION;
+  kept.forEach(section => {
+    if (section === 'seats_total' || section === 'schedule') return;
+    const fragment = all[section];
+    if (fragment) sections[section] = fragment;
+  });
+  if (!locked) {
+    const schedule: CampaignDraftRequest = { delivery_days: values.dropAt === null ? values.deliveryDays : null };
+    if (values.dropAt !== baseline.dropAt) {
+      schedule.drop_at = values.dropAt === null ? null : new Date(values.dropAt).toISOString();
+    }
+    sections.schedule = schedule;
+  }
+  return sections;
+};
+
 /** Comparable form of one section; builders emit keys in a fixed order, so equal parts match. */
 export const draftSectionKey = (fragment: CampaignDraftRequest | undefined): string =>
   fragment === undefined ? '' : JSON.stringify(fragment);

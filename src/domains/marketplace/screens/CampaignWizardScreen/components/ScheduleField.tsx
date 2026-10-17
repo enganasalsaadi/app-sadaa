@@ -21,7 +21,7 @@ import { DropTimeline } from './DropTimeline';
 const ScheduleFieldComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { schedule } = useCampaignWizard();
+  const { schedule, live } = useCampaignWizard();
   const {
     mode,
     chooseMode,
@@ -67,20 +67,23 @@ const ScheduleFieldComponent: React.FC = () => {
 
   return (
     <Box gap="2xl">
-      <CampaignField
-        label={t('marketplace.campaign.wizard.money.deadline.label')}
-        note={t('marketplace.campaign.wizard.money.deadline.note', { days: deadlineMaxDays })}
-      >
-        <DateFieldButton
-          icon={CalendarDays}
-          value={deadline === null ? null : formatCampaignDate(deadline)}
-          placeholder={t('marketplace.campaign.wizard.money.deadline.placeholder')}
-          caption={deadlineCaption}
-          error={deadlineError}
-          onPress={openDeadline}
-          accessibilityLabel={t('marketplace.campaign.wizard.money.deadline.label')}
-        />
-      </CampaignField>
+      {/* A published campaign moves its deadline through its own action (the campaign's menu). */}
+      {live ? null : (
+        <CampaignField
+          label={t('marketplace.campaign.wizard.money.deadline.label')}
+          note={t('marketplace.campaign.wizard.money.deadline.note', { days: deadlineMaxDays })}
+        >
+          <DateFieldButton
+            icon={CalendarDays}
+            value={deadline === null ? null : formatCampaignDate(deadline)}
+            placeholder={t('marketplace.campaign.wizard.money.deadline.placeholder')}
+            caption={deadlineCaption}
+            error={deadlineError}
+            onPress={openDeadline}
+            accessibilityLabel={t('marketplace.campaign.wizard.money.deadline.label')}
+          />
+        </CampaignField>
+      )}
       <CampaignField label={t('marketplace.campaign.wizard.money.when.label')}>
         <Box gap="md">
           <SegmentedControl

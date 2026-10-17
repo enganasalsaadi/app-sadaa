@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { Vibration, type ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight, Send } from 'lucide-react-native';
+import { Check, ChevronLeft, ChevronRight, Send } from 'lucide-react-native';
 import { HAPTIC_TAP_MS } from '@/core/config';
 import { formatMoney } from '@/core/i18n';
 import { opacity, useStyles, useTheme } from '@/core/theme';
@@ -12,15 +12,16 @@ import { useCampaignWizard } from '../CampaignWizardContext';
  * A floating navy bar over the steps: back (from the second step on), from the money step on the
  * most that could be held (the server's estimate), and the step's one action, which waits for the
  * pending save before moving on. On the review the action sends the campaign (again, after changes
- * were requested).
+ * were requested). Editing a live campaign the bar holds one «save» on every step: the rail moves
+ * between them.
  */
 const CampaignWizardDockComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes, isRTL } = useTheme();
-  const { step, isFirst, goNext, goBack, advancing, money, changesRequested } = useCampaignWizard();
-  const total = step === 'money' || step === 'review' ? (money.quote?.totalGross.max ?? null) : null;
-  const sending = step === 'review';
-  const Icon = sending ? Send : isRTL ? ChevronLeft : ChevronRight;
+  const { step, isFirst, goNext, goBack, advancing, money, changesRequested, live } = useCampaignWizard();
+  const total = !live && (step === 'money' || step === 'review') ? (money.quote?.totalGross.max ?? null) : null;
+  const sending = !live && step === 'review';
+  const Icon = live ? Check : sending ? Send : isRTL ? ChevronLeft : ChevronRight;
 
   const styles = useStyles(
     ({ borderWidths, radii, spacing, shadows }): Record<'wrap' | 'bar' | 'go' | 'goBusy' | 'pill' | 'flip', ViewStyle> => {
@@ -69,11 +70,12 @@ const CampaignWizardDockComponent: React.FC = () => {
   if (sending) {
     label = t(changesRequested ? 'marketplace.campaign.wizard.dock.resend' : 'marketplace.campaign.wizard.dock.send');
   }
+  if (live) label = t('marketplace.campaign.wizard.live.save');
 
   return (
     <Box style={styles.wrap}>
       <Box style={styles.bar}>
-        {isFirst ? null : (
+        {isFirst || live ? null : (
           <IconButton
             icon={isRTL ? ChevronRight : ChevronLeft}
             tone="onBrand"

@@ -7,7 +7,6 @@ import { WizardRailHeader, type WizardRailStrip } from '../../../components/Wiza
 import { WizardSaveLabel } from '../../../components/WizardSaveLabel';
 import type { WizardRailStep } from '../../../components/WizardRailStop';
 import { CAMPAIGN_STEP_ICON, CAMPAIGN_STEP_LABEL } from '../../../constants/campaignWizard';
-import { CAMPAIGN_WIZARD_STEP } from '../../../types/campaignDraft';
 import type { CampaignWizardStep } from '../../../types/campaignDraft';
 import { wizardRailState } from '../../../utils/campaignWizard';
 import { useCampaignWizard } from '../CampaignWizardContext';
@@ -19,7 +18,8 @@ const THUMB = moderateScale(28);
  * soon as it has one, the save state, and the four-step rail. Any step is a tap away once the draft
  * exists; a step left behind with something still missing wears the warning tone. A failure that
  * stops saving rides under the rail with its way out; when the team asked for changes, the strip
- * leads to their note on the review step.
+ * leads to their note on the review step. Editing a live campaign there is no save state (nothing
+ * saves until «save»), and once its terms locked no rail either: one step is left.
  */
 const CampaignWizardHeaderComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -38,6 +38,8 @@ const CampaignWizardHeaderComponent: React.FC = () => {
     confirmLeave,
     cover,
     changesRequested,
+    steps: stepKeys,
+    live,
   } = useCampaignWizard();
 
   const styles = useStyles(
@@ -57,7 +59,7 @@ const CampaignWizardHeaderComponent: React.FC = () => {
 
   const steps = useMemo<WizardRailStep<CampaignWizardStep>[]>(
     () =>
-      CAMPAIGN_WIZARD_STEP.map((key, index) => {
+      stepKeys.map((key, index) => {
         const label = t(CAMPAIGN_STEP_LABEL[key]);
         const state = wizardRailState(key, step, progress);
         return {
@@ -74,7 +76,7 @@ const CampaignWizardHeaderComponent: React.FC = () => {
           ),
         };
       }),
-    [campaignId, progress, step, t],
+    [campaignId, progress, step, stepKeys, t],
   );
 
   const strip = useMemo<WizardRailStrip | undefined>(() => {
@@ -124,7 +126,7 @@ const CampaignWizardHeaderComponent: React.FC = () => {
       onClose={onClose}
       onStepPress={goToStep}
       strip={strip}
-      trailing={<WizardSaveLabel state={saveState} labels={labels} />}
+      trailing={live ? null : <WizardSaveLabel state={saveState} labels={labels} />}
       center={
         <>
           {thumbUri ? (

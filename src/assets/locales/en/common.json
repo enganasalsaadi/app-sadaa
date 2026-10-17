@@ -1487,6 +1487,63 @@
         "dock": {
           "resume": "Finish the campaign",
           "resubmit": "Edit and resubmit"
+        },
+        "menu": {
+          "title": "Campaign actions",
+          "resume": "Continue the campaign",
+          "addSeats": "Add seats",
+          "addSeatsHint": "Up to {{max}} seats in total",
+          "addSeatsFull": "Already at the {{max}}-seat limit",
+          "extend": "Extend the application deadline",
+          "extendHint": "Up to 30 days from publishing",
+          "extendNone": "No later date is allowed now",
+          "edit": "Edit the campaign",
+          "editHint": "Saved changes go live without a new review",
+          "editLocked": "Name and announcement only — price and content are locked",
+          "duplicate": "Duplicate the campaign",
+          "close": "Close recruiting",
+          "closeHint": "The taken seats ({{seats}}) stay; waiting applications become “not selected”",
+          "cancel": "Cancel the campaign",
+          "cancelHint": "No seat is taken yet; waiting applications become “not selected”",
+          "delete": "Delete the draft"
+        },
+        "addSeats": {
+          "title": "Add seats",
+          "body": "A campaign can have up to {{max}} seats in total.",
+          "a11y": "Seats to add",
+          "totalLabel": "Seats after",
+          "needsDeadline": "The application deadline has passed. Pick a new one so creators can apply for the new seats.",
+          "confirm_one": "Add 1 seat",
+          "confirm_other": "Add {{count}} seats",
+          "done_one": "1 seat added",
+          "done_other": "{{count}} seats added"
+        },
+        "deadlineSheet": {
+          "title": "Extend the deadline",
+          "body": "Applications now close on {{date}}. Pick a later day.",
+          "bodyNone": "Pick the day applications close.",
+          "rule": "Applications close at the end of the chosen day (Damascus time).",
+          "confirm": "Extend",
+          "confirmDate": "Extend to {{date}}",
+          "closesAt": "Applications close on {{date}}",
+          "pickFirst": "Pick the new deadline first.",
+          "none": "No later date is allowed: the 30-day limit from publishing or the drop's gap is reached.",
+          "done": "Deadline extended"
+        },
+        "end": {
+          "closeTitle": "Close recruiting?",
+          "closeBody": "No new applications. The creators in the taken seats carry on with their deals.",
+          "cancelTitle": "Cancel the campaign?",
+          "cancelBody": "No seat is taken yet, so the campaign simply ends.",
+          "seatsStay": "Taken seats that stay",
+          "applications": "Waiting applications that become “not selected”",
+          "closeNote": "Recruiting can't reopen after closing. A seat that frees later can only be dropped.",
+          "cancelNote": "A cancelled campaign can't be restored; duplicate it to start again.",
+          "closeHold": "Hold to close recruiting",
+          "cancelHold": "Hold to cancel the campaign",
+          "caption": "This can't be undone",
+          "closed": "Recruiting closed",
+          "cancelled": "Campaign cancelled"
         }
       },
       "wizard": {
@@ -1527,6 +1584,18 @@
           "body": "We couldn't save your latest edits, and leaving now may lose them.",
           "confirm": "Leave without saving",
           "stay": "Stay"
+        },
+        "live": {
+          "title": "Edit the campaign",
+          "body": "Saved changes reach creators at once, without a new review. Seats and the deadline change from the campaign's menu.",
+          "lockedTitle": "Terms locked since the first application",
+          "lockedBody": "Only the name, cover and announcement can change now. Seats and the deadline change from the campaign's menu.",
+          "managed": "Seats and the application deadline change from the campaign's menu (⋯) on its page.",
+          "save": "Save changes",
+          "saved": "Changes saved and live",
+          "leaveTitle": "Discard your changes?",
+          "leaveBody": "What you changed hasn't been saved yet.",
+          "leaveConfirm": "Discard"
         },
         "idea": {
           "cover": {

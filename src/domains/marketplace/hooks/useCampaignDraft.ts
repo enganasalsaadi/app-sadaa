@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch } from '@/core/store';
 import {
   brandCampaignsApi,
+  campaignChangedTags,
   useCreateCampaignMutation,
   useGetCampaignQuery,
   useUpdateCampaignMutation,
@@ -11,15 +12,30 @@ import { CAMPAIGN_AUTOSAVE_DELAY_MS } from '../constants/campaignDraft';
 import { CAMPAIGN_MISSING_KEY } from '../types/campaignDraft';
 import type { CampaignDraftValues } from '../types/campaignDraft';
 import {
+  CAMPAIGN_LOCKED_SECTIONS,
   campaignWizardProgress,
   draftSectionsOf,
   draftValuesFromCampaign,
   emptyDraftValues,
+  liveDraftSectionsOf,
 } from '../utils/campaignDraft';
 import { createCampaignDraftSyncer } from '../utils/campaignDraftSync';
 import type { CampaignDraftSyncState } from '../utils/campaignDraftSync';
+import { campaignTermsLocked } from '../utils/campaignDetail';
 
 export type CampaignDraftSaveState = 'idle' | 'saving' | 'saved' | 'error';
+
+/** How a live campaign's «save» ended. `locked`: the server said the terms froze; the form now shows it. */
+export type CampaignLiveSaveOutcome = 'saved' | 'unchanged' | 'locked' | 'failed';
+
+export interface UseCampaignDraftOptions {
+  /**
+   * Editing a published campaign: nothing saves until `saveLive` (each edit goes straight to
+   * creators and the history), seats and the deadline stay with their own actions, and once the
+   * terms lock only the name and announcement are sent.
+   */
+  live?: boolean;
+}
 
 const IDLE_SYNC: CampaignDraftSyncState = { saving: false, pending: false, failure: null, refused: {} };
 
@@ -30,7 +46,10 @@ const IDLE_SYNC: CampaignDraftSyncState = { saving: false, pending: false, failu
  * or leaving; unmounting saves whatever is pending. The wizard's progress comes from the server's
  * `missing[]` after each save.
  */
-export const useCampaignDraft = (initialCampaignId: string | null = null) => {
+export const useCampaignDraft = (
+  initialCampaignId: string | null = null,
+  { live = false }: UseCampaignDraftOptions = {},
+) => {
   const dispatch = useAppDispatch();
   const [createCampaign] = useCreateCampaignMutation();
   const [updateCampaign] = useUpdateCampaignMutation();
@@ -38,9 +57,15 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
   const [values, setValues] = useState<CampaignDraftValues>(emptyDraftValues);
   const [sync, setSync] = useState(IDLE_SYNC);
   const [ready, setReady] = useState(initialCampaignId === null);
+  const [locked, setLocked] = useState(false);
   const { data: campaign, error: loadError, refetch } = useGetCampaignQuery(campaignId ?? skipToken);
 
   const valuesRef = useRef(values);
+  const syncRef = useRef(IDLE_SYNC);
+  // The opened campaign's own values: the drop is sent only when it moved from here.
+  const baselineRef = useRef<CampaignDraftValues>(values);
+  const lockedRef = useRef(false);
+  const liveRef = useRef(live);
   const readyRef = useRef(ready);
   const editedRef = useRef(false);
   const createRef = useRef(createCampaign);
@@ -48,16 +73,26 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
   createRef.current = createCampaign;
   updateRef.current = updateCampaign;
 
+  const sectionsOf = useCallback(
+    (next: CampaignDraftValues) =>
+      liveRef.current ? liveDraftSectionsOf(next, baselineRef.current, lockedRef.current) : draftSectionsOf(next),
+    [],
+  );
+
   const syncer = useMemo(
     () =>
       createCampaignDraftSyncer({
         create: body => createRef.current(body).unwrap(),
         update: (id, body) => updateRef.current({ id, body }).unwrap(),
-        onChange: setSync,
+        onChange: state => {
+          syncRef.current = state;
+          setSync(state);
+        },
         onCreated: setCampaignId,
-        delayMs: CAMPAIGN_AUTOSAVE_DELAY_MS,
+        delayMs: liveRef.current ? null : CAMPAIGN_AUTOSAVE_DELAY_MS,
+        sectionsOf,
       }),
-    [],
+    [sectionsOf],
   );
 
   // An opened draft is the saved baseline and fills the form once; later cache updates (the save
@@ -67,6 +102,11 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
     readyRef.current = true;
     const loaded = draftValuesFromCampaign(campaign);
     valuesRef.current = loaded;
+    baselineRef.current = loaded;
+    if (liveRef.current && campaignTermsLocked(campaign)) {
+      lockedRef.current = true;
+      setLocked(true);
+    }
     syncer.seed(campaign);
     setValues(loaded);
     setReady(true);
@@ -74,6 +114,8 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
 
   useEffect(
     () => () => {
+      // A live campaign keeps only what «save» sent: leaving drops the rest.
+      if (liveRef.current) return;
       syncer.flush().then(() => {
         // The list and the home rail show titles / counts, so they refresh once on the way out.
         if (editedRef.current) {
@@ -91,9 +133,9 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
       const next = { ...valuesRef.current, ...patch };
       valuesRef.current = next;
       setValues(next);
-      syncer.want(draftSectionsOf(next));
+      syncer.want(sectionsOf(next));
     },
-    [syncer],
+    [sectionsOf, syncer],
   );
 
   const progress = useMemo(
@@ -106,6 +148,31 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
     await syncer.flush();
     return syncer.canContinue();
   }, [syncer]);
+  /**
+   * A live campaign's «save»: sends every changed part now. The terms may have locked since the
+   * page was read (`campaign_field_locked`): the frozen parts go back to their saved values and
+   * the form switches to «name and announcement only» so the brand sees why.
+   */
+  const saveLive = useCallback(async (): Promise<CampaignLiveSaveOutcome> => {
+    if (!syncer.hasChanges()) return 'unchanged';
+    await syncer.flush();
+    const refusals = Object.values(syncRef.current.refused);
+    if (!lockedRef.current && refusals.some(refusal => refusal?.error.code === 'campaign_field_locked')) {
+      lockedRef.current = true;
+      setLocked(true);
+      const { title, teaser } = valuesRef.current;
+      const next = { ...baselineRef.current, title, teaser };
+      valuesRef.current = next;
+      setValues(next);
+      syncer.forget(CAMPAIGN_LOCKED_SECTIONS);
+      syncer.want(sectionsOf(next));
+      return 'locked';
+    }
+    if (!syncer.canContinue() || refusals.length > 0) return 'failed';
+    if (campaignId !== null) dispatch(brandCampaignsApi.util.invalidateTags([...campaignChangedTags(campaignId)]));
+    return 'saved';
+  }, [campaignId, dispatch, sectionsOf, syncer]);
+
   const reload = useCallback(() => {
     refetch();
   }, [refetch]);
@@ -131,6 +198,11 @@ export const useCampaignDraft = (initialCampaignId: string | null = null) => {
     refused: sync.refused,
     flush,
     retry: syncer.retry,
+    /** Live campaign only: the terms froze (read from the campaign, or the server said so). */
+    locked,
+    /** Live campaign only: edits not sent yet. */
+    hasChanges: live && syncer.hasChanges(),
+    saveLive,
     /** After a failed first load of a draft that was opened by id. */
     reload,
   };

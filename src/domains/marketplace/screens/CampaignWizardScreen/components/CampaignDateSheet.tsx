@@ -2,9 +2,9 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
 import { BottomSheet, Box, ChipGroup, CustomButton, Text } from '@/shared/ui';
+import { CampaignCalendar } from '../../../components/CampaignCalendar';
 import { formatCampaignDateTime, formatCampaignTime } from '../../../utils/campaignSchedule';
 import { useCampaignWizard } from '../CampaignWizardContext';
-import { CampaignCalendar } from './CampaignCalendar';
 
 /**
  * The deadline or drop picker: a calendar bounded by the rules (deadline within 30 days, drop

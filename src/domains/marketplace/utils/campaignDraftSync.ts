@@ -5,6 +5,7 @@ import type {
   CampaignDraftRequest,
   CampaignDraftSection,
   CampaignDraftSections,
+  CampaignDraftValues,
 } from '../types/campaignDraft';
 import { isCampaignConflictError } from './campaignAction';
 import {
@@ -44,8 +45,10 @@ export interface CampaignDraftSyncDeps {
   update: (id: string, body: CampaignDraftRequest) => Promise<CampaignDetail>;
   onChange: (state: CampaignDraftSyncState) => void;
   onCreated: (campaignId: string) => void;
-  /** Quiet time after the last edit before the queue runs. */
-  delayMs: number;
+  /** Quiet time after the last edit before the queue runs; `null` = only `flush` saves (a live campaign). */
+  delayMs: number | null;
+  /** The wire parts of a form; default every draft part. A live campaign leaves some out. */
+  sectionsOf?: (values: CampaignDraftValues) => CampaignDraftSections;
 }
 
 export interface CampaignDraftSyncer {
@@ -59,6 +62,10 @@ export interface CampaignDraftSyncer {
   retry: () => Promise<void>;
   /** The draft exists on the server and nothing blocks the queue: later steps can save too. */
   canContinue: () => boolean;
+  /** Something differs from what is saved (refused parts included). */
+  hasChanges: () => boolean;
+  /** Parts that may no longer be sent (locked): their refusals go, so they stop showing. */
+  forget: (sections: readonly CampaignDraftSection[]) => void;
 }
 
 const INITIAL: CampaignDraftSyncState = { saving: false, pending: false, failure: null, refused: {} };
@@ -80,6 +87,7 @@ const toFailure = (err: unknown): CampaignDraftFailure | { kind: 'invalid'; erro
  * the queue.
  */
 export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): CampaignDraftSyncer => {
+  const sectionsOf = deps.sectionsOf ?? draftSectionsOf;
   let campaignId: string | null = null;
   let saved: CampaignDraftSections = {};
   let desired: CampaignDraftSections = {};
@@ -117,7 +125,7 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
         const created = await deps.create(fragment);
         campaignId = created.id;
         // The server's own defaults are the baseline, so untouched parts aren't re-sent.
-        saved = draftSectionsOf(draftValuesFromCampaign(created));
+        saved = sectionsOf(draftValuesFromCampaign(created));
         saved[section] = fragment;
         deps.onCreated(created.id);
       } else {
@@ -181,12 +189,17 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
   return {
     seed: campaign => {
       campaignId = campaign.id;
-      saved = draftSectionsOf(draftValuesFromCampaign(campaign));
+      saved = sectionsOf(draftValuesFromCampaign(campaign));
       desired = saved;
     },
     want: sections => {
       desired = sections;
-      setState({ pending: true, failure: state.failure?.kind === 'network' ? null : state.failure });
+      const failure = state.failure?.kind === 'network' ? null : state.failure;
+      if (deps.delayMs === null) {
+        setState({ failure });
+        return;
+      }
+      setState({ pending: true, failure });
       clearTimer();
       timer = setTimeout(() => {
         timer = null;
@@ -199,5 +212,14 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
       await flush();
     },
     canContinue: () => campaignId !== null && state.failure === null,
+    hasChanges: () => dirtyDraftSections(saved, desired).length > 0,
+    forget: sections => {
+      const refused = { ...state.refused };
+      sections.forEach(section => {
+        delete refusedKeys[section];
+        delete refused[section];
+      });
+      setState({ refused });
+    },
   };
 };
