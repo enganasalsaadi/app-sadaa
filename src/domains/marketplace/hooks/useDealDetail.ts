@@ -97,6 +97,15 @@ export const useDealDetail = (
     () => navigation.navigate('DealContract', { id }),
     [id, navigation],
   );
+  // A creator reads the campaign in the Opportunities tab; a brand's own page lives in its Deals stack.
+  const campaignId = deal?.campaign?.id ?? null;
+  const openCampaign = useCallback(
+    (target: string) =>
+      role === 'brand'
+        ? navigation.navigate('CampaignDetail', { id: target })
+        : navigation.navigate('OpportunitiesTab', { screen: 'CampaignDetail', params: { id: target }, initial: false }),
+    [navigation, role],
+  );
   const openGuide = useCallback(
     () => navigate('DealGuide', { role, context: 'deal', hasProduct }),
     [hasProduct, role],
@@ -161,6 +170,7 @@ export const useDealDetail = (
     onRefresh,
     onRetry,
     openContract,
+    openCampaign: campaignId === null ? null : openCampaign,
     openGuide,
     respond,
     shipping,

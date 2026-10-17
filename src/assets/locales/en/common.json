@@ -3435,6 +3435,10 @@
         "noEvents": "Nothing recorded here yet",
         "eventMeta": "{{actor}} · {{time}}"
       },
+      "campaign": {
+        "fromA11y": "From campaign: {{title}}",
+        "openA11y": "Open campaign: {{title}}"
+      },
       "orbit": {
         "label": "Deal journey. Station {{index}} of {{count}}: {{name}}",
         "now": "Now",

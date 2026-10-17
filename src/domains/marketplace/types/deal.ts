@@ -55,6 +55,10 @@ export type DealWithdrawReason = (typeof DEAL_WITHDRAW_REASON)[number];
 export const DEAL_CANCEL_OUTCOME = ['free', 'kill_fee', 'dispute_only'] as const;
 export type DealCancelOutcome = (typeof DEAL_CANCEL_OUTCOME)[number];
 
+/** A returnable sample's way back (contract §5.5); `waived` = the brand let the creator keep it. */
+export const DEAL_RETURN_STATUS = ['awaiting_waybill', 'shipped', 'received', 'issue_reported', 'waived'] as const;
+export type DealReturnStatus = (typeof DEAL_RETURN_STATUS)[number];
+
 export const DEAL_SHIPPING_ISSUE_REASON = ['delayed', 'damaged', 'incomplete', 'wrong_item', 'other'] as const;
 export type DealShippingIssueReason = (typeof DEAL_SHIPPING_ISSUE_REASON)[number];
 
@@ -318,6 +322,8 @@ export interface DealShippingAddress {
 }
 
 export interface DealShipping {
+  /** Linked deal: the creator's brief review runs until then, so the brand can't ship before it. */
+  shipFrom: Timestamp | null;
   shipBy: Timestamp | null;
   reshipsLeft: number;
   freeCancelFrom: Timestamp | null;
@@ -341,6 +347,9 @@ export interface DealCancellation {
     /** Withdrawing now records a strike. */
     strike: boolean;
     refund: Money | null;
+    /** Linked deal (contract §5.2): the creator can still leave cleanly, with no strike, until `briefExitUntil`. */
+    briefExitAvailable: boolean;
+    briefExitUntil: Timestamp | null;
   };
 }
 
@@ -603,9 +612,54 @@ export interface DealBrief {
   trackingLink: string | null;
 }
 
+/** The public campaign a linked deal came from (contract §5.1). */
+export interface DealCampaignRef {
+  id: string;
+  title: string;
+}
+
+/** Synchronized drop (contract §5.4): everyone posts together; the live link opens a little before. */
+export interface DealDrop {
+  dropAt: Timestamp;
+  publishOpensAt: Timestamp;
+  publishOpen: boolean;
+}
+
+/** The sample's way back when the deal closes (contract §5.5). */
+export interface DealReturnShipment {
+  id: string;
+  status: Labeled<DealReturnStatus>;
+  waybillDueAt: Timestamp | null;
+  overdue: boolean;
+  courier: string | null;
+  trackingNo: string | null;
+  trackingUrl: string | null;
+  handedAt: Timestamp | null;
+  shippedAt: Timestamp | null;
+  /** The brand's silence ends here: the sample counts as received. */
+  confirmBy: Timestamp | null;
+  receivedAt: Timestamp | null;
+  autoReceived: boolean;
+  issue: {
+    note: string;
+    photos: DealShipmentPhoto[];
+    reportedAt: Timestamp | null;
+  } | null;
+  waivedAt: Timestamp | null;
+  waiveNote: string | null;
+}
+
 export interface Deal {
   id: string;
   origin: 'direct' | 'public' | null;
+  /** Set on a linked deal, `null` on a direct one: opens the campaign. */
+  campaign: DealCampaignRef | null;
+  /** The creator can't read the brief before the deal is funded. */
+  briefHidden: boolean;
+  /** `null` on a direct deal or a campaign without a drop. */
+  drop: DealDrop | null;
+  /** `null` until a returnable sample's return opens. */
+  returnShipment: DealReturnShipment | null;
   status: Labeled<DealStatus>;
   /** Slowest item's status while `in_progress`; otherwise `null`. */
   stage: Labeled<DealItemStatus> | null;

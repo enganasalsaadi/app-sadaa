@@ -13,6 +13,7 @@ import { dealNextStep } from '../utils/dealNextStep';
 import { dealStation } from '../utils/dealStation';
 import { dealTimeView, formatRemaining } from '../utils/dealTimer';
 import { getDealStatusMeta } from '../utils/dealStatus';
+import { DealCampaignChip } from './DealCampaignChip';
 import { DealFace } from './DealFace';
 import { DealStepTipBody, DealStepper } from './DealStepper';
 import { DealTimerBar, type DealTimerBarTime } from './DealTimerBar';
@@ -122,6 +123,9 @@ const DealTicketComponent: React.FC<DealTicketProps> = ({
             </Box>
             <MoneyText value={deal.total} size="sm" />
           </Box>
+          {deal.campaign ? (
+            <DealCampaignChip campaign={deal.campaign} surface="soft" />
+          ) : null}
           <DealTimerBar
             label={deal.status.label}
             tone={meta.tone}

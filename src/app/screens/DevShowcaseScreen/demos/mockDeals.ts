@@ -38,6 +38,10 @@ export const buildMockDeal = ({
   return {
     id,
     origin: 'direct',
+    campaign: null,
+    briefHidden: false,
+    drop: null,
+    returnShipment: null,
     status: labeled(status, statusLabel),
     stage: stage ? labeled(stage) : null,
     brand: party,
@@ -73,7 +77,7 @@ export const buildMockDeal = ({
     total,
     shippingMode: labeled(shipping ? 'gift' : 'none'),
     shipping: shipping
-      ? { shipBy: null, reshipsLeft: 1, freeCancelFrom: null, shipments: [], address: null, addressEditable: false }
+      ? { shipFrom: null, shipBy: null, reshipsLeft: 1, freeCancelFrom: null, shipments: [], address: null, addressEditable: false }
       : null,
     cancellation: null,
     deliveryHours: 120,

@@ -114,7 +114,7 @@ describe('getDealActions', () => {
           platformFee: null,
           creatorNet: null,
         },
-        creator: { withdrawAvailable: true, strike: true, refund: null },
+        creator: { withdrawAvailable: true, strike: true, refund: null, briefExitAvailable: false, briefExitUntil: null },
       },
     });
     expect(getDealActions(deal, 'brand', NOW)).toEqual(['cancel']);
@@ -123,7 +123,7 @@ describe('getDealActions', () => {
 
   it('offers the free shipping cancel only once its time has come', () => {
     const at = (freeCancelFrom: number) =>
-      input('product_shipping', { shipping: { shipBy: null, reshipsLeft: 1, freeCancelFrom, shipments: [], address: null, addressEditable: false } });
+      input('product_shipping', { shipping: { shipFrom: null, shipBy: null, reshipsLeft: 1, freeCancelFrom, shipments: [], address: null, addressEditable: false } });
     expect(getDealActions(at(NOW - 1), 'creator', NOW)).toContain('freeCancel');
     expect(getDealActions(at(NOW + 1), 'creator', NOW)).not.toContain('freeCancel');
     expect(getDealActions(at(NOW - 1), 'brand', NOW)).not.toContain('freeCancel');

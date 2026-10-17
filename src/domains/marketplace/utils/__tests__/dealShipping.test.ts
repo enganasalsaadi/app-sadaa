@@ -76,6 +76,7 @@ const deal = (
   status: { key: status, label: '' },
   shippingMode: { key: mode, label: '' },
   shipping: {
+    shipFrom: null,
     shipBy: NOW + 3 * DAY,
     reshipsLeft: 1,
     freeCancelFrom: null,

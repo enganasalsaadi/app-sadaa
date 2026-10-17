@@ -3659,6 +3659,10 @@
         "noEvents": "لا أحداث مسجّلة هنا بعد",
         "eventMeta": "{{actor}} · {{time}}"
       },
+      "campaign": {
+        "fromA11y": "من حملة: {{title}}",
+        "openA11y": "افتح الحملة: {{title}}"
+      },
       "orbit": {
         "label": "رحلة الصفقة. المحطة {{index}} من {{count}}: {{name}}",
         "now": "الآن",

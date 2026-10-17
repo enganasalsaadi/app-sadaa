@@ -86,6 +86,7 @@ const withProduct = (status: DealStatus, received: boolean | null) =>
   deal(status, {
     shippingMode: { key: 'gift', label: '' },
     shipping: {
+      shipFrom: null,
       shipBy: null,
       reshipsLeft: 1,
       freeCancelFrom: null,

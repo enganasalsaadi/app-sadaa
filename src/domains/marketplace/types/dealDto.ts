@@ -105,6 +105,8 @@ export interface DealShippingAddressDto {
 }
 
 export interface DealShippingDto {
+  /** Linked deal; absent on servers that predate Public Campaigns. */
+  ship_from?: string | null;
   ship_by: string | null;
   reships_left: number;
   free_cancel_from: string | null;
@@ -127,6 +129,9 @@ export interface DealCancellationDto {
     withdraw_available: boolean;
     strike: boolean;
     refund_usd: string | null;
+    /** Linked deal; absent on servers that predate Public Campaigns. */
+    brief_exit_available?: boolean;
+    brief_exit_until?: string | null;
   };
 }
 
@@ -260,9 +265,36 @@ export interface DealSignatureDto {
   signed_at: string;
 }
 
+export interface DealReturnShipmentDto {
+  id: string;
+  status: DealLabeledDto;
+  waybill_due_at: string | null;
+  overdue: boolean;
+  courier: string | null;
+  tracking_no: string | null;
+  tracking_url: string | null;
+  handed_at: string | null;
+  shipped_at: string | null;
+  confirm_by: string | null;
+  received_at: string | null;
+  auto_received: boolean;
+  issue: {
+    note: string;
+    photos: { url: string | null; mime: string; size: number }[];
+    reported_at: string | null;
+  } | null;
+  waived_at: string | null;
+  waive_note: string | null;
+}
+
 export interface DealDto {
   id: string;
   origin: string;
+  /** The Public Campaigns fields are absent on servers that predate them. */
+  campaign?: { id: string; title: string } | null;
+  brief_hidden?: boolean;
+  drop?: { drop_at: string; publish_opens_at: string; publish_open: boolean } | null;
+  return_shipment?: DealReturnShipmentDto | null;
   status: DealLabeledDto;
   stage: DealLabeledDto | null;
   brand: DealPartyDto;

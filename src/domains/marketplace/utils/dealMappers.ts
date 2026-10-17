@@ -19,6 +19,7 @@ import {
   DEAL_RETENTION_REASON,
   DEAL_RETENTION_STATUS,
   DEAL_RETENTION_TERM,
+  DEAL_RETURN_STATUS,
   DEAL_SHIPPING_ISSUE_REASON,
   DEAL_SHIPPING_MODE,
   DEAL_STATUS,
@@ -54,6 +55,7 @@ import {
   type DealRatingEntry,
   type DealRatingSide,
   type DealRetentionCase,
+  type DealReturnShipment,
   type DealRole,
   type DealShipment,
   type DealShipping,
@@ -94,6 +96,7 @@ import type {
   DealRatingEntryDto,
   DealRatingSideDto,
   DealRetentionCaseDto,
+  DealReturnShipmentDto,
   DealShipmentDto,
   DealShippingAddressDto,
   DealShippingDto,
@@ -237,6 +240,7 @@ export const mapShippingAddress = (dto: DealShippingAddressDto): DealShippingAdd
 });
 
 const mapShipping = (dto: DealShippingDto): DealShipping => ({
+  shipFrom: toTimestampOrNull(dto.ship_from ?? null),
   shipBy: toTimestampOrNull(dto.ship_by),
   reshipsLeft: dto.reships_left,
   freeCancelFrom: toTimestampOrNull(dto.free_cancel_from),
@@ -258,7 +262,31 @@ const mapCancellation = ({ brand, influencer }: DealCancellationDto): DealCancel
     withdrawAvailable: influencer.withdraw_available,
     strike: influencer.strike,
     refund: parseUsdOrNull(influencer.refund_usd),
+    briefExitAvailable: influencer.brief_exit_available ?? false,
+    briefExitUntil: toTimestampOrNull(influencer.brief_exit_until ?? null),
   },
+});
+
+const mapReturnShipment = (dto: DealReturnShipmentDto): DealReturnShipment => ({
+  id: dto.id,
+  status: toLabeled(DEAL_RETURN_STATUS, dto.status),
+  waybillDueAt: toTimestampOrNull(dto.waybill_due_at),
+  overdue: dto.overdue,
+  courier: dto.courier,
+  trackingNo: dto.tracking_no,
+  trackingUrl: dto.tracking_url,
+  handedAt: toTimestampOrNull(dto.handed_at),
+  shippedAt: toTimestampOrNull(dto.shipped_at),
+  confirmBy: toTimestampOrNull(dto.confirm_by),
+  receivedAt: toTimestampOrNull(dto.received_at),
+  autoReceived: dto.auto_received,
+  issue: dto.issue && {
+    note: dto.issue.note,
+    photos: dto.issue.photos.map(({ url, mime, size }) => ({ url, mime, size })),
+    reportedAt: toTimestampOrNull(dto.issue.reported_at),
+  },
+  waivedAt: toTimestampOrNull(dto.waived_at),
+  waiveNote: dto.waive_note,
 });
 
 const mapExtension = (dto: DealExtensionDto): DealExtension => ({
@@ -407,6 +435,16 @@ const mapSignature = (dto: DealSignatureDto): DealSignature => ({
 export const mapDeal = (dto: DealDto): Deal => ({
   id: dto.id,
   origin: oneOf(['direct', 'public'] as const, dto.origin),
+  campaign: dto.campaign ? { id: dto.campaign.id, title: dto.campaign.title } : null,
+  briefHidden: dto.brief_hidden ?? false,
+  drop: dto.drop
+    ? {
+        dropAt: toTimestamp(dto.drop.drop_at),
+        publishOpensAt: toTimestamp(dto.drop.publish_opens_at),
+        publishOpen: dto.drop.publish_open,
+      }
+    : null,
+  returnShipment: dto.return_shipment ? mapReturnShipment(dto.return_shipment) : null,
   status: toLabeled(DEAL_STATUS, dto.status),
   stage: toLabeledOrNull(DEAL_ITEM_STATUS, dto.stage),
   brand: { name: dto.brand.name, avatarUrl: dto.brand.avatar_url },

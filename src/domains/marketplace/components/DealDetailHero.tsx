@@ -14,6 +14,7 @@ import {
   formatRemaining,
   type DealTimeView,
 } from '../utils/dealTimer';
+import { DealCampaignChip } from './DealCampaignChip';
 import { DealFace } from './DealFace';
 import { DealOrbit } from './DealOrbit';
 
@@ -30,6 +31,8 @@ export interface DealDetailHeroProps {
   station: DealStationView;
   selected: number;
   onSelect: (index: number) => void;
+  /** Set on a linked deal: opens its campaign from the chip. */
+  onOpenCampaign: ((campaignId: string) => void) | null;
 }
 
 /** The orbit's centre: the other side's face and the current window ticking down. */
@@ -106,6 +109,7 @@ const DealDetailHeroComponent: React.FC<DealDetailHeroProps> = ({
   station,
   selected,
   onSelect,
+  onOpenCampaign,
 }) => {
   const { colors, sizes, spacing } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -140,6 +144,10 @@ const DealDetailHeroComponent: React.FC<DealDetailHeroProps> = ({
           {party.name ?? ''}
         </Text>
       </Box>
+
+      {deal.campaign ? (
+        <DealCampaignChip campaign={deal.campaign} surface="hero" onOpen={onOpenCampaign ?? undefined} />
+      ) : null}
 
       <DealOrbit
         stages={station.stages}

@@ -272,6 +272,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
             station={station}
             selected={vm.selected}
             onSelect={vm.select}
+            onOpenCampaign={vm.openCampaign}
           />
         }
         scrollProps={{

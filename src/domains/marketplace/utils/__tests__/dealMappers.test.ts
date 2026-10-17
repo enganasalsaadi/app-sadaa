@@ -309,6 +309,8 @@ describe('mapDeal', () => {
       withdrawAvailable: true,
       strike: true,
       refund: usd(15000),
+      briefExitAvailable: false,
+      briefExitUntil: null,
     });
     expect(deal.upsells[0]?.amount).toEqual(usd(1500));
     expect(deal.upsells[0]?.addon?.price).toEqual(usd(1500));
@@ -406,6 +408,69 @@ describe('mapDeal', () => {
     expect(mapDeal(base).shipping?.addressEditable).toBe(false);
   });
 
+  it('maps the linked-deal fields and defaults them on servers that predate campaigns', () => {
+    const plain = mapDeal(dealDto());
+    expect(plain.campaign).toBeNull();
+    expect(plain.briefHidden).toBe(false);
+    expect(plain.drop).toBeNull();
+    expect(plain.returnShipment).toBeNull();
+    expect(plain.shipping?.shipFrom).toBeNull();
+    expect(plain.cancellation?.creator).toMatchObject({ briefExitAvailable: false, briefExitUntil: null });
+
+    const base = dealDto();
+    const linked = mapDeal({
+      ...base,
+      origin: 'public',
+      campaign: { id: 'c1', title: 'Summer launch' },
+      brief_hidden: true,
+      drop: { drop_at: T0, publish_opens_at: T0, publish_open: false },
+      shipping: base.shipping && { ...base.shipping, ship_from: T0 },
+      cancellation: base.cancellation && {
+        ...base.cancellation,
+        influencer: { ...base.cancellation.influencer, brief_exit_available: true, brief_exit_until: T0 },
+      },
+    });
+    expect(linked.origin).toBe('public');
+    expect(linked.campaign).toEqual({ id: 'c1', title: 'Summer launch' });
+    expect(linked.briefHidden).toBe(true);
+    expect(linked.drop).toEqual({ dropAt: T0_MS, publishOpensAt: T0_MS, publishOpen: false });
+    expect(linked.shipping?.shipFrom).toBe(T0_MS);
+    expect(linked.cancellation?.creator).toMatchObject({ briefExitAvailable: true, briefExitUntil: T0_MS });
+  });
+
+  it('maps the returnable sample and keeps an unknown return status as a null key', () => {
+    const returnDto = {
+      id: 'r1',
+      status: { key: 'issue_reported', label: 'Issue reported' },
+      waybill_due_at: T0,
+      overdue: false,
+      courier: 'Aramex',
+      tracking_no: 'TRK1',
+      tracking_url: null,
+      handed_at: T0,
+      shipped_at: T0,
+      confirm_by: null,
+      received_at: null,
+      auto_received: false,
+      issue: { note: 'Broken lid', photos: [{ url: 'https://x/p.jpg', mime: 'image/jpeg', size: 10 }], reported_at: T0 },
+      waived_at: null,
+      waive_note: null,
+    };
+    const mapped = mapDeal(dealDto({ return_shipment: returnDto })).returnShipment;
+    expect(mapped).toMatchObject({
+      id: 'r1',
+      status: { key: 'issue_reported', label: 'Issue reported' },
+      waybillDueAt: T0_MS,
+      courier: 'Aramex',
+      autoReceived: false,
+      confirmBy: null,
+      issue: { note: 'Broken lid', reportedAt: T0_MS },
+    });
+    expect(mapped?.issue?.photos).toHaveLength(1);
+    const unknown = mapDeal(dealDto({ return_shipment: { ...returnDto, status: { key: 'v9', label: 'New' }, issue: null } }));
+    expect(unknown.returnShipment?.status).toEqual({ key: null, label: 'New' });
+  });
+
   it('renames the influencer side to creator', () => {
     const deal = mapDeal(dealDto());
 
@@ -491,7 +556,7 @@ describe('mapDeal', () => {
         platformFee: null,
         creatorNet: null,
       },
-      creator: { withdrawAvailable: false, strike: false, refund: null },
+      creator: { withdrawAvailable: false, strike: false, refund: null, briefExitAvailable: false, briefExitUntil: null },
     });
   });
 

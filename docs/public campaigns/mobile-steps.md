@@ -165,7 +165,7 @@
 
 ## PC6 — الصفقة المرتبطة (الدوران · CM7)
 
-- **PC6.1 (S · S5)** DTO: `origin`, `campaign {id,title}`, `brief_hidden`, `drop`, `shipping.ship_from`, `cancellation.*.brief_exit_*`, `return_shipment` + mappers + شريحة الحملة في الهيرو و`DealTicket`.
+- ✅ **PC6.1 (S · S5)** DTO: `origin`, `campaign {id,title}`, `brief_hidden`, `drop`, `shipping.ship_from`, `cancellation.*.brief_exit_*`, `return_shipment` + mappers + شريحة الحملة في الهيرو و`DealTicket`. 2026-10-17 — `Deal` صار يحمل `campaign {id,title}|null` و`briefHidden` و`drop {dropAt,publishOpensAt,publishOpen}|null` و`returnShipment` (`DealReturnShipment`، `status` من `DEAL_RETURN_STATUS` + نص الخادم، المفتاح المجهول = null) و`shipping.shipFrom` و`cancellation.creator.briefExitAvailable/briefExitUntil`؛ كلها اختيارية في `DealDto` وتأخذ قيماً فارغة عند خادم لا يرسلها (`mapDeal`). `DealCampaignChip` (ميغافون + عنوان الحملة): في هيرو التفاصيل زجاجية تفتح الحملة (`useDealDetail.openCampaign`: المؤثر → `OpportunitiesTab/CampaignDetail`، البراند → `CampaignDetail` في DealsStack) وفي `DealTicket` وسم ثابت داخل لمسة البطاقة. مختبَر: حالتان جديدتان في `dealMappers.test.ts` (الحقول المربوطة/الافتراضية، والإرجاع مع status مجهول). **لم يُنفَّذ:** أي سلوك على الحقول الجديدة (كشف البريف/الخروج PC6.2، الدروب PC6.3، نموذج الإرجاع PC9). **لم تُجرَّب على جهاز** (الشريحة في الهيرو الزجاجي RTL/داكن وعنوان طويل).
 - **PC6.2 (M · O)** كشف البريف + خروج 24 س (شريط + ورقة، `deal_brief_exit_available` → توجيه للخروج) + سحب بلا عقوبة في `awaiting_payment` + زر الشحن معطّل حتى `ship_from`.
 - **PC6.3 (M · S5)** الدروب في الصفقة: عدّاد، النشر مقفل حتى `publish_opens_at` (`campaign_drop_not_open`)، شارة التأخر + الإعلانات كصفوف timeline (ميغافون). **نهاية مرحلة.**
 
