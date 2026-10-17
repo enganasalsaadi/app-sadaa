@@ -609,6 +609,17 @@ export interface CreatorApplicationsArgs {
   statuses?: ApplicationStatus[];
 }
 
+/** One signed application (contract §4.2): the bid only for a bidding campaign, one account id per required platform. */
+export interface CampaignApplyArgs {
+  id: string;
+  pitch: string;
+  bid: Money | null;
+  /** Platform key → the creator's linked account id. */
+  accounts: Record<string, string>;
+  deviceId: string;
+  idempotencyKey: string;
+}
+
 /** Lifecycle actions answering the full campaign (contract §3.3), relative to `/brand/campaigns/{id}`. */
 export type CampaignActionPath =
   | 'submit'

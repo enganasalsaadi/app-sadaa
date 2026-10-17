@@ -1,5 +1,6 @@
-import { baseApi } from '@/core/api';
+import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
 import type {
+  CampaignApplyArgs,
   CampaignPage,
   CreatorApplication,
   CreatorApplicationsArgs,
@@ -21,13 +22,19 @@ import {
 } from '../utils/campaignMappers';
 import {
   buildCreatorApplicationsUrl,
+  buildCreatorApplyUrl,
   buildCreatorApplicationUrl,
   buildCreatorBookmarkUrl,
   buildCreatorCampaignUrl,
   buildCreatorFeedUrl,
   buildCreatorSavedUrl,
+  buildCreatorWithdrawUrl,
 } from '../utils/campaignQuery';
+import { toApplyBody } from '../utils/campaignApply';
 import { setBookmarkedIn } from '../utils/opportunities';
+
+/** The refusals that mean the page's own read (accepting, eligibility) is out of date. */
+const STALE_PAGE_CODES = ['campaign_not_accepting', 'campaign_not_eligible'];
 
 const nextPage = ({ meta }: CampaignPage<unknown>) =>
   meta.currentPage < meta.lastPage ? meta.currentPage + 1 : undefined;
@@ -119,6 +126,60 @@ export const creatorCampaignsApi = baseApi.injectEndpoints({
       transformResponse: (dto: CreatorApplicationDto) => mapCreatorApplication(dto),
       providesTags: (_result, _error, id) => [{ type: 'CampaignApplication', id }],
     }),
+    /**
+     * The signed, binding application (contract §4.2): one idempotency key per intent. It leaves the
+     * feed, flags the page «applied» and joins «my applications»; a refusal that says the page is out
+     * of date re-reads it.
+     */
+    applyToCampaign: builder.mutation<CreatorApplication, CampaignApplyArgs>({
+      query: args => ({
+        url: buildCreatorApplyUrl(args.id),
+        method: 'POST',
+        body: toApplyBody(args),
+        headers: { [IDEMPOTENCY_HEADER]: args.idempotencyKey },
+      }),
+      transformResponse: (dto: CreatorApplicationDto) => mapCreatorApplication(dto),
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(creatorCampaignsApi.util.upsertQueryData('getCampaignApplication', data.id, data));
+        } catch {
+          // The sheet reports the refusal.
+        }
+      },
+      invalidatesTags: (_result, error, { id }) => {
+        if (!error) {
+          return [
+            { type: 'CreatorCampaign', id },
+            { type: 'CreatorCampaignList', id: 'FEED' },
+            { type: 'CreatorCampaignList', id: 'SAVED' },
+            { type: 'CampaignApplicationList', id: 'LIST' },
+          ];
+        }
+        const code = normalizeApiError(error).code;
+        return code && STALE_PAGE_CODES.includes(code) ? [{ type: 'CreatorCampaign', id }] : [];
+      },
+    }),
+    /**
+     * Takes a pending application back (contract §4.3): no penalty, no way to apply again. A decided one
+     * answers 409, and either way the lists are re-read so the card lands in its real tab.
+     */
+    withdrawCampaignApplication: builder.mutation<CreatorApplication, string>({
+      query: id => ({ url: buildCreatorWithdrawUrl(id), method: 'POST' }),
+      transformResponse: (dto: CreatorApplicationDto) => mapCreatorApplication(dto),
+      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(creatorCampaignsApi.util.upsertQueryData('getCampaignApplication', data.id, data));
+        } catch {
+          // The sheet reports the refusal.
+        }
+      },
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'CampaignApplication', id },
+        { type: 'CampaignApplicationList', id: 'LIST' },
+      ],
+    }),
   }),
 });
 
@@ -129,4 +190,6 @@ export const {
   useSetCampaignBookmarkedMutation,
   useGetCampaignApplicationsInfiniteQuery,
   useGetCampaignApplicationQuery,
+  useApplyToCampaignMutation,
+  useWithdrawCampaignApplicationMutation,
 } = creatorCampaignsApi;

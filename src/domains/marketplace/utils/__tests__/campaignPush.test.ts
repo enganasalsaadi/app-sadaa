@@ -14,8 +14,11 @@ describe('campaignPushTags', () => {
     ]);
   });
 
+  it('stales only my applications for a deal push: their card shows the deal’s stage', () => {
+    expect(campaignPushTags({ kind: 'deal', dealId: 'd1' })).toEqual([{ type: 'CampaignApplicationList', id: 'LIST' }]);
+  });
+
   it('touches nothing for other pushes', () => {
-    expect(campaignPushTags({ kind: 'deal', dealId: 'd1' })).toEqual([]);
     expect(campaignPushTags({ kind: 'strikes' })).toEqual([]);
     expect(campaignPushTags(null)).toEqual([]);
   });

@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { useTranslation } from 'react-i18next';
-import { Bookmark, ClipboardList, Radar } from 'lucide-react-native';
+import { Bookmark, Radar } from 'lucide-react-native';
 import { useStyles } from '@/core/theme';
-import { Box, EmptyState, Layout, SuperList } from '@/shared/ui';
+import { Box, Layout, SuperList } from '@/shared/ui';
 import type { EmptyStateAction } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
 import { OpportunitiesHeader } from '../../components/OpportunitiesHeader';
@@ -13,6 +13,7 @@ import { OpportunityEmptyRules } from '../../components/OpportunityEmptyRules';
 import { OpportunityFilterChips } from '../../components/OpportunityFilterChips';
 import { OpportunityFilterSheet } from '../../components/OpportunityFilterSheet';
 import type { CreatorCampaign } from '../../types/campaign';
+import { MyApplicationsView } from './components/MyApplicationsView';
 import { useCreatorOpportunitiesScreen } from './hooks/useCreatorOpportunitiesScreen';
 
 const keyExtractor = (campaign: CreatorCampaign) => campaign.id;
@@ -20,13 +21,14 @@ const keyExtractor = (campaign: CreatorCampaign) => campaign.id;
 /**
  * Creator `OpportunitiesTab` root (PC4.0, approved 2026-10-17): the capsule switches between the
  * ranked feed, the saved ones and my applications; the feed is tickets that lead with what the
- * creator would take home. Saved and applications land in PC4.2 / PC5.2.
+ * creator would take home. Saved shares the same tickets (PC4.2); my applications (PC5.2) are their
+ * own cards with the brand's 72 h clock, the deal once selected, and the withdraw.
  */
 const CreatorOpportunitiesScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = useCreatorOpportunitiesScreen();
-  const { openCampaign, toggleBookmark, activeFilters } = vm;
+  const { openCampaign, toggleBookmark, openPersonalInfo, activeFilters } = vm;
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.sm, paddingBottom: spacing['7xl'] * 1.5 },
     item: { paddingBottom: spacing.lg },
@@ -35,15 +37,20 @@ const CreatorOpportunitiesScreenComponent: React.FC = () => {
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<CreatorCampaign>) => (
       <Box style={styles.item}>
-        <OpportunityCard campaign={item} onPress={openCampaign} onToggleBookmark={toggleBookmark} />
+        <OpportunityCard
+          campaign={item}
+          onPress={openCampaign}
+          onToggleBookmark={toggleBookmark}
+          onFillGender={openPersonalInfo}
+        />
       </Box>
     ),
-    [openCampaign, styles.item, toggleBookmark],
+    [openCampaign, openPersonalInfo, styles.item, toggleBookmark],
   );
 
   const emptyAction = useMemo<EmptyStateAction>(
-    () => ({ label: vm.emptyActionLabel, onPress: activeFilters > 0 ? vm.clearFilters : vm.openProfile }),
-    [activeFilters, vm.clearFilters, vm.emptyActionLabel, vm.openProfile],
+    () => ({ label: vm.emptyActionLabel, onPress: vm.onEmptyAction }),
+    [vm.emptyActionLabel, vm.onEmptyAction],
   );
 
   return (
@@ -60,16 +67,19 @@ const CreatorOpportunitiesScreenComponent: React.FC = () => {
         />
       }
     >
-      {vm.onFeed ? (
+      {vm.onList ? (
         <>
-          <OpportunityFilterChips
-            activityLabel={vm.activityLabel}
-            activitySelected={(vm.filters.activityTypes ?? []).length > 0}
-            pricingModel={vm.filters.pricingModel ?? null}
-            onOpenSheet={vm.sheet.open}
-            onPricing={vm.pickPricing}
-          />
+          {vm.onFeed ? (
+            <OpportunityFilterChips
+              activityLabel={vm.activityLabel}
+              activitySelected={(vm.filters.activityTypes ?? []).length > 0}
+              pricingModel={vm.filters.pricingModel ?? null}
+              onOpenSheet={vm.sheet.open}
+              onPricing={vm.pickPricing}
+            />
+          ) : null}
           <SuperList
+            key={vm.segment}
             data={vm.campaigns}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
@@ -81,23 +91,19 @@ const CreatorOpportunitiesScreenComponent: React.FC = () => {
             onEndReached={vm.onEndReached}
             onRefresh={vm.onRefresh}
             onRetry={vm.onRetry}
-            emptyIcon={Radar}
+            emptyIcon={vm.onFeed ? Radar : Bookmark}
             emptyMessage={vm.emptyTitle}
             emptyDescription={vm.emptyHint}
-            emptyContent={activeFilters > 0 ? undefined : <OpportunityEmptyRules />}
+            emptyContent={vm.onFeed && activeFilters === 0 ? <OpportunityEmptyRules /> : undefined}
             emptyAction={emptyAction}
-            errorMessage={t('marketplace.campaign.feed.loadFailed')}
+            errorMessage={t(vm.onFeed ? 'marketplace.campaign.feed.loadFailed' : 'marketplace.campaign.feed.savedLoadFailed')}
             ListSkeletonComponent={<OpportunitiesSkeleton />}
             contentContainerStyle={styles.list}
             onScroll={onScroll}
           />
         </>
       ) : (
-        <EmptyState
-          icon={vm.segment === 'saved' ? Bookmark : ClipboardList}
-          title={t('tabs.comingSoon.title')}
-          message={t('tabs.comingSoon.message')}
-        />
+        <MyApplicationsView applications={vm.applications} />
       )}
       <OpportunityFilterSheet
         visible={vm.sheet.visible}

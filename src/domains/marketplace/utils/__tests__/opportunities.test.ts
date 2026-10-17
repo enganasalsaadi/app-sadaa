@@ -1,9 +1,12 @@
 import { mapCreatorCampaign } from '../campaignMappers';
 import {
+  applyAction,
   countActiveFeedFilters,
   deadlineRemaining,
   genderRequiredReason,
+  isAlreadyApplied,
   netHeadline,
+  netShare,
   opportunityDeadline,
   setBookmarkedIn,
   toFeedArgs,
@@ -109,5 +112,59 @@ describe('setBookmarkedIn', () => {
     const items = [card({ id: 'a' }), card({ id: 'b' })];
     setBookmarkedIn(items, 'b', true);
     expect(items.map(item => item.bookmarked)).toEqual([false, true]);
+  });
+});
+
+const reason = (key: string) => ({ key, label: `why ${key}`, meta: {} });
+const BID = {
+  model: label('bidding'),
+  fee_bps: 1000,
+  fixed: null,
+  bid: { min: breakdown('60.00', '6.00', '54.00'), max: breakdown('200.00', '20.00', '180.00') },
+};
+
+describe('netShare', () => {
+  it('is the net over the gross of the fixed price', () => {
+    expect(netShare(card().pricing)).toBe(0.9);
+  });
+
+  it('is null for a bid, which has no single price', () => {
+    expect(netShare(card({ pricing: BID }).pricing)).toBeNull();
+  });
+});
+
+describe('isAlreadyApplied', () => {
+  it('reads the server reason', () => {
+    expect(isAlreadyApplied(card())).toBe(false);
+    expect(
+      isAlreadyApplied(card({ eligibility: { eligible: false, reasons: [reason('already_applied')] } })),
+    ).toBe(true);
+  });
+});
+
+describe('applyAction', () => {
+  it('offers apply for a fixed price and a bid for a bidding campaign', () => {
+    expect(applyAction(card())).toEqual({ kind: 'apply' });
+    expect(applyAction(card({ pricing: BID }))).toEqual({ kind: 'bid' });
+  });
+
+  it('sends a creator whose only gap is the gender to the profile', () => {
+    const gender = card({ eligibility: { eligible: false, reasons: [reason('gender_required')] } });
+    expect(applyAction(gender)).toEqual({ kind: 'gender' });
+  });
+
+  it('blocks with every server reason when anything else is missing, gender included', () => {
+    const rows = [reason('gender_required'), reason('min_followers')];
+    const blocked = applyAction(card({ eligibility: { eligible: false, reasons: rows } }));
+    expect(blocked.kind).toBe('blocked');
+    expect(blocked.kind === 'blocked' && blocked.reasons.map(row => row.key)).toEqual(['gender_required', 'min_followers']);
+  });
+
+  it('reads a campaign that stopped recruiting as closed, keeping the reasons', () => {
+    const closed = applyAction(
+      card({ accepting_applications: false, eligibility: { eligible: false, reasons: [reason('already_applied')] } }),
+    );
+    expect(closed.kind).toBe('closed');
+    expect(closed.kind === 'closed' && closed.reasons).toHaveLength(1);
   });
 });

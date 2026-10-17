@@ -20,6 +20,10 @@ export const netHeadline = ({ fixed, bid }: CreatorCampaignPricing): NetHeadline
   return { kind: 'range', min: bid.min.net, max: bid.max.net };
 };
 
+/** The share of the campaign price the creator keeps (0–1), from the server's own gross and net; `null` when there's no fixed price. */
+export const netShare = ({ fixed }: CreatorCampaignPricing): number | null =>
+  fixed && fixed.gross.amount > 0 ? Math.min(1, Math.max(0, fixed.net.amount / fixed.gross.amount)) : null;
+
 /** Fraction of the recruiting window still open (1 = just published, 0 = closed); `null` without both ends. */
 export const deadlineRemaining = (publishedAt: number | null, endsAt: number | null, now: number): number | null => {
   if (publishedAt === null || endsAt === null || endsAt <= publishedAt) return null;
@@ -62,4 +66,30 @@ export const setBookmarkedIn = (items: CreatorCampaign[], id: string, bookmarked
   items.forEach(item => {
     if (item.id === id) item.bookmarked = bookmarked;
   });
+};
+
+export const isAlreadyApplied = ({ eligibility }: Pick<CreatorCampaign, 'eligibility'>): boolean =>
+  eligibility.reasons.some(reason => reason.key === 'already_applied');
+
+/**
+ * What the page's dock offers (contract §4.1): apply (a bid for a bidding campaign) when the server says
+ * so; the profile when the only thing missing is the creator's gender; otherwise the server's own words
+ * for why not. A campaign that stopped recruiting is `closed` (its reasons, if any, still show).
+ */
+export type ApplyAction =
+  | { kind: 'apply' | 'bid' | 'gender' }
+  | { kind: 'blocked' | 'closed'; reasons: CampaignEligibilityReasonRow[] };
+
+export const applyAction = ({
+  acceptingApplications,
+  eligibility,
+  pricing,
+}: Pick<CreatorCampaign, 'acceptingApplications' | 'eligibility' | 'pricing'>): ApplyAction => {
+  const { reasons } = eligibility;
+  if (!acceptingApplications) return { kind: 'closed', reasons };
+  if (!eligibility.eligible) {
+    const onlyGender = reasons.length > 0 && reasons.every(reason => reason.key === 'gender_required');
+    return onlyGender ? { kind: 'gender' } : { kind: 'blocked', reasons };
+  }
+  return { kind: pricing.bid ? 'bid' : 'apply' };
 };

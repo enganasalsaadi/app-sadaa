@@ -23,6 +23,7 @@ export type { ProfileStepTarget } from './constants/profileSteps';
 export type { MissingStep, StrengthStage, StrengthStageKey } from './utils/profileCompletion';
 export type { RateRow } from './utils/rateRows';
 export type { PublicMediaKit, PublicRateCard } from './types/mediaKit';
+export { useGetPlatformsQuery } from './api/platformsApi';
 export { useGetPublicMediaKitQuery, useSetKitShortlistedMutation } from './api/mediaKitApi';
 export { ADDON_ICONS } from './constants/addonIcons';
 export { DURATION_OPTION, RUSH_HOURS_OPTION } from './constants/rateCards';

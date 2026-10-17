@@ -1,10 +1,10 @@
 import React, { memo, useCallback } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Clock, UserRound } from 'lucide-react-native';
+import { UserRound } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import { iconStroke, moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
-import { Box, Card, ProgressBar, Text } from '@/shared/ui';
+import { Box, Card, Pressable, ProgressBar, Text } from '@/shared/ui';
 import type { CreatorCampaign } from '../types/campaign';
 import { useClock } from '../hooks/useClock';
 import {
@@ -17,6 +17,7 @@ import { CampaignCover } from './CampaignCover';
 import { OpportunityBadges } from './OpportunityBadges';
 import { OpportunityBookmark } from './OpportunityBookmark';
 import { OpportunityBrandPill } from './OpportunityBrandPill';
+import { OpportunityDeadlineText } from './OpportunityDeadlineText';
 import { OpportunityDeliverables } from './OpportunityDeliverables';
 import { OpportunityNet } from './OpportunityNet';
 import { OpportunitySeats } from './OpportunitySeats';
@@ -24,15 +25,12 @@ import { OpportunitySeats } from './OpportunitySeats';
 const COVER_HEIGHT = moderateScale(158);
 const NOTCH = moderateScale(18);
 
-const DEADLINE_KEY = {
-  days: 'marketplace.campaign.feed.card.deadline.days',
-  hours: 'marketplace.campaign.feed.card.deadline.hours',
-} as const;
-
 export interface OpportunityCardProps {
   campaign: CreatorCampaign;
   onPress: (id: string) => void;
   onToggleBookmark: (campaign: CreatorCampaign) => void;
+  /** Opens the profile where the creator sets the gender a campaign is waiting on. */
+  onFillGender: () => void;
 }
 
 /**
@@ -40,7 +38,7 @@ export interface OpportunityCardProps {
  * what is asked, then a torn-off stub with what the creator takes home, the seats left and the
  * time to apply; a thin bar under it drains toward the deadline.
  */
-const OpportunityCardComponent: React.FC<OpportunityCardProps> = ({ campaign, onPress, onToggleBookmark }) => {
+const OpportunityCardComponent: React.FC<OpportunityCardProps> = ({ campaign, onPress, onToggleBookmark, onFillGender }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const now = useClock(60_000);
@@ -103,12 +101,24 @@ const OpportunityCardComponent: React.FC<OpportunityCardProps> = ({ campaign, on
         </Text>
         <OpportunityDeliverables campaign={campaign} />
         {needsGender ? (
-          <Box row align="center" gap="xs" px="md" py="xs" borderRadius="full" bg={warning.soft} alignSelf="flex-start">
+          <Pressable
+            onPress={onFillGender}
+            accessibilityRole="button"
+            accessibilityLabel={needsGender.label}
+            row
+            align="center"
+            gap="xs"
+            px="md"
+            py="xs"
+            borderRadius="full"
+            bg={warning.soft}
+            alignSelf="flex-start"
+          >
             <UserRound size={sizes.icon.xs} color={warning.main} strokeWidth={iconStroke.bold} />
             <Text variant="label" color={warning.text}>
               {needsGender.label}
             </Text>
-          </Box>
+          </Pressable>
         ) : null}
       </Box>
       <Box style={styles.tear} pointerEvents="none">
@@ -120,20 +130,7 @@ const OpportunityCardComponent: React.FC<OpportunityCardProps> = ({ campaign, on
         {headline ? <OpportunityNet headline={headline} bidding={pricing.bid !== null} /> : <Box />}
         <Box gap="sm" align="flex-end">
           <OpportunitySeats total={seats.total} free={seats.free} />
-          {deadline ? (
-            <Box row align="center" gap="xs">
-              <Clock
-                size={sizes.icon.xs}
-                color={urgent ? warning.main : colors.icon.secondary}
-                strokeWidth={iconStroke.bold}
-              />
-              <Text variant="label" color={urgent ? warning.text : colors.text.primary}>
-                {deadline.unit === 'lastHour'
-                  ? t('marketplace.campaign.feed.card.deadline.lastHour')
-                  : t(DEADLINE_KEY[deadline.unit], { count: deadline.count })}
-              </Text>
-            </Box>
-          ) : null}
+          {deadline ? <OpportunityDeadlineText deadline={deadline} /> : null}
         </Box>
       </Box>
       {remaining !== null && deadline ? (

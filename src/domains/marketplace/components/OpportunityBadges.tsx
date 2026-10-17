@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Package, ShieldCheck, Sparkles, type LucideIcon } from 'lucide-react-native';
+import { CheckCheck, Package, ShieldCheck, Sparkles, type LucideIcon } from 'lucide-react-native';
 import { iconStroke, useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 import type { CreatorCampaign } from '../types/campaign';
+import { isAlreadyApplied } from '../utils/opportunities';
 
 interface BadgeProps {
   label: string;
@@ -25,19 +26,28 @@ const Badge = memo<BadgeProps>(({ label, icon: Icon, bg, ink }) => {
 });
 
 export interface OpportunityBadgesProps {
-  campaign: Pick<CreatorCampaign, 'invited' | 'budgetSecured' | 'shippingMode'>;
+  campaign: Pick<CreatorCampaign, 'invited' | 'budgetSecured' | 'shippingMode' | 'eligibility'>;
 }
 
-/** What sets a campaign apart, at the cover's foot: invited (gold), budget secured (mint), a product on its way (neutral). */
+/** What sets a campaign apart, at the cover's foot: applied already, invited (gold), budget secured (mint), a product on its way (neutral). */
 const OpportunityBadgesComponent: React.FC<OpportunityBadgesProps> = ({ campaign }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { invited, budgetSecured, shippingMode } = campaign;
   const ships = shippingMode.key === 'gift' || shippingMode.key === 'returnable';
-  if (!invited && !budgetSecured && !ships) return null;
+  const applied = isAlreadyApplied(campaign);
+  if (!applied && !invited && !budgetSecured && !ships) return null;
 
   return (
     <Box row wrap gap="sm">
+      {applied ? (
+        <Badge
+          label={t('marketplace.campaign.feed.card.applied')}
+          icon={CheckCheck}
+          bg={colors.interactive.soft}
+          ink={colors.interactive.text}
+        />
+      ) : null}
       {invited ? (
         <Badge
           label={t('marketplace.campaign.feed.card.invited')}

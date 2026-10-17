@@ -145,4 +145,63 @@ describe('creatorCampaignsApi', () => {
     expect(list.data?.pages[0]?.items[0]?.price.net).toEqual({ amount: 9000, currency: 'USD' });
     expect(one.data?.campaign.id).toBe('c1');
   });
+  describe('withdrawCampaignApplication', () => {
+    const withdrawn = () =>
+      applicationDto({
+        status: { key: 'withdrawn', label: 'Withdrawn' },
+        state: { key: 'withdrawn', label: 'Withdrawn', source: 'application' },
+        can_withdraw: false,
+      });
+
+    it('posts the withdrawal, caches the application and re-reads the open list', async () => {
+      const store = makeStore();
+      jest.spyOn(global, 'fetch').mockImplementationOnce(async () => page([applicationDto()]));
+      await store.dispatch(
+        creatorCampaignsApi.endpoints.getCampaignApplications.initiate({ statuses: ['submitted', 'shortlisted'] }),
+      );
+      const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+        const { pathname } = new URL((input as Request).url);
+        return pathname.endsWith('/withdraw') ? ok(withdrawn()) : page([]);
+      });
+
+      const result = await store.dispatch(creatorCampaignsApi.endpoints.withdrawCampaignApplication.initiate('p1'));
+
+      const request = spy.mock.calls
+        .map(([input]) => input as Request)
+        .find(call => new URL(call.url).pathname.endsWith('/withdraw'));
+      expect(request?.method).toBe('POST');
+      expect(new URL(request?.url ?? '').pathname).toMatch(/\/influencer\/campaign-applications\/p1\/withdraw$/);
+      expect(result.data?.status.key).toBe('withdrawn');
+      await jest.advanceTimersByTimeAsync(0);
+      expect(creatorCampaignsApi.endpoints.getCampaignApplication.select('p1')(store.getState()).data?.canWithdraw).toBe(
+        false,
+      );
+      const listCalls = spy.mock.calls.filter(([input]) => new URL((input as Request).url).pathname.endsWith('/campaign-applications'));
+      expect(listCalls.length).toBeGreaterThan(1);
+    });
+
+    it('re-reads the lists when the server says it was already decided', async () => {
+      const store = makeStore();
+      jest.spyOn(global, 'fetch').mockImplementationOnce(async () => page([applicationDto()]));
+      await store.dispatch(
+        creatorCampaignsApi.endpoints.getCampaignApplications.initiate({ statuses: ['submitted', 'shortlisted'] }),
+      );
+      const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+        const { pathname } = new URL((input as Request).url);
+        return pathname.endsWith('/withdraw')
+          ? new Response(
+              JSON.stringify({ success: false, message: 'Already decided', data: null, error_code: 'campaign_invalid_transition' }),
+              { status: 409, headers: { 'Content-Type': 'application/json' } },
+            )
+          : page([]);
+      });
+
+      const result = await store.dispatch(creatorCampaignsApi.endpoints.withdrawCampaignApplication.initiate('p1'));
+      await jest.advanceTimersByTimeAsync(0);
+
+      expect('error' in result).toBe(true);
+      const listCalls = spy.mock.calls.filter(([input]) => new URL((input as Request).url).pathname.endsWith('/campaign-applications'));
+      expect(listCalls.length).toBeGreaterThan(1);
+    });
+  });
 });

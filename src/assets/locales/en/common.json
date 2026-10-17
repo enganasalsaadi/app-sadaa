@@ -1430,6 +1430,14 @@
         "subtitle_one": "1 campaign fits your profile",
         "subtitle_other": "{{count}} campaigns fit your profile",
         "loadFailed": "Couldn't load opportunities",
+        "savedLoadFailed": "Couldn't load your saved campaigns",
+        "savedSubtitle_one": "1 saved campaign",
+        "savedSubtitle_other": "{{count}} saved campaigns",
+        "saved": {
+          "title": "Nothing saved yet",
+          "hint": "Tap the save ribbon on a campaign to find it here later. Only campaigns that still take applications, or ones you applied to, stay here.",
+          "action": "Browse opportunities"
+        },
         "filters": {
           "open": "Filter opportunities",
           "title": "Filter opportunities",
@@ -1456,6 +1464,7 @@
             "hours_other": "{{count}} hours to apply",
             "lastHour": "Last hour to apply"
           },
+          "applied": "Applied",
           "invited": "Invited",
           "secured": "Budget secured",
           "shipGift": "Product shipped to you",
@@ -1483,6 +1492,176 @@
             "hint": "Try another type or clear the filters."
           }
         }
+      },
+      "applications": {
+        "subtitle": "Your applications to campaigns",
+        "tabsLabel": "Your applications by status",
+        "tabs": {
+          "open": "Open",
+          "selected": "Selected",
+          "closed": "Closed"
+        },
+        "empty": {
+          "open": {
+            "title": "No open applications",
+            "hint": "Every application you send shows up here with the brand's response clock."
+          },
+          "selected": {
+            "title": "Nothing selected yet",
+            "hint": "When a brand picks you, the deal moves here and opens with one tap."
+          },
+          "closed": {
+            "title": "No closed applications",
+            "hint": "Expired, withdrawn and not-selected applications appear here."
+          },
+          "action": "Browse opportunities"
+        },
+        "loadFailed": "Couldn't load your applications",
+        "card": {
+          "a11y": "{{title}}, {{brand}}, {{state}}",
+          "netBid": "Your net · your bid {{bid}}",
+          "netFixed": "Your net · fixed price",
+          "hoursShort": "{{hours}}h",
+          "hoursLeft_one": "{{count}} hour left",
+          "hoursLeft_other": "{{count}} hours left",
+          "windowOver": "Time is up",
+          "windowLabel": "Brand's response window",
+          "withdraw": "Withdraw application",
+          "openDeal": "Open the deal"
+        },
+        "withdraw": {
+          "title": "Withdraw your application?",
+          "body": "Your binding offer to “{{brand}}” will be cancelled. There is no penalty, but you can't apply to this campaign again.",
+          "confirm": "Withdraw",
+          "keep": "Keep my application",
+          "done": "Application withdrawn"
+        }
+      },
+      "opportunity": {
+        "loadFailed": "Couldn't load the campaign",
+        "save": "Save campaign",
+        "unsave": "Remove campaign from saved",
+        "net": {
+          "fixed": "If the brand picks you, you get",
+          "bidding": "Your expected net, based on your price",
+          "share": "You keep {{percent}}% of the campaign price",
+          "campaignPrice": "Campaign price",
+          "fee": "Sada fee {{percent}}%",
+          "suggested": "Suggested from",
+          "cap": "Maximum (binding)",
+          "bidNote": "You set your price when you apply. The maximum is binding and the suggestion is only a guide. Net is after Sada's {{percent}}% fee."
+        },
+        "asks": {
+          "title": "What's asked of you",
+          "count_one": "1 item",
+          "count_other": "{{count}} items",
+          "revisions_one": "1 draft revision",
+          "revisions_other": "{{count}} draft revisions"
+        },
+        "schedule": {
+          "title": "Schedule",
+          "deadline": "Apply by",
+          "reply": "Brand's answer",
+          "replyValue": "Within 72 hours of applying",
+          "drop": "Publish date",
+          "delivery": "Delivery",
+          "deliveryValue_one": "1 day after the deal is funded",
+          "deliveryValue_other": "{{count}} days after the deal is funded",
+          "shipping": "Shipping"
+        },
+        "conditions": {
+          "title": "Campaign terms"
+        },
+        "shipping": {
+          "gift": {
+            "title": "The product comes to your door",
+            "body": "The brand ships it once the deal is accepted and funded."
+          },
+          "returnable": {
+            "title": "The product is lent to you",
+            "body": "The brand ships it once the deal is funded, and you send it back after posting."
+          }
+        },
+        "brief": {
+          "section": "Private brief",
+          "title": "Brand-only content",
+          "body": "Revealed to you once the brand funds the deal. The budget and the number of applicants are never shown."
+        },
+        "dock": {
+          "apply": "Apply now",
+          "bid": "Place your bid",
+          "gender": "Set your gender",
+          "blocked": "You can't apply right now",
+          "closed": "Applications closed",
+          "closedHint": "This campaign no longer takes new applications."
+        }
+      },
+      "apply": {
+        "title": "Apply to the campaign",
+        "subtitle": "{{brand}} · {{title}}",
+        "price": {
+          "title": "Your price",
+          "bidding": "Bid",
+          "fixedNet": "Your net"
+        },
+        "bid": {
+          "a11y": "Your bid in dollars",
+          "placeholder": "0.00",
+          "decrease": "Lower by a dollar",
+          "increase": "Raise by a dollar",
+          "suggested": "Suggested from {{amount}}",
+          "hint": "Maximum {{max}} (binding) · lowest bid {{min}}",
+          "empty": "Enter your bid",
+          "low": "The lowest bid is {{min}}",
+          "high": "The price is above the allowed maximum ({{max}})"
+        },
+        "net": {
+          "label": "Your net if your bid is accepted",
+          "blocked": "Your net can't be worked out",
+          "fee": "After Sada's {{percent}}% fee ({{fee}})"
+        },
+        "estimate": "Estimate",
+        "accounts": {
+          "title": "Your account on the platform",
+          "required": "Pick an account",
+          "followers": "{{count}} followers",
+          "manual": "Added by hand",
+          "blocked": {
+            "followers": "Under the minimum ({{min}} followers)",
+            "review": "Under review",
+            "rejected": "Rejected account",
+            "unavailable": "Not available for campaigns"
+          },
+          "none": "You haven't linked a {{platform}} account yet",
+          "link": "Link an account",
+          "loadFailed": "Couldn't load your accounts"
+        },
+        "pitch": {
+          "title": "Your note to the brand",
+          "optional": "Optional",
+          "placeholder": "Introduce yourself and pitch your content idea"
+        },
+        "terms": {
+          "title": "Your offer at a glance",
+          "deliver": "You deliver",
+          "offer": "Your offer",
+          "netEstimate": "Your net (estimate)",
+          "net": "Your net",
+          "shipping": "Shipping",
+          "dropAt": "Publish date",
+          "delivery": "Delivery"
+        },
+        "consent": "I understand my application is a binding offer for 72 hours; if the brand picks me within that time, the deal is created on these terms.",
+        "consentRequired": "Agree to this before applying",
+        "hold": {
+          "label": "Press and hold to send your offer",
+          "caption": "Signs a binding offer for 72 hours",
+          "a11y": "Send a binding offer to the campaign"
+        },
+        "banner": {
+          "profile": "Set it"
+        },
+        "sent": "Application sent. The brand has 72 hours to respond."
       },
       "applicants": {
         "title": "Applicants",

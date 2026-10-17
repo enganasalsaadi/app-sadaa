@@ -22,7 +22,7 @@ export const selectEstimate = (balance: Money | null, price: Money): SelectEstim
 };
 
 /** «ريل ×1 · ستوري ×2»: what the creator delivers, as the campaign lists it. */
-export const deliverablesSummary = (deliverables: readonly CampaignDeliverable[]): string =>
+export const deliverablesSummary = (deliverables: readonly Pick<CampaignDeliverable, 'service' | 'count'>[]): string =>
   deliverables.map(item => `${item.service.label} ×${formatNumber(item.count)}`).join(' · ');
 
 /** 422s that mean this applicant (or the budget) cannot take the pick as it stands; retrying the same tap cannot work. */

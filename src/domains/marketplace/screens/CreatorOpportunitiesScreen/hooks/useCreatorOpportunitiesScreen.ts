@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { useLookupItems } from '@/core/api';
 import type { OpportunitiesStackScreenProps } from '@/core/navigation';
-import { useGetCampaignFeedInfiniteQuery } from '../../../api/creatorCampaignsApi';
+import { useGetCampaignFeedInfiniteQuery, useGetSavedCampaignsInfiniteQuery } from '../../../api/creatorCampaignsApi';
 import {
   DEFAULT_OPPORTUNITY_FILTERS,
   DEFAULT_OPPORTUNITY_SEGMENT,
@@ -13,6 +13,7 @@ import { useCampaignBookmark } from '../../../hooks/useCampaignBookmark';
 import { CAMPAIGN_PRICING_MODEL } from '../../../types/campaign';
 import type { CampaignPricingModel, CreatorCampaign, CreatorFeedArgs } from '../../../types/campaign';
 import { countActiveFeedFilters, isActivityType, toFeedArgs } from '../../../utils/opportunities';
+import { useMyApplications } from './useMyApplications';
 
 type Navigation = OpportunitiesStackScreenProps<'Opportunities'>['navigation'];
 
@@ -20,9 +21,11 @@ const isPricing = (value: string): value is CampaignPricingModel =>
   (CAMPAIGN_PRICING_MODEL as readonly string[]).includes(value);
 
 /**
- * The creator's Opportunities root (PC4.1): which destination is open, the server-ranked feed under
- * the two filters the API knows, and the save flag. The feed is already gated by the server, so an
- * empty answer is a real «nothing fits you yet», not something to filter around.
+ * The creator's Opportunities root (PC4.1–5.2): which destination is open, the server-ranked feed under
+ * the two filters the API knows, the saved list (newest save first, no filters), the save flag and
+ * my applications (their own hook).
+ * The feed is already gated by the server, so an empty answer is a real «nothing fits you yet»,
+ * not something to filter around. Both lists read through the same view: only the open one loads.
  */
 export const useCreatorOpportunitiesScreen = () => {
   const { t } = useTranslation();
@@ -34,10 +37,14 @@ export const useCreatorOpportunitiesScreen = () => {
   const toggleBookmark = useCampaignBookmark();
 
   const onFeed = segment === 'feed';
+  const onSaved = segment === 'saved';
+  const onApplications = segment === 'applications';
   const args = useMemo(() => toFeedArgs(filters), [filters]);
   const feed = useGetCampaignFeedInfiniteQuery(args, { skip: !onFeed, refetchOnMountOrArgChange: 30 });
-  const campaigns = useMemo<CreatorCampaign[]>(() => feed.data?.pages.flatMap(page => page.items) ?? [], [feed.data]);
-  const total = feed.data?.pages[0]?.meta.total ?? null;
+  const saved = useGetSavedCampaignsInfiniteQuery(undefined, { skip: !onSaved, refetchOnMountOrArgChange: 30 });
+  const list = onSaved ? saved : feed;
+  const campaigns = useMemo<CreatorCampaign[]>(() => list.data?.pages.flatMap(page => page.items) ?? [], [list.data]);
+  const total = list.data?.pages[0]?.meta.total ?? null;
 
   const lookups = useLookupItems('campaign_activity_types');
   const { items: lookupItems, refetch: refetchLookups } = lookups;
@@ -70,7 +77,7 @@ export const useCreatorOpportunitiesScreen = () => {
     refetchLookups();
   }, [refetchLookups]);
 
-  const { refetch, hasNextPage, isFetchingNextPage, fetchNextPage } = feed;
+  const { refetch, hasNextPage, isFetchingNextPage, fetchNextPage } = list;
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
@@ -87,6 +94,16 @@ export const useCreatorOpportunitiesScreen = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const openCampaign = useCallback((id: string) => navigation.navigate('CampaignDetail', { id }), [navigation]);
+  const openDeal = useCallback(
+    (id: string) => navigation.navigate('DealsTab', { screen: 'DealDetail', params: { id }, initial: false }),
+    [navigation],
+  );
+  const browseFeed = useCallback(() => setSegment('feed'), []);
+  const applications = useMyApplications(onApplications, { openCampaign, openDeal, browse: browseFeed });
+  const openPersonalInfo = useCallback(
+    () => navigation.navigate('SettingsTab', { screen: 'PersonalInfoScreen' }),
+    [navigation],
+  );
   const openProfile = useCallback(() => navigation.navigate('SettingsTab', { screen: 'ProfileScreen' }), [navigation]);
 
   const activeFilters = countActiveFeedFilters(args);
@@ -94,9 +111,17 @@ export const useCreatorOpportunitiesScreen = () => {
     segment,
     setSegment,
     onFeed,
+    onList: onFeed || onSaved,
+    onApplications,
+    applications,
     campaigns,
-    subtitle:
-      onFeed && total !== null ? t('marketplace.campaign.feed.subtitle', { count: total }) : null,
+    subtitle: onApplications
+      ? t('marketplace.campaign.applications.subtitle')
+      : total === null
+        ? null
+        : onFeed
+          ? t('marketplace.campaign.feed.subtitle', { count: total })
+          : t('marketplace.campaign.feed.savedSubtitle', { count: total }),
     filters: args,
     activeFilters,
     activityLabel,
@@ -107,8 +132,8 @@ export const useCreatorOpportunitiesScreen = () => {
     sheet: { visible: sheetVisible, open: openSheet, close: closeSheet, apply: applyFilters },
     clearFilters,
     pickPricing,
-    isLoading: !feed.data && feed.isFetching && !isRefreshing,
-    isError: feed.isError && !feed.data,
+    isLoading: !list.data && list.isFetching && !isRefreshing,
+    isError: list.isError && !list.data,
     isRefreshing,
     isFetchingNextPage,
     hasNextPage: hasNextPage ?? false,
@@ -117,15 +142,19 @@ export const useCreatorOpportunitiesScreen = () => {
     onEndReached,
     openCampaign,
     openProfile,
+    openPersonalInfo,
     toggleBookmark,
-    emptyTitle: t(
-      activeFilters > 0 ? 'marketplace.campaign.feed.empty.filtered.title' : 'marketplace.campaign.feed.empty.title',
-    ),
-    emptyHint: t(
-      activeFilters > 0 ? 'marketplace.campaign.feed.empty.filtered.hint' : 'marketplace.campaign.feed.empty.hint',
-    ),
-    emptyActionLabel: t(
-      activeFilters > 0 ? 'marketplace.campaign.feed.filters.clear' : 'marketplace.campaign.feed.empty.action',
-    ),
+    browseFeed,
+    emptyTitle: onSaved
+      ? t('marketplace.campaign.feed.saved.title')
+      : t(activeFilters > 0 ? 'marketplace.campaign.feed.empty.filtered.title' : 'marketplace.campaign.feed.empty.title'),
+    emptyHint: onSaved
+      ? t('marketplace.campaign.feed.saved.hint')
+      : t(activeFilters > 0 ? 'marketplace.campaign.feed.empty.filtered.hint' : 'marketplace.campaign.feed.empty.hint'),
+    emptyActionLabel: onSaved
+      ? t('marketplace.campaign.feed.saved.action')
+      : t(activeFilters > 0 ? 'marketplace.campaign.feed.filters.clear' : 'marketplace.campaign.feed.empty.action'),
+    /** What the empty state's button does: browse (saved), clear the filters, or fix the profile. */
+    onEmptyAction: onSaved ? browseFeed : activeFilters > 0 ? clearFilters : openProfile,
   };
 };

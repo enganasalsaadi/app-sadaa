@@ -228,15 +228,15 @@
     "semantic_hash": ""
   },
   "src/assets/locales/ar/common.json": {
-    "mtime": 1792244650.6775033,
-    "seen": 1792244978.138792,
-    "ast_hash": "4d7180e0742bb57fe1fc4d51a6f25e3a",
+    "mtime": 1792252929.5577629,
+    "seen": 1792253032.654089,
+    "ast_hash": "ffc1e94fb11738be3b83a951cc9f24d2",
     "semantic_hash": ""
   },
   "src/assets/locales/en/common.json": {
-    "mtime": 1792244650.6795084,
-    "seen": 1792244978.138793,
-    "ast_hash": "ca1712d0f161f1426cbaf9a3fd16e98b",
+    "mtime": 1792252929.560229,
+    "seen": 1792253032.65409,
+    "ast_hash": "43f013e3b38a36601196610e58040594",
     "semantic_hash": ""
   },
   "src/assets/lottie/bell.json": {
@@ -702,9 +702,9 @@
     "semantic_hash": ""
   },
   "src/domains/identity/index.ts": {
-    "mtime": 1791922732.2603514,
-    "seen": 1792158021.19239,
-    "ast_hash": "ad23c218a4adb5423dfe513cd6fa218d",
+    "mtime": 1792252687.6480732,
+    "seen": 1792253032.654401,
+    "ast_hash": "eafbe32398c3d8d0f726e8408a31dadb",
     "semantic_hash": ""
   },
   "src/domains/identity/navigation/SettingsNavigator.tsx": {
@@ -978,9 +978,9 @@
     "semantic_hash": "38550d302145ded6551d9b0e96fe1078"
   },
   "src/shared/ui/SuperList/SuperList.tsx": {
-    "mtime": 1792242195.939435,
-    "seen": 1792242746.2913978,
-    "ast_hash": "5d13ebb439899ef085039f04f0a3a1ad",
+    "mtime": 1792249175.519099,
+    "seen": 1792250443.7397819,
+    "ast_hash": "ea09493508d266d144c8f1211eccb05b",
     "semantic_hash": ""
   },
   "src/shared/ui/SuperList/components/ErrorBoundary/ErrorBoundary.tsx": {
@@ -1008,9 +1008,9 @@
     "semantic_hash": "3be15fb636539fc136f88e2513508cc5"
   },
   "src/shared/ui/SuperList/components/ListEmptyState/ListEmptyState.tsx": {
-    "mtime": 1791500853.1602433,
-    "seen": 1791631297.7217522,
-    "ast_hash": "923186aed64e2885490e2f2994804741",
+    "mtime": 1792249175.518526,
+    "seen": 1792250443.739786,
+    "ast_hash": "6a213e0e2a8e599525a908530485b656",
     "semantic_hash": ""
   },
   "src/shared/ui/SuperList/components/ListEmptyState/index.ts": {
@@ -1086,9 +1086,9 @@
     "semantic_hash": "6e5d0b5633e5337c3c4c2ecda48bcb1d"
   },
   "src/shared/ui/SuperList/types.ts": {
-    "mtime": 1792242195.9390213,
-    "seen": 1792242746.2914078,
-    "ast_hash": "a6dcee1c5946e3e114d85226da5fa138",
+    "mtime": 1792249200.8935041,
+    "seen": 1792250443.739795,
+    "ast_hash": "83d590fb9eecf6b3518f504586c4d626",
     "semantic_hash": ""
   },
   "src/shared/ui/ToastCard/ToastCard.tsx": {
@@ -5616,9 +5616,9 @@
     "semantic_hash": ""
   },
   "src/shared/ui/EmptyState/EmptyState.tsx": {
-    "mtime": 1790513818.090716,
-    "seen": 1791631297.721689,
-    "ast_hash": "8a90e4463fb5ba0cc16edbc51fe564dd",
+    "mtime": 1792249175.5181239,
+    "seen": 1792250443.739701,
+    "ast_hash": "402a9d831a64a97b5996e2b5bc4bd7ea",
     "semantic_hash": ""
   },
   "src/shared/ui/EmptyState/ErrorState.tsx": {
@@ -10230,9 +10230,9 @@
     "semantic_hash": ""
   },
   "docs/public campaigns/mobile-steps.md": {
-    "mtime": 1792244937.0246923,
-    "seen": 1792244978.1399722,
-    "ast_hash": "9d1aaf81e0e39be0fc0abb101244e794",
+    "mtime": 1792252997.8484135,
+    "seen": 1792253032.6551511,
+    "ast_hash": "e86097d9ceeddee39ba7124d364274fc",
     "semantic_hash": ""
   },
   "docs/public campaigns/public-campaigns.md": {
@@ -10254,9 +10254,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/campaign.ts": {
-    "mtime": 1792244435.6337366,
-    "seen": 1792244978.139679,
-    "ast_hash": "b68283e2cbc7aa9facdca4c9d15f9c88",
+    "mtime": 1792252628.3943505,
+    "seen": 1792253032.654898,
+    "ast_hash": "ddfb3b5086adf43a1ed72126136d058b",
     "semantic_hash": ""
   },
   "src/domains/marketplace/types/campaignDto.ts": {
@@ -10266,9 +10266,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignMappers.test.ts": {
-    "mtime": 1792244768.2543626,
-    "seen": 1792244978.1396961,
-    "ast_hash": "05d3aef301be44e84bbb65681615bfbd",
+    "mtime": 1792250281.95835,
+    "seen": 1792250443.739595,
+    "ast_hash": "23edf2ce0171ce90b47122b27f830105",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignStatus.test.ts": {
@@ -10278,9 +10278,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignMappers.ts": {
-    "mtime": 1792244454.4326086,
-    "seen": 1792244978.139725,
-    "ast_hash": "65238f6d4dc917aafd5c5eb8f3cb4509",
+    "mtime": 1792250125.22115,
+    "seen": 1792250443.739626,
+    "ast_hash": "76fa9f17101a1980304a785e5e684632",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignStatus.ts": {
@@ -10296,9 +10296,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/__tests__/creatorCampaignsApi.test.ts": {
-    "mtime": 1792188269.136967,
-    "seen": 1792188418.476516,
-    "ast_hash": "f6c25f845ebfc504abfa773549a1f4ef",
+    "mtime": 1792250367.4168084,
+    "seen": 1792250443.73916,
+    "ast_hash": "a5b9f7abbea2f6054be0364a536822dc",
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/brandCampaignsApi.ts": {
@@ -10308,9 +10308,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/api/creatorCampaignsApi.ts": {
-    "mtime": 1792188122.0450177,
-    "seen": 1792188418.4765189,
-    "ast_hash": "5fc8957b34ab5abe28e0c77536966eca",
+    "mtime": 1792252683.1664684,
+    "seen": 1792253032.6545138,
+    "ast_hash": "6e50516a02d8ad3bbe4ecc536051b98c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/hooks/useCampaignAction.ts": {
@@ -10356,9 +10356,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/__tests__/campaignQuery.test.ts": {
-    "mtime": 1792242044.0392845,
-    "seen": 1792242746.291242,
-    "ast_hash": "9d1d8e89833457fb6a26acd6d19da291",
+    "mtime": 1792250357.556849,
+    "seen": 1792250443.739597,
+    "ast_hash": "7d916e4f5905efe575635510a09765f1",
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignAction.ts": {
@@ -10374,9 +10374,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/campaignQuery.ts": {
-    "mtime": 1792243117.6750531,
-    "seen": 1792244002.8625312,
-    "ast_hash": "3e28d0dee19f07160db43f802bc07f76",
+    "mtime": 1792252683.1661882,
+    "seen": 1792253032.6549408,
+    "ast_hash": "2a6745415102631329939a06b962fb3a",
     "semantic_hash": ""
   },
   "src/domains/marketplace/components/CampaignComingSoon.tsx": {
@@ -10410,9 +10410,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorCampaignDetailScreen/CreatorCampaignDetailScreen.tsx": {
-    "mtime": 1792189081.8220341,
-    "seen": 1792189211.449955,
-    "ast_hash": "ce59065a22e1f01e7340b12fa74810a8",
+    "mtime": 1792252905.7995965,
+    "seen": 1792253032.654786,
+    "ast_hash": "c840ba6b27792f7d1ebac638ac1cfa94",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorCampaignDetailScreen/index.ts": {
@@ -10422,9 +10422,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorOpportunitiesScreen/CreatorOpportunitiesScreen.tsx": {
-    "mtime": 1792189081.8269138,
-    "seen": 1792189211.449981,
-    "ast_hash": "226c5f5b4f3e194c7854bc7e03c75110",
+    "mtime": 1792252116.9426725,
+    "seen": 1792252192.239558,
+    "ast_hash": "e29ffe6e97456b30743c8b101d036f71",
     "semantic_hash": ""
   },
   "src/domains/marketplace/screens/CreatorOpportunitiesScreen/index.ts": {
@@ -11568,9 +11568,9 @@
     "semantic_hash": ""
   },
   "src/domains/marketplace/utils/applicantSelect.ts": {
-    "mtime": 1792243211.6672122,
-    "seen": 1792244002.8625212,
-    "ast_hash": "1e4fce275ee0c8898e6e207d5671c681",
+    "mtime": 1792252735.2148213,
+    "seen": 1792253032.6549299,
+    "ast_hash": "6dd4ec3876e82c5b956f811dcf220e9c",
     "semantic_hash": ""
   },
   "src/domains/marketplace/constants/campaignInvite.ts": {
@@ -11601,6 +11601,228 @@
     "mtime": 1792244587.2631044,
     "seen": 1792244978.139672,
     "ast_hash": "d2366255ee72f7a7ec7ba614fbfaf2df",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunitiesHeader.tsx": {
+    "mtime": 1792249871.6074195,
+    "seen": 1792250443.739264,
+    "ast_hash": "b0f6078dc053c6ce8066d88428e374fe",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunitiesSkeleton.tsx": {
+    "mtime": 1792249927.3214931,
+    "seen": 1792250443.739265,
+    "ast_hash": "f88c3e4512c20b0c503f358a653483b9",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityBadges.tsx": {
+    "mtime": 1792251800.0940425,
+    "seen": 1792252192.2393541,
+    "ast_hash": "760bcf4048ff326c101d05ef0cc69837",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityBookmark.tsx": {
+    "mtime": 1792249677.3449647,
+    "seen": 1792250443.7392662,
+    "ast_hash": "b55fd72144fb541368ad528eef13e1ed",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityBrandPill.tsx": {
+    "mtime": 1792249699.302314,
+    "seen": 1792250443.739267,
+    "ast_hash": "06f9584600fc9138918721b6d2a4979e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityCard.tsx": {
+    "mtime": 1792252116.9425454,
+    "seen": 1792252192.2393558,
+    "ast_hash": "7ba1f9fb556e6d65cc0da4c57af79f03",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityDeliverables.tsx": {
+    "mtime": 1792249721.663866,
+    "seen": 1792250443.739268,
+    "ast_hash": "c486c690865a0eba8a5a112844855412",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityEmptyRules.tsx": {
+    "mtime": 1792249927.330477,
+    "seen": 1792250443.739268,
+    "ast_hash": "90c8a9221016d0c288f524bb1744cea4",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityFilterChips.tsx": {
+    "mtime": 1792249975.1804168,
+    "seen": 1792250443.739269,
+    "ast_hash": "15959ae8584d088756a9bf6bebeef095",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityFilterSheet.tsx": {
+    "mtime": 1792250061.469505,
+    "seen": 1792250443.739269,
+    "ast_hash": "e37c7bcfb4a39226442b8858e26012b2",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityNet.tsx": {
+    "mtime": 1792249776.8656473,
+    "seen": 1792250443.73927,
+    "ast_hash": "3ad33027e6312f99020134976b8e328e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunitySeats.tsx": {
+    "mtime": 1792250061.46908,
+    "seen": 1792250443.73927,
+    "ast_hash": "710ab150f3e8fb1470a5b05dbc8746f9",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityTabs.tsx": {
+    "mtime": 1792249847.9161873,
+    "seen": 1792250443.739271,
+    "ast_hash": "83228601fa45372b8fc89546f1a3dfd3",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/constants/opportunities.ts": {
+    "mtime": 1792251946.687952,
+    "seen": 1792252192.2393951,
+    "ast_hash": "93cb3c0065dd4fd76e6566c29e9411ba",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useCampaignBookmark.ts": {
+    "mtime": 1792249908.3356173,
+    "seen": 1792250443.739316,
+    "ast_hash": "67408730d3a4a7955403504df587f18f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/hooks/useOpportunityFilterDraft.ts": {
+    "mtime": 1792249871.6117256,
+    "seen": 1792250443.7393339,
+    "ast_hash": "a9d879619d709a4cd476677aad1e84f5",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorOpportunitiesScreen/hooks/useCreatorOpportunitiesScreen.ts": {
+    "mtime": 1792252116.9427743,
+    "seen": 1792252192.239558,
+    "ast_hash": "f4b41388af896ff37f0989a2aa7c624e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/opportunities.test.ts": {
+    "mtime": 1792251786.6370869,
+    "seen": 1792252192.239669,
+    "ast_hash": "7ecccf91c1484d8244eca7fd0eb26aef",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/opportunities.ts": {
+    "mtime": 1792251765.1590352,
+    "seen": 1792252192.239702,
+    "ast_hash": "d777587dfbf44bedc3510df1a5842fb8",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignBriefLock.tsx": {
+    "mtime": 1792252073.762688,
+    "seen": 1792252192.239271,
+    "ast_hash": "292a6cefa18ca6d1b9ab8eac7e7729d3",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CampaignPageSection.tsx": {
+    "mtime": 1792251867.4306715,
+    "seen": 1792252192.239281,
+    "ast_hash": "67159eee2a780ba82358781857aed20e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorApplyDockTop.tsx": {
+    "mtime": 1792251899.7515836,
+    "seen": 1792252192.239288,
+    "ast_hash": "bb0851a430f41bce737dd7ddd5addf9d",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorAskCard.tsx": {
+    "mtime": 1792252044.4806242,
+    "seen": 1792252192.239289,
+    "ast_hash": "6dd57d6308456aebd417db8d1380dfbb",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorCampaignHero.tsx": {
+    "mtime": 1792251887.3068316,
+    "seen": 1792252192.239289,
+    "ast_hash": "9b767897b83aa66cd68eeb4ff4275424",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorConditionsCard.tsx": {
+    "mtime": 1792252044.4866772,
+    "seen": 1792252192.239291,
+    "ast_hash": "db4b751d095550f24f2f60ec3e387fed",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorNetCard.tsx": {
+    "mtime": 1792252044.4957166,
+    "seen": 1792252192.239291,
+    "ast_hash": "9da88d55dbd6cdfe0ac22c914ba780ee",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/CreatorScheduleCard.tsx": {
+    "mtime": 1792252044.5007012,
+    "seen": 1792252192.239292,
+    "ast_hash": "c6b90603b77e6c9b56603468dcfa409f",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/components/OpportunityDeadlineText.tsx": {
+    "mtime": 1792251800.071449,
+    "seen": 1792252192.2393558,
+    "ast_hash": "8e06fcd09744779c8760e639294aa048",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/hooks/useCreatorCampaignDetailScreen.ts": {
+    "mtime": 1792252897.5773187,
+    "seen": 1792253032.6547909,
+    "ast_hash": "ff879362951879e1eef63694b3a79ef1",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/components/ApplyAccountsSection.tsx": {
+    "mtime": 1792252862.5912502,
+    "seen": 1792253032.654787,
+    "ast_hash": "cd03b1c0a734c86951deba205d60d201",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/components/ApplyBidRail.tsx": {
+    "mtime": 1792252789.3375232,
+    "seen": 1792253032.654788,
+    "ast_hash": "f16e2919d7917e17f1212622be1efc4a",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/components/ApplyPriceSection.tsx": {
+    "mtime": 1792252850.3366034,
+    "seen": 1792253032.6547892,
+    "ast_hash": "b92f1e3716eb403371c15a254df7b670",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/components/ApplyTermsCard.tsx": {
+    "mtime": 1792252873.0177038,
+    "seen": 1792253032.6547892,
+    "ast_hash": "9e19a39a8417007d392a204afc9cb256",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/components/CampaignApplySheet.tsx": {
+    "mtime": 1792252888.1622984,
+    "seen": 1792253032.65479,
+    "ast_hash": "d68f4f02b988dc30867c13105243eaf2",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/screens/CreatorCampaignDetailScreen/hooks/useCampaignApply.ts": {
+    "mtime": 1792252959.1192124,
+    "seen": 1792253032.65479,
+    "ast_hash": "c2db63171300a25df07591f73ca1eb9e",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/__tests__/campaignApply.test.ts": {
+    "mtime": 1792252671.1302457,
+    "seen": 1792253032.654907,
+    "ast_hash": "eac50a8c125e1f9492553c16b0581b07",
+    "semantic_hash": ""
+  },
+  "src/domains/marketplace/utils/campaignApply.ts": {
+    "mtime": 1792252646.7495997,
+    "seen": 1792253032.654934,
+    "ast_hash": "ee455fb219cd9c3a6ea0e2a20f052e12",
     "semantic_hash": ""
   }
 }

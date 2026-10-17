@@ -82,7 +82,13 @@ export const buildCreatorCampaignUrl = (id: string) => subPathOf(CREATOR_CAMPAIG
 /** `POST` saves, `DELETE` removes; both idempotent. */
 export const buildCreatorBookmarkUrl = (id: string) => subPathOf(CREATOR_CAMPAIGNS, id, 'bookmark');
 
+/** `POST /influencer/campaigns/{id}/apply`. */
+export const buildCreatorApplyUrl = (id: string) => subPathOf(CREATOR_CAMPAIGNS, id, 'apply');
+
 export const buildCreatorApplicationsUrl = ({ statuses }: CreatorApplicationsArgs, page: number) =>
   withPage(CREATOR_APPLICATIONS, repeated('status', statuses), page);
 
 export const buildCreatorApplicationUrl = (id: string) => subPathOf(CREATOR_APPLICATIONS, id);
+
+/** `POST /influencer/campaign-applications/{id}/withdraw`. */
+export const buildCreatorWithdrawUrl = (id: string) => subPathOf(CREATOR_APPLICATIONS, id, 'withdraw');
