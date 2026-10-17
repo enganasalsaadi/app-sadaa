@@ -2449,6 +2449,39 @@
         "title": "Save creators here",
         "hint": "Tap ❤️ on any creator to keep them for later and compare.",
         "explore": "Explore creators"
+      },
+      "invite": {
+        "enter": "Invite to a campaign",
+        "title": "Who to invite?",
+        "subtitle": "Pick from your shortlist, then the campaign",
+        "full": "You can invite up to {{max}} at a time",
+        "failed": "Couldn't send the invitations. Try again.",
+        "loadFailed": "Couldn't load your campaigns.",
+        "quotaNote": "A campaign can send up to {{limit}} invitations in total.",
+        "noCampaigns": {
+          "title": "No open campaign to invite to",
+          "hint": "Invitations go only to campaigns that are open for applications."
+        },
+        "sheet": {
+          "title": "To which campaign?",
+          "body": "They get a notification and see your campaign first, with an «Invited» badge.",
+          "send": "Send invitations"
+        },
+        "report": {
+          "title": "Invitation results",
+          "summary": "{{invited}} of {{total}} invited",
+          "invited": "Invited",
+          "skipped": "Not sent",
+          "quota": "{{used}} of {{limit}} invitations used for this campaign",
+          "quotaFull": "This campaign reached its {{limit}}-invitation limit"
+        },
+        "tray": {
+          "picked_zero": "No one picked",
+          "picked_one": "1 creator picked",
+          "picked_other": "{{count}} creators picked",
+          "hint": "Tap cards to pick them",
+          "go": "Invite"
+        }
       }
     },
     "explore": {

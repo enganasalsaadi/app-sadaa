@@ -303,6 +303,22 @@ export interface CampaignSelectDto {
   recruiting: CampaignRecruitingDto;
 }
 
+/** One creator of a `POST …/invitations` report (contract §3.6); `creator` is the explore slug. */
+export interface CampaignInviteRowDto {
+  creator: string | { slug: string; display_name?: string | null };
+  invited: boolean;
+  reason: DealLabeledDto | null;
+  eligibility: DealLabeledDto[] | null;
+}
+
+export interface CampaignInviteReportDto {
+  results: CampaignInviteRowDto[];
+  invited: number;
+  skipped: number;
+  limit: number;
+  used: number;
+}
+
 export interface ApplicantsPageDto extends CampaignPageDto<ApplicantCardDto> {
   meta: CampaignPageDto<ApplicantCardDto>['meta'] & {
     counts?: Partial<Record<string, number>>;

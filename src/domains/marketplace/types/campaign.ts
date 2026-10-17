@@ -521,6 +521,41 @@ export interface ApplicantSelectArgs extends ApplicantArgs {
   idempotencyKey: string;
 }
 
+/** Why the server left a creator out of an invitation batch (contract §3.6). */
+export const CAMPAIGN_INVITE_SKIP = [
+  'not_shortlisted',
+  'already_invited',
+  'already_applied',
+  'not_eligible',
+  'limit_reached',
+] as const;
+export type CampaignInviteSkip = (typeof CAMPAIGN_INVITE_SKIP)[number];
+
+/** One creator's outcome: invited, or skipped with the server's own `reason.label` (and the unmet conditions). */
+export interface CampaignInviteRow {
+  slug: string;
+  /** Only when the server names the creator; the screen falls back to the card it sent. */
+  displayName: string | null;
+  invited: boolean;
+  /** `key` is `null` for a reason this build does not know; the label still shows. */
+  reason: Labeled<CampaignInviteSkip> | null;
+  eligibility: string[];
+}
+
+export interface CampaignInviteReport {
+  rows: CampaignInviteRow[];
+  invited: number;
+  skipped: number;
+  /** Invitations a campaign may ever send (50) and how many it has sent. */
+  limit: number;
+  used: number;
+}
+
+export interface CampaignInviteArgs {
+  id: string;
+  slugs: string[];
+}
+
 export interface ApplicantDecisionArgs extends ApplicantArgs {
   decision: ApplicantDecision;
 }

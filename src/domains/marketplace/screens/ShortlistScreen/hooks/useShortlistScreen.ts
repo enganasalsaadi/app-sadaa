@@ -5,6 +5,7 @@ import type { HomeStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { useGetShortlistInfiniteQuery } from '../../../api/shortlistApi';
 import { useCreatorCardActions } from '../../../hooks/useCreatorCardActions';
+import { useShortlistInvite } from '../../../hooks/useShortlistInvite';
 import type { ExploreCreator } from '../../../types/explore';
 
 type Navigation = HomeStackScreenProps<'Shortlist'>['navigation'];
@@ -12,12 +13,14 @@ type Navigation = HomeStackScreenProps<'Shortlist'>['navigation'];
 /**
  * Shortlist (handoff §5): the brand's saved creators, cursor-paged, newest first. ❤️ here only
  * removes: the row leaves at once, and once the server agrees an Undo toast can save it back.
+ * Invite mode (PC3.5) picks creators for a campaign invitation instead of opening them.
  * Refetched on every open so creators who became ineligible elsewhere drop out.
  */
 export const useShortlistScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
   const { openCreator, setShortlist, requestOffer } = useCreatorCardActions();
+  const invite = useShortlistInvite();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data, isFetching, isError, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } =
@@ -58,6 +61,14 @@ export const useShortlistScreen = () => {
     refetch();
   }, [refetch]);
 
+  // Invite mode: a tap picks or drops the creator instead of opening the Media Kit.
+  const inviteToggle = invite.toggle;
+  const inviteActive = invite.active;
+  const pressCreator = useCallback(
+    (creator: ExploreCreator) => (inviteActive ? inviteToggle(creator) : openCreator(creator)),
+    [inviteActive, inviteToggle, openCreator],
+  );
+
   const openExplore = useCallback(() => navigation.navigate('Explore'), [navigation]);
   const emptyAction = useMemo(
     () => ({ label: t('marketplace.shortlist.empty.explore'), onPress: openExplore }),
@@ -75,8 +86,9 @@ export const useShortlistScreen = () => {
     onEndReached,
     onRetry,
     emptyAction,
-    openCreator,
+    pressCreator,
     removeCreator,
     requestOffer,
+    invite,
   };
 };

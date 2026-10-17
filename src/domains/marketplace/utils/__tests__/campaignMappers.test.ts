@@ -2,6 +2,7 @@ import type {
   ApplicantCardDto,
   ApplicantsPageDto,
   CampaignHistoryRowDto,
+  CampaignInviteReportDto,
   CampaignQuoteDto,
   CampaignRecruitingDto,
   CreatorApplicationDto,
@@ -15,6 +16,7 @@ import {
   mapCampaignFile,
   mapCampaignFunding,
   mapCampaignHistoryRow,
+  mapCampaignInviteReport,
   mapCampaignQuote,
   mapCampaignRecruiting,
   mapCampaignSelectResult,
@@ -473,5 +475,47 @@ describe('mapCreatorApplication', () => {
     );
     expect(a.status.key).toBeNull();
     expect(a.state.source).toBeNull();
+  });
+});
+
+describe('mapCampaignInviteReport', () => {
+  const dto: CampaignInviteReportDto = {
+    results: [
+      { creator: 'reem', invited: true, reason: null, eligibility: null },
+      { creator: { slug: 'omar', display_name: 'Omar' }, invited: false, reason: label('already_invited'), eligibility: null },
+      {
+        creator: 'lina',
+        invited: false,
+        reason: label('not_eligible'),
+        eligibility: [label('gender_required'), label('min_followers')],
+      },
+      { creator: 'sami', invited: false, reason: label('brand_new_reason'), eligibility: null },
+    ],
+    invited: 1,
+    skipped: 3,
+    limit: 50,
+    used: 12,
+  };
+
+  it('reads the creator from a slug or from a named object', () => {
+    const { rows } = mapCampaignInviteReport(dto);
+    expect(rows.map(row => [row.slug, row.displayName])).toEqual([
+      ['reem', null],
+      ['omar', 'Omar'],
+      ['lina', null],
+      ['sami', null],
+    ]);
+  });
+
+  it('keeps the server reason label and the unmet conditions; an unknown reason key becomes null but keeps its label', () => {
+    const { rows } = mapCampaignInviteReport(dto);
+    expect(rows[0]).toMatchObject({ invited: true, reason: null, eligibility: [] });
+    expect(rows[1]?.reason).toEqual({ key: 'already_invited', label: 'L:already_invited' });
+    expect(rows[2]?.eligibility).toEqual(['L:gender_required', 'L:min_followers']);
+    expect(rows[3]?.reason).toEqual({ key: null, label: 'L:brand_new_reason' });
+  });
+
+  it('carries the totals and the quota', () => {
+    expect(mapCampaignInviteReport(dto)).toMatchObject({ invited: 1, skipped: 3, limit: 50, used: 12 });
   });
 });

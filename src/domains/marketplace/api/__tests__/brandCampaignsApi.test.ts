@@ -595,3 +595,64 @@ describe('select applicant', () => {
     card.unsubscribe();
   });
 });
+
+describe('invite creators', () => {
+  beforeAll(() => initSecureStorage());
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate'] });
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  const reportDto = {
+    results: [
+      { creator: 'reem', invited: true, reason: null, eligibility: null },
+      { creator: 'omar', invited: false, reason: label('already_invited'), eligibility: null },
+    ],
+    invited: 1,
+    skipped: 1,
+    limit: 50,
+    used: 1,
+  };
+
+  it('posts the slugs to the campaign and answers the per-creator report', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async () => ok(reportDto));
+    const store = makeStore();
+
+    const report = await store.dispatch(brandCampaignsApi.endpoints.inviteCreators.initiate({ id: 'c1', slugs: ['reem', 'omar'] })).unwrap();
+
+    const post = spy.mock.calls[0]?.[0] as Request;
+    expect(post.method).toBe('POST');
+    expect(new URL(post.url).pathname).toMatch(/\/brand\/campaigns\/c1\/invitations$/);
+    expect(await post.clone().json()).toEqual({ creators: ['reem', 'omar'] });
+    expect(post.headers.get(IDEMPOTENCY_HEADER)).toBeNull();
+    expect(report.rows.map(row => row.invited)).toEqual([true, false]);
+    expect(report.used).toBe(1);
+  });
+
+  it('refetches the campaigns list when the campaign stopped accepting, and rejects with the status', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return fail(409, 'campaign_not_accepting', 'Closed');
+      return ok({ items: [detailDto()], meta: { current_page: 1, last_page: 1, total: 1 } });
+    });
+    const store = makeStore();
+    const list = store.dispatch(brandCampaignsApi.endpoints.getCampaigns.initiate({ statuses: ['open'] }));
+    await list;
+    const before = spy.mock.calls.length;
+
+    await expect(
+      store.dispatch(brandCampaignsApi.endpoints.inviteCreators.initiate({ id: 'c1', slugs: ['reem'] })).unwrap(),
+    ).rejects.toMatchObject({ status: 409 });
+    await settle();
+
+    const refetched = spy.mock.calls.slice(before).filter(([input]) => (input as Request).method === 'GET');
+    expect(refetched.length).toBeGreaterThan(0);
+    list.unsubscribe();
+  });
+});

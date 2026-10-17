@@ -26,6 +26,12 @@ jest.mock('../../../../hooks/useCreatorCardActions', () => ({
   useCreatorCardActions: () => ({ openCreator: mockOpenCreator, setShortlist: mockSetShortlist }),
 }));
 
+const mockInviteToggle = jest.fn();
+let mockInviteActive = false;
+jest.mock('../../../../hooks/useShortlistInvite', () => ({
+  useShortlistInvite: () => ({ active: mockInviteActive, toggle: mockInviteToggle }),
+}));
+
 const creator = (slug: string): ExploreCreator => ({
   slug,
   displayName: slug.toUpperCase(),
@@ -70,7 +76,10 @@ const renderModel = () => {
   return ref.current;
 };
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockInviteActive = false;
+});
 
 describe('useShortlistScreen', () => {
   it('refetches on every open and flattens the cursor pages', () => {
@@ -112,5 +121,17 @@ describe('useShortlistScreen', () => {
     const vm = renderModel();
     vm.emptyAction.onPress();
     expect(mockNavigate).toHaveBeenCalledWith('Explore');
+  });
+
+  it('opens the Media Kit on a tap, or picks the creator while inviting', () => {
+    const reem = creator('reem');
+    renderModel().pressCreator(reem);
+    expect(mockOpenCreator).toHaveBeenCalledWith(reem);
+    expect(mockInviteToggle).not.toHaveBeenCalled();
+
+    mockInviteActive = true;
+    renderModel().pressCreator(reem);
+    expect(mockInviteToggle).toHaveBeenCalledWith(reem);
+    expect(mockOpenCreator).toHaveBeenCalledTimes(1);
   });
 });

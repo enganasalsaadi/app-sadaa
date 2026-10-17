@@ -7,6 +7,7 @@ import {
   CAMPAIGN_ELIGIBILITY_REASON,
   CAMPAIGN_FILE_PURPOSE,
   CAMPAIGN_GENDER,
+  CAMPAIGN_INVITE_SKIP,
   CAMPAIGN_HISTORY_SUBJECT,
   CAMPAIGN_PRICING_MODEL,
   CAMPAIGN_SEAT_FREED_OPTION,
@@ -41,6 +42,7 @@ import {
   type CampaignWallet,
   type CreatorApplication,
   type CreatorCampaign,
+  type CampaignInviteReport,
   type CreatorCampaignDeliverable,
   type CreatorCampaignDetail,
   type CreatorCampaignPricing,
@@ -54,6 +56,7 @@ import type {
   CampaignActionDataDto,
   CampaignActionMetaDto,
   CampaignDetailDto,
+  CampaignInviteReportDto,
   CampaignDropPlanDto,
   CampaignDto,
   CampaignEligibilityDto,
@@ -400,6 +403,23 @@ export const mapCampaignSelectResult = (dto: CampaignSelectDto): CampaignSelectR
   deal: mapDealRef(dto.deal),
   funding: mapCampaignFunding(dto.funding),
   recruiting: mapCampaignRecruiting(dto.recruiting),
+});
+
+export const mapCampaignInviteReport = (dto: CampaignInviteReportDto): CampaignInviteReport => ({
+  rows: dto.results.map(row => {
+    const named = typeof row.creator === 'string' ? null : row.creator;
+    return {
+      slug: named?.slug ?? (row.creator as string),
+      displayName: named?.display_name ?? null,
+      invited: row.invited,
+      reason: row.reason ? toLabeled(CAMPAIGN_INVITE_SKIP, row.reason) : null,
+      eligibility: (row.eligibility ?? []).map(item => item.label),
+    };
+  }),
+  invited: dto.invited,
+  skipped: dto.skipped,
+  limit: dto.limit,
+  used: dto.used,
 });
 
 export const mapCreatorApplication = (dto: CreatorApplicationDto): CreatorApplication => ({

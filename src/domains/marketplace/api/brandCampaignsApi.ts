@@ -15,6 +15,8 @@ import type {
   CampaignFile,
   CampaignFilePurpose,
   CampaignHistoryRow,
+  CampaignInviteArgs,
+  CampaignInviteReport,
   CampaignListArgs,
   CampaignPage,
   CampaignQuote,
@@ -30,6 +32,7 @@ import type {
   CampaignDto,
   CampaignFileDto,
   CampaignHistoryRowDto,
+  CampaignInviteReportDto,
   CampaignPageDto,
   CampaignQuoteDto,
   CampaignSelectDto,
@@ -44,6 +47,7 @@ import {
   mapCampaignSelectResult,
   mapCampaignFile,
   mapCampaignHistoryRow,
+  mapCampaignInviteReport,
   mapCampaignQuote,
   mapCampaignsPage,
 } from '../utils/campaignMappers';
@@ -189,6 +193,22 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
             ]
           : [];
       },
+    }),
+    /**
+     * Invites shortlisted creators to an open campaign (contract §3.6). Always 200 with a report per
+     * creator, so a skipped one is data, not an error; a campaign that stopped accepting answers
+     * 409 `campaign_not_accepting` and refetches. Not binding or money, so no idempotency key. The
+     * applicants table only changes when an invited creator applies, so nothing else is invalidated.
+     */
+    inviteCreators: builder.mutation<CampaignInviteReport, CampaignInviteArgs>({
+      query: ({ id, slugs }) => ({
+        url: `${buildBrandCampaignUrl(id)}/invitations`,
+        method: 'POST',
+        body: { creators: slugs },
+      }),
+      transformResponse: (dto: CampaignInviteReportDto) => mapCampaignInviteReport(dto),
+      invalidatesTags: (_result, error, { id }) =>
+        error && isCampaignConflictError(normalizeApiError(error)) ? [{ type: 'Campaign', id }, ...campaignChangedTags(id)] : [],
     }),
     /** Status changes + note rows (`from.key == to.key`), a plain array. */
     getCampaignHistory: builder.query<CampaignHistoryRow[], string>({
@@ -344,6 +364,7 @@ export const {
   useGetCampaignApplicantQuery,
   useGetCampaignApplicantsCompareQuery,
   useDecideCampaignApplicantMutation,
+  useInviteCreatorsMutation,
   useSelectCampaignApplicantMutation,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
