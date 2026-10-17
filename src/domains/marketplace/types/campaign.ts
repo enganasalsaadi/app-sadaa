@@ -499,6 +499,34 @@ export interface ApplicantsPage extends CampaignPage<ApplicantCard> {
   recruiting: CampaignRecruiting | null;
 }
 
+/** Applicants list sorts (contract §3.5); `newest` is the server default. */
+export const APPLICANT_SORT = [
+  'newest',
+  'oldest',
+  'expiring',
+  'price_asc',
+  'price_desc',
+  'followers',
+  'rating',
+] as const;
+export type ApplicantSort = (typeof APPLICANT_SORT)[number];
+
+/** What the brand narrows the applicants by; `status` replaces the tab's own status (expired, rejected…). */
+export interface ApplicantFilters {
+  sort: ApplicantSort;
+  status: ApplicationStatus | null;
+  governorates: string[];
+  niches: string[];
+  minFollowers: number | null;
+  invitedOnly: boolean;
+}
+
+/** One applicants query: the tab's (or the status filter's) statuses plus the filters; the whole object is the cache key. */
+export interface ApplicantsArgs extends Omit<ApplicantFilters, 'status'> {
+  id: string;
+  statuses: ApplicationStatus[];
+}
+
 /** Brand list tabs send the statuses of the group (`CAMPAIGN_TAB_STATUSES`). */
 export interface CampaignListArgs {
   statuses?: CampaignStatus[];

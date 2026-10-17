@@ -53,6 +53,7 @@ export const useBrandCampaignDetailScreen = () => {
   }, [refetchHistory]);
 
   const openWizard = useCallback(() => navigate('CampaignWizard', { campaignId: id, source: 'resume' }), [id]);
+  const openApplicants = useCallback(() => navigation.navigate('CampaignApplicants', { id }), [id, navigation]);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const lifecycle = useCampaignLifecycle(campaign, goBack);
   const decide = lifecycle.decide;
@@ -79,6 +80,7 @@ export const useBrandCampaignDetailScreen = () => {
     onRetry,
     goBack,
     openWizard,
+    openApplicants,
     reopenFromDock,
     lifecycle,
     dock,

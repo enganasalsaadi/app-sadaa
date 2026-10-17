@@ -1491,6 +1491,89 @@
           "deleted": "حُذفت المسودة"
         }
       },
+      "applicants": {
+        "title": "المتقدمون",
+        "loadFailed": "تعذّر تحميل المتقدمين",
+        "tabs": {
+          "label": "مراحل المتقدمين",
+          "a11y": "{{label}}، {{count}}",
+          "new": "جديد",
+          "shortlisted": "مختصر",
+          "selected": "مختار"
+        },
+        "seatRail": {
+          "a11y": "{{occupied}} من {{total}} مقاعد ممتلئة",
+          "free_zero": "لا مقاعد شاغرة",
+          "free_one": "مقعد شاغر",
+          "free_two": "مقعدان شاغران",
+          "free_few": "{{count}} مقاعد شاغرة",
+          "free_many": "{{count}} مقعداً شاغراً",
+          "free_other": "{{count}} مقعد شاغر",
+          "ofTotal": "من {{count}}",
+          "wallet": "رصيد محفظتك. يفتح المحفظة"
+        },
+        "card": {
+          "a11y": "{{name}}، {{status}}",
+          "invited": "مدعو",
+          "expired": "انتهى",
+          "expiresIn": "يُغلق بعد {{time}}",
+          "rating": "{{average}} ({{count}})",
+          "noRating": "لا تقييمات بعد",
+          "shortlisted": "في القائمة المختصرة",
+          "bid": "عرضه",
+          "fixed": "سعرك"
+        },
+        "sort": {
+          "newest": "الأحدث",
+          "oldest": "الأقدم",
+          "expiring": "الأقرب انتهاءً",
+          "priceAsc": "السعر: الأقل أولاً",
+          "priceDesc": "السعر: الأعلى أولاً",
+          "followers": "الأكثر متابعين",
+          "rating": "الأعلى تقييماً"
+        },
+        "filters": {
+          "title": "الترتيب والتصفية",
+          "reset": "إعادة ضبط",
+          "sort": "ترتيب حسب",
+          "status": {
+            "title": "الحالة",
+            "expired": "منتهٍ",
+            "rejected": "مرفوض",
+            "notSelected": "غير مختار",
+            "cancelled": "ملغى"
+          },
+          "optionsFailed": "تعذّر تحميل الخيارات",
+          "governorate": "المحافظة",
+          "niche": "النيش",
+          "followers": "الحد الأدنى للمتابعين",
+          "followersOption": "+{{count}}",
+          "followersChip": "+{{count}} متابع",
+          "invitedOnly": "المبدعون الذين دعوتهم فقط",
+          "invitedChip": "مدعو",
+          "remove": "إزالة فلتر {{label}}",
+          "clear": "مسح الفلاتر",
+          "apply": "عرض النتائج"
+        },
+        "empty": {
+          "new": {
+            "title": "لا متقدمين جدد",
+            "hint": "تظهر الطلبات الجديدة هنا فور تقدّم المبدعين."
+          },
+          "shortlisted": {
+            "title": "قائمتك المختصرة فارغة",
+            "hint": "اختصر المبدعين الذين تريد التمعّن في ملفاتهم."
+          },
+          "selected": {
+            "title": "لم تختر أحداً بعد",
+            "hint": "من تختاره يشغل مقعداً ويبدأ صفقته."
+          },
+          "filtered": {
+            "title": "لا متقدمين مطابقين",
+            "hint": "جرّب تخفيف الفلاتر."
+          }
+        }
+      },
       "detail": {
         "loadFailed": "تعذّر فتح الحملة",
         "island": {
@@ -1540,7 +1623,8 @@
           "left": "مشغولة · المتبقي {{free}}",
           "applications": "طلبات مفتوحة",
           "price": "سعر المقعد",
-          "bidMax": "أعلى مزايدة"
+          "bidMax": "أعلى مزايدة",
+          "review": "راجع المتقدمين"
         },
         "terms": {
           "title": "الشروط",

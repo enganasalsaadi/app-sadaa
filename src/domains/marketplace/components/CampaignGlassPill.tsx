@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import type { LucideIcon } from 'lucide-react-native';
-import { iconStroke, useTheme } from '@/core/theme';
+import { iconStroke, resolveHue, useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 
 export interface CampaignGlassPillProps {
@@ -8,11 +8,14 @@ export interface CampaignGlassPillProps {
   icon?: LucideIcon;
   /** Without an icon: a dot in the status color (the label still says it, rule 08). */
   dotColor?: string;
+  /** Time running out: a warm fill instead of the frost (the label still says it). */
+  urgent?: boolean;
 }
 
 /** Frosted chip for status and time laid over a cover photo. */
-const CampaignGlassPillComponent: React.FC<CampaignGlassPillProps> = ({ label, icon: Icon, dotColor }) => {
+const CampaignGlassPillComponent: React.FC<CampaignGlassPillProps> = ({ label, icon: Icon, dotColor, urgent = false }) => {
   const { colors, sizes } = useTheme();
+  const warning = resolveHue(colors, 'warning');
   return (
     <Box
       row
@@ -21,9 +24,9 @@ const CampaignGlassPillComponent: React.FC<CampaignGlassPillProps> = ({ label, i
       px="md"
       py="xs"
       borderRadius="full"
-      bg={colors.media.glass}
+      bg={urgent ? warning.main : colors.media.glass}
       borderWidth="thin"
-      borderColor={colors.media.glassBorder}
+      borderColor={urgent ? warning.main : colors.media.glassBorder}
       alignSelf="flex-start"
     >
       {Icon ? (

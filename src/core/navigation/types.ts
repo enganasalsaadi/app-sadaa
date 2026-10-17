@@ -165,6 +165,8 @@ export type DealsStackParamList = {
   Strikes: undefined;
   /** Brand only: one of their campaigns (`sada://campaigns/{id}`). Creators open it in `OpportunitiesTab`. */
   CampaignDetail: { id: string };
+  /** Brand only: the applicants table of one of their campaigns (Public Campaigns PC3). */
+  CampaignApplicants: { id: string };
 };
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */

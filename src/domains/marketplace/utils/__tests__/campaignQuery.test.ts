@@ -1,4 +1,5 @@
 import {
+  buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignsUrl,
   buildBrandCampaignUrl,
@@ -12,6 +13,31 @@ describe('campaignQuery', () => {
       '/brand/campaigns?status%5B%5D=draft&status%5B%5D=changes_requested&page=2',
     );
     expect(buildBrandCampaignsUrl({}, 1)).toBe('/brand/campaigns?page=1');
+  });
+
+  it('builds the applicants list with repeated filter keys and only the filters that are on', () => {
+    expect(
+      buildBrandApplicantsUrl(
+        {
+          id: 'c1',
+          statuses: ['submitted'],
+          sort: 'expiring',
+          governorates: ['damascus', 'aleppo'],
+          niches: ['food'],
+          minFollowers: 10000,
+          invitedOnly: true,
+        },
+        3,
+      ),
+    ).toBe(
+      '/brand/campaigns/c1/applications?status%5B%5D=submitted&governorate%5B%5D=damascus&governorate%5B%5D=aleppo&niche%5B%5D=food&min_followers=10000&invited=1&sort=expiring&page=3',
+    );
+    expect(
+      buildBrandApplicantsUrl(
+        { id: 'c1', statuses: ['selected'], sort: 'newest', governorates: [], niches: [], minFollowers: null, invitedOnly: false },
+        1,
+      ),
+    ).toBe('/brand/campaigns/c1/applications?status%5B%5D=selected&sort=newest&page=1');
   });
 
   it('encodes each segment of an action path', () => {

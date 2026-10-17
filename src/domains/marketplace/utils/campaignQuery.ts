@@ -1,4 +1,5 @@
 import type {
+  ApplicantsArgs,
   CampaignActionPath,
   CampaignListArgs,
   CreatorApplicationsArgs,
@@ -34,6 +35,24 @@ export const buildBrandCampaignFilesUrl = (id: string, fileId?: string, step?: '
 
 export const buildBrandCampaignsUrl = ({ statuses }: CampaignListArgs, page: number) =>
   withPage(BRAND_CAMPAIGNS, repeated('status', statuses), page);
+
+/** `/brand/campaigns/{id}/applications`: statuses and filters as repeated keys, `invited=1` only when on. */
+export const buildBrandApplicantsUrl = (
+  { id, statuses, governorates, niches, minFollowers, invitedOnly, sort }: ApplicantsArgs,
+  page: number,
+) =>
+  withPage(
+    subPathOf(BRAND_CAMPAIGNS, id, 'applications'),
+    [
+      ...repeated('status', statuses),
+      ...repeated('governorate', governorates),
+      ...repeated('niche', niches),
+      ...(minFollowers ? [`min_followers=${minFollowers}`] : []),
+      ...(invitedOnly ? ['invited=1'] : []),
+      `sort=${sort}`,
+    ],
+    page,
+  );
 
 export const buildCreatorFeedUrl = ({ activityTypes, pricingModel }: CreatorFeedArgs, page: number) =>
   withPage(

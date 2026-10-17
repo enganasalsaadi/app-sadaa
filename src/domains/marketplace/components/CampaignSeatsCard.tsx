@@ -3,16 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { ShieldCheck } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { iconStroke, useTheme } from '@/core/theme';
-import { Box, Card, MoneyText, Text } from '@/shared/ui';
+import { Box, Card, CustomButton, MoneyText, Text } from '@/shared/ui';
 import type { CampaignDetail } from '../types/campaign';
 import { SeatPips } from './SeatPips';
 
 export interface CampaignSeatsCardProps {
   campaign: Pick<CampaignDetail, 'seatsTotal' | 'counters' | 'pricing' | 'budgetSecured'>;
+  /** Opens the applicants table; omitted when there is nothing to review (a draft). */
+  onReview?: () => void;
 }
 
 /** The seats as the page's hero number and large circles, then the open applications and the price. */
-const CampaignSeatsCardComponent: React.FC<CampaignSeatsCardProps> = ({ campaign }) => {
+const CampaignSeatsCardComponent: React.FC<CampaignSeatsCardProps> = ({ campaign, onReview }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const { seatsTotal, counters, pricing, budgetSecured } = campaign;
@@ -66,6 +68,15 @@ const CampaignSeatsCardComponent: React.FC<CampaignSeatsCardProps> = ({ campaign
             </Box>
           ) : null}
         </Box>
+        {onReview ? (
+          <CustomButton
+            title={t('marketplace.campaign.detail.seats.review')}
+            variant="secondary"
+            size="md"
+            fullWidth
+            onPress={onReview}
+          />
+        ) : null}
       </Box>
     </Card>
   );

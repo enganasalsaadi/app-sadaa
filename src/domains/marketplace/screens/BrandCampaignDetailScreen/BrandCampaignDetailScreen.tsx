@@ -107,7 +107,7 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
             {vm.showReadiness ? (
               <CampaignReadinessCard missing={campaign.missing} onEdit={vm.openWizard} />
             ) : (
-              <CampaignSeatsCard campaign={campaign} />
+              <CampaignSeatsCard campaign={campaign} onReview={vm.openApplicants} />
             )}
             <CampaignTermsCard campaign={campaign} locked={vm.termsLocked} />
             <CampaignHistoryCard {...vm.history} />

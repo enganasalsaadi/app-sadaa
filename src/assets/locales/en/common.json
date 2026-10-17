@@ -1419,6 +1419,85 @@
           "deleted": "Draft deleted"
         }
       },
+      "applicants": {
+        "title": "Applicants",
+        "loadFailed": "Couldn't load the applicants",
+        "tabs": {
+          "label": "Applicant stages",
+          "a11y": "{{label}}, {{count}}",
+          "new": "New",
+          "shortlisted": "Shortlisted",
+          "selected": "Selected"
+        },
+        "seatRail": {
+          "a11y": "{{occupied}} of {{total}} seats filled",
+          "free_one": "1 seat left",
+          "free_other": "{{count}} seats left",
+          "ofTotal": "of {{count}}",
+          "wallet": "Your wallet balance. Opens the wallet"
+        },
+        "card": {
+          "a11y": "{{name}}, {{status}}",
+          "invited": "Invited",
+          "expired": "Expired",
+          "expiresIn": "Closes in {{time}}",
+          "rating": "{{average}} ({{count}})",
+          "noRating": "No ratings yet",
+          "shortlisted": "Shortlisted",
+          "bid": "Their bid",
+          "fixed": "Your price"
+        },
+        "sort": {
+          "newest": "Newest",
+          "oldest": "Oldest",
+          "expiring": "Closing soonest",
+          "priceAsc": "Price: low to high",
+          "priceDesc": "Price: high to low",
+          "followers": "Most followers",
+          "rating": "Best rated"
+        },
+        "filters": {
+          "title": "Sort and filter",
+          "reset": "Reset",
+          "sort": "Sort by",
+          "status": {
+            "title": "Status",
+            "expired": "Expired",
+            "rejected": "Rejected",
+            "notSelected": "Not selected",
+            "cancelled": "Cancelled"
+          },
+          "optionsFailed": "Couldn't load the options",
+          "governorate": "Governorate",
+          "niche": "Niche",
+          "followers": "Minimum followers",
+          "followersOption": "{{count}}+",
+          "followersChip": "{{count}}+ followers",
+          "invitedOnly": "Only creators I invited",
+          "invitedChip": "Invited",
+          "remove": "Remove filter {{label}}",
+          "clear": "Clear filters",
+          "apply": "Show results"
+        },
+        "empty": {
+          "new": {
+            "title": "No new applicants",
+            "hint": "New applications show up here as creators apply."
+          },
+          "shortlisted": {
+            "title": "Your shortlist is empty",
+            "hint": "Shortlist the creators you want to take a closer look at."
+          },
+          "selected": {
+            "title": "No one selected yet",
+            "hint": "Creators you select take a seat and start their deal."
+          },
+          "filtered": {
+            "title": "No applicants match",
+            "hint": "Try loosening the filters."
+          }
+        }
+      },
       "detail": {
         "loadFailed": "Couldn't open the campaign",
         "island": {
@@ -1464,7 +1543,8 @@
           "left": "taken · {{free}} left",
           "applications": "open applications",
           "price": "price per seat",
-          "bidMax": "top bid"
+          "bidMax": "top bid",
+          "review": "Review applicants"
         },
         "terms": {
           "title": "Terms",

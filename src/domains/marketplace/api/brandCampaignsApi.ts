@@ -2,6 +2,8 @@ import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
 import { mapUploadSlot } from '@/core/upload';
 import type { UploadSlot, UploadSlotDto, UploadSlotRequest } from '@/core/upload';
 import type {
+  ApplicantsArgs,
+  ApplicantsPage,
   CampaignActionArgs,
   CampaignActionResult,
   CampaignDetail,
@@ -14,6 +16,7 @@ import type {
   Campaign,
 } from '../types/campaign';
 import type {
+  ApplicantsPageDto,
   CampaignActionDataDto,
   CampaignActionMetaDto,
   CampaignDetailDto,
@@ -26,6 +29,7 @@ import type {
 import type { CampaignDraftRequest } from '../types/campaignDraft';
 import { isCampaignConflictError } from '../utils/campaignAction';
 import {
+  mapApplicantsPage,
   mapCampaignActionResult,
   mapCampaignDetail,
   mapCampaignFile,
@@ -35,6 +39,7 @@ import {
 } from '../utils/campaignMappers';
 import {
   BRAND_CAMPAIGNS_URL,
+  buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignUrl,
   buildBrandCampaignsUrl,
@@ -75,6 +80,20 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       query: id => buildBrandCampaignUrl(id),
       transformResponse: (dto: CampaignDetailDto) => mapCampaignDetail(dto),
       providesTags: (_result, _error, id) => [{ type: 'Campaign', id }],
+    }),
+    /**
+     * One page set per tab + filters (the args are the key). The first page also carries the tab
+     * badges (`counts`) and the recruiting summary, so a decision invalidates every set at once.
+     */
+    getCampaignApplicants: builder.infiniteQuery<ApplicantsPage, ApplicantsArgs, number>({
+      infiniteQueryOptions: {
+        initialPageParam: 1,
+        getNextPageParam: ({ meta }) =>
+          meta.currentPage < meta.lastPage ? meta.currentPage + 1 : undefined,
+      },
+      query: ({ queryArg, pageParam }) => buildBrandApplicantsUrl(queryArg, pageParam),
+      transformResponse: (dto: ApplicantsPageDto) => mapApplicantsPage(dto),
+      providesTags: (_result, _error, arg) => [{ type: 'CampaignApplicants', id: arg.id }],
     }),
     /** Status changes + note rows (`from.key == to.key`), a plain array. */
     getCampaignHistory: builder.query<CampaignHistoryRow[], string>({
@@ -226,6 +245,7 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
 
 export const {
   useGetCampaignsInfiniteQuery,
+  useGetCampaignApplicantsInfiniteQuery,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
   useGetCampaignQuoteQuery,
