@@ -189,7 +189,8 @@ export type DealsStackParamList = {
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */
 export type OpportunitiesStackParamList = {
-  Opportunities: undefined;
+  /** `segment` opens that destination (Home's «under review» chip → `applications`); none keeps the one open. */
+  Opportunities: { segment?: 'feed' | 'saved' | 'applications' } | undefined;
   /** Id only, so a push or link can open it (`sada://campaigns/{id}`). */
   CampaignDetail: { id: string };
 };

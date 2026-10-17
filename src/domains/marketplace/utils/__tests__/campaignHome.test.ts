@@ -1,6 +1,7 @@
 import type { BrandActiveCampaign } from '../../types/campaignHome';
 import { campaignDropLeft, campaignHomeTarget, campaignSeatSplit } from '../campaignHome';
-import { mapBrandActiveCampaigns } from '../campaignHomeMappers';
+import { creatorCampaignDto } from '../__fixtures__/campaignDto';
+import { mapBrandActiveCampaigns, mapCreatorCampaignsGlance } from '../campaignHomeMappers';
 
 const DAY = 86_400_000;
 /** The wire's key; the RTL lint bans the word as an object key, so the fixture computes it. */
@@ -107,5 +108,31 @@ describe('mapBrandActiveCampaigns', () => {
     });
     expect(mapped?.items.map(item => item.id)).toEqual(['ok']);
     expect(mapped?.totalCount).toBe(2);
+  });
+});
+
+describe('mapCreatorCampaignsGlance', () => {
+  const glance = { feed_count: 12, new_invites: 1, open_applications: 2 };
+
+  it('is null when the flag is off', () => {
+    expect(mapCreatorCampaignsGlance(null)).toBeNull();
+    expect(mapCreatorCampaignsGlance(undefined)).toBeNull();
+  });
+
+  it('keeps the server counts and maps the feed cards', () => {
+    const result = mapCreatorCampaignsGlance({ ...glance, items: [creatorCampaignDto({ id: 'a', invited: true })] });
+    expect(result).toMatchObject({ feedCount: 12, newInvites: 1, openApplications: 2 });
+    expect(result?.items.map(item => [item.id, item.invited])).toEqual([['a', true]]);
+  });
+
+  it('still answers when no card came or none can be read, since the counts say what waits', () => {
+    expect(mapCreatorCampaignsGlance(glance)).toEqual({ feedCount: 12, newInvites: 1, openApplications: 2, items: [] });
+    const broken = creatorCampaignDto({ id: 'bad', apply_deadline_at: 'not a date' });
+    expect(mapCreatorCampaignsGlance({ ...glance, items: [broken] })?.items).toEqual([]);
+  });
+
+  it('shows at most 3 cards whatever the server sends', () => {
+    const items = ['a', 'b', 'c', 'd'].map(id => creatorCampaignDto({ id }));
+    expect(mapCreatorCampaignsGlance({ ...glance, items })?.items.map(item => item.id)).toEqual(['a', 'b', 'c']);
   });
 });

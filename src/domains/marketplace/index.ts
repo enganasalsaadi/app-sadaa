@@ -54,6 +54,7 @@ export {
 export { useDealAction } from './hooks/useDealAction';
 export { useBrandDealsBadge } from './hooks/useBrandDealsBadge';
 export { useCreatorDealsBadge } from './hooks/useCreatorDealsBadge';
+export { useCreatorInvitesBadge } from './hooks/useCreatorInvitesBadge';
 export { useDealPushRefresh } from './hooks/useDealPushRefresh';
 export { useCampaignPushRefresh } from './hooks/useCampaignPushRefresh';
 export { useCampaignsEnabled } from './hooks/useCampaignsEnabled';

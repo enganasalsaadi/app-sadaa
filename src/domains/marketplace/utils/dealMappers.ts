@@ -617,7 +617,8 @@ export const mapCreatorActiveDeal = (dto: CreatorActiveDealDto): CreatorActiveDe
 });
 
 /** A row with malformed money is dropped rather than shown wrong (rule 06); counts stay the server's. */
-export const mapCreatorDealSummary = (dto: CreatorDealSummaryDto): CreatorDealSummary => ({
+/** Everything but the campaigns strip, which `mapCreatorCampaignsGlance` reads (it maps feed cards, built on this file). */
+export const mapCreatorDealSummary = (dto: CreatorDealSummaryDto): Omit<CreatorDealSummary, 'campaigns'> => ({
   activeDeals: dto.active_deals && {
     needsActionCount: dto.active_deals.needs_action_count,
     totalCount: dto.active_deals.total_count,

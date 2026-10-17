@@ -428,6 +428,7 @@
     "account": "حسابي",
     "myProfile": "ملفي",
     "waiting": "{{title}}، {{count}} تنتظرك",
+    "invites": "{{title}}، {{count}} دعوة جديدة",
     "comingSoon": {
       "title": "قريباً",
       "message": "نعمل على هذا القسم، وسيصلك قريباً."
@@ -2680,6 +2681,38 @@
       "escrow": {
         "label": "محجوز لك",
         "kycAction": "وثّق هويتك"
+      },
+      "campaigns": {
+        "title": "حملات لك",
+        "subtitle": "مختارة حسب مجالك ومدينتك",
+        "seeAll": "كل الفرص",
+        "railA11y": "حملات مفتوحة لك ({{count}})",
+        "all": "كل الفرص",
+        "allA11y": "عرض كل الفرص ({{count}})",
+        "chips": {
+          "available_zero": "حملة متاحة",
+          "available_one": "حملة متاحة",
+          "available_two": "حملتان متاحتان",
+          "available_few": "حملات متاحة",
+          "available_many": "حملة متاحة",
+          "available_other": "حملة متاحة",
+          "invites_zero": "دعوة جديدة",
+          "invites_one": "دعوة جديدة",
+          "invites_two": "دعوتان جديدتان",
+          "invites_few": "دعوات جديدة",
+          "invites_many": "دعوة جديدة",
+          "invites_other": "دعوة جديدة",
+          "review_zero": "طلب قيد الدراسة",
+          "review_one": "طلب قيد الدراسة",
+          "review_two": "طلبان قيد الدراسة",
+          "review_few": "طلبات قيد الدراسة",
+          "review_many": "طلباً قيد الدراسة",
+          "review_other": "طلب قيد الدراسة"
+        },
+        "quiet": {
+          "title": "لا فرص مناسبة الآن",
+          "message": "أكمل ملفك وأسعارك لتظهر لك حملات أكثر."
+        }
       },
       "deals": {
         "title": "دورك",

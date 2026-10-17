@@ -2,6 +2,8 @@
 // Enum keys stay `string`: a newer server may send values this build doesn't know (mappers narrow them).
 // Money is a USD string (`"150.00"`); times are ISO 8601 with offset.
 
+import type { CreatorCampaignsDto } from './campaignHome';
+
 export interface DealLabeledDto {
   key: string;
   label: string;
@@ -433,8 +435,8 @@ export interface CreatorDealSummaryDto {
     items: CreatorActiveDealDto[];
   } | null;
   counts: { new_offers: number; pending_upsells: number; live_strikes: number };
-  /** Contract §6.3: `null` = flag off. Only presence is read here; the strip comes with the feed step. */
-  campaigns?: { feed_count: number; new_invites: number; open_applications: number } | null;
+  /** Contract §6.3: `null` = flag off. */
+  campaigns?: CreatorCampaignsDto | null;
 }
 
 export interface DealStrikeDto {

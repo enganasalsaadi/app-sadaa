@@ -5,7 +5,10 @@ import {
   type BrandActiveCampaignDto,
   type BrandActiveCampaigns,
   type BrandActiveCampaignsDto,
+  type CreatorCampaignsDto,
+  type CreatorCampaignsGlance,
 } from '../types/campaignHome';
+import { mapCreatorCampaign } from './campaignMappers';
 import { toLabeled, toLabeledOrNull, toTimestampOrNull } from './dealMappers';
 
 export const mapBrandActiveCampaign = (dto: BrandActiveCampaignDto): BrandActiveCampaign => ({
@@ -39,4 +42,28 @@ export const mapBrandActiveCampaigns = (
   });
   if (items.length === 0) return null;
   return { needsActionCount: dto.needs_action_count, totalCount: dto.total_count, items };
+};
+
+/** The strip shows at most this many tickets, whatever the server sends. */
+const GLANCE_ITEMS = 3;
+
+/**
+ * `null` = flag off. A flag-on answer always maps, even with no ticket readable: the counts still
+ * say how many campaigns wait. A card that fails to map is dropped rather than shown wrong.
+ */
+export const mapCreatorCampaignsGlance = (dto: CreatorCampaignsDto | null | undefined): CreatorCampaignsGlance | null => {
+  if (!dto) return null;
+  const items = (dto.items ?? []).slice(0, GLANCE_ITEMS).flatMap(item => {
+    try {
+      return [mapCreatorCampaign(item)];
+    } catch {
+      return [];
+    }
+  });
+  return {
+    feedCount: dto.feed_count,
+    newInvites: dto.new_invites,
+    openApplications: dto.open_applications,
+    items,
+  };
 };

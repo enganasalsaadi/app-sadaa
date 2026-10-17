@@ -9,6 +9,7 @@ import {
 } from '@/domains/identity';
 import { useAmountsHidden, useWalletGlance } from '@/domains/finance';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
+import { useCreatorHomeCampaigns } from './useCreatorHomeCampaigns';
 import { useCreatorHomeDeals } from './useCreatorHomeDeals';
 import {
   HOME_NOTICE_DEF,
@@ -32,6 +33,7 @@ export const useCreatorHomeScreen = () => {
   const overview = useCreatorOverview();
   const mediaKit = useMediaKitCard();
   const homeDeals = useCreatorHomeDeals();
+  const homeCampaigns = useCreatorHomeCampaigns();
   const walletGlance = useWalletGlance();
   const { hidden: amountsHidden } = useAmountsHidden();
   const [refreshing, setRefreshing] = useState(false);
@@ -162,6 +164,7 @@ export const useCreatorHomeScreen = () => {
     notice,
     mediaKit,
     homeDeals,
+    homeCampaigns,
     walletGlance,
     amountsHidden,
     openWallet,

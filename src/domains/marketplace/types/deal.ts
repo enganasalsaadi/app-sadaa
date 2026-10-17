@@ -1,4 +1,5 @@
 import type { Money } from '@/core/money';
+import type { CreatorCampaignsGlance } from './campaignHome';
 
 // Mirrors the backend Direct Deals enums exactly (rule 06). Adding a value breaks every
 // `Record<DealStatus, …>` map until it is handled. Unknown values from a newer server map to `null`.
@@ -588,6 +589,8 @@ export interface CreatorDealSummary {
   counts: { newOffers: number; pendingUpsells: number; liveStrikes: number };
   /** Public Campaigns flag (contract §1.2): `campaigns` is `null` while it is off. */
   campaignsEnabled: boolean;
+  /** «Campaigns for you» (contract §6.3); `null` while the flag is off. */
+  campaigns: CreatorCampaignsGlance | null;
 }
 
 export interface DealStrike {

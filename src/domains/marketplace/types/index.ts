@@ -166,6 +166,7 @@ export type {
   BrandActiveCampaign,
   BrandActiveCampaigns,
   BrandCampaignAction,
+  CreatorCampaignsGlance,
 } from './campaignHome';
 export type {
   CampaignStatus,

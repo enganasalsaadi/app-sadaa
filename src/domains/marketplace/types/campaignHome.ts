@@ -1,6 +1,7 @@
 import type { Labeled, Timestamp } from './deal';
 import type { DealLabeledDto } from './dealDto';
-import type { CampaignStatus } from './campaign';
+import type { CampaignStatus, CreatorCampaign } from './campaign';
+import type { CreatorCampaignDto } from './campaignDto';
 
 // Brand Home «my active campaigns» (contract §6.1). The server decides what needs the brand and what
 // to say about it; the app owns only where each action leads.
@@ -58,4 +59,24 @@ export interface BrandActiveCampaigns {
   needsActionCount: number;
   totalCount: number;
   items: BrandActiveCampaign[];
+}
+
+// Creator Home «campaigns for you» (contract §6.3): the counts and up to 3 of the feed's own cards.
+
+export interface CreatorCampaignsDto {
+  feed_count: number;
+  new_invites: number;
+  open_applications: number;
+  items?: CreatorCampaignDto[];
+}
+
+/** Counts are the server's; `items` are the feed's first cards, already ranked (invitations first). */
+export interface CreatorCampaignsGlance {
+  /** Campaigns the creator can apply to right now (the feed's total). */
+  feedCount: number;
+  /** Unseen invitations to campaigns still accepting applications; they badge the tab. */
+  newInvites: number;
+  /** Applications submitted or shortlisted. */
+  openApplications: number;
+  items: CreatorCampaign[];
 }

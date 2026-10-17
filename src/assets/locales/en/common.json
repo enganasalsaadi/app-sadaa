@@ -428,6 +428,7 @@
     "account": "Account",
     "myProfile": "Profile",
     "waiting": "{{title}}, {{count}} waiting on you",
+    "invites": "{{title}}, {{count}} new invitations",
     "comingSoon": {
       "title": "Coming soon",
       "message": "We're building this section. It's on its way."
@@ -2543,6 +2544,26 @@
       "escrow": {
         "label": "Held for you",
         "kycAction": "Verify ID"
+      },
+      "campaigns": {
+        "title": "Campaigns for you",
+        "subtitle": "Picked for your niche and city",
+        "seeAll": "All opportunities",
+        "railA11y": "Campaigns open to you ({{count}})",
+        "all": "All opportunities",
+        "allA11y": "See all opportunities ({{count}})",
+        "chips": {
+          "available_one": "campaign open",
+          "available_other": "campaigns open",
+          "invites_one": "new invitation",
+          "invites_other": "new invitations",
+          "review_one": "application under review",
+          "review_other": "applications under review"
+        },
+        "quiet": {
+          "title": "No matching opportunities right now",
+          "message": "Complete your profile and rates to see more campaigns."
+        }
       },
       "deals": {
         "title": "Your turn",

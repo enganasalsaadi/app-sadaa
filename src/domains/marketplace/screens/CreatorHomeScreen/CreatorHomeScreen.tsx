@@ -8,6 +8,7 @@ import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
 import { AudienceSection } from './components/AudienceSection';
 import { CreatorHomeBar } from './components/CreatorHomeBar';
 import { EscrowLine } from './components/EscrowLine';
+import { HomeCampaigns } from './components/HomeCampaigns';
 import { HomeDeals } from './components/HomeDeals';
 import { PriceTagsSection } from './components/PriceTagsSection';
 import { ReadinessSection } from './components/ReadinessSection';
@@ -21,7 +22,7 @@ import { WatchGrid } from './components/WatchGrid';
  * hanging from it as a sign) behind a transparent header that pins the identity once the
  * hero scrolls away; the body slides over it as a sheet. Then, rising in one by one and
  * always present (each has its own empty state): «your turn» (the deals waiting on the creator;
- * leaves only if its read fails) with the money held for them and a KYC nudge under it, who's looking in the last 30 days with the share bar, how ready
+ * leaves only if its read fails), «campaigns for you» (only while Public Campaigns is on) with the money held for them and a KYC nudge under it, who's looking in the last 30 days with the share bar, how ready
  * the storefront is, the audience by platform and the price tags. Sections without an API (wallet)
  * stay out until it exists.
  */
@@ -81,6 +82,9 @@ const CreatorHomeScreenComponent: React.FC = () => {
         <StaggerIn gap="3xl">
           {vm.homeDeals.deals.kind !== 'hidden' ? (
             <HomeDeals homeDeals={vm.homeDeals} openRates={vm.openRates} openPlatforms={vm.openPlatforms} />
+          ) : null}
+          {vm.homeCampaigns.campaigns.kind !== 'hidden' ? (
+            <HomeCampaigns {...vm.homeCampaigns} openRates={vm.openRates} />
           ) : null}
           {vm.walletGlance.escrow || vm.walletGlance.kycNudge ? (
             <EscrowLine

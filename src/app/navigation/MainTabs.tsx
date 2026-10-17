@@ -31,6 +31,7 @@ import {
   useBrandDealsBadge,
   useCampaignsEnabled,
   useCreatorDealsBadge,
+  useCreatorInvitesBadge,
 } from '@/domains/marketplace';
 import { selectUserType } from '@/domains/auth';
 import { SettingsNavigator } from '@/domains/identity';
@@ -137,18 +138,21 @@ export const MainTabs: React.FC = () => {
   const brandDealsBadge = useBrandDealsBadge();
   const creatorDealsBadge = useCreatorDealsBadge(isCreator);
   const dealsBadge = isCreator ? creatorDealsBadge : brandDealsBadge;
+  const invitesBadge = useCreatorInvitesBadge(isCreator);
 
   const options = useMemo(
     () =>
       tabs.map(tab => {
         const title = t(tab.titleKey);
-        const badge =
-          tab.name === 'DealsTab' && dealsBadge > 0
-            ? { count: dealsBadge, label: t('tabs.waiting', { title, count: dealsBadge }) }
-            : undefined;
+        let badge: { count: number; label: string } | undefined;
+        if (tab.name === 'DealsTab' && dealsBadge > 0) {
+          badge = { count: dealsBadge, label: t('tabs.waiting', { title, count: dealsBadge }) };
+        } else if (tab.name === 'OpportunitiesTab' && invitesBadge > 0) {
+          badge = { count: invitesBadge, label: t('tabs.invites', { title, count: invitesBadge }) };
+        }
         return buildTabOptions(title, tab.icon, badge);
       }),
-    [dealsBadge, tabs, t],
+    [dealsBadge, invitesBadge, tabs, t],
   );
 
   return (

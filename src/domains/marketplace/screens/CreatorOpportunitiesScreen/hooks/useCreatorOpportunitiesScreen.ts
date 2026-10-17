@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useLookupItems } from '@/core/api';
 import type { OpportunitiesStackScreenProps } from '@/core/navigation';
 import { useGetCampaignFeedInfiniteQuery, useGetSavedCampaignsInfiniteQuery } from '../../../api/creatorCampaignsApi';
@@ -16,6 +16,7 @@ import { countActiveFeedFilters, isActivityType, toFeedArgs } from '../../../uti
 import { useMyApplications } from './useMyApplications';
 
 type Navigation = OpportunitiesStackScreenProps<'Opportunities'>['navigation'];
+type Route = OpportunitiesStackScreenProps<'Opportunities'>['route'];
 
 const isPricing = (value: string): value is CampaignPricingModel =>
   (CAMPAIGN_PRICING_MODEL as readonly string[]).includes(value);
@@ -30,7 +31,15 @@ const isPricing = (value: string): value is CampaignPricingModel =>
 export const useCreatorOpportunitiesScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
-  const [segment, setSegment] = useState<OpportunitySegment>(DEFAULT_OPPORTUNITY_SEGMENT);
+  const requestedSegment = useRoute<Route>().params?.segment;
+  const [segment, setSegment] = useState<OpportunitySegment>(requestedSegment ?? DEFAULT_OPPORTUNITY_SEGMENT);
+  // The tab stays mounted, so a Home chip asking for a destination arrives as a param change;
+  // it is cleared once applied so the same chip works again after the creator moved on.
+  useEffect(() => {
+    if (!requestedSegment) return;
+    setSegment(requestedSegment);
+    navigation.setParams({ segment: undefined });
+  }, [navigation, requestedSegment]);
   const [filters, setFilters] = useState<CreatorFeedArgs>(DEFAULT_OPPORTUNITY_FILTERS);
   const [sheetVisible, setSheetVisible] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);

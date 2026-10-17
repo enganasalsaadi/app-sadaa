@@ -149,6 +149,10 @@ jest.mock('../components/HomeDeals', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return { HomeDeals: (props: object) => createElement('HomeDeals', props) };
 });
+jest.mock('../components/HomeCampaigns', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  return { HomeCampaigns: (props: object) => createElement('HomeCampaigns', props) };
+});
 jest.mock('../components/EscrowLine', () => {
   const { createElement } = jest.requireActual<typeof React>('react');
   return { EscrowLine: (props: object) => createElement('EscrowLine', props) };
@@ -259,6 +263,12 @@ const model = (overrides: Partial<CreatorHomeScreenModel> = {}): CreatorHomeScre
     openStrikes: jest.fn(),
     refresh: jest.fn(),
   } as unknown as CreatorHomeScreenModel['homeDeals'],
+  homeCampaigns: {
+    campaigns: { kind: 'hidden' },
+    openCampaign: jest.fn(),
+    openFeed: jest.fn(),
+    openApplications: jest.fn(),
+  },
   walletGlance: { escrow: null, kycNudge: false },
   amountsHidden: false,
   openWallet: jest.fn(),
@@ -321,6 +331,24 @@ describe('CreatorHomeScreen — your turn', () => {
       const { root } = render({ homeDeals: { ...base, deals } });
       expect(root.findAll(isHost('HomeDeals'))).toHaveLength(1);
     });
+  });
+});
+
+describe('CreatorHomeScreen — campaigns for you', () => {
+  it('leaves the strip out while the server sends no campaigns (flag off)', () => {
+    const { root } = render();
+    expect(root.findAll(isHost('HomeCampaigns'))).toHaveLength(0);
+  });
+
+  it('shows the strip once the server sends campaigns, whatever they hold', () => {
+    const base = model().homeCampaigns;
+    const { root } = render({
+      homeCampaigns: {
+        ...base,
+        campaigns: { kind: 'strip', feedCount: 0, newInvites: 0, openApplications: 0, items: [] },
+      },
+    });
+    expect(root.findAll(isHost('HomeCampaigns'))).toHaveLength(1);
   });
 });
 
