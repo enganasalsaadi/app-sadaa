@@ -161,6 +161,12 @@ export {
   isCampaignStatus,
   isApplicationStatus,
 } from './campaign';
+export { BRAND_CAMPAIGN_ACTION } from './campaignHome';
+export type {
+  BrandActiveCampaign,
+  BrandActiveCampaigns,
+  BrandCampaignAction,
+} from './campaignHome';
 export type {
   CampaignStatus,
   ApplicationStatus,

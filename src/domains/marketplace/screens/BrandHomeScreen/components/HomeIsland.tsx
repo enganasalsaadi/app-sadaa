@@ -50,6 +50,11 @@ const HomeIslandComponent: React.FC<{ island: Island }> = ({ island }) => {
             {island.message}
           </Text>
         ) : null}
+        {island.note ? (
+          <Text variant="caption" color={hue.text} numberOfLines={1}>
+            {island.note}
+          </Text>
+        ) : null}
       </Box>
       <Box style={styles.chevron}>
         <ChevronRight size={sizes.icon.sm} color={hue.main} />

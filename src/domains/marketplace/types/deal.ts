@@ -560,6 +560,8 @@ export interface BrandActiveDeal {
   dueAt: Timestamp | null;
   needsAction: boolean;
   action: Labeled<BrandDealAction> | null;
+  /** Set for a campaign seat: the row carries a campaign chip. */
+  campaign: DealCampaignRef | null;
 }
 
 /** Creator Home open-deal row: «needs you» first, then soonest `dueAt`. */

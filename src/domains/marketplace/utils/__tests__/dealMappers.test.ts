@@ -869,6 +869,7 @@ describe('mapBrandActiveDeal', () => {
       due_at: T0,
       needs_action: true,
       action: { key: 'review_draft', label: 'Review the draft' },
+      campaign: { id: '01C', title: 'Ramadan launch' },
     };
 
     expect(mapBrandActiveDeal(dto)).toEqual({
@@ -881,7 +882,11 @@ describe('mapBrandActiveDeal', () => {
       dueAt: T0_MS,
       needsAction: true,
       action: { key: 'review_draft', label: 'Review the draft' },
+      campaign: { id: '01C', title: 'Ramadan launch' },
     });
+    // Direct deals and older servers send no campaign.
+    expect(mapBrandActiveDeal({ ...dto, campaign: null }).campaign).toBeNull();
+    expect(mapBrandActiveDeal({ ...dto, campaign: undefined }).campaign).toBeNull();
   });
 });
 

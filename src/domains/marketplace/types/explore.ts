@@ -5,6 +5,7 @@ import type { ExploreFilters, ExploreSortParam } from '@/core/navigation';
 import type { PriceLockReason } from '@/domains/identity';
 import type { BrandActiveDeal, Timestamp } from './deal';
 import type { BrandActiveDealDto } from './dealDto';
+import type { BrandActiveCampaigns, BrandActiveCampaignsDto } from './campaignHome';
 
 // Route params (Explore prefill) live in core navigation; the domain reads them as its own.
 export type { ExploreFilters };
@@ -123,7 +124,7 @@ export interface BrandHomeDto {
     body: string;
     cta: { label: string; action: string };
     /** B13: `null` for every type except `fund_deals`; absent on older servers. */
-    meta?: { count: number; expires_at: string | null } | null;
+    meta?: { count: number; expires_at: string | null; campaign_count?: number } | null;
   } | null;
   /** B13 §5.1: `null` when the brand has no open deal; absent on older servers. */
   active_deals?: {
@@ -131,8 +132,8 @@ export interface BrandHomeDto {
     total_count: number;
     items: BrandActiveDealDto[];
   } | null;
-  /** Contract §6.1: `null` = flag off or nothing active. Only presence is read here; the rail comes with the home strips. */
-  active_campaigns?: { needs_action_count: number; total_count: number } | null;
+  /** Contract §6.1: `null` = flag off or nothing active. */
+  active_campaigns?: BrandActiveCampaignsDto | null;
   rails: {
     key: string;
     title: string;
@@ -222,7 +223,7 @@ export interface BrandHomeIsland {
   body: string;
   ctaLabel: string;
   /** `fund_deals` only: accepted offers waiting for money, the first to lapse at `expiresAt`. */
-  waitingDeals: { count: number; expiresAt: Timestamp | null } | null;
+  waitingDeals: { count: number; expiresAt: Timestamp | null; campaignCount: number } | null;
 }
 
 /** B13 §5.1: open deals (≤ 10 shown); the counts cover every open deal. */
@@ -248,6 +249,8 @@ export interface BrandHome {
   island: BrandHomeIsland | null;
   /** `null` = no open deal: the strip hides. */
   activeDeals: BrandActiveDeals | null;
+  /** `null` = flag off or no active campaign: the rail hides. */
+  activeCampaigns: BrandActiveCampaigns | null;
   /** Non-empty rails only, in server order. */
   rails: BrandHomeRail[];
   /** Allow-listed WhatsApp link, else `null` (card hidden). */

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { formatMoney } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
 import { Box, MoneyText, Pressable, Text } from '@/shared/ui';
+import { DealCampaignChip } from '../../../components/DealCampaignChip';
 import { DealFace } from '../../../components/DealFace';
 import { DEAL_TRACK_STOP_LABEL, DEAL_TRACK_STOPS } from '../../../constants/brandHomeDeals';
 import type { BrandActiveDeal } from '../../../types';
@@ -57,6 +58,11 @@ const DealTrackRowComponent: React.FC<DealTrackRowProps> = ({ deal, onOpen }) =>
           </Box>
           <MoneyText value={deal.total} size="sm" />
         </Box>
+        {deal.campaign ? (
+          <Box mt="xs">
+            <DealCampaignChip campaign={deal.campaign} surface="soft" />
+          </Box>
+        ) : null}
         <DealTrackStops track={track} stoppedLabel={deal.status.label} />
       </Box>
     </Pressable>

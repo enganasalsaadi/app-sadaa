@@ -2751,6 +2751,37 @@
         "topUp": "شحن"
       },
       "islandLabel": "{{title}}. {{message}}",
+      "island": {
+        "campaignSeats_zero": "منها {{count}} مقاعد حملة",
+        "campaignSeats_one": "منها مقعد حملة واحد",
+        "campaignSeats_two": "منها مقعدا حملة",
+        "campaignSeats_few": "منها {{count}} مقاعد حملة",
+        "campaignSeats_many": "منها {{count}} مقعد حملة",
+        "campaignSeats_other": "منها {{count}} مقعد حملة"
+      },
+      "campaigns": {
+        "title": "حملاتي النشطة",
+        "subtitle": "ما يحتاجك أولاً",
+        "needsYou_zero": "لا حملات تحتاج قرارك",
+        "needsYou_one": "حملة تحتاج قرارك",
+        "needsYou_two": "حملتان تحتاجان قرارك",
+        "needsYou_few": "{{count}} حملات تحتاج قرارك",
+        "needsYou_many": "{{count}} حملة تحتاج قرارك",
+        "needsYou_other": "{{count}} حملة تحتاج قرارك",
+        "railA11y": "حملاتك النشطة ({{count}})",
+        "all": "كل حملاتي",
+        "allA11y": "عرض كل حملاتك ({{count}})",
+        "open": "افتح الحملة",
+        "unsecured": "الميزانية غير مؤمّنة",
+        "seatsLeft": "{{free}} من {{total}} متاحة",
+        "seatsA11y": "{{filled}} مقاعد مدفوعة و{{awaiting}} بانتظار دفعك، من {{total}}",
+        "cardA11y": "{{title}}، {{status}}، {{free}} من {{total}} مقاعد متاحة",
+        "stat": {
+          "applications": "طلبات",
+          "awaitingPayment": "بانتظار الدفع",
+          "drop": "للدروب"
+        }
+      },
       "filters": "الفلاتر",
       "allCategories": "الكل",
       "deck": {

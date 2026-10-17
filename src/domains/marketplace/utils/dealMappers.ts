@@ -601,6 +601,7 @@ export const mapBrandActiveDeal = (dto: BrandActiveDealDto): BrandActiveDeal => 
   dueAt: toTimestampOrNull(dto.due_at),
   needsAction: dto.needs_action,
   action: toLabeledOrNull(BRAND_DEAL_ACTION, dto.action),
+  campaign: dto.campaign ? { id: dto.campaign.id, title: dto.campaign.title } : null,
 });
 
 export const mapCreatorActiveDeal = (dto: CreatorActiveDealDto): CreatorActiveDeal => ({

@@ -10,9 +10,10 @@ import { useGetBrandHomeQuery } from '../../../api/brandHomeApi';
 import { useGetExploreFiltersQuery } from '../../../api/exploreApi';
 import { BRAND_HOME_ISLAND, resolveCategoryIcon } from '../../../constants/brandHome';
 import { useCreatorCardActions } from '../../../hooks/useCreatorCardActions';
-import type { BrandActiveDeal, DealParty } from '../../../types';
+import type { BrandActiveCampaign, BrandActiveDeal, DealParty } from '../../../types';
 import type { BrandHomeRail } from '../../../types/explore';
 import { splitActiveDeals } from '../../../utils/brandHomeDeals';
+import { campaignHomeTarget } from '../../../utils/campaignHome';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
 
 type Navigation = HomeStackScreenProps<'BrandHomeScreen'>['navigation'];
@@ -46,6 +47,20 @@ export type BrandHomeDeals =
       movingCount: number;
       /** Every open deal, when the server sent fewer rows than that; else `null`. */
       moreCount: number | null;
+    };
+
+/**
+ * «My active campaigns»: nothing while Home loads or fails and nothing when the server sends
+ * `null` (flag off, or no campaign running) — the flag is unknown until Home answers, so a
+ * skeleton would flash for brands that never get the rail.
+ */
+export type BrandHomeCampaigns =
+  | { kind: 'hidden' }
+  | {
+      kind: 'rail';
+      needsActionCount: number;
+      totalCount: number;
+      items: BrandActiveCampaign[];
     };
 
 export const useBrandHomeScreen = () => {
@@ -120,6 +135,31 @@ export const useBrandHomeScreen = () => {
   );
   const openDeals = useCallback(() => navigation.navigate('DealsTab'), [navigation]);
 
+  // The brand's tab root leads with its campaigns when the flag is on, so `openDeals` also lands on «all campaigns».
+  const openCampaignAction = useCallback(
+    (campaign: BrandActiveCampaign) => {
+      const { id } = campaign;
+      const target = campaignHomeTarget(campaign);
+      switch (target) {
+        case 'wallet':
+          // The chosen seats fund themselves once the top-up lands.
+          openTopUp();
+          return;
+        case 'applicants':
+          navigation.navigate('DealsTab', { screen: 'CampaignApplicants', params: { id }, initial: false });
+          return;
+        case 'campaign':
+          navigation.navigate('DealsTab', { screen: 'CampaignDetail', params: { id }, initial: false });
+          return;
+        default: {
+          const _exhaustive: never = target;
+          return _exhaustive;
+        }
+      }
+    },
+    [navigation, openTopUp],
+  );
+
   const categoryOptions = filtersQuery.data?.categories;
   const categories = useMemo(
     () =>
@@ -147,6 +187,9 @@ export const useBrandHomeScreen = () => {
       // Server copy, shown as-is (rule 03).
       title: islandDto.title,
       message: islandDto.body,
+      note: islandDto.waitingDeals?.campaignCount
+        ? t('marketplace.brandHome.island.campaignSeats', { count: islandDto.waitingDeals.campaignCount })
+        : null,
       hint: islandDto.ctaLabel,
       onPress: () => {
         const { target } = def;
@@ -154,7 +197,7 @@ export const useBrandHomeScreen = () => {
         else navigation.navigate('SettingsTab', { screen: target.screen, initial: false });
       },
     };
-  }, [islandDto, navigation, openTopUp]);
+  }, [islandDto, navigation, openTopUp, t]);
 
   const companyName = home?.companyName || user?.display_name || null;
   const governorate = home?.governorate?.label ?? null;
@@ -203,6 +246,20 @@ export const useBrandHomeScreen = () => {
     };
   }, [activeDeals, rails, status]);
 
+  const activeCampaigns = home?.activeCampaigns;
+  const campaigns = useMemo(
+    (): BrandHomeCampaigns =>
+      activeCampaigns
+        ? {
+            kind: 'rail',
+            needsActionCount: activeCampaigns.needsActionCount,
+            totalCount: activeCampaigns.totalCount,
+            items: activeCampaigns.items,
+          }
+        : { kind: 'hidden' },
+    [activeCampaigns],
+  );
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -226,6 +283,8 @@ export const useBrandHomeScreen = () => {
     deals,
     openDeal,
     openDeals,
+    campaigns,
+    openCampaignAction,
     hasSupport: !!supportUrl,
     unreadNotifications: user?.unread_notifications_count ?? 0,
     refreshing,

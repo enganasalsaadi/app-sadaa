@@ -241,13 +241,14 @@ describe('mapBrandHome', () => {
           title: 'Fund',
           body: '1 offer waits',
           cta: { label: 'Top up', action: 'top_up' },
-          meta: { count: 1, expires_at: '2026-10-16T09:00:00+03:00' },
+          meta: { count: 1, expires_at: '2026-10-16T09:00:00+03:00', campaign_count: 1 },
         },
       }),
     );
     expect(home.island?.waitingDeals).toEqual({
       count: 1,
       expiresAt: Date.parse('2026-10-16T09:00:00+03:00'),
+      campaignCount: 1,
     });
   });
 
@@ -275,7 +276,7 @@ describe('mapBrandHome', () => {
         },
       }),
     );
-    expect(bad.island?.waitingDeals).toEqual({ count: 2, expiresAt: null });
+    expect(bad.island?.waitingDeals).toEqual({ count: 2, expiresAt: null, campaignCount: 0 });
   });
 
   it('maps active deals, keeps the server counts and drops a row with bad money', () => {

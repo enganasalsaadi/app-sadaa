@@ -408,6 +408,8 @@ export interface BrandActiveDealDto {
   due_at: string | null;
   needs_action: boolean;
   action: DealLabeledDto | null;
+  /** Contract §6.2: the campaign a seat deal came from; `null` for a direct deal, absent on older servers. */
+  campaign?: { id: string; title: string } | null;
 }
 
 /** `GET /influencer/deals/summary`: the creator's open deals. */

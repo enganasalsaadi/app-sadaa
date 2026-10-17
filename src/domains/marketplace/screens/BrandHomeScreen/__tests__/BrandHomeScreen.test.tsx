@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, create } from 'react-test-renderer';
 import type { ReactTestInstance } from 'react-test-renderer';
-import type { BrandActiveDeal } from '../../../types';
+import type { BrandActiveCampaign, BrandActiveDeal } from '../../../types';
 import type { ExploreCreator } from '../../../types/explore';
 import type { BrandHomeScreenModel } from '../hooks/useBrandHomeScreen';
 import { BrandHomeScreen } from '../BrandHomeScreen';
@@ -131,6 +131,7 @@ jest.mock('@/shared/ui', () => {
     Skeleton: stub('Skeleton'),
     SocialPlatformIcon: stub('SocialPlatformIcon'),
     StaggerIn,
+    StatusPill: stub('StatusPill'),
     Text: stub('Text'),
     TierBadge: stub('TierBadge'),
     useScreenFocused: () => true,
@@ -237,6 +238,8 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
   deals: { kind: 'hidden' },
   openDeal: jest.fn(),
   openDeals: jest.fn(),
+  campaigns: { kind: 'hidden' },
+  openCampaignAction: jest.fn(),
   ...overrides,
 });
 
@@ -251,6 +254,7 @@ const activeDeal = (overrides: Partial<BrandActiveDeal> = {}): BrandActiveDeal =
   dueAt: mockNow + 6 * HOUR,
   needsAction: true,
   action: { key: 'answer_extension', label: 'Answer the extension' },
+  campaign: null,
   ...overrides,
 });
 const waitingDeals = [
@@ -375,6 +379,7 @@ describe('BrandHomeScreen — top', () => {
         tone: 'warning',
         title: 'Verify your account',
         message: 'See prices',
+        note: null,
         hint: 'Start',
         onPress,
       },
@@ -571,5 +576,97 @@ describe('BrandHomeScreen — your deals', () => {
   it('hides the section quietly when Home fails', () => {
     const { root } = render({ deals: { kind: 'hidden' } });
     expect(textOf(root)).not.toContain('marketplace.brandHome.deals.title');
+  });
+});
+
+const activeCampaign = (overrides: Partial<BrandActiveCampaign> = {}): BrandActiveCampaign => ({
+  id: 'c1',
+  title: 'Ramadan launch',
+  status: { key: 'open', label: 'Open' },
+  seats: { total: 5, occupied: 2, free: 3 },
+  applicationsOpen: 3,
+  awaitingPaymentCount: 1,
+  applyDeadlineAt: null,
+  dropAt: mockNow + 5 * 24 * HOUR,
+  budgetSecured: true,
+  needsAction: true,
+  action: { key: 'fund_seats', label: 'Fund the selected seats' },
+  ...overrides,
+});
+const campaignsModel = (
+  overrides: Partial<Extract<BrandHomeScreenModel['campaigns'], { kind: 'rail' }>> = {},
+): BrandHomeScreenModel['campaigns'] => ({
+  kind: 'rail',
+  needsActionCount: 1,
+  totalCount: 2,
+  items: [
+    activeCampaign(),
+    activeCampaign({
+      id: 'c2',
+      title: 'Branch opening',
+      needsAction: false,
+      action: null,
+      budgetSecured: false,
+      awaitingPaymentCount: 0,
+      dropAt: null,
+    }),
+  ],
+  ...overrides,
+});
+
+describe('BrandHomeScreen — my active campaigns', () => {
+  it('shows nothing when the server sends none', () => {
+    const { root } = render();
+    expect(textOf(root)).not.toContain('marketplace.brandHome.campaigns.title');
+  });
+
+  it('leads each card with the server action and counts the ones that need the brand', () => {
+    const { root } = render({ campaigns: campaignsModel() });
+    const text = textOf(root);
+    expect(text).toContain('marketplace.brandHome.campaigns.title');
+    expect(text).toContain('marketplace.brandHome.campaigns.needsYou:{"count":1}');
+    expect(text).toContain('Fund the selected seats');
+    expect(text).toContain('marketplace.brandHome.campaigns.seatsLeft:{"free":"3","total":"5"}');
+    // The calm one reads «open», and its unsecured budget is said out loud.
+    expect(text).toContain('marketplace.brandHome.campaigns.open');
+    expect(text).toContain('marketplace.brandHome.campaigns.unsecured');
+  });
+
+  it('opens the campaign through the model when a card is pressed', () => {
+    const { root, vm } = render({ campaigns: campaignsModel() });
+    const card = root
+      .findAll(isHost('Pressable'))
+      .find(n => String(n.props.accessibilityLabel).startsWith('marketplace.brandHome.campaigns.cardA11y:'));
+    card?.props.onPress();
+    expect(vm.openCampaignAction).toHaveBeenCalledWith(expect.objectContaining({ id: 'c1' }));
+  });
+
+  it('adds a tile to every campaign only when the server has more than it sent', () => {
+    expect(byLabel(render({ campaigns: campaignsModel() }).root, 'marketplace.brandHome.campaigns.allA11y:{"count":2}')).toBeUndefined();
+    const { root, vm } = render({ campaigns: campaignsModel({ totalCount: 7 }) });
+    byLabel(root, 'marketplace.brandHome.campaigns.allA11y:{"count":7}')?.props.onPress();
+    expect(vm.openDeals).toHaveBeenCalled();
+  });
+
+  it('puts the campaign chip on a deal that came from one', () => {
+    const { root } = render({
+      deals: dealsModel({ moving: [activeDeal({ id: 'd9', needsAction: false, action: null, campaign: { id: 'c1', title: 'Ramadan launch' } })] }),
+    });
+    expect(textOf(root)).toContain('Ramadan launch');
+  });
+
+  it('says how many of the waiting deals are campaign seats, under the island', () => {
+    const { root } = render({
+      island: {
+        key: 'fund_deals',
+        tone: 'warning',
+        title: '3 deals await payment',
+        message: 'The first lapses soon',
+        note: 'marketplace.brandHome.island.campaignSeats:{"count":2}',
+        hint: 'Top up',
+        onPress: jest.fn(),
+      },
+    });
+    expect(textOf(root)).toContain('marketplace.brandHome.island.campaignSeats:{"count":2}');
   });
 });

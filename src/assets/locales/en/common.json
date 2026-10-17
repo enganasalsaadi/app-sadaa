@@ -2602,6 +2602,29 @@
         "topUp": "Top up"
       },
       "islandLabel": "{{title}}. {{message}}",
+      "island": {
+        "campaignSeats_one": "{{count}} of them is a campaign seat",
+        "campaignSeats_other": "{{count}} of them are campaign seats"
+      },
+      "campaigns": {
+        "title": "My active campaigns",
+        "subtitle": "What needs you comes first",
+        "needsYou_one": "{{count}} campaign needs your decision",
+        "needsYou_other": "{{count}} campaigns need your decision",
+        "railA11y": "Your active campaigns ({{count}})",
+        "all": "All my campaigns",
+        "allA11y": "Show all your campaigns ({{count}})",
+        "open": "Open campaign",
+        "unsecured": "Budget not secured",
+        "seatsLeft": "{{free}} of {{total}} available",
+        "seatsA11y": "{{filled}} seats paid, {{awaiting}} waiting for your payment, of {{total}}",
+        "cardA11y": "{{title}}, {{status}}, {{free}} of {{total}} seats available",
+        "stat": {
+          "applications": "Applications",
+          "awaitingPayment": "Awaiting payment",
+          "drop": "To the drop"
+        }
+      },
       "filters": "Filters",
       "allCategories": "All",
       "deck": {

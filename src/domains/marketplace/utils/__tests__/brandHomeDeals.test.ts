@@ -15,6 +15,7 @@ const deal = (
   dueAt: null,
   needsAction: false,
   action: null,
+  campaign: null,
   ...overrides,
 });
 

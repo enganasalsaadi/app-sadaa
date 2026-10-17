@@ -1,6 +1,7 @@
 import { FOLLOWER_TIERS, type FollowerTierId } from '@/core/config';
 import type { Money } from '@/core/money';
 import { toPriceLockReason } from '@/domains/identity';
+import { mapBrandActiveCampaigns } from './campaignHomeMappers';
 import { mapBrandActiveDeal } from './dealMappers';
 import { parseExploreParams } from './exploreQuery';
 import {
@@ -143,7 +144,11 @@ const mapIsland = (dto: BrandHomeDto['island']): BrandHomeIsland | null => {
     body: dto.body,
     ctaLabel: dto.cta.label,
     waitingDeals: meta
-      ? { count: meta.count, expiresAt: Number.isNaN(expiresAt) ? null : expiresAt }
+      ? {
+          count: meta.count,
+          expiresAt: Number.isNaN(expiresAt) ? null : expiresAt,
+          campaignCount: meta.campaign_count ?? 0,
+        }
       : null,
   };
 };
@@ -194,6 +199,7 @@ export const mapBrandHome = (dto: BrandHomeDto): BrandHome => ({
   },
   island: mapIsland(dto.island),
   activeDeals: mapActiveDeals(dto.active_deals),
+  activeCampaigns: mapBrandActiveCampaigns(dto.active_campaigns),
   rails: mapRails(dto.rails),
   supportWhatsappUrl: toSupportWhatsappUrl(dto.support.whatsapp_url),
   viewPrices: {

@@ -5,6 +5,7 @@ import { ArrowRight, Clock, Pause } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, GradientSurface, Pressable, Text } from '@/shared/ui';
+import { DealCampaignChip } from '../../../components/DealCampaignChip';
 import { DealFace } from '../../../components/DealFace';
 import {
   BRAND_DEAL_ACTION_CTA,
@@ -124,6 +125,12 @@ const NextStepCardComponent: React.FC<NextStepCardProps> = ({ deal, index, count
           </Text>
         </Box>
       </Box>
+
+      {deal.campaign ? (
+        <Box mt="md">
+          <DealCampaignChip campaign={deal.campaign} surface="hero" />
+        </Box>
+      ) : null}
 
       <Text variant="h2" color={colors.text.onBrand} numberOfLines={2} mt="md">
         {action}

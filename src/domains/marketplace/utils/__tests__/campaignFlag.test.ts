@@ -44,7 +44,7 @@ describe('Home flag detection', () => {
       capabilities: { view_prices: { allowed: true, reason: null } },
     };
     expect(mapBrandHome(home).campaignsEnabled).toBe(false);
-    expect(mapBrandHome({ ...home, active_campaigns: { needs_action_count: 0, total_count: 0 } }).campaignsEnabled).toBe(true);
+    expect(mapBrandHome({ ...home, active_campaigns: { needs_action_count: 0, total_count: 0, items: [] } }).campaignsEnabled).toBe(true);
   });
 });
 
