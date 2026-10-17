@@ -200,7 +200,8 @@
 
 ## PC10 — الإشعارات (CM11)
 
-- **PC10.1 (S · S5)** كل أنواع §7 في `notificationRoute` + refetch حسب النوع (invalidate tags) + فلتر الفئات محلياً (`campaign_` / `deal_`). **نهاية الميزة: بوابات كاملة + docs + `/code-review` (O).**
+- ✅ **PC10.1 (S · S5)** [منفَّذ 2026-10-17 — انظر الملخص أدناه] كل أنواع §7 في `notificationRoute` + refetch حسب النوع (invalidate tags) + فلتر الفئات محلياً (`campaign_` / `deal_`). **نهاية الميزة: بوابات كاملة + docs + `/code-review` (O).**
+  - **المنفَّذ:** الروابط تُحلّ من `deep_link` وحدها (كل أنواع §7 مغطاة باختبار جدولي في `notificationRoute.test`: حملات البراند/المؤثر → `CampaignDetail` بدور المستقبِل، `campaign_selected`/`campaign_drop_reminder_*` → الصفقة، `deal_return_*` → الصفقة، `deal_public_apply_ban*` → المخالفات). `ParsedPush` صار `{type, kind, entityId, target}` (`kind` = أي `data.type` سليم الشكل، `entityId` معرّف بسيط) وبهما `campaignPushTags(push)` يضيف: `CampaignApplicants` + `CampaignApplication` + `CreatorDealSummary` (شارة الدعوات) لكل رابط حملة، وللأنواع `campaign_*` ذات رابط الصفقة يُبطل `CampaignApplication`/`CreatorCampaign` للحملة المسمّاة في `entity_id`. الإشعارات الصندوق: `utils/notificationLook` (أيقونة+لون لكل نوع §7 مع احتياطي العائلة) و`utils/notificationCategory` + شرائح «الكل / الحملات / الصفقات» فلتر محلي بالبادئة (حسب العقد: لا مفاتيح فئات في الخادم)، مع جلب صفحات إضافية تلقائياً ما دام الفلتر يعرض أقل من 8 صفوف، و«تعليم الكل» يبقى على الصندوق كله. **لم يُجرَّب على جهاز/خادم حيّ.**
 
 ---
 

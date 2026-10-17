@@ -215,3 +215,89 @@ describe('toTabParams', () => {
     });
   });
 });
+
+// Public campaigns CM11 (§7): every inbox entry resolves through its own `data.deep_link`.
+describe('public campaign pushes (contract §7)', () => {
+  const entry = (type: string, deep_link: string, entity_id = 'c1') =>
+    item({ type, data: { type, entity_id, deep_link } });
+  const routeOf = (it: AppNotification, role: 'brand' | 'influencer') =>
+    resolveNotificationRoute(notificationTarget(it), role);
+
+  it.each([
+    'campaign_approved',
+    'campaign_changes_requested',
+    'campaign_rejected',
+    'campaign_removed',
+    'campaign_new_applications',
+    'campaign_ghost_warning',
+    'campaign_suspended',
+    'campaign_suspension_final_warning',
+    'campaign_deadline_reached',
+    'campaign_zero_applicants',
+    'campaign_zero_applicants_final_warning',
+    'campaign_filled',
+    'campaign_closed',
+    'campaign_cancelled',
+    'campaign_seat_freed',
+    'campaign_seat_reopened',
+    'campaign_drop_summary_1440',
+    'campaign_drop_summary_120',
+    'campaign_drop_summary_0',
+  ])('opens the brand campaign for %s', type => {
+    expect(routeOf(entry(type, 'sada://campaigns/c1'), 'brand')).toEqual({
+      screen: 'CampaignDetail',
+      campaignId: 'c1',
+      role: 'brand',
+    });
+  });
+
+  it.each([
+    'campaign_invited',
+    'campaign_shortlisted',
+    'campaign_not_selected',
+    'campaign_application_rejected',
+    'campaign_application_expired',
+    'campaign_application_cancelled',
+  ])('opens the creator campaign for %s', type => {
+    expect(routeOf(entry(type, 'sada://campaigns/c1'), 'influencer')).toEqual({
+      screen: 'CampaignDetail',
+      campaignId: 'c1',
+      role: 'creator',
+    });
+  });
+
+  it.each(['campaign_selected', 'campaign_drop_reminder_1440', 'campaign_drop_reminder_120', 'campaign_drop_reminder_0'])(
+    'opens the linked deal, not the campaign, for %s',
+    type => {
+      expect(routeOf(entry(type, 'sada://deals/d1'), 'influencer')).toEqual({
+        screen: 'DealDetail',
+        dealId: 'd1',
+      });
+    },
+  );
+
+  it.each([
+    'deal_campaign_announcement',
+    'deal_return_lock_lifted',
+    'deal_return_required',
+    'deal_return_received',
+    'deal_return_waived',
+    'deal_return_issue',
+    'deal_return_overdue',
+    'deal_return_shipped',
+    'deal_return_overdue_brand',
+  ])('opens the deal for %s', type => {
+    expect(routeOf(entry(type, 'sada://deals/d1', 'd1'), 'influencer')).toEqual({
+      screen: 'DealDetail',
+      dealId: 'd1',
+    });
+  });
+
+  it('opens the strikes of a creator for the apply ban and its lifting, the inbox for anyone else', () => {
+    for (const type of ['deal_public_apply_ban', 'deal_public_apply_ban_lifted']) {
+      const it_ = item({ type, data: { type, deep_link: 'sada://strikes' } });
+      expect(routeOf(it_, 'influencer')).toEqual({ screen: 'Strikes' });
+      expect(routeOf(it_, 'brand')).toEqual({ screen: 'NotificationsScreen' });
+    }
+  });
+});

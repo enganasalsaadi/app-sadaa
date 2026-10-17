@@ -1,4 +1,4 @@
-import type { PushTarget } from '@/core/notification';
+import type { ParsedPush } from '@/core/notification';
 
 /**
  * Tags a campaign push stales (CM11): the campaign on both sides, the brand's list / history / home
@@ -9,9 +9,23 @@ import type { PushTarget } from '@/core/notification';
  * deals, and a deal push can't name its campaign, so it stales every drop dashboard (only the one on
  * screen refetches). The shipping manifest follows the same way: a funded deal or an address entered
  * adds or frees a parcel. Other kinds touch nothing here.
+ *
+ * The kind refines it: a creator's application push whose link is the linked deal (`campaign_selected`,
+ * `campaign_drop_reminder_*`) carries the campaign only as `entity_id`, so that campaign's application and
+ * page go stale too. A brand's applicants (`campaign_new_applications`, deadline, ghost warning, seats)
+ * and the creator's home glance (invites badge) follow every campaign link.
  */
-export const campaignPushTags = (target: PushTarget | null) => {
-  if (target?.kind === 'deal') return [{ type: 'CampaignApplicationList', id: 'LIST' }, 'CampaignDrop', 'CampaignShipping'] as const;
+export const campaignPushTags = ({ target, kind, entityId }: ParsedPush) => {
+  if (target?.kind === 'deal') {
+    const base = [{ type: 'CampaignApplicationList', id: 'LIST' }, 'CampaignDrop', 'CampaignShipping'] as const;
+    if (!kind?.startsWith('campaign_') || entityId === null) return base;
+    return [
+      ...base,
+      { type: 'CampaignApplication', id: entityId },
+      { type: 'CreatorCampaign', id: entityId },
+      'CreatorDealSummary',
+    ] as const;
+  }
   if (target?.kind !== 'campaign') return [];
   const id = target.campaignId;
   return [
@@ -25,5 +39,8 @@ export const campaignPushTags = (target: PushTarget | null) => {
     { type: 'CreatorCampaignList', id: 'FEED' },
     { type: 'CreatorCampaignList', id: 'SAVED' },
     { type: 'CampaignApplicationList', id: 'LIST' },
+    { type: 'CampaignApplicants', id },
+    { type: 'CampaignApplication', id },
+    'CreatorDealSummary',
   ] as const;
 };

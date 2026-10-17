@@ -11,7 +11,7 @@ export const useCampaignPushRefresh = (isAuthenticated: boolean) => {
   useEffect(() => {
     if (!isAuthenticated) return undefined;
     return notificationManager.registerPushListener(push => {
-      const tags = campaignPushTags(push.target);
+      const tags = campaignPushTags(push);
       if (tags.length > 0) dispatch(baseApi.util.invalidateTags([...tags]));
     });
   }, [dispatch, isAuthenticated]);

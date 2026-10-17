@@ -2,13 +2,17 @@ import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ListRenderItemInfo } from '@shopify/flash-list';
 import { BellOff, CheckCheck } from 'lucide-react-native';
-import { Layout, SuperList } from '@/shared/ui';
+import { Chip, ChipRow, Layout, SuperList } from '@/shared/ui';
 import { useJSScrollHandler } from '@/shared/context/ScrollContext';
 import {
   useNotificationsScreen,
   type NotificationRowModel,
 } from './hooks/useNotificationsScreen';
 import { NotificationItem } from './components/NotificationItem';
+import {
+  NOTIFICATION_CATEGORIES,
+  NOTIFICATION_CATEGORY_LABEL,
+} from '../../utils/notificationCategory';
 
 const keyExtractor = (row: NotificationRowModel) => row.id;
 
@@ -43,6 +47,17 @@ const NotificationsScreenComponent: React.FC = () => {
           : undefined,
       }}
     >
+      <ChipRow accessibilityLabel={t('notifications.inbox.categories.title')} accessibilityRole="radiogroup">
+        {NOTIFICATION_CATEGORIES.map(category => (
+          <Chip
+            key={category}
+            label={t(NOTIFICATION_CATEGORY_LABEL[category])}
+            value={category}
+            selected={vm.category === category}
+            onSelect={vm.onCategory}
+          />
+        ))}
+      </ChipRow>
       <SuperList
         data={vm.rows}
         renderItem={renderItem}
@@ -55,7 +70,7 @@ const NotificationsScreenComponent: React.FC = () => {
         onEndReached={vm.onEndReached}
         onRefresh={vm.onRefresh}
         onRetry={vm.onRetry}
-        emptyMessage={t('notifications.inbox.empty')}
+        emptyMessage={t(vm.category === 'all' ? 'notifications.inbox.empty' : 'notifications.inbox.emptyCategory')}
         emptyIcon={BellOff}
         onScroll={onScroll}
       />

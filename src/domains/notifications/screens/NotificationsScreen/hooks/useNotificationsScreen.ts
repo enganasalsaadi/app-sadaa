@@ -1,10 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ParseKeys } from 'i18next';
 import type { LucideIcon } from 'lucide-react-native';
-import { AtSign, Bell, ShieldAlert, ShieldCheck, Wallet } from 'lucide-react-native';
 import { formatDate } from '@/core/i18n';
 import type { HueTone } from '@/core/theme';
 import { navigate } from '@/core/navigation';
@@ -22,7 +21,18 @@ import {
   resolveNotificationRoute,
   toTabParams,
 } from '../../../utils/notificationRoute';
+import {
+  inNotificationCategory,
+  isNotificationCategory,
+  type NotificationCategory,
+} from '../../../utils/notificationCategory';
+import { notificationLook } from '../../../utils/notificationLook';
 import { toRelativeTime } from '../../../utils/relativeTime';
+
+// The filter hides rows of pages already loaded: below a screenful, keep pulling pages until it fills,
+// the inbox ends, or this many were pulled for one choice (a rare category must not drain the history).
+const MIN_FILTERED_ROWS = 8;
+const MAX_FILL_PAGES = 5;
 
 type Navigation = NativeStackNavigationProp<SettingsStackParamList, 'NotificationsScreen'>;
 
@@ -35,33 +45,6 @@ export interface NotificationRowModel {
   icon: LucideIcon;
   tone: HueTone;
 }
-
-interface TypeLook {
-  icon: LucideIcon;
-  tone: HueTone;
-}
-
-// Status never rides on color alone: the title states the outcome, the icon names the subject.
-const TYPE_LOOK: Record<string, TypeLook> = {
-  kyc_approved: { icon: ShieldCheck, tone: 'success' },
-  kyc_rejected: { icon: ShieldCheck, tone: 'danger' },
-  brand_social_proof_approved: { icon: ShieldCheck, tone: 'success' },
-  brand_social_proof_rejected: { icon: ShieldCheck, tone: 'danger' },
-  brand_domain_verified: { icon: ShieldCheck, tone: 'success' },
-  platform_approved: { icon: AtSign, tone: 'success' },
-  platform_rejected: { icon: AtSign, tone: 'danger' },
-  wallet_top_up_completed: { icon: Wallet, tone: 'success' },
-  wallet_top_up_rejected: { icon: Wallet, tone: 'danger' },
-  wallet_withdrawal_completed: { icon: Wallet, tone: 'success' },
-  wallet_withdrawal_rejected: { icon: Wallet, tone: 'danger' },
-  wallet_withdrawal_returned: { icon: Wallet, tone: 'warning' },
-  wallet_wallet_frozen: { icon: Wallet, tone: 'warning' },
-  wallet_wallet_unfrozen: { icon: Wallet, tone: 'success' },
-  // Security alerts: "if this wasn't you, contact support".
-  wallet_payout_method_added: { icon: ShieldAlert, tone: 'warning' },
-  wallet_payout_method_changed: { icon: ShieldAlert, tone: 'warning' },
-};
-const DEFAULT_LOOK: TypeLook = { icon: Bell, tone: 'interactive' };
 
 const RELATIVE_KEY = {
   now: 'notifications.time.now',
@@ -79,17 +62,24 @@ export const useNotificationsScreen = () => {
   const [markRead] = useMarkNotificationReadMutation();
   const [markAllRead, { isLoading: isMarkingAll }] = useMarkAllNotificationsReadMutation();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [category, setCategory] = useState<NotificationCategory>('all');
+  const fillPages = useRef(0);
 
   const items = useMemo<AppNotification[]>(
     () => query.data?.pages.flatMap(page => page.items) ?? [],
     [query.data],
   );
 
+  const shown = useMemo(
+    () => items.filter(item => inNotificationCategory(item.type, category)),
+    [category, items],
+  );
+
   const rows = useMemo<NotificationRowModel[]>(() => {
     // One clock per fetch, not per row or render.
     const now = new Date(query.fulfilledTimeStamp ?? Date.now());
-    return items.map(item => {
-      const look = TYPE_LOOK[item.type] ?? DEFAULT_LOOK;
+    return shown.map(item => {
+      const look = notificationLook(item.type);
       const relative = toRelativeTime(item.created_at, now);
       let time = '';
       if (relative?.unit === 'date') time = formatDate(relative.date, { dateStyle: 'medium' });
@@ -106,9 +96,16 @@ export const useNotificationsScreen = () => {
         tone: look.tone,
       };
     });
-  }, [items, query.fulfilledTimeStamp, t]);
+  }, [query.fulfilledTimeStamp, shown, t]);
 
-  const hasUnread = rows.some(row => row.isUnread);
+  // Read-all acts on the whole inbox, not on the filter.
+  const onCategory = useCallback((value: string) => {
+    if (!isNotificationCategory(value)) return;
+    fillPages.current = 0;
+    setCategory(value);
+  }, []);
+
+  const hasUnread = items.some(item => !item.read_at);
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -123,6 +120,17 @@ export const useNotificationsScreen = () => {
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const fillWanted =
+    category !== 'all' && !query.isLoading && !query.isError && shown.length < MIN_FILTERED_ROWS && hasNextPage;
+  useEffect(() => {
+    if (!fillWanted || isFetchingNextPage || fillPages.current >= MAX_FILL_PAGES) return;
+    fillPages.current += 1;
+    fetchNextPage();
+  }, [fetchNextPage, fillWanted, isFetchingNextPage]);
+  // Still looking for the first match: a skeleton, never a false "nothing in this category".
+  const isFilling =
+    fillWanted && shown.length === 0 && (isFetchingNextPage || fillPages.current < MAX_FILL_PAGES);
 
   const onMarkAllRead = useCallback(() => {
     // Optimistic; a failure rolls the dots back and the global handlers report it.
@@ -170,9 +178,11 @@ export const useNotificationsScreen = () => {
 
   return {
     rows,
+    category,
+    onCategory,
     hasUnread,
-    isLoading: query.isLoading,
-    isError: query.isError && items.length === 0,
+    isLoading: query.isLoading || isFilling,
+    isError: query.isError && shown.length === 0,
     isRefreshing,
     isFetchingNextPage,
     hasNextPage,

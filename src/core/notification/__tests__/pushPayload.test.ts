@@ -2,7 +2,7 @@ import { parsePushPayload } from '../pushPayload';
 
 describe('parsePushPayload', () => {
   it('parses every contract deep link', () => {
-    expect(parsePushPayload({ type: 'kyc_approved', entity_id: '', deep_link: 'sada://kyc' })).toEqual({
+    expect(parsePushPayload({ type: 'kyc_approved', entity_id: '', deep_link: 'sada://kyc' })).toMatchObject({
       type: 'kyc_approved',
       target: { kind: 'kyc' },
     });
@@ -12,7 +12,7 @@ describe('parsePushPayload', () => {
         entity_id: '01J9ZQ4M8X',
         deep_link: 'sada://platforms/01J9ZQ4M8X',
       }),
-    ).toEqual({
+    ).toMatchObject({
       type: 'platform_rejected',
       target: { kind: 'platform', platformId: '01J9ZQ4M8X' },
     });
@@ -22,8 +22,8 @@ describe('parsePushPayload', () => {
         entity_id: '01JD7V2KQZ',
         deep_link: 'sada://verification',
       }),
-    ).toEqual({ type: 'brand_domain_verified', target: { kind: 'verification' } });
-    expect(parsePushPayload({ type: 'test', deep_link: 'sada://notifications' })).toEqual({
+    ).toMatchObject({ type: 'brand_domain_verified', target: { kind: 'verification' } });
+    expect(parsePushPayload({ type: 'test', deep_link: 'sada://notifications' })).toMatchObject({
       type: 'test',
       target: { kind: 'notifications' },
     });
@@ -33,21 +33,21 @@ describe('parsePushPayload', () => {
         entity_id: '01J9ZQ4M8X',
         deep_link: 'sada://wallet',
       }),
-    ).toEqual({ type: 'wallet_withdrawal_returned', target: { kind: 'wallet' } });
+    ).toMatchObject({ type: 'wallet_withdrawal_returned', target: { kind: 'wallet' } });
     expect(
       parsePushPayload({
         type: 'wallet_top_up_reversed',
         entity_id: '01JB4M8XQZ',
         deep_link: 'sada://wallet/top-ups/01JB4M8XQZ',
       }),
-    ).toEqual({ type: 'wallet_top_up_reversed', target: { kind: 'topUp', topUpId: '01JB4M8XQZ' } });
+    ).toMatchObject({ type: 'wallet_top_up_reversed', target: { kind: 'topUp', topUpId: '01JB4M8XQZ' } });
     expect(
       parsePushPayload({
         type: 'wallet_withdrawal_rejected',
         entity_id: '01JC2W7KQZ',
         deep_link: 'sada://wallet/withdrawals/01JC2W7KQZ',
       }),
-    ).toEqual({
+    ).toMatchObject({
       type: 'wallet_withdrawal_rejected',
       target: { kind: 'withdrawal', withdrawalId: '01JC2W7KQZ' },
     });
@@ -57,7 +57,7 @@ describe('parsePushPayload', () => {
         entity_id: '01JB4M8XQZ',
         deep_link: 'sada://wallet/payout-methods',
       }),
-    ).toEqual({ type: 'wallet_payout_method_added', target: { kind: 'payoutMethods' } });
+    ).toMatchObject({ type: 'wallet_payout_method_added', target: { kind: 'payoutMethods' } });
   });
 
   it('reads deal links (direct deals M11) whatever the deal kind', () => {
@@ -67,7 +67,7 @@ describe('parsePushPayload', () => {
         entity_id: '01JD5K2PQZ',
         deep_link: 'sada://deals/01JD5K2PQZ',
       }),
-    ).toEqual({ type: null, target: { kind: 'deal', dealId: '01JD5K2PQZ' } });
+    ).toMatchObject({ type: null, target: { kind: 'deal', dealId: '01JD5K2PQZ' } });
     expect(
       parsePushPayload({ type: 'deal_strikes_flag_cleared', deep_link: 'sada://strikes' }).target,
     ).toEqual({ kind: 'strikes' });
@@ -80,7 +80,38 @@ describe('parsePushPayload', () => {
         entity_id: '01JE7Q3RTV',
         deep_link: 'sada://campaigns/01JE7Q3RTV',
       }),
-    ).toEqual({ type: null, target: { kind: 'campaign', campaignId: '01JE7Q3RTV' } });
+    ).toMatchObject({ type: null, target: { kind: 'campaign', campaignId: '01JE7Q3RTV' } });
+  });
+
+  it('keeps the open-ended kind and a plain entity id for per-kind refetches', () => {
+    expect(
+      parsePushPayload({
+        type: 'campaign_selected',
+        entity_id: '01JE7Q3RTV',
+        deep_link: 'sada://deals/01JD5K2PQZ',
+      }),
+    ).toEqual({
+      type: null,
+      kind: 'campaign_selected',
+      entityId: '01JE7Q3RTV',
+      target: { kind: 'deal', dealId: '01JD5K2PQZ' },
+    });
+  });
+
+  it.each([
+    ['an empty id', ''],
+    ['an id with a path', '01J/../x'],
+    ['a non-string id', 42],
+  ])('drops %s as the entity id', (_label, entity_id) => {
+    expect(parsePushPayload({ type: 'campaign_selected', entity_id }).entityId).toBeNull();
+  });
+
+  it.each([
+    ['upper case', 'Campaign_Selected'],
+    ['a path', 'campaign/selected'],
+    ['a non-string', 7],
+  ])('drops a kind with %s', (_label, type) => {
+    expect(parsePushPayload({ type }).kind).toBeNull();
   });
 
   it.each([
@@ -95,7 +126,7 @@ describe('parsePushPayload', () => {
   });
 
   it('keeps an unknown type as null but still reads the link', () => {
-    expect(parsePushPayload({ type: 'deal_paid', deep_link: 'sada://kyc' })).toEqual({
+    expect(parsePushPayload({ type: 'deal_paid', deep_link: 'sada://kyc' })).toMatchObject({
       type: null,
       target: { kind: 'kyc' },
     });
@@ -135,10 +166,10 @@ describe('parsePushPayload', () => {
   });
 
   it('ignores the legacy `screen` field', () => {
-    expect(parsePushPayload({ screen: 'ProfileScreen' })).toEqual({ type: null, target: null });
+    expect(parsePushPayload({ screen: 'ProfileScreen' })).toEqual({ type: null, kind: null, entityId: null, target: null });
   });
 
   it('handles a message without data', () => {
-    expect(parsePushPayload(undefined)).toEqual({ type: null, target: null });
+    expect(parsePushPayload(undefined)).toEqual({ type: null, kind: null, entityId: null, target: null });
   });
 });

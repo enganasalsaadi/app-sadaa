@@ -1,6 +1,6 @@
 /**
  * FCM `data.type` values (contract §11.2, wallet handoff §9, top-ups v2 §4, company verification).
- * Deal pushes (`deal_<kind>`, direct deals M11) are routed by their link alone.
+ * Deal (`deal_<kind>`, direct deals M11) and campaign (`campaign_*`, CM11) pushes are routed by their link alone.
  */
 export const PUSH_TYPES = [
   'kyc_approved',
@@ -48,6 +48,13 @@ export type PushTarget =
 export interface ParsedPush {
   /** `null` for a type this build doesn't know yet. */
   type: PushType | null;
+  /**
+   * The well-formed `data.type` whether or not this build knows it (`campaign_*` / `deal_*` are open-ended),
+   * so a listener can refetch per kind. Never a route: screens come from `target` alone.
+   */
+  kind: string | null;
+  /** `data.entity_id` when it is a plain id: the campaign of `campaign_selected`, whose link is the deal. */
+  entityId: string | null;
   /** `null` when the link is missing, foreign or malformed: just open the app. */
   target: PushTarget | null;
 }
@@ -55,6 +62,7 @@ export interface ParsedPush {
 const DEEP_LINK_SCHEME = 'sada://';
 // ULIDs and numeric ids only: nothing that could smuggle a path or a query.
 const ENTITY_ID = /^[A-Za-z0-9]{1,64}$/;
+const PUSH_KIND = /^[a-z0-9_]{1,64}$/;
 
 const isPushType = (value: unknown): value is PushType =>
   typeof value === 'string' && (PUSH_TYPES as readonly string[]).includes(value);
@@ -99,9 +107,13 @@ const parseDeepLink = (link: unknown): PushTarget | null => {
 export const parsePushPayload = (
   data: Readonly<Record<string, unknown>> | undefined,
 ): ParsedPush => {
-  const type = data?.type;
+  const rawType = data?.type;
+  const kind = typeof rawType === 'string' && PUSH_KIND.test(rawType) ? rawType : null;
+  const entityId = data?.entity_id;
   return {
-    type: isPushType(type) ? type : null,
+    type: isPushType(kind) ? kind : null,
+    kind,
+    entityId: typeof entityId === 'string' && ENTITY_ID.test(entityId) ? entityId : null,
     target: parseDeepLink(data?.deep_link),
   };
 };

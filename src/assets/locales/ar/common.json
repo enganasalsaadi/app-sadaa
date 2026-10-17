@@ -1235,6 +1235,13 @@
       "title": "الإشعارات",
       "markAllRead": "تعليم الكل كمقروء",
       "empty": "لا توجد إشعارات بعد",
+      "emptyCategory": "لا إشعارات في هذه الفئة",
+      "categories": {
+        "title": "الفئة",
+        "all": "الكل",
+        "campaigns": "الحملات",
+        "deals": "الصفقات"
+      },
       "unread": "غير مقروء",
       "labelSeparator": "، ",
       "openUnread_zero": "الإشعارات",

@@ -1199,6 +1199,13 @@
       "title": "Notifications",
       "markAllRead": "Mark all as read",
       "empty": "No notifications yet",
+      "emptyCategory": "No notifications in this category",
+      "categories": {
+        "title": "Category",
+        "all": "All",
+        "campaigns": "Campaigns",
+        "deals": "Deals"
+      },
       "unread": "Unread",
       "labelSeparator": ", ",
       "openUnread_one": "Notifications, {{count}} unread",

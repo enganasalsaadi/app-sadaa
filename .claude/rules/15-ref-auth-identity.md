@@ -46,5 +46,6 @@ paths:
 ## Notifications domain
 
 - Inbox `NotificationsScreen` (RTK `infiniteQuery` on `/user/notifications`, optimistic read/read-all, bell badge = `/me` `unread_notifications_count`), hosted in Settings stack.
+- Push types (PC10, 2026-10-17): `ParsedPush` = `{type (known PushType|null), kind (any well-formed data.type), entityId, target}`; routes come from `deep_link` alone, `kind`/`entityId` only refine refetches (`campaignPushTags(push)`: `campaign_selected` / `campaign_drop_reminder_*` link the deal but name the campaign in `entity_id`). Inbox row look `utils/notificationLook` (own type → family `deal_`/`campaign_` → bell), local filter `utils/notificationCategory` (`all|campaigns|deals` by `type` prefix; the screen keeps pulling pages while a filter shows < 8 rows; read-all stays inbox-wide).
 - No notification-preferences screen yet: build once backend has Sada notification categories.
 - `LanguageScreen` still calls template `PUT /account/preferences` (not in contract).
