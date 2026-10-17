@@ -499,6 +499,18 @@ export interface ApplicantsPage extends CampaignPage<ApplicantCard> {
   recruiting: CampaignRecruiting | null;
 }
 
+/** The two decisions that keep an application pending (selecting is its own flow); no reason is sent. */
+export type ApplicantDecision = 'shortlist' | 'reject';
+
+export interface ApplicantArgs {
+  id: string;
+  applicationId: string;
+}
+
+export interface ApplicantDecisionArgs extends ApplicantArgs {
+  decision: ApplicantDecision;
+}
+
 /** Applicants list sorts (contract §3.5); `newest` is the server default. */
 export const APPLICANT_SORT = [
   'newest',

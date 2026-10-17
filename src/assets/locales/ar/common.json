@@ -1572,6 +1572,58 @@
             "title": "لا متقدمين مطابقين",
             "hint": "جرّب تخفيف الفلاتر."
           }
+        },
+        "detail": {
+          "title": "المتقدّم",
+          "loadFailed": "تعذّر تحميل المتقدّم",
+          "stats": {
+            "rating": "التقييم",
+            "noRating": "بلا تقييم",
+            "reviews_zero": "لا تقييمات",
+            "reviews_one": "تقييم واحد",
+            "reviews_two": "تقييمان",
+            "reviews_few": "{{count}} تقييمات",
+            "reviews_many": "{{count}} تقييماً",
+            "reviews_other": "{{count}} تقييم",
+            "deals": "صفقات منجزة",
+            "followers": "متابع"
+          },
+          "pitch": "رسالة التقديم",
+          "pitchEmpty": "لم يترك رسالة",
+          "appliedOn": "قدّم في {{date}}",
+          "price": {
+            "bid": "عرضه",
+            "fixed": "السعر المثبّت"
+          },
+          "accounts": {
+            "title": "الحسابات",
+            "verified": "موثّق",
+            "unavailable": "غير متاح",
+            "noFollowers": "عدد المتابعين غير معروف"
+          },
+          "mediaKit": "افتح الميديا كيت",
+          "expiredNotice": {
+            "title": "انتهت مهلة هذا الطلب",
+            "hint": "مرّت 72 ساعة دون قرار، فلا يمكن اختياره ولا ردّه."
+          },
+          "decided": {
+            "rejected": "رفضتَ هذا الطلب",
+            "notSelected": "لم يُختَر لأن المقاعد امتلأت",
+            "cancelled": "أُلغي هذا الطلب",
+            "selected": "اخترتَه لهذه الحملة"
+          },
+          "openDeal": "افتح الصفقة",
+          "actions": {
+            "shortlist": "اختصار",
+            "reject": "رفض",
+            "shortlisted": "أُضيف إلى القائمة المختصرة"
+          },
+          "rejectSheet": {
+            "title": "رفض {{name}}؟",
+            "body": "سيرى «لم يُختَر» فقط، دون سبب. لا يمكن التراجع.",
+            "confirm": "ارفضه",
+            "keep": "أبقِه"
+          }
         }
       },
       "detail": {

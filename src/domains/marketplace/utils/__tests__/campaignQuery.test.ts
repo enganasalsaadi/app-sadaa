@@ -1,4 +1,5 @@
 import {
+  buildBrandApplicantUrl,
   buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignsUrl,
@@ -38,6 +39,16 @@ describe('campaignQuery', () => {
         1,
       ),
     ).toBe('/brand/campaigns/c1/applications?status%5B%5D=selected&sort=newest&page=1');
+  });
+
+  it('builds one applicant and its decisions', () => {
+    expect(buildBrandApplicantUrl({ id: 'c1', applicationId: 'a1' })).toBe('/brand/campaigns/c1/applications/a1');
+    expect(buildBrandApplicantUrl({ id: 'c1', applicationId: 'a1' }, 'shortlist')).toBe(
+      '/brand/campaigns/c1/applications/a1/shortlist',
+    );
+    expect(buildBrandApplicantUrl({ id: 'c1', applicationId: 'a1' }, 'reject')).toBe(
+      '/brand/campaigns/c1/applications/a1/reject',
+    );
   });
 
   it('encodes each segment of an action path', () => {

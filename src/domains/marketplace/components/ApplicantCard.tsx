@@ -29,6 +29,8 @@ const MAX_NICHES = 2;
 
 export interface ApplicantCardProps {
   applicant: Applicant;
+  /** Opens the applicant's page. */
+  onPress: (applicantId: string) => void;
 }
 
 const Photo = memo<{ applicant: Applicant }>(({ applicant }) => {
@@ -123,10 +125,9 @@ const StateTag = memo<{ applicant: Applicant }>(({ applicant }) => {
 
 /**
  * One applicant on the table: the creator's photo leads (with the time left to decide), then the
- * name, reach, rating and pitch; the price the brand would pay sits below. Read-only until the
- * decisions arrive.
+ * name, reach, rating and pitch; the price the brand would pay sits below. A tap opens the applicant.
  */
-const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({ applicant }) => {
+const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({ applicant, onPress }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { creator, price, pitch } = applicant;
@@ -136,10 +137,12 @@ const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({ applicant }) => 
     .join(' · ');
   const money = resolveHue(colors, 'money');
   const styles = useStyles((): Record<'card', ViewStyle> => ({ card: { overflow: 'hidden', padding: 0 } }));
+  const open = useCallback(() => onPress(applicant.id), [onPress, applicant.id]);
 
   return (
     <Card
       style={styles.card}
+      onPress={open}
       accessibilityLabel={t('marketplace.campaign.applicants.card.a11y', {
         name: creator.displayName,
         status: applicant.status.label,

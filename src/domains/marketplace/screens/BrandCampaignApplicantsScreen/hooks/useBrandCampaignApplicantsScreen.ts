@@ -172,6 +172,10 @@ export const useBrandCampaignApplicantsScreen = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const openApplicant = useCallback(
+    (applicationId: string) => navigation.navigate('CampaignApplicant', { id, applicationId }),
+    [navigation, id],
+  );
   const openWallet = useCallback(() => navigation.navigate('WalletTab'), [navigation]);
   const refetchOptions = exploreFilters.refetch;
   const retryOptions = useCallback(() => {
@@ -217,6 +221,7 @@ export const useBrandCampaignApplicantsScreen = () => {
     onRetry,
     onEndReached,
     goBack,
+    openApplicant,
     openWallet,
     emptyTitle: filtered ? t('marketplace.campaign.applicants.empty.filtered.title') : t(def.emptyTitle),
     emptyHint: filtered ? t('marketplace.campaign.applicants.empty.filtered.hint') : t(def.emptyHint),

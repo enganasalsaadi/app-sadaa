@@ -1,4 +1,6 @@
 import type {
+  ApplicantArgs,
+  ApplicantDecision,
   ApplicantsArgs,
   CampaignActionPath,
   CampaignListArgs,
@@ -53,6 +55,10 @@ export const buildBrandApplicantsUrl = (
     ],
     page,
   );
+
+/** `/brand/campaigns/{id}/applications/{app}[/shortlist|reject]`: one card, or a decision on it. */
+export const buildBrandApplicantUrl = ({ id, applicationId }: ApplicantArgs, decision?: ApplicantDecision) =>
+  subPathOf(BRAND_CAMPAIGNS, id, ['applications', applicationId, decision].filter(Boolean).join('/'));
 
 export const buildCreatorFeedUrl = ({ activityTypes, pricingModel }: CreatorFeedArgs, page: number) =>
   withPage(

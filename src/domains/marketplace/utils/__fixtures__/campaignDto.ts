@@ -1,4 +1,5 @@
 import type {
+  ApplicantCardDto,
   CampaignDetailDto,
   CampaignFileDto,
   CampaignHistoryRowDto,
@@ -161,5 +162,40 @@ export const historyRowDto = (overrides: Partial<CampaignHistoryRowDto> = {}): C
   metadata: null,
   due_at: null,
   occurred_at: T0,
+  ...overrides,
+});
+
+export const applicantDto = (overrides: Partial<ApplicantCardDto> = {}): ApplicantCardDto => ({
+  id: 'a1',
+  status: label('submitted'),
+  invited: false,
+  pitch: 'I can do it in a week.',
+  price: { is_bid: true, gross_usd: '90.00', net_to_creator_usd: '81.00' },
+  accounts: [
+    {
+      platform: label('instagram'),
+      username: 'sara',
+      follower_count: 12000,
+      follower_tier: null,
+      verification_status: 'approved',
+      available: true,
+    },
+  ],
+  creator: {
+    slug: 'sara',
+    display_name: 'Sara',
+    avatar_url: null,
+    governorate: null,
+    niches: [],
+    tier: null,
+    tier_label: null,
+  },
+  track_record: { completed_deals: 4, rating: { average: 4.6, count: 3 } },
+  terms_hash: 'h1',
+  applied_at: T0,
+  expires_at: T0,
+  decided_at: null,
+  deal: null,
+  actions: { can_shortlist: true, can_reject: true, can_select: true },
   ...overrides,
 });

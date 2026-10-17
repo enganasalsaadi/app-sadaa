@@ -2,6 +2,9 @@ import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
 import { mapUploadSlot } from '@/core/upload';
 import type { UploadSlot, UploadSlotDto, UploadSlotRequest } from '@/core/upload';
 import type {
+  ApplicantArgs,
+  ApplicantCard,
+  ApplicantDecisionArgs,
   ApplicantsArgs,
   ApplicantsPage,
   CampaignActionArgs,
@@ -16,6 +19,7 @@ import type {
   Campaign,
 } from '../types/campaign';
 import type {
+  ApplicantCardDto,
   ApplicantsPageDto,
   CampaignActionDataDto,
   CampaignActionMetaDto,
@@ -29,6 +33,7 @@ import type {
 import type { CampaignDraftRequest } from '../types/campaignDraft';
 import { isCampaignConflictError } from '../utils/campaignAction';
 import {
+  mapApplicantCard,
   mapApplicantsPage,
   mapCampaignActionResult,
   mapCampaignDetail,
@@ -39,6 +44,7 @@ import {
 } from '../utils/campaignMappers';
 import {
   BRAND_CAMPAIGNS_URL,
+  buildBrandApplicantUrl,
   buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignUrl,
@@ -94,6 +100,40 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       query: ({ queryArg, pageParam }) => buildBrandApplicantsUrl(queryArg, pageParam),
       transformResponse: (dto: ApplicantsPageDto) => mapApplicantsPage(dto),
       providesTags: (_result, _error, arg) => [{ type: 'CampaignApplicants', id: arg.id }],
+    }),
+    /** One applicant's card (the detail page): opened from a row, or by id once links reach it. */
+    getCampaignApplicant: builder.query<ApplicantCard, ApplicantArgs>({
+      query: args => buildBrandApplicantUrl(args),
+      transformResponse: (dto: ApplicantCardDto) => mapApplicantCard(dto),
+      providesTags: (_result, _error, { applicationId }) => [{ type: 'CampaignApplicant', id: applicationId }],
+    }),
+    /**
+     * Shortlist or reject (contract §3.5): the answer is the card, which replaces the cached one.
+     * Every list refetches (counts and tabs moved) along with the campaign (a decision on a
+     * suspended one reopens it). A 409 means the card moved under the brand (72h passed, seat
+     * gone): it refetches too, and the screen shows the server's message.
+     */
+    decideCampaignApplicant: builder.mutation<ApplicantCard, ApplicantDecisionArgs>({
+      query: ({ decision, ...args }) => ({ url: buildBrandApplicantUrl(args, decision), method: 'POST', body: {} }),
+      transformResponse: (dto: ApplicantCardDto) => mapApplicantCard(dto),
+      async onQueryStarted({ id, applicationId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(brandCampaignsApi.util.upsertQueryData('getCampaignApplicant', { id, applicationId }, data));
+        } catch {
+          // The screen reports the failure; a conflict refetches through the tags below.
+        }
+      },
+      invalidatesTags: (_result, error, { id, applicationId }) => {
+        if (!error) return [{ type: 'CampaignApplicants', id }, { type: 'Campaign', id }, ...campaignChangedTags(id)];
+        return isCampaignConflictError(normalizeApiError(error))
+          ? [
+              { type: 'CampaignApplicant', id: applicationId },
+              { type: 'CampaignApplicants', id },
+              { type: 'Campaign', id },
+            ]
+          : [];
+      },
     }),
     /** Status changes + note rows (`from.key == to.key`), a plain array. */
     getCampaignHistory: builder.query<CampaignHistoryRow[], string>({
@@ -246,6 +286,8 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
 export const {
   useGetCampaignsInfiniteQuery,
   useGetCampaignApplicantsInfiniteQuery,
+  useGetCampaignApplicantQuery,
+  useDecideCampaignApplicantMutation,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
   useGetCampaignQuoteQuery,

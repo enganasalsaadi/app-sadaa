@@ -7,6 +7,7 @@ import {
   defaultApplicantTab,
   isDefaultApplicantFilters,
   isFollowerFloor,
+  isVerifiedAccount,
   toApplicantsArgs,
   totalFollowers,
 } from '../applicants';
@@ -69,6 +70,13 @@ describe('applicants', () => {
     expect(totalFollowers([account('instagram', 12000), account('tiktok', null), account('youtube', 3000)])).toBe(15000);
     expect(totalFollowers([account('instagram', null)])).toBeNull();
     expect(totalFollowers([])).toBeNull();
+  });
+
+  it('badges only the accounts the platform vouched for', () => {
+    expect(isVerifiedAccount({ verificationStatus: 'auto_verified' })).toBe(true);
+    expect(isVerifiedAccount({ verificationStatus: 'approved' })).toBe(true);
+    expect(isVerifiedAccount({ verificationStatus: 'pending_review' })).toBe(false);
+    expect(isVerifiedAccount({ verificationStatus: 'rejected' })).toBe(false);
   });
 
   it('maps a known tier case-insensitively and ignores an unknown one', () => {

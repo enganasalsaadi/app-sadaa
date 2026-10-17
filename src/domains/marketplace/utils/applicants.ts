@@ -95,3 +95,7 @@ export const isPendingApplicant = (card: Pick<ApplicantCard, 'status'>): boolean
 /** The server tier key to the crest the badge draws; an unknown one (newer server) shows no crest. */
 export const applicantTier = (tier: string | null): FollowerTierId | null =>
   FOLLOWER_TIERS.find(id => id === tier?.toUpperCase()) ?? null;
+
+/** A linked account the platform vouched for (automatically or after review); anything else gets no badge. */
+export const isVerifiedAccount = (account: Pick<ApplicantAccount, 'verificationStatus'>): boolean =>
+  account.verificationStatus === 'auto_verified' || account.verificationStatus === 'approved';

@@ -167,6 +167,8 @@ export type DealsStackParamList = {
   CampaignDetail: { id: string };
   /** Brand only: the applicants table of one of their campaigns (Public Campaigns PC3). */
   CampaignApplicants: { id: string };
+  /** Brand only: one applicant of that campaign (`applicationId`), with the shortlist / reject decisions. */
+  CampaignApplicant: { id: string; applicationId: string };
 };
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */

@@ -3,7 +3,7 @@ import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
 import { initSecureStorage } from '@/core/storage';
 import { toastService } from '@/core/toast';
 import { campaignFlagReducer } from '../../store/campaignFlagSlice';
-import { detailDto, fileDto, historyRowDto } from '../../utils/__fixtures__/campaignDto';
+import { applicantDto, detailDto, fileDto, historyRowDto, label } from '../../utils/__fixtures__/campaignDto';
 import { brandCampaignsApi, campaignChangedTags } from '../brandCampaignsApi';
 
 const makeStore = () =>
@@ -390,6 +390,72 @@ describe('brandCampaignsApi', () => {
     await store.dispatch(brandCampaignsApi.endpoints.getCampaign.initiate('c1'));
 
     expect(store.getState().campaignFlag.serverDisabled).toBe(true);
+  });
+});
+
+describe('applicant decisions', () => {
+  beforeAll(() => initSecureStorage());
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate'] });
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  const args = { id: 'c1', applicationId: 'a1' };
+  const cardReads = (spy: jest.SpyInstance) =>
+    spy.mock.calls.filter(([input]) => {
+      const request = input as Request;
+      return request.method === 'GET' && new URL(request.url).pathname.endsWith('/brand/campaigns/c1/applications/a1');
+    }).length;
+
+  it('posts the decision and replaces the cached card with the answer, without reading it again', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      const { pathname } = new URL(request.url);
+      if (request.method === 'POST') return ok(applicantDto({ status: label('shortlisted'), actions: { can_shortlist: false, can_reject: true, can_select: true } }));
+      return pathname.endsWith('/applications/a1') ? ok(applicantDto()) : ok(detailDto());
+    });
+    const store = makeStore();
+    const card = store.dispatch(brandCampaignsApi.endpoints.getCampaignApplicant.initiate(args));
+    await card;
+
+    await store.dispatch(brandCampaignsApi.endpoints.decideCampaignApplicant.initiate({ ...args, decision: 'shortlist' })).unwrap();
+    await settle();
+
+    const post = spy.mock.calls.map(([input]) => input as Request).find(request => request.method === 'POST');
+    expect(new URL(post?.url ?? '').pathname).toMatch(/\/brand\/campaigns\/c1\/applications\/a1\/shortlist$/);
+    const cached = brandCampaignsApi.endpoints.getCampaignApplicant.select(args)(store.getState()).data;
+    expect(cached?.status.key).toBe('shortlisted');
+    expect(cached?.actions.canShortlist).toBe(false);
+    expect(cardReads(spy)).toBe(1);
+    card.unsubscribe();
+  });
+
+  it('refetches the card when the 72 hours ran out under the brand', async () => {
+    let status = 'submitted';
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return fail(409, 'campaign_application_expired', 'Window closed');
+      return ok(applicantDto({ status: label(status) }));
+    });
+    const store = makeStore();
+    const card = store.dispatch(brandCampaignsApi.endpoints.getCampaignApplicant.initiate(args));
+    await card;
+    status = 'expired';
+
+    await expect(
+      store.dispatch(brandCampaignsApi.endpoints.decideCampaignApplicant.initiate({ ...args, decision: 'reject' })).unwrap(),
+    ).rejects.toMatchObject({ status: 409 });
+    await settle();
+
+    expect(cardReads(spy)).toBe(2);
+    expect(brandCampaignsApi.endpoints.getCampaignApplicant.select(args)(store.getState()).data?.status.key).toBe('expired');
+    card.unsubscribe();
   });
 });
 

@@ -28,6 +28,7 @@ const BrandCampaignApplicantsScreenComponent: React.FC = () => {
   const vm = useBrandCampaignApplicantsScreen();
   const { sheet } = vm;
   const openSheet = sheet.open;
+  const openApplicant = vm.openApplicant;
   const styles = useStyles(({ spacing }) => ({
     list: { paddingHorizontal: spacing.xl, paddingTop: spacing.sm, paddingBottom: spacing['7xl'] * 1.5 },
     item: { paddingBottom: spacing.lg },
@@ -38,10 +39,10 @@ const BrandCampaignApplicantsScreenComponent: React.FC = () => {
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Applicant>) => (
       <Box style={styles.item}>
-        <ApplicantCard applicant={item} />
+        <ApplicantCard applicant={item} onPress={openApplicant} />
       </Box>
     ),
-    [styles.item],
+    [styles.item, openApplicant],
   );
 
   const emptyAction = useMemo<EmptyStateAction | undefined>(

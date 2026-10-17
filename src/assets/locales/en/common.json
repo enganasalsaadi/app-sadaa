@@ -1496,6 +1496,54 @@
             "title": "No applicants match",
             "hint": "Try loosening the filters."
           }
+        },
+        "detail": {
+          "title": "Applicant",
+          "loadFailed": "Couldn't load this applicant",
+          "stats": {
+            "rating": "Rating",
+            "noRating": "No rating",
+            "reviews_one": "1 review",
+            "reviews_other": "{{count}} reviews",
+            "deals": "Deals done",
+            "followers": "Followers"
+          },
+          "pitch": "Application note",
+          "pitchEmpty": "No note left",
+          "appliedOn": "Applied {{date}}",
+          "price": {
+            "bid": "Their bid",
+            "fixed": "Your fixed price"
+          },
+          "accounts": {
+            "title": "Accounts",
+            "verified": "Verified",
+            "unavailable": "Unavailable",
+            "noFollowers": "Follower count unknown"
+          },
+          "mediaKit": "Open media kit",
+          "expiredNotice": {
+            "title": "This application has expired",
+            "hint": "72 hours passed without a decision, so it can no longer be selected or declined."
+          },
+          "decided": {
+            "rejected": "You declined this application",
+            "notSelected": "Not selected: the seats filled up",
+            "cancelled": "This application was cancelled",
+            "selected": "You selected them for this campaign"
+          },
+          "openDeal": "Open the deal",
+          "actions": {
+            "shortlist": "Shortlist",
+            "reject": "Decline",
+            "shortlisted": "Added to the shortlist"
+          },
+          "rejectSheet": {
+            "title": "Decline {{name}}?",
+            "body": "They only see \"Not selected\", with no reason. This can't be undone.",
+            "confirm": "Decline",
+            "keep": "Keep"
+          }
         }
       },
       "detail": {

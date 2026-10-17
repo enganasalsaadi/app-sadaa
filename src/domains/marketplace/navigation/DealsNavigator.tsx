@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { DealsStackParamList } from '@/core/navigation';
+import { BrandCampaignApplicantScreen } from '../screens/BrandCampaignApplicantScreen';
 import { BrandCampaignApplicantsScreen } from '../screens/BrandCampaignApplicantsScreen';
 import { BrandCampaignDetailScreen } from '../screens/BrandCampaignDetailScreen';
 import { BrandDealDetailScreen } from '../screens/BrandDealDetailScreen';
@@ -37,6 +38,7 @@ export const BrandDealsNavigator: React.FC = () => (
     <Stack.Screen name="DealDispute" component={BrandDispute} />
     <Stack.Screen name="CampaignDetail" component={BrandCampaignDetailScreen} />
     <Stack.Screen name="CampaignApplicants" component={BrandCampaignApplicantsScreen} />
+    <Stack.Screen name="CampaignApplicant" component={BrandCampaignApplicantScreen} />
   </Stack.Navigator>
 );
 
