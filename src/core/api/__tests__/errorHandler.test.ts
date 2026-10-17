@@ -21,6 +21,19 @@ describe('normalizeApiError', () => {
     expect(error.message).toBe('Please wait 42 seconds');
   });
 
+  it('reads the 429 cap reset from meta.next_available_at', () => {
+    const error = normalizeApiError({
+      status: 429,
+      data: envelope({
+        error_code: 'campaign_announcement_limit',
+        meta: { locale: 'ar', next_available_at: '2026-10-18T03:20:00+03:00' },
+      }),
+    });
+
+    expect(error.code).toBe('campaign_announcement_limit');
+    expect(error.availableAt).toBe('2026-10-18T03:20:00+03:00');
+  });
+
   it('drops unknown codes and missing retry_after', () => {
     const error = normalizeApiError({
       status: 409,

@@ -1,6 +1,7 @@
 import {
   buildBrandApplicantUrl,
   buildBrandApplicantsCompareUrl,
+  buildBrandAnnouncementsUrl,
   buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignsUrl,
@@ -83,5 +84,10 @@ describe('campaignQuery', () => {
     expect(buildCreatorApplicationsUrl({ statuses: ['selected'] }, 1)).toBe(
       '/influencer/campaign-applications?status%5B%5D=selected&page=1',
     );
+  });
+
+  it('builds the broadcast history and its post path', () => {
+    expect(buildBrandAnnouncementsUrl('a b', 2)).toBe('/brand/campaigns/a%20b/announcements?page=2');
+    expect(buildBrandCampaignUrl('c1', 'announcements')).toBe('/brand/campaigns/c1/announcements');
   });
 });

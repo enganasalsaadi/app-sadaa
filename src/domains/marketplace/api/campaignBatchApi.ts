@@ -1,10 +1,15 @@
 import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
+import type { CampaignPage } from '../types/campaign';
+import type { CampaignPageDto } from '../types/campaignDto';
+import type { CampaignAnnouncement, CampaignAnnouncementInput } from '../types/campaignAnnouncement';
+import type { CampaignAnnouncementDto } from '../types/campaignAnnouncementDto';
 import type { CampaignDropBoard } from '../types/campaignDrop';
 import type { CampaignDropDto } from '../types/campaignDropDto';
 import type { CampaignShipmentInput, CampaignShipmentReport, CampaignShippingBoard } from '../types/campaignShipping';
 import type { CampaignShipmentReportDto, CampaignShippingDto } from '../types/campaignShippingDto';
+import { mapCampaignAnnouncement, mapCampaignAnnouncementsPage } from '../utils/campaignAnnouncementMappers';
 import { mapCampaignDrop } from '../utils/campaignDropMappers';
-import { buildBrandCampaignUrl } from '../utils/campaignQuery';
+import { buildBrandAnnouncementsUrl, buildBrandCampaignUrl } from '../utils/campaignQuery';
 import { mapCampaignShipmentReport, mapCampaignShipping } from '../utils/campaignShippingMappers';
 
 export interface ShipCampaignBatchArgs {
@@ -15,7 +20,13 @@ export interface ShipCampaignBatchArgs {
   idempotencyKey: string;
 }
 
-/** Brand batch tools of one campaign (contract §3.7–§3.8): the launch room and the shipping manifest. */
+export interface SendCampaignAnnouncementArgs extends CampaignAnnouncementInput {
+  id: string;
+  /** One per user intent (rule 06): a retry of the same message replays instead of broadcasting twice. */
+  idempotencyKey: string;
+}
+
+/** Brand batch tools of one campaign (contract §3.7–§3.9): the launch room, the shipping manifest and the broadcasts. */
 export const campaignBatchApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
@@ -75,8 +86,38 @@ export const campaignBatchApi = baseApi.injectEndpoints({
         ];
       },
     }),
+    /** The broadcast history, newest first; the first page is what the daily quota is counted from. */
+    getCampaignAnnouncements: builder.infiniteQuery<CampaignPage<CampaignAnnouncement>, string, number>({
+      infiniteQueryOptions: {
+        initialPageParam: 1,
+        getNextPageParam: ({ meta }) => (meta.currentPage < meta.lastPage ? meta.currentPage + 1 : undefined),
+      },
+      query: ({ queryArg, pageParam }) => buildBrandAnnouncementsUrl(queryArg, pageParam),
+      transformResponse: (dto: CampaignPageDto<CampaignAnnouncementDto>) => mapCampaignAnnouncementsPage(dto),
+      providesTags: (_result, _error, id) => [{ type: 'CampaignAnnouncements', id }],
+    }),
+    /**
+     * Broadcasts to every creator on a funded linked deal (201). `429 campaign_announcement_limit`
+     * (with `meta.next_available_at`) and `422 campaign_no_announcement_recipients` pass through for
+     * the screen. A sent one stales the history, which is where the quota comes from.
+     */
+    sendCampaignAnnouncement: builder.mutation<CampaignAnnouncement, SendCampaignAnnouncementArgs>({
+      query: ({ id, body, link, idempotencyKey }) => ({
+        url: buildBrandCampaignUrl(id, 'announcements'),
+        method: 'POST',
+        headers: { [IDEMPOTENCY_HEADER]: idempotencyKey },
+        body: { body, ...(link ? { link } : {}) },
+      }),
+      transformResponse: (dto: CampaignAnnouncementDto) => mapCampaignAnnouncement(dto),
+      invalidatesTags: (result, _error, { id }) => (result ? [{ type: 'CampaignAnnouncements', id }] : []),
+    }),
   }),
 });
 
-export const { useGetCampaignDropQuery, useGetCampaignShippingQuery, useShipCampaignBatchMutation } =
-  campaignBatchApi;
+export const {
+  useGetCampaignDropQuery,
+  useGetCampaignShippingQuery,
+  useShipCampaignBatchMutation,
+  useGetCampaignAnnouncementsInfiniteQuery,
+  useSendCampaignAnnouncementMutation,
+} = campaignBatchApi;

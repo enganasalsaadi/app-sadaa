@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Rocket, Truck } from 'lucide-react-native';
+import { Megaphone, Rocket, Truck } from 'lucide-react-native';
 import { ListGroup, ListRow } from '@/shared/ui';
 import type { Campaign } from '../types/campaign';
 import type { CampaignBatchTools } from '../utils/campaignBatchTools';
@@ -15,14 +15,16 @@ export interface CampaignBatchToolsCardProps {
   tools: CampaignBatchTools;
   onOpenDrop: () => void;
   onOpenShipping: () => void;
+  onOpenAnnouncements: () => void;
 }
 
-/** The brand's batch tools of a campaign: one quiet row per tool that applies (launch room, shipping; announcements next). */
+/** The brand's batch tools of a campaign: one quiet row per tool that applies (launch room, shipping, broadcasts). */
 const CampaignBatchToolsCardComponent: React.FC<CampaignBatchToolsCardProps> = ({
   campaign,
   tools,
   onOpenDrop,
   onOpenShipping,
+  onOpenAnnouncements,
 }) => {
   const { t } = useTranslation();
   const now = useClock(MINUTE);
@@ -48,6 +50,14 @@ const CampaignBatchToolsCardComponent: React.FC<CampaignBatchToolsCardProps> = (
           title={t('marketplace.campaign.detail.tools.shipping.title')}
           subtitle={t('marketplace.campaign.detail.tools.shipping.subtitle')}
           onPress={onOpenShipping}
+        />
+      ) : null}
+      {tools.announcements ? (
+        <ListRow
+          icon={Megaphone}
+          title={t('marketplace.campaign.detail.tools.announcements.title')}
+          subtitle={t('marketplace.campaign.detail.tools.announcements.subtitle')}
+          onPress={onOpenAnnouncements}
         />
       ) : null}
     </ListGroup>

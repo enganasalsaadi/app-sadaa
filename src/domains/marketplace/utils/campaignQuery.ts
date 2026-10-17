@@ -29,12 +29,16 @@ const subPathOf = (base: string, id: string, subPath?: string) => {
 export const BRAND_CAMPAIGNS_URL = BRAND_CAMPAIGNS;
 
 /** `/brand/campaigns/{id}[/sub/path]`, every segment encoded. */
-export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history' | 'quote' | 'drop' | 'shipping' | 'shipments') =>
+export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history' | 'quote' | 'drop' | 'shipping' | 'shipments' | 'announcements') =>
   subPathOf(BRAND_CAMPAIGNS, id, path);
 
 /** `/brand/campaigns/{id}/files[/{file}[/complete]]`: the upload slot, its confirmation, its removal. */
 export const buildBrandCampaignFilesUrl = (id: string, fileId?: string, step?: 'complete') =>
   subPathOf(BRAND_CAMPAIGNS, id, ['files', fileId, step].filter(Boolean).join('/'));
+
+/** `/brand/campaigns/{id}/announcements?page=`: the broadcast history, newest first. */
+export const buildBrandAnnouncementsUrl = (id: string, page: number) =>
+  withPage(subPathOf(BRAND_CAMPAIGNS, id, 'announcements'), [], page);
 
 export const buildBrandCampaignsUrl = ({ statuses }: CampaignListArgs, page: number) =>
   withPage(BRAND_CAMPAIGNS, repeated('status', statuses), page);

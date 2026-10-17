@@ -116,6 +116,7 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
                 tools={vm.tools}
                 onOpenDrop={vm.openDrop}
                 onOpenShipping={vm.openShipping}
+                onOpenAnnouncements={vm.openAnnouncements}
               />
             ) : null}
             <CampaignTermsCard campaign={campaign} locked={vm.termsLocked} />

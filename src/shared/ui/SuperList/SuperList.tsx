@@ -48,6 +48,8 @@ export function SuperList<T>({
   scrollRestorationKey,
   onScroll,
   scrollEventThrottle = 16,
+  keyboardShouldPersistTaps,
+  keyboardDismissMode,
   ListHeaderComponent,
   contentContainerStyle,
   style,
@@ -180,6 +182,8 @@ export function SuperList<T>({
         // ─── Scroll ─────────────────────────────────────────────────────────
         onScroll={onScroll}
         scrollEventThrottle={scrollEventThrottle}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        keyboardDismissMode={keyboardDismissMode}
         onMomentumScrollEnd={onScrollEnd}
         onScrollEndDrag={onScrollEnd}
         onLayout={onListLayout}

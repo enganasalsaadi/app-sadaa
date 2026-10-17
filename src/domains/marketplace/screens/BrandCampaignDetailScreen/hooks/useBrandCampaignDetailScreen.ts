@@ -57,6 +57,7 @@ export const useBrandCampaignDetailScreen = () => {
   const openApplicants = useCallback(() => navigation.navigate('CampaignApplicants', { id }), [id, navigation]);
   const openDrop = useCallback(() => navigation.navigate('CampaignDrop', { id }), [id, navigation]);
   const openShipping = useCallback(() => navigation.navigate('CampaignShipping', { id }), [id, navigation]);
+  const openAnnouncements = useCallback(() => navigation.navigate('CampaignAnnouncements', { id }), [id, navigation]);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const lifecycle = useCampaignLifecycle(campaign, goBack);
   const decide = lifecycle.decide;
@@ -86,6 +87,7 @@ export const useBrandCampaignDetailScreen = () => {
     openApplicants,
     openDrop,
     openShipping,
+    openAnnouncements,
     reopenFromDock,
     lifecycle,
     dock,

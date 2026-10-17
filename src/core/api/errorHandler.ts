@@ -12,7 +12,7 @@ export interface AppApiError {
   retryAfter: number | null;
   /** `meta.reason` sub-code (e.g. `slug_unavailable` → `taken`); the domain narrows it. */
   reason: string | null;
-  /** ISO `meta.available_at` (cooldown 409), else `null`. */
+  /** ISO `meta.available_at` (cooldown 409) or `meta.next_available_at` (429 rate caps), else `null`. */
   availableAt: string | null;
   details: string | ApiUnknownRecord | unknown[] | null;
   isValidationError: boolean;
@@ -195,7 +195,9 @@ export const normalizeApiError = (error: unknown): AppApiError => {
       code: getServerErrorCode(error.data),
       retryAfter: getRetryAfter(error.data),
       reason: getMetaString(error.data, 'reason'),
-      availableAt: getMetaString(error.data, 'available_at'),
+      availableAt:
+        getMetaString(error.data, 'available_at') ??
+        getMetaString(error.data, 'next_available_at'),
       details: toSerializableDetails(
         error.data ?? fallbackTransportMessage ?? null,
       ),

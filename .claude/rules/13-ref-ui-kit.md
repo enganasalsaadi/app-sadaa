@@ -56,7 +56,7 @@ Catalog of existing parts. Reuse for behaviour, never as look of new design (rul
 
 ## Lists (SuperList = FlashList v2)
 
-No `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}` when columns change; `scrollRestorationKey` persists offset in MMKV; w/ `Layout mode="static"` pass `useJSScrollHandler()` (`@/shared/context/ScrollContext`) to `onScroll` (`useScrollHandler()` = Animated scroll views only). Ref: `LayoutListStatesScreen`.
+No `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}` when columns change; `scrollRestorationKey` persists offset in MMKV; inputs in `ListHeaderComponent` → pass `keyboardShouldPersistTaps="handled"` / `keyboardDismissMode="on-drag"` (optional props); w/ `Layout mode="static"` pass `useJSScrollHandler()` (`@/shared/context/ScrollContext`) to `onScroll` (`useScrollHandler()` = Animated scroll views only). Ref: `LayoutListStatesScreen`.
 
 ## Bottom bar
 

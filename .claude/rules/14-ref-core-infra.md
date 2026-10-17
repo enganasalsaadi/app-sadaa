@@ -13,7 +13,7 @@ paths:
 ## API (`baseApi`)
 
 - Envelope unwrapping · pagination (`withPagination`) · 401 → logout + `resetApiState` · centralised 403/5xx/offline (409/429/422 passed to screen).
-- `AppApiError.code` / `retryAfter` / `reason` / `availableAt` from top-level `meta`.
+- `AppApiError.code` / `retryAfter` / `reason` / `availableAt` from top-level `meta` (`availableAt` = `available_at`, else `next_available_at` of rate-cap 429s).
 - `extraOptions.withMeta` → `WithMeta<T>` `{ data, meta }` for success meta (`canonical_slug`).
 - `createIdempotentAction()`: one key per money intent, auto-retries only `409 idempotency_request_in_progress`. `IDEMPOTENCY_HEADER` = `Idempotency-Key` (rule 06).
 - `retryRegistry`. Domains `injectEndpoints` with `overrideExisting: true`.

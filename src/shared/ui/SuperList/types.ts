@@ -60,6 +60,9 @@ export interface SuperListProps<T> {
   // ─── Scroll integration (wires into ScrollContext) ─────────────────────
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   scrollEventThrottle?: number;
+  /** `handled` when the header holds inputs: a tap on a button keeps the keyboard instead of being swallowed. */
+  keyboardShouldPersistTaps?: 'never' | 'always' | 'handled';
+  keyboardDismissMode?: 'none' | 'on-drag' | 'interactive';
 
   // ─── Extras ────────────────────────────────────────────────────────────
   ListHeaderComponent?: ReactElement | null;

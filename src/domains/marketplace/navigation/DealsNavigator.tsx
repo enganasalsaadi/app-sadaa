@@ -5,6 +5,7 @@ import { BrandCampaignApplicantScreen } from '../screens/BrandCampaignApplicantS
 import { BrandCampaignApplicantsScreen } from '../screens/BrandCampaignApplicantsScreen';
 import { BrandCampaignCompareScreen } from '../screens/BrandCampaignCompareScreen';
 import { BrandCampaignDropScreen } from '../screens/BrandCampaignDropScreen';
+import { BrandCampaignAnnouncementsScreen } from '../screens/BrandCampaignAnnouncementsScreen';
 import { BrandCampaignShippingScreen } from '../screens/BrandCampaignShippingScreen';
 import { BrandCampaignSelectedScreen } from '../screens/BrandCampaignSelectedScreen';
 import { BrandCampaignDetailScreen } from '../screens/BrandCampaignDetailScreen';
@@ -47,6 +48,7 @@ export const BrandDealsNavigator: React.FC = () => (
     <Stack.Screen name="CampaignSelected" component={BrandCampaignSelectedScreen} />
     <Stack.Screen name="CampaignDrop" component={BrandCampaignDropScreen} />
     <Stack.Screen name="CampaignShipping" component={BrandCampaignShippingScreen} />
+    <Stack.Screen name="CampaignAnnouncements" component={BrandCampaignAnnouncementsScreen} />
   </Stack.Navigator>
 );
 

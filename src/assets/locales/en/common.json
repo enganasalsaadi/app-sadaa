@@ -2060,6 +2060,10 @@
           "shipping": {
             "title": "Shipping manifest",
             "subtitle": "Send several creators' parcels at once"
+          },
+          "announcements": {
+            "title": "Broadcast to creators",
+            "subtitle": "One message reaches everyone"
           }
         }
       },
@@ -2203,6 +2207,56 @@
             "title": "This campaign ships nothing",
             "message": "The campaign has no product, so there are no parcels."
           }
+        }
+      },
+      "announcements": {
+        "title": "Broadcast to creators",
+        "subtitle": "{{title}}",
+        "loadFailed": "Couldn't load broadcasts",
+        "quota": {
+          "used": "{{used}} of {{limit}} today",
+          "rolling": "Resets on a rolling 24 hours",
+          "a11y": "{{used}} of {{limit}} broadcasts sent in the last 24 hours"
+        },
+        "editor": {
+          "bodyLabel": "Message",
+          "bodyPlaceholder": "Write what every creator should know…",
+          "linkLabel": "Link (optional)",
+          "linkPlaceholder": "https://",
+          "infoOnly": "Informational only: it doesn't change the terms or prices. It reaches creators on funded deals."
+        },
+        "linkError": "Enter a valid link that starts with https",
+        "noRecipients": {
+          "title": "No one to reach right now",
+          "message": "No funded deal can receive a broadcast right now. It didn't count against today's limit, and your text is kept."
+        },
+        "lock": {
+          "title": "The next broadcast opens in",
+          "at": "at {{time}}",
+          "kept": "Your text stays saved until it opens.",
+          "dock": "Locked until {{time}}"
+        },
+        "dock": {
+          "hold": "Hold to broadcast",
+          "caption": "Reaches every funded deal · no undo after sending",
+          "sending": "Sending…",
+          "holdA11y": "Press and hold for a second to broadcast the message to every creator on a funded deal",
+          "hint": "Keep holding…"
+        },
+        "toast": {
+          "limit": "You've reached today's broadcast limit"
+        },
+        "reached_one": "Reached {{count}} creator",
+        "reached_other": "Reached {{count}} creators",
+        "history": {
+          "title": "History",
+          "link": "Attached link",
+          "linkCopied": "Link copied",
+          "copyLink": "Copy link"
+        },
+        "empty": {
+          "title": "You haven't broadcast anything yet",
+          "message": "Your first message reaches every creator on a funded deal, and shows in their deal history with a megaphone icon."
         }
       },
       "wizard": {
