@@ -49,6 +49,8 @@ export const motion = {
     rulerPulse: 1000,
     /** Dispute file: one leg of the scales' slow sway while the case is weighed. */
     scalesSway: 6000,
+    /** Drop squad bar: one breath of a late creator's piece (their grace is running). */
+    lateBlink: 1600,
   },
   /** One heart floating up off a service card the moment it is picked. */
   pickBurst: 900,

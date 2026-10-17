@@ -2049,6 +2049,82 @@
           "confirm": "Extend 4 days",
           "cancel": "Not now",
           "done": "Deadline extended by 4 days"
+        },
+        "tools": {
+          "title": "Batch tools",
+          "drop": {
+            "title": "Launch room",
+            "pending": "Drop in {{remaining}}",
+            "live": "Follow the creators on air"
+          }
+        }
+      },
+      "drop": {
+        "title": "Launch room",
+        "subtitle": "{{title}} · {{creators}}",
+        "creators_one": "{{count}} creator",
+        "creators_other": "{{count}} creators",
+        "loadFailed": "Couldn't open the launch room",
+        "hero": {
+          "untilPublishOpen": "Live link opens in",
+          "untilDrop": "Drop in",
+          "then": "Drop {{at}}",
+          "units": {
+            "days": "days",
+            "hours": "hours",
+            "minutes": "min",
+            "seconds": "sec"
+          },
+          "stations": {
+            "open": "Link opens",
+            "drop": "The drop",
+            "live": "On air"
+          },
+          "onAir": "On air",
+          "verifiedCaption": "verified",
+          "ringLabel": "{{verified}} of {{total}} verified",
+          "sinceDrop": "The drop went out {{ago}} ago.",
+          "lateNote_one": "{{count}} creator is late, within the grace period.",
+          "lateNote_other": "{{count}} creators are late, within the grace period."
+        },
+        "reminders": {
+          "day": "1 day before",
+          "hours": "2 hours before",
+          "atDrop": "At the drop",
+          "minutes": "{{count}} min before",
+          "sent": "Sent"
+        },
+        "filters": {
+          "all": "All",
+          "late": "Late",
+          "working": "Working",
+          "in_review": "In review",
+          "verified": "Verified",
+          "awaiting_payment": "Awaiting payment",
+          "defaulted": "Defaulted",
+          "ended": "Ended"
+        },
+        "lane": {
+          "unnamed": "Creator",
+          "items": "{{verified}} of {{total}} verified",
+          "inReview": "{{count}} in review",
+          "graceEnds": "Grace ends",
+          "due": "Due",
+          "open": "Open {{name}}'s deal"
+        },
+        "empty": {
+          "noDrop": {
+            "title": "This campaign has no drop",
+            "message": "You picked a delivery window in days, not one shared moment, so there is no launch room."
+          },
+          "noCreators": {
+            "title": "No creator linked yet",
+            "message": "Every creator you select shows up here, and the countdown is already running."
+          },
+          "filtered": {
+            "title": "Nobody in this state",
+            "message": "Try another state or show all."
+          }
         }
       },
       "wizard": {

@@ -5,6 +5,7 @@ import type { ParseKeys } from 'i18next';
 import { MoreHorizontal } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, ConfirmSheet, ErrorState, Layout, LayoutFooter, StaggerIn } from '@/shared/ui';
+import { CampaignBatchToolsCard } from '../../components/CampaignBatchToolsCard';
 import { CampaignDetailHero } from '../../components/CampaignDetailHero';
 import { CampaignDetailSkeleton } from '../../components/CampaignDetailSkeleton';
 import { CampaignHistoryCard } from '../../components/CampaignHistoryCard';
@@ -109,6 +110,9 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
             ) : (
               <CampaignSeatsCard campaign={campaign} onReview={vm.openApplicants} />
             )}
+            {vm.tools?.any ? (
+              <CampaignBatchToolsCard campaign={campaign} tools={vm.tools} onOpenDrop={vm.openDrop} />
+            ) : null}
             <CampaignTermsCard campaign={campaign} locked={vm.termsLocked} />
             <CampaignHistoryCard {...vm.history} />
           </StaggerIn>

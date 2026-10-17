@@ -6,6 +6,7 @@ describe('campaignPushTags', () => {
       { type: 'Campaign', id: 'c1' },
       { type: 'CampaignList', id: 'LIST' },
       { type: 'CampaignHistory', id: 'c1' },
+      { type: 'CampaignDrop', id: 'c1' },
       'BrandHome',
       { type: 'CreatorCampaign', id: 'c1' },
       { type: 'CreatorCampaignList', id: 'FEED' },
@@ -14,8 +15,11 @@ describe('campaignPushTags', () => {
     ]);
   });
 
-  it('stales only my applications for a deal push: their card shows the deal’s stage', () => {
-    expect(campaignPushTags({ kind: 'deal', dealId: 'd1' })).toEqual([{ type: 'CampaignApplicationList', id: 'LIST' }]);
+  it('stales my applications and the launch room for a deal push: both show the deal’s stage', () => {
+    expect(campaignPushTags({ kind: 'deal', dealId: 'd1' })).toEqual([
+      { type: 'CampaignApplicationList', id: 'LIST' },
+      'CampaignDrop',
+    ]);
   });
 
   it('touches nothing for other pushes', () => {

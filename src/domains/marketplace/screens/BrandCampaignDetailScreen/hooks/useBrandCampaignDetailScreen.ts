@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { navigate, type DealsStackScreenProps } from '@/core/navigation';
 import { useGetCampaignHistoryQuery, useGetCampaignQuery } from '../../../api/brandCampaignsApi';
 import type { CampaignStatus } from '../../../types';
+import { campaignBatchTools } from '../../../utils/campaignBatchTools';
 import { campaignHistoryEvents, campaignTermsLocked } from '../../../utils/campaignDetail';
 import { getCampaignStatusMeta } from '../../../utils/campaignStatus';
 import { useCampaignLifecycle } from './useCampaignLifecycle';
@@ -54,6 +55,7 @@ export const useBrandCampaignDetailScreen = () => {
 
   const openWizard = useCallback(() => navigate('CampaignWizard', { campaignId: id, source: 'resume' }), [id]);
   const openApplicants = useCallback(() => navigation.navigate('CampaignApplicants', { id }), [id, navigation]);
+  const openDrop = useCallback(() => navigation.navigate('CampaignDrop', { id }), [id, navigation]);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const lifecycle = useCampaignLifecycle(campaign, goBack);
   const decide = lifecycle.decide;
@@ -81,11 +83,13 @@ export const useBrandCampaignDetailScreen = () => {
     goBack,
     openWizard,
     openApplicants,
+    openDrop,
     reopenFromDock,
     lifecycle,
     dock,
     showReadiness: isDraft,
     reviewNote,
+    tools: campaign ? campaignBatchTools(campaign) : null,
     termsLocked: campaign ? campaignTermsLocked(campaign) : false,
     history: {
       events,

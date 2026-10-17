@@ -2178,6 +2178,90 @@
           "confirm": "مدّد 4 أيام",
           "cancel": "ليس الآن",
           "done": "مُدّد موعد التقديم 4 أيام"
+        },
+        "tools": {
+          "title": "أدوات الدفعة",
+          "drop": {
+            "title": "غرفة الإطلاق",
+            "pending": "الدروب بعد {{remaining}}",
+            "live": "تابع المؤثرين على الهواء"
+          }
+        }
+      },
+      "drop": {
+        "title": "غرفة الإطلاق",
+        "subtitle": "{{title}} · {{creators}}",
+        "creators_zero": "لا مؤثرين",
+        "creators_one": "مؤثر واحد",
+        "creators_two": "مؤثران",
+        "creators_few": "{{count}} مؤثرين",
+        "creators_many": "{{count}} مؤثراً",
+        "creators_other": "{{count}} مؤثر",
+        "loadFailed": "تعذّر فتح غرفة الإطلاق",
+        "hero": {
+          "untilPublishOpen": "يفتح رابط النشر بعد",
+          "untilDrop": "الدروب بعد",
+          "then": "الدروب {{at}}",
+          "units": {
+            "days": "يوم",
+            "hours": "ساعة",
+            "minutes": "دقيقة",
+            "seconds": "ثانية"
+          },
+          "stations": {
+            "open": "فتح الرابط",
+            "drop": "الدروب",
+            "live": "على الهواء"
+          },
+          "onAir": "على الهواء",
+          "verifiedCaption": "تحقّق",
+          "ringLabel": "{{verified}} من {{total}} متحقَّق",
+          "sinceDrop": "مضى الدروب منذ {{ago}}.",
+          "lateNote_zero": "لا أحد متأخر.",
+          "lateNote_one": "مؤثر واحد متأخر ضمن الإمهال.",
+          "lateNote_two": "مؤثران متأخران ضمن الإمهال.",
+          "lateNote_few": "{{count}} مؤثرين متأخرين ضمن الإمهال.",
+          "lateNote_many": "{{count}} مؤثراً متأخراً ضمن الإمهال.",
+          "lateNote_other": "{{count}} مؤثر متأخر ضمن الإمهال."
+        },
+        "reminders": {
+          "day": "قبل يوم",
+          "hours": "قبل ساعتين",
+          "atDrop": "عند الدروب",
+          "minutes": "قبل {{count}} د",
+          "sent": "أُرسل"
+        },
+        "filters": {
+          "all": "الكل",
+          "late": "متأخر",
+          "working": "يعمل",
+          "in_review": "مراجعة",
+          "verified": "متحقَّق",
+          "awaiting_payment": "بانتظار الدفع",
+          "defaulted": "تخلّف",
+          "ended": "انتهى"
+        },
+        "lane": {
+          "unnamed": "مؤثر",
+          "items": "{{verified}} من {{total}} متحقَّق",
+          "inReview": "{{count}} بالمراجعة",
+          "graceEnds": "ينتهي الإمهال",
+          "due": "الموعد",
+          "open": "افتح صفقة {{name}}"
+        },
+        "empty": {
+          "noDrop": {
+            "title": "لا دروب لهذه الحملة",
+            "message": "حدّدتَ نشراً بمهلة أيام لا بلحظة موحّدة، فلا توجد غرفة إطلاق."
+          },
+          "noCreators": {
+            "title": "لم يُربط مؤثر بعد",
+            "message": "يظهر هنا كل مؤثر تختاره، والعدّ التنازلي يعمل من الآن."
+          },
+          "filtered": {
+            "title": "لا أحد في هذه الحالة",
+            "message": "جرّب حالة أخرى أو اعرض الكل."
+          }
         }
       },
       "wizard": {
