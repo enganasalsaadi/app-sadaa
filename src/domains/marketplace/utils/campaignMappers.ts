@@ -33,6 +33,7 @@ import {
   type CampaignPrivateBrief,
   type CampaignQuote,
   type CampaignRecruiting,
+  type CampaignSelectResult,
   type CampaignSeatFreed,
   type CampaignStatus,
   type CampaignTargeting,
@@ -67,6 +68,7 @@ import type {
   CampaignQuoteDto,
   CampaignRecruitingDto,
   CampaignSeatFreedDto,
+  CampaignSelectDto,
   CampaignTargetingDto,
   CampaignTimersDto,
   CampaignWalletDto,
@@ -391,6 +393,13 @@ export const mapApplicantCard = (dto: ApplicantCardDto): ApplicantCard => ({
     canReject: dto.actions.can_reject,
     canSelect: dto.actions.can_select,
   },
+});
+
+export const mapCampaignSelectResult = (dto: CampaignSelectDto): CampaignSelectResult => ({
+  application: mapApplicantCard(dto.application),
+  deal: mapDealRef(dto.deal),
+  funding: mapCampaignFunding(dto.funding),
+  recruiting: mapCampaignRecruiting(dto.recruiting),
 });
 
 export const mapCreatorApplication = (dto: CreatorApplicationDto): CreatorApplication => ({

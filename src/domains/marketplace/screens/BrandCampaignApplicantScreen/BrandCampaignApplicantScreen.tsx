@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react-native';
 import { iconStroke, useStyles, useTheme } from '@/core/theme';
 import { Box, Card, ConfirmSheet, CustomButton, ErrorState, Layout, MoneyText, StaggerIn, StatusPill, Text } from '@/shared/ui';
+import { ApplicantSelectSheet } from '../../components/ApplicantSelectSheet';
 import { formatCampaignDay } from '../../utils/campaignSchedule';
 import { ApplicantAccountRow } from './components/ApplicantAccountRow';
 import { ApplicantDock } from './components/ApplicantDock';
@@ -16,8 +17,8 @@ import { useBrandCampaignApplicantScreen } from './hooks/useBrandCampaignApplica
 /**
  * One applicant, in the «recruiting table» language (PC3.2): their photo with the time left to
  * decide, the numbers a brand weighs, their note as a quote, what they ask or bid, and every linked
- * account. The body slides over the photo like the campaign page. The dock holds shortlist and
- * reject (the latter asks first); the media kit is one tap away. Select joins the dock in PC3.4.
+ * account. The body slides over the photo like the campaign page. The dock holds select (PC3.4,
+ * press-and-hold on its sheet), shortlist and reject (the latter asks first); the media kit is one tap away.
  */
 const BrandCampaignApplicantScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ const BrandCampaignApplicantScreenComponent: React.FC = () => {
   }
 
   const { creator, price, pitch, status } = applicant;
-  const showDock = vm.canShortlist || vm.canReject;
+  const showDock = vm.canSelect || vm.canShortlist || vm.canReject;
   return (
     <>
       <Layout
@@ -60,9 +61,11 @@ const BrandCampaignApplicantScreenComponent: React.FC = () => {
         footer={
           showDock ? (
             <ApplicantDock
+              canSelect={vm.canSelect}
               canShortlist={vm.canShortlist}
               canReject={vm.canReject}
               busy={vm.isDeciding}
+              onSelect={vm.select.open}
               onShortlist={vm.shortlist}
               onReject={vm.reject.open}
             />
@@ -134,6 +137,7 @@ const BrandCampaignApplicantScreenComponent: React.FC = () => {
           </StaggerIn>
         </Box>
       </Layout>
+      <ApplicantSelectSheet flow={vm.select.flow} />
       <ConfirmSheet
         visible={vm.reject.visible}
         onClose={vm.reject.close}

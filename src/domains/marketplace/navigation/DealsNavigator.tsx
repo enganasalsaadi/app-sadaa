@@ -4,6 +4,7 @@ import type { DealsStackParamList } from '@/core/navigation';
 import { BrandCampaignApplicantScreen } from '../screens/BrandCampaignApplicantScreen';
 import { BrandCampaignApplicantsScreen } from '../screens/BrandCampaignApplicantsScreen';
 import { BrandCampaignCompareScreen } from '../screens/BrandCampaignCompareScreen';
+import { BrandCampaignSelectedScreen } from '../screens/BrandCampaignSelectedScreen';
 import { BrandCampaignDetailScreen } from '../screens/BrandCampaignDetailScreen';
 import { BrandDealDetailScreen } from '../screens/BrandDealDetailScreen';
 import { BrandDealsScreen } from '../screens/BrandDealsScreen';
@@ -41,6 +42,7 @@ export const BrandDealsNavigator: React.FC = () => (
     <Stack.Screen name="CampaignApplicants" component={BrandCampaignApplicantsScreen} />
     <Stack.Screen name="CampaignApplicant" component={BrandCampaignApplicantScreen} />
     <Stack.Screen name="CampaignCompare" component={BrandCampaignCompareScreen} />
+    <Stack.Screen name="CampaignSelected" component={BrandCampaignSelectedScreen} />
   </Stack.Navigator>
 );
 

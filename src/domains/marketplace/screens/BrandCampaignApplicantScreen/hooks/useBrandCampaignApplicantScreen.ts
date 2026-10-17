@@ -5,14 +5,16 @@ import { push, type DealsStackScreenProps, type PublicStackParamList } from '@/c
 import { toastService } from '@/core/toast';
 import { useGetCampaignApplicantQuery } from '../../../api/brandCampaignsApi';
 import { useApplicantDecision } from '../../../hooks/useApplicantDecision';
+import { useApplicantSelectFlow } from '../../../hooks/useApplicantSelectFlow';
 import { isPendingApplicant } from '../../../utils/applicants';
 
 type Route = DealsStackScreenProps<'CampaignApplicant'>['route'];
 type Navigation = DealsStackScreenProps<'CampaignApplicant'>['navigation'];
 
 /**
- * One applicant (PC3.2): the card, the way into their media kit and the two decisions that keep
- * the application pending. Rejecting asks first and leaves the page; shortlisting stays on it.
+ * One applicant (PC3.2): the card, the way into their media kit and the decisions on them.
+ * Rejecting asks first and leaves the page; shortlisting stays on it; selecting opens the
+ * hold-to-sign sheet (PC3.4) and its answer moves on to the result page.
  * Which buttons show comes from the card's `actions` (the server re-checks every tap).
  */
 export const useBrandCampaignApplicantScreen = () => {
@@ -22,6 +24,7 @@ export const useBrandCampaignApplicantScreen = () => {
   const query = useGetCampaignApplicantQuery({ id, applicationId });
   const applicant = query.data ?? null;
   const decision = useApplicantDecision(id, applicationId);
+  const select = useApplicantSelectFlow(id);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -43,6 +46,9 @@ export const useBrandCampaignApplicantScreen = () => {
     if (await run('shortlist')) toastService.success(t('marketplace.campaign.applicants.detail.actions.shortlisted'));
   }, [run, t]);
 
+  const openSelect = useCallback(() => {
+    if (applicant) select.open(applicant);
+  }, [applicant, select]);
   const openReject = useCallback(() => setRejectVisible(true), []);
   const closeReject = useCallback(() => setRejectVisible(false), []);
   const confirmReject = useCallback(async () => {
@@ -72,10 +78,12 @@ export const useBrandCampaignApplicantScreen = () => {
     onRefresh,
     onRetry,
     pending: applicant ? isPendingApplicant(applicant) : false,
+    canSelect: applicant?.actions.canSelect ?? false,
     canShortlist: applicant?.actions.canShortlist ?? false,
     canReject: applicant?.actions.canReject ?? false,
     isDeciding: decision.isRunning,
     shortlist,
+    select: { flow: select, open: openSelect },
     reject: { visible: rejectVisible, open: openReject, close: closeReject, confirm: confirmReject },
     openMediaKit,
     openDeal,

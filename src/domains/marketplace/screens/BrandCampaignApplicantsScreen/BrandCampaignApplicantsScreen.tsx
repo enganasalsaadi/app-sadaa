@@ -9,6 +9,7 @@ import { useJSScrollHandler } from '@/shared/context/ScrollContext';
 import { ApplicantCard } from '../../components/ApplicantCard';
 import { ApplicantSeatRail } from '../../components/ApplicantSeatRail';
 import type { ApplicantCard as Applicant } from '../../types/campaign';
+import { CampaignClosePromptSheet } from './components/CampaignClosePromptSheet';
 import { ApplicantCompareTray } from './components/ApplicantCompareTray';
 import { ApplicantFilterChip } from './components/ApplicantFilterChip';
 import { ApplicantFilterSheet } from './components/ApplicantFilterSheet';
@@ -161,6 +162,7 @@ const BrandCampaignApplicantsScreenComponent: React.FC = () => {
         contentContainerStyle={styles.list}
         onScroll={onScroll}
       />
+      <CampaignClosePromptSheet prompt={vm.closePrompt} />
       <ApplicantFilterSheet
         visible={sheet.visible}
         onClose={sheet.close}

@@ -30,6 +30,7 @@ import {
   togglePick,
   type SeatFace,
 } from '../../../utils/applicants';
+import { useRecruitingClosePrompt } from './useRecruitingClosePrompt';
 
 type Route = DealsStackScreenProps<'CampaignApplicants'>['route'];
 type Navigation = DealsStackScreenProps<'CampaignApplicants'>['navigation'];
@@ -191,6 +192,7 @@ export const useBrandCampaignApplicantsScreen = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  const closePrompt = useRecruitingClosePrompt(id, recruiting);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const pickedIds = useMemo(() => new Set(picks.map(pick => pick.id)), [picks]);
 
@@ -275,6 +277,7 @@ export const useBrandCampaignApplicantsScreen = () => {
     goBack,
     pressCard,
     holdCard,
+    closePrompt,
     openWallet,
     compare: {
       active: comparing && canCompare,

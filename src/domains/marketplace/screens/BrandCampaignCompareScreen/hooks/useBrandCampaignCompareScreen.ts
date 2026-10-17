@@ -5,6 +5,7 @@ import { formatNumber } from '@/core/i18n';
 import type { Money } from '@/core/money';
 import type { DealsStackScreenProps } from '@/core/navigation';
 import { useGetCampaignApplicantsCompareQuery } from '../../../api/brandCampaignsApi';
+import { useApplicantSelectFlow } from '../../../hooks/useApplicantSelectFlow';
 import { APPLICANT_COMPARE_MIN } from '../../../constants/applicants';
 import type { ApplicantCard } from '../../../types/campaign';
 import { compareLeaders, orderByIds, totalFollowers, type CompareMetric } from '../../../utils/applicants';
@@ -31,7 +32,7 @@ export interface CompareRow {
 }
 
 /**
- * The comparison (PC3.3): the picked cards from one call, kept in the order picked, laid out as a
+ * The comparison (PC3.3, selecting from PC3.4): the picked cards from one call, kept in the order picked, laid out as a
  * row per figure. The lead in a row is marked with a word as well as a tint, and only where the
  * columns differ; nothing is scored or ranked beyond what the server sent.
  */
@@ -41,6 +42,7 @@ export const useBrandCampaignCompareScreen = () => {
   const navigation = useNavigation<Navigation>();
   const query = useGetCampaignApplicantsCompareQuery({ id, ids }, { refetchOnMountOrArgChange: 30 });
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const select = useApplicantSelectFlow(id);
 
   const cards = useMemo(() => orderByIds(query.data ?? [], ids), [query.data, ids]);
 
@@ -158,6 +160,7 @@ export const useBrandCampaignCompareScreen = () => {
     onRefresh,
     onRetry,
     openApplicant,
+    select,
     goBack,
   };
 };

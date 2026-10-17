@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { GitCompare } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
 import { Box, EmptyState, ErrorState, Layout, StaggerIn, Text } from '@/shared/ui';
+import { ApplicantSelectSheet } from '../../components/ApplicantSelectSheet';
+import { CompareDock } from './components/CompareDock';
 import { CompareFaces } from './components/CompareFaces';
 import { CompareRowView } from './components/CompareRowView';
 import { CompareSkeleton } from './components/CompareSkeleton';
@@ -12,8 +14,8 @@ import { useBrandCampaignCompareScreen } from './hooks/useBrandCampaignCompareSc
 /**
  * Up to three waiting applicants side by side (PC3.3, approved 2026-10-17): their faces stay pinned
  * while the rows scroll (price as the server sends it, total reach, rating, deals, accounts, city).
- * The lead of each numeric row is marked, with a word as well as a tint; picking one to select
- * joins this page in PC3.4.
+ * The lead of each numeric row is marked, with a word as well as a tint; the dock under the columns
+ * selects one (PC3.4, hold to sign).
  */
 const BrandCampaignCompareScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -47,24 +49,29 @@ const BrandCampaignCompareScreenComponent: React.FC = () => {
   }
 
   return (
-    <Layout
-      header={{ title }}
-      sticky={<CompareFaces cards={vm.cards} onOpen={vm.openApplicant} />}
-      scrollProps={{
-        refreshControl: <RefreshControl refreshing={vm.isRefreshing} onRefresh={vm.onRefresh} tintColor={colors.text.secondary} />,
-      }}
-    >
-      <StaggerIn gap="lg">
-        {vm.rows.map(row => (
-          <CompareRowView key={row.key} row={row} />
-        ))}
-        <Box align="center">
-          <Text variant="caption" color={colors.text.secondary} align="center">
-            {t('marketplace.campaign.applicants.compare.result.openHint')}
-          </Text>
-        </Box>
-      </StaggerIn>
-    </Layout>
+    <>
+      <Layout
+        header={{ title }}
+        footerBehavior="docked"
+        footer={<CompareDock cards={vm.cards} onSelect={vm.select.open} />}
+        sticky={<CompareFaces cards={vm.cards} onOpen={vm.openApplicant} />}
+        scrollProps={{
+          refreshControl: <RefreshControl refreshing={vm.isRefreshing} onRefresh={vm.onRefresh} tintColor={colors.text.secondary} />,
+        }}
+      >
+        <StaggerIn gap="lg">
+          {vm.rows.map(row => (
+            <CompareRowView key={row.key} row={row} />
+          ))}
+          <Box align="center">
+            <Text variant="caption" color={colors.text.secondary} align="center">
+              {t('marketplace.campaign.applicants.compare.result.openHint')}
+            </Text>
+          </Box>
+        </StaggerIn>
+      </Layout>
+      <ApplicantSelectSheet flow={vm.select} />
+    </>
   );
 };
 

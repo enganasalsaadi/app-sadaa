@@ -7,7 +7,7 @@ import type {
   CreatorApplicationDto,
   CreatorCampaignDetailDto,
 } from '../../types/campaignDto';
-import { detailDto, fileDto, label, seatsDto, T0 } from '../__fixtures__/campaignDto';
+import { applicantDto, detailDto, fileDto, label, seatsDto, T0 } from '../__fixtures__/campaignDto';
 import {
   mapApplicantCard,
   mapApplicantsPage,
@@ -17,6 +17,7 @@ import {
   mapCampaignHistoryRow,
   mapCampaignQuote,
   mapCampaignRecruiting,
+  mapCampaignSelectResult,
   mapCampaignsPage,
   mapCreatorApplication,
   mapCreatorCampaignDetail,
@@ -200,6 +201,30 @@ describe('mapCampaignFunding', () => {
       reason: 'insufficient_funds',
       missing: usd(2550),
     });
+  });
+});
+
+describe('mapCampaignSelectResult', () => {
+  it('maps the card, the deal it started, the escrow answer and the seats after', () => {
+    const result = mapCampaignSelectResult({
+      application: applicantDto({ id: 'a7', status: label('selected'), deal: { id: 'd9', status: label('awaiting_payment') } }),
+      deal: { id: 'd9', status: label('awaiting_payment') },
+      funding: { funded: false, reason: 'insufficient_funds', missing_usd: '20.00' },
+      recruiting: {
+        status: 'open',
+        seats_total: 3,
+        seats_occupied: 2,
+        seats_left: 1,
+        wallet: { balance_usd: '180.00', required_usd: '200.00', shortfall_usd: '20.00', covers_open_seats: false },
+        budget_secured: true,
+        prompt_close: true,
+      },
+    });
+    expect(result.application.id).toBe('a7');
+    expect(result.deal).toEqual({ id: 'd9', status: { key: 'awaiting_payment', label: 'L:awaiting_payment' } });
+    expect(result.funding).toEqual({ funded: false, reason: 'insufficient_funds', missing: usd(2000) });
+    expect(result.recruiting.seatsOccupied).toBe(2);
+    expect(result.recruiting.promptClose).toBe(true);
   });
 });
 

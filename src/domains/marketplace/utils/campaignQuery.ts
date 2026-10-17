@@ -61,8 +61,8 @@ export const buildBrandApplicantsUrl = (
 export const buildBrandApplicantsCompareUrl = ({ id, ids }: ApplicantsCompareArgs) =>
   `${subPathOf(BRAND_CAMPAIGNS, id, 'applications/compare')}?${repeated('ids', ids).join('&')}`;
 
-/** `/brand/campaigns/{id}/applications/{app}[/shortlist|reject]`: one card, or a decision on it. */
-export const buildBrandApplicantUrl = ({ id, applicationId }: ApplicantArgs, decision?: ApplicantDecision) =>
+/** `/brand/campaigns/{id}/applications/{app}[/shortlist|reject|select]`: one card, or a decision on it. */
+export const buildBrandApplicantUrl = ({ id, applicationId }: ApplicantArgs, decision?: ApplicantDecision | 'select') =>
   subPathOf(BRAND_CAMPAIGNS, id, ['applications', applicationId, decision].filter(Boolean).join('/'));
 
 export const buildCreatorFeedUrl = ({ activityTypes, pricingModel }: CreatorFeedArgs, page: number) =>

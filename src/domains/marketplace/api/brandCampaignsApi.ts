@@ -5,6 +5,7 @@ import type {
   ApplicantArgs,
   ApplicantCard,
   ApplicantDecisionArgs,
+  ApplicantSelectArgs,
   ApplicantsArgs,
   ApplicantsCompareArgs,
   ApplicantsPage,
@@ -17,6 +18,7 @@ import type {
   CampaignListArgs,
   CampaignPage,
   CampaignQuote,
+  CampaignSelectResult,
   Campaign,
 } from '../types/campaign';
 import type {
@@ -30,6 +32,7 @@ import type {
   CampaignHistoryRowDto,
   CampaignPageDto,
   CampaignQuoteDto,
+  CampaignSelectDto,
 } from '../types/campaignDto';
 import type { CampaignDraftRequest } from '../types/campaignDraft';
 import { isCampaignConflictError } from '../utils/campaignAction';
@@ -38,6 +41,7 @@ import {
   mapApplicantsPage,
   mapCampaignActionResult,
   mapCampaignDetail,
+  mapCampaignSelectResult,
   mapCampaignFile,
   mapCampaignHistoryRow,
   mapCampaignQuote,
@@ -135,6 +139,49 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       invalidatesTags: (_result, error, { id, applicationId }) => {
         if (!error) return [{ type: 'CampaignApplicants', id }, { type: 'Campaign', id }, ...campaignChangedTags(id)];
         return isCampaignConflictError(normalizeApiError(error))
+          ? [
+              { type: 'CampaignApplicant', id: applicationId },
+              { type: 'CampaignApplicants', id },
+              { type: 'Campaign', id },
+            ]
+          : [];
+      },
+    }),
+    /**
+     * Selects an applicant (contract §3.5): the seat is taken and a deal is born from the card, held
+     * in escrow when the wallet covers it, else waiting 24 h for payment. Binding, so it signs with
+     * this device's id and an `Idempotency-Key` (rule 06). The card is replaced by the answer; the
+     * lists, the campaign and the brand's deals refresh. Every refusal (409 `campaign_*`, 422 budget
+     * or unavailable) means the card or the campaign moved, so those refetch too.
+     */
+    selectCampaignApplicant: builder.mutation<CampaignSelectResult, ApplicantSelectArgs>({
+      query: ({ deviceId, idempotencyKey, ...args }) => ({
+        url: buildBrandApplicantUrl(args, 'select'),
+        method: 'POST',
+        body: { device_id: deviceId },
+        headers: { [IDEMPOTENCY_HEADER]: idempotencyKey },
+      }),
+      transformResponse: (dto: CampaignSelectDto) => mapCampaignSelectResult(dto),
+      async onQueryStarted({ id, applicationId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(brandCampaignsApi.util.upsertQueryData('getCampaignApplicant', { id, applicationId }, data.application));
+        } catch {
+          // The caller reports the failure; a refusal refetches through the tags below.
+        }
+      },
+      invalidatesTags: (_result, error, { id, applicationId }) => {
+        if (!error) {
+          return [
+            { type: 'CampaignApplicants', id },
+            { type: 'Campaign', id },
+            { type: 'DealList', id: 'LIST' },
+            'Wallet',
+            ...campaignChangedTags(id),
+          ];
+        }
+        const { statusCode } = normalizeApiError(error);
+        return statusCode === 409 || statusCode === 422
           ? [
               { type: 'CampaignApplicant', id: applicationId },
               { type: 'CampaignApplicants', id },
@@ -297,6 +344,7 @@ export const {
   useGetCampaignApplicantQuery,
   useGetCampaignApplicantsCompareQuery,
   useDecideCampaignApplicantMutation,
+  useSelectCampaignApplicantMutation,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
   useGetCampaignQuoteQuery,

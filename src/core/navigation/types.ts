@@ -166,11 +166,25 @@ export type DealsStackParamList = {
   /** Brand only: one of their campaigns (`sada://campaigns/{id}`). Creators open it in `OpportunitiesTab`. */
   CampaignDetail: { id: string };
   /** Brand only: the applicants table of one of their campaigns (Public Campaigns PC3). */
-  CampaignApplicants: { id: string };
+  CampaignApplicants: { id: string; closePrompt?: boolean };
   /** Brand only: one applicant of that campaign (`applicationId`), with the shortlist / reject decisions. */
   CampaignApplicant: { id: string; applicationId: string };
   /** Brand only: 2–3 pending applicants of that campaign side by side, in the order picked. */
   CampaignCompare: { id: string; ids: string[] };
+  /**
+   * Brand only: what selecting an applicant led to. `funded` and the seat count are the select
+   * answer's; the card and (unfunded) the deal are read again from the server. «Keep going» returns to
+   * the applicants table, asking «keep recruiting or close» when the answer said `promptClose`.
+   */
+  CampaignSelected: {
+    id: string;
+    applicationId: string;
+    dealId: string;
+    funded: boolean;
+    seatsOccupied: number;
+    seatsTotal: number;
+    promptClose: boolean;
+  };
 };
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */

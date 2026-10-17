@@ -1536,7 +1536,8 @@
           "actions": {
             "shortlist": "Shortlist",
             "reject": "Decline",
-            "shortlisted": "Added to the shortlist"
+            "shortlisted": "Added to the shortlist",
+            "select": "Select"
           },
           "rejectSheet": {
             "title": "Decline {{name}}?",
@@ -1581,8 +1582,66 @@
             },
             "lowest": "Lowest",
             "highest": "Highest",
-            "noValue": "None"
+            "noValue": "None",
+            "select": "Select {{name}}",
+            "cantSelect": "Unavailable"
           }
+        },
+        "select": {
+          "title": "Select {{name}}",
+          "body": "Selecting binds you: a deal is created on the terms and price below, and the price won't change.",
+          "badge": "Protected by Sada escrow",
+          "lines": {
+            "deliverables": "Deliverables",
+            "seat": "Seat {{seat}} of {{total}}",
+            "price": "The price is fixed and won't change after you select"
+          },
+          "estimate": {
+            "covers": {
+              "title": "Your balance covers it (estimate)",
+              "body": "The amount will be held in escrow right away."
+            },
+            "short": {
+              "title": "Your balance doesn't cover it (estimate)",
+              "body": "Your balance is {{balance}}. The deal is created and you have 24 hours to fund it, or the seat goes back."
+            }
+          },
+          "hold": "Press and hold to select",
+          "holdCaption": "Selecting is binding and the price is fixed",
+          "holdA11y": "Select {{name}}"
+        },
+        "selected": {
+          "title": "Selected",
+          "funded": {
+            "title": "Seat {{seat}} of {{total}} taken",
+            "body": "You selected {{name}} and the deal's money is held in escrow",
+            "held": "Held in escrow",
+            "heldNote": "Paid to the creator after delivery and verification"
+          },
+          "unfunded": {
+            "who": "{{name}} is selected",
+            "whoHint": "The seat is reserved. The deal is waiting for payment",
+            "title": "Payment needed: 24 hours",
+            "body": "If the time runs out the deal is cancelled and the seat goes back to recruiting.",
+            "topUp": "Top up wallet",
+            "later": "Later"
+          },
+          "openDeal": "Open the deal",
+          "continue": "Back to applicants",
+          "seatsA11y": "Seat {{seat}} of {{total}}"
+        },
+        "closePrompt": {
+          "title": "Keep recruiting or close it?",
+          "body": "Your balance doesn't cover the seats left. If recruiting stays open you may select someone you can't fund, and the seat goes back after 24 hours.",
+          "balance": "Your balance",
+          "required": "Needed for the seats left",
+          "topUp": "Top up {{amount}} to keep going",
+          "keep": "Keep recruiting",
+          "hold": "Press and hold to close recruiting",
+          "holdCaption": "Closing stops new applications",
+          "holdA11y": "Close recruiting",
+          "fine": "Closing ends applications and the pending ones become «Not selected». Taken seats stay.",
+          "closed": "Recruiting closed"
         }
       },
       "detail": {

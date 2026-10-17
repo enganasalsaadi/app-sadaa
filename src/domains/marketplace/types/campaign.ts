@@ -507,6 +507,20 @@ export interface ApplicantArgs {
   applicationId: string;
 }
 
+/** What selecting an applicant answers: the card, the deal born from it, whether the escrow was held, the seats after. */
+export interface CampaignSelectResult {
+  application: ApplicantCard;
+  deal: CampaignDealRef;
+  funding: CampaignFunding;
+  recruiting: CampaignRecruiting;
+}
+
+/** One select intent: `deviceId` signs it, `idempotencyKey` makes a retry the same binding act (rule 06). */
+export interface ApplicantSelectArgs extends ApplicantArgs {
+  deviceId: string;
+  idempotencyKey: string;
+}
+
 export interface ApplicantDecisionArgs extends ApplicantArgs {
   decision: ApplicantDecision;
 }

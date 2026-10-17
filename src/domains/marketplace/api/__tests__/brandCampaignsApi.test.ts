@@ -500,3 +500,98 @@ describe('applicants compare', () => {
     expect(data?.[1]?.pitch).toBeNull();
   });
 });
+
+describe('select applicant', () => {
+  beforeAll(() => initSecureStorage());
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate'] });
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  const selectDto = {
+    application: applicantDto({ id: 'a1', status: label('selected'), deal: { id: 'd1', status: label('escrow_locked') } }),
+    deal: { id: 'd1', status: label('escrow_locked') },
+    funding: { funded: true, reason: null, missing_usd: '0.00' },
+    recruiting: {
+      status: 'open',
+      seats_total: 3,
+      seats_occupied: 1,
+      seats_left: 2,
+      wallet: { balance_usd: '300.00', required_usd: '200.00', shortfall_usd: '0.00', covers_open_seats: true },
+      budget_secured: true,
+      prompt_close: false,
+    },
+  };
+  const args = { id: 'c1', applicationId: 'a1', deviceId: 'dev-1', idempotencyKey: 'key-1' };
+  const selectCalls = (spy: jest.SpyInstance) =>
+    spy.mock.calls.filter(([input]) => (input as Request).method === 'POST');
+
+  it('signs with the device id and the idempotency key, then caches the answer as the card', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return json(201, { success: true, message: 'ok', data: selectDto, meta: {} });
+      return ok(applicantDto({ id: 'a1' }));
+    });
+    const store = makeStore();
+
+    const result = await store.dispatch(brandCampaignsApi.endpoints.selectCampaignApplicant.initiate(args)).unwrap();
+    await settle();
+
+    const post = selectCalls(spy)[0]?.[0] as Request;
+    expect(new URL(post.url).pathname).toMatch(/\/brand\/campaigns\/c1\/applications\/a1\/select$/);
+    expect(post.headers.get(IDEMPOTENCY_HEADER)).toBe('key-1');
+    expect(await post.clone().json()).toEqual({ device_id: 'dev-1' });
+    expect(result.funding.funded).toBe(true);
+    expect(result.deal.id).toBe('d1');
+    expect(
+      brandCampaignsApi.endpoints.getCampaignApplicant.select({ id: 'c1', applicationId: 'a1' })(store.getState()).data?.status.key,
+    ).toBe('selected');
+  });
+
+  it('refetches the card, the table and the campaign after a refusal, and rejects with the status', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return fail(409, 'campaign_no_free_seat', 'No seat left');
+      return request.url.includes('/applications/a1') ? ok(applicantDto({ id: 'a1' })) : ok(detailDto());
+    });
+    const store = makeStore();
+    const card = store.dispatch(brandCampaignsApi.endpoints.getCampaignApplicant.initiate({ id: 'c1', applicationId: 'a1' }));
+    await card;
+    const before = spy.mock.calls.length;
+
+    await expect(
+      store.dispatch(brandCampaignsApi.endpoints.selectCampaignApplicant.initiate(args)).unwrap(),
+    ).rejects.toMatchObject({ status: 409 });
+    await settle();
+
+    const refetched = spy.mock.calls.slice(before).filter(([input]) => (input as Request).method === 'GET');
+    expect(refetched.some(([input]) => new URL((input as Request).url).pathname.endsWith('/applications/a1'))).toBe(true);
+    card.unsubscribe();
+  });
+
+  it('leaves the KYC gate to the screen: no refetch', async () => {
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return fail(403, 'kyc_required', 'Verify first');
+      return ok(applicantDto({ id: 'a1' }));
+    });
+    const store = makeStore();
+    const card = store.dispatch(brandCampaignsApi.endpoints.getCampaignApplicant.initiate({ id: 'c1', applicationId: 'a1' }));
+    await card;
+    const before = spy.mock.calls.length;
+
+    await expect(
+      store.dispatch(brandCampaignsApi.endpoints.selectCampaignApplicant.initiate(args)).unwrap(),
+    ).rejects.toMatchObject({ status: 403 });
+    await settle();
+
+    expect(spy.mock.calls.length - before).toBe(1);
+    card.unsubscribe();
+  });
+});

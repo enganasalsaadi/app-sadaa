@@ -295,6 +295,14 @@ export interface CampaignPageDto<T> {
   meta: { current_page: number; last_page: number; total: number };
 }
 
+/** `POST …/applications/{app}/select` → 201 (contract §3.5). */
+export interface CampaignSelectDto {
+  application: ApplicantCardDto;
+  deal: CampaignDealRefDto;
+  funding: CampaignFundingDto;
+  recruiting: CampaignRecruitingDto;
+}
+
 export interface ApplicantsPageDto extends CampaignPageDto<ApplicantCardDto> {
   meta: CampaignPageDto<ApplicantCardDto>['meta'] & {
     counts?: Partial<Record<string, number>>;
