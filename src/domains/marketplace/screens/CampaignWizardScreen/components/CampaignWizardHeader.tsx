@@ -18,7 +18,8 @@ const THUMB = moderateScale(28);
  * The wizard's navy bar: close, the campaign's name (with its cover) in place of «new campaign» as
  * soon as it has one, the save state, and the four-step rail. Any step is a tap away once the draft
  * exists; a step left behind with something still missing wears the warning tone. A failure that
- * stops saving rides under the rail with its way out.
+ * stops saving rides under the rail with its way out; when the team asked for changes, the strip
+ * leads to their note on the review step.
  */
 const CampaignWizardHeaderComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ const CampaignWizardHeaderComponent: React.FC = () => {
     retry,
     confirmLeave,
     cover,
+    changesRequested,
   } = useCampaignWizard();
 
   const styles = useStyles(
@@ -76,7 +78,16 @@ const CampaignWizardHeaderComponent: React.FC = () => {
   );
 
   const strip = useMemo<WizardRailStrip | undefined>(() => {
-    if (!failure) return undefined;
+    if (!failure) {
+      if (!changesRequested || step === 'review') return undefined;
+      return {
+        text: t('marketplace.campaign.wizard.strip.changesRequested'),
+        actionLabel: t('marketplace.campaign.wizard.strip.readNote'),
+        onAction: () => {
+          goToStep('review').catch(() => undefined);
+        },
+      };
+    }
     if (failure.kind === 'conflict') {
       return {
         text: failure.error.message,
@@ -91,7 +102,7 @@ const CampaignWizardHeaderComponent: React.FC = () => {
         retry().catch(() => undefined);
       },
     };
-  }, [confirmLeave, failure, retry, t]);
+  }, [changesRequested, confirmLeave, failure, goToStep, retry, step, t]);
 
   const labels = useMemo(
     () => ({

@@ -3,7 +3,7 @@ import type { TextInputInstance } from 'react-native';
 import { useNavigation, usePreventRemove, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useLookupItems, type LookupItem } from '@/core/api';
-import type { DealFlowStackScreenProps } from '@/core/navigation';
+import { navigate, type DealFlowStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { CAMPAIGN_DRAFT_LIMITS } from '../../../constants/campaignDraft';
 import { useCampaignDraft } from '../../../hooks/useCampaignDraft';
@@ -23,8 +23,13 @@ import { useCampaignCover } from './useCampaignCover';
 import { useCampaignMoney } from './useCampaignMoney';
 import { useCampaignRequirements } from './useCampaignRequirements';
 import { useCampaignSchedule } from './useCampaignSchedule';
+import { useCampaignSubmit, type CampaignWizardExit } from './useCampaignSubmit';
 
 const NO_FILES: readonly CampaignFile[] = [];
+
+/** Leaving the wizard: back where it was opened from, or on to a tab. */
+type WizardExit = { to: 'back' } | { to: 'tab'; params: CampaignWizardExit };
+const EXIT_BACK: WizardExit = { to: 'back' };
 
 type Navigation = DealFlowStackScreenProps<'CampaignWizard'>['navigation'];
 type Route = DealFlowStackScreenProps<'CampaignWizard'>['route'];
@@ -40,14 +45,15 @@ export interface ActivityOption extends LookupItem {
 /**
  * The brand's campaign wizard (PC1): which step is open, the draft engine behind it, and the
  * parts of the first step (title, activity type, cover, public text). The draft saves itself; a
- * step moves on only once what is pending is saved, so «Next» never leaves edits behind.
+ * step moves on only once what is pending is saved, so «Next» never leaves edits behind. The last
+ * step sends the draft for review; a campaign in review shows «in review» instead of the steps.
  */
 export const useCampaignWizardScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
   const { params } = useRoute<Route>();
   const draft = useCampaignDraft(params?.campaignId ?? null);
-  const { values, edit, flush, campaign, campaignId, ready, refused, failure, retry } = draft;
+  const { values, edit, flush, campaign, campaignId, ready, refused, failure, retry, progress, reload } = draft;
   const cover = useCampaignCover(campaignId, campaign?.cover ?? null);
   const requirements = useCampaignRequirements(values, edit, refused);
   const brief = useCampaignBrief(values, edit, refused, campaignId, campaign?.attachments ?? NO_FILES);
@@ -69,38 +75,45 @@ export const useCampaignWizardScreen = () => {
 
   const stepIndex = CAMPAIGN_WIZARD_STEP.indexOf(step);
 
+  const statusKey = campaign?.status.key ?? null;
+  const inReview = statusKey === 'pending_review';
+  const changesRequested = statusKey === 'changes_requested';
+
   // — Leaving ————————————————————————————————————————————————————————
-  const [leaving, setLeaving] = useState(false);
+  const [exit, setExit] = useState<WizardExit | null>(null);
   const [leaveSheet, setLeaveSheet] = useState(false);
   useEffect(() => {
-    if (leaving) navigation.goBack();
-  }, [leaving, navigation]);
+    if (!exit) return;
+    if (exit.to === 'back') navigation.goBack();
+    else navigate('Main', exit.params);
+  }, [exit, navigation]);
+  const leaveTo = useCallback((target: CampaignWizardExit) => setExit({ to: 'tab', params: target }), []);
 
-  // Back (hardware) walks the steps; the close button leaves for real.
+  // Back (hardware) walks the steps; the close button leaves for real. In review there are no steps.
   const goBack = useCallback(() => {
     const previous = previousWizardStep(step);
     if (previous) setStep(previous);
   }, [step]);
-  usePreventRemove(!leaving && step !== 'idea', goBack);
+  usePreventRemove(exit === null && !inReview && step !== 'idea', goBack);
 
   const onClose = useCallback(() => {
-    if (campaignId === null) {
-      setLeaving(true);
+    if (campaignId === null || inReview) {
+      setExit(EXIT_BACK);
       return;
     }
     flush().then(saved => {
       if (saved) {
         toastService.info(t('marketplace.campaign.wizard.closedWithDraft'));
-        setLeaving(true);
+        setExit(EXIT_BACK);
       } else {
         setLeaveSheet(true);
       }
     }, () => setLeaveSheet(true));
-  }, [campaignId, flush, t]);
+  }, [campaignId, flush, inReview, t]);
   const closeLeaveSheet = useCallback(() => setLeaveSheet(false), []);
   const confirmLeave = useCallback(() => {
     setLeaveSheet(false);
-    setLeaving(true);
+    setExit(EXIT_BACK);
   }, []);
 
   // — Steps ——————————————————————————————————————————————————————————
@@ -110,8 +123,24 @@ export const useCampaignWizardScreen = () => {
     titleRef.current?.focus();
   }, []);
 
+  const uploadsBusy = cover.busy || brief.attachments.busy;
+  const submission = useCampaignSubmit({
+    campaignId,
+    progress,
+    flush,
+    reload,
+    uploadsBusy,
+    openStep: setStep,
+    leaveTo,
+  });
+  const { submit } = submission;
+
   const goNext = useCallback(async () => {
     if (advancing) return;
+    if (step === 'review') {
+      await submit();
+      return;
+    }
     if (step === 'idea' && !titleValid) {
       focusTitle();
       return;
@@ -129,7 +158,7 @@ export const useCampaignWizardScreen = () => {
     setAdvancing(false);
     const next = nextWizardStep(step);
     if (saved && next) setStep(next);
-  }, [advancing, brief.attachments.busy, cover.busy, flush, focusTitle, step, t, titleValid]);
+  }, [advancing, brief.attachments.busy, cover.busy, flush, focusTitle, step, submit, t, titleValid]);
 
   const goToStep = useCallback(
     async (target: CampaignWizardStep) => {
@@ -189,7 +218,9 @@ export const useCampaignWizardScreen = () => {
     step,
     stepIndex,
     isFirst: stepIndex === 0,
-    advancing,
+    advancing: advancing || submission.submitting,
+    inReview,
+    changesRequested,
     goNext,
     goBack,
     goToStep,
@@ -219,6 +250,7 @@ export const useCampaignWizardScreen = () => {
     brief,
     money,
     schedule,
+    submission,
   };
 };
 

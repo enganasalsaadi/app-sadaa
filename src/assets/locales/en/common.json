@@ -1345,14 +1345,18 @@
         "strip": {
           "retry": "Retry",
           "leave": "Leave",
-          "saveFailed": "Couldn't save your changes. Check your connection."
+          "saveFailed": "Couldn't save your changes. Check your connection.",
+          "changesRequested": "The team asked for changes before publishing",
+          "readNote": "Read the note"
         },
         "dock": {
           "back": "Previous step",
           "next": "Next",
           "review": "Review",
           "total": "Most held",
-          "estimate": "Estimate"
+          "estimate": "Estimate",
+          "send": "Send for review",
+          "resend": "Send again"
         },
         "leave": {
           "title": "Unsaved changes",
@@ -1568,6 +1572,114 @@
             "latest": "Latest deadline this drop allows: {{date}}"
           },
           "sheetConfirm": "Confirm"
+        },
+        "review": {
+          "title": "Review and send",
+          "body": "Check everything once more. Our team reviews the campaign before it goes live.",
+          "edit": "Edit",
+          "complete": "Complete",
+          "editA11y": "Edit {{label}}",
+          "doneA11y": "{{label}}: complete",
+          "missingA11y": "{{label}}: incomplete",
+          "missing": "Missing: {{items}}",
+          "missingSome": "Something here is still missing",
+          "missingKey": {
+            "title": "Title",
+            "activity_type": "Activity type",
+            "teaser": "Public announcement",
+            "deliverables": "Content",
+            "pricing": "Price",
+            "apply_deadline_at": "Application deadline",
+            "schedule": "Schedule"
+          },
+          "idea": {
+            "withCover": "Cover + title",
+            "noCover": "Title, no cover"
+          },
+          "requirements": {
+            "line": "{{service}} ×{{count}}",
+            "followers": "{{count}}+ followers",
+            "shipping": "Product: {{mode}}"
+          },
+          "money": {
+            "seat": "{{price}} per seat",
+            "bid": "Bids {{min}}–{{max}}",
+            "bidTop": "Bids up to {{max}}",
+            "seats_zero": "{{count}} seats",
+            "seats_one": "{{count}} seat",
+            "seats_two": "{{count}} seats",
+            "seats_few": "{{count}} seats",
+            "seats_many": "{{count}} seats",
+            "seats_other": "{{count}} seats",
+            "drop": "drop {{date}}",
+            "delivery_zero": "delivery within {{count}} days",
+            "delivery_one": "delivery within {{count}} day",
+            "delivery_two": "delivery within {{count}} days",
+            "delivery_few": "delivery within {{count}} days",
+            "delivery_many": "delivery within {{count}} days",
+            "delivery_other": "delivery within {{count}} days"
+          },
+          "brief": {
+            "empty": "Nothing added",
+            "locked": "The private brief is revealed to the creator only after funding"
+          },
+          "notice": {
+            "missingTitle": "Sending takes you to what is missing",
+            "missingBody": "Complete the marked steps, or press send and we will take you there.",
+            "shortfall": "Your wallet has {{balance}} and the most held is {{max}}. You are short {{shortfall}}. This does not stop sending.",
+            "topUp": "Top up now",
+            "kycVerified": "Your company is verified. After sending, nothing can be edited until the review ends.",
+            "kycPending": "Your company verification is under review. You can send once it is approved.",
+            "kycRequired": "Verify your company before sending. Your draft stays saved.",
+            "kycAction": "Verify now",
+            "locked": "After sending, nothing can be edited until the review ends."
+          },
+          "note": {
+            "title": "Note from the Sada team",
+            "body": "Make the changes, then send the campaign again."
+          },
+          "notReady": "Complete what is missing first",
+          "waitUploads": "Waiting for the files to finish uploading",
+          "blocked": {
+            "kycTitle": "Verify your company first",
+            "kycBody": "Campaigns go out only from verified brands. Your draft is saved; send it once you are verified.",
+            "kycConfirm": "Verify now",
+            "pendingTitle": "Verification under review",
+            "pendingBody": "We will let you know once your company is verified. Then you can send this campaign; your draft is saved.",
+            "ok": "OK",
+            "liveTitle": "Live campaign limit reached",
+            "liveBody": "You can have up to 5 campaigns in review or live. Close or cancel one, then send this one.",
+            "liveConfirm": "My campaigns",
+            "later": "Later"
+          }
+        },
+        "inReview": {
+          "close": "Close",
+          "sentAt": "Sent · {{date}}",
+          "seats_zero": "{{count}} seats",
+          "seats_one": "{{count}} seat",
+          "seats_two": "{{count}} seats",
+          "seats_few": "{{count}} seats",
+          "seats_many": "{{count}} seats",
+          "seats_other": "{{count}} seats",
+          "title": "We are reviewing your campaign",
+          "body": "Usually within 24 hours. We will notify you when it is published or if we need a change.",
+          "sent": {
+            "title": "Sent",
+            "caption": "Content, requirements and price are complete"
+          },
+          "review": {
+            "title": "In review",
+            "caption": "You cannot edit at this stage"
+          },
+          "live": {
+            "title": "Published and open",
+            "caption": "Creators start applying"
+          },
+          "stepsA11y": "Review progress",
+          "shortfall": "Your wallet is short {{amount}} to cover every seat. Top up early so the first deal is not delayed.",
+          "topUp": "Top up wallet",
+          "myCampaigns": "My campaigns"
         }
       }
     },
