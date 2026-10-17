@@ -511,6 +511,12 @@ export interface ApplicantDecisionArgs extends ApplicantArgs {
   decision: ApplicantDecision;
 }
 
+/** The applicants put side by side, in the order the brand picked them. */
+export interface ApplicantsCompareArgs {
+  id: string;
+  ids: string[];
+}
+
 /** Applicants list sorts (contract §3.5); `newest` is the server default. */
 export const APPLICANT_SORT = [
   'newest',

@@ -1,12 +1,17 @@
 import { useCallback, useMemo, useState } from 'react';
+import { Vibration } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { HAPTIC_TAP_MS } from '@/core/config';
 import { formatNumber } from '@/core/i18n';
 import type { DealsStackScreenProps } from '@/core/navigation';
 import type { Money } from '@/core/money';
+import { toastService } from '@/core/toast';
 import { useGetCampaignApplicantsInfiniteQuery, useGetCampaignQuery } from '../../../api/brandCampaignsApi';
 import { useGetExploreFiltersQuery } from '../../../api/exploreApi';
 import {
+  APPLICANT_COMPARE_MAX,
+  APPLICANT_COMPARE_MIN,
   APPLICANT_SORT_LABEL,
   APPLICANT_STATUS_FILTER_LABEL,
   APPLICANT_TABS,
@@ -19,7 +24,10 @@ import {
   DEFAULT_APPLICANT_FILTERS,
   countActiveFilters,
   defaultApplicantTab,
+  isPendingApplicant,
+  seatFaceOf,
   toApplicantsArgs,
+  togglePick,
   type SeatFace,
 } from '../../../utils/applicants';
 
@@ -59,6 +67,8 @@ export const useBrandCampaignApplicantsScreen = () => {
   const [filters, setFilters] = useState<ApplicantFilters>(DEFAULT_APPLICANT_FILTERS);
   const [sheetVisible, setSheetVisible] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [comparing, setComparing] = useState(false);
+  const [picks, setPicks] = useState<SeatFace[]>([]);
 
   const tab = pickedTab ?? defaultApplicantTab(campaign?.status.key ?? null);
   // A status filter (expired, rejected…) replaces the tabs' own status, so no tab is lit.
@@ -76,12 +86,7 @@ export const useBrandCampaignApplicantsScreen = () => {
   const counts = summary?.counts ?? null;
 
   const faces = useMemo<SeatFace[]>(
-    () =>
-      itemsOf(rail.data).map(card => ({
-        id: card.id,
-        name: card.creator.displayName,
-        avatarUrl: card.creator.avatarUrl,
-      })),
+    () => itemsOf(rail.data).map(seatFaceOf),
     [rail.data],
   );
   const seatsTotal = recruiting?.seatsTotal ?? campaign?.seatsTotal ?? 0;
@@ -98,17 +103,32 @@ export const useBrandCampaignApplicantsScreen = () => {
     [counts, t],
   );
 
-  const setTab = useCallback((next: ApplicantTab) => {
-    setPickedTab(next);
-    setFilters(current => (current.status ? { ...current, status: null } : current));
+  // Only waiting applicants (new, shortlisted) can be compared, so the other views leave the mode.
+  const canCompare = activeTab === 'new' || activeTab === 'shortlisted';
+  const exitCompare = useCallback(() => {
+    setComparing(false);
+    setPicks([]);
   }, []);
+
+  const setTab = useCallback(
+    (next: ApplicantTab) => {
+      setPickedTab(next);
+      setFilters(current => (current.status ? { ...current, status: null } : current));
+      if (next === 'selected') exitCompare();
+    },
+    [exitCompare],
+  );
 
   const openSheet = useCallback(() => setSheetVisible(true), []);
   const closeSheet = useCallback(() => setSheetVisible(false), []);
-  const applyFilters = useCallback((next: ApplicantFilters) => {
-    setFilters(next);
-    setSheetVisible(false);
-  }, []);
+  const applyFilters = useCallback(
+    (next: ApplicantFilters) => {
+      setFilters(next);
+      setSheetVisible(false);
+      if (next.status) exitCompare();
+    },
+    [exitCompare],
+  );
   const clearFilters = useCallback(() => setFilters(current => ({ ...DEFAULT_APPLICANT_FILTERS, sort: current.sort })), []);
 
   const options = exploreFilters.data;
@@ -172,10 +192,42 @@ export const useBrandCampaignApplicantsScreen = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
-  const openApplicant = useCallback(
-    (applicationId: string) => navigation.navigate('CampaignApplicant', { id, applicationId }),
-    [navigation, id],
+  const pickedIds = useMemo(() => new Set(picks.map(pick => pick.id)), [picks]);
+
+  // Compare mode: a tap picks or drops, the fourth is refused with a buzz and a word.
+  const pickApplicant = useCallback(
+    (card: ApplicantCard) => {
+      const next = togglePick(picks, seatFaceOf(card), APPLICANT_COMPARE_MAX);
+      if (next.full) {
+        Vibration.vibrate(HAPTIC_TAP_MS);
+        toastService.info(t('marketplace.campaign.applicants.compare.full', { max: APPLICANT_COMPARE_MAX }));
+        return;
+      }
+      setPicks(next.picks);
+    },
+    [picks, t],
   );
+  const startCompare = useCallback(() => setComparing(true), []);
+  const pressCard = useCallback(
+    (card: ApplicantCard) => {
+      if (comparing) pickApplicant(card);
+      else navigation.navigate('CampaignApplicant', { id, applicationId: card.id });
+    },
+    [comparing, id, navigation, pickApplicant],
+  );
+  const holdCard = useCallback(
+    (card: ApplicantCard) => {
+      if (!canCompare || !isPendingApplicant(card)) return;
+      Vibration.vibrate(HAPTIC_TAP_MS);
+      setComparing(true);
+      setPicks(current => (current.some(pick => pick.id === card.id) ? current : togglePick(current, seatFaceOf(card), APPLICANT_COMPARE_MAX).picks));
+    },
+    [canCompare],
+  );
+  const openCompare = useCallback(() => {
+    if (picks.length < APPLICANT_COMPARE_MIN) return;
+    navigation.navigate('CampaignCompare', { id, ids: picks.map(pick => pick.id) });
+  }, [id, navigation, picks]);
   const openWallet = useCallback(() => navigation.navigate('WalletTab'), [navigation]);
   const refetchOptions = exploreFilters.refetch;
   const retryOptions = useCallback(() => {
@@ -221,8 +273,20 @@ export const useBrandCampaignApplicantsScreen = () => {
     onRetry,
     onEndReached,
     goBack,
-    openApplicant,
+    pressCard,
+    holdCard,
     openWallet,
+    compare: {
+      active: comparing && canCompare,
+      canStart: canCompare && applicants.length >= APPLICANT_COMPARE_MIN,
+      picks,
+      pickedIds,
+      min: APPLICANT_COMPARE_MIN,
+      max: APPLICANT_COMPARE_MAX,
+      start: startCompare,
+      exit: exitCompare,
+      open: openCompare,
+    },
     emptyTitle: filtered ? t('marketplace.campaign.applicants.empty.filtered.title') : t(def.emptyTitle),
     emptyHint: filtered ? t('marketplace.campaign.applicants.empty.filtered.hint') : t(def.emptyHint),
     emptyActionLabel: filtered ? t('marketplace.campaign.applicants.filters.clear') : null,

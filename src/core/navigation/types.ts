@@ -169,6 +169,8 @@ export type DealsStackParamList = {
   CampaignApplicants: { id: string };
   /** Brand only: one applicant of that campaign (`applicationId`), with the shortlist / reject decisions. */
   CampaignApplicant: { id: string; applicationId: string };
+  /** Brand only: 2–3 pending applicants of that campaign side by side, in the order picked. */
+  CampaignCompare: { id: string; ids: string[] };
 };
 
 /** `OpportunitiesTab` stack (marketplace, creator only): the public-campaign feed and a campaign's page. */

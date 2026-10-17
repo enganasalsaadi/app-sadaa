@@ -16,6 +16,8 @@ export interface SuperListProps<T> {
   data: T[];
   renderItem: FlashListProps<T>['renderItem'];
   keyExtractor: (item: T, index: number) => string;
+  /** State `renderItem` reads that is not in the items (a selection): a change re-renders the visible rows. */
+  extraData?: unknown;
 
   // ─── Loading / Error ───────────────────────────────────────────────────
   isLoading?: boolean;

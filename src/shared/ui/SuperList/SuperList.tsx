@@ -27,6 +27,7 @@ export function SuperList<T>({
   data,
   renderItem,
   keyExtractor,
+  extraData,
   isLoading = false,
   isFetchingNextPage = false,
   isRefreshing = false,
@@ -160,6 +161,7 @@ export function SuperList<T>({
         data={data.length > 0 ? data : EMPTY}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        extraData={extraData}
         numColumns={numColumns}
         overrideItemLayout={
           overrideItemLayout as FlashListProps<T>['overrideItemLayout']

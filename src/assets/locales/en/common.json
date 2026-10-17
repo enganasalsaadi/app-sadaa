@@ -1544,6 +1544,45 @@
             "confirm": "Decline",
             "keep": "Keep"
           }
+        },
+        "compare": {
+          "enter": "Compare applicants",
+          "exit": "Close comparison",
+          "title": "Compare",
+          "subtitle": "Pick up to {{max}} applicants",
+          "hint": "Only pending applicants (new and shortlisted) can be compared.",
+          "full": "You can compare up to {{max}} at a time",
+          "longPressHint": "Press and hold to compare",
+          "tray": {
+            "picked_one": "You picked 1",
+            "picked_other": "You picked {{count}}",
+            "needMore": "Pick at least {{min}} to compare",
+            "addOrGo": "Add another or compare now",
+            "go": "Compare",
+            "slot": "Picked: {{name}}",
+            "freeSlot": "Free slot"
+          },
+          "result": {
+            "title": "Comparison",
+            "loadFailed": "Couldn't load the comparison",
+            "tooFew": {
+              "title": "Not enough to compare",
+              "hint": "Some of these applicants are no longer available. Go back and pick again."
+            },
+            "openHint": "Tap a face to open the applicant",
+            "openA11y": "Open {{name}}",
+            "rows": {
+              "price": "Price",
+              "followers": "Total followers",
+              "rating": "Rating",
+              "deals": "Deals done",
+              "accounts": "Accounts",
+              "location": "City · niche"
+            },
+            "lowest": "Lowest",
+            "highest": "Highest",
+            "noValue": "None"
+          }
         }
       },
       "detail": {

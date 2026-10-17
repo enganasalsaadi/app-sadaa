@@ -6,6 +6,7 @@ import type {
   ApplicantCard,
   ApplicantDecisionArgs,
   ApplicantsArgs,
+  ApplicantsCompareArgs,
   ApplicantsPage,
   CampaignActionArgs,
   CampaignActionResult,
@@ -45,6 +46,7 @@ import {
 import {
   BRAND_CAMPAIGNS_URL,
   buildBrandApplicantUrl,
+  buildBrandApplicantsCompareUrl,
   buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignUrl,
@@ -106,6 +108,12 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       query: args => buildBrandApplicantUrl(args),
       transformResponse: (dto: ApplicantCardDto) => mapApplicantCard(dto),
       providesTags: (_result, _error, { applicationId }) => [{ type: 'CampaignApplicant', id: applicationId }],
+    }),
+    /** 2–4 cards side by side (a plain array, in the server's order); any decision on the campaign makes it stale. */
+    getCampaignApplicantsCompare: builder.query<ApplicantCard[], ApplicantsCompareArgs>({
+      query: args => buildBrandApplicantsCompareUrl(args),
+      transformResponse: (dtos: ApplicantCardDto[]) => dtos.map(mapApplicantCard),
+      providesTags: (_result, _error, { id }) => [{ type: 'CampaignApplicants', id }],
     }),
     /**
      * Shortlist or reject (contract §3.5): the answer is the card, which replaces the cached one.
@@ -287,6 +295,7 @@ export const {
   useGetCampaignsInfiniteQuery,
   useGetCampaignApplicantsInfiniteQuery,
   useGetCampaignApplicantQuery,
+  useGetCampaignApplicantsCompareQuery,
   useDecideCampaignApplicantMutation,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,

@@ -66,3 +66,7 @@ export const APPLICANT_URGENT_HOURS = 6;
 
 /** Seats beyond this many stop being drawn one by one on the table (a bar instead). */
 export const APPLICANT_MAX_SEAT_SOCKETS = 5;
+
+/** The contract takes 2–4 cards; the table compares at most 3 (approved PC3.0), so a face stays readable in a column. */
+export const APPLICANT_COMPARE_MIN = 2;
+export const APPLICANT_COMPARE_MAX = 3;

@@ -2,6 +2,7 @@ import type {
   ApplicantArgs,
   ApplicantDecision,
   ApplicantsArgs,
+  ApplicantsCompareArgs,
   CampaignActionPath,
   CampaignListArgs,
   CreatorApplicationsArgs,
@@ -55,6 +56,10 @@ export const buildBrandApplicantsUrl = (
     ],
     page,
   );
+
+/** `/brand/campaigns/{id}/applications/compare?ids[]=a&ids[]=b`: the cards to set side by side. */
+export const buildBrandApplicantsCompareUrl = ({ id, ids }: ApplicantsCompareArgs) =>
+  `${subPathOf(BRAND_CAMPAIGNS, id, 'applications/compare')}?${repeated('ids', ids).join('&')}`;
 
 /** `/brand/campaigns/{id}/applications/{app}[/shortlist|reject]`: one card, or a decision on it. */
 export const buildBrandApplicantUrl = ({ id, applicationId }: ApplicantArgs, decision?: ApplicantDecision) =>

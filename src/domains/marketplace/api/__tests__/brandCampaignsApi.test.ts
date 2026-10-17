@@ -468,3 +468,35 @@ describe('campaignChangedTags', () => {
     ]);
   });
 });
+
+describe('applicants compare', () => {
+  beforeAll(() => initSecureStorage());
+
+  beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'queueMicrotask', 'setImmediate'] });
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  it('asks for the picked ids and maps the plain array of cards', async () => {
+    const spy = jest
+      .spyOn(global, 'fetch')
+      .mockImplementation(async () => ok([applicantDto({ id: 'a1' }), applicantDto({ id: 'a2', pitch: null })]));
+    const store = makeStore();
+    const request = store.dispatch(
+      brandCampaignsApi.endpoints.getCampaignApplicantsCompare.initiate({ id: 'c1', ids: ['a1', 'a2'] }),
+    );
+    const { data } = await request;
+    request.unsubscribe();
+
+    const url = new URL((spy.mock.calls[0]?.[0] as Request).url);
+    expect(url.pathname).toMatch(/\/brand\/campaigns\/c1\/applications\/compare$/);
+    expect(url.searchParams.getAll('ids[]')).toEqual(['a1', 'a2']);
+    expect(data?.map(card => card.id)).toEqual(['a1', 'a2']);
+    expect(data?.[1]?.pitch).toBeNull();
+  });
+});

@@ -1,5 +1,6 @@
 import {
   buildBrandApplicantUrl,
+  buildBrandApplicantsCompareUrl,
   buildBrandApplicantsUrl,
   buildBrandCampaignFilesUrl,
   buildBrandCampaignsUrl,
@@ -48,6 +49,12 @@ describe('campaignQuery', () => {
     );
     expect(buildBrandApplicantUrl({ id: 'c1', applicationId: 'a1' }, 'reject')).toBe(
       '/brand/campaigns/c1/applications/a1/reject',
+    );
+  });
+
+  it('builds the compare call with repeated ids', () => {
+    expect(buildBrandApplicantsCompareUrl({ id: 'c1', ids: ['a1', 'a2', 'a3'] })).toBe(
+      '/brand/campaigns/c1/applications/compare?ids%5B%5D=a1&ids%5B%5D=a2&ids%5B%5D=a3',
     );
   });
 

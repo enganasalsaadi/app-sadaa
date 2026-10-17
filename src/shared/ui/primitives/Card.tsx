@@ -19,6 +19,8 @@ export interface CardProps {
   children: React.ReactNode;
   /** بدون `onPress` يُعرض كـ Box ثابت؛ مع `onPress` يُلف بـ Pressable */
   onPress?: PressableProps['onPress'];
+  /** Needs `onPress` too (a card without it is not pressable). */
+  onLongPress?: PressableProps['onLongPress'];
   /**
    * حالة التحديد: بدون `bg` يُستخدم `interactive.soft` عند `true` و`surface.main` عند `false`.
    * بدون `borderColor` يُستخدم `interactive.main` عند `true` و`border.card` عند `false`.
@@ -67,6 +69,7 @@ export interface CardProps {
 const CardInner: React.FC<CardProps> = ({
   children,
   onPress,
+  onLongPress,
   selected,
   shadow = 'card',
   bg,
@@ -175,6 +178,7 @@ const CardInner: React.FC<CardProps> = ({
       <Pressable
         {...layoutProps}
         onPress={onPress}
+        onLongPress={onLongPress}
         disabled={disabled}
         activeOpacity={activeOpacity}
         scaleOnPress={scaleOnPress}

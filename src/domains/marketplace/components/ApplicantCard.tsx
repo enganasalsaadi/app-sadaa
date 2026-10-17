@@ -1,6 +1,6 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Star } from 'lucide-react-native';
+import { Check, Star } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import type { ViewStyle } from 'react-native';
 import { iconStroke, moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
@@ -29,16 +29,49 @@ const MAX_NICHES = 2;
 
 export interface ApplicantCardProps {
   applicant: Applicant;
-  /** Opens the applicant's page. */
-  onPress: (applicantId: string) => void;
+  /** Opens the applicant's page, or (while comparing) picks or drops them. */
+  onPress: (applicant: Applicant) => void;
+  /** Press and hold starts comparing; leave out where the applicant cannot be compared. */
+  onLongPress?: (applicant: Applicant) => void;
+  /** Compare mode: the photo carries a tick circle and the card answers as a choice. */
+  picking?: boolean;
+  picked?: boolean;
 }
 
-const Photo = memo<{ applicant: Applicant }>(({ applicant }) => {
+const PICK_MARK = moderateScale(26);
+
+/** The tick circle of compare mode: hollow until picked, then teal with the tick. */
+const PickMark = memo<{ picked: boolean }>(({ picked }) => {
+  const { colors, sizes } = useTheme();
+  const styles = useStyles(
+    ({ borderWidths }): Record<'mark', ViewStyle> => ({
+      mark: {
+        width: PICK_MARK,
+        height: PICK_MARK,
+        borderRadius: PICK_MARK / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: borderWidths.md,
+        borderColor: picked ? colors.interactive.main : colors.border.strong,
+        backgroundColor: picked ? colors.interactive.main : colors.surface.main,
+      },
+    }),
+    [picked, colors.interactive.main, colors.border.strong, colors.surface.main],
+  );
+  return (
+    <Box style={styles.mark}>
+      {picked ? <Check size={sizes.icon.xs} color={colors.text.onAccent} strokeWidth={iconStroke.bold} /> : null}
+    </Box>
+  );
+});
+
+const Photo = memo<{ applicant: Applicant; picking: boolean; picked: boolean }>(({ applicant, picking, picked }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useStyles(
-    ({ spacing }): Record<'overlay', ViewStyle> => ({
+    ({ spacing }): Record<'overlay' | 'top', ViewStyle> => ({
       overlay: { position: 'absolute', top: 0, bottom: 0, start: 0, end: 0, padding: spacing.sm, justifyContent: 'space-between' },
+      top: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' },
     }),
   );
   const [failed, setFailed] = useState(false);
@@ -63,11 +96,10 @@ const Photo = memo<{ applicant: Applicant }>(({ applicant }) => {
         </Text>
       )}
       <Box style={styles.overlay}>
-        {applicant.invited ? (
-          <CampaignGlassPill label={t('marketplace.campaign.applicants.card.invited')} />
-        ) : (
-          <Box />
-        )}
+        <Box style={styles.top}>
+          {applicant.invited ? <CampaignGlassPill label={t('marketplace.campaign.applicants.card.invited')} /> : <Box />}
+          {picking ? <PickMark picked={picked} /> : null}
+        </Box>
         {isPendingApplicant(applicant) ? <ApplicantExpiryChip expiresAt={applicant.expiresAt} /> : null}
       </Box>
     </Box>
@@ -127,7 +159,13 @@ const StateTag = memo<{ applicant: Applicant }>(({ applicant }) => {
  * One applicant on the table: the creator's photo leads (with the time left to decide), then the
  * name, reach, rating and pitch; the price the brand would pay sits below. A tap opens the applicant.
  */
-const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({ applicant, onPress }) => {
+const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({
+  applicant,
+  onPress,
+  onLongPress,
+  picking = false,
+  picked = false,
+}) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { creator, price, pitch } = applicant;
@@ -137,19 +175,24 @@ const ApplicantCardComponent: React.FC<ApplicantCardProps> = ({ applicant, onPre
     .join(' · ');
   const money = resolveHue(colors, 'money');
   const styles = useStyles((): Record<'card', ViewStyle> => ({ card: { overflow: 'hidden', padding: 0 } }));
-  const open = useCallback(() => onPress(applicant.id), [onPress, applicant.id]);
+  const press = useCallback(() => onPress(applicant), [onPress, applicant]);
+  const hold = useMemo(() => (onLongPress ? () => onLongPress(applicant) : undefined), [onLongPress, applicant]);
 
   return (
     <Card
       style={styles.card}
-      onPress={open}
+      onPress={press}
+      onLongPress={hold}
+      selected={picking ? picked : undefined}
+      borderWidth={picked ? 'md' : undefined}
+      accessibilityHint={onLongPress && !picking ? t('marketplace.campaign.applicants.compare.longPressHint') : undefined}
       accessibilityLabel={t('marketplace.campaign.applicants.card.a11y', {
         name: creator.displayName,
         status: applicant.status.label,
       })}
     >
       <Box row minHeight={moderateScale(150)}>
-        <Photo applicant={applicant} />
+        <Photo applicant={applicant} picking={picking} picked={picked} />
         <Box flex={1} p="md" gap="xs">
           <Box row align="center" gap="sm">
             <Box flex={1}>
