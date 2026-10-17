@@ -1,5 +1,5 @@
 import type { DealReturnShipment } from '../../types';
-import { dealReturnView, handedDaysAgo, returnFormValues, toReturnBody } from '../dealReturn';
+import { dealReturnAnswers, dealReturnView, handedDaysAgo, returnFormValues, toReturnBody } from '../dealReturn';
 
 // The reason icons load with the constants; their names are enough here.
 jest.mock('lucide-react-native', () =>
@@ -164,5 +164,20 @@ describe('toReturnBody', () => {
     expect(handedDaysAgo({ handed: 'today', handedDays: 5 })).toBe(0);
     expect(handedDaysAgo({ handed: 'yesterday', handedDays: 5 })).toBe(1);
     expect(handedDaysAgo({ handed: 'earlier', handedDays: 5 })).toBe(5);
+  });
+});
+
+describe('dealReturnAnswers', () => {
+  it('lets the brand receive or report only once the waybill is in, and waive until receipt', () => {
+    expect(dealReturnAnswers('awaiting_waybill')).toEqual({ receive: false, issue: false, waive: true });
+    expect(dealReturnAnswers('shipped')).toEqual({ receive: true, issue: true, waive: true });
+  });
+
+  it('closes every answer once the return is done, reported, waived or unknown', () => {
+    const closed = { receive: false, issue: false, waive: false };
+    expect(dealReturnAnswers('received')).toEqual(closed);
+    expect(dealReturnAnswers('issue_reported')).toEqual(closed);
+    expect(dealReturnAnswers('waived')).toEqual(closed);
+    expect(dealReturnAnswers(null)).toEqual(closed);
   });
 });

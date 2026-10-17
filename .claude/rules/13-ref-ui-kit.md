@@ -65,6 +65,7 @@ No `estimatedItemSize`; `overrideItemLayout` supports `span` only; `key={layout}
 ## Theme
 
 `useTheme()`, `useStyles()`, `useResponsiveValue()`; `moderateScale/fontScale` only for sizes w/o tokens. Font Tajawal. Colors: hue groups `{main,text,soft}` (`brand interactive money premium status.*`): `.text` text, `.main` fills/icons. Spacing `xs sm md lg xl 2xl … 7xl`. Typography `h1–h4 title body bodyMedium bodySmall caption button buttonSmall overline tabLabel tabLabelActive label`. Motion timings `motion` (`@/core/theme`). SVG via `react-native-svg-transformer` (import `.svg` as components).
+- Motion tokens (`core/theme/tokens/motion`): `duration.unlock` / `unlockedHold` (a lock opening, the green «unlocked» hold) and `loop.parcelPulse` / `parcelTravel` (the return route's waiting pulse and travelling parcel). Loops always `useScreenFocused` + `useReducedMotion`.
 
 ## Not verified on device
 

@@ -10,6 +10,7 @@ const SECTIONS: readonly DealDetailSectionKey[] = [
   'next',
   'drop',
   'dispute',
+  'return',
   'retentionCases',
   'upsell',
   'rating',

@@ -4701,8 +4701,10 @@
         "copied": "Copied",
         "card": {
           "to": "To {{name}}",
+          "from": "From {{name}}",
           "you": "You",
           "brand": "Brand",
+          "creator": "Creator",
           "courier": "Courier",
           "trackingNo": "Tracking no.",
           "handed": "Handed to courier",
@@ -4751,6 +4753,59 @@
         "toast": {
           "saved": "Your account is unlocked",
           "edited": "Waybill updated"
+        },
+        "brand": {
+          "waiting": "Waiting for {{name}}'s waybill. You can waive the sample before it arrives.",
+          "late": "{{name}} missed the waybill deadline and got a strike. You can waive the sample.",
+          "waive": "Waive the sample's return",
+          "waiveShort": "Waive",
+          "autoLabel": "Receipt confirms itself",
+          "autoBy": "If you don't answer by {{date}}",
+          "receive": "Confirm the sample arrived",
+          "issue": "Report a problem",
+          "received": "You confirmed the sample on {{date}}. All done.",
+          "autoReceived": "You didn't answer in time, so receipt was confirmed on {{date}}.",
+          "noteLabel": "Your report · {{date}}",
+          "issueLine": "Sada's team is reviewing the case. No automatic strike for the creator.",
+          "waiveLabel": "Your reason · {{date}}",
+          "waivedLine": "You waived the sample. It's {{name}}'s now and their account is unlocked."
+        },
+        "answer": {
+          "toast": {
+            "received": "Receipt confirmed",
+            "reported": "Report sent to Sada's team",
+            "waived": "You waived the sample"
+          },
+          "receive": {
+            "title": "Did the sample arrive?",
+            "body": "Confirming closes the return with {{name}}",
+            "autoOn": "Confirms itself on",
+            "finalTitle": "Confirming is final",
+            "finalBody": "The return closes and no problem can be reported after.",
+            "hold": "Hold to confirm receipt",
+            "holdCaption": "There is no undoing it"
+          },
+          "issue": {
+            "title": "Report a problem",
+            "body": "Say what arrived from {{name}} and add photos",
+            "noteLabel": "What's wrong?",
+            "notePlaceholder": "e.g. The perfume arrived with a broken cap and about a third missing",
+            "photosHint": "Clear photos of the sample and its box. jpg, png or webp, up to 20MB each.",
+            "noticeTitle": "The case goes to Sada's team",
+            "noticeBody": "No automatic penalty for the creator, and the report can't be edited once sent.",
+            "hold": "Hold to send the report",
+            "holdCaption": "The report is sent once"
+          },
+          "waive": {
+            "title": "Waive the sample's return",
+            "body": "{{name}} won't be asked to send it back",
+            "noticeTitle": "The creator keeps the sample",
+            "noticeBody": "{{name}}'s account is unlocked right away. Only before you confirm receipt.",
+            "noteLabel": "Reason (optional)",
+            "notePlaceholder": "e.g. The sample is partly used, keep it",
+            "hold": "Hold to waive the sample",
+            "holdCaption": "Waiving can't be undone; {{name}} sees the reason on the return ticket"
+          }
         }
       },
       "changes": {

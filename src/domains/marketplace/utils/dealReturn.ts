@@ -7,7 +7,7 @@ import {
 } from '../constants/dealReturn';
 import type { DealCourierChoice } from '../constants/dealShipping';
 import type { DealReturnFormValues } from '../schemas/dealReturnSchema';
-import type { Deal, DealReturnShipment, Timestamp } from '../types';
+import type { Deal, DealReturnShipment, DealReturnStatus, Timestamp } from '../types';
 import { courierChoiceOf, courierName, safeTrackingUrl } from './dealShipping';
 
 const DAY_MS = 86_400_000;
@@ -66,6 +66,24 @@ export const dealReturnView = (
     kept: key === 'waived',
   };
 };
+
+export interface DealReturnAnswers {
+  receive: boolean;
+  issue: boolean;
+  waive: boolean;
+}
+
+/**
+ * Which answers the brand may give (contract §5.5): receipt and a problem report need the waybill
+ * on file (`shipped`); letting the sample go works from the moment the return opens until receipt
+ * is confirmed. Anything else (done, reported, waived, unknown) is closed. The server re-checks
+ * (`409 deal_return_unavailable`).
+ */
+export const dealReturnAnswers = (key: DealReturnStatus | null): DealReturnAnswers => ({
+  receive: key === 'shipped',
+  issue: key === 'shipped',
+  waive: key === 'awaiting_waybill' || key === 'shipped',
+});
 
 /** Fields the sheet starts from: a fresh waybill, or the one on file when the creator edits it. */
 export const returnFormValues = (

@@ -32,6 +32,7 @@ import { DealNextStepCard } from './DealNextStepCard';
 import { DealOutcomeCard } from './DealOutcomeCard';
 import { DealRatingSection } from './DealRatingSection';
 import { DealRespondDock } from './DealRespondDock';
+import { DealReturnAnswerSheets } from './DealReturnAnswerSheets';
 import { DealReturnCard } from './DealReturnCard';
 import { DealReturnSheet } from './DealReturnSheet';
 import { DealRespondSheets } from './DealRespondSheets';
@@ -120,7 +121,9 @@ const DetailSection = memo<{
         return vm.drop && !vm.stopped ? <DealDropCard drop={vm.drop} role={vm.role} /> : null;
       // The sample's way back outlives the deal: shown even after it stops.
       case 'return':
-        return vm.role === 'creator' && vm.returns.view ? <DealReturnCard deal={deal} ret={vm.returns} /> : null;
+        return vm.returns.view ? (
+          <DealReturnCard deal={deal} role={vm.role} ret={vm.returns} answer={vm.returnAnswer} />
+        ) : null;
       case 'next': {
         // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
         if (vm.dispute.showCard) return null;
@@ -336,6 +339,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
       <DealRetentionSheets deal={deal} retention={vm.retention} />
       {vm.role === 'creator' ? <DealBriefExitSheet exit={vm.briefExit} deal={deal} /> : null}
       {vm.role === 'creator' ? <DealReturnSheet deal={deal} ret={vm.returns} /> : null}
+      {vm.role === 'brand' ? <DealReturnAnswerSheets deal={deal} ret={vm.returns} answer={vm.returnAnswer} /> : null}
     </>
   );
 };

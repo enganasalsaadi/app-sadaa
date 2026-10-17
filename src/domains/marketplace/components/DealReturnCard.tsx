@@ -1,76 +1,26 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Copy, Gift, Info, Lock, LockOpen, Package, ShieldCheck, TriangleAlert, CheckCheck } from 'lucide-react-native';
-import { formatDate } from '@/core/i18n';
-import { iconStroke, moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
-import {
-  Box,
-  CustomButton,
-  GalleryModal,
-  IconButton,
-  Image,
-  Pressable,
-  ProgressBar,
-  StatusPill,
-  Text,
-} from '@/shared/ui';
-import { isolateLtr, isolateText } from '@/shared/utils';
+import { CheckCheck, Gift, Info, Lock, LockOpen, Package, ShieldCheck, TriangleAlert } from 'lucide-react-native';
+import { moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
+import { Box, CustomButton, ProgressBar, StatusPill, Text } from '@/shared/ui';
+import { isolateText } from '@/shared/utils';
+import type { DealReturnAnswerModel } from '../hooks/useDealReturnAnswer';
 import type { DealReturnModel } from '../hooks/useDealReturn';
-import type { Deal } from '../types';
+import type { Deal, DealRole } from '../types';
+import { DealReturnBrandBody } from './DealReturnBrandBody';
+import { ReturnLine, ReturnNote, ReturnPhotos, ReturnWaybill, useReturnDate } from './DealReturnParts';
 import { ReturnRoute, type ReturnRouteMode } from './ReturnRoute';
 
 const NOTCH = moderateScale(18);
-const THUMB = moderateScale(64);
-const WHEN: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-const WHEN_TIME: Intl.DateTimeFormatOptions = { ...WHEN, hour: 'numeric', minute: '2-digit' };
 
 export interface DealReturnCardProps {
   deal: Deal;
+  role: DealRole;
   ret: DealReturnModel;
+  /** The brand's answers; only read for `role` brand. */
+  answer: DealReturnAnswerModel;
 }
-
-/** A label over a value, the two halves of one detail row. */
-const Fact = memo<{ label: string; value: string; mono?: boolean; onCopy?: () => void; copyLabel?: string }>(
-  ({ label, value, mono = false, onCopy, copyLabel }) => {
-    const { colors } = useTheme();
-    return (
-      <Box flex={1} gap="xs">
-        <Text variant="caption" color={colors.text.tertiary}>
-          {label}
-        </Text>
-        <Box row align="center" gap="xs">
-          <Box flex={1}>
-            <Text variant="bodyMedium" color={colors.text.primary} numberOfLines={1}>
-              {mono ? isolateLtr(value) : value}
-            </Text>
-          </Box>
-          {onCopy && copyLabel ? (
-            <IconButton icon={Copy} size="sm" variant="ghost" accessibilityLabel={copyLabel} onPress={onCopy} />
-          ) : null}
-        </Box>
-      </Box>
-    );
-  },
-);
-
-/** One sentence with its icon, tinted by what it tells the creator. */
-const Line = memo<{ icon: typeof Lock; tone: 'warning' | 'danger' | 'interactive' | 'success' | 'neutral'; text: string }>(
-  ({ icon: Icon, tone, text }) => {
-    const { colors, sizes } = useTheme();
-    const hue = resolveHue(colors, tone);
-    return (
-      <Box row align="flex-start" gap="sm" p="md" borderRadius="md" bg={hue.soft}>
-        <Icon size={sizes.icon.sm} color={hue.main} strokeWidth={iconStroke.bold} />
-        <Box flex={1}>
-          <Text variant="bodySmall" color={hue.text}>
-            {text}
-          </Text>
-        </Box>
-      </Box>
-    );
-  },
-);
 
 const routeMode = (key: string | null, moving: boolean): ReturnRouteMode => {
   if (moving) return 'moving';
@@ -87,18 +37,17 @@ const routeMode = (key: string | null, moving: boolean): ReturnRouteMode => {
 };
 
 /**
- * The creator's return ticket (PC9.0 frames 1 · 5): a ticket with a coloured head — the server's
- * status as the title and the sample's road back — a perforation, and what the creator needs now.
- * Owed: the clock, what stays locked and the way to enter the waybill. On its way: the waybill on
- * file, the brand's silence clock and the open lock. Done or let go: the facts and a closing line.
- * A reported problem shows the brand's note and photos, read-only.
+ * The return ticket (PC9.0 frames 1 · 5, both roles): a coloured head — the server's status as the
+ * title and the sample's road back — a perforation, and what this side needs now. Creator: the
+ * clock and the way to enter the waybill while it is owed; the waybill, the brand's silence clock
+ * and the open lock once it is on its way; the facts and a closing line when done or let go; the
+ * brand's note and photos, read-only, after a reported problem. Brand: `DealReturnBrandBody`.
  */
-const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) => {
-  const { t, i18n } = useTranslation();
+const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, ret, answer }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
+  const date = useReturnDate();
   const { ship, view } = ret;
-  const [photo, setPhoto] = useState<number | null>(null);
-  const closePhoto = useCallback(() => setPhoto(null), []);
   const hue = resolveHue(colors, view?.tone ?? 'neutral');
   const styles = useStyles(
     ({ radii, spacing }): Record<'card' | 'head' | 'perf' | 'notchStart' | 'notchEnd' | 'dash', ViewStyle> => ({
@@ -133,48 +82,12 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
   if (!ship || !view) return null;
 
   const key = ship.status.key;
-  const brand = isolateText(deal.brand.name ?? '');
-  const date = (at: number | null, withTime = false) =>
-    at === null ? '' : formatDate(at, withTime ? WHEN_TIME : WHEN, i18n.language);
+  const brand = role === 'brand';
+  const party = isolateText((brand ? deal.creator.name : deal.brand.name) ?? '');
   const urls = (ship.issue?.photos ?? []).flatMap(item => (item.url ? [item.url] : []));
+  const waybill = <ReturnWaybill ship={ship} onCopyTracking={ret.copyTracking} onCopyLink={ret.copyLink} />;
 
-  const waybill =
-    ship.trackingNo || ship.courier ? (
-      <>
-        <Box row gap="lg">
-          <Fact label={t('marketplace.deals.return.card.courier')} value={ship.courier ?? '—'} />
-          <Fact
-            label={t('marketplace.deals.return.card.trackingNo')}
-            value={ship.trackingNo ?? '—'}
-            mono
-            onCopy={ship.trackingNo ? ret.copyTracking : undefined}
-            copyLabel={t('marketplace.deals.return.card.copyTrackingNo')}
-          />
-        </Box>
-        {ship.handedAt !== null || ship.trackingUrl ? (
-          <Box row gap="lg">
-            {ship.handedAt !== null ? (
-              <Fact label={t('marketplace.deals.return.card.handed')} value={date(ship.handedAt)} />
-            ) : (
-              <Box flex={1} />
-            )}
-            {ship.trackingUrl ? (
-              <Fact
-                label={t('marketplace.deals.return.card.link')}
-                value={ship.trackingUrl.replace(/^https:\/\//, '')}
-                mono
-                onCopy={ret.copyLink}
-                copyLabel={t('marketplace.deals.return.card.copyLink')}
-              />
-            ) : (
-              <Box flex={1} />
-            )}
-          </Box>
-        ) : null}
-      </>
-    ) : null;
-
-  const body = (() => {
+  const creatorBody = (() => {
     if (key === 'awaiting_waybill') {
       return (
         <>
@@ -194,7 +107,7 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
               })}
             </Text>
           ) : null}
-          <Line
+          <ReturnLine
             icon={view.late ? TriangleAlert : Lock}
             tone={view.late ? 'danger' : 'warning'}
             text={t(view.late ? 'marketplace.deals.return.card.lockLate' : 'marketplace.deals.return.card.lockOwed')}
@@ -227,7 +140,7 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
               {t('marketplace.deals.return.card.autoBy', { date: date(ret.autoConfirm.at) })}
             </Text>
           ) : null}
-          <Line icon={LockOpen} tone="success" text={t('marketplace.deals.return.card.unlocked')} />
+          <ReturnLine icon={LockOpen} tone="success" text={t('marketplace.deals.return.card.unlocked')} />
           <CustomButton
             title={t('marketplace.deals.return.card.edit')}
             variant="outline"
@@ -242,7 +155,7 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
       return (
         <>
           {waybill}
-          <Line
+          <ReturnLine
             icon={CheckCheck}
             tone="success"
             text={t(
@@ -259,31 +172,13 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
       return (
         <>
           {ship.issue ? (
-            <Box gap="sm" p="md" borderRadius="md" bg={colors.surface.elevated}>
-              <Text variant="caption" color={colors.text.tertiary}>
-                {t('marketplace.deals.return.card.noteLabel', { date: date(ship.issue.reportedAt) })}
-              </Text>
-              <Text variant="bodySmall" color={colors.text.primary}>
-                {ship.issue.note}
-              </Text>
-            </Box>
+            <ReturnNote
+              label={t('marketplace.deals.return.card.noteLabel', { date: date(ship.issue.reportedAt) })}
+              text={ship.issue.note}
+            />
           ) : null}
-          {urls.length > 0 ? (
-            <Box row gap="sm" wrap>
-              {urls.map((url, at) => (
-                <Pressable
-                  key={url}
-                  scaleOnPress
-                  onPress={() => setPhoto(at)}
-                  accessibilityRole="imagebutton"
-                  accessibilityLabel={t('marketplace.deals.return.card.photoA11y', { number: at + 1 })}
-                >
-                  <Image uri={url} width={THUMB} height={THUMB} borderRadius="md" resizeMode="cover" />
-                </Pressable>
-              ))}
-            </Box>
-          ) : null}
-          <Line icon={ShieldCheck} tone="warning" text={t('marketplace.deals.return.card.issueLine')} />
+          <ReturnPhotos urls={urls} />
+          <ReturnLine icon={ShieldCheck} tone="warning" text={t('marketplace.deals.return.card.issueLine')} />
         </>
       );
     }
@@ -291,21 +186,17 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
       return (
         <>
           {ship.waiveNote ? (
-            <Box gap="sm" p="md" borderRadius="md" bg={colors.surface.elevated}>
-              <Text variant="caption" color={colors.text.tertiary}>
-                {t('marketplace.deals.return.card.waiveLabel', { date: date(ship.waivedAt) })}
-              </Text>
-              <Text variant="bodySmall" color={colors.text.primary}>
-                {ship.waiveNote}
-              </Text>
-            </Box>
+            <ReturnNote
+              label={t('marketplace.deals.return.card.waiveLabel', { date: date(ship.waivedAt) })}
+              text={ship.waiveNote}
+            />
           ) : null}
-          <Line icon={Gift} tone="neutral" text={t('marketplace.deals.return.card.waivedLine')} />
+          <ReturnLine icon={Gift} tone="neutral" text={t('marketplace.deals.return.card.waivedLine')} />
         </>
       );
     }
     // A status this build doesn't know: the title says it, the waybill (if any) is still the creator's.
-    return waybill ?? <Line icon={Info} tone="neutral" text={ship.status.label} />;
+    return ship.trackingNo || ship.courier ? waybill : <ReturnLine icon={Info} tone="neutral" text={ship.status.label} />;
   })();
 
   return (
@@ -314,15 +205,15 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
         <Box row align="center" justify="space-between" gap="md">
           <StatusPill label={ship.status.label} tone={view.tone} />
           <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
-            {t('marketplace.deals.return.card.to', { name: brand })}
+            {t(brand ? 'marketplace.deals.return.card.from' : 'marketplace.deals.return.card.to', { name: party })}
           </Text>
         </Box>
         <ReturnRoute
           mode={routeMode(key, view.moving)}
           tone={view.tone}
           progress={view.progress}
-          fromLabel={t('marketplace.deals.return.card.you')}
-          toLabel={t('marketplace.deals.return.card.brand')}
+          fromLabel={t(brand ? 'marketplace.deals.return.card.creator' : 'marketplace.deals.return.card.you')}
+          toLabel={t(brand ? 'marketplace.deals.return.card.you' : 'marketplace.deals.return.card.brand')}
         />
       </Box>
       <Box style={styles.perf}>
@@ -331,9 +222,8 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, ret }) =
         <Box style={styles.notchEnd} />
       </Box>
       <Box px="lg" pb="lg" gap="md">
-        {body}
+        {brand ? <DealReturnBrandBody deal={deal} ret={ret} answer={answer} urls={urls} /> : creatorBody}
       </Box>
-      <GalleryModal images={urls} visible={photo !== null} initialIndex={photo ?? 0} onClose={closePhoto} />
     </Box>
   );
 };
