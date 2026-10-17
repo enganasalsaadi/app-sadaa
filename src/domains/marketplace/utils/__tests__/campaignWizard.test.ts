@@ -5,6 +5,8 @@ import {
   isValidCampaignTitle,
   nextWizardStep,
   previousWizardStep,
+  refusalFieldMessage,
+  refusalLeftover,
   refusalMessage,
   wizardRailState,
 } from '../campaignWizard';
@@ -67,5 +69,26 @@ describe('refusalMessage', () => {
 
   it('falls back to the general message', () => {
     expect(refusalMessage(refusal({ other: 'x' }), ['title'])).toBe('general words');
+  });
+});
+
+describe('refusal split over several inputs', () => {
+  const refusal = (fields: Record<string, string>): CampaignDraftRefusal => ({
+    error: { message: 'general words' } as CampaignDraftRefusal['error'],
+    fields,
+  });
+  const PRICE = ['seat_price_usd', 'budget_usd'];
+
+  it('gives a field only its own message', () => {
+    expect(refusalFieldMessage(refusal({ budget_usd: 'too high' }), ['budget_usd'])).toBe('too high');
+    expect(refusalFieldMessage(refusal({ budget_usd: 'too high' }), ['seat_price_usd'])).toBeUndefined();
+    expect(refusalFieldMessage(undefined, ['budget_usd'])).toBeUndefined();
+  });
+
+  it('shows the general message once, only when no input shows its own', () => {
+    expect(refusalLeftover(refusal({ budget_usd: 'too high' }), PRICE)).toBeUndefined();
+    expect(refusalLeftover(refusal({ pricing_model: 'conflict' }), PRICE)).toBe('general words');
+    expect(refusalLeftover(refusal({}), PRICE)).toBe('general words');
+    expect(refusalLeftover(undefined, PRICE)).toBeUndefined();
   });
 });

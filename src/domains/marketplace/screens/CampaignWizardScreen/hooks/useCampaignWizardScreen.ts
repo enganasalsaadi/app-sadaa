@@ -19,7 +19,9 @@ import {
   refusalMessage,
 } from '../../../utils/campaignWizard';
 import { useCampaignCover } from './useCampaignCover';
+import { useCampaignMoney } from './useCampaignMoney';
 import { useCampaignRequirements } from './useCampaignRequirements';
+import { useCampaignSchedule } from './useCampaignSchedule';
 
 type Navigation = DealFlowStackScreenProps<'CampaignWizard'>['navigation'];
 type Route = DealFlowStackScreenProps<'CampaignWizard'>['route'];
@@ -47,6 +49,8 @@ export const useCampaignWizardScreen = () => {
   const requirements = useCampaignRequirements(values, edit, refused);
 
   const [step, setStep] = useState<CampaignWizardStep>('idea');
+  const money = useCampaignMoney(values, edit, refused, campaignId, step);
+  const schedule = useCampaignSchedule(values, edit, refused, campaign);
   const [advancing, setAdvancing] = useState(false);
   const [titleTouched, setTitleTouched] = useState(false);
   const titleRef = useRef<TextInputInstance>(null);
@@ -204,6 +208,8 @@ export const useCampaignWizardScreen = () => {
     cover,
     pickCover,
     requirements,
+    money,
+    schedule,
   };
 };
 

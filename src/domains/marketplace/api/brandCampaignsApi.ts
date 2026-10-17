@@ -10,6 +10,7 @@ import type {
   CampaignHistoryRow,
   CampaignListArgs,
   CampaignPage,
+  CampaignQuote,
   Campaign,
 } from '../types/campaign';
 import type {
@@ -20,6 +21,7 @@ import type {
   CampaignFileDto,
   CampaignHistoryRowDto,
   CampaignPageDto,
+  CampaignQuoteDto,
 } from '../types/campaignDto';
 import type { CampaignDraftRequest } from '../types/campaignDraft';
 import { isCampaignConflictError } from '../utils/campaignAction';
@@ -28,6 +30,7 @@ import {
   mapCampaignDetail,
   mapCampaignFile,
   mapCampaignHistoryRow,
+  mapCampaignQuote,
   mapCampaignsPage,
 } from '../utils/campaignMappers';
 import {
@@ -49,6 +52,9 @@ interface CampaignActionEnvelopeDto {
  */
 export const campaignChangedTags = (id: string) =>
   [{ type: 'CampaignList', id: 'LIST' }, { type: 'CampaignHistory', id }, 'BrandHome'] as const;
+
+/** Draft keys the quote is worked out from: saving one of them makes the cached quote stale. */
+const QUOTE_INPUTS = ['pricing_model', 'seats_total', 'deliverables'] as const;
 
 /** Brand side of Public Campaigns: reads + the lifecycle actions answering the full campaign (contract §3). */
 export const brandCampaignsApi = baseApi.injectEndpoints({
@@ -75,6 +81,16 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       query: id => buildBrandCampaignUrl(id, 'history'),
       transformResponse: (rows: CampaignHistoryRowDto[]) => rows.map(mapCampaignHistoryRow),
       providesTags: (_result, _error, id) => [{ type: 'CampaignHistory', id }],
+    }),
+    /**
+     * Pricing preview of the saved draft (contract §3.2 Quote): per-seat split, the most it could
+     * hold, the wallet against it. A warning only; nothing is held. Stale after a pricing, seats or
+     * deliverables save (see `updateCampaign`), so it follows the autosave's quiet time.
+     */
+    getCampaignQuote: builder.query<CampaignQuote, string>({
+      query: id => buildBrandCampaignUrl(id, 'quote'),
+      transformResponse: (dto: CampaignQuoteDto) => mapCampaignQuote(dto),
+      providesTags: (_result, _error, id) => [{ type: 'CampaignQuote', id }],
     }),
     /** Starts a draft from the first part (the title); answers the full campaign, which seeds the cache. */
     createCampaign: builder.mutation<CampaignDetail, CampaignDraftRequest>({
@@ -106,8 +122,10 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
           // The draft engine classifies the failure.
         }
       },
-      invalidatesTags: (_result, error, { id }) =>
-        error && isCampaignConflictError(normalizeApiError(error)) ? [{ type: 'Campaign', id }] : [],
+      invalidatesTags: (_result, error, { id, body }) => {
+        if (error) return isCampaignConflictError(normalizeApiError(error)) ? [{ type: 'Campaign', id }] : [];
+        return QUOTE_INPUTS.some(key => key in body) ? [{ type: 'CampaignQuote', id }] : [];
+      },
     }),
     /** Drafts only; a `campaign_not_draft` conflict refetches the campaign the screen thought was a draft. */
     deleteCampaign: builder.mutation<void, string>({
@@ -210,6 +228,7 @@ export const {
   useGetCampaignsInfiniteQuery,
   useGetCampaignQuery,
   useGetCampaignHistoryQuery,
+  useGetCampaignQuoteQuery,
   useCreateCampaignMutation,
   useUpdateCampaignMutation,
   useDeleteCampaignMutation,

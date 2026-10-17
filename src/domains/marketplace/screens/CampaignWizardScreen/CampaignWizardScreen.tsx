@@ -3,12 +3,10 @@ import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { moderateScale } from '@/core/theme';
 import { Box, ErrorState, Layout, Skeleton } from '@/shared/ui';
-import { CampaignStepSoon } from './components/CampaignStepSoon';
 import { CampaignWizardDock } from './components/CampaignWizardDock';
 import { CampaignWizardHeader } from './components/CampaignWizardHeader';
-import { IdeaStep } from './components/IdeaStep';
+import { CampaignWizardStepBody } from './components/CampaignWizardStepBody';
 import { LeaveSheet } from './components/LeaveSheet';
-import { RequirementsStep } from './components/RequirementsStep';
 import { CampaignWizardContext } from './CampaignWizardContext';
 import { useCampaignWizardScreen } from './hooks/useCampaignWizardScreen';
 
@@ -53,7 +51,7 @@ export const CampaignWizardScreen: React.FC = () => {
         footerBehavior="divider"
       >
         <Animated.View entering={reduceMotion ? undefined : FadeIn}>
-          {step === 'idea' ? <IdeaStep /> : step === 'requirements' ? <RequirementsStep /> : <CampaignStepSoon />}
+          <CampaignWizardStepBody step={step} />
         </Animated.View>
       </Layout>
     );

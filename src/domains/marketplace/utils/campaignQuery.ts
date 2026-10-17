@@ -25,7 +25,7 @@ const subPathOf = (base: string, id: string, subPath?: string) => {
 export const BRAND_CAMPAIGNS_URL = BRAND_CAMPAIGNS;
 
 /** `/brand/campaigns/{id}[/sub/path]`, every segment encoded. */
-export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history') =>
+export const buildBrandCampaignUrl = (id: string, path?: CampaignActionPath | 'history' | 'quote') =>
   subPathOf(BRAND_CAMPAIGNS, id, path);
 
 /** `/brand/campaigns/{id}/files[/{file}[/complete]]`: the upload slot, its confirmation, its removal. */

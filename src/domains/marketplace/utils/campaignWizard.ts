@@ -45,3 +45,24 @@ export const refusalMessage = (
   const field = fieldNames.find(name => refusal.fields[name]);
   return field ? refusal.fields[field] : refusal.error.message;
 };
+
+/** Only a field's own message: `undefined` when the server named none of `fieldNames`. */
+export const refusalFieldMessage = (
+  refusal: CampaignDraftRefusal | undefined,
+  fieldNames: readonly string[],
+): string | undefined => {
+  const field = fieldNames.find(name => refusal?.fields[name]);
+  return field ? refusal?.fields[field] : undefined;
+};
+
+/**
+ * A part split over several inputs: its general message, for the one place that shows it, only
+ * when none of the inputs already shows its own (`shownFields`).
+ */
+export const refusalLeftover = (
+  refusal: CampaignDraftRefusal | undefined,
+  shownFields: readonly string[],
+): string | undefined => {
+  if (!refusal || shownFields.some(name => refusal.fields[name])) return undefined;
+  return refusal.error.message;
+};

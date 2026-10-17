@@ -3,24 +3,28 @@ import { Vibration, type ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { HAPTIC_TAP_MS } from '@/core/config';
+import { formatMoney } from '@/core/i18n';
 import { opacity, useStyles, useTheme } from '@/core/theme';
 import { Box, IconButton, Pressable, Text } from '@/shared/ui';
 import { useCampaignWizard } from '../CampaignWizardContext';
 
 /**
- * A floating navy bar over the steps: back (from the second step on) and the step's one action,
- * which waits for the pending save before moving on.
+ * A floating navy bar over the steps: back (from the second step on), from the money step on the
+ * most that could be held (the server's estimate), and the step's one action, which waits for the
+ * pending save before moving on.
  */
 const CampaignWizardDockComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors, sizes, isRTL } = useTheme();
-  const { step, isFirst, goNext, goBack, advancing } = useCampaignWizard();
+  const { step, isFirst, goNext, goBack, advancing, money } = useCampaignWizard();
+  const total = step === 'money' || step === 'review' ? (money.quote?.totalGross.max ?? null) : null;
   const Chevron = isRTL ? ChevronLeft : ChevronRight;
 
   const styles = useStyles(
-    ({ borderWidths, radii, spacing, shadows }): Record<'wrap' | 'bar' | 'go' | 'goBusy', ViewStyle> => {
+    ({ borderWidths, radii, spacing, shadows }): Record<'wrap' | 'bar' | 'go' | 'goBusy' | 'pill', ViewStyle> => {
       const go: ViewStyle = {
-        flex: 1,
+        // Beside a total the action takes its own width; alone it fills the bar.
+        flex: total ? undefined : 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,9 +49,10 @@ const CampaignWizardDockComponent: React.FC = () => {
         },
         go,
         goBusy: { ...go, opacity: opacity.disabled },
+        pill: { paddingHorizontal: spacing.xs, borderRadius: radii.full, backgroundColor: colors.glass.badge },
       };
     },
-    [colors.brand.main, colors.button.onBrand.bg, colors.glass.border, sizes.button.lg],
+    [colors.brand.main, colors.button.onBrand.bg, colors.glass.badge, colors.glass.border, sizes.button.lg, total],
   );
 
   const onGo = useCallback(() => {
@@ -69,6 +74,23 @@ const CampaignWizardDockComponent: React.FC = () => {
             accessibilityLabel={t('marketplace.campaign.wizard.dock.back')}
           />
         )}
+        {total ? (
+          <Box flex={1} ps="sm" accessible accessibilityLabel={`${t('marketplace.campaign.wizard.dock.total')} ${t('marketplace.campaign.wizard.dock.estimate')} ${formatMoney(total)}`}>
+            <Box row align="center" gap="xs">
+              <Text variant="caption" color={colors.text.onBrandMuted}>
+                {t('marketplace.campaign.wizard.dock.total')}
+              </Text>
+              <Box style={styles.pill}>
+                <Text variant="caption" color={colors.text.onBrand}>
+                  {t('marketplace.campaign.wizard.dock.estimate')}
+                </Text>
+              </Box>
+            </Box>
+            <Text variant="amountTitle" color={colors.glass.iconMoney} numberOfLines={1}>
+              {formatMoney(total)}
+            </Text>
+          </Box>
+        ) : null}
         <Pressable
           style={advancing ? styles.goBusy : styles.go}
           scaleOnPress={!advancing}

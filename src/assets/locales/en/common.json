@@ -1350,7 +1350,9 @@
         "dock": {
           "back": "Previous step",
           "next": "Next",
-          "review": "Review"
+          "review": "Review",
+          "total": "Most held",
+          "estimate": "Estimate"
         },
         "leave": {
           "title": "Unsaved changes",
@@ -1425,6 +1427,99 @@
             "cities": "Cities",
             "niches": "Niches (up to {{max}})"
           }
+        },
+        "money": {
+          "pricing": {
+            "label": "Pricing",
+            "fixed": "Fixed price",
+            "bidding": "Bidding",
+            "fixedHint": "You set the seat price; creators take it as it is.",
+            "biddingHint": "Each creator proposes a price within your range. The top of the range binds you."
+          },
+          "seatPrice": {
+            "label": "Seat price",
+            "note": "per creator · {{min}} to {{max}}",
+            "split": "Fee {{fee}} · creator gets {{net}}"
+          },
+          "bid": {
+            "min": "Lowest bid",
+            "minNote": "guide",
+            "max": "Highest bid",
+            "maxNote": "binding",
+            "split": "Fee {{fee}} · creator gets up to {{net}}"
+          },
+          "budget": {
+            "label": "Budget cap",
+            "note": "optional",
+            "hint": "What gets held never goes above this, whatever the bids."
+          },
+          "seats": {
+            "label": "Seats",
+            "hint": "up to {{max}} seats",
+            "a11y": "Number of seats"
+          },
+          "quote": {
+            "title": "Most held if every seat fills",
+            "estimate": "Estimate",
+            "range": "Lowest estimate {{min}}",
+            "balance": "Your wallet",
+            "shortfall": "Short by",
+            "covered": "Your wallet covers it",
+            "empty": "Enter a price to see the most that could be held.",
+            "failed": "Couldn't work out the estimate.",
+            "retry": "Try again",
+            "updating": "Updating…",
+            "note": "Nothing is held now. Money is held only when you select an applicant.",
+            "topUp": "Top up before then so the deal isn't delayed."
+          },
+          "deadline": {
+            "label": "Application deadline",
+            "note": "within {{days}} days",
+            "placeholder": "Pick the day",
+            "today": "Ends today",
+            "inDays_zero": "in {{count}} days",
+            "inDays_one": "in {{count}} day",
+            "inDays_two": "in {{count}} days",
+            "inDays_few": "in {{count}} days",
+            "inDays_many": "in {{count}} days",
+            "inDays_other": "in {{count}} days",
+            "sheetTitle": "Application deadline",
+            "sheetBody": "Applications are open until the end of this day, Damascus time."
+          },
+          "when": {
+            "label": "When does the content go out?",
+            "delivery": "Delivery window",
+            "drop": "One drop",
+            "deliveryHint": "Each creator publishes within this window from the start of their deal.",
+            "days_zero": "{{count}} days",
+            "days_one": "{{count}} day",
+            "days_two": "{{count}} days",
+            "days_few": "{{count}} days",
+            "days_many": "{{count}} days",
+            "days_other": "{{count}} days",
+            "dropHint": "Every creator publishes at the same moment, at least {{days}} days after applications close.",
+            "dropPlaceholder": "Pick the drop day and time",
+            "zone": "Damascus time",
+            "tooEarly": "The drop is too close to the deadline. Earliest allowed: {{date}}",
+            "sheetTitle": "Drop moment",
+            "sheetBody": "Earliest allowed: {{date}} · Damascus time",
+            "time": "Time",
+            "noTime": "No time left on this day. Pick a later one."
+          },
+          "plan": {
+            "label": "How the campaign runs",
+            "caption": "{{date}} · {{note}}",
+            "deadline": "Applications close",
+            "deadlineCaption": "then you choose who joins",
+            "drafts": "Drafts due",
+            "draftsCaption": "{{hours}} hours before the drop",
+            "publish": "Publish link opens",
+            "publishCaption": "{{minutes}} minutes before the drop",
+            "drop": "The drop",
+            "dropCaption": "everyone publishes now",
+            "latest": "Latest deadline this drop allows: {{date}}"
+          },
+          "sheetConfirm": "Confirm"
         }
       }
     },

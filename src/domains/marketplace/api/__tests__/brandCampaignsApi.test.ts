@@ -28,6 +28,7 @@ const mockServer = (actionResponse: () => Response) => {
     const { pathname } = new URL(request.url);
     if (request.method !== 'GET') return actionResponse();
     if (pathname.endsWith('/history')) return ok([historyRowDto()]);
+    if (pathname.endsWith('/quote')) return ok(quoteDto);
     if (pathname.endsWith('/brand/campaigns')) {
       return ok({ items: [detailDto()], meta: { current_page: 1, last_page: 2, total: 21 } });
     }
@@ -35,6 +36,27 @@ const mockServer = (actionResponse: () => Response) => {
   });
   return { spy, state };
 };
+
+const quoteDto = {
+  pricing_model: 'fixed',
+  currency: 'USD',
+  fee_bps: 1000,
+  seats: 5,
+  deliverables_per_creator: 2,
+  seat: {
+    min: { gross_usd: '100.00', fee_usd: '10.00', net_usd: '90.00' },
+    max: { gross_usd: '100.00', fee_usd: '10.00', net_usd: '90.00' },
+  },
+  total_gross_usd: { min: '500.00', max: '500.00' },
+  budget_usd: null,
+  wallet: { balance_usd: '320.00', required_usd: '500.00', shortfall_usd: '180.00', is_sufficient: false },
+};
+
+const quoteReads = (spy: jest.SpyInstance) =>
+  spy.mock.calls.filter(([input]) => {
+    const request = input as Request;
+    return request.method === 'GET' && new URL(request.url).pathname.endsWith('/brand/campaigns/c1/quote');
+  }).length;
 
 const detailReads = (spy: jest.SpyInstance) =>
   spy.mock.calls.filter(([input]) => {
@@ -206,6 +228,48 @@ describe('brandCampaignsApi', () => {
     expect(readCampaign(store)?.missing).toEqual(['schedule']);
     expect(detailReads(spy)).toBe(1);
     detail.unsubscribe();
+  });
+
+  it('reads the quote in minor units', async () => {
+    mockServer(() => ok(null));
+    const store = makeStore();
+
+    const quote = await store.dispatch(brandCampaignsApi.endpoints.getCampaignQuote.initiate('c1'));
+
+    expect(quote.data?.totalGross.max).toEqual({ amount: 50000, currency: 'USD' });
+    expect(quote.data?.wallet.shortfall).toEqual({ amount: 18000, currency: 'USD' });
+    expect(quote.data?.seat.max?.net).toEqual({ amount: 9000, currency: 'USD' });
+  });
+
+  it('refreshes the quote after a pricing, seats or deliverables save only', async () => {
+    const { spy } = mockServer(() => ok(detailDto()));
+    const store = makeStore();
+    const quote = store.dispatch(brandCampaignsApi.endpoints.getCampaignQuote.initiate('c1'));
+    await quote;
+
+    await store
+      .dispatch(brandCampaignsApi.endpoints.updateCampaign.initiate({ id: 'c1', body: { title: 'Renamed' } }))
+      .unwrap();
+    await settle();
+    expect(quoteReads(spy)).toBe(1);
+
+    await store
+      .dispatch(
+        brandCampaignsApi.endpoints.updateCampaign.initiate({
+          id: 'c1',
+          body: { pricing_model: 'fixed', seat_price_usd: '120.00', budget_usd: null },
+        }),
+      )
+      .unwrap();
+    await settle();
+    expect(quoteReads(spy)).toBe(2);
+
+    await store
+      .dispatch(brandCampaignsApi.endpoints.updateCampaign.initiate({ id: 'c1', body: { seats_total: 6 } }))
+      .unwrap();
+    await settle();
+    expect(quoteReads(spy)).toBe(3);
+    quote.unsubscribe();
   });
 
   it('refetches the campaign when an autosave finds it no longer editable', async () => {

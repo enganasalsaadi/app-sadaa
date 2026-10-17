@@ -246,6 +246,7 @@ export const baseApi = createApi({
     'Campaign',
     'CampaignList',
     'CampaignHistory',
+    'CampaignQuote',
     'CampaignApplication',
     'CampaignApplicationList',
     'CreatorCampaign',
