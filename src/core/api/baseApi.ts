@@ -171,6 +171,10 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
         normalizedError.code === 'gated_parameter' ||
         normalizedError.code?.startsWith('deal_')
       ) {
+        // The creator's restriction list is stale (a ban began, or a waybill is owed): refetch it.
+        if (normalizedError.code === 'creator_restricted') {
+          api.dispatch(baseApi.util.invalidateTags(['CreatorRestrictions']));
+        }
         return { error: result.error };
       }
 
@@ -256,6 +260,7 @@ export const baseApi = createApi({
     'CampaignApplicationList',
     'CreatorCampaign',
     'CreatorCampaignList',
+    'CreatorRestrictions',
   ],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,

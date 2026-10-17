@@ -5,11 +5,12 @@ import {
 } from '../../components/DealDetailView';
 import { useCreatorDealDetailScreen } from './hooks/useCreatorDealDetailScreen';
 
-/** Creator reading order: the brief's clean exit while it's open (linked deals), the next step, the drop clock (linked deals), the deliverables while the work is on, the offer file (read before accepting), then the station card with its history. */
+/** Creator reading order: the brief's clean exit while it's open (linked deals), the next step, the drop clock (linked deals), the sample's return (returnable samples), the deliverables while the work is on, the offer file (read before accepting), then the station card with its history. */
 const SECTIONS: readonly DealDetailSectionKey[] = [
   'briefExit',
   'next',
   'drop',
+  'return',
   'dispute',
   'retentionCases',
   'upsell',

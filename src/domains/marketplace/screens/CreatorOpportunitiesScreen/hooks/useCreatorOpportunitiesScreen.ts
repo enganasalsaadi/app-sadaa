@@ -10,6 +10,7 @@ import {
   type OpportunitySegment,
 } from '../../../constants/opportunities';
 import { useCampaignBookmark } from '../../../hooks/useCampaignBookmark';
+import { useRestrictions } from '../../../hooks/useRestrictions';
 import { CAMPAIGN_PRICING_MODEL } from '../../../types/campaign';
 import type { CampaignPricingModel, CreatorCampaign, CreatorFeedArgs } from '../../../types/campaign';
 import { countActiveFeedFilters, isActivityType, toFeedArgs } from '../../../utils/opportunities';
@@ -116,7 +117,9 @@ export const useCreatorOpportunitiesScreen = () => {
   const openProfile = useCallback(() => navigation.navigate('SettingsTab', { screen: 'ProfileScreen' }), [navigation]);
 
   const activeFilters = countActiveFeedFilters(args);
+  const restrictions = useRestrictions('public');
   return {
+    restrictions,
     segment,
     setSegment,
     onFeed,

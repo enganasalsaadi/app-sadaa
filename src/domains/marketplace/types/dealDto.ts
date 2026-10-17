@@ -443,6 +443,7 @@ export interface DealStrikeDto {
   id: string;
   deal_id: string;
   reason: DealLabeledDto;
+  severity?: DealLabeledDto | null;
   occurred_at: string;
   expires_at: string;
 }

@@ -81,6 +81,7 @@ describe('strikesAlert', () => {
     id,
     dealId: 'd1',
     reason: { key: 'withdrew', label: 'Withdrew' },
+    severity: null,
     occurredAt: 0,
     expiresAt,
   });

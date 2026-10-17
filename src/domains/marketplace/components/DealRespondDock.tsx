@@ -1,18 +1,24 @@
 import React, { memo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Hourglass, PenLine, Plus, Undo2, X, Zap } from 'lucide-react-native';
+import { Hourglass, KeyRound, PenLine, Plus, Undo2, X, Zap } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, CustomButton, Text } from '@/shared/ui';
 import type { DealRespondModel } from '../hooks/useDealRespond';
 import type { Deal } from '../types';
+import type { RestrictionNotice } from '../utils/restrictions';
 import { dealTimer } from '../utils/dealTimer';
 import { DealDecisionDock, type DealDockClock } from './DealDecisionDock';
+import { RestrictionDockTop } from './RestrictionDockTop';
 
 export interface DealRespondDockProps {
   deal: Deal;
   respond: DealRespondModel;
+  /** Creator: what stops them accepting a direct offer right now (PC9.1), `null` when nothing does. */
+  restriction?: RestrictionNotice | null;
+  /** Opens the deal that owes the waybill, or the strikes. */
+  onRestriction?: () => void;
 }
 
 type TimedDock = 'creatorOffer' | 'brandOffer' | 'brandExtension';
@@ -34,6 +40,8 @@ const CLOCK_LEAD = {
 const DealRespondDockComponent: React.FC<DealRespondDockProps> = ({
   deal,
   respond,
+  restriction = null,
+  onRestriction,
 }) => {
   const { t, i18n } = useTranslation();
   const { colors, sizes, isRTL } = useTheme();
@@ -68,6 +76,31 @@ const DealRespondDockComponent: React.FC<DealRespondDockProps> = ({
   const body = (() => {
     switch (dock) {
       case 'creatorOffer':
+        // A restricted creator can still say no: the accept and the extension are what the lock takes.
+        if (restriction && onRestriction) {
+          return (
+            <>
+              <RestrictionDockTop notice={restriction} scope="direct" onWhy={onRestriction} />
+              {restriction.kind === 'return_pending' ? (
+                <CustomButton
+                  title={t('marketplace.restrictions.returnPending.dockAction')}
+                  size="md"
+                  fullWidth
+                  leftIcon={<KeyRound />}
+                  onPress={onRestriction}
+                />
+              ) : null}
+              <CustomButton
+                title={t('marketplace.deals.respond.dock.decline')}
+                variant="outline"
+                size="md"
+                fullWidth
+                leftIcon={<X />}
+                onPress={respond.opens.decline}
+              />
+            </>
+          );
+        }
         return (
           <>
             <CustomButton

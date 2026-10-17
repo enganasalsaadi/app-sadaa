@@ -36,7 +36,7 @@ interface DealEnvelopeDto {
 /**
  * What else moves when a deal does: the lists (status changes tab), its history (new rows,
  * addenda), the brand home's and creator summary's active deals, the escrow money and the creator's strikes (a
- * withdrawal records one). Each refetches only if on screen.
+ * withdrawal records one) and restrictions (a waybill lifts one). Each refetches only if on screen.
  */
 export const dealChangedTags = (id: string) =>
   [
@@ -49,6 +49,7 @@ export const dealChangedTags = (id: string) =>
     'WalletEarnings',
     { type: 'WalletTransaction', id: 'LIST' },
     'DealStrikes',
+    'CreatorRestrictions',
   ] as const;
 
 /**
@@ -60,7 +61,7 @@ export const dealPushTags = (target: PushTarget | null) => {
   if (target?.kind === 'deal') {
     return [{ type: 'Deal', id: target.dealId }, ...dealChangedTags(target.dealId)] as const;
   }
-  return target?.kind === 'strikes' ? (['DealStrikes'] as const) : [];
+  return target?.kind === 'strikes' ? (['DealStrikes', 'CreatorRestrictions'] as const) : [];
 };
 
 /** Direct Deals reads + every action answering the full deal (handoff §0, M3). Both roles. */

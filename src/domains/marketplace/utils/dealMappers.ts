@@ -24,6 +24,7 @@ import {
   DEAL_SHIPPING_MODE,
   DEAL_STATUS,
   DEAL_STRIKE_REASON,
+  DEAL_STRIKE_SEVERITY,
   DEAL_UPSELL_DECLINE_REASON,
   DEAL_UPSELL_KIND,
   DEAL_UPSELL_STATUS,
@@ -642,6 +643,7 @@ const mapStrike = (dto: DealStrikeDto): DealStrike => ({
   id: dto.id,
   dealId: dto.deal_id,
   reason: toLabeled(DEAL_STRIKE_REASON, dto.reason),
+  severity: toLabeledOrNull(DEAL_STRIKE_SEVERITY, dto.severity ?? null),
   occurredAt: toTimestamp(dto.occurred_at),
   expiresAt: toTimestamp(dto.expires_at),
 });

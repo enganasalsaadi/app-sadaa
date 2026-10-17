@@ -155,8 +155,18 @@ export const CREATOR_DEAL_ACTION = [
 ] as const;
 export type CreatorDealAction = (typeof CREATOR_DEAL_ACTION)[number];
 
-export const DEAL_STRIKE_REASON = ['withdrew', 'defaulted', 'dispute_lost', 'retention_violation'] as const;
+export const DEAL_STRIKE_REASON = [
+  'withdrew',
+  'defaulted',
+  'dispute_lost',
+  'retention_violation',
+  'return_overdue',
+] as const;
 export type DealStrikeReason = (typeof DEAL_STRIKE_REASON)[number];
+
+/** A normal strike clears on its own; a severe one (a withdrawal or default after a gift) also bans public applying. */
+export const DEAL_STRIKE_SEVERITY = ['normal', 'severe'] as const;
+export type DealStrikeSeverity = (typeof DEAL_STRIKE_SEVERITY)[number];
 
 /** Who moved a deal: the server's actor types (the influencer is our creator). */
 export const DEAL_ACTOR = ['brand', 'influencer', 'system', 'admin'] as const;
@@ -597,6 +607,8 @@ export interface DealStrike {
   id: string;
   dealId: string;
   reason: Labeled<DealStrikeReason>;
+  /** `null` from a server that doesn't send it yet. */
+  severity: Labeled<DealStrikeSeverity> | null;
   occurredAt: Timestamp;
   expiresAt: Timestamp;
 }
@@ -827,7 +839,7 @@ type DealItemPath<A extends string> = `items/${string}/${A}`;
 /**
  * Every action route whose success `data` is the full deal (handoff §0), relative to
  * `/{brand|influencer}/deals/{id}/`. Routes answering another resource (rating, retention,
- * opening a dispute or adding evidence) and the multipart `shipment/issue` get their own mutations.
+ * opening a dispute or adding evidence) and the multipart `shipment/issue` and `return-shipment/issue` get their own mutations.
  */
 export type DealActionPath =
   // brand
@@ -837,6 +849,8 @@ export type DealActionPath =
   | 'extension/approve'
   | 'extension/decline'
   | 'shipment'
+  | 'return-shipment/receive'
+  | 'return-shipment/waive'
   | DealItemPath<'approve' | 'revision' | 'verify' | 'fix'>
   | 'upsells'
   | `upsells/${string}/withdraw`
@@ -845,6 +859,7 @@ export type DealActionPath =
   | 'decline'
   | 'extension'
   | 'shipment/receive'
+  | 'return-shipment'
   | 'brief-exit'
   | DealItemPath<'drafts' | 'publish'>
   | `upsells/${string}/${'accept' | 'decline'}`

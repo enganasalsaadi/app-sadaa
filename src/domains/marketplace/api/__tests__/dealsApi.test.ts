@@ -195,11 +195,12 @@ describe('dealPushTags', () => {
       'WalletEarnings',
       { type: 'WalletTransaction', id: 'LIST' },
       'DealStrikes',
+      'CreatorRestrictions',
     ]);
   });
 
-  it('refetches the strikes list on a strikes link', () => {
-    expect(dealPushTags({ kind: 'strikes' })).toEqual(['DealStrikes']);
+  it('refetches the strikes list and the restrictions on a strikes link', () => {
+    expect(dealPushTags({ kind: 'strikes' })).toEqual(['DealStrikes', 'CreatorRestrictions']);
   });
 
   it('ignores other links and pushes without one', () => {

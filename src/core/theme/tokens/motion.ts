@@ -19,6 +19,10 @@ export const motion = {
     seal: 1600,
     /** A dispute's scales tipping once toward the side the ruling favoured. */
     tilt: 1400,
+    /** A restriction's lock springing open once the waybill is in. */
+    unlock: 260,
+    /** The green «unlocked» banner stays this long before it folds away. */
+    unlockedHold: 1400,
   },
   /** Delay between siblings of a stagger rise. */
   stagger: 60,
@@ -51,6 +55,10 @@ export const motion = {
     scalesSway: 6000,
     /** Drop squad bar: one breath of a late creator's piece (their grace is running). */
     lateBlink: 1600,
+    /** Return card: one ring breathing out of the parcel that still waits on the creator. */
+    parcelPulse: 1800,
+    /** Return card: one trip of the parcel along its route while it's on the way to the brand. */
+    parcelTravel: 3200,
   },
   /** One heart floating up off a service card the moment it is picked. */
   pickBurst: 900,

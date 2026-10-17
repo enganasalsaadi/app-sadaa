@@ -4,13 +4,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { applyServerFieldErrors, normalizeApiError, type AppApiError } from '@/core/api';
 import { toastService } from '@/core/toast';
-import { checkUpload, normalizeMime } from '@/core/upload';
 import { useReportShipmentIssueMutation } from '../api/dealShippingApi';
 import { DEAL_SHIPPING_LIMITS, dealCourierLabels } from '../constants/dealShipping';
-import { DEAL_ISSUE_PHOTO_POLICY } from '../constants/dealUploads';
 import {
   createDealIssueSchema,
   createDealShipSchema,
@@ -32,6 +29,7 @@ import {
 import { useClock } from './useClock';
 import { useDealAction } from './useDealAction';
 import { useDealAddressForm } from './useDealAddressForm';
+import { useIssuePhotos } from './useIssuePhotos';
 
 const MINUTE_MS = 60_000;
 
@@ -45,14 +43,6 @@ const SHIP_FIELDS = {
 } as const;
 const ISSUE_FIELDS = { reason: 'reason', note: 'note' } as const;
 const EMPTY_ISSUE: DealIssueFormValues = { reason: null, note: '' };
-
-/** A picked issue photo, kept on the device until the report goes (multipart, original quality). */
-export interface DealIssuePhoto {
-  key: string;
-  uri: string;
-  name: string;
-  mime: string;
-}
 
 /**
  * Shipping on the deal page (handoff M5, B5.1), both roles. Brand: enter the waybill, edit it
@@ -95,8 +85,15 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
     defaultValues: EMPTY_ISSUE,
   });
   const address = useDealAddressForm();
-  const [photos, setPhotos] = useState<DealIssuePhoto[]>([]);
-  const [photosError, setPhotosError] = useState<string | null>(null);
+  const {
+    photos,
+    error: photosError,
+    setError: setPhotosError,
+    reset: resetPhotos,
+    pick: pickPhotos,
+    remove: removePhoto,
+    appendTo: appendPhotos,
+  } = useIssuePhotos(DEAL_SHIPPING_LIMITS.issuePhotos);
 
   const current = view?.current ?? null;
   const resetShip = shipForm.reset;
@@ -116,8 +113,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
           break;
         case 'issue':
           resetIssue(EMPTY_ISSUE);
-          setPhotos([]);
-          setPhotosError(null);
+          resetPhotos();
           break;
         case 'cancel':
           resetCancel();
@@ -132,7 +128,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
       }
       setSheet(next);
     },
-    [courierLabels, current, resetCancel, resetIssue, resetShip, startAddress, viewAddress],
+    [courierLabels, current, resetCancel, resetIssue, resetPhotos, resetShip, startAddress, viewAddress],
   );
   const opens = useMemo(
     () =>
@@ -215,51 +211,6 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
     [runReceive, settle, t],
   );
 
-  const remaining = DEAL_SHIPPING_LIMITS.issuePhotos - photos.length;
-  const pickPhotos = useCallback(async () => {
-    if (remaining <= 0) {
-      toastService.info(
-        t('marketplace.deals.shipping.issue.photosLimit', { max: DEAL_SHIPPING_LIMITS.issuePhotos }),
-      );
-      return;
-    }
-    try {
-      // Original quality: these photos become dispute evidence (rule 07).
-      const response = await launchImageLibrary({
-        mediaType: 'photo',
-        quality: 1,
-        assetRepresentationMode: 'current',
-        selectionLimit: remaining,
-      });
-      if (response.didCancel) return;
-      if (response.errorCode) throw new Error(response.errorCode);
-      let rejected = 0;
-      const picked = (response.assets ?? []).flatMap<DealIssuePhoto>(asset => {
-        const name = asset.fileName ?? asset.uri ?? '';
-        const check = checkUpload(
-          DEAL_ISSUE_PHOTO_POLICY,
-          normalizeMime(asset.type, name),
-          asset.fileSize ?? 0,
-        );
-        if (!asset.uri || !check.ok) {
-          rejected += 1;
-          return [];
-        }
-        return [{ key: `${asset.uri}-${Date.now()}`, uri: asset.uri, name, mime: check.mime }];
-      });
-      if (rejected > 0) toastService.error(t('marketplace.deals.shipping.issue.photoRejected'));
-      if (picked.length === 0) return;
-      setPhotosError(null);
-      setPhotos(list => [...list, ...picked].slice(0, DEAL_SHIPPING_LIMITS.issuePhotos));
-    } catch {
-      toastService.error(t('marketplace.deals.shipping.issue.pickFailed'));
-    }
-  }, [remaining, t]);
-  const removePhoto = useCallback(
-    (key: string) => setPhotos(list => list.filter(photo => photo.key !== key)),
-    [],
-  );
-
   const issueSubmit = issueForm.handleSubmit;
   const setIssueError = issueForm.setError;
   const photosRequired = t('marketplace.deals.shipping.issue.photosRequired');
@@ -275,10 +226,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
           const form = new FormData();
           form.append('reason', reason);
           if (note.trim()) form.append('note', note.trim());
-          photos.forEach(photo => {
-            const file: FormDataValue = { uri: photo.uri, name: photo.name, type: photo.mime };
-            form.append('photos[]', file);
-          });
+          appendPhotos(form);
           try {
             await sendIssue({ id, form }).unwrap();
             setSheet(null);
@@ -305,7 +253,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
           if (issueNeedsPhotos(picked) && photos.length === 0) setPhotosError(photosRequired);
         },
       ),
-    [id, issueForm, issueState.isLoading, issueSubmit, party, photos, photosRequired, sendIssue, setIssueError, t],
+    [appendPhotos, id, issueForm, issueState.isLoading, issueSubmit, party, photos, photosRequired, sendIssue, setIssueError, setPhotosError, t],
   );
 
   const runSaveAddress = saveAddress.run;

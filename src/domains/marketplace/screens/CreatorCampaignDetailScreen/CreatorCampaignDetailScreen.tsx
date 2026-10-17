@@ -15,6 +15,7 @@ import { CreatorCampaignHero } from '../../components/CreatorCampaignHero';
 import { CreatorConditionsCard } from '../../components/CreatorConditionsCard';
 import { CreatorNetCard } from '../../components/CreatorNetCard';
 import { CreatorScheduleCard } from '../../components/CreatorScheduleCard';
+import { RestrictionDockTop } from '../../components/RestrictionDockTop';
 import type { ApplyAction } from '../../utils/opportunities';
 import { CampaignApplySheet } from './components/CampaignApplySheet';
 import { useCreatorCampaignDetailScreen } from './hooks/useCreatorCampaignDetailScreen';
@@ -88,8 +89,20 @@ const CreatorCampaignDetailScreenComponent: React.FC = () => {
       footerBehavior="docked"
       footer={
         <LayoutFooter
-          top={<CreatorApplyDockTop seats={campaign.seats} deadline={vm.deadline} action={action} />}
-          primary={{ label: t(DOCK_LABEL[action.kind]), onPress: vm.onPrimary, disabled }}
+          top={
+            vm.restriction ? (
+              <RestrictionDockTop notice={vm.restriction} scope="public" onWhy={vm.openRestriction} />
+            ) : (
+              <CreatorApplyDockTop seats={campaign.seats} deadline={vm.deadline} action={action} />
+            )
+          }
+          primary={
+            !vm.restriction
+              ? { label: t(DOCK_LABEL[action.kind]), onPress: vm.onPrimary, disabled }
+              : vm.restriction.kind === 'return_pending'
+                ? { label: t('marketplace.restrictions.returnPending.dockAction'), onPress: vm.openRestriction }
+                : undefined
+          }
         />
       }
       hero={<CreatorCampaignHero campaign={campaign} />}

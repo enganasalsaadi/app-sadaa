@@ -12,6 +12,7 @@ import { OpportunityCard } from '../../components/OpportunityCard';
 import { OpportunityEmptyRules } from '../../components/OpportunityEmptyRules';
 import { OpportunityFilterChips } from '../../components/OpportunityFilterChips';
 import { OpportunityFilterSheet } from '../../components/OpportunityFilterSheet';
+import { RestrictionBanner } from '../../components/RestrictionBanner';
 import type { CreatorCampaign } from '../../types/campaign';
 import { MyApplicationsView } from './components/MyApplicationsView';
 import { useCreatorOpportunitiesScreen } from './hooks/useCreatorOpportunitiesScreen';
@@ -67,6 +68,7 @@ const CreatorOpportunitiesScreenComponent: React.FC = () => {
         />
       }
     >
+      <RestrictionBanner notice={vm.restrictions.notice} onPress={vm.restrictions.openNotice} />
       {vm.onList ? (
         <>
           {vm.onFeed ? (

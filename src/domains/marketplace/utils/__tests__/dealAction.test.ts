@@ -1,7 +1,8 @@
 import { createIdempotentAction } from '@/core/api';
 import type { AppApiError } from '@/core/api';
 import type { DealActionResult } from '../../types/deal';
-import { isDealConflictError, settleDealAction } from '../dealAction';
+import { toastService } from '@/core/toast';
+import { isDealConflictError, reportDealFailure, settleDealAction } from '../dealAction';
 
 const apiError = (status: number, code: string, message = 'Server says no') => ({
   status,
@@ -88,5 +89,18 @@ describe('settleDealAction', () => {
     }, intent, jest.fn());
 
     expect(sent).toEqual(['k1', 'k1', 'k2']);
+  });
+});
+
+describe('reportDealFailure', () => {
+  it('says a creator_restricted refusal, the one 403 baseQuery lets through silently', () => {
+    const error = jest.spyOn(toastService, 'error').mockImplementation(() => undefined);
+    reportDealFailure({ ...appError(403, 'creator_restricted'), message: 'Locked until the waybill' });
+    expect(error).toHaveBeenCalledWith('Locked until the waybill');
+    error.mockClear();
+    reportDealFailure(appError(403, 'account_suspended'));
+    reportDealFailure(appError(500, null));
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
   });
 });

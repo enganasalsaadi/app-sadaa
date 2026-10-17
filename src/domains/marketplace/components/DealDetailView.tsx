@@ -32,6 +32,8 @@ import { DealNextStepCard } from './DealNextStepCard';
 import { DealOutcomeCard } from './DealOutcomeCard';
 import { DealRatingSection } from './DealRatingSection';
 import { DealRespondDock } from './DealRespondDock';
+import { DealReturnCard } from './DealReturnCard';
+import { DealReturnSheet } from './DealReturnSheet';
 import { DealRespondSheets } from './DealRespondSheets';
 import { DealRetentionCases } from './DealRetentionCases';
 import { DealRetentionSection } from './DealRetentionSection';
@@ -50,6 +52,7 @@ export type DealDetailSectionKey =
   | 'briefExit'
   | 'next'
   | 'drop'
+  | 'return'
   | 'dispute'
   | 'retentionCases'
   | 'upsell'
@@ -115,6 +118,9 @@ const DetailSection = memo<{
         return vm.briefExit.available && !vm.stopped ? <DealBriefExitCard exit={vm.briefExit} /> : null;
       case 'drop':
         return vm.drop && !vm.stopped ? <DealDropCard drop={vm.drop} role={vm.role} /> : null;
+      // The sample's way back outlives the deal: shown even after it stops.
+      case 'return':
+        return vm.role === 'creator' && vm.returns.view ? <DealReturnCard deal={deal} ret={vm.returns} /> : null;
       case 'next': {
         // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
         if (vm.dispute.showCard) return null;
@@ -269,7 +275,12 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         footerBehavior="docked"
         footer={
           vm.respond.dock ? (
-            <DealRespondDock deal={deal} respond={vm.respond} />
+            <DealRespondDock
+              deal={deal}
+              respond={vm.respond}
+              restriction={vm.restrictions.notice}
+              onRestriction={vm.restrictions.openNotice}
+            />
           ) : vm.shipping.dock ? (
             <DealShippingDock shipping={vm.shipping} />
           ) : undefined
@@ -324,6 +335,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
       <DealDisputeSheet deal={deal} role={vm.role} dispute={vm.dispute} />
       <DealRetentionSheets deal={deal} retention={vm.retention} />
       {vm.role === 'creator' ? <DealBriefExitSheet exit={vm.briefExit} deal={deal} /> : null}
+      {vm.role === 'creator' ? <DealReturnSheet deal={deal} ret={vm.returns} /> : null}
     </>
   );
 };

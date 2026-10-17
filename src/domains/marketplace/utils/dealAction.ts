@@ -48,12 +48,17 @@ export const toastDealConflict = (error: AppApiError): boolean => {
   return true;
 };
 
-/** Failures nobody else reports: 422 toasts in baseQuery, 403/5xx/offline have global UI. */
+/**
+ * Failures nobody else reports: 422 toasts in baseQuery, 403/5xx/offline have global UI. The one
+ * 403 baseQuery lets through silently is `creator_restricted` (a lock the page didn't know yet):
+ * say it in the server's words; the restrictions refetch and the dock turns into the lock bar.
+ */
 export const reportDealFailure = (error: AppApiError) => {
   if (
     error.statusCode === 400 ||
     error.statusCode === 404 ||
-    error.statusCode === 409
+    error.statusCode === 409 ||
+    error.code === 'creator_restricted'
   ) {
     toastService.error(error.message);
   }

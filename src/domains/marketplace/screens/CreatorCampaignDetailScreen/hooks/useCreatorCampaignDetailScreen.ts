@@ -9,6 +9,7 @@ import { useGetCreatorCampaignQuery } from '../../../api/creatorCampaignsApi';
 import { OPPORTUNITY_GENDER_LABEL } from '../../../constants/opportunities';
 import { useCampaignBookmark } from '../../../hooks/useCampaignBookmark';
 import { useClock } from '../../../hooks/useClock';
+import { useRestrictions } from '../../../hooks/useRestrictions';
 import type { CreatorCampaignDetail } from '../../../types/campaign';
 import { applyAction, opportunityDeadline, type ApplyAction } from '../../../utils/opportunities';
 import { useCampaignApply } from './useCampaignApply';
@@ -95,7 +96,10 @@ export const useCreatorCampaignDetailScreen = () => {
   const apply = useCampaignApply(campaign, { openProfile, openPlatforms });
   const openApply = apply.open;
 
+  // A restriction only matters where the dock would have applied: a closed campaign stays closed.
+  const gate = useRestrictions('public');
   const kind = action?.kind ?? null;
+  const restriction = kind === 'apply' || kind === 'bid' ? gate.notice : null;
   const onPrimary = useCallback(() => {
     if (kind === 'gender') openProfile();
     else if (kind === 'apply' || kind === 'bid') openApply();
@@ -115,6 +119,8 @@ export const useCreatorCampaignDetailScreen = () => {
     onRetry,
     toggleSaved,
     onPrimary,
+    restriction,
+    openRestriction: gate.openNotice,
     apply,
     // Saving needs a campaign that still recruits; un-saving is always possible.
     canSave: !!campaign && (campaign.acceptingApplications || campaign.bookmarked),

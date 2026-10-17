@@ -1,49 +1,49 @@
 # Graph Report - sadaa  (2026-10-17)
 
 ## Corpus Check
-- 1992 files · ~844,008 words
+- 2031 files · ~859,782 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 54 file(s) not represented in the graph (top: .csv 37, .ttf 10, (none) 4)
 
 ## Summary
-- 11270 nodes · 40453 edges · 351 communities (264 shown, 87 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 1574 edges (avg confidence: 0.89)
+- 11450 nodes · 41273 edges · 357 communities (268 shown, 89 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 1614 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3aad8fc7`
+- Built from commit: `ef9593f4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - dependencies
-- types/campaignDraft.ts
-- EmptyState.tsx
+- utils/campaignDraft.ts
+- useInfluencerWelcomeScreen.ts
 - useDealPublishScreen.ts
 - BarChart.tsx
 - useTheme
 - package.json
-- useStatementScreen.ts
+- dealsApi.ts
 - permissions/index.ts
 - identity/index.ts
 - Marketplace Domain Concepts
-- react-native
+- theme/index.ts
 - theme/types.ts
-- useTopUpFlow.ts
+- money/index.ts
 - Charts & Data Rules
 - storage/index.ts
-- ProfileScreen.tsx
-- useDealCancel.ts
+- useBrandVisibility.ts
+- shared/utils/index.ts
 - design_system.py
 - native.py
-- navigation/index.ts
+- useInfluencerRatesScreen.ts
 - core.py
-- OpportunityCard.tsx
-- useLayoutListStatesScreen.ts
-- useOfferBuilderScreen.ts
-- DealRatingSummary.tsx
+- CampaignTicket.tsx
+- LayoutListStatesScreen.tsx
+- offerForm.ts
+- constants/campaignStatus.ts
 - CustomInput.tsx
-- auth/index.ts
+- auth/store/index.ts
 - WalletNavigator.tsx
 - CampaignSeatCard.tsx
 - usePlatformDetailScreen.ts
@@ -51,151 +51,151 @@
 - useCampaignApply.ts
 - typing
 - formatMoney
-- useCampaignSubmit.ts
+- usePhoneVerifyStep.ts
 - useCampaignWizardScreen.ts
 - Core App Infrastructure
-- mediaKitShowcase.ts
+- MediaKitEscrow.tsx
 - devDependencies
-- constants/dealOffer.ts
+- useCampaignBrief.ts
 - ar
-- dealMappers.ts
-- utils/applicants.ts
+- toTimestampOrNull
+- utils/campaignShipping.ts
 - NextStepDeck.tsx
 - finance/types/index.ts
 - Design System Generator
-- i18next
-- EscrowTicket.tsx
+- usePayoutMethodFormScreen.ts
+- StatementScreen.tsx
 - useRateCardEditorScreen.ts
-- dealDto.ts
-- useDealDraftReviewScreen.ts
+- campaignBatchApi.ts
+- navigation/index.ts
 - Mobile Contract — Profile, Account, Social Lookup, KYC, Push
-- Deal
+- useDealCancel.ts
 - DealsNavigator.tsx
 - colors.ts
-- TransactionReceiptScreen.tsx
+- WithdrawAmountParts.tsx
 - ui/index.ts
-- useFileUploads
+- dealStation.ts
 - _sync_all.py
 - Brand Explore & Home — Mobile Handoff (backend implemented, 2026-10-10)
 - showcaseRegistry.ts
-- formatDuration
-- Money
+- useTopUpDetailScreen.ts
+- MoneyText.tsx
 - ref_child_process
 - useMediaKitInsightsScreen.ts
 - google
-- useMediaKitPublicScreen.test.tsx
+- useFileUploads
 - compilerOptions
 - Wallet & Finance: Mobile Handoff (phase 1)
-- DealJourney.tsx
-- useShortlistInvite.test.tsx
+- DealOrbit.tsx
+- campaign.ts
 - useDealDisputeScreen.ts
 - Mobile Integration — Company Verification (Brands)
-- creatorCampaignsApi.ts
-- useSocialProofScreen.ts
-- DealTrackRow.tsx
-- DealsBoard.tsx
-- PlatformResource
-- DealPublicationReviewScreen.tsx
+- KycScreen.tsx
+- types/verification.ts
+- TopUpDetailScreen.tsx
+- MyApplicationsView.tsx
+- getValidLanguage
+- useCreatorOverview.ts
 - useMediaKitSettingsScreen.ts
 - Home Screen UI Patterns
 - Design System Rule
-- useDraftFrames.ts
-- useMediaKitCard.ts
+- DraftFrame.tsx
+- useMediaKitShare.ts
 - DateRangePicker.tsx
 - Icon & Layout Guidelines
 - src_core_navigation_index_replace
-- useCampaignWizard
+- react
 - campaignMappers.ts
 - BrandHomeScreen.test.tsx
-- MediaKitWorkMasonry.tsx
+- mediaKitShowcase.ts
 - marketplace/types/index.ts
 - MainTabs.tsx
 - MediaKitStageReach.tsx
-- AppStatus
-- react-native-reanimated
+- useAppBootstrap.ts
+- useDealRating.ts
 - BriefFileSourceTile.tsx
 - campaignSchedule.ts
 - WelcomeEchoCanvas.tsx
-- MediaKitStats
+- 17. Media Kit — LOCKED (2026-10-06, implemented)
 - MediaKitAudience.tsx
-- BrandSpotlight.tsx
+- moderateScale
 - BrandCampaignsScreen.tsx
-- utils/dealDrafts.ts
-- dealOfferMappers.ts
+- EscrowTicket.tsx
+- Money
 - explore.ts
 - useExploreScreen.ts
-- rateCardCatalogTypes.ts
+- rateRows.ts
 - BrandLogo.tsx
-- MediaKitEscrow.tsx
+- MediaKitHighlights.tsx
 - Text
 - 08 — Brand Identity (Navy Trust)
 - CardsCanvas.tsx
-- config/index.ts
-- 04 — Data Layer
+- RateCardEditorScreen.tsx
+- 05 — Quality Gates
 - useWithdrawalDetailScreen.ts
 - MediaKitPublicScreen.tsx
 - Rate Cards v2 — Mobile Handoff
-- rateRows.ts
+- ProfileScreen.tsx
 - Manifest Config
 - UI Primitives & Theme
 - gen.py
 - RootNavigator.tsx
-- payoutMethodMappers.ts
+- useMediaKitPublicScreen.ts
 - OnboardingScreen/types.ts
-- react
-- baseApi
+- showcaseDemos.ts
+- brandCampaignsApi.test.ts
 - DealContractScreen.tsx
-- theme/index.ts
-- ReviewRevisionSheet.tsx
+- react-i18next
+- config/index.ts
 - DisputeScales.tsx
-- DealOrbit.tsx
-- Box.tsx
+- useBrandCampaignAnnouncementsScreen.ts
+- Pressable.tsx
 - iOS Run README
 - Design System Generation
 - 5.3 Core journeys in plain English
 - useWithdrawFlow.ts
-- CustomButton.tsx
+- DealRatingBars.tsx
 - tabRoot.ts
 - MediaKitStage.tsx
 - SettingsNavigator.tsx
 - 6. UX Strategies
 - finance/constants/index.ts
-- CreatorOpportunitiesScreen.tsx
+- useCreatorOpportunitiesScreen.ts
 - 2. Brand screens
-- useDomainEmailScreen.ts
-- useDealsList.ts
+- useOfferBuilderScreen.ts
+- BrandCampaignAnnouncementsScreen.tsx
 - motion
 - ESLint Config Rules
 - React Native Config Types
 - React Native Restart Types
 - dealContract.ts
 - Domain Architecture Rule
-- Box
-- useAppSelector
-- useDealRespond.ts
+- Pressable
+- App.tsx
+- DealReasonSheet.tsx
 - marketplace/index.ts
-- utils/dealRating.ts
-- useMyApplications.ts
-- GuideChapter.tsx
+- AudienceSection.tsx
+- constants/opportunities.ts
+- useDealGuideCopy.ts
 - 3.2 Creators (the supply side)
 - useMediaKitCover.ts
-- CampaignIsland.tsx
+- CampaignDetail
 - Sparkline.tsx
-- formatNumber
-- 15. Registration & Auth (wire this first)
+- DealPublishScreen.tsx
+- pushPrompt.ts
 - Wallet: Top-up Flow v2, Mobile Handoff Delta
 - wallet-v4-prompt.md
 - notification/index.ts
 - GlowOrbs.tsx
 - core/api/index.ts
-- appLink.ts
-- useBrandCampaignApplicantsScreen.ts
+- react-test-renderer
+- DiscardSheet.tsx
 - SelectionControlsDemo.tsx
 - PART 1: THE PITCH DECK
 - 4. Business Model & Value
 - useDealRetention.ts
 - Toast Service
-- @react-navigation/native
+- applyServerFieldErrors
 - Ratings & Badges
 - Search Domains
 - Search Stacks
@@ -205,8 +205,8 @@
 - Bootsplash Logo 3x
 - Bootsplash Logo 4x
 - CLAUDE.md Project Guide
-- RootNavigator
-- useFileUploads.test.tsx
+- CreatorCampaignDetailScreen.tsx
+- socialProofSchema.ts
 - personalInfoSchema.ts
 - 2. Elevator Pitch & Unique Selling Points
 - 7. App Store & Launch Status
@@ -217,7 +217,7 @@
 - mediaKit.ts
 - 17-ref-native-env.md
 - google_genai
-- CreatorHomeScreen/components/HomeDeals.tsx
+- react-native
 - App Config
 - pytest
 - ref_assets_images_logo_svg
@@ -342,12 +342,12 @@
 - CampaignScopeSwitch.tsx
 - LayoutGalleryDemo.tsx
 - useBrandHomeScreen.ts
-- dealUpsellApi.ts
-- shared/utils/index.ts
-- Text.tsx
-- Public Campaigns — Mobile Handoff (C0–C14)
-- useCreatorCampaignDetailScreen.ts
-- BrandCampaignApplicantsScreen.tsx
+- auth/index.ts
+- i18next
+- Box.tsx
+- 5. Linked-deal additions (CM7, CM8, CM10)
+- CampaignWizardHeader.tsx
+- TierBadge.tsx
 - {
   useGetCampaignFeedInfiniteQuery,
   useGetSavedCampaignsInfiniteQuery,
@@ -359,38 +359,38 @@
   useWithdrawCampaignApplicationMutation,
 }
 - Backend task — Deal shipping address (B5.1)
-- constants/opportunities.ts
-- 3. Brand endpoints
+- useCampaignMoney.ts
+- Public Campaigns — Mobile Handoff (C0–C14)
 - TideChart.tsx
 - DeckCard.tsx
 - MainTabBar.tsx
 - exploreQuery.ts
 - useDealShipping.ts
-- DropLane.tsx
-- DraftCaptionCard.tsx
+- HueTone
+- MissingStepsRail.tsx
 - Wallet v4: Wallet Screen Insights, Mobile Handoff Delta
-- ProgressSegments.tsx
-- utils/opportunities.ts
+- InfluencerWelcomeScreen.tsx
+- DealJourney.tsx
 - 1. Endpoint map by mobile task
 - DealStepper.tsx
-- CreatorCampaign
-- useDealRating.ts
+- useOfferDraft.ts
+- useCompanyVerificationScreen.ts
 - useKycScreen.ts
 - SuperList/index.ts
 - Media Kit v2 (Pitch Page): Mobile Handoff (backend implemented, 2026-10-11)
 - VerificationMethodList.tsx
 - ToastCard.tsx
 - media-kit-v2-prompt.md
-- Skeleton
+- ReadinessSection.tsx
 - FloatingCard.tsx
-- WizardShell.tsx
-- DealDetailView.tsx
-- Timestamp
-- MissingStepsRail.tsx
+- DocStackArt.tsx
+- DealStageCard.tsx
+- resolveHue
+- profileCompletion.ts
 - CreatorHomeScreen.test.tsx
 - ProfileOrbit.tsx
-- Radio.tsx
-- DealPublishScreen.tsx
+- useCreatorCardDemo.ts
+- DealDecisionDock.tsx
 - { useGetBrandSettingsQuery, useUpdateBrandSettingsMutation }
 - {
   useSetKitShortlistedMutation,
@@ -440,51 +440,53 @@
 - { useGetDealUpsellQuoteQuery, useGetDealStrikesQuery }
 - { useGetExploreCreatorsInfiniteQuery, useGetExploreFiltersQuery }
 - { useGetShortlistInfiniteQuery, useSetShortlistedMutation }
-- 09 — Screen Playbook
+- useDealContractScreen.ts
 - useCampaignRequirements.ts
-- useClock
+- Deal
 - DealRatingQuestion.tsx
 - scripts
-- useBrandCampaignDropScreen.ts
+- CreatorOrbitScene.tsx
 - upload/index.ts
-- DealRatingBars.tsx
-- DropStations.tsx
-- parseAmountText
-- dealsApi.test.ts
-- CreatorApplyDockTop.tsx
-- AnimatedNumber.tsx
-- ReviewScrubber.tsx
+- BrandDealDetailScreen.tsx
+- Timestamp
 - DealJourneyCard.tsx
-- index.js
-- DropRoomHero.tsx
-- platformsLayout.ts
-- DealDraftReviewScreen.tsx
+- toast/index.ts
+- OpportunityCard.tsx
+- Text.tsx
+- 08b — Brand Palette (raw values), Tab Bar, Logo, Assets
+- LanguageOptionRow.tsx
+- DealJourneyRail.tsx
+- DealWaybill.tsx
+- PlatformsCarousel.tsx
+- useShortlistInvite.test.tsx
 - BM25
-- moderateScale
+- BrandCampaignApplicantsScreen.tsx
 - ToastServiceClass
-- useDealBriefExit.ts
-- خطة التنفيذ — الحملات العامة (Public Campaigns) — موبايل
+- useExploreScreen.test.tsx
+- useCampaignsList.ts
 - graphify-refresh.sh
 - mobile-changelog.md
 - format_ascii_box
+- SuperList.tsx
+- types/campaignDraft.ts
+- ShortlistScreen.tsx
+- dealUploads.ts
+- shortlistApi.test.ts
+- react-native-reanimated
 - ListFooterLoader.tsx
-- useCampaignReviewSummary.ts
-- secureStorage.test.ts
-- LayoutWizardScreen.tsx
-- DropOnAir.tsx
-- ScreenHeader.tsx
-- DropFilters.tsx
 - deals-offer-preflight-prompt.md
-- Creator Home — Plan (approved 2026-10-05; Home sections 1–6 + Insights built 2026-10-06)
+- CampaignAttentionRail.tsx
 - GlassCard.tsx
-- scorePassword.ts
-- 17. Media Kit — LOCKED (2026-10-06, implemented; v2 additions 2026-10-11 → §17.11)
-- CreatorDealsScreen.tsx
-- utils/campaignDrop.ts
-- react-native-fast-image.d.ts
-- DiscardSheet.tsx
-- BidPrice
-- HomeCampaigns.test.tsx
+- react-native-blob-util.ts
+- index.js
+- 10 — Component Reuse & Showcase
+- ProgressBar.tsx
+- FileUploads
+- build.py
+- reason
+- offerServices.ts
+- 7. Creator: payout methods
+- CreatorCampaignPricing
 - {
   useGetCampaignsInfiniteQuery,
   useGetCampaignApplicantsInfiniteQuery,
@@ -504,21 +506,31 @@
   useRemoveCampaignFileMutation,
   useRunCampaignActionMutation,
 }
-- react-native-blob-util.ts
-- ReviewStage.tsx
+- isolateText
+- useDealDraftReviewScreen.ts
+- CampaignBriefList
+- {
+  useGetCampaignDropQuery,
+  useGetCampaignShippingQuery,
+  useShipCampaignBatchMutation,
+  useGetCampaignAnnouncementsInfiniteQuery,
+  useSendCampaignAnnouncementMutation,
+}
 - Direct Deals — Mobile Handoff (B0–B13)
+- 07 — Security & Privacy
+- i18n/types.ts
 
 ## God Nodes (most connected - your core abstractions)
-1. `useTheme()` - 1519 edges
-2. `react` - 1116 edges
-3. `react-i18next` - 760 edges
-4. `Box` - 709 edges
-5. `useStyles()` - 644 edges
-6. `Text` - 548 edges
-7. `lucide-react-native` - 458 edges
-8. `react-native` - 380 edges
-9. `moderateScale()` - 298 edges
-10. `formatNumber()` - 274 edges
+1. `useTheme()` - 1554 edges
+2. `react` - 1137 edges
+3. `react-i18next` - 778 edges
+4. `Box` - 728 edges
+5. `useStyles()` - 650 edges
+6. `Text` - 564 edges
+7. `lucide-react-native` - 472 edges
+8. `react-native` - 384 edges
+9. `moderateScale()` - 303 edges
+10. `formatNumber()` - 288 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `2. `CreatorCard` (used by Explore, Home rails, Shortlist)` --references--> `search()`  [INFERRED]
@@ -551,23 +563,23 @@
 - **Pre-Delivery Verification Flow** — claude_skills_ui_ux_pro_max_skill_pre_delivery_checklist, claude_skills_ui_ux_pro_max_skill_icons_visual_elements, claude_skills_ui_ux_pro_max_skill_interaction_app, claude_skills_ui_ux_pro_max_skill_light_dark_contrast, claude_skills_ui_ux_pro_max_skill_accessibility [INFERRED 0.80]
 - **iOS Run Environment Variants** — readme_run_ios_development, readme_run_ios_staging, readme_run_ios_production [INFERRED 0.85]
 
-## Communities (351 total, 87 thin omitted)
+## Communities (357 total, 89 thin omitted)
 
 ### Community 0 - "dependencies"
 Cohesion: 0.03
 Nodes (67): dependencies, @gorhom/bottom-sheet, @hookform/resolvers, i18next, intl-pluralrules, libphonenumber-js, lottie-react-native, lucide-react-native (+59 more)
 
-### Community 1 - "types/campaignDraft.ts"
-Cohesion: 0.08
-Nodes (53): PC1 — معالج الحملة (البراند · CM1), src_domains_marketplace_api_brandcampaignsapi_usecreatecampaignmutation, src_domains_marketplace_api_brandcampaignsapi_useupdatecampaignmutation, CAMPAIGN_AUTOSAVE_DELAY_MS, CAMPAIGN_DRAFT_LIMITS, CAMPAIGN_MISSING_STEP, CAMPAIGN_UNKNOWN_MISSING_STEP, CampaignDraftSaveState (+45 more)
+### Community 1 - "utils/campaignDraft.ts"
+Cohesion: 0.10
+Nodes (40): PC1 — معالج الحملة (البراند · CM1), saved(), campaignChangedTags(), src_domains_marketplace_api_brandcampaignsapi_usecreatecampaignmutation, src_domains_marketplace_api_brandcampaignsapi_useupdatecampaignmutation, CAMPAIGN_AUTOSAVE_DELAY_MS, CAMPAIGN_DRAFT_LIMITS, CAMPAIGN_MISSING_STEP (+32 more)
 
-### Community 2 - "EmptyState.tsx"
-Cohesion: 0.31
-Nodes (6): EmptyStateComponent(), EmptyStateProps, EmptyStateTone, ErrorStateComponent(), ErrorStateProps, getErrorMessage()
+### Community 2 - "useInfluencerWelcomeScreen.ts"
+Cohesion: 0.13
+Nodes (17): DEMO_PLATFORMS, IN_PERSON_ROWS, PLATFORM_ROWS, usePlatformEditingDemo(), MOCK_RATE_SERVICES, PlatformEditingDemo, PlatformEditingDemoComponent(), FollowerTierOption (+9 more)
 
 ### Community 3 - "useDealPublishScreen.ts"
-Cohesion: 0.06
-Nodes (72): 16c — Ref: Deal drafts & publish (P6, P7), P3 — M3 القوائم والتفاصيل (الدوران), P7 — M7 النشر والتحقق, src_core_navigation_index_dealsstackparamlist, src_core_navigation_index_dealsstackscreenprops, DealsStackParamList, DealsStackScreenProps, src_domains_marketplace_api_dealpublishapi_usegetdealitempublicationsquery (+64 more)
+Cohesion: 0.08
+Nodes (55): 16c — Ref: Deal drafts & publish (P6, P7), P7 — M7 النشر والتحقق, src_domains_marketplace_api_dealpublishapi_usegetdealitempublicationsquery, src_domains_marketplace_api_dealpublishapi_userequestproofuploadslotmutation, DEAL_FIX_CHIPS, DEAL_LIVE_HOSTS, DEAL_LIVE_PLATFORM_LABEL, DEAL_LIVE_PLATFORMS (+47 more)
 
 ### Community 4 - "BarChart.tsx"
 Cohesion: 0.20
@@ -575,15 +587,15 @@ Nodes (12): Bar, BarChartComponent(), BarChartDatum, BarChartProps, BarChartTone
 
 ### Community 5 - "useTheme"
 Cohesion: 0.01
-Nodes (286): BootScreenComponent(), styleFactory(), DashboardBarIdentity, DashboardHero, LayoutDashboardScreenComponent(), noop(), DemoHero, useStyles() (+278 more)
+Nodes (352): BootScreenComponent(), styleFactory(), BrandLogoDemo, BrandLogoDemoComponent(), LOGO_HEIGHT, VARIANTS, LayoutCollapseHeaderScreenComponent(), DashboardHero (+344 more)
 
 ### Community 6 - "package.json"
 Cohesion: 0.03
-Nodes (57): config, defaultConfig, { getDefaultConfig, mergeConfig }, engines, node, @react-native/typescript-config, name, private (+49 more)
+Nodes (58): config, defaultConfig, { getDefaultConfig, mergeConfig }, engines, node, @react-native/typescript-config, name, private (+50 more)
 
-### Community 7 - "useStatementScreen.ts"
-Cohesion: 0.03
-Nodes (100): src_domains_finance_api_topupapi_usegettopupsinfinitequery, src_domains_finance_api_walletapi_usegetwallettransactionsinfinitequery, src_domains_finance_api_withdrawalapi_usegetwithdrawalsinfinitequery, StatusChip, StatusFilterChips, StatusFilterChipsProps, WalletDayGroup, WalletDayGroupComponent() (+92 more)
+### Community 7 - "dealsApi.ts"
+Cohesion: 0.06
+Nodes (66): 16 — Ref: Deals core, P11 — التكاملات (M11 + B13), P12 — Creator Home «دورك» (المؤثر) 🔜, baseApi, mapUploadSlot(), UploadSlotDto, UploadSlotRequest, rate() (+58 more)
 
 ### Community 8 - "permissions/index.ts"
 Cohesion: 0.18
@@ -591,35 +603,35 @@ Nodes (18): react-native-permissions, usePermission(), initialState(), useCheckP
 
 ### Community 9 - "identity/index.ts"
 Cohesion: 0.14
-Nodes (21): src_domains_identity_api_mediakitapi_usegetpublicmediakitquery, src_domains_identity_api_mediakitapi_usesetkitshortlistedmutation, PLATFORM_STATUS_PILL, PlatformStatusPill, PlatformVerificationStatus, PRICE_LOCK_ACTION, PRICE_LOCK_ACTION_FALLBACK, PRICE_LOCK_GUEST (+13 more)
+Nodes (21): src_domains_identity_api_mediakitapi_usegetpublicmediakitquery, src_domains_identity_api_mediakitapi_usesetkitshortlistedmutation, PRICE_LOCK_ACTION, PRICE_LOCK_ACTION_FALLBACK, PRICE_LOCK_GUEST, PriceLockAction, PriceLockScreen, BRAND_KYC_STEP_SCREENS (+13 more)
 
 ### Community 10 - "Marketplace Domain Concepts"
 Cohesion: 0.06
 Nodes (38): Ad Types, Affiliate Links & Discount Codes, AI-Generated Creator Bio/Portfolio, Analytics & ROI Dashboard, Anonymous Brand Reviews, Barter Marketplace, Barter Digital Catalog, Brand/Merchant Actor (+30 more)
 
-### Community 11 - "react-native"
+### Community 11 - "theme/index.ts"
 Cohesion: 0.02
-Nodes (124): Controls & building blocks, react-native, AddonRow, AddonRowComponent(), TILE, BriefFileSourceSheet, BriefTemplates, BriefTemplatesComponent() (+116 more)
+Nodes (134): react-native-svg, DASH, DashedRule, DashedRuleComponent(), RateLineComponent(), RateLineProps, MediaKitTermsSheetComponent(), AddonRow (+126 more)
 
 ### Community 12 - "theme/types.ts"
 Cohesion: 0.06
-Nodes (61): Typography, Not verified on device, TopControlBarProps, isRTL(), syncRTL(), buildTheme(), getStoredLanguage(), getStoredThemeMode() (+53 more)
+Nodes (61): Typography, react-native-restart, TopControlBarProps, BREAKPOINTS, DESIGN_HEIGHT, DESIGN_WIDTH, FONT_MAX_SCALE_RATIO, FONT_SCALE_FACTOR (+53 more)
 
-### Community 13 - "useTopUpFlow.ts"
+### Community 13 - "money/index.ts"
 Cohesion: 0.03
-Nodes (91): src_core_navigation_index_topupstackparamlist, src_core_navigation_index_topupstackscreenprops, TopUpStackParamList, TopUpStackScreenProps, src_domains_finance_api_topupapi_usecreatetopupmutation, src_domains_finance_api_topupapi_usegettopupchannelsquery, TopUpStepLayoutComponent(), TopUpStepLayoutProps (+83 more)
+Nodes (142): Brand top-ups (Money wizard archetype, rule 09), Step 4: Brand top-up ✅ (2026-10-09, on the v2 contract; awaiting live-server + device testing), parseDecimalMoney(), CURRENCY_CODES, CurrencyCode, MINOR_UNIT_DIGITS, toMajorUnits(), src_core_navigation_index_topupstackparamlist (+134 more)
 
 ### Community 15 - "storage/index.ts"
-Cohesion: 0.08
-Nodes (43): react-native-device-info, react-native-mmkv, bootstrapLanguage(), resolveAppStatus(), useChooseLanguageScreen(), baseQueryWithGlobalErrorHandler(), ExtraOptions, isApiEnvelope() (+35 more)
-
-### Community 16 - "ProfileScreen.tsx"
-Cohesion: 0.04
-Nodes (55): AccountFooter, AccountFooterComponent(), AccountFooterProps, CompanyInfoCard, CompanyInfoCardComponent(), CompanyInfoCardProps, Fact, FACT_ICON (+47 more)
-
-### Community 17 - "useDealCancel.ts"
 Cohesion: 0.09
-Nodes (32): DealReasonFieldsProps, DealReasonTilesProps, ReasonTileProps, DealStrikesBannerComponent(), DEAL_CANCEL_REASON_DEF, DEAL_UPSELL_DECLINE_REASON_DEF, DEAL_WITHDRAW_REASON_DEF, DealReasonDef (+24 more)
+Nodes (34): react-native-mmkv, resolveAppStatus(), EMPTY_CATALOG_ERROR, rateCardCatalogApi, CatalogCache, CatalogCacheEntry, isEntry(), parseCatalogCache() (+26 more)
+
+### Community 16 - "useBrandVisibility.ts"
+Cohesion: 0.10
+Nodes (13): brandSettingsApi, src_domains_identity_api_brandsettingsapi_usegetbrandsettingsquery, src_domains_identity_api_brandsettingsapi_useupdatebrandsettingsmutation, mockQuery, mockToastError, mockUpdate, Probe(), vm (+5 more)
+
+### Community 17 - "shared/utils/index.ts"
+Cohesion: 0.05
+Nodes (56): src_assets_icons_social_facebook, src_assets_icons_social_instagram, src_assets_icons_social_telegram, src_assets_icons_social_tiktok, src_assets_icons_social_youtube, src_domains_auth_api_index_usebrandstep2profilemutation, SocialLinkField, SocialLinkFieldProps (+48 more)
 
 ### Community 18 - "design_system.py"
 Cohesion: 0.11
@@ -629,153 +641,153 @@ Nodes (25): argparse, Main search function with auto-domain detection, search(),
 Cohesion: 0.23
 Nodes (8): circle(), magick(), opaque(), Generates native app icons + bootsplash assets from…, Rasterise svg text into a w×h transparent PNG, fitted (contain) into box=(x, y,…, render(), subprocess, tempfile
 
-### Community 20 - "navigation/index.ts"
-Cohesion: 0.02
-Nodes (131): 2. Reference patterns (structure & code, not look), Screen chrome & multi-step, Login & registration, 0. Breaking changes summary (do these first), @react-navigation/native-stack, RootNavigator(), src_core_navigation_index_brandonboardingstackparamlist, src_core_navigation_index_brandwizardstackparamlist (+123 more)
+### Community 20 - "useInfluencerRatesScreen.ts"
+Cohesion: 0.04
+Nodes (75): 15 — Ref: Auth, Identity, Notifications, Account deletion, Login & registration, Notifications domain, Suspension, 0.1 Changelog — hardening pass (act on every row), 0. Breaking changes summary (do these first), @react-native-documents/picker (+67 more)
 
 ### Community 21 - "core.py"
 Cohesion: 0.20
 Nodes (11): detect_domain(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Search stack-specific guidelines, UI/UX Pro Max Core - BM25 search engine for UI/UX style guides, _search_csv() (+3 more)
 
-### Community 22 - "OpportunityCard.tsx"
-Cohesion: 0.16
-Nodes (17): OpportunityBrandPill, COVER_HEIGHT, NOTCH, OpportunityCardComponent(), OpportunityNet, OpportunityNetComponent(), OpportunityNetProps, OpportunitySeats (+9 more)
+### Community 22 - "CampaignTicket.tsx"
+Cohesion: 0.10
+Nodes (25): CreatorCampaignHero, CreatorCampaignHeroComponent(), CreatorCampaignHeroProps, HERO_HEIGHT, CreatorScheduleCardProps, Badge, BadgeProps, OpportunityBadges (+17 more)
 
-### Community 23 - "useLayoutListStatesScreen.ts"
-Cohesion: 0.22
-Nodes (10): SuperListDemoComponent(), isListState(), LIST_STATES, ListState, MOCK_ROWS, MockListRow, STATE_LABEL_KEY, useLayoutListStatesScreen() (+2 more)
+### Community 23 - "LayoutListStatesScreen.tsx"
+Cohesion: 0.13
+Nodes (16): SuperListDemoComponent(), isListState(), LIST_STATES, ListState, MOCK_ROWS, MockListRow, STATE_LABEL_KEY, useLayoutListStatesScreen() (+8 more)
 
-### Community 24 - "useOfferBuilderScreen.ts"
-Cohesion: 0.07
-Nodes (52): P2 — M2 بناء العرض (البراند) — قلب الميزة, AddonType, src_domains_identity_index_usegetpublicmediakitquery, src_domains_identity_index_usesetkitshortlistedmutation, src_domains_marketplace_api_dealofferapi_usecreatedealofferdraftmutation, src_domains_marketplace_api_dealofferapi_usedeletedealofferdraftmutation, src_domains_marketplace_api_dealofferapi_usegetdealofferpreflightquery, src_domains_marketplace_api_dealofferapi_useupdatedealofferdraftmutation (+44 more)
+### Community 24 - "offerForm.ts"
+Cohesion: 0.20
+Nodes (16): AddonType, AddonRowProps, ServiceCardProps, DEAL_OFFER_LIMITS, briefList(), createOfferSchema(), OFFER_STEP_FIELDS, OfferLinesModel (+8 more)
 
-### Community 25 - "DealRatingSummary.tsx"
-Cohesion: 0.07
-Nodes (26): DealRatingClock, DealRatingClockProps, DIAMETER, DealRatingEnvelope, DealRatingEnvelopeComponent(), DealRatingEnvelopeProps, DealRatingEnvelopeState, WAIT_RING (+18 more)
+### Community 25 - "constants/campaignStatus.ts"
+Cohesion: 0.15
+Nodes (19): APPLICATION_STATUS_META, APPLICATION_TAB_STATUSES, ApplicationStatusMeta, CAMPAIGN_STATUS_META, CAMPAIGN_TAB_STATUSES, CAMPAIGN_TABS, CampaignStatusMeta, UNKNOWN_APPLICATION_STATUS_META (+11 more)
 
 ### Community 26 - "CustomInput.tsx"
-Cohesion: 0.09
-Nodes (38): RadiiToken, src_core_theme_types_radiitoken, src_core_theme_types_spacingtoken, CustomInputHintTone, CustomInputInner, CustomInputProps, IconProps, createInputTextStyle() (+30 more)
+Cohesion: 0.08
+Nodes (42): RadiiToken, src_core_theme_types_radiitoken, CustomInputHintTone, CustomInputInner, CustomInputProps, IconProps, createInputTextStyle(), createMultilineContainerStyle() (+34 more)
 
-### Community 27 - "auth/index.ts"
+### Community 27 - "auth/store/index.ts"
 Cohesion: 0.03
-Nodes (140): PC0 — الأساس (بدون UI), FOLLOWER_TIERS, FollowerTierId, authApi, src_domains_auth_api_index_usegetprofilequery, startOnboardingSession(), Step1Session, FollowerTierOption (+132 more)
+Nodes (111): 15.0 Flow overview, 15.10 `GET /onboarding/progress` — `auth:sanctum` only (works while draft, unverified **and** suspended), 15.11 Resume resolver (single function, used on launch, after login, after 409 out-of-order), 15.12 Login / forgot / reset, 15.13 `POST /auth/logout` — `auth:sanctum` (no `account.active`, works when suspended), 15.1 `GET /lookups` — public, no auth, 15.2 `POST /onboarding/influencer/step-1` — public, 15.3 `POST /onboarding/brand/step-1` — public (+103 more)
 
 ### Community 28 - "WalletNavigator.tsx"
-Cohesion: 0.11
-Nodes (11): SCREEN_OPTIONS, Stack, PayoutMethodFormScreen, PayoutMethodsScreen, StatementScreen, TopUpDetailScreen, TopUpsScreen, TransactionReceiptScreen (+3 more)
+Cohesion: 0.05
+Nodes (35): src_domains_finance_api_topupapi_usegettopupsinfinitequery, StatusChip, StatusFilterChips, StatusFilterChipsProps, SCREEN_OPTIONS, Stack, PayoutMethodFormScreen, PayoutMethodsScreen (+27 more)
 
 ### Community 29 - "CampaignSeatCard.tsx"
-Cohesion: 0.13
-Nodes (23): creatorDealSummaryApi, CampaignDeadlineChipComponent(), CAMPAIGN_HOME_TARGET, CampaignHomeTarget, CAMPAIGN_CARD_WIDTH, CampaignSeatCard, CampaignSeatCardComponent(), CampaignSeatCardProps (+15 more)
+Cohesion: 0.11
+Nodes (26): CampaignDeadlineChipComponent(), CAMPAIGN_HOME_TARGET, CampaignHomeTarget, CAMPAIGN_CARD_WIDTH, CampaignSeatCard, CampaignSeatCardComponent(), CampaignSeatCardProps, dropValueKey() (+18 more)
 
 ### Community 30 - "usePlatformDetailScreen.ts"
-Cohesion: 0.05
-Nodes (56): { useGetLookupsQuery }, { useGetRateCardCatalogQuery }, secondsLeft(), useCountdown(), { useLookupSocialProfileMutation }, PlatformAccountRowProps, PlatformAccountSheet, PlatformAccountSheetProps (+48 more)
+Cohesion: 0.07
+Nodes (32): { useGetLookupsQuery }, { useGetRateCardCatalogQuery }, RateCardPatch, AddPlatformRequest, PlatformAvailabilityRequest, platformsApi, PROFILE_TAGS, UpdatePlatformRequest (+24 more)
 
 ### Community 32 - "useCampaignApply.ts"
-Cohesion: 0.15
-Nodes (22): src_domains_identity_index_usegetplatformsquery, src_domains_marketplace_api_creatorcampaignsapi_useapplytocampaignmutation, ApplyExits, BID_ISSUE_KEY, useCampaignApply(), CampaignApplyArgs, CampaignLabel, CampaignMoneyBreakdown (+14 more)
+Cohesion: 0.10
+Nodes (32): src_core_navigation_index_opportunitiesstackscreenprops, src_domains_identity_index_usegetplatformsquery, src_domains_marketplace_api_creatorcampaignsapi_useapplytocampaignmutation, src_domains_marketplace_api_creatorcampaignsapi_usegetcreatorcampaignquery, CreatorAskCardProps, OPPORTUNITY_GENDER_LABEL, useCampaignBookmark(), BidPrice (+24 more)
 
 ### Community 34 - "formatMoney"
 Cohesion: 0.04
-Nodes (77): Formatting, 09b — Money Screens, 14 — Ref: Core Infrastructure — reuse, don't rebuild, Feedback UI, Money & format, Brand top-ups (Money wizard archetype, rule 09), Decisions (v1), Open / waiting on backend (+69 more)
+Nodes (78): Formatting, 09b — Money Screens, Money & format, BarChartDemoComponent(), toSeries(), useBarChartDemo(), useLiveElementsDemo(), useSearchBarDemo() (+70 more)
 
-### Community 35 - "useCampaignSubmit.ts"
-Cohesion: 0.11
-Nodes (28): CampaignReadinessCard, CampaignReadinessCardComponent(), CampaignReadinessCardProps, ROW_STEPS, WizardRailHeader, CAMPAIGN_MISSING_LABEL, CAMPAIGN_STEP_ICON, CAMPAIGN_STEP_LABEL (+20 more)
+### Community 35 - "usePhoneVerifyStep.ts"
+Cohesion: 0.07
+Nodes (41): 2. Reference patterns (structure & code, not look), Screen chrome & multi-step, src_core_navigation_index_passwordresetstackparamlist, src_core_navigation_index_passwordresetstackscreenprops, replace(), PasswordResetStackParamList, PasswordResetStackScreenProps, src_domains_auth_api_index_userequestpasswordresetmutation (+33 more)
 
 ### Community 36 - "useCampaignWizardScreen.ts"
-Cohesion: 0.10
-Nodes (33): LookupItem, src_domains_marketplace_api_brandcampaignsapi_usegetcampaignquotequery, amountText(), CampaignMoneyModel, PRICE_FIELDS, QUOTE_STEPS, useCampaignMoney(), ActivityOption (+25 more)
+Cohesion: 0.11
+Nodes (27): useCampaignCover(), CampaignWizardExit, CampaignWizardModel, EXIT_BACK, isActivityType(), LIVE_STEPS, LOCKED_STEPS, Navigation (+19 more)
 
 ### Community 37 - "Core App Infrastructure"
 Cohesion: 0.12
 Nodes (21): AppStatus Enum, baseApi, GlobalErrorModal, globalErrorSlice, MMKV Storage, navigationService, NetworkSnackbar, retryRegistry (+13 more)
 
-### Community 38 - "mediaKitShowcase.ts"
-Cohesion: 0.06
-Nodes (49): MediaKitAudience, MediaKitEscrow, MediaKitHighlights, MediaKitRates, MediaKitRatesComponent(), MediaKitRatesProps, PILL_LOGO, PillProps (+41 more)
+### Community 38 - "MediaKitEscrow.tsx"
+Cohesion: 0.08
+Nodes (29): ClockProps, COIN, DONE_HEIGHT, MediaKitEscrow, MediaKitEscrowComponent(), NODE, NODE_ICON, PATH_HEIGHT (+21 more)
 
 ### Community 39 - "devDependencies"
 Cohesion: 0.09
 Nodes (22): devDependencies, @babel/core, babel-plugin-module-resolver, @babel/preset-env, @babel/runtime, eslint, jest, patch-package (+14 more)
 
-### Community 40 - "constants/dealOffer.ts"
-Cohesion: 0.12
-Nodes (33): BriefTemplatesProps, BriefToneChipsProps, DEAL_BRIEF_LIMITS, DEAL_DRAFT_TTL_DAYS, DEAL_EXTENSION_ANSWER_HOURS, DEAL_FIX_REQUESTS, DEAL_OFFER_LIMITS, CampaignBriefListProps (+25 more)
+### Community 40 - "useCampaignBrief.ts"
+Cohesion: 0.16
+Nodes (27): BriefTemplatesProps, BriefToneChipsProps, DEAL_BRIEF_LIMITS, useCampaignAttachments(), CampaignBriefModel, listItemCount(), useCampaignBrief(), BriefFieldEntriesProps (+19 more)
 
 ### Community 41 - "ar"
 Cohesion: 0.13
 Nodes (16): 03 — Localization & RTL, Strict RTL (lint `no-restricted-syntax`), Type-safe i18n, Phase 1 — Understand (read, don't guess), Phase 2 — Design (produce, then stop), Phase 3 — Build (after approval only), Phase 4 — Verify, /sada-screen — build a screen the Sada way (+8 more)
 
-### Community 42 - "dealMappers.ts"
-Cohesion: 0.09
-Nodes (63): 16 — Ref: Deals core, parseUsd(), parseUsdOrNull(), campaignBatchApi, CampaignDropDto, DealListArgs, DealDisputeEntryDto, DealExtensionDto (+55 more)
+### Community 42 - "toTimestampOrNull"
+Cohesion: 0.11
+Nodes (43): parseUsd(), parseUsdOrNull(), CAMPAIGN_DROP_PHASE, CAMPAIGN_DROP_STATE, CampaignDropDto, mapCampaignDrop(), mapCreator(), mapReminder() (+35 more)
 
-### Community 43 - "utils/applicants.ts"
-Cohesion: 0.05
-Nodes (54): src_domains_marketplace_api_brandcampaignsapi_usegetcampaignapplicantscomparequery, src_domains_marketplace_api_brandcampaignsapi_usegetcampaignapplicantsinfinitequery, ApplicantCardProps, Reach, ApplicantExpiryChipComponent(), ApplicantSeatRailProps, ApplicantSelectSheetProps, APPLICANT_COMPARE_MIN (+46 more)
+### Community 43 - "utils/campaignShipping.ts"
+Cohesion: 0.10
+Nodes (35): PC8 — الدروب + أدوات الدفعة (البراند · CM8 + CM9), createCampaignShippingResolver(), options, run(), t, BrandCampaignShippingScreenComponent(), ParcelHintProps, ParcelSentProps (+27 more)
 
 ### Community 44 - "NextStepDeck.tsx"
-Cohesion: 0.10
-Nodes (23): react-native-gesture-handler, NextStepDeckModel, THROW_DISTANCE, useNextStepDeck(), NextStepCard, FAR_EDGE, FAR_INSET, GHOST_HEIGHT (+15 more)
+Cohesion: 0.05
+Nodes (36): react-native-worklets, NextStepDeckModel, THROW_DISTANCE, useNextStepDeck(), NextStepCard, FAR_EDGE, FAR_INSET, GHOST_HEIGHT (+28 more)
 
 ### Community 45 - "finance/types/index.ts"
-Cohesion: 0.05
-Nodes (107): env, isCurrencyCode(), src_core_navigation_index_topupstatusparam, TopUpStatusParam, topUpApi, walletApi, PaymentChannelDef, TOP_UPS_PER_PAGE (+99 more)
+Cohesion: 0.09
+Nodes (58): isCurrencyCode(), walletApi, Counterparty, CounterpartyDto, EARNINGS_PERIODS, EarningsBucket, EarningsBucketDto, EarningsPeriod (+50 more)
 
 ### Community 46 - "Design System Generator"
 Cohesion: 0.14
 Nodes (11): DesignSystemGenerator, Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation. variance/motion/density are…, Bucket a 1-10 dial value into its tier config. Returns None if value is None., Generates design system recommendations from aggregated searches. (+3 more)
 
-### Community 47 - "i18next"
+### Community 47 - "usePayoutMethodFormScreen.ts"
 Cohesion: 0.05
-Nodes (75): Step 5: Creator payout methods ✅ (2026-10-09, commits 50d4918 + 3bec572; awaiting live-server + device testing), i18next, resources, CustomTypeOptions, i18next, src_core_navigation_index_walletstackscreenprops, WalletStackScreenProps, src_domains_finance_api_payoutmethodapi_usecreatepayoutmethodmutation (+67 more)
+Nodes (82): Step 5: Creator payout methods ✅ (2026-10-09, commits 50d4918 + 3bec572; awaiting live-server + device testing), src_core_navigation_index_walletstackscreenprops, WalletStackScreenProps, LIST, payoutMethodApi, src_domains_finance_api_payoutmethodapi_usecreatepayoutmethodmutation, src_domains_finance_api_payoutmethodapi_usedeletepayoutmethodmutation, src_domains_finance_api_payoutmethodapi_usegetpayoutmethodsquery (+74 more)
 
-### Community 48 - "EscrowTicket.tsx"
-Cohesion: 0.05
-Nodes (48): useWalletDemo(), MOCK_WALLET, WalletDemo, WalletDemoComponent(), BalanceCard, BalanceCardProps, Connector, EscrowFlowCard (+40 more)
+### Community 48 - "StatementScreen.tsx"
+Cohesion: 0.04
+Nodes (54): useWalletDemo(), WalletDemo, WalletDemoComponent(), BalanceCard, BalanceCardProps, Connector, EscrowFlowCard, EscrowFlowCardComponent() (+46 more)
 
 ### Community 49 - "useRateCardEditorScreen.ts"
-Cohesion: 0.04
-Nodes (104): P1 — M1 إضافات الـ Rate Card v2 (المؤثر), AddonPricingMode, CatalogService, RateService, Retention, src_core_navigation_index_settingsstackparamlist, SettingsStackParamList, RATE_CURRENCY (+96 more)
+Cohesion: 0.05
+Nodes (88): P1 — M1 إضافات الـ Rate Card v2 (المؤثر), CatalogService, RateCardCatalog, RateService, Retention, fromPriceUsd(), RatePriceBounds, toPriceUsd() (+80 more)
 
-### Community 50 - "dealDto.ts"
-Cohesion: 0.06
-Nodes (69): P11 — التكاملات (M11 + B13), dealDisputeApi, DisputeWriteArgs, disputeWriteTags(), dealRatingApi, RateDealArgs, ratingTags(), brandDeal() (+61 more)
+### Community 50 - "campaignBatchApi.ts"
+Cohesion: 0.12
+Nodes (26): campaignBatchApi, SendCampaignAnnouncementArgs, ShipCampaignBatchArgs, ShippingTotalsProps, CampaignAnnouncementInput, CampaignAnnouncementDto, ApplicantsPageDto, CampaignPageDto (+18 more)
 
-### Community 51 - "useDealDraftReviewScreen.ts"
-Cohesion: 0.10
-Nodes (30): P6 — M6 المسودات والمراجعة, src_domains_marketplace_api_dealdraftsapi_usegetdealitemdraftsquery, src_domains_marketplace_api_dealdraftsapi_usequoteextrarevisionmutation, src_domains_marketplace_api_dealdraftsapi_userequestdraftuploadslotmutation, DeliverableRow, createDealDraftSchema(), createDealPinSchema(), createDealRevisionSchema() (+22 more)
+### Community 51 - "navigation/index.ts"
+Cohesion: 0.03
+Nodes (133): App.tsx, Step 7: Wiring + docs ✅ (2026-10-09, commit 19ee340; awaiting live-server + device testing), @react-navigation/native, src_core_navigation_index_dealsstackscreenprops, src_core_navigation_index_navigate, src_core_navigation_index_publicstackparamlist, src_core_navigation_index_push, navigate() (+125 more)
 
 ### Community 52 - "Mobile Contract — Profile, Account, Social Lookup, KYC, Push"
-Cohesion: 0.07
-Nodes (26): 10. Password & logout, 11.1 Device token, 11.2 Payload (FCM `data`, all strings), 11.3 Notification list, 11.4 Test push (dev/staging only), 11. Push notifications, 13. Suggested mobile TypeScript types, 14. Register screen behaviour (influencer step 2) — all cases (+18 more)
+Cohesion: 0.05
+Nodes (38): 10. Password & logout, 11.1 Device token, 11.2 Payload (FCM `data`, all strings), 11.3 Notification list, 11.4 Test push (dev/staging only), 11. Push notifications, 13. Suggested mobile TypeScript types, 14. Register screen behaviour (influencer step 2) — all cases (+30 more)
 
-### Community 53 - "Deal"
-Cohesion: 0.07
-Nodes (53): P0 — الأساس (بدون UI) — شرط لكل ما بعده, DealCancelSheet, DealCancelSheetProps, DealChangesSectionComponent(), DealChangesSectionProps, DealChangesSheets, DealChangesSheetsProps, DealDeliverablesProps (+45 more)
+### Community 53 - "useDealCancel.ts"
+Cohesion: 0.04
+Nodes (80): 0. قرارات ثابتة (من الوثيقة + الباك إند), 1. خريطة الانتقالات (Screen map), P3 — M3 القوائم والتفاصيل (الدوران), P4 — M4 الرد والدفع, الترتيب المقترح, الشريحة B — الحالات الخاصة, خطة الموبايل — الحملات المباشرة (Direct Deals), قرارات معتمدة (2026-10-13) (+72 more)
 
 ### Community 54 - "DealsNavigator.tsx"
-Cohesion: 0.08
-Nodes (17): SCREEN_OPTIONS, Stack, BrandCampaignApplicantScreen, BrandCampaignCompareScreen, BrandCampaignDetailScreen, BrandCampaignDropScreen, BrandCampaignSelectedScreen, BrandCampaignSelectedScreenComponent() (+9 more)
+Cohesion: 0.07
+Nodes (18): SCREEN_OPTIONS, Stack, BrandCampaignAnnouncementsScreen, BrandCampaignApplicantScreen, BrandCampaignApplicantsScreen, BrandCampaignCompareScreen, BrandCampaignDetailScreen, BrandCampaignDropScreen (+10 more)
 
 ### Community 55 - "colors.ts"
-Cohesion: 0.06
-Nodes (36): ButtonColors, createColors(), darkColors, darkInteractive, darkStatus, darkText, DEAL_ORBIT, DRAFT (+28 more)
-
-### Community 56 - "TransactionReceiptScreen.tsx"
 Cohesion: 0.07
-Nodes (28): WalletTransactionRowComponent(), LINE_KIND_ICON, lineBadgeColors(), ReceiptRow, TransactionReceiptModel, ICON_CIRCLE, ReceiptHead, ReceiptSection (+20 more)
+Nodes (29): ButtonColors, darkColors, darkInteractive, darkStatus, darkText, DEAL_ORBIT, DRAFT, ESCROW (+21 more)
+
+### Community 56 - "WithdrawAmountParts.tsx"
+Cohesion: 0.08
+Nodes (28): DealView, Period, useSegmentedControlDemo(), SegmentedControlDemo, SegmentedControlDemoComponent(), WithdrawMethodSheet, WithdrawMethodSheetComponent(), WithdrawStepLayout (+20 more)
 
 ### Community 57 - "ui/index.ts"
 Cohesion: 0.02
-Nodes (138): BADGE_COUNTS, BADGE_TONES, BadgesDemo, BadgesDemoComponent(), TAG_TONES, TONE_LABEL_KEY, GradientSurfaceDemoComponent(), useBadgesDemo() (+130 more)
+Nodes (124): ShowcaseLinkRowProps, AvatarGroupDemo, SIZES, BADGE_COUNTS, BADGE_TONES, BadgesDemo, BadgesDemoComponent(), TAG_TONES (+116 more)
 
-### Community 58 - "useFileUploads"
-Cohesion: 0.09
-Nodes (29): Probe(), patchEntry(), useFileUploads(), src_domains_marketplace_api_brandcampaignsapi_usecompletecampaignfilemutation, src_domains_marketplace_api_brandcampaignsapi_useremovecampaignfilemutation, src_domains_marketplace_api_brandcampaignsapi_userequestcampaignfileslotmutation, src_domains_marketplace_api_dealofferapi_usecompletebriefattachmentmutation, src_domains_marketplace_api_dealofferapi_useremovebriefattachmentmutation (+21 more)
+### Community 58 - "dealStation.ts"
+Cohesion: 0.04
+Nodes (78): PC6 — الصفقة المرتبطة (الدوران · CM7), src_domains_marketplace_api_dealsapi_usegetdealsinfinitequery, ACTION_LABEL, DealNextStepCard, DealNextStepCardProps, DealOutcomeCard, DealOutcomeCardComponent(), DealOutcomeCardProps (+70 more)
 
 ### Community 59 - "_sync_all.py"
 Cohesion: 0.26
@@ -789,73 +801,73 @@ Nodes (10): 0. Tasks, in order, 1. Access rules, 2. `CreatorCard` (used by Explo
 Cohesion: 0.10
 Nodes (23): ref_fs, ref_path, ENTRY_IDS, DomainExportName, SHOWCASE_CATEGORIES, SHOWCASE_CATEGORY_ORDER, SHOWCASE_ENTRIES, SHOWCASE_EXEMPT (+15 more)
 
-### Community 62 - "formatDuration"
-Cohesion: 0.10
-Nodes (28): src_core_navigation_index_dealflowstackscreenprops, src_core_navigation_index_dealguideparams, src_core_navigation_index_dealguiderole, DealFlowStackScreenProps, DealGuideParams, DealGuideRole, DealDossierItemComponent(), DealDossierLogisticsComponent() (+20 more)
+### Community 62 - "useTopUpDetailScreen.ts"
+Cohesion: 0.06
+Nodes (43): env, src_domains_finance_api_topupapi_usegettopupquery, WalletDayGroupComponent(), TOP_UP_STATUS_LOOK, creditOf(), DATE, DetailRow, Navigation (+35 more)
 
-### Community 63 - "Money"
-Cohesion: 0.05
-Nodes (64): Step 1: Foundations (no UI), COMPACT_UNITS, compactMagnitude(), FormatMoneyOptions, formatMoneyParts(), Magnitude, MoneyCurrencyDisplay, MoneyNotation (+56 more)
+### Community 63 - "MoneyText.tsx"
+Cohesion: 0.09
+Nodes (29): Decisions (v1), Open / waiting on backend, Phase 2 (out of scope for v1), Step 0: Design process fix (before any wallet screen) ✅ 2026-10-08, Step 1: Foundations (no UI), Step 3: Statement + receipt (both) ✅ (2026-10-09, awaiting device + live-server testing), Step 8: QA & device testing checklist, Wallet & Finance: Mobile Build Plan (+21 more)
 
 ### Community 65 - "useMediaKitInsightsScreen.ts"
-Cohesion: 0.05
-Nodes (50): src_domains_identity_api_mediakitapi_usegetmediakitstatsquery, HOME_STATS_PERIOD, useMediaKitCard(), BrandLocationsCardProps, COMPACT, InsightsStatsGrid, InsightsStatsGridComponent(), InsightsStatsGridProps (+42 more)
-
-### Community 67 - "useMediaKitPublicScreen.test.tsx"
 Cohesion: 0.06
-Nodes (33): react-test-renderer, mockHandlers, mockPush, mockUnsubscribe, Probe(), MediaKitPublicScreenModel, isHost(), kit (+25 more)
+Nodes (52): src_domains_identity_api_mediakitapi_usegetmediakitstatsquery, HOME_STATS_PERIOD, useMediaKitCard(), useMediaKitShareActions(), BrandLocationsCardProps, COMPACT, InsightsStatsGrid, InsightsStatsGridComponent() (+44 more)
+
+### Community 67 - "useFileUploads"
+Cohesion: 0.09
+Nodes (27): خريطة إعادة الاستخدام, Probe(), patchEntry(), useFileUploads(), src_domains_marketplace_api_brandcampaignsapi_usecompletecampaignfilemutation, src_domains_marketplace_api_brandcampaignsapi_useremovecampaignfilemutation, src_domains_marketplace_api_brandcampaignsapi_userequestcampaignfileslotmutation, src_domains_marketplace_api_dealofferapi_usecompletebriefattachmentmutation (+19 more)
 
 ### Community 68 - "compilerOptions"
 Cohesion: 0.15
 Nodes (12): compilerOptions, noFallthroughCasesInSwitch, noImplicitAny, noImplicitReturns, noUncheckedIndexedAccess, paths, strict, types (+4 more)
 
 ### Community 69 - "Wallet & Finance: Mobile Handoff (phase 1)"
-Cohesion: 0.08
-Nodes (25): 10. Screens checklist, 1. Breaking change (ship with this release), 2. Money format, 3. Idempotency (required), 4. Capabilities (from `GET /user/me`), 5. Shared (brand + influencer), 6. Brand: top-ups, 7. Creator: payout methods (+17 more)
-
-### Community 70 - "DealJourney.tsx"
 Cohesion: 0.11
-Nodes (27): DealJourneyComponent(), DealJourneyProps, DOT, DOT_ON, DealJourneyCard, DealJourneyRail, DealJourneyRailComponent(), DealJourneyRailProps (+19 more)
+Nodes (19): 10. Screens checklist, 1. Breaking change (ship with this release), 2. Money format, 3. Idempotency (required), 4. Capabilities (from `GET /user/me`), 5. Shared (brand + influencer), 6. Brand: top-ups, 8. Creator: withdrawals (+11 more)
 
-### Community 71 - "useShortlistInvite.test.tsx"
-Cohesion: 0.17
-Nodes (8): current, Harness(), mockError, mockInfo, mockInvite, mockQuery, mockUseQuery, Model
+### Community 70 - "DealOrbit.tsx"
+Cohesion: 0.15
+Nodes (17): DealOrbit, directionAt(), LABEL_GAP, LABEL_HEIGHT, LABEL_WIDTH, labelOffset(), labelReach(), MAX_RADIUS (+9 more)
+
+### Community 71 - "campaign.ts"
+Cohesion: 0.05
+Nodes (76): QUOTE_INPUTS, src_domains_marketplace_api_brandcampaignsapi_usedecidecampaignapplicantmutation, src_domains_marketplace_api_brandcampaignsapi_usegetcampaignsinfinitequery, src_domains_marketplace_api_brandcampaignsapi_useinvitecreatorsmutation, creatorCampaignsApi, nextPage(), STALE_PAGE_CODES, CAMPAIGN_INVITE_BATCH_MAX (+68 more)
 
 ### Community 72 - "useDealDisputeScreen.ts"
-Cohesion: 0.04
-Nodes (87): 16d — Ref: Deal changes, disputes, retention (P8, P9), 4. Contract changes by task (what changed for the app), M9 — Disputes and retention (B10), src_domains_marketplace_api_dealdisputeapi_useadddealdisputeevidencemutation, src_domains_marketplace_api_dealdisputeapi_usegetdealdisputesquery, src_domains_marketplace_api_dealdisputeapi_useopendealdisputemutation, src_domains_marketplace_api_dealdisputeapi_userequestevidenceuploadslotmutation, DealBriefExitSheetComponent() (+79 more)
+Cohesion: 0.06
+Nodes (63): src_domains_marketplace_api_dealdisputeapi_useadddealdisputeevidencemutation, src_domains_marketplace_api_dealdisputeapi_usegetdealdisputesquery, src_domains_marketplace_api_dealdisputeapi_useopendealdisputemutation, src_domains_marketplace_api_dealdisputeapi_userequestevidenceuploadslotmutation, DealDisputeCardComponent(), DEAL_DISPUTE_CLOSED_COPY, DEAL_DISPUTE_CLOSED_FALLBACK, DEAL_DISPUTE_LIMITS (+55 more)
 
 ### Community 73 - "Mobile Integration — Company Verification (Brands)"
-Cohesion: 0.08
-Nodes (25): 1. Owner national ID / passport for brands (`POST /user/kyc` + brand onboarding step 3), 2. New `GET /brand/verification/domain-email`: latest attempt or `null`, 3. Block free and disposable email providers (route 3), 4. Exact push `type` strings, 5. Rate limits + 429, 6. Verified method in `/user/me`, Conventions (keep them), Admin-side (for reference only — admin console team's screens, not mobile) (+17 more)
-
-### Community 74 - "creatorCampaignsApi.ts"
-Cohesion: 0.19
-Nodes (28): brandCampaignsApi, creatorCampaignsApi, nextPage(), STALE_PAGE_CODES, ApplicantDecision, CreatorApplicationsArgs, mapCreatorApplication(), mapCreatorApplicationsPage() (+20 more)
-
-### Community 75 - "useSocialProofScreen.ts"
-Cohesion: 0.04
-Nodes (82): KYC_METHODS, KycMethod, isKycMethod(), toKycMethod(), kycApi, src_domains_identity_api_kycapi_usegetkycquery, DOMAIN_TAG, SOCIAL_TAG (+74 more)
-
-### Community 76 - "DealTrackRow.tsx"
-Cohesion: 0.10
-Nodes (27): BRAND_DEAL_ACTION_CTA, DEAL_TRACK_STOP_LABEL, DEAL_TRACK_STOP_OF_PHASE, DEAL_TRACK_STOPS, DealTrackStop, NEXT_STEP_HOT_SECONDS, UNKNOWN_BRAND_DEAL_ACTION_CTA, DEAL_ITEM_STATUS_META (+19 more)
-
-### Community 77 - "DealsBoard.tsx"
 Cohesion: 0.06
-Nodes (36): Paginated lists, @shopify/flash-list, StatementScreenComponent(), PlatformListRow, PlatformsScreen, PlatformsScreenComponent(), ApplicationCard, ApplicationsSkeleton (+28 more)
+Nodes (36): 1. Owner national ID / passport for brands (`POST /user/kyc` + brand onboarding step 3), 2. New `GET /brand/verification/domain-email`: latest attempt or `null`, 3. Block free and disposable email providers (route 3), 4. Exact push `type` strings, 5. Rate limits + 429, 6. Verified method in `/user/me`, 7. Please confirm (no change needed if already true), Conventions (keep them) (+28 more)
 
-### Community 78 - "PlatformResource"
-Cohesion: 0.12
-Nodes (15): PlatformResource, PlatformAccountCardProps, PlatformReviewNotice, PlatformReviewNoticeProps, PlatformSettingsGroupProps, PlatformDetailModel, ContentProps, PlatformListRowProps (+7 more)
-
-### Community 79 - "DealPublicationReviewScreen.tsx"
+### Community 74 - "KycScreen.tsx"
 Cohesion: 0.08
-Nodes (23): AVATAR, BADGE, LiveRoomHero, LiveRoomHeroProps, WELL, ProofReel, FixChip, FixChips (+15 more)
+Nodes (40): Brand company verification (identity; contract `docs/company-verification.md`), src_core_navigation_index_brandwizardstackparamlist, src_core_navigation_index_settingsstackparamlist, BrandWizardStackParamList, KycDocumentGroupParam, SettingsStackParamList, noop(), useSettingsVerificationFlow() (+32 more)
+
+### Community 75 - "types/verification.ts"
+Cohesion: 0.12
+Nodes (26): KycMethod, kycApi, DOMAIN_TAG, SOCIAL_TAG, verificationApi, KycDetails, KycDetailsDto, DOMAIN_VERIFICATION_STATUS (+18 more)
+
+### Community 76 - "TopUpDetailScreen.tsx"
+Cohesion: 0.08
+Nodes (26): ReportLink, ReportLinkComponent(), ReportLinkProps, DetailHead, DetailSkeleton, DetailView, ICON_CIRCLE, LinkValue (+18 more)
+
+### Community 77 - "MyApplicationsView.tsx"
+Cohesion: 0.19
+Nodes (11): ApplicationCard, ApplicationCardProps, ApplicationsSkeleton, WithdrawApplicationSheet, WithdrawApplicationSheetComponent(), WithdrawApplicationSheetProps, MyApplicationsView, MyApplicationsViewComponent() (+3 more)
+
+### Community 78 - "getValidLanguage"
+Cohesion: 0.12
+Nodes (20): bootstrapLanguage(), COMPACT_UNITS, compactNumber(), dateFormat(), dateFormats, LEVANTINE_MONTHS, numberFormat(), numberFormats (+12 more)
+
+### Community 79 - "useCreatorOverview.ts"
+Cohesion: 0.09
+Nodes (27): src_domains_auth_index_usegetprofilequery, BrandSocialLink, InfluencerGender, ProfileCompletionStep, User, accountApi, ChangePasswordRequest, UpdateBrandProfileRequest (+19 more)
 
 ### Community 80 - "useMediaKitSettingsScreen.ts"
-Cohesion: 0.04
-Nodes (55): isCreatorSlugFormat(), isCreatorSlugLength(), toCreatorTarget(), src_domains_identity_api_mediakitapi_uselazycheckmediakitslugquery, src_domains_identity_api_mediakitapi_useupdatemediakitmutation, Deferred, latest, mockCheckSlug (+47 more)
+Cohesion: 0.05
+Nodes (50): src_domains_identity_api_mediakitapi_uselazycheckmediakitslugquery, Deferred, latest, mockCheckSlug, Probe(), requests, CheckResult, SLUG_CHECK_DEBOUNCE_MS (+42 more)
 
 ### Community 81 - "Home Screen UI Patterns"
 Cohesion: 0.20
@@ -865,61 +877,61 @@ Nodes (11): BottomBarContext, FloatingBottomBar, HomeFeatureSwitcher, HomeHeroHe
 Cohesion: 0.22
 Nodes (11): 02 — Strict Design System, Theme Tokens, useStyles(factory, deps?), useTheme(), UI Kit (@/shared/ui), Box, Card, Image (+3 more)
 
-### Community 83 - "useDraftFrames.ts"
-Cohesion: 0.12
-Nodes (21): @react-native-documents/picker, isRetryableFailure(), failureText(), useProofFrames(), DisputeEvidenceSheetComponent(), EvidenceDraftTileProps, EvidenceFile, failureText() (+13 more)
+### Community 83 - "DraftFrame.tsx"
+Cohesion: 0.07
+Nodes (34): isRetryableFailure(), DealProofShotsProps, failureText(), ProofFrame, ProofFrameStatus, useProofFrames(), DisputeEvidenceSheetComponent(), EvidenceDraftTileProps (+26 more)
 
-### Community 84 - "useMediaKitCard.ts"
-Cohesion: 0.13
-Nodes (22): src_domains_identity_api_mediakitapi_usegetmediakitquery, src_domains_identity_api_mediakitapi_usesharemediakitmutation, MediaKitShareNotice, MediaKitShareNoticeProps, MediaKitCardShare, MediaKitCardStatus, MediaKitCardModel, useMediaKitShare() (+14 more)
+### Community 84 - "useMediaKitShare.ts"
+Cohesion: 0.16
+Nodes (18): src_domains_identity_api_mediakitapi_usesharemediakitmutation, src_domains_identity_api_mediakitapi_useupdatemediakitmutation, MediaKitShareNotice, MediaKitShareNoticeProps, MediaKitCardShare, MediaKitCardStatus, MediaKitCardModel, useMediaKitShare() (+10 more)
 
 ### Community 85 - "DateRangePicker.tsx"
-Cohesion: 0.17
-Nodes (17): react-native-calendars, addDays(), buildMarkedDates(), DateRangeDirection, DateRangePickerContent(), DateRangePickerContentProps, DateRangePickerProps, formatShort() (+9 more)
+Cohesion: 0.07
+Nodes (33): 13 — Ref: UI Kit (`@/shared/ui`) — reuse when it fits, Controls & building blocks, Lists (SuperList = FlashList v2), Not verified on device, Theme, react-native-calendars, useResponsiveValue(), BottomSheetProps (+25 more)
 
 ### Community 86 - "Icon & Layout Guidelines"
 Cohesion: 0.24
 Nodes (11): icons.csv Recommended Icons, Accessibility Checklist, Heroicons (@heroicons/react), Icons & Visual Elements Guidelines, Interaction (App) Guidelines, Layout & Spacing Guidelines, Light/Dark Mode Contrast Guidelines, Phosphor Icons (@phosphor-icons/react) (+3 more)
 
-### Community 88 - "useCampaignWizard"
+### Community 88 - "react"
 Cohesion: 0.03
-Nodes (97): BriefBlock, BriefBlockComponent(), BriefBlockProps, BriefEntryAdder, BriefEntryAdderProps, BriefEntryList, BriefEntryListComponent(), BriefEntryListProps (+89 more)
+Nodes (124): react, BriefBlock, BriefBlockProps, BriefEntryAdder, BriefEntryAdderProps, BriefFileTiles, BriefFileTilesComponent(), FileTile (+116 more)
 
 ### Community 89 - "campaignMappers.ts"
-Cohesion: 0.07
-Nodes (73): CampaignActionEnvelopeDto, QUOTE_INPUTS, ApplicantArgs, ApplicantDecisionArgs, ApplicantsCompareArgs, ApplicantSelectArgs, ApplicantsPage, CampaignActionResult (+65 more)
+Cohesion: 0.05
+Nodes (83): brandCampaignsApi, CampaignActionEnvelopeDto, APPLICATION_STATE_SOURCE, CAMPAIGN_ELIGIBILITY_REASON, CAMPAIGN_FILE_PURPOSE, CAMPAIGN_HISTORY_SUBJECT, CAMPAIGN_INVITE_SKIP, CAMPAIGN_SEAT_FREED_OPTION (+75 more)
 
 ### Community 90 - "BrandHomeScreen.test.tsx"
 Cohesion: 0.15
 Nodes (15): activeCampaign(), byLabel(), campaignsModel(), creator(), isHost(), mockDeckNext, mockIcon(), mockModel (+7 more)
 
-### Community 91 - "MediaKitWorkMasonry.tsx"
-Cohesion: 0.11
-Nodes (19): MediaKitRise, MediaKitRiseComponent(), MediaKitRiseFrom, MediaKitRiseProps, RISE, SIDE, MediaKitSectionTitle, MediaKitSectionTitleComponent() (+11 more)
+### Community 91 - "mediaKitShowcase.ts"
+Cohesion: 0.04
+Nodes (74): BrandCard, LOGO, MediaKitBrands, SEAL, MediaKitHighlights, ARC_DROP, ARC_RADII, MediaKitJoinCard (+66 more)
 
 ### Community 92 - "marketplace/types/index.ts"
 Cohesion: 0.03
-Nodes (137): CreatorAskCardProps, CreatorNetCardProps, DealCampaignChipProps, DealShippingAddressCardProps, OpportunityBrandPillProps, ApplyPriceSectionProps, DisputeStatementCardProps, APPLICANT_COUNT_KEY (+129 more)
+Nodes (141): creatorDealSummaryApi, DealUpsellQuoteArgs, DealShippingAddressCardProps, DEAL_DECLINE_REASON_DEF, ParcelAddressProps, DisputeStatementCardProps, CreatorCampaignsGlance, BRAND_DEAL_ACTION (+133 more)
 
 ### Community 93 - "MainTabs.tsx"
-Cohesion: 0.09
-Nodes (29): Bottom tab bar, Bottom bar, Step 2: Wallet tab (both roles) ✅ (2026-10-09, awaiting device + live-server testing), PC7 — الرئيسية (C14), BRAND_TABS, buildTabOptions(), CREATOR_TABS_WITH_CAMPAIGNS, CREATOR_TABS_WITHOUT_CAMPAIGNS (+21 more)
+Cohesion: 0.11
+Nodes (25): Bottom bar, Step 2: Wallet tab (both roles) ✅ (2026-10-09, awaiting device + live-server testing), PC7 — الرئيسية (C14), BRAND_TABS, buildTabOptions(), CREATOR_TABS_WITH_CAMPAIGNS, CREATOR_TABS_WITHOUT_CAMPAIGNS, creatorTabs() (+17 more)
 
 ### Community 94 - "MediaKitStageReach.tsx"
+Cohesion: 0.12
+Nodes (20): MediaKitStageComponent(), BAR_GAP, BAR_HEIGHT, BAR_MAX, BAR_MIN, COMPACT, GRID_MAX, MediaKitStageReach (+12 more)
+
+### Community 95 - "useAppBootstrap.ts"
+Cohesion: 0.08
+Nodes (35): 11 — Mobile Docs (MANDATORY, Definition of Done), 12 — Ref: Boot & Navigation, Boot pipeline (`useAppBootstrap`, `src/app/bootstrap`), Storage, AppStatus, AUTHENTICATED, CHOOSE_LANGUAGE, LOADING (+27 more)
+
+### Community 96 - "useDealRating.ts"
 Cohesion: 0.13
-Nodes (19): MediaKitStageComponent(), BAR_GAP, BAR_HEIGHT, BAR_MAX, BAR_MIN, COMPACT, GRID_MAX, MediaKitStageReachComponent() (+11 more)
-
-### Community 95 - "AppStatus"
-Cohesion: 0.07
-Nodes (34): 11 — Mobile Docs (MANDATORY, Definition of Done), Boot pipeline (`useAppBootstrap`, `src/app/bootstrap`), Storage, AppStatus, AUTHENTICATED, CHOOSE_LANGUAGE, LOADING, MAINTENANCE (+26 more)
-
-### Community 96 - "react-native-reanimated"
-Cohesion: 0.06
-Nodes (46): 13 — Ref: UI Kit (`@/shared/ui`) — reuse when it fits, Lists (SuperList = FlashList v2), Navy surfaces & live parts (rule 09 §3.1), Primitives & Layout, Theme, react-native-edge-to-edge, react-native-keyboard-controller, react-native-reanimated (+38 more)
+Nodes (24): 4. Contract changes by task (what changed for the app), M9 — Disputes and retention (B10), P10 — M10 التقييم, src_domains_marketplace_api_dealratingapi_useratedealmutation, src_domains_marketplace_api_dealratingapi_useskipdealratingmutation, DealRatingEnvelopesCardProps, DealRatingSummaryProps, COMMENT_FIELDS (+16 more)
 
 ### Community 97 - "BriefFileSourceTile.tsx"
-Cohesion: 0.06
-Nodes (31): BriefFileSourceTile, BriefFileSourceTileComponent(), PILL, TILE, TILE_HEIGHT, ART_HEIGHT, ART_WIDTH, BACK (+23 more)
+Cohesion: 0.11
+Nodes (18): BriefFileSourceTile, BriefFileSourceTileComponent(), PILL, TILE, TILE_HEIGHT, DocStackArt, ART_HEIGHT, ART_WIDTH (+10 more)
 
 ### Community 98 - "campaignSchedule.ts"
 Cohesion: 0.15
@@ -929,85 +941,85 @@ Nodes (31): CAMPAIGN_DELIVERY_DAY_PRESETS, CAMPAIGN_SCHEDULE, CampaignScheduleMo
 Cohesion: 0.11
 Nodes (15): ARC_OPACITY, ARCS_END, ARCS_START, CHIPS, ChipSpec, PARTICLES, SceneProps, styles (+7 more)
 
-### Community 100 - "MediaKitStats"
-Cohesion: 0.11
-Nodes (23): Ownership, 0. Your tasks, in order, 17.10 Media Kit edge-case checklist, 17.1 `GET /influencer/media-kit` — own media kit, 17.2 `PATCH /influencer/media-kit` — partial, 17.3 `GET /influencer/media-kit/slug-check?slug=` — live availability, 17.4 Public — `GET /public/creators/{slug}` (no auth; bearer optional), 17.5 `POST /public/creators/{slug}/views` — count a view (+15 more)
+### Community 100 - "17. Media Kit — LOCKED (2026-10-06, implemented)"
+Cohesion: 0.18
+Nodes (11): 17.10 Media Kit edge-case checklist, 17.1 `GET /influencer/media-kit` — own media kit, 17.2 `PATCH /influencer/media-kit` — partial, 17.3 `GET /influencer/media-kit/slug-check?slug=` — live availability, 17.4 Public — `GET /public/creators/{slug}` (no auth; bearer optional), 17.5 `POST /public/creators/{slug}/views` — count a view, 17.6 `POST /influencer/media-kit/share`, 17.7 `GET /influencer/media-kit/stats?period=7d|30d|90d` (default `30d`) (+3 more)
 
 ### Community 101 - "MediaKitAudience.tsx"
 Cohesion: 0.12
 Nodes (20): AgeColumn, AGES_HEIGHT, CITY_BAR, CITY_NAME, CITY_VALUE, CityRow, GENDER_GAP, GENDER_HEIGHT (+12 more)
 
-### Community 102 - "BrandSpotlight.tsx"
-Cohesion: 0.07
-Nodes (25): MotionDurationToken, opacity, BEAM_END, BEAM_HEIGHT, BEAM_TOP, BEAM_WIDTH, BrandSpotlight, BrandSpotlightComponent() (+17 more)
+### Community 102 - "moderateScale"
+Cohesion: 0.05
+Nodes (42): react-native-webview, MaintenanceScreenComponent(), Props, src_core_navigation_index_settingsstackscreenprops, SettingsStackScreenProps, moderateScale(), src_domains_identity_api_accountapi_useupdatepreferencesmutation, LANGUAGES (+34 more)
 
 ### Community 103 - "BrandCampaignsScreen.tsx"
-Cohesion: 0.06
-Nodes (47): src_domains_marketplace_api_brandcampaignsapi_usegetcampaignsinfinitequery, CampaignAttentionRailProps, ChipProps, CampaignBatchToolsCardProps, CampaignCard, CampaignCardProps, CampaignDraftCard, CampaignDraftCardComponent() (+39 more)
+Cohesion: 0.15
+Nodes (13): CampaignCard, CampaignDraftCard, CampaignDraftSheet, CampaignFinishedRow, CampaignScope, CampaignsListHeader, CampaignsSkeleton, CampaignsSkeletonComponent() (+5 more)
 
-### Community 104 - "utils/dealDrafts.ts"
-Cohesion: 0.14
-Nodes (17): DEAL_DRAFT_REVIEW_TONE, DATE_FORMAT, ReviewHistory, ReviewHistoryComponent(), ReviewHistoryProps, Round, ReviewStageProps, DraftAskTicketProps (+9 more)
-
-### Community 105 - "dealOfferMappers.ts"
+### Community 104 - "EscrowTicket.tsx"
 Cohesion: 0.10
-Nodes (42): dealOfferApi, DraftAttachmentArgs, draftUrl(), DEFAULT_DEAL_WINDOWS, OfferSent, DealRetentionTerm, DealBriefDto, DEAL_BLOCKER_CODE (+34 more)
+Nodes (23): AVATAR, ESCROW_PILL, EscrowTicket, EscrowTicketComponent(), EscrowTicketProps, NOTCH, TEAR_DASH, TEAR_Y (+15 more)
+
+### Community 105 - "Money"
+Cohesion: 0.03
+Nodes (108): ContractTerms, Money, MonthInPillProps, WalletHeaderBalanceProps, MediaKitTermsSheetProps, OfferFooterProps, dealOfferApi, DraftAttachmentArgs (+100 more)
 
 ### Community 106 - "explore.ts"
-Cohesion: 0.06
-Nodes (60): 6.3 `RateCard` (editor and media kit share it), 5. Card response (editor and media kit share it), src_core_navigation_index_exploresortparam, ExploreSortParam, brandHomeApi, EXPLORE_PER_PAGE, exploreApi, SHORTLIST_PER_PAGE (+52 more)
+Cohesion: 0.07
+Nodes (55): 6.3 `RateCard` (editor and media kit share it), 5. Card response (editor and media kit share it), src_core_navigation_index_exploresortparam, brandHomeApi, EXPLORE_PER_PAGE, exploreApi, SHORTLIST_PER_PAGE, shortlistListApi (+47 more)
 
 ### Community 107 - "useExploreScreen.ts"
-Cohesion: 0.06
-Nodes (52): 16e — Ref: Discovery (Brand Home, Explore, Shortlist, price lock), ExploreFilters, ExploreParams, src_domains_marketplace_api_exploreapi_usegetexplorecreatorsinfinitequery, PriceLockSheet, ExploreFilterSheet, ExploreFilterSheetComponent(), ExploreFilterSheetProps (+44 more)
+Cohesion: 0.09
+Nodes (43): 16e — Ref: Discovery (Brand Home, Explore, Shortlist, price lock), ExploreFilters, src_domains_marketplace_api_exploreapi_usegetexplorecreatorsinfinitequery, PriceLockSheet, ExploreFilterSheet, ExploreFilterSheetComponent(), ExploreFilterSheetProps, FlagBox (+35 more)
 
-### Community 108 - "rateCardCatalogTypes.ts"
-Cohesion: 0.12
-Nodes (23): isAddonType(), KNOWN, knownServiceAddons(), orderAddons(), withKnownAddons(), EMPTY_CATALOG_ERROR, rateCardCatalogApi, CatalogCache (+15 more)
+### Community 108 - "rateRows.ts"
+Cohesion: 0.08
+Nodes (30): isAddonType(), KNOWN, knownServiceAddons(), orderAddons(), withKnownAddons(), ADDON_TYPES, CatalogAddon, CatalogAddonOption (+22 more)
 
 ### Community 109 - "BrandLogo.tsx"
-Cohesion: 0.06
-Nodes (34): 08b — Brand Palette (raw values), Tab Bar, Logo, Assets, Brand book, Glass (`colors.glass`, light / dark), Hues (light · dark), Logo (Concept C — Concentric Echo, geometry v4, FINAL — changes need explicit user approval), Neutrals, Status (light main · text · soft | dark main = text · soft), src_assets_images_logo_logo_full_dark (+26 more)
+Cohesion: 0.09
+Nodes (26): src_assets_images_logo_logo_full_dark, src_assets_images_logo_logo_full_en_dark, src_assets_images_logo_logo_full_en_light, src_assets_images_logo_logo_full_light, src_assets_images_logo_symbol_lg, src_assets_images_logo_symbol_lg_dark, src_assets_images_logo_symbol_md, src_assets_images_logo_symbol_md_dark (+18 more)
 
-### Community 110 - "MediaKitEscrow.tsx"
-Cohesion: 0.08
-Nodes (26): ClockProps, COIN, DONE_HEIGHT, MediaKitEscrowComponent(), NODE, NODE_ICON, PATH_HEIGHT, PHASE (+18 more)
+### Community 110 - "MediaKitHighlights.tsx"
+Cohesion: 0.10
+Nodes (23): BARS_GAP, BARS_HEIGHT, BrandStack, EngagementRing, LocalTrack, MediaKitHighlightsProps, METRIC_LABEL, RING (+15 more)
 
 ### Community 111 - "Text"
 Cohesion: 0.02
-Nodes (175): lucide-react-native, HERO_BADGE_SIZE, HERO_ICON_SIZE, src_assets_locales_ar_common, src_assets_locales_en_common, iconStroke, GlassPill, GlassPillComponent() (+167 more)
+Nodes (157): lucide-react-native, react-hook-form, src_assets_locales_ar_common, src_assets_locales_en_common, formatNumber(), FollowerTierPicker, OnboardingProgressGateProps, SocialProfileCard (+149 more)
 
 ### Community 112 - "08 — Brand Identity (Navy Trust)"
 Cohesion: 0.20
 Nodes (9): 08 — Brand Identity (Navy Trust), Color roles — one job each, Currency, Follower tier badges, Logo in app, Mode, Neutral & special tokens, Shape, depth, glass, motion (+1 more)
 
 ### Community 113 - "CardsCanvas.tsx"
-Cohesion: 0.20
-Nodes (14): @shopify/react-native-skia, BADGE_SIZE, CardsCanvasComponent(), useCardFonts(), buildParagraph(), Params, CARD_WIDTH_RATIO, CardMetrics (+6 more)
+Cohesion: 0.19
+Nodes (14): @shopify/react-native-skia, BADGE_SIZE, CardsCanvasComponent(), CardsCanvasProps, useCardFonts(), SlideData, buildParagraph(), Params (+6 more)
 
-### Community 114 - "config/index.ts"
-Cohesion: 0.05
-Nodes (47): react-native-config, LanguageOptionRow, LanguageOptionRowProps, LANGUAGE_OPTIONS, LanguageCardAlign, LanguageOption, useTextInputsDemo(), TextInputsDemo (+39 more)
+### Community 114 - "RateCardEditorScreen.tsx"
+Cohesion: 0.13
+Nodes (18): DEFAULT_CURRENCY, ADDON_ICONS, AddonRow, AddonRowProps, ICON_BOX, RateCardAddonFields, Props, RateCardLockedSummary (+10 more)
 
-### Community 115 - "04 — Data Layer"
-Cohesion: 0.14
-Nodes (11): 04 — Data Layer, Local state & storage, Redux, Repository pattern, RTK Query, 05 — Quality Gates, Imports, Performance (+3 more)
+### Community 115 - "05 — Quality Gates"
+Cohesion: 0.33
+Nodes (5): 05 — Quality Gates, Imports, Strict TS, Style, Tests
 
 ### Community 116 - "useWithdrawalDetailScreen.ts"
-Cohesion: 0.07
-Nodes (44): @react-native-clipboard/clipboard, WithdrawStackParamList, useToast(), src_domains_finance_api_withdrawalapi_usecancelwithdrawalmutation, src_domains_finance_api_withdrawalapi_usegetwithdrawalquery, MoneyStepLayout, WithdrawStepLayoutComponent(), WithdrawStepLayoutProps (+36 more)
+Cohesion: 0.06
+Nodes (50): WithdrawStackParamList, src_domains_finance_api_withdrawalapi_usecancelwithdrawalmutation, src_domains_finance_api_withdrawalapi_usegetwithdrawalquery, src_domains_finance_api_withdrawalapi_usegetwithdrawalsinfinitequery, WalletDayGroupProps, WithdrawStepLayoutProps, WITHDRAW_QUOTE_DEBOUNCE_MS, WITHDRAW_STEP_COUNT (+42 more)
 
 ### Community 117 - "MediaKitPublicScreen.tsx"
-Cohesion: 0.12
-Nodes (20): MediaKitHeaderBar, MediaKitShowcaseBody, MediaKitShowcaseBodySkeleton, MediaKitShowcaseBodySkeletonComponent(), TICKET_HEIGHT, TICKETS, TILE_HEIGHT, TILES (+12 more)
+Cohesion: 0.07
+Nodes (35): MediaKitHeaderBar, MediaKitShowcaseBody, MediaKitShowcaseBodySkeleton, MediaKitShowcaseBodySkeletonComponent(), TICKET_HEIGHT, TICKETS, TILE_HEIGHT, TILES (+27 more)
 
 ### Community 118 - "Rate Cards v2 — Mobile Handoff"
 Cohesion: 0.18
 Nodes (10): 1. Breaking changes, 2. Re-create banner (no push), 3. Catalog — `GET /api/v1/lookups/rate-card-catalog`, 4.1 Card payload, 4.2 PATCH, 4.3 Onboarding step 3 (quick form), 4. Endpoints, 6. Validation errors (`422`) (+2 more)
 
-### Community 119 - "rateRows.ts"
-Cohesion: 0.15
-Nodes (16): useMediaKitPreviewLabels(), labelNiches(), buildLockableRateRows(), buildRateRows(), buildRows(), LockableRowCard, RateAddonDetail, RatePlatform (+8 more)
+### Community 119 - "ProfileScreen.tsx"
+Cohesion: 0.11
+Nodes (19): PROFILE_SECTIONS, ProfileSectionKey, AccountFooter, CompanyInfoCardProps, CreatorToolsBentoProps, KycPill, KycRejectedStrip, PlatformsCarousel (+11 more)
 
 ### Community 120 - "Manifest Config"
 Cohesion: 0.40
@@ -1018,52 +1030,52 @@ Cohesion: 0.40
 Nodes (5): Primitive Components (Box/Text/Pressable/Card), Theme System, ToastCard, useStyles Hook, useTheme Hook
 
 ### Community 122 - "gen.py"
-Cohesion: 0.12
-Nodes (15): base64, math, os, pathlib, re, Builds the Sada brand book (rule 08) into docs/brand/. Never hand-edit the…, arc(), compact() (+7 more)
+Cohesion: 0.17
+Nodes (11): math, os, arc(), compact(), lockup(), Generates every SVG in src/assets/images/logo/ (rule 08). Never hand-edit those…, HarfBuzz glyph outlines + mint dot centre, both in font-size-100 units., Symbol sits on the reading-start side: right for Arabic, left for English.… (+3 more)
 
 ### Community 123 - "RootNavigator.tsx"
 Cohesion: 0.12
 Nodes (29): RootStackParamList, Stack, BootScreen, ChooseLanguageScreen(), ComingSoonTabScreen, DevShowcaseScreen, LayoutBrandHeaderScreen, LayoutCollapseHeaderScreen (+21 more)
 
-### Community 124 - "payoutMethodMappers.ts"
-Cohesion: 0.20
-Nodes (17): LIST, payoutMethodApi, CreatePayoutMethodInput, DeletePayoutMethodDto, PayoutDetails, PayoutDetailsDto, PayoutMethodDto, PayoutMethodPatch (+9 more)
+### Community 124 - "useMediaKitPublicScreen.ts"
+Cohesion: 0.06
+Nodes (35): OnboardingResume(), RootNavigator(), src_core_navigation_index_authstackparamlist, src_core_navigation_index_dealflowstackparamlist, src_core_navigation_index_publicstackscreenprops, src_core_navigation_index_roottabparamlist, AccountScreens, AuthStackParamList (+27 more)
 
 ### Community 125 - "OnboardingScreen/types.ts"
-Cohesion: 0.22
-Nodes (11): CardsCanvasProps, ONBOARDING_SLIDES, Params, useOnboardingScreen(), SlideCard, SlideCardDefinition, SlideData, SlideDefinition (+3 more)
+Cohesion: 0.26
+Nodes (9): ONBOARDING_SLIDES, Params, useOnboardingScreen(), SlideCard, SlideCardDefinition, SlideDefinition, resolveCard(), resolveSlides() (+1 more)
 
-### Community 126 - "react"
-Cohesion: 0.01
-Nodes (187): react, AccordionDemo, AccordionDemoComponent(), AmountInputDemo, AmountInputDemoComponent(), AvatarGroupDemo, SIZES, BarChartDemo (+179 more)
+### Community 126 - "showcaseDemos.ts"
+Cohesion: 0.02
+Nodes (142): AccordionDemo, AccordionDemoComponent(), AmountInputDemo, AmountInputDemoComponent(), BarChartDemo, Sample, SampleProps, BottomSheetDemo (+134 more)
 
-### Community 127 - "baseApi"
-Cohesion: 0.07
-Nodes (34): 3.5 Applicants (CM3), baseApi, campaignChangedTags(), fail(), json(), mockServer(), ok(), quoteDto (+26 more)
+### Community 127 - "brandCampaignsApi.test.ts"
+Cohesion: 0.11
+Nodes (22): 3.5 Applicants (CM3), fail(), json(), mockServer(), ok(), quoteDto, ok(), page() (+14 more)
 
 ### Community 128 - "DealContractScreen.tsx"
-Cohesion: 0.07
-Nodes (29): DealView, Period, useSegmentedControlDemo(), SegmentedControlDemo, SegmentedControlDemoComponent(), CampaignFilter, useLayoutStickyScreen(), LayoutStickyScreenComponent() (+21 more)
+Cohesion: 0.15
+Nodes (14): ContractAddendumCard, ISSUED_FORMAT, TYPE_LABEL, ContractBlock, ContractBlockComponent(), ContractPaper, ContractPaperComponent(), PartyCard (+6 more)
 
-### Community 129 - "theme/index.ts"
+### Community 129 - "react-i18next"
 Cohesion: 0.02
-Nodes (168): react-hook-form, react-i18next, ComingSoonTabScreenProps, DemoScrollRows, ShowcaseLinkRow, ShowcaseLinkRowProps, ShowcaseSection, ShowcaseSectionProps (+160 more)
+Nodes (164): react-i18next, HERO_BADGE_SIZE, HERO_ICON_SIZE, ComingSoonTabScreenProps, DemoScrollRows, ShowcaseLinkRow, ShowcaseSection, ShowcaseSectionProps (+156 more)
 
-### Community 130 - "ReviewRevisionSheet.tsx"
-Cohesion: 0.14
-Nodes (18): DealDossierFilesProps, DealRevisionFormValues, ReviewFileStripProps, Cue, CUE_MIN, ReviewNotes, ReviewNotesComponent(), ReviewNotesProps (+10 more)
+### Community 130 - "config/index.ts"
+Cohesion: 0.10
+Nodes (24): libphonenumber-js, react-native-config, react-native-device-info, useTextInputsDemo(), TextInputsDemoComponent(), ForceUpdateScreenComponent(), APP_NAME, DEFAULT_LANGUAGE (+16 more)
 
 ### Community 131 - "DisputeScales.tsx"
 Cohesion: 0.10
 Nodes (21): AREA_H, BASE_H, BASE_W, BEAM_H, BEAM_MAX, BOWL_D, DisputeScales, DisputeScalesProps (+13 more)
 
-### Community 132 - "DealOrbit.tsx"
-Cohesion: 0.14
-Nodes (19): arcPath(), DealOrbit, DealOrbitComponent(), directionAt(), LABEL_GAP, LABEL_HEIGHT, LABEL_WIDTH, labelOffset() (+11 more)
+### Community 132 - "useBrandCampaignAnnouncementsScreen.ts"
+Cohesion: 0.13
+Nodes (17): src_domains_marketplace_api_campaignbatchapi_usegetcampaignannouncementsinfinitequery, src_domains_marketplace_api_campaignbatchapi_usesendcampaignannouncementmutation, CampaignAnnouncementFormValues, createCampaignAnnouncementSchema(), EMPTY_ANNOUNCEMENT, schema, t, AnnouncementEditorProps (+9 more)
 
-### Community 133 - "Box.tsx"
+### Community 133 - "Pressable.tsx"
 Cohesion: 0.06
-Nodes (41): ShadowToken, SpacingToken, src_core_theme_types_borderwidthtoken, src_core_theme_types_shadowtoken, src_core_theme_types_zindextoken, shadowBleed, MediaKitBrandsComponent(), DividerComponent() (+33 more)
+Nodes (46): BorderWidthToken, ButtonColorVariant, HueColors, opacity, ShadowToken, src_core_theme_types_borderwidthtoken, src_core_theme_types_buttoncolorvariant, Mutable (+38 more)
 
 ### Community 134 - "iOS Run README"
 Cohesion: 0.83
@@ -1079,23 +1091,23 @@ Nodes (17): 5.3 Core journeys in plain English, Journey A2: Managing platforms, 
 
 ### Community 137 - "useWithdrawFlow.ts"
 Cohesion: 0.04
-Nodes (70): 06 — Business State Machines & Money, Audit trail, Deal state machine (Direct Deals, `docs/direct-deals/`), Money, Server is source of truth, API (`baseApi`), Creator withdrawals (handoff §8, Money wizard), RFC-4122 (+62 more)
+Nodes (77): 16f — Ref: Finance (wallet, top-ups, payouts, withdrawals), Creator payout methods (handoff §7), Creator withdrawals (handoff §8, Money wizard), Shared money-wizard parts, Step 6: Creator withdraw ✅ (2026-10-09, awaiting live-server + device testing), src_core_navigation_index_withdrawalstatusparam, src_core_navigation_index_withdrawstackscreenprops, WithdrawalStatusParam (+69 more)
 
-### Community 138 - "CustomButton.tsx"
-Cohesion: 0.18
-Nodes (15): ButtonColorVariant, src_core_theme_types_buttoncolorvariant, Mutable, CustomButtonInner(), CustomButtonProps, IconProps, SIZE_BORDER_WIDTH, SIZE_PX (+7 more)
+### Community 138 - "DealRatingBars.tsx"
+Cohesion: 0.11
+Nodes (18): Bar, BAR_HEIGHT, DealRatingBars, DealRatingBarsProps, DealRatingReveal, DealRatingRevealComponent(), DealRatingRevealProps, formatScore() (+10 more)
 
 ### Community 139 - "tabRoot.ts"
-Cohesion: 0.11
-Nodes (14): TAB_ROOT_SCREENS, TabRootScreen, TabRoute, src_core_navigation_index_homestackparamlist, src_core_navigation_index_walletstackparamlist, HomeStackParamList, WalletStackParamList, BrandHomeNavigator() (+6 more)
+Cohesion: 0.12
+Nodes (13): TAB_ROOT_SCREENS, TabRootScreen, TabRoute, src_core_navigation_index_homestackparamlist, src_core_navigation_index_walletstackparamlist, HomeStackParamList, WalletStackParamList, BrandHomeNavigator() (+5 more)
 
 ### Community 140 - "MediaKitStage.tsx"
 Cohesion: 0.07
-Nodes (40): initialsOf(), MediaKitStageProps, SEAL, SEAL_INSET, StagePhoto, BOARD, boardPath(), clearOf() (+32 more)
+Nodes (38): initialsOf(), MediaKitStageProps, SEAL, SEAL_INSET, StagePhoto, BOARD, boardPath(), clearOf() (+30 more)
 
 ### Community 141 - "SettingsNavigator.tsx"
-Cohesion: 0.09
-Nodes (18): react-native-webview, src_core_navigation_index_settingsstackscreenprops, SettingsStackScreenProps, Stack, ChangePasswordScreen, CompanyInfoScreen, CompanyVerificationScreen, LanguageScreen (+10 more)
+Cohesion: 0.12
+Nodes (12): Stack, ChangePasswordScreen, CompanyInfoScreen, CompanyVerificationScreen, LanguageScreen, NichesScreen, PersonalInfoScreen, PlatformDetailScreen (+4 more)
 
 ### Community 142 - "6. UX Strategies"
 Cohesion: 0.33
@@ -1103,83 +1115,83 @@ Nodes (6): 6.1 Arabic first and a correct right-to-left layout, 6.2 Offline and 
 
 ### Community 143 - "finance/constants/index.ts"
 Cohesion: 0.03
-Nodes (88): 16f — Ref: Finance (wallet, top-ups, payouts, withdrawals), Creator payout methods (handoff §7), Shared money-wizard parts, Wallet (finance), src_domains_finance_api_walletapi_usegetexchangeratequery, src_domains_finance_api_walletapi_usegetwalletearningsquery, src_domains_finance_api_walletapi_usegetwalletescrowsquery, src_domains_finance_api_walletapi_usegetwalletquery (+80 more)
+Nodes (106): src_domains_finance_api_walletapi_usegetwalletearningsquery, src_domains_finance_api_walletapi_usegetwalletescrowsquery, src_domains_finance_api_walletapi_usegetwalletquery, src_domains_finance_api_walletapi_usegetwallettransactionsinfinitequery, STATEMENT_PERIOD_LABEL, STATEMENT_PERIOD_PRESETS, STATEMENT_TYPE_FILTERS, StatementPeriodPreset (+98 more)
 
-### Community 144 - "CreatorOpportunitiesScreen.tsx"
+### Community 144 - "useCreatorOpportunitiesScreen.ts"
 Cohesion: 0.12
-Nodes (19): src_domains_marketplace_api_creatorcampaignsapi_usegetcampaignfeedinfinitequery, src_domains_marketplace_api_creatorcampaignsapi_usegetsavedcampaignsinfinitequery, OpportunitiesHeader, OpportunityCard, OpportunityEmptyRules, OpportunityFilterChips, OpportunityFilterChipsProps, OpportunityFilterSheet (+11 more)
+Nodes (23): LookupItem, src_domains_marketplace_api_creatorcampaignsapi_usegetcampaignfeedinfinitequery, src_domains_marketplace_api_creatorcampaignsapi_usegetsavedcampaignsinfinitequery, OpportunityFilterChips, OpportunityFilterChipsProps, isPricing(), OpportunityFilterSheetComponent(), OpportunityFilterSheetProps (+15 more)
 
 ### Community 145 - "2. Brand screens"
 Cohesion: 0.11
 Nodes (18): 1. Navigation & entry points, 2. Brand screens, 3. Creator screens, 4. Shared components to build once, 5. Task order & dependencies, 6. V2 (mobile side), CM10 — Returns & restrictions, CM11 — Notifications (+10 more)
 
-### Community 146 - "useDomainEmailScreen.ts"
-Cohesion: 0.08
-Nodes (34): OtpCodeFieldProps, OtpCodeForm, OtpRejection, OtpSendOrigin, useOtpCodeForm(), UseOtpCodeFormOptions, formatClock(), applyOtpRejection() (+26 more)
+### Community 146 - "useOfferBuilderScreen.ts"
+Cohesion: 0.13
+Nodes (21): src_domains_identity_index_usegetpublicmediakitquery, src_domains_identity_index_usesetkitshortlistedmutation, src_domains_marketplace_api_dealofferapi_usedeletedealofferdraftmutation, src_domains_marketplace_api_dealofferapi_usegetdealofferpreflightquery, src_domains_marketplace_api_dealsapi_userundealactionmutation, isBlockerCode(), isProductMode(), OfferBuilderModel (+13 more)
 
-### Community 147 - "useDealsList.ts"
-Cohesion: 0.09
-Nodes (29): 0. قرارات ثابتة (من الوثيقة + الباك إند), 1. خريطة الانتقالات (Screen map), P12 — Creator Home «دورك» (المؤثر) 🔜, الترتيب المقترح, خطة الموبايل — الحملات المباشرة (Direct Deals), logo(), measures(), rate() (+21 more)
+### Community 147 - "BrandCampaignAnnouncementsScreen.tsx"
+Cohesion: 0.13
+Nodes (14): AnnouncementCard, AnnouncementCardProps, AnnouncementDock, AnnouncementEditor, AnnouncementLock, AnnouncementLockComponent(), AnnouncementLockProps, pad() (+6 more)
 
 ### Community 148 - "motion"
 Cohesion: 0.05
-Nodes (37): motion, CreatorOrbitScene, CreatorOrbitSceneComponent(), CreatorOrbitSceneProps, Geometry, Hint, HINTS, OrbitSlotProps (+29 more)
+Nodes (42): motion, MotionDurationToken, PASSWORD_RESET_TOTAL_STEPS, Stack, CONNECTOR, WizardRailConnector, WizardRailConnectorComponent(), WizardRailConnectorProps (+34 more)
 
 ### Community 152 - "dealContract.ts"
-Cohesion: 0.14
-Nodes (22): 6.2 `GET /brand/home` → deal additions, PricingFieldComponent(), ContractAddendumCardComponent(), ContractAddendumCardProps, ContractPaperComponent(), ContractPaperProps, addendumClause(), bilingual() (+14 more)
+Cohesion: 0.24
+Nodes (14): ContractAddendumCardComponent(), addendumClause(), bilingual(), ContractDeliverable, ContractParty, ContractTerm, count(), isRecord() (+6 more)
 
-### Community 154 - "Box"
-Cohesion: 0.03
-Nodes (90): AccountType, AccountTypeOption, AccountTypeOptionDef, AccountTypeOptionProps, AccountTypeSheet(), AccountTypeSheetProps, OPTIONS, DASH (+82 more)
+### Community 154 - "Pressable"
+Cohesion: 0.02
+Nodes (114): COMPACT, LiveElementsDemo, MOCK_ESCROW_BALANCE, RAIL_ITEMS, SurfacesDemo, AccountType, AccountTypeOption, AccountTypeOptionDef (+106 more)
 
-### Community 155 - "useAppSelector"
+### Community 155 - "App.tsx"
 Cohesion: 0.03
-Nodes (96): Error routing (centralised in baseQuery — don't re-handle), App.tsx, Step 7: Wiring + docs ✅ (2026-10-09, commit 19ee340; awaiting live-server + device testing), @gorhom/bottom-sheet, @react-native-community/netinfo, react-redux, redux-persist, AppContent() (+88 more)
+Nodes (73): Error routing (centralised in baseQuery — don't re-handle), Feedback UI, @gorhom/bottom-sheet, react-native-toast-message, react-redux, redux-persist, @reduxjs/toolkit, AppContent() (+65 more)
 
-### Community 156 - "useDealRespond.ts"
-Cohesion: 0.03
-Nodes (84): P4 — M4 الرد والدفع, getPersistentDeviceId(), DealAddressLine, DealDecisionDock, DealDecisionDockComponent(), DealDecisionDockProps, DealDockClock, MAJOR (+76 more)
+### Community 156 - "DealReasonSheet.tsx"
+Cohesion: 0.18
+Nodes (11): ART_HEIGHT, COPY, DealReasonSheetComponent(), DealReasonSheetKind, DealReasonSheetProps, PULL, PulledSlip, SLIP (+3 more)
 
 ### Community 157 - "marketplace/index.ts"
 Cohesion: 0.04
-Nodes (84): DealCardDemoComponent(), DraftReviewDemoComponent(), useDealCardDemo(), useDraftReviewDemo(), buildMockDeal(), labeled(), MockDealInput, HueTone (+76 more)
+Nodes (93): DealCardDemo, DealCardDemoComponent(), DraftReviewDemoComponent(), useDealCardDemo(), useDraftReviewDemo(), buildMockDeal(), labeled(), MockDealInput (+85 more)
 
-### Community 158 - "utils/dealRating.ts"
-Cohesion: 0.18
-Nodes (19): 5a. A1 — admin tools: what the app sees (no new app endpoints), P10 — M10 التقييم, DealRatingClockComponent(), DealRatingEnvelopesCardProps, DealRatingRevealProps, useDealRating(), DealRating, DealRatingSide (+11 more)
+### Community 158 - "AudienceSection.tsx"
+Cohesion: 0.04
+Nodes (50): AudienceRow, SWATCH_WIDTH, AddPlatformRow, AudienceBar, AudienceSection, AudienceSectionProps, BAR_HEIGHT, NoPlatforms (+42 more)
 
-### Community 159 - "useMyApplications.ts"
+### Community 159 - "constants/opportunities.ts"
+Cohesion: 0.09
+Nodes (30): src_domains_marketplace_api_creatorcampaignsapi_usegetcampaignapplicationsinfinitequery, src_domains_marketplace_api_creatorcampaignsapi_usewithdrawcampaignapplicationmutation, ApplicationCardComponent(), ApplicationClockProps, OpportunitiesHeader, OpportunitiesHeaderComponent(), OpportunitiesHeaderProps, OpportunityTabs (+22 more)
+
+### Community 160 - "useDealGuideCopy.ts"
 Cohesion: 0.12
-Nodes (20): src_domains_marketplace_api_creatorcampaignsapi_usegetcampaignapplicationsinfinitequery, src_domains_marketplace_api_creatorcampaignsapi_usewithdrawcampaignapplicationmutation, ApplicationCardComponent(), ApplicationCardProps, ApplicationClockProps, WithdrawApplicationSheet, WithdrawApplicationSheetComponent(), WithdrawApplicationSheetProps (+12 more)
-
-### Community 160 - "GuideChapter.tsx"
-Cohesion: 0.13
-Nodes (15): GuideBar, GuideBarComponent(), GuideBarProps, GuideChapter, GuideChapterComponent(), MARK, NUMBER_BOX, NUMBER_SIZE (+7 more)
+Nodes (22): src_core_navigation_index_dealflowstackscreenprops, src_core_navigation_index_dealguideparams, src_core_navigation_index_dealguiderole, DealFlowStackScreenProps, DealGuideParams, DealGuideRole, GuideChapterProps, brandChapters() (+14 more)
 
 ### Community 161 - "3.2 Creators (the supply side)"
 Cohesion: 0.22
 Nodes (9): 3.1 Brands (the demand side), 3.2 Creators (the supply side), 3.3 Platform staff (internal), 3. Target Personas, Persona B1: "Rania", independent store owner, Persona B2: "Omar", marketing manager at a growing company, Persona C1: "Lina", Nano creator (the long tail and our growth engine), Persona C2: "Karim", Micro creator (the sweet spot for brands) (+1 more)
 
 ### Community 162 - "useMediaKitCover.ts"
-Cohesion: 0.05
-Nodes (41): react-native-image-picker, brandSettingsApi, src_domains_identity_api_brandsettingsapi_usegetbrandsettingsquery, src_domains_identity_api_brandsettingsapi_useupdatebrandsettingsmutation, src_domains_identity_api_mediakitapi_useremovemediakitcovermutation, src_domains_identity_api_mediakitapi_useuploadmediakitcovermutation, mockQuery, mockToastError (+33 more)
+Cohesion: 0.09
+Nodes (27): react-native-image-picker, src_domains_identity_api_mediakitapi_useremovemediakitcovermutation, src_domains_identity_api_mediakitapi_useuploadmediakitcovermutation, current(), JPEG, mockLaunch, mockRemove, mockToast (+19 more)
 
-### Community 163 - "CampaignIsland.tsx"
-Cohesion: 0.06
-Nodes (54): PC2 — حملاتي + أوراق النظام (البراند · CM2 + CM4), src_domains_marketplace_api_brandcampaignsapi_usegetcampaignhistoryquery, src_domains_marketplace_api_brandcampaignsapi_usegetcampaignquery, CampaignCardComponent(), CampaignDetailHeroComponent(), CampaignFinishedRowComponent(), CampaignHistoryCardProps, ACTION_LABEL (+46 more)
+### Community 163 - "CampaignDetail"
+Cohesion: 0.05
+Nodes (65): PC3 — المتقدمون والاختيار (البراند · CM3), src_domains_marketplace_api_brandcampaignsapi_usegetcampaignhistoryquery, CampaignHistoryCardProps, ACTION_LABEL, CampaignIslandComponent(), CampaignIslandProps, ISLAND_TONE, CampaignSeatsCardProps (+57 more)
 
 ### Community 164 - "Sparkline.tsx"
 Cohesion: 0.17
 Nodes (11): DEFAULT_HEIGHT, END_DOT_RADIUS, Sparkline, SparklineComponent(), SparklineProps, SparklineTone, buildSparklinePath(), SparklineFrame (+3 more)
 
-### Community 165 - "formatNumber"
-Cohesion: 0.02
-Nodes (99): formatNumber(), BrandLocationsCard, BrandLocationsCardComponent(), PERCENT, TopWorkCardComponent(), NichesScreenComponent(), PlatformRatesRow, CampaignBriefLock (+91 more)
+### Community 165 - "DealPublishScreen.tsx"
+Cohesion: 0.03
+Nodes (85): GalleryDemo, GalleryDemoComponent(), GalleryTile, GalleryTileProps, useGalleryDemo(), CampaignBriefLock, CampaignBriefLockComponent(), CampaignBriefLockProps (+77 more)
 
-### Community 166 - "15. Registration & Auth (wire this first)"
-Cohesion: 0.10
-Nodes (23): 0.1 Changelog — hardening pass (act on every row), 15.0 Flow overview, 15.10 `GET /onboarding/progress` — `auth:sanctum` only (works while draft, unverified **and** suspended), 15.11 Resume resolver (single function, used on launch, after login, after 409 out-of-order), 15.12 Login / forgot / reset, 15.13 `POST /auth/logout` — `auth:sanctum` (no `account.active`, works when suspended), 15.1 `GET /lookups` — public, no auth, 15.2 `POST /onboarding/influencer/step-1` — public (+15 more)
+### Community 166 - "pushPrompt.ts"
+Cohesion: 0.22
+Nodes (15): canAutoPrompt(), EMPTY_HISTORY, parsePushPromptHistory(), PUSH_PROMPT_COOLDOWN_MS, PUSH_PROMPT_MAX_AUTO, PushPromptHistory, readHistory(), recordPushPromptDismissed() (+7 more)
 
 ### Community 167 - "Wallet: Top-up Flow v2, Mobile Handoff Delta"
 Cohesion: 0.13
@@ -1190,24 +1202,24 @@ Cohesion: 0.25
 Nodes (7): 1. `GET /wallet`: add `summary`, 2. New `GET /wallet/escrows?per_page=5`: active escrow per deal (both roles), 3. New `GET /wallet/earnings?period=6m|12m`: monthly chart, 4. `GET /wallet/transactions` (and the receipt): add fields to each item, 5. Questions to answer in your reply, Conventions (keep them), Deliverables
 
 ### Community 169 - "notification/index.ts"
-Cohesion: 0.05
-Nodes (48): Push permission, @notifee/react-native, @react-native-firebase/app, @react-native-firebase/messaging, src_core_notification_index_notificationmanager, messagingInstance, notificationManager, NotificationTokenListener (+40 more)
+Cohesion: 0.06
+Nodes (38): Push permission, @notifee/react-native, @react-native-firebase/app, @react-native-firebase/messaging, src_core_notification_index_notificationmanager, messagingInstance, notificationManager, NotificationTokenListener (+30 more)
 
 ### Community 170 - "GlowOrbs.tsx"
 Cohesion: 0.28
 Nodes (8): clearOf(), driftPhase(), GlowOrbsComponent(), Light, LightDef, LightProps, LIGHTS, STOPS
 
 ### Community 171 - "core/api/index.ts"
-Cohesion: 0.03
-Nodes (117): Envelope, react-native-toast-message, @reduxjs/toolkit, apiListenerMiddleware, AppApiError, getApiErrorMessage(), getMessageFromData(), getMessageFromErrorsArray() (+109 more)
+Cohesion: 0.04
+Nodes (74): 06 — Business State Machines & Money, Audit trail, Deal state machine (Direct Deals, `docs/direct-deals/`), Money, Server is source of truth, RFC-4122, 2. خريطة إعادة الاستخدام (لا نبني من جديد), configApi (+66 more)
 
-### Community 172 - "appLink.ts"
-Cohesion: 0.23
-Nodes (6): APP_LINK_SCHEME, AppLinkTarget, parseAppLink(), toSegments(), AppLinkHandler, appLinkManager
+### Community 172 - "react-test-renderer"
+Cohesion: 0.09
+Nodes (21): react-test-renderer, CREATOR_SLUG_MAX_LENGTH, CREATOR_SLUG_MIN_LENGTH, CREATOR_SLUG_PATTERN, isCreatorSlugFormat(), isCreatorSlugLength(), APP_LINK_SCHEME, AppLinkTarget (+13 more)
 
-### Community 173 - "useBrandCampaignApplicantsScreen.ts"
-Cohesion: 0.11
-Nodes (28): APPLICANT_COMPARE_MAX, APPLICANT_FOLLOWER_FLOORS, APPLICANT_SORT_LABEL, APPLICANT_STATUS_FILTER_LABEL, APPLICANT_STATUS_FILTERS, APPLICANT_TAB_DEF, APPLICANT_TABS, ApplicantStatusFilter (+20 more)
+### Community 173 - "DiscardSheet.tsx"
+Cohesion: 0.14
+Nodes (14): DiscardGuard, src_core_navigation_index_withdrawstackparamlist, DISCARD_COPY, DiscardCopy, DiscardFlow, DiscardSheet, DiscardSheetComponent(), DiscardSheetProps (+6 more)
 
 ### Community 174 - "SelectionControlsDemo.tsx"
 Cohesion: 0.18
@@ -1223,19 +1235,19 @@ Nodes (7): 4.1 How Sada creates value, 4.2 Revenue streams, 4.3 Go-to-market pri
 
 ### Community 177 - "useDealRetention.ts"
 Cohesion: 0.05
-Nodes (73): الشريحة B — الحالات الخاصة, src_domains_marketplace_api_dealretentionapi_useconfirmdealretentionmutation, src_domains_marketplace_api_dealretentionapi_usecontestdealretentionmutation, src_domains_marketplace_api_dealretentionapi_userejectdealretentionmutation, src_domains_marketplace_api_dealretentionapi_usereportdealretentionmutation, src_domains_marketplace_api_dealretentionapi_userequestretentionreportslotmutation, src_domains_marketplace_api_dealretentionapi_userequestretentionrestoreslotmutation, src_domains_marketplace_api_dealretentionapi_userestoredealretentionmutation (+65 more)
+Nodes (71): 16d — Ref: Deal changes, disputes, retention (P8, P9), src_domains_marketplace_api_dealretentionapi_useconfirmdealretentionmutation, src_domains_marketplace_api_dealretentionapi_usecontestdealretentionmutation, src_domains_marketplace_api_dealretentionapi_userejectdealretentionmutation, src_domains_marketplace_api_dealretentionapi_usereportdealretentionmutation, src_domains_marketplace_api_dealretentionapi_userequestretentionreportslotmutation, src_domains_marketplace_api_dealretentionapi_userequestretentionrestoreslotmutation, src_domains_marketplace_api_dealretentionapi_userestoredealretentionmutation (+63 more)
 
-### Community 179 - "@react-navigation/native"
-Cohesion: 0.04
-Nodes (98): @hookform/resolvers, libphonenumber-js, @react-navigation/native, applyServerFieldErrors(), extractServerFieldErrors(), { useGetConfigQuery }, useLookupItems(), DEFAULT_PHONE_COUNTRY (+90 more)
+### Community 179 - "applyServerFieldErrors"
+Cohesion: 0.03
+Nodes (102): Wallet (finance), @hookform/resolvers, applyServerFieldErrors(), extractServerFieldErrors(), useLookupItems(), COMPACT_HERO_MAX_HEIGHT, secondsLeft(), useCountdown() (+94 more)
 
-### Community 190 - "RootNavigator"
-Cohesion: 0.19
-Nodes (9): 12 — Ref: Boot & Navigation, RootNavigator, OnboardingResume(), src_core_navigation_index_opportunitiesstackparamlist, OpportunitiesStackParamList, CreatorOpportunitiesNavigator(), Stack, CreatorCampaignDetailScreen (+1 more)
+### Community 190 - "CreatorCampaignDetailScreen.tsx"
+Cohesion: 0.12
+Nodes (14): src_core_navigation_index_opportunitiesstackparamlist, OpportunitiesStackParamList, CreatorAskCard, CreatorConditionsCard, CreatorNetCard, CreatorScheduleCard, OpportunityCard, OpportunityEmptyRules (+6 more)
 
-### Community 191 - "useFileUploads.test.tsx"
-Cohesion: 0.13
-Nodes (7): Uploads (`@/core/upload`), Call, mockCalls, policy, requestSlot, vm, FileUploads
+### Community 191 - "socialProofSchema.ts"
+Cohesion: 0.09
+Nodes (29): PUBLIC_EMAIL_DOMAINS, SOCIAL_PROOF_APP_URL, SOCIAL_PROOF_DEEP_LINK_HOSTS, SOCIAL_PROOF_HOSTS, SOCIAL_PROOF_PLATFORM_LABEL, SOCIAL_PROOF_POLL_MS, SOCIAL_PROOF_URL_EXAMPLE, VERIFICATION_FIELD_MAX_LENGTH (+21 more)
 
 ### Community 192 - "personalInfoSchema.ts"
 Cohesion: 0.16
@@ -1258,100 +1270,100 @@ Cohesion: 0.50
 Nodes (3): Fix, Fix	Area, Fix	File	Now
 
 ### Community 203 - "mediaKit.ts"
-Cohesion: 0.09
-Nodes (30): 0. Your tasks, in order, ContractTerms, WithMeta, coverTags(), mediaKitApi, mediaKitMutationsApi, MediaKitStageChipsProps, MediaKitTermsSheetProps (+22 more)
+Cohesion: 0.05
+Nodes (52): Ownership, 0. Your tasks, in order, 0. Your tasks, in order, 1. What changed vs the proposal (breaking for any code written against it), 2. Required edits to `docs/design/creator-home-plan.md`, 3. API layer & types, 4. Behavior rules (don't skip), 5. Send these to the backend owner (needed for universal links + the web page's app buttons) (+44 more)
 
-### Community 206 - "CreatorHomeScreen/components/HomeDeals.tsx"
-Cohesion: 0.12
-Nodes (13): ActionDeck, CountChip, DealCountChips, DealCountChipsProps, DealsHeading, DealsQuiet, CARD_HEIGHT, CHIP_HEIGHT (+5 more)
+### Community 206 - "react-native"
+Cohesion: 0.04
+Nodes (48): react-native, react-native-linear-gradient, src_core_store_index_selectnetworkerror, NamedStyles, StyleFactory, BEAM_END, BEAM_HEIGHT, BEAM_TOP (+40 more)
 
 ### Community 245 - "CampaignScopeSwitch.tsx"
-Cohesion: 0.10
-Nodes (21): CampaignScopeSwitch, CampaignScopeSwitchProps, ScopeLabel, ScopeLabelComponent(), ScopeLabelProps, TOUCH, UNDERLINE_HEIGHT, UNDERLINE_WIDTH (+13 more)
+Cohesion: 0.17
+Nodes (11): CampaignScopeSwitch, CampaignScopeSwitchProps, ScopeLabel, ScopeLabelComponent(), ScopeLabelProps, TOUCH, UNDERLINE_HEIGHT, UNDERLINE_WIDTH (+3 more)
 
 ### Community 246 - "LayoutGalleryDemo.tsx"
-Cohesion: 0.14
-Nodes (14): 10 — Component Reuse & Showcase, Before building UI, Layouts, Same change that adds/changes a kit export, Showcase code, LayoutGalleryDemo, LayoutGalleryDemoComponent(), LayoutGalleryRow (+6 more)
+Cohesion: 0.17
+Nodes (12): LayoutGalleryDemo, LayoutGalleryDemoComponent(), LayoutGalleryRow, ROWS, SCREENS, DevShowcaseScreenComponent(), useDevShowcaseScreen(), useShowcaseCategoryScreen() (+4 more)
 
 ### Community 247 - "useBrandHomeScreen.ts"
 Cohesion: 0.06
-Nodes (38): src_core_navigation_index_explorefilters, src_core_navigation_index_homestackscreenprops, { useGetBrandHomeQuery }, src_domains_marketplace_api_exploreapi_usegetexplorefiltersquery, BRAND_HOME_ISLAND, BrandHomeIslandTarget, CATEGORY_ICON, resolveCategoryIcon() (+30 more)
+Nodes (42): src_core_navigation_index_explorefilters, src_core_navigation_index_homestackscreenprops, HomeStackScreenProps, { useGetBrandHomeQuery }, src_domains_marketplace_api_exploreapi_usegetexplorefiltersquery, BRAND_HOME_ISLAND, BrandHomeIslandTarget, CATEGORY_ICON (+34 more)
 
-### Community 248 - "dealUpsellApi.ts"
-Cohesion: 0.20
-Nodes (15): dealDraftsApi, itemPath(), dealUpsellApi, DealUpsellQuoteArgs, toUpsellBody(), DealStrikesBannerProps, DealStrikes, DealUpsellQuote (+7 more)
+### Community 248 - "auth/index.ts"
+Cohesion: 0.06
+Nodes (45): src_core_navigation_index_brandonboardingstackparamlist, src_domains_auth_api_index_usebrandstep3kycmutation, src_domains_auth_api_index_usegetonboardingprogressquery, src_domains_auth_api_index_usegetprofilequery, src_domains_auth_api_index_uselogoutmutation, DeleteAccountSheet, OtpCodeFieldProps, BRAND_STEP_ROUTE (+37 more)
 
-### Community 249 - "shared/utils/index.ts"
-Cohesion: 0.04
-Nodes (76): 5. Forms, Forms & data helpers, yup, DEMO_PLATFORMS, IN_PERSON_ROWS, PLATFORM_ROWS, usePlatformEditingDemo(), MOCK_RATE_SERVICES (+68 more)
+### Community 249 - "i18next"
+Cohesion: 0.06
+Nodes (68): 5. Forms, Forms & data helpers, i18next, yup, PasswordStrengthMeterComponent(), PlatformAccountRowProps, PlatformAccountSheet, PlatformAccountSheetProps (+60 more)
 
-### Community 250 - "Text.tsx"
-Cohesion: 0.12
-Nodes (22): TextScript, plainText(), replaceChild(), TextComponent(), TimelineRow, STATE_LABEL, TimelineMarker, DRAW_EASING (+14 more)
-
-### Community 251 - "Public Campaigns — Mobile Handoff (C0–C14)"
-Cohesion: 0.09
-Nodes (22): 10. Edge-case checklist, 4.1 Feed, saved, detail (CM5), 4.2 Apply (CM6) — `POST /influencer/campaigns/{id}/apply` → **201**, 4.3 My applications (CM6), 4.4 Profile gender (needed for gender-targeted campaigns), 4. Creator endpoints, 5.1 Identifying the campaign, 5.2 Brief reveal and 24h brief exit (creator) (+14 more)
-
-### Community 252 - "useCreatorCampaignDetailScreen.ts"
-Cohesion: 0.16
-Nodes (13): HAPTIC_TAP_MS, src_core_navigation_index_opportunitiesstackscreenprops, OpportunitiesStackScreenProps, src_domains_marketplace_api_creatorcampaignsapi_usegetcreatorcampaignquery, src_domains_marketplace_api_creatorcampaignsapi_usesetcampaignbookmarkedmutation, OPPORTUNITY_GENDER_LABEL, useCampaignBookmark(), CreatorCampaignDetailScreenComponent() (+5 more)
-
-### Community 253 - "BrandCampaignApplicantsScreen.tsx"
+### Community 250 - "Box.tsx"
 Cohesion: 0.13
-Nodes (12): ApplicantCard, ApplicantSeatRail, BrandCampaignApplicantsScreen, ApplicantCompareTray, ApplicantFilterChip, ApplicantFilterChipProps, ApplicantFilterSheet, ApplicantsSkeleton (+4 more)
+Nodes (19): Radio, RadioProps, RadioGroup, RadioGroupProps, RadioMark, RadioMarkProps, TimelineRow, STATE_LABEL (+11 more)
+
+### Community 251 - "5. Linked-deal additions (CM7, CM8, CM10)"
+Cohesion: 0.12
+Nodes (16): PC5 — التقديم وطلباتي (المؤثر · CM6), 2.2 Application status (`status {key, label}`), 4.1 Feed, saved, detail (CM5), 4.2 Apply (CM6) — `POST /influencer/campaigns/{id}/apply` → **201**, 4.3 My applications (CM6), 4.4 Profile gender (needed for gender-targeted campaigns), 4. Creator endpoints, 5.1 Identifying the campaign (+8 more)
+
+### Community 252 - "CampaignWizardHeader.tsx"
+Cohesion: 0.13
+Nodes (15): WizardRailStrip, CAMPAIGN_STEP_ICON, CampaignWizardContext, CampaignWizardScreen(), COVER_HEIGHT, TEASER_HEIGHT, TITLE_HEIGHT, CampaignInReview (+7 more)
+
+### Community 253 - "TierBadge.tsx"
+Cohesion: 0.11
+Nodes (23): DateRangePickerDemoComponent(), useDateRangeDemo(), useTierBadgeDemo(), SurfacesDemoComponent(), SIZES, TierBadgeDemo, TierBadgeDemoComponent(), useDisclosure() (+15 more)
 
 ### Community 255 - "Backend task — Deal shipping address (B5.1)"
 Cohesion: 0.12
 Nodes (15): 1. The address object, 2. Deal resource changes, 3.1 Accept — `POST /influencer/deals/{id}/accept`, 3.2 Extension — `POST /influencer/deals/{id}/extension`, 3.3 Edit — `PUT /influencer/deals/{id}/shipping-address`, 3.4 Prefill — `GET /influencer/shipping-address`, 3.5 Ship — `POST /brand/deals/{id}/shipment` (existing), 3. Endpoints (+7 more)
 
-### Community 256 - "constants/opportunities.ts"
-Cohesion: 0.16
-Nodes (14): OpportunitiesHeaderProps, ChipShell(), OpportunityDeliverables, OpportunityTabs, OpportunityTabsComponent(), OpportunityTabsProps, Segment, SegmentComponent() (+6 more)
-
-### Community 257 - "3. Brand endpoints"
+### Community 256 - "useCampaignMoney.ts"
 Cohesion: 0.12
-Nodes (18): 15.8 `POST /onboarding/influencer/step-3` — rate cards, 2. Enums (values sent/received), 2.1 Campaign status (`status {key, label}`), 2.2 Application status (`status {key, label}`), 2.3 Seat occupancy (derived, never sent as a status), 2. State machines, 3.1 Campaign shape (`CampaignResource`), 3.2 Drafting (CM1) (+10 more)
+Nodes (28): Money & Sada parts, parseAmountText(), sanitizeAmountText(), toAmountText(), toWesternDigits(), src_domains_marketplace_api_brandcampaignsapi_usegetcampaignquotequery, amountText(), CampaignMoneyModel (+20 more)
+
+### Community 257 - "Public Campaigns — Mobile Handoff (C0–C14)"
+Cohesion: 0.09
+Nodes (25): 15.8 `POST /onboarding/influencer/step-3` — rate cards, 2. Enums (values sent/received), 10. Edge-case checklist, 2.1 Campaign status (`status {key, label}`), 2.3 Seat occupancy (derived, never sent as a status), 2. State machines, 3.1 Campaign shape (`CampaignResource`), 3.2 Drafting (CM1) (+17 more)
 
 ### Community 258 - "TideChart.tsx"
 Cohesion: 0.10
 Nodes (21): BUBBLE_LIFT, BUBBLE_SLOT, BubbleTag, CHART_HEIGHT, GRID_DASH, INSET, LABEL_WIDTH, MonthLabel (+13 more)
 
 ### Community 259 - "DeckCard.tsx"
-Cohesion: 0.04
-Nodes (68): TypographyVariant, DealDisputeClockProps, GATED_EXPLORE_PARAMS, GATED_EXPLORE_SORTS, PRICE_LOCK_FALLBACK, PRICE_LOCK_LABEL, DockSlot, CreatorMedia (+60 more)
+Cohesion: 0.06
+Nodes (42): react-native-gesture-handler, ShortlistHeart, GATED_EXPLORE_PARAMS, GATED_EXPLORE_SORTS, PRICE_LOCK_FALLBACK, PRICE_LOCK_LABEL, CreatorMedia, DECK_STEP (+34 more)
 
 ### Community 260 - "MainTabBar.tsx"
-Cohesion: 0.11
-Nodes (27): @react-navigation/bottom-tabs, useKeyboardVisible(), BAR_CORNER, BAR_HEIGHT, ICON_HOP, ICON_HOP_DELAY, ICON_PRESS_SCALE, ICON_REST_LIFT (+19 more)
+Cohesion: 0.07
+Nodes (37): 09 — Screen Playbook, 0. Design freedom (read first), 1. Concept first, code second, 3.1 Existing animated parts (optional, never a default), 3.2 Accessibility (gate), 3.3 Review question (every screen), 3. Craft (how to make it not dull), 4. Required states (+29 more)
 
 ### Community 261 - "exploreQuery.ts"
 Cohesion: 0.18
-Nodes (13): EXPLORE_SORTS, ARRAY_PARAMS, BOOLEAN_PARAMS, buildExploreQuery(), EXPLORE_QUERY_MIN, isExploreSort(), isTrue(), KeysOfType (+5 more)
+Nodes (12): EXPLORE_SORTS, ARRAY_PARAMS, BOOLEAN_PARAMS, EXPLORE_QUERY_MIN, isExploreSort(), isTrue(), KeysOfType, NUMBER_PARAMS (+4 more)
 
 ### Community 262 - "useDealShipping.ts"
-Cohesion: 0.05
-Nodes (69): 07 — Security & Privacy, Auth, Input & content, Logging & PII, Permissions, Secrets & tokens, 16b — Ref: Deal respond, pay, shipping (P4, P5), src_domains_marketplace_api_dealshippingapi_uselazygetshippingaddressprefillquery (+61 more)
+Cohesion: 0.04
+Nodes (85): 16b — Ref: Deal respond, pay, shipping (P4, P5), src_domains_marketplace_api_dealshippingapi_uselazygetshippingaddressprefillquery, src_domains_marketplace_api_dealshippingapi_usereportshipmentissuemutation, DealAddressLineProps, AddressInput, DealAddressSheet, DealAddressSheetProps, FIELDS (+77 more)
 
-### Community 263 - "DropLane.tsx"
-Cohesion: 0.16
-Nodes (14): CAMPAIGN_DROP_STATE_TONE, UNKNOWN_CAMPAIGN_DROP_STATE_TONE, DOT_HEIGHT, DOT_WIDTH, Dots, DropLane, DropLaneComponent(), DropLaneProps (+6 more)
+### Community 263 - "HueTone"
+Cohesion: 0.12
+Nodes (20): HueTone, TopUpStatusLook, WithdrawalStatusLook, DealTimerBar, DealTimerBarComponent(), DealTimerBarProps, DealTimerBarTime, HEIGHT (+12 more)
 
-### Community 264 - "DraftCaptionCard.tsx"
+### Community 264 - "MissingStepsRail.tsx"
 Cohesion: 0.16
-Nodes (14): DEAL_DRAFT_KIND_LABEL, DEAL_DRAFT_LIMITS, DealPinFormValues, ReviewPinSheetProps, AVATAR, BriefTokens, DraftCaptionCard, DraftCaptionCardComponent() (+6 more)
+Nodes (14): ProfileStepTarget, ICON_BOX, MissingStepsRail, MissingStepsRailProps, NOTCH, TEAR_DASH, TEAR_Y, Ticket (+6 more)
 
 ### Community 265 - "Wallet v4: Wallet Screen Insights, Mobile Handoff Delta"
 Cohesion: 0.18
 Nodes (7): 1. `GET /wallet`: new `summary`, 2. New: `GET /wallet/escrows?per_page=5`, 3. New: `GET /wallet/earnings?period=6m|12m`, 4. `GET /wallet/transactions` and `GET /wallet/transactions/{reference}`: new fields per item, 5. Answers, Push, Wallet v4: Wallet Screen Insights, Mobile Handoff Delta
 
-### Community 266 - "ProgressSegments.tsx"
-Cohesion: 0.40
-Nodes (4): CardsCanvas, ProgressSegments, ProgressSegmentsComponent(), ProgressSegmentsProps
+### Community 266 - "InfluencerWelcomeScreen.tsx"
+Cohesion: 0.07
+Nodes (26): CARD_HEIGHT, GlassDemo, GlassDemoComponent(), STAGE_HEIGHT, useGlassDemo(), CardsCanvas, ProgressSegments, ProgressSegmentsComponent() (+18 more)
 
-### Community 267 - "utils/opportunities.ts"
-Cohesion: 0.24
-Nodes (11): CreatorNetCardComponent(), isPricing(), OpportunityFilterSheetComponent(), OpportunityFilterSheetProps, useOpportunityFilterDraft(), CreatorFeedArgs, isActivityType(), netShare() (+3 more)
+### Community 267 - "DealJourney.tsx"
+Cohesion: 0.19
+Nodes (13): DealJourneyComponent(), DealJourneyProps, DOT, DOT_ON, DealJourneyCard, DealJourneyRail, DealJourneyCopyInput, useDealJourneyCopy() (+5 more)
 
 ### Community 268 - "1. Endpoint map by mobile task"
 Cohesion: 0.17
@@ -1361,21 +1373,21 @@ Nodes (12): 1. Endpoint map by mobile task, M10 — Ratings (B11), M11 — Notif
 Cohesion: 0.14
 Nodes (15): ACCESSIBILITY_ACTIONS, DealStepper, DealStepperComponent(), DealStepTipBody, HALO, lookOf(), NODE, NODE_CORE (+7 more)
 
-### Community 270 - "CreatorCampaign"
-Cohesion: 0.15
-Nodes (14): CreatorCampaignHeroProps, CreatorScheduleCardProps, Badge, BadgeProps, OpportunityBadges, OpportunityBadgesComponent(), OpportunityBadgesProps, OpportunityCardProps (+6 more)
+### Community 270 - "useOfferDraft.ts"
+Cohesion: 0.14
+Nodes (11): P2 — M2 بناء العرض (البراند) — قلب الميزة, src_domains_marketplace_api_dealofferapi_usecreatedealofferdraftmutation, src_domains_marketplace_api_dealofferapi_useupdatedealofferdraftmutation, DealGuideScreen(), OfferDraftModel, OfferDraftResult, OfferSaveState, useOfferDraft() (+3 more)
 
-### Community 271 - "useDealRating.ts"
-Cohesion: 0.16
-Nodes (11): src_domains_marketplace_api_dealratingapi_useratedealmutation, src_domains_marketplace_api_dealratingapi_useskipdealratingmutation, DealRatingSealedProps, DEAL_RATING_ADVANCE_MS, DEAL_RATING_LIMITS, COMMENT_FIELDS, DealRatingPhase, DealRatingSeal (+3 more)
+### Community 271 - "useCompanyVerificationScreen.ts"
+Cohesion: 0.12
+Nodes (24): src_domains_identity_api_kycapi_usegetkycquery, src_domains_identity_api_verificationapi_usegetdomainverificationquery, src_domains_identity_api_verificationapi_usegetsocialproofquery, VerificationAttemptCardProps, BRAND_KYC_DOCUMENT_TYPES, toBrandKycDocumentGroup(), CompanyVerificationScreenComponent(), VerifiedSectionProps (+16 more)
 
 ### Community 272 - "useKycScreen.ts"
-Cohesion: 0.05
-Nodes (62): 15 — Ref: Auth, Identity, Notifications, Account deletion, Brand company verification (identity; contract `docs/company-verification.md`), Notifications domain, Suspension, src_core_navigation_index_kycdocumentgroupparam, KycDocumentGroupParam, BrandKycStepScreens (+54 more)
+Cohesion: 0.15
+Nodes (19): src_core_navigation_index_kycdocumentgroupparam, src_domains_identity_api_kycapi_usesubmitkycmutation, BRAND_KYC_DOCUMENT_GROUPS, BRAND_KYC_DOCUMENT_LABEL, BRAND_KYC_DOCUMENT_SLOTS, BrandKycDocumentGroup, BrandKycDocumentType, KYC_FILE_FIELDS (+11 more)
 
 ### Community 273 - "SuperList/index.ts"
-Cohesion: 0.08
-Nodes (26): EmptyStateAction, ErrorBoundary, Props, State, LayoutToggleProps, ListEmptyState(), ListEmptyStateProps, SkeletonItem() (+18 more)
+Cohesion: 0.14
+Nodes (16): Performance, SkeletonItem(), SkeletonItemProps, SkeletonList(), SkeletonListProps, useInfiniteScroll(), UseInfiniteScrollOptions, UseInfiniteScrollReturn (+8 more)
 
 ### Community 274 - "Media Kit v2 (Pitch Page): Mobile Handoff (backend implemented, 2026-10-11)"
 Cohesion: 0.22
@@ -1393,241 +1405,257 @@ Nodes (9): StatusTone, ToastAction, ICONS, styles, TOAST_TONE, ToastCard(), Toas
 Cohesion: 0.25
 Nodes (7): 1. New fields on `GET /public/creators/{slug}` (and §17.1 `preview`), 2. Shortlist: optional picked services (phase 2, not blocking), 3. Direct offers (tell us the plan), 4. Deliverables (send these back to the mobile team), Caching (important), Conventions (keep them), Field rules
 
-### Community 278 - "Skeleton"
-Cohesion: 0.02
-Nodes (103): react-native-fast-image, react-native-linear-gradient, SocialProfileCard, SocialProfileCardProps, META_HEIGHT, PayoutMethodsSkeleton, PayoutMethodsSkeletonComponent(), PayoutMethodsSkeletonProps (+95 more)
+### Community 278 - "ReadinessSection.tsx"
+Cohesion: 0.24
+Nodes (9): Completion, NextStepRow, percent(), PIECE_HEIGHT, Pieces, ReadinessSection, ReadinessSectionComponent(), SKELETON_HEIGHT (+1 more)
 
 ### Community 279 - "FloatingCard.tsx"
 Cohesion: 0.19
-Nodes (11): CardAppearance, ENTER_OFFSET, ENTER_SPRING, FloatingCard, FloatingCardProps, MOTION, MotionSpec, src_app_screens_onboardingscreen_icons_onboarding_icons (+3 more)
+Nodes (12): CardAppearance, ENTER_OFFSET, ENTER_SPRING, FloatingCard, FloatingCardProps, MOTION, MotionSpec, src_app_screens_onboardingscreen_icons_onboarding_icons (+4 more)
 
-### Community 280 - "WizardShell.tsx"
-Cohesion: 0.16
-Nodes (14): Segment, SegmentProps, StepProgress, StepProgressComponent(), StepProgressProps, StepProgressTone, styles, styles (+6 more)
+### Community 280 - "DocStackArt.tsx"
+Cohesion: 0.14
+Nodes (13): ART_HEIGHT, ART_WIDTH, BACK, BACK_SHIFT_X, DocStackArtComponent(), DocStackArtProps, FRONT, FRONT_LIFT (+5 more)
 
-### Community 281 - "DealDetailView.tsx"
-Cohesion: 0.03
-Nodes (92): DealAddressSheet, DealBriefExitSheet, DealChangesSection, DealDeliverables, DealDetailHero, DealDetailSkeleton, DealDetailViewComponent(), DealDetailViewProps (+84 more)
+### Community 281 - "DealStageCard.tsx"
+Cohesion: 0.18
+Nodes (12): DealOrbitProps, BADGE, DealStageCard, DealStageCardComponent(), DealStageCardProps, EVENT_DOT, EVENT_FORMAT, EventRow (+4 more)
 
-### Community 282 - "Timestamp"
-Cohesion: 0.19
-Nodes (11): ApplicantExpiryChipProps, CampaignDeadlineChipProps, DropBeacons, DropBeaconsComponent(), DropBeaconsProps, DropCountdownProps, CAMPAIGN_DROP_PHASE, CAMPAIGN_DROP_STATE (+3 more)
+### Community 282 - "resolveHue"
+Cohesion: 0.08
+Nodes (34): resolveHue(), TierCard, ApplicantExpiryChip, ApplicantExpiryChipComponent(), ApplicantExpiryChipProps, CampaignCardComponent(), CampaignCardProps, COVER_HEIGHT (+26 more)
 
-### Community 283 - "MissingStepsRail.tsx"
-Cohesion: 0.15
-Nodes (15): ProfileStepTarget, ICON_BOX, MissingStepsRail, MissingStepsRailProps, NOTCH, TEAR_DASH, TEAR_Y, Ticket (+7 more)
+### Community 283 - "profileCompletion.ts"
+Cohesion: 0.21
+Nodes (14): ProfileStepKey, PROFILE_STEP_META, ProfileStepMeta, buildMissingSteps(), isProfileStepKey(), kycStepMeta(), MissingStep, STRENGTH_STAGES (+6 more)
 
 ### Community 284 - "CreatorHomeScreen.test.tsx"
 Cohesion: 0.27
 Nodes (12): button(), byLabel(), byLabelKey(), isHost(), mockModel, model(), platform(), pressables() (+4 more)
 
 ### Community 285 - "ProfileOrbit.tsx"
-Cohesion: 0.13
-Nodes (16): ARC_STYLE, ArcLook, buildArcPaths(), DASH, Face, FaceProps, Hero, ORBIT_SIZE (+8 more)
+Cohesion: 0.10
+Nodes (23): ARC_STYLE, ArcLook, buildArcPaths(), DASH, Face, FaceProps, Hero, ORBIT_SIZE (+15 more)
 
-### Community 286 - "Radio.tsx"
-Cohesion: 0.24
-Nodes (8): Radio, RadioComponent(), RadioProps, RadioGroup, RadioGroupProps, RadioMark, RadioMarkComponent(), RadioMarkProps
+### Community 286 - "useCreatorCardDemo.ts"
+Cohesion: 0.43
+Nodes (5): CreatorCardDemo, CreatorCardDemoComponent(), BASE_BADGES, toggleSlug(), useCreatorCardDemo()
 
-### Community 287 - "DealPublishScreen.tsx"
-Cohesion: 0.06
-Nodes (43): DealDossierFilesComponent(), FileTile, KIND_LABEL, TILE, BADGE, DealProofPhone, DealProofPhoneComponent(), DealProofPhoneProps (+35 more)
+### Community 287 - "DealDecisionDock.tsx"
+Cohesion: 0.16
+Nodes (12): DealDecisionDock, DealDecisionDockComponent(), DealDecisionDockProps, DealDockClock, MAJOR, NowTick, Ruler, RulerTones (+4 more)
 
-### Community 302 - "09 — Screen Playbook"
-Cohesion: 0.17
-Nodes (11): 09 — Screen Playbook, 0. Design freedom (read first), 1. Concept first, code second, 3.1 Existing animated parts (optional, never a default), 3.2 Accessibility (gate), 3.3 Review question (every screen), 3. Craft (how to make it not dull), 4. Required states (+3 more)
+### Community 302 - "useDealContractScreen.ts"
+Cohesion: 0.18
+Nodes (12): RootNavigator, P0 — الأساس (بدون UI) — شرط لكل ما بعده, DealsStackParamList, src_domains_marketplace_api_dealsapi_usegetdealcontractquery, BrandDealsNavigator(), CreatorDealsNavigator(), CreatorOpportunitiesNavigator(), ContractAddendumCardProps (+4 more)
 
 ### Community 303 - "useCampaignRequirements.ts"
-Cohesion: 0.16
-Nodes (29): CAMPAIGN_DELIVERABLE_LIMITS, CAMPAIGN_FOLLOWER_PRESETS, CAMPAIGN_TARGETING_LIMITS, DeliverableLineCardProps, DeliverablesFieldComponent(), CampaignRequirementsModel, useCampaignRequirements(), CampaignDraftDeliverable (+21 more)
+Cohesion: 0.15
+Nodes (30): CAMPAIGN_DELIVERABLE_LIMITS, CAMPAIGN_FOLLOWER_PRESETS, CAMPAIGN_TARGETING_LIMITS, CatalogServiceSheetComponent(), DeliverableLineCardProps, DeliverablesFieldComponent(), CampaignRequirementsModel, useCampaignRequirements() (+22 more)
 
-### Community 304 - "useClock"
-Cohesion: 0.04
-Nodes (83): react-native-svg, src_domains_marketplace_api_dealupsellapi_usegetdealstrikesquery, CampaignBatchToolsCard, CampaignBatchToolsCardComponent(), DealCampaignChip, ACTION_LABEL, DealDeliverablesComponent(), TILE (+75 more)
+### Community 304 - "Deal"
+Cohesion: 0.02
+Nodes (147): src_domains_marketplace_api_dealupsellapi_usegetdealstrikesquery, CampaignBatchToolsCardComponent(), DealBriefExitCard, DealBriefExitCardComponent(), DealBriefExitCardProps, UNTIL_FORMAT, DealBriefExitSheet, DealBriefExitSheetProps (+139 more)
 
 ### Community 305 - "DealRatingQuestion.tsx"
-Cohesion: 0.14
-Nodes (17): DealRatingPads, DealRatingPadsComponent(), DealRatingPadsProps, PAD_HEIGHT, PadState, RatingPad, DASH, DASH_HEIGHT (+9 more)
+Cohesion: 0.13
+Nodes (19): DealRatingPads, DealRatingPadsComponent(), DealRatingPadsProps, PAD_HEIGHT, PadState, RatingPad, DASH, DASH_HEIGHT (+11 more)
 
 ### Community 306 - "scripts"
 Cohesion: 0.20
 Nodes (10): scripts, android, android:reverse, ios, lint, postinstall, preandroid, prestart (+2 more)
 
-### Community 307 - "useBrandCampaignDropScreen.ts"
-Cohesion: 0.24
-Nodes (11): { useGetCampaignDropQuery }, BrandCampaignDropScreenComponent(), BrandCampaignDropModel, Navigation, Route, useBrandCampaignDropScreen(), campaignDropChips(), filterDropLanes() (+3 more)
+### Community 307 - "CreatorOrbitScene.tsx"
+Cohesion: 0.14
+Nodes (9): CreatorOrbitScene, CreatorOrbitSceneComponent(), CreatorOrbitSceneProps, Geometry, Hint, HINTS, OrbitSlotProps, SPARKS (+1 more)
 
 ### Community 308 - "upload/index.ts"
 Cohesion: 0.08
-Nodes (45): قرارات معتمدة (2026-10-13), react-native-blob-util, putFile(), PutTask, toNativePath(), blobUtil, policy, slot (+37 more)
+Nodes (40): react-native-blob-util, putFile(), PutTask, toNativePath(), blobUtil, policy, slot, video (+32 more)
 
-### Community 309 - "DealRatingBars.tsx"
+### Community 309 - "BrandDealDetailScreen.tsx"
 Cohesion: 0.21
-Nodes (10): Bar, BAR_HEIGHT, DealRatingBars, DealRatingBarsProps, DealRatingQuestionProps, DealRatingSummaryProps, DEAL_RATING_CRITERION_COPY, DealRatingFormValues (+2 more)
+Nodes (9): DealDetailView, BrandDealDetailScreen, BrandDealDetailScreenComponent(), SECTIONS, useBrandDealDetailScreen(), CreatorDealDetailScreen, CreatorDealDetailScreenComponent(), SECTIONS (+1 more)
 
-### Community 310 - "DropStations.tsx"
-Cohesion: 0.18
-Nodes (11): DropStationsComponent(), DropStationsProps, FILL, LABEL_WIDTH, NODE, Station, STATION_LABEL, STATIONS (+3 more)
+### Community 310 - "Timestamp"
+Cohesion: 0.04
+Nodes (78): CampaignDeadlineChipProps, DealTransitMeterProps, CAMPAIGN_DROP_BAR_ORDER, CAMPAIGN_DROP_FILTER_ORDER, CAMPAIGN_DROP_LANE_ORDER, CAMPAIGN_DROP_STATE_TONE, UNKNOWN_CAMPAIGN_DROP_STATE_TONE, AnnouncementDockProps (+70 more)
 
-### Community 311 - "parseAmountText"
-Cohesion: 0.42
-Nodes (8): Money & Sada parts, parseAmountText(), sanitizeAmountText(), toAmountText(), toWesternDigits(), usdWire(), AmountInputInner, sameAmount()
-
-### Community 312 - "dealsApi.test.ts"
-Cohesion: 0.25
-Nodes (6): dealDto(), fail(), json(), mockServer(), ok(), REF
-
-### Community 313 - "CreatorApplyDockTop.tsx"
-Cohesion: 0.27
-Nodes (9): CreatorApplyDockTop, CreatorApplyDockTopComponent(), CreatorApplyDockTopProps, DEADLINE_KEY, OpportunityDeadlineText, OpportunityDeadlineTextProps, CampaignEligibilityReasonRow, applyAction (+1 more)
-
-### Community 314 - "AnimatedNumber.tsx"
-Cohesion: 0.19
-Nodes (12): src_core_theme_types_typographyvariant, AnimatedNumber, AnimatedNumberComponent(), AnimatedNumberProps, Digit, DigitProps, DIGITS, DigitStyles (+4 more)
-
-### Community 315 - "ReviewScrubber.tsx"
-Cohesion: 0.13
-Nodes (17): ReviewPinSheetComponent(), ReviewPlayerComponent(), PIN, PIN_SLOP, PinDrop, PLAYHEAD_W, ReviewScrubber, ReviewScrubberComponent() (+9 more)
-
-### Community 316 - "DealJourneyCard.tsx"
-Cohesion: 0.24
+### Community 311 - "DealJourneyCard.tsx"
+Cohesion: 0.23
 Nodes (10): ACTOR_MARK, DealJourneyCardComponent(), DealJourneyCardProps, pad(), ReplyCountdown, ReplyCountdownProps, RING, JOURNEY_STATUS_LABEL (+2 more)
 
-### Community 317 - "index.js"
-Cohesion: 0.33
-Nodes (5): displayName, name, react-native-screens, App(), registerNotificationBackgroundHandlers()
+### Community 312 - "toast/index.ts"
+Cohesion: 0.08
+Nodes (22): @react-native-clipboard/clipboard, { useGetConfigQuery }, ShowErrorToastOptions, ToastOptions, ToastProps, toastService, ToastType, src_domains_marketplace_api_campaignbatchapi_usegetcampaignshippingquery (+14 more)
 
-### Community 318 - "DropRoomHero.tsx"
-Cohesion: 0.27
-Nodes (9): DropCountdown, DropOnAir, DropRoomHero, DropRoomHeroComponent(), DropRoomHeroProps, DropStations, CampaignDropBoard, campaignDropView (+1 more)
+### Community 313 - "OpportunityCard.tsx"
+Cohesion: 0.10
+Nodes (30): CreatorApplyDockTop, CreatorApplyDockTopComponent(), CreatorApplyDockTopProps, Reason, CreatorNetCardComponent(), COVER_HEIGHT, NOTCH, OpportunityCardComponent() (+22 more)
 
-### Community 319 - "platformsLayout.ts"
-Cohesion: 0.27
-Nodes (6): AudienceRowComponent(), COMPACT, formatFollowers(), PlatformIssue, resolvePlatformIssue(), UNAVAILABLE
+### Community 314 - "Text.tsx"
+Cohesion: 0.07
+Nodes (35): TextScript, TypographyVariant, src_core_theme_types_typographyvariant, CreatorMediaProps, AnimatedNumber, AnimatedNumberComponent(), AnimatedNumberProps, Digit (+27 more)
 
-### Community 320 - "DealDraftReviewScreen.tsx"
-Cohesion: 0.22
-Nodes (8): ReviewCaption, ReviewDock, ReviewExtraSheet, ReviewPinSheet, ReviewStage, DealDraftReviewScreen, ReviewSkeleton, SKELETON
+### Community 315 - "08b — Brand Palette (raw values), Tab Bar, Logo, Assets"
+Cohesion: 0.17
+Nodes (10): 08b — Brand Palette (raw values), Tab Bar, Logo, Assets, Bottom tab bar, Brand book, Glass (`colors.glass`, light / dark), Hues (light · dark), Logo (Concept C — Concentric Echo, geometry v4, FINAL — changes need explicit user approval), Neutrals, Status (light main · text · soft | dark main = text · soft) (+2 more)
+
+### Community 316 - "LanguageOptionRow.tsx"
+Cohesion: 0.32
+Nodes (7): LanguageOptionRow, LanguageOptionRowProps, LANGUAGE_OPTIONS, LanguageCardAlign, LanguageOption, useChooseLanguageScreen(), SupportedLanguage
+
+### Community 317 - "DealJourneyRail.tsx"
+Cohesion: 0.23
+Nodes (11): DealJourneyRailComponent(), DealJourneyRailProps, JOURNEY_ICON, PILL_TOP, RAIL_HEIGHT, STATION, StationProps, TRACK_TOP (+3 more)
+
+### Community 318 - "DealWaybill.tsx"
+Cohesion: 0.04
+Nodes (61): BADGE, DealAnnouncementRow, DealAnnouncementRowComponent(), DealAnnouncementRowProps, EVENT_FORMAT, DAY_FORMAT, DealShipmentRow, DealShipmentRowComponent() (+53 more)
+
+### Community 319 - "PlatformsCarousel.tsx"
+Cohesion: 0.07
+Nodes (28): PlatformResource, PLATFORM_STATUS_PILL, PlatformStatusPill, PlatformVerificationStatus, PlatformAccountCardProps, PlatformReviewNoticeProps, PlatformSettingsGroupProps, PlatformDetailModel (+20 more)
+
+### Community 320 - "useShortlistInvite.test.tsx"
+Cohesion: 0.17
+Nodes (8): current, Harness(), mockError, mockInfo, mockInvite, mockQuery, mockUseQuery, Model
 
 ### Community 321 - "BM25"
 Cohesion: 0.28
 Nodes (5): BM25, BM25 ranking algorithm for text search, Lowercase, split, remove punctuation, filter short words, Build BM25 index from documents, Score all documents against query
 
-### Community 322 - "moderateScale"
-Cohesion: 0.02
-Nodes (100): react-native-safe-area-context, ForceUpdateScreenComponent(), MaintenanceScreenComponent(), Props, src_core_store_index_selectnetworkerror, moderateScale(), src_domains_identity_api_accountapi_useupdatepreferencesmutation, ARC_DROP (+92 more)
+### Community 322 - "BrandCampaignApplicantsScreen.tsx"
+Cohesion: 0.10
+Nodes (16): ApplicantCard, ApplicantCompareTray, ApplicantCompareTrayComponent(), OVERLAP, SLOT, TRAY_HEIGHT, ApplicantFilterChip, ApplicantFilterChipProps (+8 more)
 
-### Community 324 - "useDealBriefExit.ts"
-Cohesion: 0.13
-Nodes (17): PC6 — الصفقة المرتبطة (الدوران · CM7), DealBriefExitCard, DealBriefExitCardComponent(), DealBriefExitCardProps, UNTIL_FORMAT, DealBriefExitSheetProps, DealBriefExitModel, NOTE_FIELD (+9 more)
-
-### Community 325 - "خطة التنفيذ — الحملات العامة (Public Campaigns) — موبايل"
+### Community 324 - "useExploreScreen.test.tsx"
 Cohesion: 0.17
-Nodes (12): 0. قرارات ثابتة (من العقد), PC10 — الإشعارات (CM11), PC4 — الاكتشاف (المؤثر · CM5) — يمكن البدء بعد PC0, PC5 — التقديم وطلباتي (المؤثر · CM6), PC8 — الدروب + أدوات الدفعة (البراند · CM8 + CM9), PC9 — الإرجاع والقيود (CM10), اختيار النموذج, الترتيب (+4 more)
+Nodes (8): lockedPage, mockNavigate, mockQuery, mockRoute, mockUseCreators, Probe(), QueryState, vm
+
+### Community 325 - "useCampaignsList.ts"
+Cohesion: 0.06
+Nodes (43): 0. قرارات ثابتة (من العقد), PC0 — الأساس (بدون UI), PC10 — الإشعارات (CM11), PC2 — حملاتي + أوراق النظام (البراند · CM2 + CM4), PC4 — الاكتشاف (المؤثر · CM5) — يمكن البدء بعد PC0, PC9 — الإرجاع والقيود (CM10), اختيار النموذج, الترتيب (+35 more)
 
 ### Community 328 - "format_ascii_box"
 Cohesion: 0.22
 Nodes (8): ansi_ljust(), format_ascii_box(), hex_to_ansi(), Convert hex color to ANSI True Color swatch (██) with fallback., Like str.ljust but accounts for zero-width ANSI escape sequences., Create a Unicode section separator: ├─── NAME ───...┤, Format design system as Unicode box with ANSI color swatches., section_header()
 
-### Community 329 - "ListFooterLoader.tsx"
+### Community 329 - "SuperList.tsx"
+Cohesion: 0.14
+Nodes (10): @shopify/flash-list, EmptyStateAction, ErrorBoundary, Props, State, ListEmptyState(), ListEmptyStateProps, EMPTY (+2 more)
+
+### Community 330 - "types/campaignDraft.ts"
+Cohesion: 0.10
+Nodes (34): CampaignReadinessCardComponent(), CampaignReadinessCardProps, ROW_STEPS, CAMPAIGN_MISSING_LABEL, CAMPAIGN_STEP_LABEL, ReviewNoticesProps, ReviewStepComponent(), COMPACT (+26 more)
+
+### Community 331 - "ShortlistScreen.tsx"
+Cohesion: 0.22
+Nodes (6): CreatorRowsSkeleton, ROW_SKELETON_HEIGHT, SKELETON_ROWS, InviteCampaignSheet, ShortlistScreen, ShortlistScreenComponent()
+
+### Community 332 - "dealUploads.ts"
+Cohesion: 0.25
+Nodes (7): DEAL_ISSUE_PHOTO_POLICY, DEAL_UPLOAD_LIMIT, DEAL_UPLOAD_POLICY, KIND_RULE, RetentionPurpose, RetentionShotsModel, pickScreenshots()
+
+### Community 333 - "shortlistApi.test.ts"
+Cohesion: 0.29
+Nodes (6): shortlistApi, creator(), home, json(), mockServer(), ok()
+
+### Community 334 - "react-native-reanimated"
+Cohesion: 0.04
+Nodes (80): Navy surfaces & live parts (rule 09 §3.1), Primitives & Layout, react-native-edge-to-edge, react-native-keyboard-controller, react-native-reanimated, react-native-safe-area-context, LayoutNoScrollWithHandlerScreenComponent(), SpacingToken (+72 more)
+
+### Community 335 - "ListFooterLoader.tsx"
 Cohesion: 0.25
 Nodes (7): lottie-react-native, ListFooterLoader(), ListFooterLoaderProps, LOTTIE_HEIGHT, LOTTIE_PADDING_TRIM, LOTTIE_WIDTH, styles
-
-### Community 330 - "useCampaignReviewSummary.ts"
-Cohesion: 0.09
-Nodes (30): CampaignWizardStepBody, IdeaStep, LockedBriefPreview, LockedBriefPreviewProps, MoneyStep, RequirementsStep, ReviewNoteCard, ReviewNotices (+22 more)
-
-### Community 331 - "secureStorage.test.ts"
-Cohesion: 0.25
-Nodes (5): KeychainModule, launch(), load(), mockGlobals, StorageModule
-
-### Community 332 - "LayoutWizardScreen.tsx"
-Cohesion: 0.43
-Nodes (6): useLayoutWizardAction(), useLayoutWizardStep(), WIZARD_DEMO_TOTAL, LayoutWizardScreenComponent(), STEP_TITLE_KEY, WizardDemoStep
-
-### Community 333 - "DropOnAir.tsx"
-Cohesion: 0.39
-Nodes (5): DropOnAirComponent(), DropOnAirProps, CampaignDropTotals, campaignDropVerifiedShare(), secondsBetween()
-
-### Community 334 - "ScreenHeader.tsx"
-Cohesion: 0.11
-Nodes (37): HueColors, IconButtonColors, IconButtonComponent(), IconButtonProps, IconButtonTone, IconButtonVariant, resolveColors(), HeaderMotionInput (+29 more)
-
-### Community 335 - "DropFilters.tsx"
-Cohesion: 0.38
-Nodes (6): DropFilters, DropFiltersComponent(), DropFiltersProps, FILTER_LABEL, CampaignDropChip, CampaignDropFilter
 
 ### Community 336 - "deals-offer-preflight-prompt.md"
 Cohesion: 0.33
 Nodes (5): 1. New `GET /brand/deals/preflight?influencer_profile_id={id}` (or the creator slug, whichever you prefer), 2. `blockers` on `POST /brand/deals/quote`, 3. Lifecycle windows on `POST /brand/deals/quote`, 4. Tests, Conventions (keep them)
 
-### Community 337 - "Creator Home — Plan (approved 2026-10-05; Home sections 1–6 + Insights built 2026-10-06)"
-Cohesion: 0.17
-Nodes (11): 7. Please confirm (no change needed if already true), Build order, Creator Home — Plan (approved 2026-10-05; Home sections 1–6 + Insights built 2026-10-06), Decisions, Screens, Sections (top → bottom), States, 3.1 `GET /user/me` — Home / app launch (lean) (+3 more)
+### Community 337 - "CampaignAttentionRail.tsx"
+Cohesion: 0.28
+Nodes (8): AttentionChip, AttentionChipComponent(), CampaignAttentionRail, CampaignAttentionRailComponent(), CampaignAttentionRailProps, ChipProps, KIND_VIEW, CampaignAttention
 
 ### Community 338 - "GlassCard.tsx"
 Cohesion: 0.48
 Nodes (4): GlassCard, GlassCardProps, GlassCardStyle, useGlassCardStyle()
 
-### Community 339 - "scorePassword.ts"
-Cohesion: 0.40
-Nodes (4): PasswordStrengthMeterComponent(), PASSWORD_MIN_LENGTH, PasswordScore, scorePassword()
-
-### Community 340 - "17. Media Kit — LOCKED (2026-10-06, implemented; v2 additions 2026-10-11 → §17.11)"
-Cohesion: 0.18
-Nodes (11): 17.10 Media Kit edge-case checklist, 17.11 Media kit v2 — pitch page (2026-10-11, implemented), 17.1 `GET /influencer/media-kit` — own media kit, 17.3 `GET /influencer/media-kit/slug-check?slug=` — live availability, 17.4 Public — `GET /public/creators/{slug}` (no auth; bearer optional), 17.5 `POST /public/creators/{slug}/views` — count a view, 17.6 `POST /influencer/media-kit/share`, 17.7 `GET /influencer/media-kit/stats?period=7d|30d|90d` (default `30d`) (+3 more)
-
-### Community 341 - "CreatorDealsScreen.tsx"
-Cohesion: 0.47
-Nodes (4): DealStrikesBanner, CreatorDealsScreen, CreatorDealsScreenComponent(), useCreatorDealsScreen()
-
-### Community 342 - "utils/campaignDrop.ts"
-Cohesion: 0.60
-Nodes (4): CAMPAIGN_DROP_BAR_ORDER, CAMPAIGN_DROP_FILTER_ORDER, CAMPAIGN_DROP_LANE_ORDER, CampaignDropState
-
-### Community 343 - "react-native-fast-image.d.ts"
-Cohesion: 0.40
-Nodes (4): FlexStyle, react-native, ShadowStyleIOS, TransformsStyle
-
-### Community 344 - "DiscardSheet.tsx"
-Cohesion: 0.25
-Nodes (8): DiscardGuard, DISCARD_COPY, DiscardCopy, DiscardFlow, DiscardSheet, DiscardSheetComponent(), DiscardSheetProps, DiscardChangesSheetProps
-
-### Community 347 - "HomeCampaigns.test.tsx"
-Cohesion: 0.36
-Nodes (6): CreatorHomeCampaigns, chip(), isHost(), pressables(), strip(), ticket()
-
-### Community 350 - "react-native-blob-util.ts"
+### Community 339 - "react-native-blob-util.ts"
 Cohesion: 0.25
 Nodes (3): FakePut, fakePuts, fakeStat
 
-### Community 351 - "ReviewStage.tsx"
-Cohesion: 0.04
-Nodes (48): react-native-video, DealItemFuse, DealItemFuseProps, BAR_HEIGHT, BAR_WIDTH, DealRoundBars, DealRoundBarsComponent(), DealRoundBarsProps (+40 more)
+### Community 340 - "index.js"
+Cohesion: 0.33
+Nodes (5): displayName, name, react-native-screens, App(), registerNotificationBackgroundHandlers()
+
+### Community 341 - "10 — Component Reuse & Showcase"
+Cohesion: 0.29
+Nodes (6): 10 — Component Reuse & Showcase, Before building UI, Layouts, Same change that adds/changes a kit export, Showcase code, DevShowcaseStackParamList
+
+### Community 342 - "ProgressBar.tsx"
+Cohesion: 0.36
+Nodes (7): clamp(), ProgressBarComponent(), ProgressBarProps, ProgressBarSize, ProgressBarSurface, ProgressBarTone, styles
+
+### Community 344 - "build.py"
+Cohesion: 0.29
+Nodes (6): base64, pathlib, re, logo(), measures(), Builds the Sada brand book (rule 08) into docs/brand/. Never hand-edit the…
+
+### Community 345 - "reason"
+Cohesion: 0.14
+Nodes (12): 04 — Data Layer, Envelope, Local state & storage, Paginated lists, Redux, Repository pattern, RTK Query, 14 — Ref: Core Infrastructure — reuse, don't rebuild (+4 more)
+
+### Community 346 - "offerServices.ts"
+Cohesion: 0.43
+Nodes (6): OfferAddonDetail, OfferCreator, toDetail(), toOfferServices(), toService(), toUsd()
+
+### Community 347 - "7. Creator: payout methods"
+Cohesion: 0.33
+Nodes (6): 7. Creator: payout methods, `DELETE /wallet/payout-methods/{id}`, `GET /wallet/payout-methods`, `PATCH /wallet/payout-methods/{id}`, `POST /wallet/payout-methods`, `POST /wallet/payout-methods/{id}/default`
+
+### Community 348 - "CreatorCampaignPricing"
+Cohesion: 0.33
+Nodes (6): CreatorNetCardProps, ApplyAccountsSectionProps, ApplyPriceSectionProps, CampaignApplySheetProps, CampaignApplyModel, CreatorCampaignPricing
+
+### Community 350 - "isolateText"
+Cohesion: 0.40
+Nodes (4): DealBriefExitSheetComponent(), DealShippingAddressCardComponent(), DealShippingDockComponent(), isolateText()
+
+### Community 351 - "useDealDraftReviewScreen.ts"
+Cohesion: 0.03
+Nodes (115): P6 — M6 المسودات والمراجعة, react-native-video, src_core_navigation_index_dealsstackparamlist, src_domains_marketplace_api_dealdraftsapi_usegetdealitemdraftsquery, src_domains_marketplace_api_dealdraftsapi_usequoteextrarevisionmutation, src_domains_marketplace_api_dealdraftsapi_userequestdraftuploadslotmutation, DealItemFuse, DealItemFuseProps (+107 more)
 
 ### Community 354 - "Direct Deals — Mobile Handoff (B0–B13)"
-Cohesion: 0.17
-Nodes (11): 0. Ground rules (apply everywhere), 2. Deal shape (`DealResource`), 3. Timeline (`GET …/timeline`), 5.1 `GET /brand/home` → `active_deals` is now live, 5.2 New island `fund_deals`, 5.3 `GET /wallet/escrows`, 5.4 Media kit (`GET /public/creators/{slug}` and the own-kit `preview`), 5.5 KYC and payouts (P5 check) (+3 more)
+Cohesion: 0.15
+Nodes (12): 0. Ground rules (apply everywhere), 2. Deal shape (`DealResource`), 3. Timeline (`GET …/timeline`), 5.1 `GET /brand/home` → `active_deals` is now live, 5.2 New island `fund_deals`, 5.3 `GET /wallet/escrows`, 5.4 Media kit (`GET /public/creators/{slug}` and the own-kit `preview`), 5.5 KYC and payouts (P5 check) (+4 more)
+
+### Community 358 - "07 — Security & Privacy"
+Cohesion: 0.29
+Nodes (6): 07 — Security & Privacy, Auth, Input & content, Logging & PII, Permissions, Secrets & tokens
+
+### Community 368 - "i18n/types.ts"
+Cohesion: 0.67
+Nodes (3): resources, CustomTypeOptions, i18next
 
 ## Knowledge Gaps
-- **2607 isolated node(s):** `graphify-refresh.sh script`, `DOMAIN_DEEP_IMPORT`, `RN_RAW_UI`, `fakePuts`, `fakeStat` (+2602 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3233 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **87 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2634 isolated node(s):** `graphify-refresh.sh script`, `DOMAIN_DEEP_IMPORT`, `RN_RAW_UI`, `fakePuts`, `fakeStat` (+2629 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3272 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **89 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `types/campaignDraft.ts`, `EmptyState.tsx`, `useDealPublishScreen.ts`, `BarChart.tsx`, `useTheme`, `package.json`, `useStatementScreen.ts`, `permissions/index.ts`, `identity/index.ts`, `react-native`, `theme/types.ts`, `useTopUpFlow.ts`, `storage/index.ts`, `ProfileScreen.tsx`, `useDealCancel.ts`, `navigation/index.ts`, `OpportunityCard.tsx`, `useLayoutListStatesScreen.ts`, `useOfferBuilderScreen.ts`, `DealRatingSummary.tsx`, `CustomInput.tsx`, `auth/index.ts`, `WalletNavigator.tsx`, `CampaignSeatCard.tsx`, `usePlatformDetailScreen.ts`, `useCampaignApply.ts`, `formatMoney`, `useCampaignSubmit.ts`, `useCampaignWizardScreen.ts`, `mediaKitShowcase.ts`, `constants/dealOffer.ts`, `utils/applicants.ts`, `NextStepDeck.tsx`, `i18next`, `EscrowTicket.tsx`, `useRateCardEditorScreen.ts`, `useDealDraftReviewScreen.ts`, `Deal`, `DealsNavigator.tsx`, `colors.ts`, `TransactionReceiptScreen.tsx`, `ui/index.ts`, `useFileUploads`, `showcaseRegistry.ts`, `formatDuration`, `Money`, `useMediaKitInsightsScreen.ts`, `useMediaKitPublicScreen.test.tsx`, `DealJourney.tsx`, `useShortlistInvite.test.tsx`, `useDealDisputeScreen.ts`, `useSocialProofScreen.ts`, `DealTrackRow.tsx`, `DealsBoard.tsx`, `PlatformResource`, `DealPublicationReviewScreen.tsx`, `useMediaKitSettingsScreen.ts`, `useDraftFrames.ts`, `useMediaKitCard.ts`, `DateRangePicker.tsx`, `useCampaignWizard`, `BrandHomeScreen.test.tsx`, `MediaKitWorkMasonry.tsx`, `MainTabs.tsx`, `MediaKitStageReach.tsx`, `AppStatus`, `react-native-reanimated`, `BriefFileSourceTile.tsx`, `campaignSchedule.ts`, `WelcomeEchoCanvas.tsx`, `MediaKitAudience.tsx`, `BrandSpotlight.tsx`, `BrandCampaignsScreen.tsx`, `utils/dealDrafts.ts`, `useExploreScreen.ts`, `BrandLogo.tsx`, `MediaKitEscrow.tsx`, `Text`, `CardsCanvas.tsx`, `config/index.ts`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `rateRows.ts`, `RootNavigator.tsx`, `OnboardingScreen/types.ts`, `DealContractScreen.tsx`, `theme/index.ts`, `ReviewRevisionSheet.tsx`, `DisputeScales.tsx`, `DealOrbit.tsx`, `Box.tsx`, `useWithdrawFlow.ts`, `CustomButton.tsx`, `tabRoot.ts`, `MediaKitStage.tsx`, `SettingsNavigator.tsx`, `finance/constants/index.ts`, `CreatorOpportunitiesScreen.tsx`, `useDomainEmailScreen.ts`, `useDealsList.ts`, `motion`, `Box`, `useAppSelector`, `useDealRespond.ts`, `marketplace/index.ts`, `useMyApplications.ts`, `GuideChapter.tsx`, `useMediaKitCover.ts`, `CampaignIsland.tsx`, `Sparkline.tsx`, `formatNumber`, `notification/index.ts`, `GlowOrbs.tsx`, `core/api/index.ts`, `useBrandCampaignApplicantsScreen.ts`, `SelectionControlsDemo.tsx`, `useDealRetention.ts`, `@react-navigation/native`, `RootNavigator`, `useFileUploads.test.tsx`, `mediaKit.ts`, `CreatorHomeScreen/components/HomeDeals.tsx`, `CampaignScopeSwitch.tsx`, `LayoutGalleryDemo.tsx`, `useBrandHomeScreen.ts`, `shared/utils/index.ts`, `Text.tsx`, `useCreatorCampaignDetailScreen.ts`, `BrandCampaignApplicantsScreen.tsx`, `constants/opportunities.ts`, `TideChart.tsx`, `DeckCard.tsx`, `MainTabBar.tsx`, `useDealShipping.ts`, `DropLane.tsx`, `DraftCaptionCard.tsx`, `ProgressSegments.tsx`, `utils/opportunities.ts`, `DealStepper.tsx`, `CreatorCampaign`, `useDealRating.ts`, `useKycScreen.ts`, `SuperList/index.ts`, `VerificationMethodList.tsx`, `ToastCard.tsx`, `Skeleton`, `FloatingCard.tsx`, `WizardShell.tsx`, `DealDetailView.tsx`, `Timestamp`, `MissingStepsRail.tsx`, `CreatorHomeScreen.test.tsx`, `ProfileOrbit.tsx`, `Radio.tsx`, `DealPublishScreen.tsx`, `useCampaignRequirements.ts`, `useClock`, `DealRatingQuestion.tsx`, `useBrandCampaignDropScreen.ts`, `upload/index.ts`, `DealRatingBars.tsx`, `DropStations.tsx`, `parseAmountText`, `CreatorApplyDockTop.tsx`, `AnimatedNumber.tsx`, `ReviewScrubber.tsx`, `DealJourneyCard.tsx`, `DropRoomHero.tsx`, `DealDraftReviewScreen.tsx`, `moderateScale`, `useDealBriefExit.ts`, `ListFooterLoader.tsx`, `useCampaignReviewSummary.ts`, `LayoutWizardScreen.tsx`, `DropOnAir.tsx`, `ScreenHeader.tsx`, `DropFilters.tsx`, `GlassCard.tsx`, `CreatorDealsScreen.tsx`, `DiscardSheet.tsx`, `HomeCampaigns.test.tsx`, `ReviewStage.tsx`?**
-  _High betweenness centrality (0.226) - this node is a cross-community bridge._
-- **Why does `useTheme()` connect `useTheme` to `EmptyState.tsx`, `useDealPublishScreen.ts`, `BarChart.tsx`, `useStatementScreen.ts`, `identity/index.ts`, `react-native`, `theme/types.ts`, `useTopUpFlow.ts`, `storage/index.ts`, `ProfileScreen.tsx`, `useDealCancel.ts`, `navigation/index.ts`, `OpportunityCard.tsx`, `useLayoutListStatesScreen.ts`, `DealRatingSummary.tsx`, `CustomInput.tsx`, `auth/index.ts`, `CampaignSeatCard.tsx`, `usePlatformDetailScreen.ts`, `formatMoney`, `useCampaignSubmit.ts`, `mediaKitShowcase.ts`, `utils/applicants.ts`, `NextStepDeck.tsx`, `i18next`, `EscrowTicket.tsx`, `useRateCardEditorScreen.ts`, `useDealDraftReviewScreen.ts`, `Deal`, `DealsNavigator.tsx`, `colors.ts`, `TransactionReceiptScreen.tsx`, `ui/index.ts`, `formatDuration`, `Money`, `useMediaKitInsightsScreen.ts`, `DealJourney.tsx`, `useDealDisputeScreen.ts`, `useSocialProofScreen.ts`, `DealTrackRow.tsx`, `DealsBoard.tsx`, `DealPublicationReviewScreen.tsx`, `useMediaKitSettingsScreen.ts`, `useDraftFrames.ts`, `DateRangePicker.tsx`, `useCampaignWizard`, `MediaKitWorkMasonry.tsx`, `MediaKitStageReach.tsx`, `react-native-reanimated`, `BriefFileSourceTile.tsx`, `WelcomeEchoCanvas.tsx`, `MediaKitAudience.tsx`, `BrandSpotlight.tsx`, `BrandCampaignsScreen.tsx`, `utils/dealDrafts.ts`, `useExploreScreen.ts`, `BrandLogo.tsx`, `MediaKitEscrow.tsx`, `Text`, `CardsCanvas.tsx`, `config/index.ts`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `RootNavigator.tsx`, `OnboardingScreen/types.ts`, `react`, `DealContractScreen.tsx`, `theme/index.ts`, `ReviewRevisionSheet.tsx`, `DisputeScales.tsx`, `DealOrbit.tsx`, `Box.tsx`, `CustomButton.tsx`, `MediaKitStage.tsx`, `SettingsNavigator.tsx`, `finance/constants/index.ts`, `motion`, `dealContract.ts`, `Box`, `useAppSelector`, `useDealRespond.ts`, `marketplace/index.ts`, `utils/dealRating.ts`, `useMyApplications.ts`, `GuideChapter.tsx`, `CampaignIsland.tsx`, `Sparkline.tsx`, `formatNumber`, `GlowOrbs.tsx`, `useBrandCampaignApplicantsScreen.ts`, `useDealRetention.ts`, `CreatorHomeScreen/components/HomeDeals.tsx`, `CampaignScopeSwitch.tsx`, `useBrandHomeScreen.ts`, `shared/utils/index.ts`, `Text.tsx`, `useCreatorCampaignDetailScreen.ts`, `constants/opportunities.ts`, `TideChart.tsx`, `DeckCard.tsx`, `MainTabBar.tsx`, `useDealShipping.ts`, `DropLane.tsx`, `DraftCaptionCard.tsx`, `ProgressSegments.tsx`, `utils/opportunities.ts`, `DealStepper.tsx`, `CreatorCampaign`, `useKycScreen.ts`, `SuperList/index.ts`, `ToastCard.tsx`, `Skeleton`, `WizardShell.tsx`, `DealDetailView.tsx`, `Timestamp`, `MissingStepsRail.tsx`, `ProfileOrbit.tsx`, `Radio.tsx`, `DealPublishScreen.tsx`, `useCampaignRequirements.ts`, `useClock`, `DealRatingQuestion.tsx`, `useBrandCampaignDropScreen.ts`, `DealRatingBars.tsx`, `DropStations.tsx`, `CreatorApplyDockTop.tsx`, `AnimatedNumber.tsx`, `ReviewScrubber.tsx`, `DealJourneyCard.tsx`, `DropRoomHero.tsx`, `platformsLayout.ts`, `moderateScale`, `ListFooterLoader.tsx`, `useCampaignReviewSummary.ts`, `LayoutWizardScreen.tsx`, `DropOnAir.tsx`, `ScreenHeader.tsx`, `GlassCard.tsx`, `scorePassword.ts`, `DiscardSheet.tsx`, `BidPrice`, `ReviewStage.tsx`?**
-  _High betweenness centrality (0.106) - this node is a cross-community bridge._
-- **Why does `react-i18next` connect `theme/index.ts` to `EmptyState.tsx`, `useDealPublishScreen.ts`, `useTheme`, `package.json`, `useStatementScreen.ts`, `identity/index.ts`, `react-native`, `useTopUpFlow.ts`, `ProfileScreen.tsx`, `useDealCancel.ts`, `navigation/index.ts`, `OpportunityCard.tsx`, `useLayoutListStatesScreen.ts`, `useOfferBuilderScreen.ts`, `DealRatingSummary.tsx`, `CustomInput.tsx`, `auth/index.ts`, `CampaignSeatCard.tsx`, `usePlatformDetailScreen.ts`, `useCampaignApply.ts`, `formatMoney`, `useCampaignSubmit.ts`, `useCampaignWizardScreen.ts`, `mediaKitShowcase.ts`, `constants/dealOffer.ts`, `utils/applicants.ts`, `NextStepDeck.tsx`, `i18next`, `EscrowTicket.tsx`, `useRateCardEditorScreen.ts`, `useDealDraftReviewScreen.ts`, `Deal`, `colors.ts`, `TransactionReceiptScreen.tsx`, `ui/index.ts`, `useFileUploads`, `formatDuration`, `Money`, `useMediaKitInsightsScreen.ts`, `DealJourney.tsx`, `useDealDisputeScreen.ts`, `useSocialProofScreen.ts`, `DealTrackRow.tsx`, `DealsBoard.tsx`, `PlatformResource`, `DealPublicationReviewScreen.tsx`, `useMediaKitSettingsScreen.ts`, `useDraftFrames.ts`, `useMediaKitCard.ts`, `DateRangePicker.tsx`, `useCampaignWizard`, `MediaKitWorkMasonry.tsx`, `MainTabs.tsx`, `MediaKitStageReach.tsx`, `BriefFileSourceTile.tsx`, `MediaKitAudience.tsx`, `BrandCampaignsScreen.tsx`, `utils/dealDrafts.ts`, `useExploreScreen.ts`, `BrandLogo.tsx`, `MediaKitEscrow.tsx`, `Text`, `config/index.ts`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `OnboardingScreen/types.ts`, `react`, `DealContractScreen.tsx`, `ReviewRevisionSheet.tsx`, `DealOrbit.tsx`, `useWithdrawFlow.ts`, `MediaKitStage.tsx`, `finance/constants/index.ts`, `CreatorOpportunitiesScreen.tsx`, `useDomainEmailScreen.ts`, `useDealsList.ts`, `motion`, `Box`, `useAppSelector`, `useDealRespond.ts`, `marketplace/index.ts`, `useMyApplications.ts`, `GuideChapter.tsx`, `useMediaKitCover.ts`, `CampaignIsland.tsx`, `formatNumber`, `notification/index.ts`, `core/api/index.ts`, `useBrandCampaignApplicantsScreen.ts`, `SelectionControlsDemo.tsx`, `useDealRetention.ts`, `@react-navigation/native`, `CreatorHomeScreen/components/HomeDeals.tsx`, `CampaignScopeSwitch.tsx`, `LayoutGalleryDemo.tsx`, `useBrandHomeScreen.ts`, `shared/utils/index.ts`, `Text.tsx`, `useCreatorCampaignDetailScreen.ts`, `BrandCampaignApplicantsScreen.tsx`, `constants/opportunities.ts`, `TideChart.tsx`, `DeckCard.tsx`, `useDealShipping.ts`, `DropLane.tsx`, `DraftCaptionCard.tsx`, `utils/opportunities.ts`, `DealStepper.tsx`, `CreatorCampaign`, `useDealRating.ts`, `useKycScreen.ts`, `SuperList/index.ts`, `VerificationMethodList.tsx`, `ToastCard.tsx`, `Skeleton`, `WizardShell.tsx`, `DealDetailView.tsx`, `Timestamp`, `MissingStepsRail.tsx`, `ProfileOrbit.tsx`, `DealPublishScreen.tsx`, `useCampaignRequirements.ts`, `useClock`, `DealRatingQuestion.tsx`, `upload/index.ts`, `DealRatingBars.tsx`, `DropStations.tsx`, `CreatorApplyDockTop.tsx`, `ReviewScrubber.tsx`, `DealJourneyCard.tsx`, `DealDraftReviewScreen.tsx`, `moderateScale`, `useDealBriefExit.ts`, `useCampaignReviewSummary.ts`, `LayoutWizardScreen.tsx`, `DropOnAir.tsx`, `ScreenHeader.tsx`, `DropFilters.tsx`, `CreatorDealsScreen.tsx`, `DiscardSheet.tsx`, `ReviewStage.tsx`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `utils/campaignDraft.ts`, `useInfluencerWelcomeScreen.ts`, `useDealPublishScreen.ts`, `BarChart.tsx`, `useTheme`, `package.json`, `dealsApi.ts`, `permissions/index.ts`, `identity/index.ts`, `theme/index.ts`, `theme/types.ts`, `money/index.ts`, `useBrandVisibility.ts`, `shared/utils/index.ts`, `useInfluencerRatesScreen.ts`, `CampaignTicket.tsx`, `LayoutListStatesScreen.tsx`, `offerForm.ts`, `constants/campaignStatus.ts`, `CustomInput.tsx`, `auth/store/index.ts`, `WalletNavigator.tsx`, `CampaignSeatCard.tsx`, `usePlatformDetailScreen.ts`, `useCampaignApply.ts`, `formatMoney`, `usePhoneVerifyStep.ts`, `useCampaignWizardScreen.ts`, `MediaKitEscrow.tsx`, `useCampaignBrief.ts`, `NextStepDeck.tsx`, `usePayoutMethodFormScreen.ts`, `StatementScreen.tsx`, `useRateCardEditorScreen.ts`, `navigation/index.ts`, `useDealCancel.ts`, `DealsNavigator.tsx`, `colors.ts`, `WithdrawAmountParts.tsx`, `ui/index.ts`, `dealStation.ts`, `showcaseRegistry.ts`, `useTopUpDetailScreen.ts`, `MoneyText.tsx`, `useMediaKitInsightsScreen.ts`, `useFileUploads`, `DealOrbit.tsx`, `campaign.ts`, `useDealDisputeScreen.ts`, `KycScreen.tsx`, `TopUpDetailScreen.tsx`, `MyApplicationsView.tsx`, `useCreatorOverview.ts`, `useMediaKitSettingsScreen.ts`, `DraftFrame.tsx`, `useMediaKitShare.ts`, `DateRangePicker.tsx`, `BrandHomeScreen.test.tsx`, `mediaKitShowcase.ts`, `MainTabs.tsx`, `MediaKitStageReach.tsx`, `useAppBootstrap.ts`, `useDealRating.ts`, `BriefFileSourceTile.tsx`, `campaignSchedule.ts`, `WelcomeEchoCanvas.tsx`, `MediaKitAudience.tsx`, `moderateScale`, `BrandCampaignsScreen.tsx`, `EscrowTicket.tsx`, `Money`, `useExploreScreen.ts`, `rateRows.ts`, `BrandLogo.tsx`, `MediaKitHighlights.tsx`, `Text`, `CardsCanvas.tsx`, `RateCardEditorScreen.tsx`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `ProfileScreen.tsx`, `RootNavigator.tsx`, `useMediaKitPublicScreen.ts`, `OnboardingScreen/types.ts`, `showcaseDemos.ts`, `DealContractScreen.tsx`, `react-i18next`, `config/index.ts`, `DisputeScales.tsx`, `useBrandCampaignAnnouncementsScreen.ts`, `Pressable.tsx`, `useWithdrawFlow.ts`, `DealRatingBars.tsx`, `tabRoot.ts`, `MediaKitStage.tsx`, `SettingsNavigator.tsx`, `finance/constants/index.ts`, `useCreatorOpportunitiesScreen.ts`, `useOfferBuilderScreen.ts`, `BrandCampaignAnnouncementsScreen.tsx`, `motion`, `Pressable`, `App.tsx`, `DealReasonSheet.tsx`, `marketplace/index.ts`, `AudienceSection.tsx`, `constants/opportunities.ts`, `useDealGuideCopy.ts`, `useMediaKitCover.ts`, `CampaignDetail`, `Sparkline.tsx`, `DealPublishScreen.tsx`, `pushPrompt.ts`, `notification/index.ts`, `GlowOrbs.tsx`, `core/api/index.ts`, `react-test-renderer`, `DiscardSheet.tsx`, `SelectionControlsDemo.tsx`, `useDealRetention.ts`, `applyServerFieldErrors`, `CreatorCampaignDetailScreen.tsx`, `mediaKit.ts`, `react-native`, `CampaignScopeSwitch.tsx`, `LayoutGalleryDemo.tsx`, `useBrandHomeScreen.ts`, `auth/index.ts`, `i18next`, `Box.tsx`, `CampaignWizardHeader.tsx`, `TierBadge.tsx`, `useCampaignMoney.ts`, `TideChart.tsx`, `DeckCard.tsx`, `MainTabBar.tsx`, `useDealShipping.ts`, `HueTone`, `MissingStepsRail.tsx`, `InfluencerWelcomeScreen.tsx`, `DealJourney.tsx`, `DealStepper.tsx`, `useOfferDraft.ts`, `useCompanyVerificationScreen.ts`, `useKycScreen.ts`, `SuperList/index.ts`, `VerificationMethodList.tsx`, `ToastCard.tsx`, `ReadinessSection.tsx`, `FloatingCard.tsx`, `DocStackArt.tsx`, `DealStageCard.tsx`, `resolveHue`, `CreatorHomeScreen.test.tsx`, `ProfileOrbit.tsx`, `useCreatorCardDemo.ts`, `DealDecisionDock.tsx`, `useDealContractScreen.ts`, `useCampaignRequirements.ts`, `Deal`, `DealRatingQuestion.tsx`, `CreatorOrbitScene.tsx`, `upload/index.ts`, `BrandDealDetailScreen.tsx`, `Timestamp`, `DealJourneyCard.tsx`, `toast/index.ts`, `OpportunityCard.tsx`, `Text.tsx`, `08b — Brand Palette (raw values), Tab Bar, Logo, Assets`, `LanguageOptionRow.tsx`, `DealJourneyRail.tsx`, `DealWaybill.tsx`, `PlatformsCarousel.tsx`, `useShortlistInvite.test.tsx`, `BrandCampaignApplicantsScreen.tsx`, `useExploreScreen.test.tsx`, `useCampaignsList.ts`, `SuperList.tsx`, `types/campaignDraft.ts`, `ShortlistScreen.tsx`, `dealUploads.ts`, `react-native-reanimated`, `ListFooterLoader.tsx`, `CampaignAttentionRail.tsx`, `GlassCard.tsx`, `ProgressBar.tsx`, `useDealDraftReviewScreen.ts`?**
+  _High betweenness centrality (0.214) - this node is a cross-community bridge._
+- **Why does `useTheme()` connect `useTheme` to `useInfluencerWelcomeScreen.ts`, `useDealPublishScreen.ts`, `BarChart.tsx`, `identity/index.ts`, `theme/index.ts`, `theme/types.ts`, `money/index.ts`, `shared/utils/index.ts`, `useInfluencerRatesScreen.ts`, `CampaignTicket.tsx`, `LayoutListStatesScreen.tsx`, `constants/campaignStatus.ts`, `CustomInput.tsx`, `WalletNavigator.tsx`, `CampaignSeatCard.tsx`, `useCampaignApply.ts`, `formatMoney`, `usePhoneVerifyStep.ts`, `MediaKitEscrow.tsx`, `utils/campaignShipping.ts`, `NextStepDeck.tsx`, `StatementScreen.tsx`, `useRateCardEditorScreen.ts`, `navigation/index.ts`, `useDealCancel.ts`, `colors.ts`, `WithdrawAmountParts.tsx`, `ui/index.ts`, `dealStation.ts`, `useTopUpDetailScreen.ts`, `MoneyText.tsx`, `useMediaKitInsightsScreen.ts`, `DealOrbit.tsx`, `useDealDisputeScreen.ts`, `KycScreen.tsx`, `TopUpDetailScreen.tsx`, `MyApplicationsView.tsx`, `useMediaKitSettingsScreen.ts`, `DraftFrame.tsx`, `DateRangePicker.tsx`, `react`, `mediaKitShowcase.ts`, `MediaKitStageReach.tsx`, `BriefFileSourceTile.tsx`, `WelcomeEchoCanvas.tsx`, `MediaKitAudience.tsx`, `moderateScale`, `BrandCampaignsScreen.tsx`, `EscrowTicket.tsx`, `Money`, `useExploreScreen.ts`, `BrandLogo.tsx`, `MediaKitHighlights.tsx`, `Text`, `CardsCanvas.tsx`, `RateCardEditorScreen.tsx`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `ProfileScreen.tsx`, `RootNavigator.tsx`, `OnboardingScreen/types.ts`, `showcaseDemos.ts`, `DealContractScreen.tsx`, `react-i18next`, `config/index.ts`, `DisputeScales.tsx`, `Pressable.tsx`, `useWithdrawFlow.ts`, `DealRatingBars.tsx`, `MediaKitStage.tsx`, `finance/constants/index.ts`, `useCreatorOpportunitiesScreen.ts`, `BrandCampaignAnnouncementsScreen.tsx`, `motion`, `dealContract.ts`, `Pressable`, `App.tsx`, `DealReasonSheet.tsx`, `marketplace/index.ts`, `AudienceSection.tsx`, `constants/opportunities.ts`, `CampaignDetail`, `Sparkline.tsx`, `DealPublishScreen.tsx`, `notification/index.ts`, `GlowOrbs.tsx`, `DiscardSheet.tsx`, `useDealRetention.ts`, `CreatorCampaignDetailScreen.tsx`, `react-native`, `CampaignScopeSwitch.tsx`, `LayoutGalleryDemo.tsx`, `useBrandHomeScreen.ts`, `auth/index.ts`, `i18next`, `Box.tsx`, `CampaignWizardHeader.tsx`, `TierBadge.tsx`, `TideChart.tsx`, `DeckCard.tsx`, `MainTabBar.tsx`, `useDealShipping.ts`, `HueTone`, `MissingStepsRail.tsx`, `InfluencerWelcomeScreen.tsx`, `DealJourney.tsx`, `DealStepper.tsx`, `useOfferDraft.ts`, `useCompanyVerificationScreen.ts`, `useKycScreen.ts`, `SuperList/index.ts`, `ToastCard.tsx`, `ReadinessSection.tsx`, `DocStackArt.tsx`, `DealStageCard.tsx`, `resolveHue`, `ProfileOrbit.tsx`, `DealDecisionDock.tsx`, `useCampaignRequirements.ts`, `Deal`, `DealRatingQuestion.tsx`, `CreatorOrbitScene.tsx`, `Timestamp`, `DealJourneyCard.tsx`, `OpportunityCard.tsx`, `Text.tsx`, `LanguageOptionRow.tsx`, `DealJourneyRail.tsx`, `DealWaybill.tsx`, `PlatformsCarousel.tsx`, `BrandCampaignApplicantsScreen.tsx`, `SuperList.tsx`, `types/campaignDraft.ts`, `react-native-reanimated`, `ListFooterLoader.tsx`, `CampaignAttentionRail.tsx`, `GlassCard.tsx`, `ProgressBar.tsx`, `isolateText`, `useDealDraftReviewScreen.ts`?**
+  _High betweenness centrality (0.132) - this node is a cross-community bridge._
+- **Why does `react-i18next` connect `react-i18next` to `useInfluencerWelcomeScreen.ts`, `useDealPublishScreen.ts`, `useTheme`, `package.json`, `identity/index.ts`, `theme/index.ts`, `money/index.ts`, `useBrandVisibility.ts`, `shared/utils/index.ts`, `useInfluencerRatesScreen.ts`, `CampaignTicket.tsx`, `LayoutListStatesScreen.tsx`, `offerForm.ts`, `constants/campaignStatus.ts`, `CustomInput.tsx`, `auth/store/index.ts`, `WalletNavigator.tsx`, `CampaignSeatCard.tsx`, `usePlatformDetailScreen.ts`, `useCampaignApply.ts`, `formatMoney`, `usePhoneVerifyStep.ts`, `useCampaignWizardScreen.ts`, `MediaKitEscrow.tsx`, `useCampaignBrief.ts`, `NextStepDeck.tsx`, `usePayoutMethodFormScreen.ts`, `StatementScreen.tsx`, `useRateCardEditorScreen.ts`, `navigation/index.ts`, `useDealCancel.ts`, `colors.ts`, `WithdrawAmountParts.tsx`, `ui/index.ts`, `dealStation.ts`, `useTopUpDetailScreen.ts`, `MoneyText.tsx`, `useMediaKitInsightsScreen.ts`, `useFileUploads`, `DealOrbit.tsx`, `campaign.ts`, `useDealDisputeScreen.ts`, `KycScreen.tsx`, `TopUpDetailScreen.tsx`, `MyApplicationsView.tsx`, `useMediaKitSettingsScreen.ts`, `DraftFrame.tsx`, `useMediaKitShare.ts`, `DateRangePicker.tsx`, `react`, `mediaKitShowcase.ts`, `MainTabs.tsx`, `MediaKitStageReach.tsx`, `useDealRating.ts`, `BriefFileSourceTile.tsx`, `MediaKitAudience.tsx`, `moderateScale`, `BrandCampaignsScreen.tsx`, `EscrowTicket.tsx`, `Money`, `useExploreScreen.ts`, `BrandLogo.tsx`, `MediaKitHighlights.tsx`, `Text`, `RateCardEditorScreen.tsx`, `useWithdrawalDetailScreen.ts`, `MediaKitPublicScreen.tsx`, `ProfileScreen.tsx`, `useMediaKitPublicScreen.ts`, `OnboardingScreen/types.ts`, `showcaseDemos.ts`, `DealContractScreen.tsx`, `config/index.ts`, `useBrandCampaignAnnouncementsScreen.ts`, `useWithdrawFlow.ts`, `DealRatingBars.tsx`, `MediaKitStage.tsx`, `finance/constants/index.ts`, `useCreatorOpportunitiesScreen.ts`, `useOfferBuilderScreen.ts`, `BrandCampaignAnnouncementsScreen.tsx`, `motion`, `Pressable`, `App.tsx`, `DealReasonSheet.tsx`, `marketplace/index.ts`, `AudienceSection.tsx`, `constants/opportunities.ts`, `useDealGuideCopy.ts`, `useMediaKitCover.ts`, `CampaignDetail`, `DealPublishScreen.tsx`, `notification/index.ts`, `core/api/index.ts`, `DiscardSheet.tsx`, `SelectionControlsDemo.tsx`, `useDealRetention.ts`, `applyServerFieldErrors`, `CreatorCampaignDetailScreen.tsx`, `react-native`, `CampaignScopeSwitch.tsx`, `LayoutGalleryDemo.tsx`, `useBrandHomeScreen.ts`, `auth/index.ts`, `i18next`, `Box.tsx`, `CampaignWizardHeader.tsx`, `TierBadge.tsx`, `TideChart.tsx`, `DeckCard.tsx`, `useDealShipping.ts`, `HueTone`, `MissingStepsRail.tsx`, `InfluencerWelcomeScreen.tsx`, `DealJourney.tsx`, `DealStepper.tsx`, `useCompanyVerificationScreen.ts`, `useKycScreen.ts`, `VerificationMethodList.tsx`, `ToastCard.tsx`, `ReadinessSection.tsx`, `DocStackArt.tsx`, `DealStageCard.tsx`, `resolveHue`, `ProfileOrbit.tsx`, `useCreatorCardDemo.ts`, `DealDecisionDock.tsx`, `useDealContractScreen.ts`, `useCampaignRequirements.ts`, `Deal`, `DealRatingQuestion.tsx`, `CreatorOrbitScene.tsx`, `Timestamp`, `DealJourneyCard.tsx`, `toast/index.ts`, `OpportunityCard.tsx`, `LanguageOptionRow.tsx`, `DealJourneyRail.tsx`, `DealWaybill.tsx`, `PlatformsCarousel.tsx`, `BrandCampaignApplicantsScreen.tsx`, `useCampaignsList.ts`, `types/campaignDraft.ts`, `ShortlistScreen.tsx`, `dealUploads.ts`, `react-native-reanimated`, `CampaignAttentionRail.tsx`, `useDealDraftReviewScreen.ts`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **What connects `graphify-refresh.sh script`, `DOMAIN_DEEP_IMPORT`, `RN_RAW_UI` to the rest of the system?**
-  _2607 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2634 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.029850746268656716 - nodes in this community are weakly interconnected._
-- **Should `types/campaignDraft.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.08469945355191257 - nodes in this community are weakly interconnected._
-- **Should `useDealPublishScreen.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.05852842809364549 - nodes in this community are weakly interconnected._
+- **Should `utils/campaignDraft.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.09855072463768116 - nodes in this community are weakly interconnected._
+- **Should `useInfluencerWelcomeScreen.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.12554112554112554 - nodes in this community are weakly interconnected._

@@ -4697,6 +4697,62 @@
           "addressSaved": "Address saved"
         }
       },
+      "return": {
+        "copied": "Copied",
+        "card": {
+          "to": "To {{name}}",
+          "you": "You",
+          "brand": "Brand",
+          "courier": "Courier",
+          "trackingNo": "Tracking no.",
+          "handed": "Handed to courier",
+          "link": "Tracking link",
+          "copyTrackingNo": "Copy tracking number",
+          "copyLink": "Copy tracking link",
+          "dueLabel": "Time to enter the waybill",
+          "lateLabel": "Late by",
+          "dueA11y": "How much of the waybill time has passed",
+          "dueBy": "Ends {{date}}",
+          "wasDue": "Was due {{date}}",
+          "lockOwed": "Until you enter it: no applying to public campaigns and no accepting direct offers.",
+          "lockLate": "A strike was recorded. The lock stays until you enter the waybill.",
+          "enter": "Enter the return waybill",
+          "edit": "Edit the waybill",
+          "autoLabel": "Receipt confirms itself",
+          "autoBy": "If the brand doesn't answer by {{date}}",
+          "unlocked": "Your account is unlocked. You can edit the waybill until the brand answers.",
+          "received": "The brand received the sample on {{date}}. All done.",
+          "autoReceived": "The brand didn't answer in time, so receipt was confirmed on {{date}}.",
+          "noteLabel": "Brand's note · {{date}}",
+          "waiveLabel": "Brand's reason · {{date}}",
+          "photoA11y": "Photo {{number}}",
+          "issueLine": "Sada's team is reviewing the case. No automatic strike for you.",
+          "waivedLine": "The sample is yours and your account is unlocked."
+        },
+        "sheet": {
+          "title": "Sample return waybill",
+          "editTitle": "Edit return waybill",
+          "body": "Send the sample back to {{name}}. We only record the details",
+          "due": "Due in {{time}} · {{date}}",
+          "dueLate": "Late by {{time}} · was due {{date}}",
+          "handed": {
+            "label": "When did you hand it to the courier?",
+            "optional": "Optional",
+            "today": "Today",
+            "yesterday": "Yesterday",
+            "earlier": "Another date",
+            "daysAgo_one": "{{count}} day ago",
+            "daysAgo_other": "{{count}} days ago"
+          },
+          "unlockHint": "Saving unlocks your account right away. You can change it until the brand answers.",
+          "save": "Save the waybill",
+          "saveEdit": "Save changes"
+        },
+        "toast": {
+          "saved": "Your account is unlocked",
+          "edited": "Waybill updated"
+        }
+      },
       "changes": {
         "reasonLabel": "Reason",
         "reasonError": "Pick a reason",
@@ -5115,7 +5171,44 @@
         "banner_other": "You have {{count}} active strikes",
         "bannerSoonest": "Soonest: {{when}}",
         "bannerHint": "Opens my strikes",
-        "bannerA11y": "{{title}}, {{when}}"
+        "bannerA11y": "{{title}}, {{when}}",
+        "reasons": {
+          "withdrew": "Withdrew from a running deal",
+          "defaulted": "Missed the delivery",
+          "dispute_lost": "Lost a dispute",
+          "retention_violation": "Removed the post early",
+          "return_overdue": "Late return waybill"
+        }
+      }
+    },
+    "restrictions": {
+      "returnPending": {
+        "title": "Your account is locked for now",
+        "body": "Enter the sample's return waybill to unlock applying and accepting offers",
+        "action": "Enter waybill",
+        "dockAction": "Enter the return waybill"
+      },
+      "ban": {
+        "title": "Public campaigns paused until {{date}}",
+        "titleOpen": "Public campaigns paused",
+        "body": "Direct offers work as usual"
+      },
+      "other": {
+        "title": "Your account is restricted",
+        "body": "Check your strikes to see why"
+      },
+      "unlocked": {
+        "title": "Your account is unlocked",
+        "body": "You can apply and accept offers now"
+      },
+      "dock": {
+        "owed": {
+          "public": "Locked until you enter the return waybill. No applying before it",
+          "direct": "Locked until you enter the return waybill. No accepting offers before it"
+        },
+        "until": "Applying paused until {{date}}",
+        "stopped": "Applying is paused",
+        "why": "Why?"
       }
     },
     "guide": {

@@ -10,6 +10,7 @@ export {
   SUPPORT_WHATSAPP_NUMBER,
   DEFAULT_PHONE_COUNTRY,
   HAPTIC_TAP_MS,
+  HAPTIC_SUCCESS_MS,
 } from './app';
 export type {SupportedLanguage} from './app';
 export {

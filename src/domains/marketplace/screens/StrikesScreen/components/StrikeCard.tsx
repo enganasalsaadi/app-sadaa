@@ -3,7 +3,8 @@ import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Text } from '@/shared/ui';
+import { Box, StatusPill, Text } from '@/shared/ui';
+import { DEAL_STRIKE_REASON_FALLBACK } from '../../../constants/dealStrike';
 import type { DealStrike } from '../../../types';
 import { strikeLife } from '../../../utils/dealCancel';
 
@@ -40,6 +41,8 @@ const StrikeCardComponent: React.FC<StrikeCardProps> = ({ strike, now }) => {
     }),
     [colors.status.warning.main, colors.surface.elevated, share],
   );
+  const reason =
+    strike.reason.label || (strike.reason.key ? t(DEAL_STRIKE_REASON_FALLBACK[strike.reason.key]) : '');
   const date = formatDate(strike.occurredAt, DATE_FORMAT, i18n.language);
   const remaining = t('marketplace.deals.strikes.expiresIn', { count: daysLeft });
   return (
@@ -50,13 +53,24 @@ const StrikeCardComponent: React.FC<StrikeCardProps> = ({ strike, now }) => {
       borderRadius="xl"
       shadow="card"
       accessible
-      accessibilityLabel={t('marketplace.deals.strikes.a11y', { reason: strike.reason.label, date, remaining })}
+      accessibilityLabel={t('marketplace.deals.strikes.a11y', {
+        reason: [reason, strike.severity?.label].filter(Boolean).join(' · '),
+        date,
+        remaining,
+      })}
     >
       <Box row align="center" justify="space-between" gap="md">
-        <Box flex={1}>
+        <Box flex={1} gap="xs">
           <Text variant="bodyMedium" color={colors.text.primary}>
-            {strike.reason.label}
+            {reason}
           </Text>
+          {strike.severity?.label ? (
+            <StatusPill
+              label={strike.severity.label}
+              tone={strike.severity.key === 'severe' ? 'danger' : 'warning'}
+              size="sm"
+            />
+          ) : null}
         </Box>
         <Text variant="caption" color={colors.text.tertiary}>
           {date}

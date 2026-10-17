@@ -16,8 +16,10 @@ import { useDealDrop } from './useDealDrop';
 import { useDealRating } from './useDealRating';
 import { useDealRespond } from './useDealRespond';
 import { useDealRetention } from './useDealRetention';
+import { useDealReturn } from './useDealReturn';
 import { useDealShipping } from './useDealShipping';
 import { useDealUpsells } from './useDealUpsells';
+import { useRestrictions } from './useRestrictions';
 
 type Navigation = DealsStackScreenProps<'DealDetail'>['navigation'];
 
@@ -114,6 +116,9 @@ export const useDealDetail = (
     [hasProduct, role],
   );
 
+  // Only a creator is ever restricted; the lock is on the offer's dock.
+  const restrictions = useRestrictions('direct', role === 'creator');
+
   const respond = useDealRespond(
     role,
     id,
@@ -124,6 +129,7 @@ export const useDealDetail = (
   );
 
   const shipping = useDealShipping(role, id, deal);
+  const returns = useDealReturn(role, id, deal);
 
   const rating = useDealRating(role, id, deal?.rating ?? null);
 
@@ -178,7 +184,9 @@ export const useDealDetail = (
     openCampaign: campaignId === null ? null : openCampaign,
     openGuide,
     respond,
+    restrictions,
     shipping,
+    returns,
     rating,
     cancel,
     briefExit,

@@ -17,3 +17,6 @@ export const DEFAULT_PHONE_COUNTRY: CountryCode = 'SY';
 
 /** Android vibration length for a light tap (ms) — short enough to feel like a click, not a buzz. */
 export const HAPTIC_TAP_MS = 10;
+
+/** Android vibration length for a success beat (a lock opening): a little firmer than a tap. */
+export const HAPTIC_SUCCESS_MS = 24;
