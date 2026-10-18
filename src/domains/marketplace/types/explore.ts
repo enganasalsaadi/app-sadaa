@@ -256,7 +256,7 @@ export interface BrandHome {
   /** Allow-listed WhatsApp link, else `null` (card hidden). */
   supportWhatsappUrl: string | null;
   viewPrices: { allowed: boolean; reason: PriceLockReason | null };
-  /** Public Campaigns flag (contract §1.2): `active_campaigns` is `null` while it is off. */
+  /** Public Campaigns flag (contract §1.2): `active_campaigns` is `null` while it is off, and also for a brand with no active campaign (§6.1), so `false` here is not proof. */
   campaignsEnabled: boolean;
 }
 
