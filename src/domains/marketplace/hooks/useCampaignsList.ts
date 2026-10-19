@@ -2,19 +2,23 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { navigate, type DealsStackScreenProps } from '@/core/navigation';
-import type { SegmentedOption } from '@/shared/ui';
 import { useGetCampaignsInfiniteQuery } from '../api/brandCampaignsApi';
-import { CAMPAIGN_ATTENTION_STATUSES, CAMPAIGN_TAB_DEF, DEFAULT_CAMPAIGN_TAB } from '../constants/campaignList';
-import { CAMPAIGN_TABS } from '../constants/campaignStatus';
-import type { CampaignTab } from '../constants/campaignStatus';
+import {
+  CAMPAIGN_FILTERS,
+  CAMPAIGN_FILTER_DEF,
+  DEFAULT_CAMPAIGN_FILTER,
+  type CampaignFilter,
+} from '../constants/campaignList';
 import type { Campaign, CampaignPage } from '../types';
-import { buildCampaignAttention, waitingApplications } from '../utils/campaignList';
+import type { HubFilterOption } from '../types/hub';
+import { campaignAttentionKind, countCampaignAttention } from '../utils/campaignList';
+import { needsFirst } from '../utils/hubList';
 
 type Navigation = DealsStackScreenProps<'Deals'>['navigation'];
 
-const useTabQuery = (tab: CampaignTab, skip: boolean) =>
+const useFilterQuery = (filter: CampaignFilter, skip: boolean) =>
   useGetCampaignsInfiniteQuery(
-    { statuses: [...CAMPAIGN_TAB_DEF[tab].statuses] },
+    { statuses: [...CAMPAIGN_FILTER_DEF[filter].statuses] },
     { skip, refetchOnMountOrArgChange: 30 },
   );
 
@@ -24,80 +28,79 @@ interface Paged {
 
 const itemsOf = (data: Paged | undefined): Campaign[] => data?.pages.flatMap(page => page.items) ?? [];
 const totalOf = (data: Paged | undefined): number | null => data?.pages[0]?.meta.total ?? null;
+const waitsOnBrand = (campaign: Campaign) => campaignAttentionKind(campaign) !== null;
 
 /**
- * The brand's «My campaigns» (PC2.1): one infinite query per status group. A tab is read only once
- * it has been opened (counts show on the tabs that have loaded, no four-way fetch on entry); the
- * live tab loads first, and a small query of its own reads the campaigns the admin sent back so
- * the «needs your decision» rail is right before the drafts tab was ever opened.
+ * The brand's public campaigns face: one infinite query per status group, all read on entry so
+ * every chip shows its count; «all» is a fifth query read the first time the chip is opened. What
+ * waits on the brand (suspended, a freed seat, edits asked for) comes first and is counted for the
+ * face's badge. `enabled` is false while Public Campaigns are off: nothing is fetched.
  */
-export const useCampaignsList = () => {
+export const useCampaignsList = (enabled: boolean) => {
   const { t } = useTranslation();
   const navigation = useNavigation<Navigation>();
-  const [tab, setTabState] = useState<CampaignTab>(DEFAULT_CAMPAIGN_TAB);
-  const [opened, setOpened] = useState<readonly CampaignTab[]>([DEFAULT_CAMPAIGN_TAB]);
+  const [filter, setFilterState] = useState<CampaignFilter>(DEFAULT_CAMPAIGN_FILTER);
+  const [allOpened, setAllOpened] = useState(DEFAULT_CAMPAIGN_FILTER === 'all');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const drafts = useTabQuery('drafts', !opened.includes('drafts'));
-  const review = useTabQuery('review', !opened.includes('review'));
-  const live = useTabQuery('live', !opened.includes('live'));
-  const finished = useTabQuery('finished', !opened.includes('finished'));
-  const attention = useGetCampaignsInfiniteQuery(
-    { statuses: [...CAMPAIGN_ATTENTION_STATUSES] },
-    { refetchOnMountOrArgChange: 30 },
-  );
+  const live = useFilterQuery('live', !enabled);
+  const review = useFilterQuery('review', !enabled);
+  const drafts = useFilterQuery('drafts', !enabled);
+  const finished = useFilterQuery('finished', !enabled);
+  const all = useFilterQuery('all', !enabled || !allOpened);
 
   const queryOf = useCallback(
-    (key: CampaignTab) => ({ drafts, review, live, finished })[key],
-    [drafts, finished, live, review],
+    (key: CampaignFilter) => ({ all, live, review, drafts, finished })[key],
+    [all, drafts, finished, live, review],
   );
-  const query = queryOf(tab);
-  const campaigns = useMemo(() => itemsOf(query.data), [query.data]);
+  const query = queryOf(filter);
+  const campaigns = useMemo(() => needsFirst(itemsOf(query.data), waitsOnBrand), [query.data]);
 
-  const setTab = useCallback((next: CampaignTab) => {
-    setTabState(next);
-    setOpened(current => (current.includes(next) ? current : [...current, next]));
+  const setFilter = useCallback((next: CampaignFilter) => {
+    setFilterState(next);
+    if (next === 'all') setAllOpened(true);
   }, []);
 
-  const options: SegmentedOption<CampaignTab>[] = useMemo(
-    () =>
-      CAMPAIGN_TABS.map(key => {
-        const total = totalOf(queryOf(key).data);
-        const label = t(CAMPAIGN_TAB_DEF[key].label);
-        return {
-          value: key,
-          label: total ? t('marketplace.deals.tabCount', { label, count: total }) : label,
-        };
-      }),
-    [queryOf, t],
+  const attentionCount = useMemo(
+    () => countCampaignAttention([...itemsOf(live.data), ...itemsOf(drafts.data)]),
+    [drafts.data, live.data],
   );
 
-  const needsYou = useMemo(
-    () => buildCampaignAttention([...itemsOf(live.data), ...itemsOf(attention.data)]),
-    [attention.data, live.data],
-  );
+  const options: HubFilterOption<CampaignFilter>[] = useMemo(() => {
+    const totals = [live, review, drafts, finished].map(group => totalOf(group.data));
+    const everything = totals.every(total => total !== null)
+      ? totals.reduce<number>((sum, total) => sum + (total ?? 0), 0)
+      : 0;
+    return CAMPAIGN_FILTERS.map(key => {
+      const group = key === 'all' ? null : queryOf(key);
+      return {
+        value: key,
+        label: t(CAMPAIGN_FILTER_DEF[key].label),
+        count: group === null ? everything : totalOf(group.data) ?? 0,
+        attention: (key === 'live' || key === 'drafts') && itemsOf(queryOf(key).data).some(waitsOnBrand),
+      };
+    });
+  }, [drafts, finished, live, queryOf, review, t]);
 
-  const total = totalOf(query.data);
-  const liveWaiting = tab === 'live' ? waitingApplications(campaigns, query.hasNextPage ?? false) : null;
-  const draftsTotal = totalOf(drafts.data);
-
-  const draftsRefetch = drafts.refetch;
-  const reviewRefetch = review.refetch;
   const liveRefetch = live.refetch;
+  const reviewRefetch = review.refetch;
+  const draftsRefetch = drafts.refetch;
   const finishedRefetch = finished.refetch;
-  const attentionRefetch = attention.refetch;
+  const allRefetch = all.refetch;
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      const refetchers = { drafts: draftsRefetch, review: reviewRefetch, live: liveRefetch, finished: finishedRefetch };
       await Promise.all([
-        attentionRefetch(),
-        ...opened.map(key => refetchers[key]()),
+        liveRefetch(),
+        reviewRefetch(),
+        draftsRefetch(),
+        finishedRefetch(),
+        ...(allOpened ? [allRefetch()] : []),
       ]);
     } finally {
       setIsRefreshing(false);
     }
-  }, [attentionRefetch, draftsRefetch, finishedRefetch, liveRefetch, opened, reviewRefetch]);
+  }, [allOpened, allRefetch, draftsRefetch, finishedRefetch, liveRefetch, reviewRefetch]);
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = query;
   const onEndReached = useCallback(() => {
@@ -111,16 +114,14 @@ export const useCampaignsList = () => {
   const resumeDraft = useCallback((id: string) => navigate('CampaignWizard', { campaignId: id, source: 'resume' }), []);
   const openNewCampaign = useCallback(() => navigate('CampaignWizard'), []);
 
-  const def = CAMPAIGN_TAB_DEF[tab];
+  const def = CAMPAIGN_FILTER_DEF[filter];
   return {
-    tab,
-    setTab,
+    filter,
+    setFilter,
     options,
     campaigns,
-    needsYou,
-    count: total === null ? null : t(def.count, { count: total }),
-    waitingApplications: liveWaiting,
-    draftsTotal,
+    attentionCount,
+    draftsTotal: totalOf(drafts.data),
     isLoading: !query.data && query.isFetching && !isRefreshing,
     isError: query.isError && !query.data,
     isRefreshing,

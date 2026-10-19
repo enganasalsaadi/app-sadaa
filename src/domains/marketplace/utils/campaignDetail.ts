@@ -76,6 +76,18 @@ export const campaignCountdown = (dueAt: Timestamp, windowMs: number, now: numbe
 export const campaignTermsLocked = ({ status, counters }: Pick<CampaignDetail, 'status' | 'counters'>): boolean =>
   getCampaignStatusMeta(status.key).tab === 'live' && (counters.seatsOccupied > 0 || counters.applicationsOpen > 0);
 
+/** How the terms stand on the page: under the team's review, frozen by an application, still the brand's to change, or past changing. */
+export type CampaignTermsState = 'review' | 'locked' | 'editable' | 'static';
+
+export const campaignTermsState = (campaign: Pick<CampaignDetail, 'status' | 'counters'>): CampaignTermsState => {
+  const status = campaign.status.key;
+  if (status === 'pending_review') return 'review';
+  if (campaignTermsLocked(campaign)) return 'locked';
+  return status === 'draft' || status === 'changes_requested' || status === 'open' || status === 'suspended'
+    ? 'editable'
+    : 'static';
+};
+
 export interface CampaignHistoryEvent {
   id: string;
   /** A note (`from == to`) is an event on the way, not a step of the lifecycle. */

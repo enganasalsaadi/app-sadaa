@@ -1,3 +1,4 @@
+import type { ParseKeys } from 'i18next';
 import type { HueTone } from '@/core/theme';
 import type { ApplicationStatus, CampaignStatus } from '../types';
 
@@ -6,14 +7,28 @@ import type { ApplicationStatus, CampaignStatus } from '../types';
  * only tone and the tab grouping (rule 06). A `Record` map: a new status fails the build until handled.
  */
 
+/** The stations a live campaign passes on its card: reviewed, taking applications, seats filling, running, done. */
+export const CAMPAIGN_STATIONS = ['review', 'apply', 'seats', 'run', 'done'] as const;
+export type CampaignStation = (typeof CAMPAIGN_STATIONS)[number];
+
+export const CAMPAIGN_STATION_LABEL = {
+  review: 'marketplace.campaign.list.station.review',
+  apply: 'marketplace.campaign.list.station.apply',
+  seats: 'marketplace.campaign.list.station.seats',
+  run: 'marketplace.campaign.list.station.run',
+  done: 'marketplace.campaign.list.station.done',
+} as const satisfies Record<CampaignStation, ParseKeys>;
+
 /** Brand "My campaigns" tabs (`GET /brand/campaigns?status[]=…`). */
-export const CAMPAIGN_TABS = ['drafts', 'review', 'live', 'finished'] as const;
+export const CAMPAIGN_TABS = ['live', 'review', 'drafts', 'finished'] as const;
 export type CampaignTab = (typeof CAMPAIGN_TABS)[number];
 
 export interface CampaignStatusMeta {
   /** Rule 08: warning = needs the brand, info = waiting on someone else, teal = moving. */
   tone: HueTone;
   tab: CampaignTab;
+  /** Which station of the card's track the campaign stands on (`CAMPAIGN_STATIONS`); `null` = no track (drafts, finished rows). */
+  station: number | null;
   /** No further transition is possible. */
   final: boolean;
   /** Creators can read it (published at least once); `cancelled` / `removed` are 404 for them. */
@@ -21,23 +36,24 @@ export interface CampaignStatusMeta {
 }
 
 export const CAMPAIGN_STATUS_META = {
-  draft: { tone: 'neutral', tab: 'drafts', final: false, readableByCreator: false },
-  pending_review: { tone: 'info', tab: 'review', final: false, readableByCreator: false },
-  changes_requested: { tone: 'warning', tab: 'drafts', final: false, readableByCreator: false },
-  open: { tone: 'interactive', tab: 'live', final: false, readableByCreator: true },
-  suspended: { tone: 'warning', tab: 'live', final: false, readableByCreator: true },
-  filled: { tone: 'success', tab: 'live', final: false, readableByCreator: true },
-  closed: { tone: 'neutral', tab: 'live', final: false, readableByCreator: true },
-  completed: { tone: 'success', tab: 'finished', final: true, readableByCreator: true },
-  cancelled: { tone: 'neutral', tab: 'finished', final: true, readableByCreator: false },
-  rejected: { tone: 'danger', tab: 'finished', final: true, readableByCreator: false },
-  removed: { tone: 'danger', tab: 'finished', final: true, readableByCreator: false },
+  draft: { tone: 'neutral', tab: 'drafts', station: null, final: false, readableByCreator: false },
+  pending_review: { tone: 'info', tab: 'review', station: 0, final: false, readableByCreator: false },
+  changes_requested: { tone: 'warning', tab: 'drafts', station: null, final: false, readableByCreator: false },
+  open: { tone: 'interactive', tab: 'live', station: 1, final: false, readableByCreator: true },
+  suspended: { tone: 'warning', tab: 'live', station: 1, final: false, readableByCreator: true },
+  filled: { tone: 'success', tab: 'live', station: 3, final: false, readableByCreator: true },
+  closed: { tone: 'neutral', tab: 'live', station: 2, final: false, readableByCreator: true },
+  completed: { tone: 'success', tab: 'finished', station: null, final: true, readableByCreator: true },
+  cancelled: { tone: 'neutral', tab: 'finished', station: null, final: true, readableByCreator: false },
+  rejected: { tone: 'danger', tab: 'finished', station: null, final: true, readableByCreator: false },
+  removed: { tone: 'danger', tab: 'finished', station: null, final: true, readableByCreator: false },
 } as const satisfies Record<CampaignStatus, CampaignStatusMeta>;
 
 /** A status this build doesn't know yet (server ahead of the app). */
 export const UNKNOWN_CAMPAIGN_STATUS_META: CampaignStatusMeta = {
   tone: 'neutral',
   tab: 'live',
+  station: null,
   final: false,
   readableByCreator: false,
 };

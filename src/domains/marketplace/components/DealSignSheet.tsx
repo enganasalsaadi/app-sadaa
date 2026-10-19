@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { FileText } from 'lucide-react-native';
 import type { Money } from '@/core/money';
 import { useTheme } from '@/core/theme';
-import { Pressable, Text } from '@/shared/ui';
+import { Pressable, Text, SheetFrame } from '@/shared/ui';
 import { DealCommitSlip, type DealCommitLine } from './DealCommitSlip';
-import { DealSheetFrame } from './DealSheetFrame';
 import { DealHoldToSign } from './DealHoldToSign';
 
 export interface DealSignSheetProps {
@@ -54,7 +53,7 @@ const DealSignSheetComponent: React.FC<DealSignSheetProps> = ({
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       onDismissed={onDismissed}
@@ -96,7 +95,7 @@ const DealSignSheetComponent: React.FC<DealSignSheetProps> = ({
           </Text>
         </Pressable>
       ) : null}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

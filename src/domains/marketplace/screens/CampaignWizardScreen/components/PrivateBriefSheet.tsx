@@ -2,11 +2,10 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Ban, Hash, Link2, Lock, MessageCircle } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, CustomButton, InlineError, Notice, Text } from '@/shared/ui';
+import { Box, CustomButton, InlineError, Notice, Text, SheetFrame } from '@/shared/ui';
 import { BriefBlock } from '../../../components/brief/BriefBlock';
 import { BriefTemplates } from '../../../components/brief/BriefTemplates';
 import { BriefToneChips } from '../../../components/brief/BriefToneChips';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import { DEAL_BRIEF_LIMITS } from '../../../constants/dealOffer';
 import { useCampaignWizard } from '../CampaignWizardContext';
 import { CampaignBriefFiles } from './CampaignBriefFiles';
@@ -27,7 +26,7 @@ const PrivateBriefSheetComponent: React.FC = () => {
   const count = (size: number) => t('marketplace.offer.brief.count', { count: size, max: DEAL_BRIEF_LIMITS.maxEntries });
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={open}
       onClose={closeSheet}
       title={t('marketplace.campaign.wizard.requirements.brief.sheet.title')}
@@ -93,7 +92,7 @@ const PrivateBriefSheetComponent: React.FC = () => {
       </BriefBlock>
       <CampaignBriefMeasure />
       <CampaignBriefFiles />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

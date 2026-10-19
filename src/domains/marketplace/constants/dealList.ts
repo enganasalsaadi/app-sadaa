@@ -3,8 +3,16 @@ import type { DealStatus } from '../types';
 import { DEAL_STATUS } from '../types';
 import { DEAL_STATUS_META } from './dealStatus';
 
-export const BRAND_DEAL_TABS = ['active', 'drafts', 'closed'] as const;
+/** The brand's status groups: each deal sits in exactly one, and each is its own query. */
+export const BRAND_DEAL_TABS = ['waiting', 'ongoing', 'drafts', 'closed'] as const;
 export type BrandDealTab = (typeof BRAND_DEAL_TABS)[number];
+
+/** The chips of «direct requests»: the groups, plus «all» and «waiting on you» (picked from what is loaded). */
+export const BRAND_DEAL_FILTERS = ['all', 'onYou', ...BRAND_DEAL_TABS] as const;
+export type BrandDealFilter = (typeof BRAND_DEAL_FILTERS)[number];
+
+/** Opens on everything, with what waits on the brand first. */
+export const DEFAULT_BRAND_DEAL_FILTER: BrandDealFilter = 'all';
 
 export const CREATOR_DEAL_TABS = ['new', 'active', 'closed'] as const;
 export type CreatorDealTab = (typeof CREATOR_DEAL_TABS)[number];
@@ -31,25 +39,50 @@ const OPEN_SENT: readonly DealStatus[] = DEAL_STATUS.filter(
 );
 
 export const BRAND_DEAL_TAB_DEF = {
-  active: {
-    statuses: OPEN_SENT,
-    label: 'marketplace.deals.tabs.active',
-    emptyTitle: 'marketplace.deals.empty.brandActive.title',
-    emptyHint: 'marketplace.deals.empty.brandActive.hint',
+  waiting: {
+    statuses: NEW_OFFERS,
+    label: 'marketplace.deals.filters.waiting',
+    emptyTitle: 'marketplace.deals.empty.waiting.title',
+    emptyHint: 'marketplace.deals.empty.waiting.hint',
+  },
+  ongoing: {
+    statuses: OPEN_SENT.filter(status => !NEW_OFFERS.includes(status)),
+    label: 'marketplace.deals.filters.ongoing',
+    emptyTitle: 'marketplace.deals.empty.ongoing.title',
+    emptyHint: 'marketplace.deals.empty.ongoing.hint',
   },
   drafts: {
     statuses: ['draft'],
-    label: 'marketplace.deals.tabs.drafts',
+    label: 'marketplace.deals.filters.drafts',
     emptyTitle: 'marketplace.deals.empty.drafts.title',
     emptyHint: 'marketplace.deals.empty.drafts.hint',
   },
   closed: {
     statuses: CLOSED,
-    label: 'marketplace.deals.tabs.closed',
+    label: 'marketplace.deals.filters.closed',
     emptyTitle: 'marketplace.deals.empty.closed.title',
     emptyHint: 'marketplace.deals.empty.closed.hint',
   },
 } as const satisfies Record<BrandDealTab, DealListTabDef>;
+
+/**
+ * Copy of the two chips that are not a status group. «All» reads every status in one query;
+ * «waiting on you» is worked out client-side from the open groups (a UX hint, rule 06).
+ */
+export const BRAND_DEAL_EXTRA_DEF = {
+  all: {
+    statuses: DEAL_STATUS,
+    label: 'marketplace.deals.filters.all',
+    emptyTitle: 'marketplace.deals.empty.all.title',
+    emptyHint: 'marketplace.deals.empty.all.hint',
+  },
+  onYou: {
+    statuses: OPEN_SENT,
+    label: 'marketplace.deals.filters.onYou',
+    emptyTitle: 'marketplace.deals.empty.onYou.title',
+    emptyHint: 'marketplace.deals.empty.onYou.hint',
+  },
+} as const satisfies Record<Exclude<BrandDealFilter, BrandDealTab>, DealListTabDef>;
 
 export const CREATOR_DEAL_TAB_DEF = {
   new: {

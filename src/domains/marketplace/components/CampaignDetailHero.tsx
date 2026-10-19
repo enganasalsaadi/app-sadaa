@@ -8,14 +8,15 @@ import { CampaignCover } from './CampaignCover';
 import { CampaignDeadlineChip } from './CampaignDeadlineChip';
 import { CampaignGlassPill } from './CampaignGlassPill';
 
-const HERO_HEIGHT = moderateScale(268);
+const HERO_HEIGHT = moderateScale(208);
 
 export interface CampaignDetailHeroProps {
   campaign: CampaignDetail;
 }
 
 /**
- * The campaign page's top: its cover edge to edge under the overlay header, with the status, time
+ * The campaign page's top, kept short so the page's work starts early: its cover edge to edge
+ * under the overlay header (rings on the brand gradient while it has none), with the status, time
  * left to recruit, title and kind laid on it. The body slides over its lower edge.
  */
 const CampaignDetailHeroComponent: React.FC<CampaignDetailHeroProps> = ({ campaign }) => {
@@ -26,14 +27,14 @@ const CampaignDetailHeroComponent: React.FC<CampaignDetailHeroProps> = ({ campai
   const kind = [activityType?.label, pricing.model.label].filter(Boolean).join(' · ');
 
   return (
-    <CampaignCover uri={campaign.cover?.url ?? null} height={HERO_HEIGHT + top}>
+    <CampaignCover uri={campaign.cover?.url ?? null} height={HERO_HEIGHT + top} rings>
       <Box height={top + sizes.iconButton.md} />
       <Box gap="sm" pb="3xl">
         <Box row align="center" gap="sm" wrap>
           <CampaignGlassPill label={status.label} dotColor={resolveHue(colors, tone).main} />
           {status.key === 'open' ? <CampaignDeadlineChip endsAt={campaign.applyDeadlineAt} /> : null}
         </Box>
-        <Text variant="h2" color={colors.text.onBrand} numberOfLines={2}>
+        <Text variant="h3" color={colors.text.onBrand} numberOfLines={2}>
           {campaign.title}
         </Text>
         {kind ? (

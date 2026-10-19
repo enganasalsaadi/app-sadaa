@@ -4,11 +4,10 @@ import type { ParseKeys } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MapPin } from 'lucide-react-native';
 import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
-import { ChipGroup, CustomButton, CustomInput, FormSection, PhoneInput } from '@/shared/ui';
+import { ChipGroup, CustomButton, CustomInput, FormSection, PhoneInput, SheetFrame } from '@/shared/ui';
 import { DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
 import type { DealAddressFormModel } from '../hooks/useDealAddressForm';
 import type { DealAddressFormValues } from '../schemas/dealShippingSchema';
-import { DealSheetFrame } from './DealSheetFrame';
 
 const LIMITS = DEAL_SHIPPING_LIMITS.address;
 const ignoreCountry = () => undefined;
@@ -135,7 +134,7 @@ const DealAddressSheetComponent: React.FC<DealAddressSheetProps> = ({
   const { setFocus } = form;
   const focusCity = useCallback(() => setFocus('city'), [setFocus]);
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       onDismissed={onDismissed}
@@ -200,7 +199,7 @@ const DealAddressSheetComponent: React.FC<DealAddressSheetProps> = ({
       <AddressInput form={form} def={FIELDS.addressLine} />
       <AddressInput form={form} def={FIELDS.landmark} />
       <AddressInput form={form} def={FIELDS.notes} />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

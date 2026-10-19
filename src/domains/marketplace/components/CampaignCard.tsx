@@ -1,19 +1,22 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { PauseCircle, ShieldCheck, Users } from 'lucide-react-native';
-import { iconStroke, moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
-import { Box, Card, MoneyText, Text } from '@/shared/ui';
+import type { Money } from '@/core/money';
+import { iconStroke, useStyles, useTheme } from '@/core/theme';
+import { Box, Card, MoneyText, StatusPill, Text, Timeline, type TimelineStep } from '@/shared/ui';
+import { CAMPAIGN_STATIONS, CAMPAIGN_STATION_LABEL } from '../constants/campaignStatus';
 import type { Campaign } from '../types';
-import { getCampaignStatusMeta } from '../utils/campaignStatus';
 import { campaignAttentionKind } from '../utils/campaignList';
-import { CampaignCover } from './CampaignCover';
-import { CampaignDeadlineChip } from './CampaignDeadlineChip';
-import { CampaignGlassPill } from './CampaignGlassPill';
+import { getCampaignStatusMeta } from '../utils/campaignStatus';
+import { CampaignCaption } from './CampaignCaption';
 import { CampaignRibbon } from './CampaignRibbon';
+import { OpportunityDeliverables } from './OpportunityDeliverables';
 import { SeatPips } from './SeatPips';
 
-const COVER_HEIGHT = moderateScale(132);
+/** Campaign prices are USD: a whole-dollar price reads «$100», not «$100.00». */
+const USD_MINOR_UNITS = 100;
+const priceDigits = (price: Money) => (price.amount % USD_MINOR_UNITS === 0 ? 0 : undefined);
 
 export interface CampaignCardProps {
   campaign: Campaign;
@@ -21,16 +24,16 @@ export interface CampaignCardProps {
 }
 
 /**
- * A running (or in-review) campaign: the cover leads with its status and time left, then the
- * seats as the hero, the applications waiting and the price. A suspension or freed seat adds a
- * ribbon so the brand sees it before opening.
+ * A campaign in review or running, on the same card the deal board uses: title and status, what
+ * it is for (activity · city, seats as dots), what is asked of each creator, then the stations it
+ * passes (reviewed → applications → seats → running → done) with a line saying what the current
+ * one means. A suspension or freed seat adds a strip so the brand sees it before opening.
  */
 const CampaignCardComponent: React.FC<CampaignCardProps> = ({ campaign, onPress }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const styles = useStyles(
-    ({ borderWidths }): Record<'card' | 'divider', ViewStyle> => ({
-      card: { overflow: 'hidden', padding: 0 },
+    ({ borderWidths }): Record<'divider', ViewStyle> => ({
       divider: { borderTopWidth: borderWidths.thin, borderTopColor: colors.border.default },
     }),
     [colors.border.default],
@@ -40,79 +43,110 @@ const CampaignCardComponent: React.FC<CampaignCardProps> = ({ campaign, onPress 
   const attention = campaignAttentionKind(campaign);
   const open = useCallback(() => onPress(id), [id, onPress]);
   const waiting = counters.applicationsOpen;
+  const price = pricing.seatPrice;
+  const hasFooter = price !== null || pricing.bidMax !== null || budgetSecured;
+  const where = [campaign.activityType?.label, campaign.targeting.cities[0]].filter(Boolean).join(' · ');
+  const seatsShown = meta.tab === 'live' && seatsTotal > 0;
+
+  const steps: TimelineStep[] = useMemo(() => {
+    const current = meta.station;
+    if (current === null) return [];
+    return CAMPAIGN_STATIONS.map((station, index) => ({
+      key: station,
+      title: t(CAMPAIGN_STATION_LABEL[station]),
+      state: index < current ? 'done' : index === current ? 'current' : 'upcoming',
+    }));
+  }, [meta.station, t]);
 
   return (
     <Card
       onPress={open}
-      style={styles.card}
+      p="lg"
       accessibilityLabel={t('marketplace.campaign.list.cardA11y', { title: campaign.title, status: status.label })}
     >
-      <CampaignCover uri={campaign.cover?.url ?? null} height={COVER_HEIGHT}>
-        <Box row justify="space-between" align="flex-start" gap="sm">
-          <CampaignGlassPill label={status.label} dotColor={resolveHue(colors, meta.tone).main} />
-          {status.key === 'open' ? <CampaignDeadlineChip endsAt={campaign.applyDeadlineAt} /> : null}
-        </Box>
-        <Text variant="h3" color={colors.text.onBrand} numberOfLines={1}>
-          {campaign.title}
-        </Text>
-      </CampaignCover>
-      {attention === 'suspended' ? (
-        <CampaignRibbon
-          tone="warning"
-          icon={PauseCircle}
-          label={t('marketplace.campaign.list.ribbon.suspended')}
-          action={t('marketplace.campaign.list.ribbon.decide')}
-        />
-      ) : null}
-      {attention === 'seat_freed' ? (
-        <CampaignRibbon
-          tone="interactive"
-          icon={Users}
-          label={t('marketplace.campaign.list.ribbon.seatFreed')}
-          action={t('marketplace.campaign.list.ribbon.decide')}
-        />
-      ) : null}
-      <Box p="lg" gap="md">
-        <Box row align="center" justify="space-between" gap="md">
-          <Box row align="center" gap="md" flex={1}>
-            <SeatPips total={seatsTotal} filled={counters.seatsOccupied} />
-            <Text variant="caption" color={colors.text.secondary}>
-              {t('marketplace.campaign.list.seats', { filled: counters.seatsOccupied, total: seatsTotal })}
+      <Box gap="md">
+        <Box row align="flex-start" justify="space-between" gap="md">
+          <Box flex={1}>
+            <Text variant="title" color={colors.text.primary} numberOfLines={2}>
+              {campaign.title}
             </Text>
           </Box>
-          {waiting > 0 ? (
-            <Box px="md" py="xs" borderRadius="full" bg={colors.interactive.soft}>
-              <Text variant="label" color={colors.interactive.text}>
-                {t('marketplace.campaign.list.applications', { count: waiting })}
-              </Text>
-            </Box>
-          ) : null}
+          <StatusPill label={status.label} tone={meta.tone} size="sm" />
         </Box>
-        <Box row align="center" justify="space-between" gap="sm" pt="md" style={styles.divider}>
-          {pricing.seatPrice ? (
-            <Box row align="baseline" gap="xs">
-              <MoneyText value={pricing.seatPrice} size="sm" tone="money" />
-              <Text variant="caption" color={colors.text.tertiary}>
-                {t('marketplace.campaign.list.perSeat')}
+        {attention === 'suspended' ? (
+          <CampaignRibbon
+            tone="warning"
+            icon={PauseCircle}
+            label={t('marketplace.campaign.list.ribbon.suspended')}
+            action={t('marketplace.campaign.list.ribbon.decide')}
+          />
+        ) : null}
+        {attention === 'seat_freed' ? (
+          <CampaignRibbon
+            tone="interactive"
+            icon={Users}
+            label={t('marketplace.campaign.list.ribbon.seatFreed')}
+            action={t('marketplace.campaign.list.ribbon.decide')}
+          />
+        ) : null}
+        {where || seatsShown ? (
+          <Box row align="center" justify="space-between" gap="md">
+            <Box flex={1}>
+              <Text variant="bodySmall" color={colors.text.secondary} numberOfLines={1}>
+                {where}
               </Text>
             </Box>
-          ) : pricing.bidMax ? (
-            <Box row align="baseline" gap="xs">
-              <Text variant="caption" color={colors.text.tertiary}>
-                {t('marketplace.campaign.list.upTo')}
-              </Text>
-              <MoneyText value={pricing.bidMax} size="sm" tone="money" />
+            {seatsShown ? (
+              <Box row align="center" gap="sm">
+                <SeatPips total={seatsTotal} filled={counters.seatsOccupied} size="dot" />
+                <Text variant="caption" color={colors.text.tertiary}>
+                  {t('marketplace.campaign.list.seatsFilled', { filled: counters.seatsOccupied, total: seatsTotal })}
+                </Text>
+              </Box>
+            ) : null}
+          </Box>
+        ) : null}
+        <OpportunityDeliverables campaign={campaign} />
+        {steps.length > 0 ? <Timeline variant="track" steps={steps} /> : null}
+        <CampaignCaption campaign={campaign} />
+        {hasFooter || waiting > 0 ? (
+          <Box row align="center" justify="space-between" gap="sm" pt="md" style={styles.divider}>
+            {price ? (
+              <Box row align="baseline" gap="xs">
+                <MoneyText value={price} size="md" tone="money" precision={priceDigits(price)} />
+                <Text variant="caption" color={colors.text.tertiary}>
+                  {t('marketplace.campaign.list.perCreator')}
+                </Text>
+              </Box>
+            ) : pricing.bidMax ? (
+              <Box row align="baseline" gap="xs">
+                <Text variant="caption" color={colors.text.tertiary}>
+                  {t('marketplace.campaign.list.upTo')}
+                </Text>
+                <MoneyText value={pricing.bidMax} size="md" tone="money" precision={priceDigits(pricing.bidMax)} />
+              </Box>
+            ) : (
+              <Box />
+            )}
+            <Box row align="center" gap="sm">
+              {waiting > 0 ? (
+                <Box px="md" py="xs" borderRadius="full" bg={colors.status.warning.soft}>
+                  <Text variant="label" color={colors.status.warning.text}>
+                    {t('marketplace.campaign.list.applications', { count: waiting })}
+                  </Text>
+                </Box>
+              ) : null}
+              {budgetSecured ? (
+                <Box row align="center" gap="xs" px="md" py="xs" borderRadius="full" bg={colors.money.soft}>
+                  <ShieldCheck size={sizes.icon.xs} color={colors.money.main} strokeWidth={iconStroke.bold} />
+                  <Text variant="label" color={colors.money.text}>
+                    {t('marketplace.campaign.list.secured')}
+                  </Text>
+                </Box>
+              ) : null}
             </Box>
-          ) : null}
-          {budgetSecured ? (
-            <Box row align="center" gap="xs" px="md" py="xs" borderRadius="full" bg={colors.money.soft}>
-              <ShieldCheck size={sizes.icon.xs} color={colors.money.main} strokeWidth={iconStroke.bold} />
-              <Text variant="label" color={colors.money.text}>
-                {t('marketplace.campaign.list.secured')}
-              </Text>
-            </Box>
-          ) : null}
-        </Box>
+          </Box>
+        ) : null}
       </Box>
     </Card>
   );

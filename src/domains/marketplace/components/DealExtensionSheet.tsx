@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Info } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useStyles, useTheme } from '@/core/theme';
-import { Box, CustomInput, Text } from '@/shared/ui';
+import { Box, CustomInput, Text, SheetFrame } from '@/shared/ui';
 import {
   DEAL_EXTENSION_ANSWER_HOURS,
   DEAL_MAX_EXTENSION_DAYS,
@@ -15,7 +15,6 @@ import type { DealExtensionFormValues } from '../schemas/dealRespondSchema';
 import type { DealExtensionRange } from '../utils/dealRespond';
 import { formatDays, formatDuration } from '../utils/offerDuration';
 import { DealDayRuler } from './DealDayRuler';
-import { DealSheetFrame } from './DealSheetFrame';
 import { DealHoldToSign } from './DealHoldToSign';
 
 export interface DealExtensionSheetProps {
@@ -96,7 +95,7 @@ const DealExtensionSheetComponent: React.FC<DealExtensionSheetProps> = ({
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       onDismissed={onDismissed}
@@ -165,7 +164,7 @@ const DealExtensionSheetComponent: React.FC<DealExtensionSheetProps> = ({
         </Box>
       </Box>
       {children}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

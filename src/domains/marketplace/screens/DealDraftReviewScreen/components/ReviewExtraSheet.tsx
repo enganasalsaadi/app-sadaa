@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Wallet } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, MoneyText, Skeleton, Text } from '@/shared/ui';
+import { Box, CustomButton, MoneyText, Skeleton, Text, SheetFrame } from '@/shared/ui';
 import { DealHoldToSign } from '../../../components/DealHoldToSign';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import type { ExtraQuote } from '../hooks/useDealDraftReviewScreen';
 
 const ROUND_BADGE = moderateScale(52);
@@ -76,7 +75,7 @@ const ReviewExtraSheetComponent: React.FC<ReviewExtraSheetProps> = ({
   const shortfall = ready && !ready.wallet.isSufficient ? ready.wallet.shortfall : null;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.drafts.review.extra.title')}
@@ -154,7 +153,7 @@ const ReviewExtraSheetComponent: React.FC<ReviewExtraSheetProps> = ({
           ) : null}
         </Box>
       ) : null}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

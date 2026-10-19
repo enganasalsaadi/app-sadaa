@@ -13,7 +13,6 @@ import {
   Compass,
   House,
   IdCard,
-  Megaphone,
   MessageCircle,
   Wallet,
   type LucideIcon,
@@ -58,7 +57,7 @@ const MessagesPlaceholder: React.FC = () => {
 /** Same route names for both roles; label, icon and root screen differ. */
 const BRAND_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: BrandHomeNavigator },
-  { name: 'DealsTab', titleKey: 'tabs.campaigns', icon: Megaphone, component: BrandDealsNavigator },
+  { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: BrandDealsNavigator },
   { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: BrandWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.account', icon: CircleUser, component: SettingsNavigator },

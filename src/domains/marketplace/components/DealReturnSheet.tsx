@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Clock, LockOpen, Package } from 'lucide-react-native';
 import { formatDate } from '@/core/i18n';
 import { iconStroke, resolveHue, useTheme } from '@/core/theme';
-import { Box, ChipGroup, CustomButton, CustomInput, FormSection, NumberStepper, Text } from '@/shared/ui';
+import { Box, ChipGroup, CustomButton, CustomInput, FormSection, NumberStepper, Text, SheetFrame } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import {
   DEAL_RETURN_EARLIER_DAYS,
@@ -16,7 +16,6 @@ import { DEAL_COURIER_PRESETS, DEAL_SHIPPING_LIMITS, type DealCourierChoice } fr
 import type { DealReturnModel } from '../hooks/useDealReturn';
 import type { DealReturnFormValues } from '../schemas/dealReturnSchema';
 import type { Deal } from '../types';
-import { DealSheetFrame } from './DealSheetFrame';
 
 const DUE_FORMAT: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
 
@@ -99,7 +98,7 @@ const DealReturnSheetComponent: React.FC<DealReturnSheetProps> = ({ deal, ret })
   const success = resolveHue(colors, 'success');
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={ret.visible}
       onClose={ret.close}
       title={t(editing ? 'marketplace.deals.return.sheet.editTitle' : 'marketplace.deals.return.sheet.title')}
@@ -214,7 +213,7 @@ const DealReturnSheetComponent: React.FC<DealReturnSheetProps> = ({ deal, ret })
           </Box>
         </Box>
       ) : null}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

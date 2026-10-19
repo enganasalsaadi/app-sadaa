@@ -2,13 +2,12 @@ import React, { memo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { LogOut } from 'lucide-react-native';
-import { CustomInput, Notice } from '@/shared/ui';
+import { CustomInput, Notice, SheetFrame } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import { DEAL_RESPOND_LIMITS } from '../constants/dealOffer';
 import type { DealBriefExitModel } from '../hooks/useDealBriefExit';
 import type { Deal } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealBriefExitSheetProps {
   exit: DealBriefExitModel;
@@ -24,7 +23,7 @@ const DealBriefExitSheetComponent: React.FC<DealBriefExitSheetProps> = ({ exit, 
   const { t } = useTranslation();
   const name = isolateText(deal.brand.name ?? '');
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={exit.visible}
       onClose={exit.close}
       title={t('marketplace.deals.briefExit.sheet.title')}
@@ -66,7 +65,7 @@ const DealBriefExitSheetComponent: React.FC<DealBriefExitSheetProps> = ({ exit, 
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

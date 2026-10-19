@@ -1,11 +1,10 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { BottomSheet, Box, CustomButton, NumberStepper, Text } from '@/shared/ui';
+import { Box, CustomButton, NumberStepper, SheetFrame, Text } from '@/shared/ui';
 import { DEAL_OFFER_LIMITS } from '../../../constants/dealOffer';
 import { formatDays } from '../../../utils/offerDuration';
 import { useOfferBuilder } from '../OfferBuilderContext';
-import { SheetTitle } from '../../../components/SheetTitle';
 
 /** A deadline longer than the creator's fastest, in whole days (server cap 90). */
 const DeliveryDaysSheetComponent: React.FC = () => {
@@ -32,34 +31,35 @@ const DeliveryDaysSheetComponent: React.FC = () => {
   const duration = formatDays(t, days);
 
   return (
-    <BottomSheet visible={visible} onClose={closeSheet}>
-      <Box px="xl" pb="2xl" gap="xl">
-        <SheetTitle
-          title={t('marketplace.offer.delivery.sheetTitle')}
-          body={t('marketplace.offer.delivery.sheetBody', {
-            fastest: formatDays(t, quote?.minDeliveryDays ?? 1),
-            max,
-          })}
-        />
-        <Box align="center" gap="md">
-          <NumberStepper
-            value={days}
-            onChange={setDays}
-            min={min}
-            max={max}
-            formatValue={label}
-            accessibilityLabel={t('marketplace.offer.delivery.sheetTitle')}
-          />
-          <Text variant="bodySmall" color={colors.text.secondary}>
-            {t('marketplace.offer.delivery.sheetCaption', { duration })}
-          </Text>
-        </Box>
+    <SheetFrame
+      visible={visible}
+      onClose={closeSheet}
+      title={t('marketplace.offer.delivery.sheetTitle')}
+      body={t('marketplace.offer.delivery.sheetBody', {
+        fastest: formatDays(t, quote?.minDeliveryDays ?? 1),
+        max,
+      })}
+      footer={
         <Box gap="sm">
           <CustomButton title={t('marketplace.offer.delivery.apply', { duration })} size="lg" fullWidth onPress={apply} />
           <CustomButton title={t('marketplace.offer.delivery.cancel')} variant="ghost" fullWidth onPress={closeSheet} />
         </Box>
+      }
+    >
+      <Box align="center" gap="md">
+        <NumberStepper
+          value={days}
+          onChange={setDays}
+          min={min}
+          max={max}
+          formatValue={label}
+          accessibilityLabel={t('marketplace.offer.delivery.sheetTitle')}
+        />
+        <Text variant="bodySmall" color={colors.text.secondary}>
+          {t('marketplace.offer.delivery.sheetCaption', { duration })}
+        </Text>
       </Box>
-    </BottomSheet>
+    </SheetFrame>
   );
 };
 

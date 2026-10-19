@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { CircleStop, X } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
-import { Box, Card, KeyValueRow, Text } from '@/shared/ui';
+import { Box, Card, KeyValueRow, Text, SheetFrame } from '@/shared/ui';
 import { DealHoldToSign } from '../../../components/DealHoldToSign';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import type { CampaignDetail } from '../../../types/campaign';
 import type { CampaignLifecycleModel } from '../hooks/useCampaignLifecycle';
 
@@ -27,7 +26,7 @@ const CampaignEndSheetComponent: React.FC<CampaignEndSheetProps> = ({ campaign, 
   const { seatsOccupied, applicationsOpen } = campaign.counters;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={endVisible}
       onClose={close}
       title={t(closing ? 'marketplace.campaign.detail.end.closeTitle' : 'marketplace.campaign.detail.end.cancelTitle')}
@@ -59,7 +58,7 @@ const CampaignEndSheetComponent: React.FC<CampaignEndSheetProps> = ({ campaign, 
       <Text variant="bodySmall" color={colors.text.secondary}>
         {t(closing ? 'marketplace.campaign.detail.end.closeNote' : 'marketplace.campaign.detail.end.cancelNote')}
       </Text>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

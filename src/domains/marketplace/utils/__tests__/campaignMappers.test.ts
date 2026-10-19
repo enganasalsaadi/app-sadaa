@@ -159,6 +159,18 @@ describe('mapCampaignQuote', () => {
     expect(q.feeBps).toBe(1000);
   });
 
+  it('reads a wallet with nothing to hold yet (null amounts) as covered', () => {
+    const q = mapCampaignQuote(
+      quote({ wallet: { balance_usd: '300.00', required_usd: null, shortfall_usd: null, is_sufficient: null } }),
+    );
+    expect(q.wallet).toEqual({
+      balance: usd(30000),
+      required: usd(0),
+      shortfall: usd(0),
+      isSufficient: true,
+    });
+  });
+
   it('keeps nulls until the pricing is set', () => {
     const q = mapCampaignQuote(
       quote({ pricing_model: null, seat: { min: null, max: null }, total_gross_usd: { min: null, max: null } }),

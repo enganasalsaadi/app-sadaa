@@ -4,6 +4,7 @@ import {
   campaignHistoryEvents,
   campaignIsland,
   campaignTermsLocked,
+  campaignTermsState,
 } from '../campaignDetail';
 import { detailDto, historyRowDto, label } from '../__fixtures__/campaignDto';
 
@@ -86,6 +87,27 @@ describe('campaignTermsLocked', () => {
 
   it('leaves a draft editable whatever its counters say', () => {
     expect(campaignTermsLocked(calm({ status: label('draft') }))).toBe(false);
+  });
+});
+
+describe('campaignTermsState', () => {
+  const counters = (applications: number, seats: number) => ({ applications_open: applications, seats_occupied: seats });
+  const state = (status: string, c = counters(0, 0)) => campaignTermsState(calm({ status: label(status), counters: c }));
+
+  it('holds the terms fixed while the team reviews, and frozen once somebody applied', () => {
+    expect(state('pending_review')).toBe('review');
+    expect(state('open', counters(2, 0))).toBe('locked');
+    expect(state('filled', counters(0, 3))).toBe('locked');
+  });
+
+  it('lets the brand change them until then', () => {
+    ['draft', 'changes_requested', 'open', 'suspended'].forEach(status => expect(state(status)).toBe('editable'));
+  });
+
+  it('shows no chip for a campaign past changing', () => {
+    ['closed', 'completed', 'cancelled', 'rejected', 'removed', 'brand_new'].forEach(status =>
+      expect(state(status)).toBe('static'),
+    );
   });
 });
 

@@ -1,14 +1,13 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PackageCheck } from 'lucide-react-native';
-import { Box, Notice } from '@/shared/ui';
+import { Box, Notice, SheetFrame } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import type { DealReturnModel } from '../hooks/useDealReturn';
 import type { DealReturnAnswerModel } from '../hooks/useDealReturnAnswer';
 import type { Deal } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
 import { ReturnFact, useReturnDate } from './DealReturnParts';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealReturnReceiveSheetProps {
   deal: Deal;
@@ -26,7 +25,7 @@ const DealReturnReceiveSheetComponent: React.FC<DealReturnReceiveSheetProps> = (
   const { ship } = ret;
   const creator = isolateText(deal.creator.name ?? '');
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={answer.sheet === 'receive'}
       onClose={answer.close}
       title={t('marketplace.deals.return.answer.receive.title')}
@@ -71,7 +70,7 @@ const DealReturnReceiveSheetComponent: React.FC<DealReturnReceiveSheetProps> = (
         title={t('marketplace.deals.return.answer.receive.finalTitle')}
         message={t('marketplace.deals.return.answer.receive.finalBody')}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

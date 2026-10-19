@@ -2,9 +2,8 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
-import { Box, Card, CustomButton, Notice, NumberStepper, Text } from '@/shared/ui';
+import { Box, Card, CustomButton, Notice, NumberStepper, Text, SheetFrame } from '@/shared/ui';
 import { CampaignCalendar } from '../../../components/CampaignCalendar';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import { SeatPips } from '../../../components/SeatPips';
 import type { CampaignDetail } from '../../../types/campaign';
 import { formatCampaignDate } from '../../../utils/campaignSchedule';
@@ -29,7 +28,7 @@ const CampaignAddSeatsSheetComponent: React.FC<CampaignAddSeatsSheetProps> = ({ 
   const noDate = needsDeadline && deadlineWindow === null;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={seatsVisible}
       onClose={close}
       title={t('marketplace.campaign.detail.addSeats.title')}
@@ -87,7 +86,7 @@ const CampaignAddSeatsSheetComponent: React.FC<CampaignAddSeatsSheetProps> = ({ 
           </Box>
         ) : null
       ) : null}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

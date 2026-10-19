@@ -11,6 +11,7 @@ import {
   GalleryModal,
   Notice,
   Text,
+  SheetFrame,
 } from '@/shared/ui';
 import {
   DEAL_RETENTION_LIMITS,
@@ -22,7 +23,6 @@ import type { RetentionShotsModel } from '../hooks/useRetentionShots';
 import type { Deal } from '../types';
 import { DealProofShots } from './DealProofShots';
 import { DealReasonTiles } from './DealReasonTiles';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealRetentionSheetsProps {
   deal: Deal;
@@ -54,7 +54,7 @@ const ReportSheet = memo<DealRetentionSheetsProps>(({ deal, retention }) => {
   const { report } = retention;
   const item = deal.items.find(entry => entry.id === report.itemId);
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={report.visible}
       onClose={report.close}
       onDismissed={retention.onDismissed}
@@ -125,7 +125,7 @@ const ReportSheet = memo<DealRetentionSheetsProps>(({ deal, retention }) => {
         shots={report.shots}
         hint={t('marketplace.deals.retention.report.shotsHint')}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 });
 
@@ -135,7 +135,7 @@ const RestoreSheet = memo<DealRetentionSheetsProps>(({ retention }) => {
   const { colors, sizes } = useTheme();
   const { restore } = retention;
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={restore.visible}
       onClose={restore.close}
       onDismissed={retention.onDismissed}
@@ -197,7 +197,7 @@ const RestoreSheet = memo<DealRetentionSheetsProps>(({ retention }) => {
         shots={restore.shots}
         hint={t('marketplace.deals.retention.restore.shotsHint')}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 });
 
@@ -207,7 +207,7 @@ const NoteSheet = memo<DealRetentionSheetsProps>(({ retention }) => {
   const { note } = retention;
   const brand = retention.role === 'brand';
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={note.visible}
       onClose={note.close}
       onDismissed={retention.onDismissed}
@@ -269,7 +269,7 @@ const NoteSheet = memo<DealRetentionSheetsProps>(({ retention }) => {
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 });
 

@@ -3,12 +3,11 @@ import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CircleQuestionMark, LogOut } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, Notice, Pressable, Text } from '@/shared/ui';
+import { Box, CustomButton, Notice, Pressable, Text, SheetFrame } from '@/shared/ui';
 import type { DealCancelModel } from '../hooks/useDealCancel';
 import type { Deal } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
 import { DealReasonFields } from './DealReasonFields';
-import { DealSheetFrame } from './DealSheetFrame';
 
 /** Enough pips to read as a tally; the count in the sentence is the exact figure. */
 const MAX_PIPS = 6;
@@ -85,7 +84,7 @@ const DealWithdrawSheetComponent: React.FC<DealWithdrawSheetProps> = ({ cancel, 
   );
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={cancel.visible}
       onClose={cancel.close}
       onDismissed={cancel.onDismissed}
@@ -136,7 +135,7 @@ const DealWithdrawSheetComponent: React.FC<DealWithdrawSheetProps> = ({ cancel, 
           <DealReasonFields control={cancel.control} reasons={cancel.reasons} defs={cancel.reasonDefs} />
         </>
       )}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

@@ -3,17 +3,20 @@ import { StyleSheet, type ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, GradientSurface, Image } from '@/shared/ui';
+import { CampaignCoverRings } from './CampaignCoverRings';
 
 export interface CampaignCoverProps {
   /** The signed cover link; `null` while it has no cover (or the link was purged). */
   uri: string | null;
   height: number;
+  /** Without a photo, draw the page's rings on the gradient instead of leaving it plain. */
+  rings?: boolean;
   /** Laid over the photo: first child top, second child bottom. */
   children?: React.ReactNode;
 }
 
 /** A campaign's cover, edge to edge: the photo (or the brand gradient) under a scrim so white type reads on any image. */
-const CampaignCoverComponent: React.FC<CampaignCoverProps> = ({ uri, height, children }) => {
+const CampaignCoverComponent: React.FC<CampaignCoverProps> = ({ uri, height, rings = false, children }) => {
   const { colors } = useTheme();
   const styles = useStyles(
     ({ spacing }): Record<'frame' | 'overlay', ViewStyle> => ({
@@ -34,7 +37,14 @@ const CampaignCoverComponent: React.FC<CampaignCoverProps> = ({ uri, height, chi
 
   return (
     <Box style={styles.frame}>
-      {uri ? <Image uri={uri} width="100%" height="100%" /> : <GradientSurface variant="brand" style={StyleSheet.absoluteFill} />}
+      {uri ? (
+        <Image uri={uri} width="100%" height="100%" />
+      ) : (
+        <>
+          <GradientSurface variant="brand" style={StyleSheet.absoluteFill} />
+          {rings ? <CampaignCoverRings /> : null}
+        </>
+      )}
       <LinearGradient
         colors={mediaTopShade.colors}
         locations={mediaTopShade.locations}

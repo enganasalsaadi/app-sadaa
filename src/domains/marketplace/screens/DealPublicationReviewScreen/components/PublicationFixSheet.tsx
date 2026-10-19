@@ -4,8 +4,7 @@ import { Controller, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, Pressable, Text } from '@/shared/ui';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
+import { Box, CustomButton, CustomInput, Pressable, Text, SheetFrame } from '@/shared/ui';
 import { DEAL_FIX_CHIPS, DEAL_PUBLISH_LIMITS } from '../../../constants/dealPublish';
 import type { DealFixFormValues } from '../../../schemas/dealPublishSchema';
 import type { DealFixCount } from '../../../utils/dealPublish';
@@ -97,7 +96,7 @@ const PublicationFixSheetComponent: React.FC<PublicationFixSheetProps> = ({
   const last = fixes.remaining <= 1;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.publish.fix.title')}
@@ -144,7 +143,7 @@ const PublicationFixSheetComponent: React.FC<PublicationFixSheetProps> = ({
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

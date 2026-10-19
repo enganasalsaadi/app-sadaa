@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { Box, CustomButton, Notice, Text } from '@/shared/ui';
+import { Box, CustomButton, Notice, Text, SheetFrame } from '@/shared/ui';
 import { CampaignCalendar } from '../../../components/CampaignCalendar';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import { formatCampaignDate } from '../../../utils/campaignSchedule';
 import type { CampaignLifecycleModel } from '../hooks/useCampaignLifecycle';
 
@@ -24,7 +23,7 @@ const CampaignReopenSheetComponent: React.FC<CampaignReopenSheetProps> = ({ life
   const suspended = reopenPath === 'reopen';
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={reopenVisible}
       onClose={close}
       title={t(suspended ? 'marketplace.campaign.detail.reopen.title' : 'marketplace.campaign.detail.reopen.seatTitle')}
@@ -59,7 +58,7 @@ const CampaignReopenSheetComponent: React.FC<CampaignReopenSheetProps> = ({ life
       ) : (
         <Notice tone="warning" message={t('marketplace.campaign.detail.deadlineSheet.none')} />
       )}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

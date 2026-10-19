@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useRef } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
-import { BottomSheet, ListGroup, ListRow, Pressable, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { ListGroup, ListRow, Pressable, SheetFrame, Text } from '@/shared/ui';
 import { channelCurrenciesKey } from '../constants/paymentChannels';
 import type { PayoutMethodView } from '../utils/payoutMethodView';
 
@@ -50,9 +49,6 @@ const WithdrawMethodSheetComponent: React.FC<WithdrawMethodSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const styles = useStyles(({ spacing }) => ({
-    content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl, gap: spacing.lg },
-  }));
   const adding = useRef(false);
 
   const choose = useCallback(
@@ -75,33 +71,33 @@ const WithdrawMethodSheetComponent: React.FC<WithdrawMethodSheetProps> = ({
   }, [onAdd]);
 
   return (
-    <BottomSheet visible={visible} onClose={onClose} onDismissed={onDismissed}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text variant="h4" accessibilityRole="header">
-          {t('finance.withdraw.methodSheet.title')}
+    <SheetFrame
+      visible={visible}
+      onClose={onClose}
+      onDismissed={onDismissed}
+      title={t('finance.withdraw.methodSheet.title')}
+    >
+      <ListGroup>
+        {views.map(view => (
+          <MethodOption key={view.id} view={view} selected={view.id === selectedId} onChoose={choose} />
+        ))}
+      </ListGroup>
+      <Pressable
+        onPress={add}
+        row
+        align="center"
+        justify="center"
+        gap="xs"
+        minHeight={sizes.button.md}
+        accessibilityRole="button"
+        accessibilityLabel={t('finance.withdraw.methodSheet.add')}
+      >
+        <Plus size={sizes.icon.sm} color={colors.interactive.main} />
+        <Text variant="bodyMedium" color={colors.interactive.text}>
+          {t('finance.withdraw.methodSheet.add')}
         </Text>
-        <ListGroup>
-          {views.map(view => (
-            <MethodOption key={view.id} view={view} selected={view.id === selectedId} onChoose={choose} />
-          ))}
-        </ListGroup>
-        <Pressable
-          onPress={add}
-          row
-          align="center"
-          justify="center"
-          gap="xs"
-          minHeight={sizes.button.md}
-          accessibilityRole="button"
-          accessibilityLabel={t('finance.withdraw.methodSheet.add')}
-        >
-          <Plus size={sizes.icon.sm} color={colors.interactive.main} />
-          <Text variant="bodyMedium" color={colors.interactive.text}>
-            {t('finance.withdraw.methodSheet.add')}
-          </Text>
-        </Pressable>
-      </ScrollView>
-    </BottomSheet>
+      </Pressable>
+    </SheetFrame>
   );
 };
 

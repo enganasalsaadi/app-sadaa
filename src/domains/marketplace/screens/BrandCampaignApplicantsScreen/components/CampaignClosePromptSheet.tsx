@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Lock, Wallet } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import { iconStroke, useTheme } from '@/core/theme';
-import { Box, CustomButton, MoneyText, ProgressBar, Text } from '@/shared/ui';
+import { Box, CustomButton, MoneyText, ProgressBar, Text, SheetFrame } from '@/shared/ui';
 import { DealHoldToSign } from '../../../components/DealHoldToSign';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import type { RecruitingClosePrompt } from '../hooks/useRecruitingClosePrompt';
 
 export interface CampaignClosePromptSheetProps {
@@ -25,7 +24,7 @@ const CampaignClosePromptSheetComponent: React.FC<CampaignClosePromptSheetProps>
   const { balance, required, shortfall } = recruiting.wallet;
   const covered = required.amount > 0 ? Math.min(1, Math.max(0, balance.amount / required.amount)) : 1;
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={prompt.visible}
       onClose={prompt.keep}
       onDismissed={prompt.onDismissed}
@@ -74,7 +73,7 @@ const CampaignClosePromptSheetComponent: React.FC<CampaignClosePromptSheetProps>
       <Text variant="caption" color={colors.text.secondary}>
         {t('marketplace.campaign.applicants.closePrompt.fine')}
       </Text>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

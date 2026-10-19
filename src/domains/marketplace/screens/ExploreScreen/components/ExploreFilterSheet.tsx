@@ -1,10 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react-native';
-import { useStyles, useTheme } from '@/core/theme';
+import { useTheme } from '@/core/theme';
 import {
-  BottomSheet,
   Box,
   Checkbox,
   ChipGroup,
@@ -13,6 +11,7 @@ import {
   FormSection,
   Notice,
   Pressable,
+  SheetFrame,
   Text,
 } from '@/shared/ui';
 import type { ExploreFilterOptions, ExploreFilters } from '../../../types/explore';
@@ -129,10 +128,6 @@ const ExploreFilterSheetComponent: React.FC<ExploreFilterSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const styles = useStyles(({ spacing }) => ({
-    scroll: { flexGrow: 0, flexShrink: 1 },
-    content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: spacing['2xl'] },
-  }));
   const { draft, setList, setText, setFlag, toggleDelivery, reset, allNiches, showAllNiches } =
     useExploreFilterDraft(filters, visible);
   const apply = useCallback(() => onApply(draft), [draft, onApply]);
@@ -142,11 +137,13 @@ const ExploreFilterSheetComponent: React.FC<ExploreFilterSheetProps> = ({
   const loading = optionsLoading && !options;
 
   return (
-    <BottomSheet visible={visible} onClose={onClose} onDismissed={onDismissed}>
-      <Box row align="center" justify="space-between" px="lg" pb="sm">
-        <Text variant="h4" accessibilityRole="header">
-          {t('marketplace.explore.filterSheet.title')}
-        </Text>
+    <SheetFrame
+      visible={visible}
+      onClose={onClose}
+      onDismissed={onDismissed}
+      title={t('marketplace.explore.filterSheet.title')}
+      gap="2xl"
+      action={
         <Pressable
           onPress={reset}
           minHeight={sizes.button.md}
@@ -159,132 +156,127 @@ const ExploreFilterSheetComponent: React.FC<ExploreFilterSheetProps> = ({
             {t('marketplace.explore.filterSheet.reset')}
           </Text>
         </Pressable>
-      </Box>
-
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {optionsError ? (
-          <Notice
-            tone="danger"
-            message={t('marketplace.explore.filterSheet.optionsFailed')}
-            action={{ label: t('common.retry'), onPress: onRetryOptions }}
-          />
+      }
+      footer={<CustomButton title={t('marketplace.explore.filterSheet.apply')} onPress={apply} fullWidth />}
+    >
+      {optionsError ? (
+        <Notice
+          tone="danger"
+          message={t('marketplace.explore.filterSheet.optionsFailed')}
+          action={{ label: t('common.retry'), onPress: onRetryOptions }}
+        />
+      ) : null}
+      <ListSection
+        title={t('marketplace.explore.filterSheet.governorate')}
+        field="governorate"
+        items={options?.governorates ?? []}
+        value={draft.governorate}
+        loading={loading}
+        onChange={setList}
+      />
+      <ListSection
+        title={t('marketplace.explore.filterSheet.platform')}
+        field="platform"
+        items={options?.platforms ?? []}
+        value={draft.platform}
+        loading={loading}
+        onChange={setList}
+      />
+      <Box gap="sm">
+        <ListSection
+          title={t('marketplace.explore.filterSheet.niche')}
+          field="niche"
+          items={visibleNiches}
+          value={draft.niche}
+          loading={loading}
+          onChange={setList}
+        />
+        {!allNiches && niches.length > NICHES_PREVIEW ? (
+          <Pressable
+            onPress={showAllNiches}
+            minHeight={sizes.button.md}
+            justify="center"
+            alignSelf="flex-start"
+            accessibilityRole="button"
+          >
+            <Text variant="bodyMedium" color={colors.interactive.text}>
+              {t('marketplace.explore.filterSheet.moreNiches', { count: niches.length - NICHES_PREVIEW })}
+            </Text>
+          </Pressable>
         ) : null}
-        <ListSection
-          title={t('marketplace.explore.filterSheet.governorate')}
-          field="governorate"
-          items={options?.governorates ?? []}
-          value={draft.governorate}
-          loading={loading}
-          onChange={setList}
+      </Box>
+      <ListSection
+        title={t('marketplace.explore.filterSheet.tier')}
+        field="tier"
+        items={options?.tiers ?? []}
+        value={draft.tier}
+        loading={loading}
+        onChange={setList}
+      />
+      <FormSection title={t('marketplace.explore.filterSheet.followers')}>
+        <RangeInputs
+          minField="minFollowers"
+          maxField="maxFollowers"
+          min={draft.minFollowers}
+          max={draft.maxFollowers}
+          maxLength={FOLLOWERS_MAX_LENGTH}
+          editable
+          onChange={setText}
         />
-        <ListSection
-          title={t('marketplace.explore.filterSheet.platform')}
-          field="platform"
-          items={options?.platforms ?? []}
-          value={draft.platform}
+      </FormSection>
+      <FormSection title={t('marketplace.explore.filterSheet.delivery')}>
+        <ChipGroup
+          items={options?.deliveryBuckets ?? []}
+          value={draft.maxDeliveryDays}
+          onChange={toggleDelivery}
           loading={loading}
-          onChange={setList}
+          accessibilityLabel={t('marketplace.explore.filterSheet.delivery')}
         />
+      </FormSection>
+      <FormSection title={t('marketplace.explore.filterSheet.more')}>
         <Box gap="sm">
-          <ListSection
-            title={t('marketplace.explore.filterSheet.niche')}
-            field="niche"
-            items={visibleNiches}
-            value={draft.niche}
-            loading={loading}
-            onChange={setList}
+          <FlagBox field="kycVerified" label={t('marketplace.explore.filterSheet.kycVerified')} checked={draft.kycVerified} onChange={setFlag} />
+          <FlagBox
+            field="followersVerified"
+            label={t('marketplace.explore.filterSheet.followersVerified')}
+            checked={draft.followersVerified}
+            onChange={setFlag}
           />
-          {!allNiches && niches.length > NICHES_PREVIEW ? (
-            <Pressable
-              onPress={showAllNiches}
-              minHeight={sizes.button.md}
-              justify="center"
-              alignSelf="flex-start"
-              accessibilityRole="button"
-            >
-              <Text variant="bodyMedium" color={colors.interactive.text}>
-                {t('marketplace.explore.filterSheet.moreNiches', { count: niches.length - NICHES_PREVIEW })}
-              </Text>
-            </Pressable>
-          ) : null}
+          <FlagBox field="rush" label={t('marketplace.explore.filterSheet.rush')} checked={draft.rush} onChange={setFlag} />
+          <FlagBox field="onSite" label={t('marketplace.explore.filterSheet.onSite')} checked={draft.onSite} onChange={setFlag} />
         </Box>
-        <ListSection
-          title={t('marketplace.explore.filterSheet.tier')}
-          field="tier"
-          items={options?.tiers ?? []}
-          value={draft.tier}
-          loading={loading}
-          onChange={setList}
-        />
-        <FormSection title={t('marketplace.explore.filterSheet.followers')}>
+      </FormSection>
+      <Pressable
+        onPress={priceLocked ? onLocked : undefined}
+        disabled={!priceLocked}
+        accessible={priceLocked}
+        accessibilityRole={priceLocked ? 'button' : undefined}
+        accessibilityLabel={priceLocked ? t('marketplace.explore.filterSheet.priceLockedA11y') : undefined}
+      >
+        <Box pointerEvents={priceLocked ? 'none' : 'auto'} gap="md">
+          <Box row align="center" gap="xs">
+            {priceLocked ? <Lock size={sizes.icon.sm} color={colors.icon.secondary} /> : null}
+            <Text variant="label">{t('marketplace.explore.filterSheet.price')}</Text>
+          </Box>
           <RangeInputs
-            minField="minFollowers"
-            maxField="maxFollowers"
-            min={draft.minFollowers}
-            max={draft.maxFollowers}
-            maxLength={FOLLOWERS_MAX_LENGTH}
-            editable
+            minField="priceMin"
+            maxField="priceMax"
+            min={draft.priceMin}
+            max={draft.priceMax}
+            maxLength={PRICE_MAX_LENGTH}
+            editable={!priceLocked}
             onChange={setText}
           />
-        </FormSection>
-        <FormSection title={t('marketplace.explore.filterSheet.delivery')}>
-          <ChipGroup
-            items={options?.deliveryBuckets ?? []}
-            value={draft.maxDeliveryDays}
-            onChange={toggleDelivery}
-            loading={loading}
-            accessibilityLabel={t('marketplace.explore.filterSheet.delivery')}
+          <FlagBox
+            field="withinBudget"
+            label={t('marketplace.explore.filterSheet.withinBudget')}
+            checked={draft.withinBudget}
+            disabled={priceLocked}
+            onChange={setFlag}
           />
-        </FormSection>
-        <FormSection title={t('marketplace.explore.filterSheet.more')}>
-          <Box gap="sm">
-            <FlagBox field="kycVerified" label={t('marketplace.explore.filterSheet.kycVerified')} checked={draft.kycVerified} onChange={setFlag} />
-            <FlagBox
-              field="followersVerified"
-              label={t('marketplace.explore.filterSheet.followersVerified')}
-              checked={draft.followersVerified}
-              onChange={setFlag}
-            />
-            <FlagBox field="rush" label={t('marketplace.explore.filterSheet.rush')} checked={draft.rush} onChange={setFlag} />
-            <FlagBox field="onSite" label={t('marketplace.explore.filterSheet.onSite')} checked={draft.onSite} onChange={setFlag} />
-          </Box>
-        </FormSection>
-        <Pressable
-          onPress={priceLocked ? onLocked : undefined}
-          disabled={!priceLocked}
-          accessible={priceLocked}
-          accessibilityRole={priceLocked ? 'button' : undefined}
-          accessibilityLabel={priceLocked ? t('marketplace.explore.filterSheet.priceLockedA11y') : undefined}
-        >
-          <Box pointerEvents={priceLocked ? 'none' : 'auto'} gap="md">
-            <Box row align="center" gap="xs">
-              {priceLocked ? <Lock size={sizes.icon.sm} color={colors.icon.secondary} /> : null}
-              <Text variant="label">{t('marketplace.explore.filterSheet.price')}</Text>
-            </Box>
-            <RangeInputs
-              minField="priceMin"
-              maxField="priceMax"
-              min={draft.priceMin}
-              max={draft.priceMax}
-              maxLength={PRICE_MAX_LENGTH}
-              editable={!priceLocked}
-              onChange={setText}
-            />
-            <FlagBox
-              field="withinBudget"
-              label={t('marketplace.explore.filterSheet.withinBudget')}
-              checked={draft.withinBudget}
-              disabled={priceLocked}
-              onChange={setFlag}
-            />
-          </Box>
-        </Pressable>
-      </ScrollView>
-
-      <Box px="lg" pt="md" pb="lg">
-        <CustomButton title={t('marketplace.explore.filterSheet.apply')} onPress={apply} fullWidth />
-      </Box>
-    </BottomSheet>
+        </Box>
+      </Pressable>
+    </SheetFrame>
   );
 };
 

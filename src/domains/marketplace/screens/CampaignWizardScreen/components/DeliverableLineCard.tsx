@@ -48,7 +48,7 @@ const DeliverableLineCardComponent: React.FC<DeliverableLineCardProps> = ({
   const styles = useStyles(
     ({ borderWidths, radii, spacing }): Record<'card' | 'mark', ViewStyle> => ({
       card: {
-        gap: spacing.md,
+        gap: spacing.xl,
         padding: spacing.lg,
         borderRadius: radii.xl,
         borderWidth: borderWidths.thin,
@@ -97,8 +97,8 @@ const DeliverableLineCardComponent: React.FC<DeliverableLineCardProps> = ({
           })}
         />
       </Box>
-      <Box row gap="lg">
-        <Box flex={1} gap="xs">
+      <Box gap="xl">
+        <Box gap="xs" row justify='space-between' align="center" >
           <Text variant="caption" color={colors.text.secondary}>
             {t('marketplace.campaign.wizard.requirements.deliverables.count')}
           </Text>
@@ -110,7 +110,7 @@ const DeliverableLineCardComponent: React.FC<DeliverableLineCardProps> = ({
             accessibilityLabel={t('marketplace.campaign.wizard.requirements.deliverables.count')}
           />
         </Box>
-        <Box flex={1} gap="xs">
+        <Box gap="xs" row justify='space-between' align="center">
           <Text variant="caption" color={colors.text.secondary}>
             {t('marketplace.campaign.wizard.requirements.deliverables.revisions')}
           </Text>

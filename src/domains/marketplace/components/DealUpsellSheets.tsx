@@ -2,11 +2,10 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Undo2 } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, ConfirmSheet, CustomButton, Text } from '@/shared/ui';
+import { Box, ConfirmSheet, CustomButton, Text, SheetFrame } from '@/shared/ui';
 import type { DealUpsellsModel } from '../hooks/useDealUpsells';
 import { DEAL_UPSELL_DECLINE_REASON, type Deal } from '../types';
 import { DealReasonFields } from './DealReasonFields';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealUpsellSheetsProps {
   deal: Deal;
@@ -20,7 +19,7 @@ const DealUpsellSheetsComponent: React.FC<DealUpsellSheetsProps> = ({ deal, upse
   const { sheet } = upsells;
   return (
     <>
-      <DealSheetFrame
+      <SheetFrame
         visible={sheet === 'decline'}
         onClose={upsells.close}
         title={t('marketplace.deals.changes.upsells.decline.title')}
@@ -46,7 +45,7 @@ const DealUpsellSheetsComponent: React.FC<DealUpsellSheetsProps> = ({ deal, upse
           reasons={DEAL_UPSELL_DECLINE_REASON}
           defs={upsells.declineReasonDefs}
         />
-      </DealSheetFrame>
+      </SheetFrame>
       <ConfirmSheet
         visible={sheet === 'withdraw'}
         onClose={upsells.close}

@@ -18,7 +18,7 @@ const MoneyStepComponent: React.FC = () => {
   const { t } = useTranslation();
   const { live } = useCampaignWizard();
   return (
-    <Box px="xl" py="xl" gap="2xl">
+    <Box py="xl" gap="2xl">
       <CampaignField label={t('marketplace.campaign.wizard.money.pricing.label')}>
         <PricingField />
       </CampaignField>

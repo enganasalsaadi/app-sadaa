@@ -1,9 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { LookupItem } from '@/core/api';
-import { useStyles, useTheme } from '@/core/theme';
-import { BottomSheet, Box, ChipGroup, CustomButton, FormSection, Notice, Pressable, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { ChipGroup, CustomButton, FormSection, Notice, Pressable, SheetFrame, Text } from '@/shared/ui';
 import { OPPORTUNITY_PRICING_LABEL } from '../constants/opportunities';
 import { useOpportunityFilterDraft } from '../hooks/useOpportunityFilterDraft';
 import { CAMPAIGN_PRICING_MODEL } from '../types/campaign';
@@ -38,10 +37,6 @@ const OpportunityFilterSheetComponent: React.FC<OpportunityFilterSheetProps> = (
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const styles = useStyles(({ spacing }) => ({
-    scroll: { flexGrow: 0, flexShrink: 1 },
-    content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: spacing['2xl'] },
-  }));
   const { draft, setActivityTypes, togglePricing, reset } = useOpportunityFilterDraft(filters, visible);
   const apply = useCallback(() => onApply(draft), [draft, onApply]);
   const changeActivities = useCallback(
@@ -57,11 +52,12 @@ const OpportunityFilterSheetComponent: React.FC<OpportunityFilterSheetProps> = (
   const pricing = CAMPAIGN_PRICING_MODEL.map(value => ({ value, label: t(OPPORTUNITY_PRICING_LABEL[value]) }));
 
   return (
-    <BottomSheet visible={visible} onClose={onClose}>
-      <Box row align="center" justify="space-between" px="lg" pb="sm">
-        <Text variant="h4" accessibilityRole="header">
-          {t('marketplace.campaign.feed.filters.title')}
-        </Text>
+    <SheetFrame
+      visible={visible}
+      onClose={onClose}
+      title={t('marketplace.campaign.feed.filters.title')}
+      gap="2xl"
+      action={
         <Pressable
           onPress={reset}
           minHeight={sizes.button.md}
@@ -74,39 +70,36 @@ const OpportunityFilterSheetComponent: React.FC<OpportunityFilterSheetProps> = (
             {t('marketplace.campaign.feed.filters.reset')}
           </Text>
         </Pressable>
-      </Box>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <FormSection title={t('marketplace.campaign.feed.filters.activity')}>
-          {activityFailed ? (
-            <Notice
-              tone="danger"
-              message={t('marketplace.campaign.feed.filters.activityFailed')}
-              action={{ label: t('common.retry'), onPress: onRetryActivities }}
-            />
-          ) : (
-            <ChipGroup
-              multiple
-              items={activityOptions}
-              value={draft.activityTypes ?? []}
-              onChange={changeActivities}
-              loading={activityLoading}
-              accessibilityLabel={t('marketplace.campaign.feed.filters.activity')}
-            />
-          )}
-        </FormSection>
-        <FormSection title={t('marketplace.campaign.feed.filters.pricing')}>
-          <ChipGroup
-            items={pricing}
-            value={draft.pricingModel ?? null}
-            onChange={changePricing}
-            accessibilityLabel={t('marketplace.campaign.feed.filters.pricing')}
+      }
+      footer={<CustomButton title={t('marketplace.campaign.feed.filters.apply')} onPress={apply} fullWidth />}
+    >
+      <FormSection title={t('marketplace.campaign.feed.filters.activity')}>
+        {activityFailed ? (
+          <Notice
+            tone="danger"
+            message={t('marketplace.campaign.feed.filters.activityFailed')}
+            action={{ label: t('common.retry'), onPress: onRetryActivities }}
           />
-        </FormSection>
-      </ScrollView>
-      <Box px="lg" pt="md" pb="lg">
-        <CustomButton title={t('marketplace.campaign.feed.filters.apply')} onPress={apply} fullWidth />
-      </Box>
-    </BottomSheet>
+        ) : (
+          <ChipGroup
+            multiple
+            items={activityOptions}
+            value={draft.activityTypes ?? []}
+            onChange={changeActivities}
+            loading={activityLoading}
+            accessibilityLabel={t('marketplace.campaign.feed.filters.activity')}
+          />
+        )}
+      </FormSection>
+      <FormSection title={t('marketplace.campaign.feed.filters.pricing')}>
+        <ChipGroup
+          items={pricing}
+          value={draft.pricingModel ?? null}
+          onChange={changePricing}
+          accessibilityLabel={t('marketplace.campaign.feed.filters.pricing')}
+        />
+      </FormSection>
+    </SheetFrame>
   );
 };
 

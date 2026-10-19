@@ -2,14 +2,14 @@ import React, { memo, useCallback } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, ShieldCheck, ShieldAlert } from 'lucide-react-native';
+import { iconStroke, moderateScale, opacity, resolveHue, useStyles, useTheme } from '@/core/theme';
 import { formatNumber } from '@/core/i18n';
-import { iconStroke, moderateScale, resolveHue, useStyles, useTheme } from '@/core/theme';
 import { Box, Pressable, StatusPill, Text } from '@/shared/ui';
 import type { BrandActiveCampaign } from '../../../types';
 import { campaignDropLeft, campaignSeatSplit } from '../../../utils/campaignHome';
 import { getCampaignStatusMeta } from '../../../utils/campaignStatus';
 import type { CampaignTimeLeft } from '../../../utils/campaignList';
-import { CampaignSeatStrip } from './CampaignSeatStrip';
+import { CampaignSeatDots } from './CampaignSeatDots';
 
 export const CAMPAIGN_CARD_WIDTH = moderateScale(292);
 
@@ -19,15 +19,15 @@ interface CampaignSeatCardProps {
   onOpen: (campaign: BrandActiveCampaign) => void;
 }
 
-/** The biggest unit of the time left, short enough for a stat cell. */
+/** Only the biggest unit of the time left, spelled out, so the stat cell never squeezes «43ي 4س». */
 const dropValueKey = (left: CampaignTimeLeft) => {
   switch (left.unit) {
     case 'days':
-      return { key: 'marketplace.campaign.list.left.days', values: { days: left.days, hours: left.hours } } as const;
+      return { key: 'marketplace.brandHome.campaigns.dropIn.days', count: left.days } as const;
     case 'hours':
-      return { key: 'marketplace.campaign.list.left.hours', values: { hours: left.hours, minutes: left.minutes } } as const;
+      return { key: 'marketplace.brandHome.campaigns.dropIn.hours', count: left.hours } as const;
     case 'minutes':
-      return { key: 'marketplace.campaign.list.left.minutes', values: { minutes: left.minutes } } as const;
+      return { key: 'marketplace.brandHome.campaigns.dropIn.minutes', count: left.minutes } as const;
     default: {
       const _exhaustive: never = left;
       return _exhaustive;
@@ -39,23 +39,16 @@ interface StatProps {
   value: string;
   label: string;
   hot?: boolean;
-  divider?: boolean;
 }
 
-const Stat = memo<StatProps>(({ value, label, hot = false, divider = false }) => {
+const Stat = memo<StatProps>(({ value, label, hot = false }) => {
   const { colors } = useTheme();
-  const styles = useStyles(
-    ({ borderWidths }): Record<'cell', ViewStyle> => ({
-      cell: { borderStartWidth: divider ? borderWidths.thin : 0, borderStartColor: colors.border.default },
-    }),
-    [colors.border.default, divider],
-  );
   return (
-    <Box flex={1} align="center" py="md" px="xs" style={styles.cell}>
-      <Text variant="amountTitle" color={hot ? colors.status.warning.text : colors.text.primary} numberOfLines={1}>
+    <Box flex={1} align="center" gap="xs">
+      <Text variant="title" color={hot ? colors.status.warning.text : colors.text.primary} numberOfLines={1}>
         {value}
       </Text>
-      <Text variant="caption" color={colors.text.tertiary} numberOfLines={1}>
+      <Text variant="caption" color={colors.text.secondary} numberOfLines={1}>
         {label}
       </Text>
     </Box>
@@ -63,8 +56,9 @@ const Stat = memo<StatProps>(({ value, label, hot = false, divider = false }) =>
 });
 
 /**
- * One active campaign as a seat strip over three numbers and a decision bar. A campaign that needs
- * the brand wears an amber ring and the server's own words on its bar; a calm one just opens.
+ * One active campaign: status and budget trust on one line, the title, seat dots, three numbers, and
+ * a quiet arrow in the corner — the whole card opens it. A campaign that needs the brand wears an
+ * amber ring and the server's own words beside the arrow.
  */
 const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, now, onOpen }) => {
   const { t } = useTranslation();
@@ -74,22 +68,28 @@ const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, 
   const statusTone = getCampaignStatusMeta(campaign.status.key).tone;
   const { needsAction, action, seats, budgetSecured } = campaign;
   const styles = useStyles(
-    ({ borderWidths }): Record<'card' | 'divider', ViewStyle> => ({
+    ({ borderWidths }): Record<'card' | 'trust' | 'arrow', ViewStyle> => ({
       card: {
-        overflow: 'hidden',
         borderWidth: needsAction ? borderWidths.md : borderWidths.thin,
         borderColor: needsAction ? warning.main : colors.border.default,
       },
-      divider: { borderTopWidth: borderWidths.thin, borderTopColor: colors.border.default },
+      trust: { flexShrink: 1 },
+      arrow: {
+        width: sizes.button.sm,
+        height: sizes.button.sm,
+        borderRadius: sizes.button.sm / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: needsAction ? warning.soft : colors.interactive.soft,
+      },
     }),
-    [colors.border.default, needsAction, warning.main],
+    [colors.border.default, colors.interactive.soft, needsAction, sizes.button.sm, warning.main, warning.soft],
   );
   const open = useCallback(() => onOpen(campaign), [campaign, onOpen]);
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
-  const barLabel = needsAction && action ? action.label : t('marketplace.brandHome.campaigns.open');
+  const actionLabel = needsAction && action ? action.label : null;
   const dropLeft = campaignDropLeft(campaign, now);
   const dropValue = dropLeft ? dropValueKey(dropLeft) : null;
-  const barInk = needsAction ? warning.text : colors.text.secondary;
   const Shield = budgetSecured ? ShieldCheck : ShieldAlert;
   const shieldHue = budgetSecured ? money : warning;
 
@@ -98,9 +98,11 @@ const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, 
       width={CAMPAIGN_CARD_WIDTH}
       bg={colors.surface.main}
       borderRadius="xl"
+      p="lg"
+      gap="lg"
       style={styles.card}
       onPress={open}
-      scaleOnPress
+      activeOpacity={opacity.pressedSubtle}
       accessibilityRole="button"
       accessibilityLabel={t('marketplace.brandHome.campaigns.cardA11y', {
         title: campaign.title,
@@ -108,12 +110,12 @@ const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, 
         free: seats.free,
         total: seats.total,
       })}
-      accessibilityHint={barLabel}
+      accessibilityHint={actionLabel ?? t('marketplace.brandHome.campaigns.open')}
     >
-      <Box p="lg" gap="md">
-        <Box row align="center" justify="space-between" gap="sm">
+      <Box gap="sm">
+        <Box row align="center" justify="space-between" gap="md">
           <StatusPill label={campaign.status.label} tone={statusTone} size="sm" />
-          <Box row align="center" gap="xs" flex={1} justify="flex-end">
+          <Box row align="center" gap="xs" style={styles.trust}>
             <Shield size={sizes.icon.xs} color={shieldHue.main} strokeWidth={iconStroke.bold} />
             <Text variant="caption" color={shieldHue.text} numberOfLines={1}>
               {budgetSecured
@@ -122,20 +124,12 @@ const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, 
             </Text>
           </Box>
         </Box>
-        <Text variant="h4" numberOfLines={2}>
+        <Text variant="title" numberOfLines={2}>
           {campaign.title}
         </Text>
-        <Box gap="sm">
-          <CampaignSeatStrip seats={campaignSeatSplit(campaign)} />
-          <Text variant="caption" color={colors.text.secondary}>
-            {t('marketplace.brandHome.campaigns.seatsLeft', {
-              free: formatNumber(seats.free),
-              total: formatNumber(seats.total),
-            })}
-          </Text>
-        </Box>
       </Box>
-      <Box row style={styles.divider}>
+      <CampaignSeatDots seats={campaignSeatSplit(campaign)} />
+      <Box row>
         <Stat
           value={formatNumber(campaign.applicationsOpen)}
           label={t('marketplace.brandHome.campaigns.stat.applications')}
@@ -145,27 +139,27 @@ const CampaignSeatCardComponent: React.FC<CampaignSeatCardProps> = ({ campaign, 
           value={formatNumber(campaign.awaitingPaymentCount)}
           label={t('marketplace.brandHome.campaigns.stat.awaitingPayment')}
           hot={campaign.awaitingPaymentCount > 0}
-          divider
         />
         <Stat
-          value={dropValue ? t(dropValue.key, dropValue.values) : '—'}
+          value={dropValue ? t(dropValue.key, { count: dropValue.count }) : '—'}
           label={t('marketplace.brandHome.campaigns.stat.drop')}
-          divider
         />
       </Box>
-      <Box
-        row
-        align="center"
-        justify="space-between"
-        gap="sm"
-        px="lg"
-        py="md"
-        bg={needsAction ? warning.soft : colors.surface.elevated}
-      >
-        <Text variant="buttonSmall" color={barInk} numberOfLines={1}>
-          {barLabel}
-        </Text>
-        <Arrow size={sizes.icon.sm} color={barInk} strokeWidth={iconStroke.bold} />
+      <Box row align="center" justify="space-between" gap="sm">
+        <Box flex={1}>
+          {actionLabel ? (
+            <Text variant="buttonSmall" color={warning.text} numberOfLines={1}>
+              {actionLabel}
+            </Text>
+          ) : null}
+        </Box>
+        <Box style={styles.arrow}>
+          <Arrow
+            size={sizes.icon.sm}
+            color={needsAction ? warning.text : colors.interactive.main}
+            strokeWidth={iconStroke.regular}
+          />
+        </Box>
       </Box>
     </Pressable>
   );

@@ -74,6 +74,7 @@ import type {
   CampaignSelectDto,
   CampaignTargetingDto,
   CampaignTimersDto,
+  CampaignQuoteWalletDto,
   CampaignWalletDto,
   CreatorApplicationDto,
   CreatorCampaignDeliverableDto,
@@ -242,6 +243,18 @@ export const mapCampaignActionResult = (
   return { campaign: mapCampaignDetail(data), wallet: wallet ? mapWallet(wallet) : null };
 };
 
+/** Nothing to hold yet (no pricing) reads as covered: zero required, zero short. */
+const mapQuoteWallet = (dto: CampaignQuoteWalletDto): CampaignWallet => {
+  const zero = parseUsd('0');
+  const shortfall = parseUsdOrNull(dto.shortfall_usd) ?? zero;
+  return {
+    balance: parseUsdOrNull(dto.balance_usd) ?? zero,
+    required: parseUsdOrNull(dto.required_usd) ?? zero,
+    shortfall,
+    isSufficient: dto.is_sufficient ?? shortfall.amount === 0,
+  };
+};
+
 export const mapCampaignQuote = (dto: CampaignQuoteDto): CampaignQuote => ({
   pricingModel: oneOf(CAMPAIGN_PRICING_MODEL, dto.pricing_model),
   feeBps: dto.fee_bps,
@@ -256,7 +269,7 @@ export const mapCampaignQuote = (dto: CampaignQuoteDto): CampaignQuote => ({
     max: parseUsdOrNull(dto.total_gross_usd.max),
   },
   budget: parseUsdOrNull(dto.budget_usd),
-  wallet: mapWallet(dto.wallet),
+  wallet: mapQuoteWallet(dto.wallet),
 });
 
 const toStatusKey = (status: CampaignRecruitingDto['status']): CampaignStatus | null =>

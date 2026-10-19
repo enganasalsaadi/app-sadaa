@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { BottomSheet, Box, ListRow, Text } from '@/shared/ui';
+import { Box, ListRow, SheetFrame } from '@/shared/ui';
 import type { ExploreSort, ExploreSortOption } from '../../../types/explore';
 
 interface ExploreSortSheetProps {
@@ -56,11 +56,13 @@ const ExploreSortSheetComponent: React.FC<ExploreSortSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <BottomSheet visible={visible} onClose={onClose} onDismissed={onDismissed}>
-      <Box px="lg" pb="lg" gap="sm" accessibilityRole="radiogroup">
-        <Text variant="h4" accessibilityRole="header">
-          {t('marketplace.explore.sort.title')}
-        </Text>
+    <SheetFrame
+      visible={visible}
+      onClose={onClose}
+      onDismissed={onDismissed}
+      title={t('marketplace.explore.sort.title')}
+    >
+      <Box gap="sm" accessibilityRole="radiogroup">
         {options.map(option => (
           <SortRow
             key={option.value}
@@ -72,7 +74,7 @@ const ExploreSortSheetComponent: React.FC<ExploreSortSheetProps> = ({
           />
         ))}
       </Box>
-    </BottomSheet>
+    </SheetFrame>
   );
 };
 

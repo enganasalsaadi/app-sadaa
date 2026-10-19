@@ -8,7 +8,7 @@ import { HUE_TONES } from '@/core/theme';
 import type { HueTone } from '@/core/theme';
 import { useBadgesDemo } from './hooks/useBadgesDemo';
 
-const BADGE_TONES: BadgeTone[] = ['danger', 'interactive', 'neutral'];
+const BADGE_TONES: BadgeTone[] = ['danger', 'warning', 'interactive', 'neutral'];
 const BADGE_COUNTS = [3, 12, 150];
 const TAG_TONES: TagTone[] = ['neutral', 'brand', 'premium'];
 

@@ -3,8 +3,7 @@ import type { ViewStyle } from 'react-native';
 import { Controller, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, Text } from '@/shared/ui';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
+import { Box, CustomButton, CustomInput, Text, SheetFrame } from '@/shared/ui';
 import { DEAL_DRAFT_LIMITS } from '../../../constants/dealDrafts';
 import type { DealRevisionFormValues } from '../../../schemas/dealDraftSchema';
 import type { DealFile } from '../../../types';
@@ -72,7 +71,7 @@ const ReviewRevisionSheetComponent: React.FC<ReviewRevisionSheetProps> = ({
     [colors.interactive.main, colors.interactive.soft, colors.surface.main],
   );
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.drafts.review.revision.title', { round })}
@@ -122,7 +121,7 @@ const ReviewRevisionSheetComponent: React.FC<ReviewRevisionSheetProps> = ({
               })}
         </Text>
       </Box>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

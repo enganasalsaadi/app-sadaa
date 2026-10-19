@@ -9,6 +9,7 @@ export const useBottomSheetDemo = () => {
   const framed = useDisclosure();
   const selection = useDisclosure();
   const [selected, setSelected] = useState<string | number | null>(null);
+  const [tag, setTag] = useState('option1');
 
   const items = useMemo<SelectionItem[]>(
     () => [
@@ -28,5 +29,5 @@ export const useBottomSheetDemo = () => {
     [t],
   );
 
-  return { sheet, framed, selection, selected, setSelected, items };
+  return { sheet, framed, selection, selected, setSelected, items, tag, setTag };
 };

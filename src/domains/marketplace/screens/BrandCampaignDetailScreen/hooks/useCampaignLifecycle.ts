@@ -17,6 +17,9 @@ import {
   type CampaignMenuAction,
 } from '../../../utils/campaignLifecycle';
 
+/** Runs `next` once the way to the next screen or sheet is clear: after the menu is gone, or at once. */
+type Then = (next: () => void) => void;
+
 type LifecycleSheet = 'menu' | 'seats' | 'deadline' | 'end' | 'delete' | 'reduce' | 'reopen' | 'extend';
 
 /** The two ways back to «open»: a suspended campaign, or a filled one whose seat was freed. */
@@ -82,42 +85,45 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
     setSheet(null);
   }, []);
 
-  const duplicate = useCallback(async () => {
-    const outcome = await action.run('duplicate');
-    if (!outcome.ok) return;
-    const copyId = outcome.result.campaign.id;
-    thenFromMenu(() => navigate('CampaignWizard', { campaignId: copyId, source: 'duplicate' }));
-  }, [action, thenFromMenu]);
+  const duplicate = useCallback(
+    async (then: Then) => {
+      const outcome = await action.run('duplicate');
+      if (!outcome.ok) return;
+      const copyId = outcome.result.campaign.id;
+      then(() => navigate('CampaignWizard', { campaignId: copyId, source: 'duplicate' }));
+    },
+    [action],
+  );
 
-  const choose = useCallback(
-    (picked: CampaignMenuAction) => {
+  const perform = useCallback(
+    (picked: CampaignMenuAction, then: Then) => {
       switch (picked) {
         case 'resume':
-          thenFromMenu(() => navigate('CampaignWizard', { campaignId: id, source: 'resume' }));
+          then(() => navigate('CampaignWizard', { campaignId: id, source: 'resume' }));
           return;
         case 'edit':
-          thenFromMenu(() => navigate('CampaignWizard', { campaignId: id, source: 'edit' }));
+          then(() => navigate('CampaignWizard', { campaignId: id, source: 'edit' }));
           return;
         case 'addSeats':
           setSeats(1);
           setPickedDay(null);
           setDateFor('seats');
-          thenFromMenu(() => setSheet('seats'));
+          then(() => setSheet('seats'));
           return;
         case 'extendDeadline':
           setPickedDay(null);
           setDateFor('deadline');
-          thenFromMenu(() => setSheet('deadline'));
+          then(() => setSheet('deadline'));
           return;
         case 'duplicate':
-          duplicate().catch(() => undefined);
+          duplicate(then).catch(() => undefined);
           return;
         case 'close':
         case 'cancel':
-          thenFromMenu(() => setSheet('end'));
+          then(() => setSheet('end'));
           return;
         case 'delete':
-          thenFromMenu(() => setSheet('delete'));
+          then(() => setSheet('delete'));
           return;
         default: {
           const _exhaustive: never = picked;
@@ -125,7 +131,19 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
         }
       }
     },
-    [duplicate, id, thenFromMenu],
+    [duplicate, id],
+  );
+
+  /** A row of the «⋯»: its sheet opens once the menu has slid away. */
+  const choose = useCallback((picked: CampaignMenuAction) => perform(picked, thenFromMenu), [perform, thenFromMenu]);
+
+  /** A quick action on the page: no menu is open, so the sheet opens at once (dates read from now). */
+  const chooseQuick = useCallback(
+    (picked: CampaignMenuAction) => {
+      setOpenedAt(Date.now());
+      perform(picked, next => next());
+    },
+    [perform],
   );
 
   /** Runs one sheet's action; `true` closes the sheet. Refused-because-stale answers close it too. */
@@ -303,6 +321,7 @@ export const useCampaignLifecycle = (campaign: CampaignDetail | null, leave: () 
     close,
     onMenuDismissed,
     choose,
+    chooseQuick,
     isRunning: action.isRunning,
     isDuplicating: action.isRunning && sheet === 'menu',
     isDeleting,

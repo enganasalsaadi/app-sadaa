@@ -6,9 +6,8 @@ import { Check, FilePlus2, ImagePlus, Link2, Plus, Send, X } from 'lucide-react-
 import type { LucideIcon } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, IconButton, Image, Notice, Pressable, Text } from '@/shared/ui';
+import { Box, CustomButton, CustomInput, IconButton, Image, Notice, Pressable, Text, SheetFrame } from '@/shared/ui';
 import { isolateLtr } from '@/shared/utils';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import { DEAL_DISPUTE_LIMITS } from '../../../constants/dealDispute';
 import type { DealShipmentPhotoRef } from '../../../utils/dealDispute';
 import type { DisputeEvidenceModel, EvidenceSource } from '../hooks/useDisputeEvidence';
@@ -134,7 +133,7 @@ const DisputeEvidenceSheetComponent: React.FC<DisputeEvidenceSheetProps> = ({ ev
   const canLink = evidence.links.length < evidence.linkRoom;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={evidence.visible}
       onClose={evidence.close}
       title={t('marketplace.deals.dispute.evidence.title')}
@@ -279,7 +278,7 @@ const DisputeEvidenceSheetComponent: React.FC<DisputeEvidenceSheetProps> = ({ ev
       ) : null}
 
       <Notice tone="info" message={t('marketplace.deals.dispute.evidence.final')} />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

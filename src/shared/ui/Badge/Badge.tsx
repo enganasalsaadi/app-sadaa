@@ -4,7 +4,7 @@ import { formatNumber } from '@/core/i18n';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 
-export type BadgeTone = 'danger' | 'interactive' | 'neutral';
+export type BadgeTone = 'danger' | 'warning' | 'interactive' | 'neutral';
 export type BadgeVariant = 'count' | 'dot';
 
 export interface BadgeProps {
@@ -29,7 +29,12 @@ const BadgeComponent: React.FC<BadgeProps> = ({
   accessibilityLabel,
 }) => {
   const { colors, sizes } = useTheme();
-  const bg = tone === 'neutral' ? colors.status.neutral.main : tone === 'danger' ? colors.status.danger.main : colors.interactive.main;
+  const bg = {
+    neutral: colors.status.neutral.main,
+    danger: colors.status.danger.main,
+    warning: colors.status.warning.main,
+    interactive: colors.interactive.main,
+  }[tone];
 
   if (variant === 'dot') {
     return (

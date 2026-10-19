@@ -61,6 +61,8 @@ export type { MainTabBarProps } from './MainTabBar';
 export { GalleryModal } from './GalleryModal';
 export type { GalleryModalProps } from './GalleryModal';
 export { BottomSheet } from './BottomSheet';
+export { SheetFrame } from './SheetFrame';
+export type { SheetFrameProps } from './SheetFrame';
 export { ScreenHeader } from './ScreenHeader';
 export type {
   ScreenHeaderProps,

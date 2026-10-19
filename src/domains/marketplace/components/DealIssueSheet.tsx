@@ -3,13 +3,12 @@ import type { ViewStyle } from 'react-native';
 import { Controller, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, FormSection, Pressable, Text } from '@/shared/ui';
+import { Box, CustomButton, CustomInput, FormSection, Pressable, Text, SheetFrame } from '@/shared/ui';
 import { DEAL_ISSUE_REASON_DEF, DEAL_ISSUE_REASON_ORDER, DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
 import type { DealIssuePhoto } from '../hooks/useIssuePhotos';
 import { issueNeedsPhotos, type DealIssueFormValues } from '../schemas/dealShippingSchema';
 import type { DealShippingIssueReason } from '../types';
 import { DealPhotoSlots } from './DealPhotoSlots';
-import { DealSheetFrame } from './DealSheetFrame';
 
 const TILE_HEIGHT = moderateScale(80);
 
@@ -161,7 +160,7 @@ const DealIssueSheetComponent: React.FC<DealIssueSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.shipping.issue.title')}
@@ -206,7 +205,7 @@ const DealIssueSheetComponent: React.FC<DealIssueSheetProps> = ({
         onRemove={onRemovePhoto}
       />
       <NoteField control={control} />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

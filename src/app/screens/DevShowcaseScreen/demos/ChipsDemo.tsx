@@ -106,6 +106,26 @@ const ChipsDemoComponent: React.FC = () => {
 
       <Box gap="sm">
         <Text variant="label" color={colors.text.secondary}>
+          {t('devShowcase.chips.solidTitle')}
+        </Text>
+        <ChipRow accessibilityRole="radiogroup" accessibilityLabel={t('devShowcase.chips.solidTitle')}>
+          {items.map((item, index) => (
+            <Chip
+              key={item.value}
+              variant="solid"
+              label={item.label}
+              value={item.value}
+              count={index * 2}
+              attention={index === 1}
+              selected={item.value === single}
+              onSelect={setSingle}
+            />
+          ))}
+        </ChipRow>
+      </Box>
+
+      <Box gap="sm">
+        <Text variant="label" color={colors.text.secondary}>
           {t('devShowcase.chips.singleTitle')}
         </Text>
         <ChipGroup

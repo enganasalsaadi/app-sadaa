@@ -38,6 +38,7 @@ jest.mock('@/core/theme', () => {
     resolveHue: () => tokens,
     moderateScale: (n: number) => n,
     iconStroke: { regular: 2, bold: 2.5 },
+    opacity: { pressed: 0.7, pressedSubtle: 0.85 },
     motion: { duration: { base: 250 }, spring: {} },
   };
 });
@@ -626,9 +627,12 @@ describe('BrandHomeScreen — my active campaigns', () => {
     expect(text).toContain('marketplace.brandHome.campaigns.title');
     expect(text).toContain('marketplace.brandHome.campaigns.needsYou:{"count":1}');
     expect(text).toContain('Fund the selected seats');
-    expect(text).toContain('marketplace.brandHome.campaigns.seatsLeft:{"free":"3","total":"5"}');
-    // The calm one reads «open», and its unsecured budget is said out loud.
-    expect(text).toContain('marketplace.brandHome.campaigns.open');
+    expect(text).toContain('marketplace.brandHome.campaigns.seatsBooked:{"booked":"2","total":"5"}');
+    // The calm one only hints «open» (the arrow says it), and its unsecured budget is said out loud.
+    const calm = root
+      .findAll(isHost('Pressable'))
+      .find(n => String(n.props.accessibilityLabel).startsWith('marketplace.brandHome.campaigns.cardA11y:{"title":"Branch opening"'));
+    expect(calm?.props.accessibilityHint).toBe('marketplace.brandHome.campaigns.open');
     expect(text).toContain('marketplace.brandHome.campaigns.unsecured');
   });
 

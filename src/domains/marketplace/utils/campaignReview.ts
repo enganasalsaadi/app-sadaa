@@ -23,6 +23,9 @@ export const readCampaignMissing = (details: unknown): string[] | null => {
   return details.meta.missing.filter((key): key is string => typeof key === 'string');
 };
 
+/** The reasons this build knows, in the server's order. Unknown ones are left out. */
+export const knownMissingKeys = (missing: readonly string[]): CampaignMissingKey[] => missing.filter(isMissingKey);
+
 /** The known reasons each step still lacks, in the server's order. Unknown reasons are left out. */
 export const missingByStep = (missing: readonly string[]): Record<CampaignWizardStep, CampaignMissingKey[]> => {
   const byStep: Record<CampaignWizardStep, CampaignMissingKey[]> = {

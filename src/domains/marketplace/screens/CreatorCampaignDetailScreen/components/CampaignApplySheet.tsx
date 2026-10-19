@@ -1,10 +1,9 @@
 import React, { memo, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { Box, Checkbox, CustomInput, Notice, Text } from '@/shared/ui';
+import { Box, Checkbox, CustomInput, Notice, Text, SheetFrame } from '@/shared/ui';
 import type { NoticeProps } from '@/shared/ui';
 import { DealHoldToSign } from '../../../components/DealHoldToSign';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import type { CreatorCampaignDetail } from '../../../types/campaign';
 import { PITCH_MAX, type ApplyRefusal } from '../../../utils/campaignApply';
 import type { CampaignApplyModel } from '../hooks/useCampaignApply';
@@ -62,7 +61,7 @@ const CampaignApplySheetComponent: React.FC<CampaignApplySheetProps> = ({ campai
   const net = apply.isBid ? (apply.net?.net ?? null) : (fixed?.net ?? null);
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={apply.visible}
       onClose={apply.close}
       title={t('marketplace.campaign.apply.title')}
@@ -113,7 +112,7 @@ const CampaignApplySheetComponent: React.FC<CampaignApplySheetProps> = ({ campai
       <Section title={t('marketplace.campaign.apply.terms.title')}>
         <ApplyTermsCard campaign={campaign} offer={offer} net={net} estimated={apply.isBid} />
       </Section>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

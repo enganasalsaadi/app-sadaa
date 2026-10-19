@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Truck } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, ChipGroup, CustomButton, CustomInput, FormSection, Text } from '@/shared/ui';
+import { Box, ChipGroup, CustomButton, CustomInput, FormSection, Text, SheetFrame } from '@/shared/ui';
 import { isolateLtr } from '@/shared/utils';
 import {
   DEAL_COURIER_PRESETS,
@@ -14,7 +14,6 @@ import {
 } from '../constants/dealShipping';
 import type { DealShipFormValues } from '../schemas/dealShippingSchema';
 import { courierName } from '../utils/dealShipping';
-import { DealSheetFrame } from './DealSheetFrame';
 import { DealWaybillBarcode } from './DealWaybillBarcode';
 
 const BARCODE_WIDTH = moderateScale(84);
@@ -174,7 +173,7 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
   const focusUrl = useCallback(() => setFocus('trackingUrl'), [setFocus]);
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={kind !== null}
       onClose={onClose}
       title={t(copy.title)}
@@ -252,7 +251,7 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

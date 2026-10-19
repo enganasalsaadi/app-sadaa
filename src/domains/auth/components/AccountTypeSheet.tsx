@@ -4,7 +4,7 @@ import { Building2, ChevronLeft, ChevronRight, Sparkles, Users } from 'lucide-re
 import type { LucideIcon } from 'lucide-react-native';
 import type { ParseKeys } from 'i18next';
 import { useTheme } from '@/core/theme';
-import { Box, Text, Pressable, BottomSheet } from '@/shared/ui';
+import { Box, Text, Pressable, SheetFrame } from '@/shared/ui';
 
 export type AccountType = 'brand' | 'influencer' | 'agency';
 
@@ -119,15 +119,10 @@ export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
   const { t } = useTranslation();
 
   return (
-    <BottomSheet visible={visible} onClose={onClose}>
-      <Box gap="lg" px="2xl" pb="2xl">
-        <Text variant="h4" align="center">
-          {t('auth.accountType.title')}
-        </Text>
-        {OPTIONS.map(option => (
-          <AccountTypeOption key={option.type} option={option} onSelect={onSelect} />
-        ))}
-      </Box>
-    </BottomSheet>
+    <SheetFrame visible={visible} onClose={onClose} title={t('auth.accountType.title')}>
+      {OPTIONS.map(option => (
+        <AccountTypeOption key={option.type} option={option} onSelect={onSelect} />
+      ))}
+    </SheetFrame>
   );
 };

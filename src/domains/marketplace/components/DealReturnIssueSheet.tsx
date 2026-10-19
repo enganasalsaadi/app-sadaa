@@ -2,14 +2,13 @@ import React, { memo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ShieldAlert } from 'lucide-react-native';
-import { CustomInput, Notice } from '@/shared/ui';
+import { CustomInput, Notice, SheetFrame } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import { DEAL_RETURN_LIMITS } from '../constants/dealReturn';
 import type { DealReturnAnswerModel } from '../hooks/useDealReturnAnswer';
 import type { Deal } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
 import { DealPhotoSlots } from './DealPhotoSlots';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealReturnIssueSheetProps {
   deal: Deal;
@@ -26,7 +25,7 @@ const DealReturnIssueSheetComponent: React.FC<DealReturnIssueSheetProps> = ({ de
   const { t } = useTranslation();
   const creator = isolateText(deal.creator.name ?? '');
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={answer.sheet === 'issue'}
       onClose={answer.close}
       title={t('marketplace.deals.return.answer.issue.title')}
@@ -77,7 +76,7 @@ const DealReturnIssueSheetComponent: React.FC<DealReturnIssueSheetProps> = ({ de
         title={t('marketplace.deals.return.answer.issue.noticeTitle')}
         message={t('marketplace.deals.return.answer.issue.noticeBody')}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

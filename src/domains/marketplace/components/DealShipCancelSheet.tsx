@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { CircleX } from 'lucide-react-native';
 import type { Money } from '@/core/money';
 import { useTheme } from '@/core/theme';
-import { Box, Card, MoneyText, Text } from '@/shared/ui';
+import { Box, Card, MoneyText, Text, SheetFrame } from '@/shared/ui';
 import { DealHoldToSign } from './DealHoldToSign';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealShipCancelSheetProps {
   visible: boolean;
@@ -30,7 +29,7 @@ const DealShipCancelSheetComponent: React.FC<DealShipCancelSheetProps> = ({
   const { t } = useTranslation();
   const { colors } = useTheme();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.shipping.cancel.title')}
@@ -62,7 +61,7 @@ const DealShipCancelSheetComponent: React.FC<DealShipCancelSheetProps> = ({
           )}
         </Box>
       </Card>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

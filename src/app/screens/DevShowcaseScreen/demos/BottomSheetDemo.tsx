@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next';
 import {
   BottomSheet,
   Box,
+  Chip,
   CustomButton,
+  Rail,
   SelectionModal,
+  SheetFrame,
   Text,
 } from '@/shared/ui';
 import { useTheme } from '@/core/theme';
@@ -13,7 +16,7 @@ import { useBottomSheetDemo } from './hooks/useBottomSheetDemo';
 const BottomSheetDemoComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { sheet, framed, selection, selected, setSelected, items } =
+  const { sheet, framed, selection, selected, setSelected, items, tag, setTag } =
     useBottomSheetDemo();
 
   return (
@@ -55,32 +58,38 @@ const BottomSheetDemoComponent: React.FC = () => {
         </Box>
       </BottomSheet>
 
-      {/* `header` + `footer` on a sunken body: white top and CTA, page-color content. */}
-      <BottomSheet
+      {/* SheetFrame: white header (title, body, a sideways chip row), page-color body, white footer. */}
+      <SheetFrame
         visible={framed.visible}
         onClose={framed.close}
-        bg={colors.layout.base}
-        header={
-          <Box px="xl" pb="lg">
-            <Text variant="h4">{t('devShowcase.modalsToasts.sheetTitle')}</Text>
-          </Box>
+        title={t('devShowcase.modalsToasts.sheetTitle')}
+        body={t('devShowcase.modalsToasts.sheetBody')}
+        headerAccessory={
+          <Rail bleed gap="sm">
+            {items.map(item => (
+              <Chip
+                key={String(item.value)}
+                variant="tile"
+                value={String(item.value)}
+                label={item.label}
+                selected={String(item.value) === tag}
+                onSelect={setTag}
+              />
+            ))}
+          </Rail>
         }
         footer={
-          <Box px="xl" py="md">
-            <CustomButton
-              title={t('devShowcase.modalsToasts.sheetConfirm')}
-              onPress={framed.close}
-              fullWidth
-            />
-          </Box>
+          <CustomButton
+            title={t('devShowcase.modalsToasts.sheetConfirm')}
+            onPress={framed.close}
+            fullWidth
+          />
         }
       >
-        <Box px="xl" py="lg">
-          <Text variant="body" color={colors.text.secondary}>
-            {t('devShowcase.modalsToasts.sheetBody')}
-          </Text>
-        </Box>
-      </BottomSheet>
+        <Text variant="body" color={colors.text.secondary}>
+          {t('devShowcase.modalsToasts.sheetBody')}
+        </Text>
+      </SheetFrame>
 
       <SelectionModal
         visible={selection.visible}

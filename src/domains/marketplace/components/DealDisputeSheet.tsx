@@ -4,13 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Flag, LifeBuoy } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, Notice, Text } from '@/shared/ui';
+import { Box, CustomButton, CustomInput, Notice, Text, SheetFrame } from '@/shared/ui';
 import { DEAL_DISPUTE_CLOSED_COPY, DEAL_DISPUTE_CLOSED_FALLBACK, DEAL_DISPUTE_LIMITS } from '../constants/dealDispute';
 import type { DealDisputeModel } from '../hooks/useDealDispute';
 import type { Deal, DealRole } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
 import { DealReasonTiles } from './DealReasonTiles';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealDisputeSheetProps {
   dispute: DealDisputeModel;
@@ -32,7 +31,7 @@ const DealDisputeSheetComponent: React.FC<DealDisputeSheetProps> = ({ dispute, d
   if (!dispute.canOpen) {
     const reason = dispute.closedReason;
     return (
-      <DealSheetFrame
+      <SheetFrame
         visible={dispute.visible}
         onClose={dispute.close}
         onDismissed={dispute.onDismissed}
@@ -57,14 +56,14 @@ const DealDisputeSheetComponent: React.FC<DealDisputeSheetProps> = ({ dispute, d
         <Text variant="bodySmall" color={colors.text.secondary}>
           {t('marketplace.deals.dispute.open.closedSupport')}
         </Text>
-      </DealSheetFrame>
+      </SheetFrame>
     );
   }
 
   const active = dispute.strikes?.activeCount ?? null;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={dispute.visible}
       onClose={dispute.close}
       onDismissed={dispute.onDismissed}
@@ -141,7 +140,7 @@ const DealDisputeSheetComponent: React.FC<DealDisputeSheetProps> = ({ dispute, d
       <Text variant="caption" color={colors.text.tertiary}>
         {t('marketplace.deals.dispute.open.later', { hours: formatNumber(DEAL_DISPUTE_LIMITS.evidenceHours) })}
       </Text>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

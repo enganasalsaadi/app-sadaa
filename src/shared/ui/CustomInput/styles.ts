@@ -66,13 +66,27 @@ export const createInputTextStyle = (theme: Theme): TextStyle => ({
   padding: 0,
 });
 
-export const createMultilineContainerStyle = (
-  theme: Theme,
-  numberOfLines: number,
-): ViewStyle => ({
+/** Frame of a text area: no fixed height, it hugs the text the input reports. */
+export const createMultilineContainerStyle = (theme: Theme): ViewStyle => ({
   minHeight: theme.sizes.input.md,
-  height:
-    theme.typography.body.lineHeight * numberOfLines + theme.spacing.md * 2,
   alignItems: 'flex-start',
-  paddingVertical: theme.spacing.sm,
+  paddingVertical: theme.spacing.md,
 });
+
+/**
+ * Text area grows natively from `minLines` (reserved up front) to `maxLines`, then scrolls inside.
+ * An explicit `lineHeight` keeps every line the same height, so Arabic + Latin + emoji runs no
+ * longer make the text bounce while typing.
+ */
+export const createMultilineTextStyle = (
+  theme: Theme,
+  minLines: number,
+  maxLines: number,
+): TextStyle => {
+  const { lineHeight } = theme.typography.body;
+  return {
+    lineHeight,
+    minHeight: lineHeight * minLines,
+    maxHeight: lineHeight * Math.max(minLines, maxLines),
+  };
+};

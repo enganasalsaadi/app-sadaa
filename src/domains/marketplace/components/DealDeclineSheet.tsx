@@ -3,13 +3,12 @@ import { Controller, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Info } from 'lucide-react-native';
 import { useTheme } from '@/core/theme';
-import { Box, CustomButton, CustomInput, Text } from '@/shared/ui';
+import { Box, CustomButton, CustomInput, Text, SheetFrame } from '@/shared/ui';
 import { DEAL_DECLINE_REASON_DEF } from '../constants/dealRespond';
 import { DEAL_RESPOND_LIMITS } from '../constants/dealOffer';
 import type { DealDeclineFormValues } from '../schemas/dealRespondSchema';
 import { DEAL_DECLINE_REASON } from '../types';
 import { DealReasonTiles } from './DealReasonTiles';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealDeclineSheetProps {
   visible: boolean;
@@ -66,7 +65,7 @@ const DealDeclineSheetComponent: React.FC<DealDeclineSheetProps> = ({
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={t('marketplace.deals.respond.decline.title')}
@@ -111,7 +110,7 @@ const DealDeclineSheetComponent: React.FC<DealDeclineSheetProps> = ({
           </Text>
         </Box>
       </Box>
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

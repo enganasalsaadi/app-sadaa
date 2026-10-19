@@ -1,7 +1,6 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@/core/theme';
-import { Box, BottomSheet, CustomButton, SegmentedControl, Text } from '@/shared/ui';
+import { Box, Chip, CustomButton, Rail, SheetFrame } from '@/shared/ui';
 import { hasDeliverable } from '../../../utils/campaignDeliverables';
 import { useCampaignWizard } from '../CampaignWizardContext';
 import { CatalogServiceRow } from './CatalogServiceRow';
@@ -12,7 +11,6 @@ import { CatalogServiceRow } from './CatalogServiceRow';
  */
 const CatalogServiceSheetComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
   const { values, requirements } = useCampaignWizard();
   const { choices, sheetOpen, closeSheet, toggleService } = requirements;
   const [platformKey, setPlatformKey] = useState<string | null>(null);
@@ -26,50 +24,53 @@ const CatalogServiceSheetComponent: React.FC = () => {
   }, [choices, firstKey, platformKey, sheetOpen]);
 
   const platform = choices.find(choice => choice.key === platformKey) ?? choices[0];
-  const options = useMemo(() => choices.map(choice => ({ value: choice.key, label: choice.label })), [choices]);
 
   const pickPlatform = useCallback((key: string) => setPlatformKey(key), []);
 
   return (
-    <BottomSheet
+    <SheetFrame
       visible={sheetOpen}
       onClose={closeSheet}
+      title={t('marketplace.campaign.wizard.requirements.sheet.title')}
+      body={t('marketplace.campaign.wizard.requirements.sheet.body')}
       footer={<CustomButton title={t('marketplace.campaign.wizard.requirements.sheet.done')} onPress={closeSheet} fullWidth />}
     >
-      <Box px="xl" pt="md" pb="xl" gap="lg">
-        <Box gap="xs">
-          <Text variant="h3" color={colors.text.primary}>
-            {t('marketplace.campaign.wizard.requirements.sheet.title')}
-          </Text>
-          <Text variant="bodySmall" color={colors.text.secondary}>
-            {t('marketplace.campaign.wizard.requirements.sheet.body')}
-          </Text>
-        </Box>
-        {platform ? (
-          <>
-            <SegmentedControl
-              options={options}
-              value={platform.key}
-              onChange={pickPlatform}
-              accessibilityLabel={t('marketplace.campaign.wizard.requirements.sheet.platforms')}
+      {/* In the body, not `headerAccessory`: a header whose height changes with the catalog fights the sheet's measuring and scrolling. */}
+      {platform ? (
+          <Rail
+            bleed
+            gap="sm"
+            accessibilityRole="tablist"
+            accessibilityLabel={t('marketplace.campaign.wizard.requirements.sheet.platforms')}
+          >
+            {choices.map(choice => (
+              <Chip
+                key={choice.key}
+                variant="tile"
+                value={choice.key}
+                label={choice.label}
+                selected={choice.key === platform.key}
+                onSelect={pickPlatform}
+              />
+            ))}
+          </Rail>
+        ) : undefined}
+      {platform ? (
+        <Box gap="sm">
+          {platform.services.map(service => (
+            <CatalogServiceRow
+              key={service.key}
+              platform={platform.key}
+              platformLabel={platform.label}
+              service={service.key}
+              label={service.label}
+              picked={hasDeliverable(values.deliverables, platform.key, service.key)}
+              onToggle={toggleService}
             />
-            <Box gap="sm">
-              {platform.services.map(service => (
-                <CatalogServiceRow
-                  key={service.key}
-                  platform={platform.key}
-                  platformLabel={platform.label}
-                  service={service.key}
-                  label={service.label}
-                  picked={hasDeliverable(values.deliverables, platform.key, service.key)}
-                  onToggle={toggleService}
-                />
-              ))}
-            </Box>
-          </>
-        ) : null}
-      </Box>
-    </BottomSheet>
+          ))}
+        </Box>
+      ) : null}
+    </SheetFrame>
   );
 };
 

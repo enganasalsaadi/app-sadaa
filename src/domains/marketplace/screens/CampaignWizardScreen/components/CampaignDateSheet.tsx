@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { BottomSheet, Box, ChipGroup, CustomButton, Text } from '@/shared/ui';
+import { Box, ChipGroup, CustomButton, SheetFrame, Text } from '@/shared/ui';
 import { CampaignCalendar } from '../../../components/CampaignCalendar';
 import { formatCampaignDateTime, formatCampaignTime } from '../../../utils/campaignSchedule';
 import { useCampaignWizard } from '../CampaignWizardContext';
@@ -40,9 +40,15 @@ const CampaignDateSheetComponent: React.FC = () => {
   const ready = pickedDay !== null && (!isDrop || dropMinute !== null);
 
   return (
-    <BottomSheet
+    <SheetFrame
       visible={sheetOpen}
       onClose={closeSheet}
+      title={t(isDrop ? 'marketplace.campaign.wizard.money.when.sheetTitle' : 'marketplace.campaign.wizard.money.deadline.sheetTitle')}
+      body={
+        isDrop
+          ? t('marketplace.campaign.wizard.money.when.sheetBody', { date: formatCampaignDateTime(earliestDrop) })
+          : t('marketplace.campaign.wizard.money.deadline.sheetBody')
+      }
       footer={
         <CustomButton
           title={t('marketplace.campaign.wizard.money.sheetConfirm')}
@@ -52,46 +58,34 @@ const CampaignDateSheetComponent: React.FC = () => {
         />
       }
     >
-      <Box px="xl" pt="md" pb="xl" gap="lg">
-        <Box gap="xs">
-          <Text variant="h3" color={colors.text.primary}>
-            {t(isDrop ? 'marketplace.campaign.wizard.money.when.sheetTitle' : 'marketplace.campaign.wizard.money.deadline.sheetTitle')}
+      <CampaignCalendar
+        // A fresh calendar per opening, so it opens on the month of the date picked last.
+        key={sheetOpen ? sheet : 'closed'}
+        selected={pickedDay}
+        minDay={isDrop ? dropMinDay : deadlineRange.min}
+        maxDay={isDrop ? undefined : deadlineRange.max}
+        onPick={pickDay}
+      />
+      {isDrop && pickedDay !== null ? (
+        <Box gap="sm">
+          <Text variant="label" color={colors.text.secondary}>
+            {t('marketplace.campaign.wizard.money.when.time')}
           </Text>
-          <Text variant="bodySmall" color={colors.text.secondary}>
-            {isDrop
-              ? t('marketplace.campaign.wizard.money.when.sheetBody', { date: formatCampaignDateTime(earliestDrop) })
-              : t('marketplace.campaign.wizard.money.deadline.sheetBody')}
-          </Text>
-        </Box>
-        <CampaignCalendar
-          // A fresh calendar per opening, so it opens on the month of the date picked last.
-          key={sheetOpen ? sheet : 'closed'}
-          selected={pickedDay}
-          minDay={isDrop ? dropMinDay : deadlineRange.min}
-          maxDay={isDrop ? undefined : deadlineRange.max}
-          onPick={pickDay}
-        />
-        {isDrop && pickedDay !== null ? (
-          <Box gap="sm">
-            <Text variant="label" color={colors.text.secondary}>
-              {t('marketplace.campaign.wizard.money.when.time')}
+          {times.length > 0 ? (
+            <ChipGroup
+              items={times}
+              value={dropMinute === null ? null : String(dropMinute)}
+              onChange={onTime}
+              accessibilityLabel={t('marketplace.campaign.wizard.money.when.time')}
+            />
+          ) : (
+            <Text variant="bodySmall" color={colors.status.warning.text}>
+              {t('marketplace.campaign.wizard.money.when.noTime')}
             </Text>
-            {times.length > 0 ? (
-              <ChipGroup
-                items={times}
-                value={dropMinute === null ? null : String(dropMinute)}
-                onChange={onTime}
-                accessibilityLabel={t('marketplace.campaign.wizard.money.when.time')}
-              />
-            ) : (
-              <Text variant="bodySmall" color={colors.status.warning.text}>
-                {t('marketplace.campaign.wizard.money.when.noTime')}
-              </Text>
-            )}
-          </Box>
-        ) : null}
-      </Box>
-    </BottomSheet>
+          )}
+        </Box>
+      ) : null}
+    </SheetFrame>
   );
 };
 

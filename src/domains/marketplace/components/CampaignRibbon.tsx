@@ -12,12 +12,12 @@ export interface CampaignRibbonProps {
   action: string;
 }
 
-/** A strip under a card's cover for the one thing that waits on the brand (suspension, freed seat). */
+/** A strip inside a card for the one thing that waits on the brand (suspension, freed seat). */
 const CampaignRibbonComponent: React.FC<CampaignRibbonProps> = ({ tone, icon: Icon, label, action }) => {
   const { colors, sizes } = useTheme();
   const hue = resolveHue(colors, tone);
   return (
-    <Box row align="center" gap="md" px="lg" py="md" bg={hue.soft}>
+    <Box row align="center" gap="md" px="md" py="sm" borderRadius="md" bg={hue.soft}>
       <Icon size={sizes.icon.sm} color={hue.main} />
       <Box flex={1}>
         <Text variant="label" color={hue.text} numberOfLines={2}>

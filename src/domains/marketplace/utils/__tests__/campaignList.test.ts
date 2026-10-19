@@ -1,10 +1,9 @@
 import { mapCampaignDetail } from '../campaignMappers';
 import {
-  buildCampaignAttention,
   campaignAttentionKind,
   campaignReadiness,
   campaignTimeLeft,
-  waitingApplications,
+  countCampaignAttention,
 } from '../campaignList';
 import { detailDto, label } from '../__fixtures__/campaignDto';
 
@@ -29,18 +28,16 @@ describe('campaignAttentionKind', () => {
   });
 });
 
-describe('buildCampaignAttention', () => {
-  it('orders by urgency and lists a campaign once', () => {
+describe('countCampaignAttention', () => {
+  it('counts every campaign that waits once, even when it is listed twice', () => {
     const freed = campaign({ id: 'a', status: label('open') });
     const edits = campaign({ id: 'b', status: label('changes_requested'), ...NO_SEAT_FREED });
-    const suspended = campaign({ id: 'c', status: label('suspended'), ...NO_SEAT_FREED });
-    const found = buildCampaignAttention([freed, edits, suspended, freed]);
-    expect(found.map(item => item.campaign.id)).toEqual(['c', 'a', 'b']);
-    expect(found.map(item => item.kind)).toEqual(['suspended', 'seat_freed', 'changes_requested']);
+    const calm = campaign({ id: 'c', status: label('open'), ...NO_SEAT_FREED });
+    expect(countCampaignAttention([freed, edits, calm, freed])).toBe(2);
   });
 
-  it('is empty when nothing waits', () => {
-    expect(buildCampaignAttention([campaign({ ...NO_SEAT_FREED })])).toEqual([]);
+  it('is zero when nothing waits', () => {
+    expect(countCampaignAttention([campaign({ ...NO_SEAT_FREED })])).toBe(0);
   });
 });
 
@@ -52,14 +49,6 @@ describe('campaignReadiness', () => {
 
   it('never goes below zero when the server lists more than this build knows', () => {
     expect(campaignReadiness({ missing: Array.from({ length: 9 }, (_, i) => `k${i}`) }).done).toBe(0);
-  });
-});
-
-describe('waitingApplications', () => {
-  it('sums open applications, but only when every page has loaded', () => {
-    const rows = [campaign({ id: 'a' }), campaign({ id: 'b', counters: { applications_open: 2, seats_occupied: 0 } })];
-    expect(waitingApplications(rows, false)).toBe(5);
-    expect(waitingApplications(rows, true)).toBeNull();
   });
 });
 

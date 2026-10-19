@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { CircleCheck, Megaphone } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
-import { Box, CustomButton, EmptyState, InlineError, ListRow, Notice, Skeleton, StatusPill, Text } from '@/shared/ui';
+import { Box, CustomButton, EmptyState, InlineError, ListRow, Notice, Skeleton, StatusPill, Text, SheetFrame } from '@/shared/ui';
 import { ApplicantFace } from '../../../components/ApplicantFace';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import { CAMPAIGN_INVITE_LIMIT, CAMPAIGN_INVITE_SKIP_TONE, UNKNOWN_INVITE_SKIP_TONE } from '../../../constants/campaignInvite';
 import type { Campaign } from '../../../types/campaign';
 import type { InviteReportRow, ShortlistInviteSheet } from '../../../hooks/useShortlistInvite';
@@ -160,7 +159,7 @@ const InviteCampaignSheetComponent: React.FC<InviteCampaignSheetProps> = ({ shee
   const sent = sheet.report !== null;
   const canSend = !sheet.isLoading && !sheet.isError && sheet.campaigns.length > 0;
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={sheet.visible}
       onClose={sheet.close}
       title={t(sent ? 'marketplace.shortlist.invite.report.title' : 'marketplace.shortlist.invite.sheet.title')}
@@ -181,7 +180,7 @@ const InviteCampaignSheetComponent: React.FC<InviteCampaignSheetProps> = ({ shee
       }
     >
       {sent ? <Report sheet={sheet} /> : <Picker sheet={sheet} />}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

@@ -18,10 +18,9 @@ import {
   useStyles,
   useTheme,
 } from '@/core/theme';
-import { Box, CustomButton, CustomInput } from '@/shared/ui';
+import { Box, CustomButton, CustomInput, SheetFrame } from '@/shared/ui';
 import { DEAL_RESPOND_LIMITS } from '../constants/dealOffer';
 import type { DealReasonFormValues } from '../schemas/dealRespondSchema';
-import { DealSheetFrame } from './DealSheetFrame';
 
 const ART_HEIGHT = moderateScale(112);
 const SLIP = { width: moderateScale(168), height: moderateScale(88) };
@@ -151,7 +150,7 @@ const DealReasonSheetComponent: React.FC<DealReasonSheetProps> = ({
   if (kind) shown.current = kind;
   const copy = COPY[shown.current];
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={kind !== null}
       onClose={onClose}
       title={t(copy.title)}
@@ -198,7 +197,7 @@ const DealReasonSheetComponent: React.FC<DealReasonSheetProps> = ({
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

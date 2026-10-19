@@ -306,7 +306,7 @@ export const SHOWCASE_ENTRIES = {
   bottomSheet: {
     category: 'overlays',
     titleKey: 'devShowcase.sections.bottomSheet',
-    covers: ['BottomSheet', 'SelectionModal'],
+    covers: ['BottomSheet', 'SheetFrame', 'SelectionModal'],
   },
   confirmSheet: {
     category: 'overlays',

@@ -124,6 +124,14 @@ export interface CampaignWalletDto {
   is_sufficient: boolean;
 }
 
+/** The quote's wallet block: until the pricing is set the server has nothing to hold, so these arrive `null`. */
+export interface CampaignQuoteWalletDto {
+  balance_usd: string | null;
+  required_usd: string | null;
+  shortfall_usd: string | null;
+  is_sufficient: boolean | null;
+}
+
 export interface CampaignQuoteDto {
   pricing_model: string | null;
   currency: string;
@@ -133,7 +141,7 @@ export interface CampaignQuoteDto {
   seat: { min: CampaignMoneyBreakdownDto | null; max: CampaignMoneyBreakdownDto | null };
   total_gross_usd: { min: string | null; max: string | null };
   budget_usd: string | null;
-  wallet: CampaignWalletDto;
+  wallet: CampaignQuoteWalletDto;
 }
 
 export interface CampaignRecruitingDto {

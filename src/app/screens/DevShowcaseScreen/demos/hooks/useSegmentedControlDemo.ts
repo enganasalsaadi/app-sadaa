@@ -13,7 +13,7 @@ export const useSegmentedControlDemo = () => {
   const dealOptions = useMemo<SegmentedOption<DealView>[]>(
     () => [
       { value: 'active', label: t('devShowcase.segmented.active') },
-      { value: 'completed', label: t('devShowcase.segmented.completed') },
+      { value: 'completed', label: t('devShowcase.segmented.completed'), badge: 2 },
     ],
     [t],
   );

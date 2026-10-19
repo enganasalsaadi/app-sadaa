@@ -76,7 +76,7 @@ const DeliverablesFieldComponent: React.FC = () => {
   }
 
   return (
-    <Box gap="md">
+    <Box gap="lg">
       {lines.map(line => {
         const key = deliverableKey(line);
         const names = deliverableLabels(choices, line);

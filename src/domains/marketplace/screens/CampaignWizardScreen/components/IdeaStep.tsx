@@ -30,7 +30,7 @@ const IdeaStepComponent: React.FC = () => {
   } = useCampaignWizard();
 
   return (
-    <Box px="xl" py="xl" gap="2xl">
+    <Box py="xl" gap="2xl">
       {live ? (
         <Notice
           tone="info"

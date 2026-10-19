@@ -4,15 +4,15 @@ import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
 import { MoreHorizontal } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
+import { formatNumber } from '@/core/i18n';
 import { Box, ConfirmSheet, ErrorState, Layout, LayoutFooter, StaggerIn } from '@/shared/ui';
 import { CampaignBatchToolsCard } from '../../components/CampaignBatchToolsCard';
 import { CampaignDetailHero } from '../../components/CampaignDetailHero';
 import { CampaignDetailSkeleton } from '../../components/CampaignDetailSkeleton';
 import { CampaignHistoryCard } from '../../components/CampaignHistoryCard';
-import { CampaignIsland } from '../../components/CampaignIsland';
-import { CampaignReadinessCard } from '../../components/CampaignReadinessCard';
-import { CampaignReviewNoteCard } from '../../components/CampaignReviewNoteCard';
-import { CampaignSeatsCard } from '../../components/CampaignSeatsCard';
+import { CampaignJourney } from '../../components/CampaignJourney';
+import { CampaignNowCard } from '../../components/CampaignNowCard';
+import { CampaignQuickActions } from '../../components/CampaignQuickActions';
 import { CampaignTermsCard } from '../../components/CampaignTermsCard';
 import { CampaignActionsSheet } from './components/CampaignActionsSheet';
 import { CampaignAddSeatsSheet } from './components/CampaignAddSeatsSheet';
@@ -27,13 +27,16 @@ const DOCK_LABEL = {
   resume: 'marketplace.campaign.detail.dock.resume',
   resubmit: 'marketplace.campaign.detail.dock.resubmit',
   reopen: 'marketplace.campaign.detail.dock.reopen',
+  applicants: 'marketplace.campaign.detail.dock.applicants',
+  creators: 'marketplace.campaign.detail.dock.creators',
 } as const satisfies Record<CampaignDetailDock, ParseKeys>;
 
 /**
- * The brand's campaign page (`sada://campaigns/{id}`): the cover with the status and time left,
- * the one thing the campaign waits on, the seats as the hero (or a readiness checklist for a
- * draft), the terms with their lock, and the campaign's own history. The body slides over the
- * cover like the deal page. The «⋯» in the bar opens what the status allows.
+ * The brand's campaign page (`sada://campaigns/{id}`): a short cover (the campaign's photo, rings on
+ * the brand gradient without one), then the body that slides over it, in the order a brand asks:
+ * what can I do right now (quick actions), what is happening and what is asked of me, the terms,
+ * the tools, the journey so far, and the campaign's own history. The «⋯» in the bar opens
+ * everything the status allows; the dock holds the one thing it asks.
  */
 const BrandCampaignDetailScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -86,9 +89,9 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
           dock ? (
             <LayoutFooter
               primary={{
-                label: t(DOCK_LABEL[dock]),
-                onPress: dock === 'reopen' ? vm.reopenFromDock : vm.openWizard,
-                loading: dock === 'reopen' && lifecycle.isRunning,
+                label: t(DOCK_LABEL[dock.kind], { count: formatNumber(dock.count) }),
+                onPress: vm.dockPress,
+                loading: dock.kind === 'reopen' && lifecycle.isRunning,
               }}
             />
           ) : undefined
@@ -101,15 +104,13 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
         }}
       >
         <Box style={styles.sheet} px="xl" pt="xl" pb="5xl">
-          {/* Spaces itself: it renders nothing most of the time, and a null child would still take a gap. */}
-          <CampaignIsland campaign={campaign} onAction={lifecycle.decide} busy={lifecycle.isRunning} />
-          <StaggerIn gap="lg">
-            {vm.reviewNote ? <CampaignReviewNoteCard note={vm.reviewNote} /> : null}
-            {vm.showReadiness ? (
-              <CampaignReadinessCard missing={campaign.missing} onEdit={vm.openWizard} />
-            ) : (
-              <CampaignSeatsCard campaign={campaign} onReview={vm.openApplicants} />
-            )}
+          <StaggerIn gap="2xl">
+            {vm.quickActions.length > 0 ? (
+              <CampaignQuickActions actions={vm.quickActions} onAction={vm.onQuickAction} busy={lifecycle.isRunning} />
+            ) : null}
+            {vm.nowCard ? (
+              <CampaignNowCard now={vm.nowCard} note={vm.reviewNote} onTodo={vm.onTodo} busy={lifecycle.isRunning} />
+            ) : null}
             {vm.tools?.any ? (
               <CampaignBatchToolsCard
                 campaign={campaign}
@@ -119,7 +120,10 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
                 onOpenAnnouncements={vm.openAnnouncements}
               />
             ) : null}
-            <CampaignTermsCard campaign={campaign} locked={vm.termsLocked} />
+            <CampaignTermsCard campaign={campaign} state={vm.termsState} onEdit={vm.editTerms} />
+            {vm.journey && vm.nowCard ? (
+              <CampaignJourney stations={vm.journey} tone={vm.nowCard.tone} onOpenApplicants={vm.openApplicants} />
+            ) : null}
             <CampaignHistoryCard {...vm.history} />
           </StaggerIn>
         </Box>

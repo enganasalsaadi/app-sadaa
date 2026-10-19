@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
-import { Box, CustomButton, Notice, Text } from '@/shared/ui';
+import { Box, CustomButton, Notice, Text, SheetFrame } from '@/shared/ui';
 import { CampaignCalendar } from '../../../components/CampaignCalendar';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
 import type { CampaignDetail } from '../../../types/campaign';
 import { formatCampaignDate } from '../../../utils/campaignSchedule';
 import type { CampaignLifecycleModel } from '../hooks/useCampaignLifecycle';
@@ -24,7 +23,7 @@ const CampaignDeadlineSheetComponent: React.FC<CampaignDeadlineSheetProps> = ({ 
   const current = campaign.applyDeadlineAt;
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={deadlineVisible}
       onClose={close}
       title={t('marketplace.campaign.detail.deadlineSheet.title')}
@@ -63,7 +62,7 @@ const CampaignDeadlineSheetComponent: React.FC<CampaignDeadlineSheetProps> = ({ 
       ) : (
         <Notice tone="warning" message={t('marketplace.campaign.detail.deadlineSheet.none')} />
       )}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

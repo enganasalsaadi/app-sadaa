@@ -19,7 +19,7 @@ const RequirementsStepComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   return (
-    <Box px="xl" py="xl" gap="2xl">
+    <Box py="xl" gap="2xl">
       <CampaignField label={t('marketplace.campaign.wizard.requirements.deliverables.label')}>
         <DeliverablesField />
       </CampaignField>

@@ -41,7 +41,7 @@ const OpportunityDeliverablesComponent: React.FC<OpportunityDeliverablesProps> =
               {item.platform.label}
             </Text>
           )}
-          <Text variant="bodySmall" color={colors.text.primary}>
+          <Text variant="caption" color={colors.text.primary}>
             {`${item.count} × ${item.service.label}`}
           </Text>
         </ChipShell>

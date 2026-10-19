@@ -420,7 +420,6 @@
   "tabs": {
     "home": "Home",
     "explore": "Explore",
-    "campaigns": "Campaigns",
     "deals": "Deals",
     "opportunities": "Opportunities",
     "messages": "Messages",
@@ -1334,34 +1333,27 @@
     "campaign": {
       "detailTitle": "Campaign",
       "list": {
-        "scope": {
-          "campaigns": "My campaigns",
-          "deals": "My deals"
-        },
         "tabsLabel": "Campaign groups",
+        "station": {
+          "review": "Review",
+          "apply": "Applications",
+          "seats": "Seats",
+          "run": "Running",
+          "done": "Done"
+        },
         "tabs": {
-          "drafts": "Drafts",
+          "all": "All",
+          "live": "Active",
           "review": "In review",
-          "live": "Live",
+          "drafts": "Drafts",
           "finished": "Finished"
         },
-        "count": {
-          "drafts_one": "{{count}} draft",
-          "drafts_other": "{{count}} drafts",
-          "review_one": "{{count}} campaign in review",
-          "review_other": "{{count}} campaigns in review",
-          "live_one": "{{count}} live campaign",
-          "live_other": "{{count}} live campaigns",
-          "finished_one": "{{count}} finished campaign",
-          "finished_other": "{{count}} finished campaigns"
-        },
-        "waiting_one": "{{count}} application waiting",
-        "waiting_other": "{{count}} applications waiting",
         "applications_one": "{{count}} application",
         "applications_other": "{{count}} applications",
         "seats": "{{filled}}/{{total}} seats",
+        "seatsFilled": "{{filled}} of {{total}} filled",
         "seatsA11y": "{{filled}} of {{total}} seats filled",
-        "perSeat": "per seat",
+        "perCreator": "/ creator",
         "upTo": "up to",
         "secured": "Budget secured",
         "left": {
@@ -1369,19 +1361,26 @@
           "hours": "{{hours}}h {{minutes}}m",
           "minutes": "{{minutes}}m"
         },
+        "timeLeft": {
+          "days_one": "{{count}} day left",
+          "days_other": "{{count}} days left",
+          "hours_one": "{{count}} hour left",
+          "hours_other": "{{count}} hours left",
+          "minutes_one": "{{count}} minute left",
+          "minutes_other": "{{count}} minutes left"
+        },
         "ribbon": {
           "suspended": "Suspended — open it to reopen",
           "seatFreed": "A seat freed up — decide what to do",
           "decide": "Decide"
         },
-        "cardA11y": "{{title}}, {{status}}",
-        "attention": {
-          "title": "Needs your decision · {{count}}",
-          "suspended": "Suspended — needs reopening",
-          "seatFreed": "Seat freed — replace or reduce",
-          "changes": "Admin asked for changes",
-          "railA11y": "Campaigns waiting on your decision"
+        "caption": {
+          "noApplicants": "No one has applied yet",
+          "closed": "Applications closed · {{filled}} of {{total}} seats",
+          "filled": "Seats are full and the deals are under way",
+          "review": "The team reviews it before creators see it"
         },
+        "cardA11y": "{{title}}, {{status}}",
         "readiness": "{{done}}/{{total}}",
         "readinessA11y": "{{done}} of {{total}} parts complete",
         "untitled": "Untitled campaign",
@@ -1395,17 +1394,21 @@
         "finishedMeta": "{{filled}} of {{total}} seats • {{date}}",
         "loadFailed": "Couldn't load your campaigns",
         "empty": {
-          "drafts": {
-            "title": "No drafts",
-            "hint": "Start a new campaign; your work is saved as you go."
+          "all": {
+            "title": "No campaigns yet",
+            "hint": "Publish your first campaign so creators can apply and you can choose."
+          },
+          "live": {
+            "title": "No active campaigns",
+            "hint": "Approved campaigns appear here with their seats and creator applications."
           },
           "review": {
             "title": "Nothing in review",
             "hint": "A campaign you send shows here until the admin answers."
           },
-          "live": {
-            "title": "No live campaigns",
-            "hint": "Approved campaigns appear here with their seats and creator applications."
+          "drafts": {
+            "title": "No drafts",
+            "hint": "Start a new campaign; your work is saved as you go."
           },
           "finished": {
             "title": "No finished campaigns",
@@ -1932,20 +1935,14 @@
           },
           "ringA11y": "{{value}} {{unit}} left"
         },
-        "readiness": {
-          "title": "Campaign readiness"
-        },
         "seats": {
-          "title": "Seats",
-          "of": "/{{total}}",
-          "left": "taken · {{free}} left",
           "applications": "open applications",
           "price": "price per seat",
           "bidMax": "top bid",
           "review": "Review applicants"
         },
         "terms": {
-          "title": "Terms",
+          "title": "Campaign terms",
           "locked": "Locked after the first application",
           "deadline": "Application deadline",
           "schedule": "Schedule",
@@ -1953,7 +1950,13 @@
           "targeting": "Targeting",
           "anyone": "Open to everyone",
           "shipping": "Shipping",
-          "revisions": "Revisions ×{{count}}"
+          "revisions": "Revisions ×{{count}}",
+          "deliverables": "Asked of each creator",
+          "noPrice": "Not set yet",
+          "followersMin": "followers at least",
+          "priority": "Priority in the feed",
+          "lockedReview": "Fixed during review",
+          "edit": "Edit"
         },
         "history": {
           "title": "Campaign history",
@@ -1968,12 +1971,16 @@
             "deadline_reached": "The application deadline passed",
             "zero_applicants": "The deadline passed with no applicants",
             "zero_applicants_extended": "Deadline extended by 4 days"
-          }
+          },
+          "showAll": "Show all ({{count}})",
+          "showLess": "Show less"
         },
         "dock": {
           "resume": "Finish the campaign",
           "resubmit": "Edit and resubmit",
-          "reopen": "Reopen"
+          "reopen": "Reopen",
+          "applicants": "Review applications ({{count}})",
+          "creators": "View selected creators"
         },
         "menu": {
           "title": "Campaign actions",
@@ -2058,7 +2065,7 @@
           "done": "Deadline extended by 4 days"
         },
         "tools": {
-          "title": "Batch tools",
+          "title": "Campaign tools",
           "drop": {
             "title": "Launch room",
             "pending": "Drop in {{remaining}}",
@@ -2071,6 +2078,137 @@
           "announcements": {
             "title": "Broadcast to creators",
             "subtitle": "One message reaches everyone"
+          }
+        },
+        "quick": {
+          "title": "Quick actions",
+          "labels": {
+            "resume": "Resume",
+            "addSeats": "Seats",
+            "extendDeadline": "Extend",
+            "edit": "Edit",
+            "duplicate": "Copy",
+            "close": "Close",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "reopen": "Reopen",
+            "creators": "Creators"
+          }
+        },
+        "now": {
+          "tag": "Happening now",
+          "todoTitle": "What you need to do",
+          "nextLabel": "Next:",
+          "calm": "Nothing needed from you right now — we'll tell you when something changes.",
+          "ring": {
+            "ready": "ready",
+            "creators": "creators",
+            "readyA11y": "{{done}} of {{total}} complete",
+            "creatorsA11y": "{{count}} creators selected"
+          },
+          "draft": {
+            "head": "Your campaign is still a draft",
+            "body": "Fill in what is missing, then send it to the Sada team for review.",
+            "next": "After you send it, the Sada team reviews it before it goes live."
+          },
+          "changes": {
+            "head": "The Sada team asked for changes",
+            "body": "Make the requested changes, then resubmit. Your campaign stays saved.",
+            "next": "After you resubmit, the team reviews it again."
+          },
+          "review": {
+            "head": "The Sada team is reviewing your campaign",
+            "body": "A check of the cover, price and terms. Nothing is needed from you now, and we will tell you as soon as there is a decision.",
+            "next": "Once approved, the campaign goes live and creators start applying."
+          },
+          "open": {
+            "head": "Creators are applying now",
+            "bodyWaiting": "Applications are waiting for your decision. One that waits too long suspends the campaign automatically.",
+            "bodyQuiet": "Waiting for creators to apply before the deadline.",
+            "next": "After you pick creators, their payment is held in escrow and the work begins."
+          },
+          "filled": {
+            "head": "All seats are taken",
+            "body": "Applications are closed and the creators are working on your campaign. Drafts reach you inside each creator's deal, to approve or ask for changes.",
+            "next": "Once the content is published and verified, the money is released to the creators and each side rates the other."
+          },
+          "closed": {
+            "head": "Applications closed",
+            "body": "You went with the creators you picked, and their deals are under way.",
+            "next": "Once the content is published and verified, the money is released to the creators and each side rates the other."
+          },
+          "completed": {
+            "head": "Campaign complete",
+            "body": "All of its deals have ended."
+          },
+          "cancelled": {
+            "head": "Campaign cancelled",
+            "body": "It is no longer visible to creators."
+          },
+          "rejected": {
+            "head": "Campaign rejected",
+            "body": "The team's note is here, and you can duplicate the campaign to start a new draft."
+          },
+          "removed": {
+            "head": "Campaign removed",
+            "body": "The team's note is here, and you can duplicate the campaign to start a new draft."
+          },
+          "todo": {
+            "applicantsSub": "Compare the applicants and pick",
+            "urgentStop": "Suspends the campaign in {{value}} {{unit}}",
+            "urgentCancel": "Cancels itself in {{value}} {{unit}}",
+            "missingSub": "Needed before sending",
+            "editSub": "Read the team's note, then resubmit",
+            "sub": {
+              "reopen": "Applications open again",
+              "reopenSeat": "Applications open again to fill the seat",
+              "reduce": "Keep only the filled seats",
+              "extend": "Give creators more time",
+              "edit": "Review the terms again",
+              "cancel": "The campaign ends"
+            }
+          }
+        },
+        "journey": {
+          "title": "Campaign journey",
+          "where": "Where we are",
+          "sum": {
+            "draftNotSent": "Not sent yet",
+            "reviewing": "Under review",
+            "awaitingEdits": "Waiting for your changes",
+            "approved": "Passed the review",
+            "applyUntil": "Until {{date}}",
+            "applyOpen": "Open for applications",
+            "suspended": "Suspended · cancels on {{date}}",
+            "suspendedNoDate": "Temporarily suspended",
+            "applyClosed": "Applications closed",
+            "afterApproval": "After approval",
+            "seatsPicked": "{{occupied}} of {{total}} picked",
+            "afterPicking": "After picking creators",
+            "running": "Creators are working",
+            "notStarted": "Not started yet",
+            "runDone": "Work complete",
+            "afterVerify": "After the posts are verified",
+            "done": "Campaign complete"
+          },
+          "panel": {
+            "reviewDone": "The team checked the cover, price and terms and approved them.",
+            "reviewing": "The team is checking the cover, price and terms. The terms stay fixed during the review; find them in «Campaign terms».",
+            "draft": "Complete the campaign details and send them for the Sada team to review.",
+            "changes": "Make the changes the team asked for, then resubmit.",
+            "applyNext": "After approval the campaign goes live and creators apply until the deadline.",
+            "applyDone": "Applications are closed.",
+            "deadline": "Application deadline",
+            "cancelAt": "Automatic cancellation",
+            "left": "{{value}} {{unit}} left",
+            "seatsNext": "When you pick a creator, the seat's price is held from your wallet in escrow.",
+            "seatsClosed": "Applications closed with the seats picked.",
+            "seatsDone": "The creators are picked and their payment is held in escrow.",
+            "runCurrent": "The creators are working. Each creator's draft reaches you inside their deal, to approve or ask for changes.",
+            "runNext": "Starts after you pick creators: drafts are reviewed, then published, then verified.",
+            "runDone": "Work complete.",
+            "doneNext": "The money is released to the creators after the posts are verified, then each side rates the other.",
+            "doneDone": "The campaign is complete."
           }
         }
       },
@@ -2852,9 +2990,17 @@
         "allA11y": "Show all your campaigns ({{count}})",
         "open": "Open campaign",
         "unsecured": "Budget not secured",
-        "seatsLeft": "{{free}} of {{total}} available",
+        "seatsBooked": "{{booked}} of {{total}} booked",
         "seatsA11y": "{{filled}} seats paid, {{awaiting}} waiting for your payment, of {{total}}",
         "cardA11y": "{{title}}, {{status}}, {{free}} of {{total}} seats available",
+        "dropIn": {
+          "days_one": "{{count}} day",
+          "days_other": "{{count}} days",
+          "hours_one": "{{count}} hour",
+          "hours_other": "{{count}} hours",
+          "minutes_one": "{{count}} min",
+          "minutes_other": "{{count}} min"
+        },
         "stat": {
           "applications": "Applications",
           "awaitingPayment": "Awaiting payment",
@@ -3516,17 +3662,35 @@
       "tabsLabel": "Deal groups",
       "tabCount": "{{label}} {{count}}",
       "tabs": {
-        "active": "Active",
-        "drafts": "Drafts",
         "closed": "Closed",
         "new": "New",
         "ongoing": "Ongoing"
       },
+      "filters": {
+        "all": "All",
+        "onYou": "Waiting on you",
+        "waiting": "Awaiting reply",
+        "ongoing": "In progress",
+        "drafts": "Drafts",
+        "closed": "Finished"
+      },
       "loadFailed": "Couldn't load your deals",
       "empty": {
-        "brandActive": {
-          "title": "No active deals yet",
-          "hint": "Find a creator and send your first offer from their media kit."
+        "all": {
+          "title": "No requests yet",
+          "hint": "Pick a creator in Explore and send them a direct request."
+        },
+        "onYou": {
+          "title": "Nothing waits on you",
+          "hint": "When a deal needs your review or payment it shows here."
+        },
+        "waiting": {
+          "title": "No requests awaiting a reply",
+          "hint": "Requests you sent that the creator has not answered show here."
+        },
+        "ongoing": {
+          "title": "No deals in progress",
+          "hint": "Once a creator accepts, the deal shows here with its stations."
         },
         "drafts": {
           "title": "No drafts",
@@ -5243,6 +5407,14 @@
         }
       }
     },
+    "hub": {
+      "faces": {
+        "campaigns": "Public campaigns",
+        "deals": "Direct requests"
+      },
+      "facesLabel": "Kind of deals",
+      "newRequest": "New request"
+    },
     "restrictions": {
       "returnPending": {
         "title": "Your account is locked for now",
@@ -6371,7 +6543,8 @@
       "filterSet": "This month",
       "filterClear": "Clear date",
       "rowTitle": "ChipRow (pinned filter row, scrolls sideways)",
-      "tileTitle": "Chip tile (discovery shortcuts: soft pill + icon)"
+      "tileTitle": "Chip tile (discovery shortcuts: soft pill + icon)",
+      "solidTitle": "Chip solid (list filter: chosen one filled + count + waiting dot)"
     },
     "otp": {
       "hint": "Enter 123456 for success; any other code shakes.",

@@ -21,6 +21,7 @@ import {
   getFieldFrameStyle,
   createInputTextStyle,
   createMultilineContainerStyle,
+  createMultilineTextStyle,
 } from './styles';
 
 interface IconProps {
@@ -38,8 +39,12 @@ export interface CustomInputProps extends Omit<TextInputProps, 'style'> {
   borderRadius?: RadiiToken;
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
+  /** Text area: reserves `numberOfLines` lines, grows with the text up to `maxLines`, then scrolls. */
   multiline?: boolean;
+  /** Lines reserved while empty (minimum height of a text area). */
   numberOfLines?: number;
+  /** Lines the text area may grow to before it scrolls inside. */
+  maxLines?: number;
   /** `value.length / maxLength` under the field (briefs, bios). Needs `maxLength`. */
   showCount?: boolean;
   /** Unit at the trailing end (currency code, `%`, `min`). */
@@ -52,6 +57,8 @@ export interface CustomInputProps extends Omit<TextInputProps, 'style'> {
 }
 
 export type CustomInputHintTone = 'neutral' | 'success';
+
+const DEFAULT_MAX_LINES = 10;
 
 const CustomInputInner = React.forwardRef(
   (
@@ -68,6 +75,7 @@ const CustomInputInner = React.forwardRef(
       editable = true,
       multiline = false,
       numberOfLines = 4,
+      maxLines = DEFAULT_MAX_LINES,
       showCount = false,
       suffix,
       hint,
@@ -95,11 +103,15 @@ const CustomInputInner = React.forwardRef(
     );
     const baseTextStyle = useMemo(() => createInputTextStyle(theme), [theme]);
     const multilineStyle = useMemo(
+      () => (multiline ? createMultilineContainerStyle(theme) : undefined),
+      [multiline, theme],
+    );
+    const multilineTextStyle = useMemo(
       () =>
         multiline
-          ? createMultilineContainerStyle(theme, numberOfLines)
+          ? createMultilineTextStyle(theme, numberOfLines, maxLines)
           : undefined,
-      [multiline, numberOfLines, theme],
+      [multiline, numberOfLines, maxLines, theme],
     );
 
     const isRTL = theme.isRTL;
@@ -179,11 +191,12 @@ const CustomInputInner = React.forwardRef(
     const mergedTextStyle = useMemo<TextStyle>(
       () => ({
         ...baseTextStyle,
+        ...(multilineTextStyle ?? {}),
         textAlign: isRTL ? 'right' : 'left',
         writingDirection: isRTL ? 'rtl' : 'ltr',
         ...(inputStyle ?? {}),
       }),
-      [baseTextStyle, isRTL, inputStyle],
+      [baseTextStyle, multilineTextStyle, isRTL, inputStyle],
     );
 
     return (
@@ -224,7 +237,6 @@ const CustomInputInner = React.forwardRef(
             secureTextEntry={secureEntry}
             placeholderTextColor={ic.placeholder}
             multiline={multiline}
-            numberOfLines={multiline ? numberOfLines : undefined}
             textAlignVertical={multiline ? 'top' : 'center'}
             accessibilityLabel={
               rest.accessibilityLabel ?? label ?? rest.placeholder

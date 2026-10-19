@@ -1,9 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatNumber } from '@/core/i18n';
-import { useStyles, useTheme } from '@/core/theme';
-import { BottomSheet, Box, Checkbox, ChipGroup, CustomButton, FormSection, Notice, Pressable, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
+import { Checkbox, ChipGroup, CustomButton, FormSection, Notice, Pressable, SheetFrame, Text } from '@/shared/ui';
 import {
   APPLICANT_FOLLOWER_FLOORS,
   APPLICANT_SORT_LABEL,
@@ -44,10 +43,6 @@ const ApplicantFilterSheetComponent: React.FC<ApplicantFilterSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const styles = useStyles(({ spacing }) => ({
-    scroll: { flexGrow: 0, flexShrink: 1 },
-    content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: spacing['2xl'] },
-  }));
   const { draft, set, toggleStatus, toggleFloor, reset } = useApplicantFilterDraft(filters, visible);
   const apply = useCallback(() => onApply(draft), [draft, onApply]);
   const setSort = useCallback((sort: string) => set('sort', sort as ApplicantSort), [set]);
@@ -64,11 +59,12 @@ const ApplicantFilterSheetComponent: React.FC<ApplicantFilterSheetProps> = ({
   }));
 
   return (
-    <BottomSheet visible={visible} onClose={onClose}>
-      <Box row align="center" justify="space-between" px="lg" pb="sm">
-        <Text variant="h4" accessibilityRole="header">
-          {t('marketplace.campaign.applicants.filters.title')}
-        </Text>
+    <SheetFrame
+      visible={visible}
+      onClose={onClose}
+      title={t('marketplace.campaign.applicants.filters.title')}
+      gap="2xl"
+      action={
         <Pressable
           onPress={reset}
           minHeight={sizes.button.md}
@@ -81,69 +77,66 @@ const ApplicantFilterSheetComponent: React.FC<ApplicantFilterSheetProps> = ({
             {t('marketplace.campaign.applicants.filters.reset')}
           </Text>
         </Pressable>
-      </Box>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <FormSection title={t('marketplace.campaign.applicants.filters.sort')}>
-          <ChipGroup
-            items={sorts}
-            value={draft.sort}
-            onChange={setSort}
-            accessibilityLabel={t('marketplace.campaign.applicants.filters.sort')}
-          />
-        </FormSection>
-        <FormSection title={t('marketplace.campaign.applicants.filters.status.title')}>
-          <ChipGroup
-            items={statuses}
-            value={draft.status}
-            onChange={toggleStatus}
-            accessibilityLabel={t('marketplace.campaign.applicants.filters.status.title')}
-          />
-        </FormSection>
-        {optionsError ? (
-          <Notice
-            tone="danger"
-            message={t('marketplace.campaign.applicants.filters.optionsFailed')}
-            action={{ label: t('common.retry'), onPress: onRetryOptions }}
-          />
-        ) : null}
-        <FormSection title={t('marketplace.campaign.applicants.filters.governorate')}>
-          <ChipGroup
-            multiple
-            items={options?.governorates ?? []}
-            value={draft.governorates}
-            onChange={setGovernorates}
-            loading={loading}
-            accessibilityLabel={t('marketplace.campaign.applicants.filters.governorate')}
-          />
-        </FormSection>
-        <FormSection title={t('marketplace.campaign.applicants.filters.niche')}>
-          <ChipGroup
-            multiple
-            items={options?.niches ?? []}
-            value={draft.niches}
-            onChange={setNiches}
-            loading={loading}
-            accessibilityLabel={t('marketplace.campaign.applicants.filters.niche')}
-          />
-        </FormSection>
-        <FormSection title={t('marketplace.campaign.applicants.filters.followers')}>
-          <ChipGroup
-            items={floors}
-            value={draft.minFollowers === null ? null : String(draft.minFollowers)}
-            onChange={toggleFloor}
-            accessibilityLabel={t('marketplace.campaign.applicants.filters.followers')}
-          />
-        </FormSection>
-        <Checkbox
-          label={t('marketplace.campaign.applicants.filters.invitedOnly')}
-          checked={draft.invitedOnly}
-          onChange={setInvited}
+      }
+      footer={<CustomButton title={t('marketplace.campaign.applicants.filters.apply')} onPress={apply} fullWidth />}
+    >
+      <FormSection title={t('marketplace.campaign.applicants.filters.sort')}>
+        <ChipGroup
+          items={sorts}
+          value={draft.sort}
+          onChange={setSort}
+          accessibilityLabel={t('marketplace.campaign.applicants.filters.sort')}
         />
-      </ScrollView>
-      <Box px="lg" pt="md" pb="lg">
-        <CustomButton title={t('marketplace.campaign.applicants.filters.apply')} onPress={apply} fullWidth />
-      </Box>
-    </BottomSheet>
+      </FormSection>
+      <FormSection title={t('marketplace.campaign.applicants.filters.status.title')}>
+        <ChipGroup
+          items={statuses}
+          value={draft.status}
+          onChange={toggleStatus}
+          accessibilityLabel={t('marketplace.campaign.applicants.filters.status.title')}
+        />
+      </FormSection>
+      {optionsError ? (
+        <Notice
+          tone="danger"
+          message={t('marketplace.campaign.applicants.filters.optionsFailed')}
+          action={{ label: t('common.retry'), onPress: onRetryOptions }}
+        />
+      ) : null}
+      <FormSection title={t('marketplace.campaign.applicants.filters.governorate')}>
+        <ChipGroup
+          multiple
+          items={options?.governorates ?? []}
+          value={draft.governorates}
+          onChange={setGovernorates}
+          loading={loading}
+          accessibilityLabel={t('marketplace.campaign.applicants.filters.governorate')}
+        />
+      </FormSection>
+      <FormSection title={t('marketplace.campaign.applicants.filters.niche')}>
+        <ChipGroup
+          multiple
+          items={options?.niches ?? []}
+          value={draft.niches}
+          onChange={setNiches}
+          loading={loading}
+          accessibilityLabel={t('marketplace.campaign.applicants.filters.niche')}
+        />
+      </FormSection>
+      <FormSection title={t('marketplace.campaign.applicants.filters.followers')}>
+        <ChipGroup
+          items={floors}
+          value={draft.minFollowers === null ? null : String(draft.minFollowers)}
+          onChange={toggleFloor}
+          accessibilityLabel={t('marketplace.campaign.applicants.filters.followers')}
+        />
+      </FormSection>
+      <Checkbox
+        label={t('marketplace.campaign.applicants.filters.invitedOnly')}
+        checked={draft.invitedOnly}
+        onChange={setInvited}
+      />
+    </SheetFrame>
   );
 };
 

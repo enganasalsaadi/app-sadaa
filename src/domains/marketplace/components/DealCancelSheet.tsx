@@ -4,13 +4,12 @@ import { CircleX, Flag, Gavel } from 'lucide-react-native';
 import { formatMoney } from '@/core/i18n';
 import type { Money } from '@/core/money';
 import { useTheme } from '@/core/theme';
-import { Box, Countdown, CustomButton, MoneyText, Notice, Text } from '@/shared/ui';
+import { Box, Countdown, CustomButton, MoneyText, Notice, Text, SheetFrame } from '@/shared/ui';
 import type { DealCancelModel } from '../hooks/useDealCancel';
 import type { Deal } from '../types';
 import { DealHoldToSign } from './DealHoldToSign';
 import { DealReasonFields } from './DealReasonFields';
 import { DealSettlementBar } from './DealSettlementBar';
-import { DealSheetFrame } from './DealSheetFrame';
 
 export interface DealCancelSheetProps {
   cancel: DealCancelModel;
@@ -72,7 +71,7 @@ const DealCancelSheetComponent: React.FC<DealCancelSheetProps> = ({ cancel, deal
   );
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={cancel.visible}
       onClose={cancel.close}
       onDismissed={cancel.onDismissed}
@@ -140,7 +139,7 @@ const DealCancelSheetComponent: React.FC<DealCancelSheetProps> = ({ cancel, deal
           </Box>
         </Box>
       )}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

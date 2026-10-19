@@ -1,8 +1,7 @@
 import React, { memo } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CustomButton, CustomInput } from '@/shared/ui';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
+import { CustomButton, CustomInput, SheetFrame } from '@/shared/ui';
 import { DEAL_DRAFT_KIND_LABEL, DEAL_DRAFT_LIMITS } from '../../../constants/dealDrafts';
 import type { DealPinFormValues } from '../../../schemas/dealDraftSchema';
 import { formatTimecode } from '../../../utils/dealDrafts';
@@ -31,7 +30,7 @@ const ReviewPinSheetComponent: React.FC<ReviewPinSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={visible}
       onClose={onClose}
       title={
@@ -62,7 +61,7 @@ const ReviewPinSheetComponent: React.FC<ReviewPinSheetProps> = ({
           />
         )}
       />
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

@@ -3,13 +3,7 @@ import type { Campaign } from '../types';
 import { getCampaignStatusMeta } from './campaignStatus';
 
 /** What waits on the brand in a campaign's row (list rows carry no `timers`, so nothing time-based). */
-export const CAMPAIGN_ATTENTION_KIND = ['suspended', 'seat_freed', 'changes_requested'] as const;
-export type CampaignAttentionKind = (typeof CAMPAIGN_ATTENTION_KIND)[number];
-
-export interface CampaignAttention {
-  campaign: Campaign;
-  kind: CampaignAttentionKind;
-}
+export type CampaignAttentionKind = 'suspended' | 'seat_freed' | 'changes_requested';
 
 export const campaignAttentionKind = (campaign: Campaign): CampaignAttentionKind | null => {
   const { key } = campaign.status;
@@ -19,20 +13,9 @@ export const campaignAttentionKind = (campaign: Campaign): CampaignAttentionKind
   return null;
 };
 
-/** Most urgent first: a suspension cancels itself, a freed seat blocks recruiting, edits wait on the brand only. */
-export const buildCampaignAttention = (campaigns: readonly Campaign[]): CampaignAttention[] => {
-  const seen = new Set<string>();
-  const found: CampaignAttention[] = [];
-  campaigns.forEach(campaign => {
-    const kind = campaignAttentionKind(campaign);
-    if (kind === null || seen.has(campaign.id)) return;
-    seen.add(campaign.id);
-    found.push({ campaign, kind });
-  });
-  return found.sort(
-    (a, b) => CAMPAIGN_ATTENTION_KIND.indexOf(a.kind) - CAMPAIGN_ATTENTION_KIND.indexOf(b.kind),
-  );
-};
+/** How many campaigns wait on the brand, each counted once (the loaded groups overlap in «all»). */
+export const countCampaignAttention = (campaigns: readonly Campaign[]): number =>
+  new Set(campaigns.filter(campaign => campaignAttentionKind(campaign) !== null).map(campaign => campaign.id)).size;
 
 export interface CampaignReadiness {
   done: number;
@@ -44,13 +27,6 @@ export const campaignReadiness = ({ missing }: Pick<Campaign, 'missing'>): Campa
   const total = CAMPAIGN_MISSING_KEY.length;
   return { done: Math.max(0, total - missing.length), total };
 };
-
-/** «Applications waiting» over what has loaded; `null` while more pages exist (a partial sum would mislead). */
-export const waitingApplications = (
-  campaigns: readonly Campaign[],
-  hasMorePages: boolean,
-): number | null =>
-  hasMorePages ? null : campaigns.reduce((sum, c) => sum + c.counters.applicationsOpen, 0);
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;

@@ -2,8 +2,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
-import { Box, Card, CustomButton, Notice, NumberStepper, Text } from '@/shared/ui';
-import { DealSheetFrame } from '../../../components/DealSheetFrame';
+import { Box, Card, CustomButton, Notice, NumberStepper, Text, SheetFrame } from '@/shared/ui';
 import { SeatPips } from '../../../components/SeatPips';
 import type { CampaignDetail } from '../../../types/campaign';
 import type { CampaignLifecycleModel } from '../hooks/useCampaignLifecycle';
@@ -25,7 +24,7 @@ const CampaignReduceSheetComponent: React.FC<CampaignReduceSheetProps> = ({ camp
   const total = Math.max(0, campaign.seatsTotal - seats);
 
   return (
-    <DealSheetFrame
+    <SheetFrame
       visible={reduceVisible}
       onClose={close}
       title={t('marketplace.campaign.detail.reduce.title')}
@@ -64,7 +63,7 @@ const CampaignReduceSheetComponent: React.FC<CampaignReduceSheetProps> = ({ camp
         </Box>
       </Card>
       {total === 0 ? <Notice tone="warning" message={t('marketplace.campaign.detail.reduce.cancels')} /> : null}
-    </DealSheetFrame>
+    </SheetFrame>
   );
 };
 

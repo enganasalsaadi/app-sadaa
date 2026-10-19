@@ -1,6 +1,7 @@
 import {
   APPLICATION_STATUS_META,
   APPLICATION_TAB_STATUSES,
+  CAMPAIGN_STATIONS,
   CAMPAIGN_STATUS_META,
   CAMPAIGN_TAB_STATUSES,
   CAMPAIGN_TABS,
@@ -65,6 +66,14 @@ describe('campaign status meta', () => {
     );
     const grouped = CAMPAIGN_TABS.flatMap(tab => [...CAMPAIGN_TAB_STATUSES[tab]]);
     expect([...grouped].sort()).toEqual([...CAMPAIGN_STATUS].sort());
+  });
+
+  it('puts a station on the card track only for campaigns in review or running', () => {
+    const withTrack = CAMPAIGN_STATUS.filter(status => CAMPAIGN_STATUS_META[status].station !== null);
+    expect(withTrack.sort()).toEqual(['closed', 'filled', 'open', 'pending_review', 'suspended']);
+    withTrack.forEach(status =>
+      expect(CAMPAIGN_STATUS_META[status].station).toBeLessThan(CAMPAIGN_STATIONS.length),
+    );
   });
 
   it('falls back to a neutral meta for an unknown status instead of crashing', () => {
