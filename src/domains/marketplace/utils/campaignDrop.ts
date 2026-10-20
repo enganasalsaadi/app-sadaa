@@ -20,8 +20,6 @@ export interface CampaignDropView {
   phase: CampaignDropPhase;
   /** `null` once live. */
   next: { moment: CampaignDropMoment; at: Timestamp } | null;
-  /** While the live link is the next moment: the drop itself, as the secondary line. */
-  then: Timestamp | null;
 }
 
 /**
@@ -37,11 +35,11 @@ export const campaignDropView = (board: CampaignDropBoard, now: number): Campaig
         : 'upcoming';
   switch (phase) {
     case 'upcoming':
-      return { phase, next: { moment: 'publish_open', at: board.publishOpensAt }, then: board.dropAt };
+      return { phase, next: { moment: 'publish_open', at: board.publishOpensAt } };
     case 'publish_open':
-      return { phase, next: { moment: 'drop', at: board.dropAt }, then: null };
+      return { phase, next: { moment: 'drop', at: board.dropAt } };
     case 'live':
-      return { phase, next: null, then: null };
+      return { phase, next: null };
     default: {
       const _exhaustive: never = phase;
       return _exhaustive;

@@ -32,12 +32,12 @@ const DropOnAirComponent: React.FC<DropOnAirProps> = ({ totals, dropAt, now }) =
         progress={campaignDropVerifiedShare(totals)}
         color={colors.glass.iconMoney}
         trackColor={colors.glass.progressTrack}
-        size={104}
-        strokeWidth={10}
+        size={88}
+        strokeWidth={9}
         accessibilityLabel={ringLabel}
       >
         <Box align="center">
-          <Text variant="amountTitle" color={colors.text.onBrand} writingDirection="ltr">
+          <Text variant="amount" color={colors.text.onBrand} writingDirection="ltr">
             {`${formatNumber(verified)}/${formatNumber(linked)}`}
           </Text>
           <Text variant="caption" color={colors.text.onBrandMuted}>

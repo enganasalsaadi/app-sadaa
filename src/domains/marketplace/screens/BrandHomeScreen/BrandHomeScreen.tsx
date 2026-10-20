@@ -9,6 +9,7 @@ import { HomeHeadline } from './components/HomeHeadline';
 import { HomeIsland } from './components/HomeIsland';
 import { HomeRails } from './components/HomeRails';
 import { HomeTopBar } from './components/HomeTopBar';
+import { HomeTwoWays } from './components/HomeTwoWays';
 import { SearchEntry } from './components/SearchEntry';
 import { SupportLine } from './components/SupportLine';
 import { WalletLine } from './components/WalletLine';
@@ -16,7 +17,8 @@ import { WalletLine } from './components/WalletLine';
 /**
  * Brand Home «Spotlight» (approved 2026-10-11): greeting row, a quiet wallet line, the server's
  * blocker, then «your deals» (approved 2026-10-15: the next step on top, the rest on their
- * trackers); «my active campaigns» as seat cards when the brand has any; one big question, search and category shortcuts; then the rails, each in its own
+ * trackers); «my active campaigns» as seat cards when the brand has any; for a brand that has
+ * neither, the «two ways» card that tells a direct deal from a public campaign; one big question, search and category shortcuts; then the rails, each in its own
  * shape, led by the swipeable story deck of creators near you. Search, chips, filters and
  * "See all" open Explore; ❤️ opens the Shortlist.
  */
@@ -70,6 +72,11 @@ const BrandHomeScreenComponent: React.FC = () => {
             />
           </Box>
         )}
+        {vm.showTwoWays ? (
+          <Box mt="2xl">
+            <HomeTwoWays onExplore={vm.browseAll} onCreateCampaign={vm.openCreateCampaign} />
+          </Box>
+        ) : null}
         <Box mt="4xl" gap="lg">
           <HomeHeadline />
           <SearchEntry onOpenSearch={vm.openSearch} onOpenFilters={vm.browseAll} />

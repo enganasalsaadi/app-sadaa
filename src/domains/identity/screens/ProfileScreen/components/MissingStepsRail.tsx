@@ -76,7 +76,7 @@ const Ticket = memo<TicketProps>(({ step, onPress }) => {
         <Box width={ICON_BOX} height={ICON_BOX} borderRadius="md" bg={hue.soft} align="center" justify="center">
           <Icon size={sizes.icon.md} color={hue.main} />
         </Box>
-        <Text variant="bodyMedium" numberOfLines={2}>
+        <Text variant="bodySmall" >
           {title}
         </Text>
       </Box>
@@ -98,7 +98,7 @@ const Ticket = memo<TicketProps>(({ step, onPress }) => {
       <Box style={styles.notchEnd} pointerEvents="none" />
 
       <Box flex={1} row align="center" justify="space-between" px="md">
-        <Text variant="buttonSmall" color={hue.text} numberOfLines={1}>
+        <Text variant="buttonSmall" color={hue.text}>
           {inReview ? t('account.profile.tickets.inReview') : points}
         </Text>
         {target ? <Chevron size={sizes.icon.sm} color={colors.icon.secondary} /> : null}

@@ -7,15 +7,17 @@ import { Box, EmptyState, ErrorState, Layout, StaggerIn } from '@/shared/ui';
 import { DropFilters } from './components/DropFilters';
 import { DropLane } from './components/DropLane';
 import { DropRoomHero } from './components/DropRoomHero';
+import { DropRunway } from './components/DropRunway';
 import { DropSkeleton } from './components/DropSkeleton';
 import { DropSquad } from './components/DropSquad';
 import { useBrandCampaignDropScreen } from './hooks/useBrandCampaignDropScreen';
 
 /**
- * The brand's launch room (`GET /{id}/drop`, approved design 2026-10-17): the clock of the next
- * moment on the live gradient (the ring of verified creators once on air), the squad as one bar
- * with state filters, and a row per creator, late ones first, each opening its deal. The body
- * slides over the hero like the campaign page; pull to refresh, and a push re-reads it.
+ * The brand's launch room (`GET /{id}/drop`, approved design 2026-10-17, hero slimmed 2026-10-19):
+ * a short hero with the clock of the next moment on the live gradient (the ring of verified
+ * creators once on air); the body slides over it and opens with the runway card (stations +
+ * reminders), then the squad as one bar with state filters, and a row per creator, late ones
+ * first, each opening its deal. Pull to refresh, and a push re-reads it.
  */
 const BrandCampaignDropScreenComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -80,6 +82,7 @@ const BrandCampaignDropScreenComponent: React.FC = () => {
           />
         ) : (
           <StaggerIn gap="lg">
+            <DropRunway board={board} />
             <Box gap="lg">
               <DropSquad creators={vm.bar} />
               <DropFilters chips={vm.chips} selected={vm.filter} onSelect={vm.selectFilter} />

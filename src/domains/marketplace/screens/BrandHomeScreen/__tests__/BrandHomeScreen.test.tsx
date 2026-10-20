@@ -39,7 +39,7 @@ jest.mock('@/core/theme', () => {
     moderateScale: (n: number) => n,
     iconStroke: { regular: 2, bold: 2.5 },
     opacity: { pressed: 0.7, pressedSubtle: 0.85 },
-    motion: { duration: { base: 250 }, spring: {} },
+    motion: { duration: { base: 250 }, stagger: 60, spring: {} },
   };
 });
 
@@ -51,6 +51,7 @@ jest.mock('react-native-reanimated', () => {
       View: ({ children, ...props }: { children?: React.ReactNode }) =>
         createElement('AnimatedView', props, children),
     },
+    FadeInDown: { duration: () => ({ delay: () => ({}) }) },
     cancelAnimation: () => undefined,
     Easing: { inOut: () => undefined, sin: undefined },
     interpolate: () => 1,
@@ -241,6 +242,8 @@ const model = (overrides: Partial<BrandHomeScreenModel> = {}): BrandHomeScreenMo
   openDeals: jest.fn(),
   campaigns: { kind: 'hidden' },
   openCampaignAction: jest.fn(),
+  showTwoWays: false,
+  openCreateCampaign: jest.fn(),
   ...overrides,
 });
 
@@ -672,5 +675,33 @@ describe('BrandHomeScreen — my active campaigns', () => {
       },
     });
     expect(textOf(root)).toContain('marketplace.brandHome.island.campaignSeats:{"count":2}');
+  });
+});
+
+describe('BrandHomeScreen — two ways', () => {
+  const CTA_DIRECT = 'marketplace.brandHome.twoWays.cta.direct';
+  const CTA_CAMPAIGN = 'marketplace.brandHome.twoWays.cta.campaign';
+  const ctaOf = (root: ReactTestInstance, title: string) =>
+    root.findAll(isHost('CustomButton')).find(node => node.props.title === title);
+
+  it('shows the card only when the model says so', () => {
+    expect(ctaOf(render().root, CTA_DIRECT)).toBeUndefined();
+    expect(ctaOf(render({ showTwoWays: true }).root, CTA_DIRECT)).toBeDefined();
+  });
+
+  it('opens Explore from the direct-deal side', () => {
+    const { root, vm } = render({ showTwoWays: true });
+    ctaOf(root, CTA_DIRECT)?.props.onPress();
+    expect(vm.browseAll).toHaveBeenCalled();
+    expect(vm.openCreateCampaign).not.toHaveBeenCalled();
+  });
+
+  it('follows the switch: the campaign side opens the campaign wizard', () => {
+    const { root, vm } = render({ showTwoWays: true });
+    act(() => byLabel(root, 'marketplace.brandHome.twoWays.way.campaign')?.props.onPress());
+    expect(ctaOf(root, CTA_DIRECT)).toBeUndefined();
+    ctaOf(root, CTA_CAMPAIGN)?.props.onPress();
+    expect(vm.openCreateCampaign).toHaveBeenCalled();
+    expect(vm.browseAll).not.toHaveBeenCalled();
   });
 });

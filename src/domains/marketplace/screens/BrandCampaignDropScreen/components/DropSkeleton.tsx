@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale, useTheme } from '@/core/theme';
 import { Box, Layout, Skeleton } from '@/shared/ui';
 
-const HERO_HEIGHT = moderateScale(300);
+const HERO_HEIGHT = moderateScale(190);
 const ROW_HEIGHT = moderateScale(76);
 
 /** First load of the room: the navy top kept under the header, then the squad bar and a few rows. */

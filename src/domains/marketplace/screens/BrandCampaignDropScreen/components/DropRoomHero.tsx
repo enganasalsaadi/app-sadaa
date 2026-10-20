@@ -1,15 +1,13 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, useStyles } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 import { useClock } from '../../../hooks/useClock';
 import type { CampaignDropBoard } from '../../../types/campaignDrop';
-import { campaignDropView, sortDropReminders } from '../../../utils/campaignDrop';
-import { DropBeacons } from './DropBeacons';
+import { campaignDropView } from '../../../utils/campaignDrop';
 import { DropCountdown } from './DropCountdown';
 import { DropOnAir } from './DropOnAir';
-import { DropStations } from './DropStations';
 
 export interface DropRoomHeroProps {
   board: CampaignDropBoard;
@@ -18,16 +16,16 @@ export interface DropRoomHeroProps {
 }
 
 /**
- * The launch room's top, transparent over the live gradient (Layout paints it): the title, then
- * the clock of the next moment (the live link opening, then the drop) or, once on air, the ring of
- * verified creators; under it the three stations and the reminders the server sends.
+ * The launch room's top, transparent over the live gradient (Layout paints it): the title and one
+ * strip, the clock of the next moment (the live link opening, then the drop) or, once on air, the
+ * ring of verified creators. Kept short on purpose: the body slides over its foot, so the stations
+ * and reminders live in the body (`DropRunway`).
  */
 const DropRoomHeroComponent: React.FC<DropRoomHeroProps> = ({ board, title, subtitle }) => {
   const { colors, sizes, spacing } = useTheme();
   const { top } = useSafeAreaInsets();
   const now = useClock(1000);
   const view = campaignDropView(board, now);
-  const reminders = useMemo(() => sortDropReminders(board.reminders), [board.reminders]);
   const styles = useStyles(
     (): Record<'container' | 'titleRow', ViewStyle> => ({
       // Same top as the overlay ScreenHeader's icon row.
@@ -39,7 +37,7 @@ const DropRoomHeroComponent: React.FC<DropRoomHeroProps> = ({ board, title, subt
   );
 
   return (
-    <Box style={styles.container} px="xl" pb="4xl" gap="xl">
+    <Box style={styles.container} px="xl" pb="4xl" gap="lg" mb='5xl'>
       <Box style={styles.titleRow}>
         <Text variant="h4" color={colors.text.onBrand} numberOfLines={1} accessibilityRole="header">
           {title}
@@ -49,12 +47,10 @@ const DropRoomHeroComponent: React.FC<DropRoomHeroProps> = ({ board, title, subt
         </Text>
       </Box>
       {view.next ? (
-        <DropCountdown moment={view.next.moment} endsAt={view.next.at} then={view.then} />
+        <DropCountdown moment={view.next.moment} endsAt={view.next.at} />
       ) : (
         <DropOnAir totals={board.totals} dropAt={board.dropAt} now={now} />
       )}
-      <DropStations phase={view.phase} />
-      <DropBeacons reminders={reminders} />
     </Box>
   );
 };

@@ -2,17 +2,19 @@ import { useCallback, useMemo, useState } from 'react';
 import { Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import type { ExploreFilters, HomeStackScreenProps } from '@/core/navigation';
+import { navigate, type ExploreFilters, type HomeStackScreenProps } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
 import { selectUser, useOpenSupport } from '@/domains/auth';
 import { useAmountsHidden } from '@/domains/finance';
 import { useGetBrandHomeQuery } from '../../../api/brandHomeApi';
 import { useGetExploreFiltersQuery } from '../../../api/exploreApi';
 import { BRAND_HOME_ISLAND, resolveCategoryIcon } from '../../../constants/brandHome';
+import { useCampaignsEnabled } from '../../../hooks/useCampaignsEnabled';
 import { useCreatorCardActions } from '../../../hooks/useCreatorCardActions';
 import type { BrandActiveCampaign, BrandActiveDeal, DealParty } from '../../../types';
 import type { BrandHomeRail } from '../../../types/explore';
 import { splitActiveDeals } from '../../../utils/brandHomeDeals';
+import { shouldShowTwoWays } from '../../../utils/brandHomeTwoWays';
 import { campaignHomeTarget } from '../../../utils/campaignHome';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
 
@@ -260,6 +262,15 @@ export const useBrandHomeScreen = () => {
     [activeCampaigns],
   );
 
+  // The wizard is the campaigns flow's own stack: reached from here the way the campaigns list does.
+  const openCreateCampaign = useCallback(() => navigate('CampaignWizard'), []);
+  const campaignsEnabled = useCampaignsEnabled('brand');
+  const showTwoWays = shouldShowTwoWays({
+    campaignsEnabled,
+    noOpenDeal: deals.kind === 'welcome',
+    noActiveCampaign: campaigns.kind === 'hidden',
+  });
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -285,6 +296,8 @@ export const useBrandHomeScreen = () => {
     openDeals,
     campaigns,
     openCampaignAction,
+    showTwoWays,
+    openCreateCampaign,
     hasSupport: !!supportUrl,
     unreadNotifications: user?.unread_notifications_count ?? 0,
     refreshing,

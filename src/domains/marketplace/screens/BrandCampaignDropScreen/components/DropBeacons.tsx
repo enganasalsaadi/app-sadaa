@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Bell } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
@@ -10,7 +11,7 @@ export interface DropBeaconsProps {
   reminders: readonly CampaignDropReminder[];
 }
 
-/** The server's three reminders to the creators, lit once they went out. */
+/** The server's three reminders to the creators, in success tone once they went out. */
 const DropBeaconsComponent: React.FC<DropBeaconsProps> = ({ reminders }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -24,9 +25,16 @@ const DropBeaconsComponent: React.FC<DropBeaconsProps> = ({ reminders }) => {
           : t('marketplace.campaign.drop.reminders.minutes', { count: formatNumber(minutesBefore) });
 
   return (
-    <Box row justify="center" gap="sm" wrap>
+    <Box row align="center" gap="sm" wrap>
+      <Box row align="center" gap="xs">
+        <Bell size={sizes.icon.xs} color={colors.text.tertiary} />
+        <Text variant="caption" color={colors.text.tertiary}>
+          {t('marketplace.campaign.drop.reminders.title')}
+        </Text>
+      </Box>
       {reminders.map(reminder => {
         const text = label(reminder);
+        const { sent } = reminder;
         return (
           <Box
             key={reminder.minutesBefore}
@@ -36,19 +44,17 @@ const DropBeaconsComponent: React.FC<DropBeaconsProps> = ({ reminders }) => {
             px="md"
             py="xs"
             borderRadius="full"
-            bg={colors.glass.fill}
-            borderWidth="thin"
-            borderColor={colors.glass.border}
+            bg={sent ? colors.status.success.soft : colors.surface.elevated}
             accessible
-            accessibilityLabel={reminder.sent ? `${text} · ${t('marketplace.campaign.drop.reminders.sent')}` : text}
+            accessibilityLabel={sent ? `${text} · ${t('marketplace.campaign.drop.reminders.sent')}` : text}
           >
             <Box
               width={sizes.dot.md}
               height={sizes.dot.md}
               borderRadius="full"
-              bg={reminder.sent ? colors.glass.iconMoney : colors.glass.progressTrack}
+              bg={sent ? colors.status.success.main : colors.border.strong}
             />
-            <Text variant="caption" color={colors.text.onBrand}>
+            <Text variant="caption" color={sent ? colors.status.success.text : colors.text.secondary}>
               {text}
             </Text>
           </Box>

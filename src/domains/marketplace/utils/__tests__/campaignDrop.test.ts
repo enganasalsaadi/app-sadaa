@@ -47,11 +47,10 @@ const creator = (dealId: string, state: CampaignDropState | null, lateUntil: num
 });
 
 describe('campaignDropView', () => {
-  it('counts to the live link first, with the drop as the second line', () => {
+  it('counts to the live link first', () => {
     expect(campaignDropView(board('upcoming'), OPENS - 1)).toEqual({
       phase: 'upcoming',
       next: { moment: 'publish_open', at: OPENS },
-      then: DROP,
     });
   });
 
@@ -59,12 +58,11 @@ describe('campaignDropView', () => {
     expect(campaignDropView(board('publish_open'), OPENS + 1)).toEqual({
       phase: 'publish_open',
       next: { moment: 'drop', at: DROP },
-      then: null,
     });
   });
 
   it('goes on air at the drop', () => {
-    expect(campaignDropView(board('upcoming'), DROP)).toEqual({ phase: 'live', next: null, then: null });
+    expect(campaignDropView(board('upcoming'), DROP)).toEqual({ phase: 'live', next: null });
   });
 
   it('moves forward from a stale copy by the clock, never back from the server’s phase', () => {

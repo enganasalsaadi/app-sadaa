@@ -2221,7 +2221,6 @@
         "hero": {
           "untilPublishOpen": "Live link opens in",
           "untilDrop": "Drop in",
-          "then": "Drop {{at}}",
           "units": {
             "days": "days",
             "hours": "hours",
@@ -2241,11 +2240,16 @@
           "lateNote_other": "{{count}} creators are late, within the grace period."
         },
         "reminders": {
+          "title": "Creator reminders",
           "day": "1 day before",
           "hours": "2 hours before",
           "atDrop": "At the drop",
           "minutes": "{{count}} min before",
           "sent": "Sent"
+        },
+        "runway": {
+          "now": "Now",
+          "afterDrop": "After the drop"
         },
         "filters": {
           "all": "All",
@@ -2979,6 +2983,43 @@
       "island": {
         "campaignSeats_one": "{{count}} of them is a campaign seat",
         "campaignSeats_other": "{{count}} of them are campaign seats"
+      },
+      "twoWays": {
+        "kicker": "Before you start",
+        "title": "Two ways to work with creators",
+        "subtitle": "Pick what fits your goal. You can use both.",
+        "switchLabel": "Way of working",
+        "way": {
+          "direct": "Direct deal",
+          "campaign": "Public campaign"
+        },
+        "scene": {
+          "fixedPrice": "Fixed price",
+          "directCaption": "You choose one creator by name",
+          "campaignCaption": "You post a request, creators apply"
+        },
+        "rows": {
+          "who": {
+            "label": "Who chooses?",
+            "direct": "You pick the creator from Explore and open their page.",
+            "campaign": "Creators apply to your request, and you choose from them."
+          },
+          "price": {
+            "label": "Price",
+            "direct": "A fixed price from the creator's rate card.",
+            "campaign": "You set a budget and seats, and each creator proposes a price."
+          },
+          "fit": {
+            "label": "Best for",
+            "direct": "A creator you know and want specifically.",
+            "campaign": "Several creators at once, or a product launch in one day."
+          }
+        },
+        "note": "Every creator you pick in a campaign becomes a regular deal, with the same protection and follow-up.",
+        "cta": {
+          "direct": "Discover creators",
+          "campaign": "Create a public campaign"
+        }
       },
       "campaigns": {
         "title": "My active campaigns",
