@@ -141,6 +141,14 @@ export const API_ERROR_CODES = [
   'deal_brief_exit_closed',
   'deal_brief_exit_available',
   'deal_return_unavailable',
+  // Markets (`docs/markets/mobile-contract.md`). Admin-only market codes never reach the app.
+  'phone_market_unsupported',
+  'market_inactive',
+  'market_not_found',
+  'channel_not_available',
+  'courier_not_available',
+  'governorate_not_in_market',
+  'withdrawal_amount_out_of_range',
   'server_error',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];

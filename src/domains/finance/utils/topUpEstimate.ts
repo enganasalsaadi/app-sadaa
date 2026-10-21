@@ -1,5 +1,4 @@
 import type { Money } from '@/core/money';
-import { TOP_UP_USD_LIMITS } from '../constants/topUp';
 import type { TopUpLimits } from '../types';
 
 /** A decimal rate string as an exact fraction: `"14000.50"` → 1400050 / 100. */
@@ -54,12 +53,23 @@ export const estimateCredit = (amount: Money, rate: string | null): Money | null
   return cents === null ? null : { amount: cents, currency: 'USD' };
 };
 
+/** The market's top-up range in USD cents (`GET /markets/{code}`); both bounds are needed to use it. */
+export interface UsdTopUpRange {
+  min: number;
+  max: number;
+}
+
 /**
- * Limits when the server doesn't send them: $10 – $10,000 (handoff §6), SYP converted at
- * the rate so the whole range stays inside the USD one. `null` = SYP without a rate.
+ * Limits when the channel doesn't send them: the market's USD range, SYP converted at the
+ * rate so the whole range stays inside the USD one. `null` = no market range, or SYP without a rate.
  */
-export const fallbackLimits = (currency: Money['currency'], rate: string | null): TopUpLimits | null => {
-  const { min, max } = TOP_UP_USD_LIMITS;
+export const fallbackLimits = (
+  currency: Money['currency'],
+  rate: string | null,
+  usdRange: UsdTopUpRange | null,
+): TopUpLimits | null => {
+  if (!usdRange) return null;
+  const { min, max } = usdRange;
   if (currency === 'USD') {
     return { min: { amount: min, currency: 'USD' }, max: { amount: max, currency: 'USD' } };
   }

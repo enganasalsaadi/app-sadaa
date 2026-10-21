@@ -6,7 +6,7 @@ import { formatMoney, formatNumber } from '@/core/i18n';
 import type { CurrencyCode } from '@/core/money';
 import type { WithdrawStackScreenProps } from '@/core/navigation';
 import type { SegmentedOption } from '@/shared/ui';
-import { WITHDRAW_LIMITS } from '../../../constants/withdraw';
+import { WITHDRAW_COOLDOWN_DAYS } from '../../../constants/withdraw';
 import { useWithdrawFlow } from '../../../hooks/useWithdrawFlow';
 import { WITHDRAW_STEP_FIELDS, type WithdrawFormValues } from '../../../schemas/withdrawSchema';
 import type { PaymentChannel } from '../../../types';
@@ -37,7 +37,7 @@ export const useWithdrawAmountScreen = () => {
   const flow = useWithdrawFlow();
   const { control, setValue, trigger } = useFormContext<WithdrawFormValues>();
   const currency = useWatch({ control, name: 'currency' });
-  const { available, method, methodView, quote, quoteStatus, blocked, blockReasons, nextAllowedAt } = flow;
+  const { available, limits, method, methodView, quote, quoteStatus, blocked, blockReasons, nextAllowedAt } = flow;
 
   const [methodSheetVisible, setMethodSheetVisible] = useState(false);
   const [channelSheetVisible, setChannelSheetVisible] = useState(false);
@@ -57,15 +57,18 @@ export const useWithdrawAmountScreen = () => {
     if (available) setValue('amount', available, { shouldDirty: true, shouldValidate: true });
   }, [available, setValue]);
 
-  const limitsLabel = useMemo(
-    () =>
-      t('finance.withdraw.amount.limits', {
-        min: formatMoney({ amount: WITHDRAW_LIMITS.min, currency: 'USD' }, lang, WHOLE),
-        max: formatMoney({ amount: WITHDRAW_LIMITS.dailyMax, currency: 'USD' }, lang, WHOLE),
-        days: formatNumber(WITHDRAW_LIMITS.cooldownDays, {}, lang),
-      }),
-    [lang, t],
-  );
+  // Only the bounds the market sets are named; the cooldown always is.
+  const limitsLabel = useMemo(() => {
+    const parts: string[] = [];
+    if (limits?.min != null) {
+      parts.push(t('finance.withdraw.amount.limitMin', { min: formatMoney({ amount: limits.min, currency: 'USD' }, lang, WHOLE) }));
+    }
+    if (limits?.max != null) {
+      parts.push(t('finance.withdraw.amount.limitMax', { max: formatMoney({ amount: limits.max, currency: 'USD' }, lang, WHOLE) }));
+    }
+    parts.push(t('finance.withdraw.amount.limitCooldown', { days: formatNumber(WITHDRAW_COOLDOWN_DAYS, {}, lang) }));
+    return parts.join(' · ');
+  }, [lang, limits, t]);
 
   const reasons = useMemo(() => blockReasons.map(reason => formatReasonLabel(reason, t)), [blockReasons, t]);
   const needsKyc = blockReasons.some(reason => reason.code === 'kyc_required');

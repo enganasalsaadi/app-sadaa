@@ -1,14 +1,14 @@
 import * as yup from 'yup';
 import type { TFunction } from 'i18next';
 import type { CountryCode } from 'libphonenumber-js';
+import { toMarketMobile, type MobileRule } from '@/core/market';
 import { PAYOUT_FIELD_LIMITS, type PayoutField } from '../constants/payoutMethods';
-import type { PaymentChannel } from '../types';
 import {
   isValidAccountCode,
   isValidAccountNumber,
   isValidIban,
   payoutFields,
-  toSyrianMobile,
+  type PayoutChannelRef,
 } from '../utils/payoutMethodForm';
 
 /** Every channel's fields in one shape; the schema checks only the picked channel's (handoff §7). */
@@ -33,7 +33,9 @@ const { holderName, bankName, city, label } = PAYOUT_FIELD_LIMITS;
 
 export const createPayoutMethodSchema = (
   t: TFunction,
-  channel: PaymentChannel,
+  channel: PayoutChannelRef,
+  /** The user's market rule for mobiles; `null` while it loads (the screen waits for it). */
+  mobile: MobileRule | null,
 ): yup.ObjectSchema<PayoutMethodFormValues> => {
   const used = new Set<PayoutField>(payoutFields(channel));
   // Fields of other channels stay in the form values but are never checked or sent.
@@ -53,10 +55,7 @@ export const createPayoutMethodSchema = (
       yup
         .string()
         .required(t('validation.required'))
-        .test('syrian-mobile', t('finance.payouts.form.errors.phone'), function (value) {
-          const { countryCode } = this.parent as Pick<PayoutMethodFormValues, 'countryCode'>;
-          return !!value && toSyrianMobile(value, countryCode) !== null;
-        }),
+        .test('market-mobile', t('finance.payouts.form.errors.phone'), value => !!value && toMarketMobile(value, mobile) !== null),
     ),
     governorate: only('governorate', yup.string().required(t('validation.selectOne'))),
     city: only('city', yup.string().trim().max(city.max, t('validation.maxLength', { count: city.max })).defined()),

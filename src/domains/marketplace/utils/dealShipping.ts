@@ -1,6 +1,6 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
-import { DEAL_COURIER_PRESETS, type DealCourierChoice } from '../constants/dealShipping';
+import { toMarketMobile, type MarketCourier, type MobileRule } from '@/core/market';
+import { DEAL_COURIER_OTHER, type DealCourierChoice } from '../constants/dealShipping';
 import type {
   DealAddressFormValues,
   DealShipFormValues,
@@ -152,14 +152,6 @@ export const safeTrackingUrl = (raw: string | null): string | null => {
   return DOMAIN.test(host) ? url : null;
 };
 
-/** E.164 of a typed Syrian mobile ("0944…", "944…"), or `null`. Mirrors the server's rule. */
-const SYRIAN_MOBILE = /^\+9639\d{8}$/;
-
-export const toSyrianMobile = (national: string): string | null => {
-  const e164 = parsePhoneNumberFromString(national, DEFAULT_PHONE_COUNTRY)?.number;
-  return e164 && SYRIAN_MOBILE.test(e164) ? e164 : null;
-};
-
 const toNationalPhone = (e164: string | null | undefined): string =>
   (e164 && parsePhoneNumberFromString(e164)?.nationalNumber) || '';
 
@@ -179,9 +171,12 @@ export const addressFormValues = (
 });
 
 /** The server's address body (B5.1); call only on schema-valid values. */
-export const toAddressBody = (values: DealAddressFormValues): Record<string, string | null> => ({
+export const toAddressBody = (
+  values: DealAddressFormValues,
+  mobile: MobileRule,
+): Record<string, string | null> => ({
   recipient_name: values.recipientName.trim(),
-  phone: toSyrianMobile(values.phone) ?? values.phone,
+  phone: toMarketMobile(values.phone, mobile) ?? values.phone,
   governorate_id: values.governorateId,
   city: values.city.trim(),
   area: values.area.trim(),
@@ -222,36 +217,46 @@ export const addressText = (address: DealShippingAddress): string =>
     .filter(Boolean)
     .join('\n');
 
-/** Which chip an existing courier name lands on: a preset by its label, else «other». */
+/** Which chip an existing courier lands on: a market courier by code or name, else «other». */
 export const courierChoiceOf = (
   name: string,
-  labels: Readonly<Record<DealCourierChoice, string>>,
+  couriers: readonly MarketCourier[],
 ): DealCourierChoice => {
   const trimmed = name.trim();
-  return DEAL_COURIER_PRESETS.find(preset => labels[preset] === trimmed) ?? 'other';
+  return couriers.find(c => c.code === trimmed || c.name === trimmed)?.code ?? DEAL_COURIER_OTHER;
 };
 
 export const shipFormValues = (
   shipment: DealShipment | null,
-  labels: Readonly<Record<DealCourierChoice, string>>,
+  couriers: readonly MarketCourier[],
 ): DealShipFormValues => {
   if (!shipment) return { courier: null, courierName: '', trackingNo: '', trackingUrl: '' };
-  const courier = courierChoiceOf(shipment.courier, labels);
+  const courier = courierChoiceOf(shipment.courier, couriers);
   return {
     courier,
-    courierName: courier === 'other' ? shipment.courier : '',
+    courierName: courier === DEAL_COURIER_OTHER ? shipment.courier : '',
     trackingNo: shipment.trackingNo,
     trackingUrl: shipment.trackingUrl ?? '',
   };
 };
 
-/** The courier's name as sent and shown: the preset's label, or what the brand typed. */
+/** The courier's name as shown: the market's name for the code, or what the brand typed. */
 export const courierName = (
   values: Pick<DealShipFormValues, 'courier' | 'courierName'>,
-  labels: Readonly<Record<DealCourierChoice, string>>,
+  couriers: readonly MarketCourier[],
 ): string => {
   if (values.courier === null) return '';
-  return values.courier === 'other' ? values.courierName.trim() : labels[values.courier];
+  if (values.courier === DEAL_COURIER_OTHER) return values.courierName.trim();
+  return couriers.find(c => c.code === values.courier)?.name ?? values.courier;
+};
+
+/** What the server takes for a courier: its code, or «other» with the typed name (contract: Payments, couriers). */
+export const toCourierFields = (
+  values: Pick<DealShipFormValues, 'courier' | 'courierName'>,
+): { courier: string; courierName: string | null } => {
+  if (values.courier === null) return { courier: '', courierName: null };
+  if (values.courier !== DEAL_COURIER_OTHER) return { courier: values.courier, courierName: null };
+  return { courier: DEAL_COURIER_OTHER, courierName: values.courierName.trim() };
 };
 
 /**
@@ -260,12 +265,13 @@ export const courierName = (
  */
 export const toShipmentBody = (
   values: DealShipFormValues,
-  labels: Readonly<Record<DealCourierChoice, string>>,
   editing: boolean,
 ): Record<string, string | null> => {
   const url = safeTrackingUrl(values.trackingUrl);
+  const { courier, courierName: typed } = toCourierFields(values);
   return {
-    courier: courierName(values, labels),
+    courier,
+    ...(typed ? { courier_name: typed } : {}),
     tracking_no: values.trackingNo.trim(),
     ...(url || editing ? { tracking_url: url } : {}),
   };

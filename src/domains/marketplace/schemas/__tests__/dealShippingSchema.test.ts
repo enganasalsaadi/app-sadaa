@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next';
+import type { MobileRule } from '@/core/market';
 import {
   createDealAddressSchema,
   createDealIssueSchema,
@@ -84,8 +85,10 @@ describe('createDealIssueSchema', () => {
   });
 });
 
+const SY_MOBILE: MobileRule = { countryCode: 'SY', mobilePattern: '^\\+9639\\d{8}$', mobileExample: '+963944123456' };
+
 describe('createDealAddressSchema', () => {
-  const schema = createDealAddressSchema(t);
+  const schema = createDealAddressSchema(t, SY_MOBILE);
   const valid: DealAddressFormValues = {
     recipientName: 'سارة',
     phone: '0944123456',
@@ -101,8 +104,16 @@ describe('createDealAddressSchema', () => {
     expect(messageOf(() => schema.validateSync(valid))).toBeNull();
   });
 
-  it('needs a Syrian mobile', () => {
+  it('needs a mobile of the market', () => {
     expect(messageOf(() => schema.validateSync({ ...valid, phone: '0112345678' }))).toBe(
+      'marketplace.deals.shipping.address.phoneError',
+    );
+  });
+
+  it('follows another market\'s rule', () => {
+    const ae = createDealAddressSchema(t, { countryCode: 'AE', mobilePattern: '^\\+9715\\d{8}$', mobileExample: '+971501234567' });
+    expect(messageOf(() => ae.validateSync({ ...valid, phone: '0501234567' }))).toBeNull();
+    expect(messageOf(() => ae.validateSync({ ...valid, phone: '0944123456' }))).toBe(
       'marketplace.deals.shipping.address.phoneError',
     );
   });

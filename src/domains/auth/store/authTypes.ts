@@ -149,6 +149,8 @@ export interface User {
   /** UI gates only; the server enforces them too (contract §3.1). */
   capabilities?: Partial<Record<CapabilityKey, Capability>>;
   unread_notifications_count?: number;
+  /** The user's market, from the phone's country code (`/me`). Absent on older servers. */
+  market?: { code: string; timezone: string; default_currency: string };
 
   // --- legacy fields (travel template) kept optional for back-compat ---
   user_id?: number;

@@ -1,4 +1,4 @@
-import type { ParseKeys, TFunction } from 'i18next';
+import type { ParseKeys } from 'i18next';
 import {
   ArrowLeftRight,
   Clock,
@@ -9,27 +9,9 @@ import {
 } from 'lucide-react-native';
 import type { DealShippingIssueReason } from '../types';
 
-/** The couriers most Syrian brands use, one tap each; anything else is typed under «other». */
-export const DEAL_COURIER_PRESETS = ['alqadmous', 'aramex', 'syrianPost', 'direct'] as const;
-export type DealCourierPreset = (typeof DEAL_COURIER_PRESETS)[number];
-export type DealCourierChoice = DealCourierPreset | 'other';
-
-export const DEAL_COURIER_LABEL = {
-  alqadmous: 'marketplace.deals.shipping.couriers.alqadmous',
-  aramex: 'marketplace.deals.shipping.couriers.aramex',
-  syrianPost: 'marketplace.deals.shipping.couriers.syrianPost',
-  direct: 'marketplace.deals.shipping.couriers.direct',
-  other: 'marketplace.deals.shipping.couriers.other',
-} as const satisfies Record<DealCourierChoice, ParseKeys>;
-
-/** The couriers' names in the current language, for the waybill label and the chips. */
-export const dealCourierLabels = (t: TFunction): Record<DealCourierChoice, string> => ({
-  alqadmous: t(DEAL_COURIER_LABEL.alqadmous),
-  aramex: t(DEAL_COURIER_LABEL.aramex),
-  syrianPost: t(DEAL_COURIER_LABEL.syrianPost),
-  direct: t(DEAL_COURIER_LABEL.direct),
-  other: t(DEAL_COURIER_LABEL.other),
-});
+/** A courier's market code, or «other» for one the brand types (sent with `courier_name`). */
+export type DealCourierChoice = string;
+export const DEAL_COURIER_OTHER = 'other';
 
 /**
  * The creator's five shipping problems (server `DealShippingIssueReasonEnum`), as tiles.

@@ -3,8 +3,11 @@ import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { Wallet } from 'lucide-react-native';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import { useDiscardGuard } from '@/core/hooks';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { nationalMobileExample, type MobileRule } from '@/core/market';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { useGetProfileQuery } from '@/domains/auth';
@@ -14,21 +17,21 @@ import {
   useSetDefaultPayoutMethodMutation,
   useUpdatePayoutMethodMutation,
 } from '../../../api/payoutMethodApi';
-import { PAYMENT_CHANNEL_DEF } from '../../../constants/paymentChannels';
 import { PAYOUT_GROUP_DEF, PAYOUT_SERVER_FIELDS, type PayoutField } from '../../../constants/payoutMethods';
+import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
 import { usePayoutMethods } from '../../../hooks/usePayoutMethods';
 import { createPayoutMethodSchema, type PayoutMethodFormValues } from '../../../schemas/payoutMethodSchema';
-import { PAYMENT_CHANNELS } from '../../../types';
 import type { PaymentChannel, PayoutMethod } from '../../../types';
 import { nextPrimaryAfterDelete } from '../../../utils/payoutMethodMappers';
 import {
   emptyPayoutMethodForm,
+  inferPayoutGroup,
   payoutFields,
+  type PayoutChannelRef,
   toPayoutDetails,
   toPayoutMethodForm,
   toPayoutMethodPatch,
 } from '../../../utils/payoutMethodForm';
-import { isOneOf } from '../../../utils/walletMappers';
 
 type Navigation = WalletStackScreenProps<'PayoutMethodForm'>['navigation'];
 type Route = WalletStackScreenProps<'PayoutMethodForm'>['route'];
@@ -37,6 +40,10 @@ type Route = WalletStackScreenProps<'PayoutMethodForm'>['route'];
 export type PayoutTextField = Exclude<PayoutField, 'governorate'> | 'label';
 
 const NOT_FOUND = 404;
+
+/** Placeholders for the form's first render, before the market loads (the screen shows a skeleton then). */
+const NO_CHANNEL: PayoutChannelRef = { code: '', group: 'e_wallet' };
+const FALLBACK_MOBILE: MobileRule = { countryCode: DEFAULT_PHONE_COUNTRY, mobilePattern: '', mobileExample: '' };
 
 /** Taken when the sheet opens: the list loses the method as soon as the delete starts. */
 interface DeleteTarget {
@@ -59,8 +66,9 @@ export const usePayoutMethodFormScreen = () => {
   const editId = 'id' in params ? params.id : null;
   const isEdit = editId !== null;
   const [pickedChannel, setPickedChannel] = useState<PaymentChannel | null>(() =>
-    'channel' in params && isOneOf(PAYMENT_CHANNELS, params.channel) ? params.channel : null,
+    'channel' in params ? params.channel : null,
   );
+  const { find, market, isLoading: isMarketLoading, isError: isMarketError, refetch: refetchMarket } = usePaymentChannels();
 
   const list = usePayoutMethods();
   const { methods, views } = list;
@@ -68,7 +76,14 @@ export const usePayoutMethodFormScreen = () => {
   // Kept while deleting: the optimistic removal must not flash "not found" under the sheet.
   const [deleting, setDeleting] = useState<DeleteTarget | null>(null);
   const current = method ?? deleting?.method ?? null;
-  const channel = current?.channel ?? (isEdit ? null : pickedChannel);
+  // A saved method keeps working after its channel leaves the catalog: the kind of details is read off them.
+  const channel = useMemo<PayoutChannelRef | null>(() => {
+    if (current) {
+      return { code: current.channel, group: find(current.channel)?.group ?? inferPayoutGroup(current.details) };
+    }
+    const picked = isEdit ? null : find(pickedChannel);
+    return picked?.supportsPayout ? { code: picked.code, group: picked.group } : null;
+  }, [current, find, isEdit, pickedChannel]);
 
   const { data: user } = useGetProfileQuery();
   const governorates = useLookupItems('governorates');
@@ -81,12 +96,15 @@ export const usePayoutMethodFormScreen = () => {
   const [channelSheetVisible, setChannelSheetVisible] = useState(false);
 
   // Unknown channel only on a broken link; the not-found state covers it, the schema needs one.
-  const schema = useMemo(() => createPayoutMethodSchema(t, channel ?? PAYMENT_CHANNELS[0]), [channel, t]);
+  const schema = useMemo(
+    () => createPayoutMethodSchema(t, channel ?? NO_CHANNEL, market ?? null),
+    [channel, market, t],
+  );
   const { control, handleSubmit, reset, setError, setFocus, setValue, clearErrors, formState } =
     useForm<PayoutMethodFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
-      defaultValues: emptyPayoutMethodForm(false),
+      defaultValues: emptyPayoutMethodForm(false, market ?? FALLBACK_MOBILE),
     });
   const { isDirty } = formState;
 
@@ -95,16 +113,16 @@ export const usePayoutMethodFormScreen = () => {
   // Prefill once the list is known: the saved method, or the account's name and phone.
   const prefilled = useRef(false);
   useEffect(() => {
-    if (prefilled.current || !methods) return;
+    if (prefilled.current || !methods || !market) return;
     if (isEdit) {
       if (!method) return;
       prefilled.current = true;
-      reset(toPayoutMethodForm(method));
+      reset(toPayoutMethodForm(method, market));
       return;
     }
     prefilled.current = true;
-    reset(emptyPayoutMethodForm(methods.length === 0, { holderName: user?.full_name, phone: user?.phone }));
-  }, [isEdit, method, methods, reset, user?.full_name, user?.phone]);
+    reset(emptyPayoutMethodForm(methods.length === 0, market, { holderName: user?.full_name, phone: user?.phone }));
+  }, [isEdit, market, method, methods, reset, user?.full_name, user?.phone]);
 
   const guard = useDiscardGuard(isDirty && !done);
   useEffect(() => {
@@ -191,7 +209,7 @@ export const usePayoutMethodFormScreen = () => {
       if (!channel || isSaving) return;
       try {
         if (current) {
-          const patch = toPayoutMethodPatch(values, current);
+          const patch = toPayoutMethodPatch(values, current, channel, market ?? null);
           const promote = values.makeDefault && !current.is_default;
           if (Object.keys(patch).length === 0 && !promote) {
             setDone(true);
@@ -202,9 +220,9 @@ export const usePayoutMethodFormScreen = () => {
         } else {
           const label = values.label.trim();
           const created = await createMethod({
-            channel,
+            channel: channel.code,
             ...(label ? { label } : {}),
-            details: toPayoutDetails(values, channel),
+            details: toPayoutDetails(values, channel, market ?? null),
           }).unwrap();
           if (values.makeDefault && created && !created.is_default) await makePrimary(created.id);
         }
@@ -214,7 +232,7 @@ export const usePayoutMethodFormScreen = () => {
         reportFailure(err);
       }
     })();
-  }, [channel, createMethod, current, handleSubmit, isSaving, makePrimary, reportFailure, t, updateMethod]);
+  }, [channel, createMethod, current, handleSubmit, isSaving, makePrimary, market, reportFailure, t, updateMethod]);
 
   // ─── Delete ────────────────────────────────────────────────────────────
   const openDelete = useCallback(() => {
@@ -252,31 +270,37 @@ export const usePayoutMethodFormScreen = () => {
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const retry = useCallback(() => {
     refetch();
-  }, [refetch]);
+    refetchMarket();
+  }, [refetch, refetchMarket]);
 
-  const def = channel ? PAYMENT_CHANNEL_DEF[channel] : null;
-  const groupDef = def ? PAYOUT_GROUP_DEF[def.group] : null;
+  const info = channel ? find(channel.code) : null;
+  const groupDef = channel ? PAYOUT_GROUP_DEF[channel.group] : null;
 
   return {
     isEdit,
     control,
-    isLoading: list.isLoading,
-    isError: list.isError,
+    isLoading: list.isLoading || isMarketLoading,
+    isError: list.isError || isMarketError,
     error: list.error,
     isRetrying: list.isFetching,
     retry,
     /** A deleted method, or a link with an unknown channel. */
     isNotFound: !list.isLoading && !list.isError && !done && (isEdit ? !!methods && !current : !channel),
     goBack,
-    channel: def
+    channel: channel
       ? {
-          icon: def.icon,
-          name: views.find(view => view.id === current?.id)?.channelName ?? t(def.labelKey),
-          currencies: current?.currencies.length ? current.currencies : def.currencies,
+          icon: info?.icon ?? Wallet,
+          name: views.find(view => view.id === current?.id)?.channelName ?? info?.name ?? channel.code,
+          currencies: current?.currencies.length ? current.currencies : (info?.currencies ?? []),
           canChange: !isEdit,
-          value: channel,
+          value: channel.code,
         }
       : null,
+    /** The market's mobile rule: the locked country of the phone field and its placeholder. */
+    mobile: {
+      countryCode: (market ?? FALLBACK_MOBILE).countryCode,
+      placeholder: nationalMobileExample(market ?? null),
+    },
     channelSheet: {
       visible: channelSheetVisible,
       onOpen: openChannelSheet,

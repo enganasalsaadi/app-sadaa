@@ -1,4 +1,4 @@
-import type { DealCourierChoice } from '../../constants/dealShipping';
+import type { MarketCourier, MobileRule } from '@/core/market';
 import type { Deal, DealShipment, DealShipping, DealShippingAddress, DealStatus } from '../../types';
 import {
   addressFieldMap,
@@ -13,7 +13,6 @@ import {
   shipFormValues,
   toAddressBody,
   toShipmentBody,
-  toSyrianMobile,
   transitDays,
 } from '../dealShipping';
 
@@ -25,13 +24,13 @@ jest.mock('lucide-react-native', () =>
 const DAY = 86_400_000;
 const NOW = Date.UTC(2026, 9, 15, 12);
 
-const LABELS: Record<DealCourierChoice, string> = {
-  alqadmous: 'القدموس',
-  aramex: 'أرامكس',
-  syrianPost: 'البريد السوري',
-  direct: 'توصيل مباشر',
-  other: 'أخرى',
-};
+const COURIERS: MarketCourier[] = [
+  { code: 'alqadmous', name: 'القدموس' },
+  { code: 'aramex', name: 'أرامكس' },
+  { code: 'syrian_post', name: 'البريد السوري' },
+];
+
+const SY_MOBILE: MobileRule = { countryCode: 'SY', mobilePattern: '^\\+9639\\d{8}$', mobileExample: '+963944123456' };
 
 const ADDRESS: DealShippingAddress = {
   recipientName: 'سارة',
@@ -209,19 +208,6 @@ describe('safeTrackingUrl', () => {
   });
 });
 
-describe('toSyrianMobile', () => {
-  it('turns typed Syrian mobiles into E.164', () => {
-    expect(toSyrianMobile('0944123456')).toBe('+963944123456');
-    expect(toSyrianMobile('944123456')).toBe('+963944123456');
-  });
-
-  it('refuses landlines and short numbers', () => {
-    expect(toSyrianMobile('0112345678')).toBeNull();
-    expect(toSyrianMobile('09441')).toBeNull();
-    expect(toSyrianMobile('')).toBeNull();
-  });
-});
-
 describe('address helpers', () => {
   it('fills the form from the address, else from the account', () => {
     expect(addressFormValues(ADDRESS, {})).toEqual({
@@ -242,16 +228,19 @@ describe('address helpers', () => {
 
   it('sends trimmed fields, E.164 and nulls for empty optionals', () => {
     expect(
-      toAddressBody({
-        recipientName: ' سارة ',
-        phone: '0944123456',
-        governorateId: '1',
-        city: ' دمشق',
-        area: 'المزة ',
-        addressLine: 'شارع 4',
-        landmark: '  ',
-        notes: '',
-      }),
+      toAddressBody(
+        {
+          recipientName: ' سارة ',
+          phone: '0944123456',
+          governorateId: '1',
+          city: ' دمشق',
+          area: 'المزة ',
+          addressLine: 'شارع 4',
+          landmark: '  ',
+          notes: '',
+        },
+        SY_MOBILE,
+      ),
     ).toEqual({
       recipient_name: 'سارة',
       phone: '+963944123456',
@@ -278,14 +267,16 @@ describe('address helpers', () => {
 });
 
 describe('waybill form', () => {
-  it('lands a known courier on its chip, anything else on «other»', () => {
-    expect(courierChoiceOf(' أرامكس ', LABELS)).toBe('aramex');
-    expect(courierChoiceOf('شركة الفؤاد', LABELS)).toBe('other');
+  it('lands a known courier on its chip by name or code, anything else on «other»', () => {
+    expect(courierChoiceOf(' أرامكس ', COURIERS)).toBe('aramex');
+    expect(courierChoiceOf('syrian_post', COURIERS)).toBe('syrian_post');
+    expect(courierChoiceOf('شركة الفؤاد', COURIERS)).toBe('other');
+    expect(courierChoiceOf('أرامكس', [])).toBe('other');
   });
 
   it('refills an edit from the shipment', () => {
-    expect(shipFormValues(null, LABELS)).toEqual({ courier: null, courierName: '', trackingNo: '', trackingUrl: '' });
-    expect(shipFormValues(shipment({ courier: 'شركة الفؤاد', trackingUrl: 'https://f.sy/1' }), LABELS)).toEqual({
+    expect(shipFormValues(null, COURIERS)).toEqual({ courier: null, courierName: '', trackingNo: '', trackingUrl: '' });
+    expect(shipFormValues(shipment({ courier: 'شركة الفؤاد', trackingUrl: 'https://f.sy/1' }), COURIERS)).toEqual({
       courier: 'other',
       courierName: 'شركة الفؤاد',
       trackingNo: 'QD-1',
@@ -293,21 +284,27 @@ describe('waybill form', () => {
     });
   });
 
-  it('names the courier by its label or the typed name', () => {
-    expect(courierName({ courier: 'direct', courierName: 'ignored' }, LABELS)).toBe('توصيل مباشر');
-    expect(courierName({ courier: 'other', courierName: ' الفؤاد ' }, LABELS)).toBe('الفؤاد');
-    expect(courierName({ courier: null, courierName: '' }, LABELS)).toBe('');
+  it('names the courier by the market name or the typed name', () => {
+    expect(courierName({ courier: 'syrian_post', courierName: 'ignored' }, COURIERS)).toBe('البريد السوري');
+    expect(courierName({ courier: 'gone', courierName: '' }, COURIERS)).toBe('gone');
+    expect(courierName({ courier: 'other', courierName: ' الفؤاد ' }, COURIERS)).toBe('الفؤاد');
+    expect(courierName({ courier: null, courierName: '' }, COURIERS)).toBe('');
+  });
+
+  it('sends «other» with the typed name for a courier outside the catalog', () => {
+    const values = { courier: 'other', courierName: ' الفؤاد ', trackingNo: 'F-1', trackingUrl: '' };
+    expect(toShipmentBody(values, false)).toEqual({ courier: 'other', courier_name: 'الفؤاد', tracking_no: 'F-1' });
   });
 
   it('leaves a missing link out of a new shipment but clears it on an edit', () => {
     const values = { courier: 'alqadmous' as const, courierName: '', trackingNo: ' QD-9 ', trackingUrl: '' };
-    expect(toShipmentBody(values, LABELS, false)).toEqual({ courier: 'القدموس', tracking_no: 'QD-9' });
-    expect(toShipmentBody(values, LABELS, true)).toEqual({
-      courier: 'القدموس',
+    expect(toShipmentBody(values, false)).toEqual({ courier: 'alqadmous', tracking_no: 'QD-9' });
+    expect(toShipmentBody(values, true)).toEqual({
+      courier: 'alqadmous',
       tracking_no: 'QD-9',
       tracking_url: null,
     });
-    expect(toShipmentBody({ ...values, trackingUrl: 'https://q.sy/9' }, LABELS, false).tracking_url).toBe(
+    expect(toShipmentBody({ ...values, trackingUrl: 'https://q.sy/9' }, false).tracking_url).toBe(
       'https://q.sy/9',
     );
   });

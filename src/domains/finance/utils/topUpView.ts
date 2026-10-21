@@ -1,12 +1,11 @@
 import type { TFunction } from 'i18next';
 import type { ThemeColors } from '@/core/theme';
-import { PAYMENT_CHANNEL_DEF } from '../constants/paymentChannels';
 import { TOP_UP_STATUS_LOOK } from '../constants/topUp';
 import type { TopUp } from '../types';
 
-/** Server label first, the app's own words for a known channel, else nothing. */
-export const topUpChannelLabel = (topUp: TopUp, t: TFunction): string | null =>
-  topUp.channel_label ?? (topUp.channel ? t(PAYMENT_CHANNEL_DEF[topUp.channel].labelKey) : null);
+/** The server's label for the channel, else the market catalog's name for it, else nothing. */
+export const topUpChannelLabel = (topUp: TopUp, catalogName?: string | null): string | null =>
+  topUp.channel_label ?? catalogName ?? null;
 
 /** Status pill label: the server's, else the app's for a known status. */
 export const topUpStatusLabel = (topUp: TopUp, t: TFunction): string =>

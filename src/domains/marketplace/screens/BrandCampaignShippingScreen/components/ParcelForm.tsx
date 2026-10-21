@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
 import { Box, ChipGroup, CustomInput, Text } from '@/shared/ui';
 import type { ChipGroupItem } from '@/shared/ui';
-import { DEAL_SHIPPING_LIMITS, type DealCourierChoice } from '../../../constants/dealShipping';
+import { DEAL_COURIER_OTHER, DEAL_SHIPPING_LIMITS } from '../../../constants/dealShipping';
 import type { CampaignShippingFormValues } from '../../../utils/campaignShipping';
 
 export interface ParcelFormProps {
@@ -17,7 +17,7 @@ export interface ParcelFormProps {
 const OtherCourierField = memo<Pick<ParcelFormProps, 'dealId' | 'control'>>(({ dealId, control }) => {
   const { t } = useTranslation();
   const courier = useWatch({ control, name: `rows.${dealId}.courier` });
-  if (courier !== 'other') return null;
+  if (courier !== DEAL_COURIER_OTHER) return null;
   return (
     <Controller
       control={control}
@@ -57,7 +57,7 @@ const ParcelFormComponent: React.FC<ParcelFormProps> = ({ dealId, control, couri
             <ChipGroup
               items={courierItems}
               value={value}
-              onChange={next => onChange(next as DealCourierChoice)}
+              onChange={onChange}
               accessibilityLabel={t('marketplace.deals.shipping.ship.courier')}
             />
             {fieldState.error?.message ? (

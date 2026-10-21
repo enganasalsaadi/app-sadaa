@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Controller, useWatch, type Control, type UseFormSetFocus } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -7,11 +7,8 @@ import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, ChipGroup, CustomButton, CustomInput, FormSection, Text, SheetFrame } from '@/shared/ui';
 import { isolateLtr } from '@/shared/utils';
-import {
-  DEAL_COURIER_PRESETS,
-  DEAL_SHIPPING_LIMITS,
-  type DealCourierChoice,
-} from '../constants/dealShipping';
+import { DEAL_COURIER_OTHER, DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
+import type { CourierOptions } from '../hooks/useCourierOptions';
 import type { DealShipFormValues } from '../schemas/dealShippingSchema';
 import { courierName } from '../utils/dealShipping';
 import { DealWaybillBarcode } from './DealWaybillBarcode';
@@ -43,7 +40,7 @@ export interface DealShipSheetProps {
   onClose: () => void;
   control: Control<DealShipFormValues>;
   setFocus: UseFormSetFocus<DealShipFormValues>;
-  courierLabels: Readonly<Record<DealCourierChoice, string>>;
+  courierOptions: CourierOptions;
   /** «Shipment N» on the live label. */
   sequence: number;
   partyName: string;
@@ -54,16 +51,16 @@ export interface DealShipSheetProps {
 /** The label filling in as the brand types: courier, number, a barcode drawn from it. */
 const LiveLabel = memo<{
   control: Control<DealShipFormValues>;
-  labels: Readonly<Record<DealCourierChoice, string>>;
+  couriers: CourierOptions['couriers'];
   sequence: number;
-}>(({ control, labels, sequence }) => {
+}>(({ control, couriers, sequence }) => {
   const { t, i18n } = useTranslation();
   const { colors, sizes } = useTheme();
   const [courier, typed, trackingNo] = useWatch({
     control,
     name: ['courier', 'courierName', 'trackingNo'],
   });
-  const name = courierName({ courier, courierName: typed }, labels);
+  const name = courierName({ courier, courierName: typed }, couriers);
   const styles = useStyles(
     ({ radii, spacing }): Record<'label' | 'number' | 'code', ViewStyle> => ({
       label: {
@@ -116,7 +113,7 @@ const CourierOtherField = memo<{ control: Control<DealShipFormValues>; onNext: (
   ({ control, onNext }) => {
     const { t } = useTranslation();
     const courier = useWatch({ control, name: 'courier' });
-    if (courier !== 'other') return null;
+    if (courier !== DEAL_COURIER_OTHER) return null;
     return (
       <Controller
         control={control}
@@ -150,7 +147,7 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
   onClose,
   control,
   setFocus,
-  courierLabels,
+  courierOptions,
   sequence,
   partyName,
   onSubmit,
@@ -161,14 +158,6 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
   const shown = useRef<DealShipSheetKind>(kind ?? 'ship');
   if (kind) shown.current = kind;
   const copy = COPY[shown.current];
-  const items = useMemo(
-    () =>
-      [...DEAL_COURIER_PRESETS, 'other' as const].map(choice => ({
-        value: choice,
-        label: courierLabels[choice],
-      })),
-    [courierLabels],
-  );
   const focusTracking = useCallback(() => setFocus('trackingNo'), [setFocus]);
   const focusUrl = useCallback(() => setFocus('trackingUrl'), [setFocus]);
 
@@ -189,7 +178,7 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
         />
       }
     >
-      <LiveLabel control={control} labels={courierLabels} sequence={sequence} />
+      <LiveLabel control={control} couriers={courierOptions.couriers} sequence={sequence} />
       <Controller
         control={control}
         name="courier"
@@ -199,9 +188,9 @@ const DealShipSheetComponent: React.FC<DealShipSheetProps> = ({
             error={fieldState.error?.message}
           >
             <ChipGroup
-              items={items}
+              items={courierOptions.items}
               value={value}
-              onChange={next => onChange(next as DealCourierChoice)}
+              onChange={onChange}
               accessibilityLabel={t('marketplace.deals.shipping.ship.courier')}
             />
           </FormSection>

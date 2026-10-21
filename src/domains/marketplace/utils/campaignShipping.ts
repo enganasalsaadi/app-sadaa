@@ -1,4 +1,3 @@
-import type { DealCourierChoice } from '../constants/dealShipping';
 import type { DealShipFormValues } from '../schemas/dealShippingSchema';
 import type { Timestamp } from '../types/deal';
 import type {
@@ -7,7 +6,7 @@ import type {
   CampaignShippingRow,
   CampaignShippingTotals,
 } from '../types/campaignShipping';
-import { courierName, safeTrackingUrl } from './dealShipping';
+import { safeTrackingUrl, toCourierFields } from './dealShipping';
 
 /** The server takes 1–20 parcels per request (contract §3.8); more go in turns. */
 export const CAMPAIGN_SHIPMENT_CHUNK = 20;
@@ -154,7 +153,6 @@ export const parcelCanShip = (parcel: Pick<CampaignParcel, 'state'>): boolean =>
 export const buildShipmentInputs = (
   parcels: readonly CampaignParcel[],
   drafts: Readonly<Record<string, CampaignShippingDraft>>,
-  labels: Readonly<Record<DealCourierChoice, string>>,
 ): CampaignShipmentInput[] =>
   parcels.flatMap(parcel => {
     const draft = drafts[parcel.row.dealId];
@@ -162,7 +160,7 @@ export const buildShipmentInputs = (
     return [
       {
         dealId: parcel.row.dealId,
-        courier: courierName(draft, labels),
+        ...toCourierFields(draft),
         trackingNo: draft.trackingNo.trim(),
         trackingUrl: safeTrackingUrl(draft.trackingUrl),
       },

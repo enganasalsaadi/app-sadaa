@@ -5,14 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createIdempotentAction, type IdempotentAction } from '@/core/api';
 import { useDiscardGuard } from '@/core/hooks';
+import { useActiveMarket } from '@/core/market';
 import type { Money } from '@/core/money';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useGetTopUpChannelsQuery } from '../api/topUpApi';
 import { createTopUpSchema, type TopUpFormValues } from '../schemas/topUpSchema';
-import { PAYMENT_CHANNELS } from '../types';
 import type { TopUpChannelOption, TopUpChannels, TopUpLimits } from '../types';
-import { estimateCredit, fallbackLimits } from '../utils/topUpEstimate';
-import { isOneOf } from '../utils/walletMappers';
+import { estimateCredit, fallbackLimits, type UsdTopUpRange } from '../utils/topUpEstimate';
 
 type Navigation = WalletStackScreenProps<'TopUp'>['navigation'];
 type Route = WalletStackScreenProps<'TopUp'>['route'];
@@ -35,6 +34,8 @@ export interface TopUpFlow {
   selected: TopUpChannelOption | null;
   /** Range for the picked channel + currency; `null` = unknown (the server checks). */
   limits: TopUpLimits | null;
+  /** The market's USD range: the amount screen's fallback when a channel sends none. */
+  usdRange: UsdTopUpRange | null;
   /** Fresh SYP per USD, `null` while stale or missing. */
   rate: string | null;
   /** What the wallet would get for the typed amount (SYP = client estimate). */
@@ -78,10 +79,8 @@ export const useTopUpFlowState = () => {
       : 'loading';
 
   const [defaultValues] = useState<TopUpFormValues>(() => {
-    const channel =
-      prefill?.channel && isOneOf(PAYMENT_CHANNELS, prefill.channel) ? prefill.channel : null;
     return {
-      channel,
+      channel: prefill?.channel ?? null,
       currency: prefill ? prefill.amount.currency : 'USD',
       amount: prefill ? prefill.amount : null,
       transferReference: '',
@@ -109,9 +108,14 @@ export const useTopUpFlowState = () => {
     [channel, channels],
   );
   const rate = channels?.rate && !channels.rate.is_stale ? channels.rate.rate : null;
+  const { market } = useActiveMarket();
+  const usdRange = useMemo<UsdTopUpRange | null>(() => {
+    const { min, max } = market?.currencies.find(entry => entry.code === 'USD')?.topUp ?? {};
+    return min != null && max != null ? { min, max } : null;
+  }, [market]);
   const limits = useMemo(
-    () => (selected ? (selected.limits[currency] ?? fallbackLimits(currency, rate)) : null),
-    [currency, rate, selected],
+    () => (selected ? (selected.limits[currency] ?? fallbackLimits(currency, rate, usdRange)) : null),
+    [currency, rate, selected, usdRange],
   );
   useEffect(() => setLimitsForSchema(limits), [limits]);
   // Read at exit only: the submitted screen shows the channel's review time.
@@ -180,6 +184,7 @@ export const useTopUpFlowState = () => {
       refetchChannels,
       selected,
       limits,
+      usdRange,
       rate,
       credit,
       action: actionRef.current ?? createIdempotentAction(),
@@ -200,6 +205,7 @@ export const useTopUpFlowState = () => {
       finish,
       limits,
       notice,
+      usdRange,
       rate,
       refetchChannels,
       selected,

@@ -6,6 +6,7 @@ export { createIdempotencyKey, createIdempotentAction, IDEMPOTENCY_HEADER } from
 export type { IdempotentAction } from './idempotency';
 export { configApi, useGetConfigQuery } from './configApi';
 export type { AppConfig } from './configApi';
+export { readCachedAppConfig, writeCachedAppConfig } from './configCache';
 export {
   lookupsApi,
   useGetLookupsQuery,

@@ -55,8 +55,9 @@ describe('mapPayoutMethod', () => {
     expect(mapped?.label).toBeNull();
   });
 
-  it('skips a channel this build does not know', () => {
-    expect(mapPayoutMethod(dto({ channel: 'paypal' }))).toBeNull();
+  it('keeps any channel code of the market, and skips a method without one', () => {
+    expect(mapPayoutMethod(dto({ channel: 'paypal' }))?.channel).toBe('paypal');
+    expect(mapPayoutMethod(dto({ channel: '' }))).toBeNull();
   });
 });
 

@@ -12,6 +12,7 @@ import { useOpenSupport } from '@/domains/auth';
 import type { TimelineStep } from '@/shared/ui';
 import { useCancelWithdrawalMutation, useGetWithdrawalQuery } from '../../../api/withdrawalApi';
 import { WITHDRAWAL_STATUS_LOOK } from '../../../constants/withdraw';
+import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
 import type { Withdrawal } from '../../../types';
 import { exchangeRateLine } from '../../../utils/exchangeRateText';
 import {
@@ -147,9 +148,11 @@ export const useWithdrawalDetailScreen = () => {
     [formatWhen, t],
   );
 
+  const { find: findChannel } = usePaymentChannels();
+
   const view = useMemo(() => {
     if (!withdrawal) return null;
-    const destination = withdrawalDestination(withdrawal, t);
+    const destination = withdrawalDestination(withdrawal, findChannel(withdrawal.channel)?.name);
     const lost = isWithdrawalLost(withdrawal);
     const requestedAt = formatWhen(withdrawal.created_at);
     const converted =
@@ -220,7 +223,7 @@ export const useWithdrawalDetailScreen = () => {
       canCancel: withdrawal.status === 'pending',
       returned: withdrawal.status === 'returned',
     };
-  }, [buildSteps, colors, formatWhen, lang, submitted, t, withdrawal]);
+  }, [buildSteps, colors, findChannel, formatWhen, lang, submitted, t, withdrawal]);
 
   const onCopy = useCallback(
     (value: string) => {

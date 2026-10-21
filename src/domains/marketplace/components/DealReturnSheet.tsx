@@ -12,7 +12,7 @@ import {
   DEAL_RETURN_HANDED_LABEL,
   type DealReturnHanded,
 } from '../constants/dealReturn';
-import { DEAL_COURIER_PRESETS, DEAL_SHIPPING_LIMITS, type DealCourierChoice } from '../constants/dealShipping';
+import { DEAL_COURIER_OTHER, DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
 import type { DealReturnModel } from '../hooks/useDealReturn';
 import type { DealReturnFormValues } from '../schemas/dealReturnSchema';
 import type { Deal } from '../types';
@@ -28,7 +28,7 @@ export interface DealReturnSheetProps {
 const CourierOtherField = memo<{ control: Control<DealReturnFormValues>; onNext: () => void }>(({ control, onNext }) => {
   const { t } = useTranslation();
   const courier = useWatch({ control, name: 'courier' });
-  if (courier !== 'other') return null;
+  if (courier !== DEAL_COURIER_OTHER) return null;
   return (
     <Controller
       control={control}
@@ -84,10 +84,6 @@ const DealReturnSheetComponent: React.FC<DealReturnSheetProps> = ({ deal, ret })
   const { colors, sizes } = useTheme();
   const { control, setFocus, view, ship } = ret;
   const editing = ship?.status.key === 'shipped';
-  const items = useMemo(
-    () => [...DEAL_COURIER_PRESETS, 'other' as const].map(choice => ({ value: choice, label: ret.courierLabels[choice] })),
-    [ret.courierLabels],
-  );
   const handedItems = useMemo(
     () => DEAL_RETURN_HANDED.map(value => ({ value, label: t(DEAL_RETURN_HANDED_LABEL[value]) })),
     [t],
@@ -133,9 +129,9 @@ const DealReturnSheetComponent: React.FC<DealReturnSheetProps> = ({ deal, ret })
         render={({ field: { value, onChange }, fieldState }) => (
           <FormSection title={t('marketplace.deals.shipping.ship.courier')} error={fieldState.error?.message}>
             <ChipGroup
-              items={items}
+              items={ret.courierOptions.items}
               value={value}
-              onChange={next => onChange(next as DealCourierChoice)}
+              onChange={onChange}
               accessibilityLabel={t('marketplace.deals.shipping.ship.courier')}
             />
           </FormSection>

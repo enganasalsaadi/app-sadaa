@@ -10,8 +10,9 @@ import type { DealsStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
 import { useGetCampaignQuery } from '../../../api/brandCampaignsApi';
 import { useGetCampaignShippingQuery, useShipCampaignBatchMutation } from '../../../api/campaignBatchApi';
-import { dealCourierLabels, DEAL_COURIER_PRESETS, type DealCourierChoice } from '../../../constants/dealShipping';
+import { DEAL_COURIER_OTHER } from '../../../constants/dealShipping';
 import { useClock } from '../../../hooks/useClock';
+import { useCourierOptions } from '../../../hooks/useCourierOptions';
 import { createCampaignShippingResolver } from '../../../schemas/campaignShippingSchema';
 import type { CampaignShipmentReport } from '../../../types/campaignShipping';
 import {
@@ -96,15 +97,8 @@ export const useBrandCampaignShippingScreen = () => {
     });
   }, [board, getValues, setValue]);
 
-  const courierLabels = useMemo(() => dealCourierLabels(t), [t]);
-  const courierItems = useMemo(
-    () => ([...DEAL_COURIER_PRESETS, 'other'] as const).map(value => ({ value, label: courierLabels[value] })),
-    [courierLabels],
-  );
-  const bulkItems = useMemo(
-    () => DEAL_COURIER_PRESETS.map(value => ({ value, label: courierLabels[value] })),
-    [courierLabels],
-  );
+  const { items: courierItems } = useCourierOptions();
+  const bulkItems = useMemo(() => courierItems.filter(item => item.value !== DEAL_COURIER_OTHER), [courierItems]);
 
   const parcelsRef = useRef(parcels);
   parcelsRef.current = parcels;
@@ -130,13 +124,12 @@ export const useBrandCampaignShippingScreen = () => {
   /** One courier for every parcel that can still ship; the number stays per parcel. */
   const setCourierForAll = useCallback(
     (value: string) => {
-      const courier = DEAL_COURIER_PRESETS.find(preset => preset === value);
-      if (!courier) return;
+      if (!bulkItems.some(item => item.value === value)) return;
       parcelsRef.current.filter(parcelCanShip).forEach(parcel => {
-        setValue(`rows.${parcel.row.dealId}.courier`, courier as DealCourierChoice);
+        setValue(`rows.${parcel.row.dealId}.courier`, value);
       });
     },
-    [setValue],
+    [bulkItems, setValue],
   );
 
   // — Addresses (PII) —————————————————————————————————————————————————
@@ -202,7 +195,7 @@ export const useBrandCampaignShippingScreen = () => {
 
   const sendBatches = useCallback(
     async (drafts: CampaignShippingFormValues) => {
-      const inputs = buildShipmentInputs(parcelsRef.current, drafts.rows, courierLabels);
+      const inputs = buildShipmentInputs(parcelsRef.current, drafts.rows);
       if (inputs.length === 0) {
         toastService.info(t('marketplace.campaign.shipping.toast.pickOne'));
         return;
@@ -237,7 +230,7 @@ export const useBrandCampaignShippingScreen = () => {
         else toastService.error(message);
       }
     },
-    [courierLabels, id, settleReport, ship, t],
+    [id, settleReport, ship, t],
   );
 
   const handleSubmit = form.handleSubmit;

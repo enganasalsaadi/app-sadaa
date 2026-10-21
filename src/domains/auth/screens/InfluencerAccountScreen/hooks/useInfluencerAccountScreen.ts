@@ -7,7 +7,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { resolveInitialPhoneCountry } from '@/core/market';
 import { motion } from '@/core/theme';
 import { useWizardHeader } from '@/shared/ui';
 import { useInfluencerStep1Mutation } from '../../../api';
@@ -24,15 +24,16 @@ const SERVER_FIELD_MAP = {
   governorate: 'governorate',
 } as const satisfies Record<string, keyof InfluencerAccountFormValues>;
 
-const DEFAULT_VALUES: InfluencerAccountFormValues = {
+/** The country comes from the device region and the cached markets, read once per screen. */
+const createDefaultValues = (): InfluencerAccountFormValues => ({
   fullName: '',
   phone: '',
-  countryCode: DEFAULT_PHONE_COUNTRY,
+  countryCode: resolveInitialPhoneCountry(),
   governorate: '',
   email: '',
   password: '',
   passwordConfirmation: '',
-};
+});
 
 interface PendingAccount {
   values: InfluencerAccountFormValues;
@@ -44,6 +45,7 @@ export const useInfluencerAccountScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const schema = useMemo(() => createInfluencerAccountSchema(t), [t]);
+  const defaultValues = useMemo(createDefaultValues, []);
   const [pending, setPending] = useState<PendingAccount | null>(null);
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [influencerStep1, { isLoading }] = useInfluencerStep1Mutation();
@@ -53,7 +55,7 @@ export const useInfluencerAccountScreen = () => {
     useForm<InfluencerAccountFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
-      defaultValues: DEFAULT_VALUES,
+      defaultValues,
     });
 
   const step = INFLUENCER_WIZARD_STEPS.account;

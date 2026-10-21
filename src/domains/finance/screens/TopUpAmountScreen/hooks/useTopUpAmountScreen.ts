@@ -33,7 +33,7 @@ export const useTopUpAmountScreen = () => {
   const { control, setValue, trigger } = useFormContext<TopUpFormValues>();
   const currency = useWatch({ control, name: 'currency' });
   const amount = useWatch({ control, name: 'amount' });
-  const { selected, limits, rate, credit } = flow;
+  const { selected, limits, rate, credit, usdRange } = flow;
 
   const currencies = useMemo<SegmentedOption<CurrencyCode>[]>(
     () => (selected?.currencies ?? []).map(value => ({ value, label: t(SEGMENT_LABEL[value]) })),
@@ -55,7 +55,7 @@ export const useTopUpAmountScreen = () => {
     const min = formatMoney(limits.min, lang, WHOLE);
     const max = formatMoney(limits.max, lang, WHOLE);
     if (currency === 'USD') return t('finance.topUp.amount.range', { min, max });
-    const usd = selected?.limits.USD ?? fallbackLimits('USD', null);
+    const usd = selected?.limits.USD ?? fallbackLimits('USD', null, usdRange);
     if (!usd) return t('finance.topUp.amount.range', { min, max });
     return t('finance.topUp.amount.rangeWithUsd', {
       min,
@@ -65,7 +65,7 @@ export const useTopUpAmountScreen = () => {
         max: formatMoney(usd.max, lang, WHOLE),
       }),
     });
-  }, [currency, lang, limits, selected?.limits.USD, t]);
+  }, [currency, lang, limits, selected?.limits.USD, t, usdRange]);
 
   const rateLabel = useMemo(() => {
     if (currency !== 'SYP' || !rate) return null;

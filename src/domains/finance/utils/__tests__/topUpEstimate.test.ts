@@ -55,21 +55,27 @@ describe('estimateCredit', () => {
 });
 
 describe('fallbackLimits', () => {
-  it('is $10 – $10,000 in dollars', () => {
-    expect(fallbackLimits('USD', null)).toEqual({
+  const RANGE = { min: 1_000, max: 1_000_000 };
+
+  it('is the market range in dollars', () => {
+    expect(fallbackLimits('USD', null, RANGE)).toEqual({
       min: { amount: 1_000, currency: 'USD' },
       max: { amount: 1_000_000, currency: 'USD' },
     });
   });
 
   it('keeps the pound range inside the dollar one', () => {
-    expect(fallbackLimits('SYP', '13999.99')).toEqual({
+    expect(fallbackLimits('SYP', '13999.99', RANGE)).toEqual({
       min: { amount: 140_000, currency: 'SYP' },
       max: { amount: 139_999_900, currency: 'SYP' },
     });
   });
 
   it('has no pound range without a rate', () => {
-    expect(fallbackLimits('SYP', null)).toBeNull();
+    expect(fallbackLimits('SYP', null, RANGE)).toBeNull();
+  });
+
+  it('has no range at all when the market sets none', () => {
+    expect(fallbackLimits('USD', null, null)).toBeNull();
   });
 });

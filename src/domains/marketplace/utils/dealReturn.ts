@@ -5,10 +5,11 @@ import {
   DEAL_RETURN_WINDOW_DAYS,
   UNKNOWN_DEAL_RETURN_STATUS_META,
 } from '../constants/dealReturn';
-import type { DealCourierChoice } from '../constants/dealShipping';
+import type { MarketCourier } from '@/core/market';
+import { DEAL_COURIER_OTHER } from '../constants/dealShipping';
 import type { DealReturnFormValues } from '../schemas/dealReturnSchema';
 import type { Deal, DealReturnShipment, DealReturnStatus, Timestamp } from '../types';
-import { courierChoiceOf, courierName, safeTrackingUrl } from './dealShipping';
+import { courierChoiceOf, safeTrackingUrl, toCourierFields } from './dealShipping';
 
 const DAY_MS = 86_400_000;
 
@@ -88,16 +89,16 @@ export const dealReturnAnswers = (key: DealReturnStatus | null): DealReturnAnswe
 /** Fields the sheet starts from: a fresh waybill, or the one on file when the creator edits it. */
 export const returnFormValues = (
   ship: DealReturnShipment | null,
-  labels: Readonly<Record<DealCourierChoice, string>>,
+  couriers: readonly MarketCourier[],
   now: number,
 ): DealReturnFormValues => {
   const base = { handed: 'today' as const, handedDays: DEAL_RETURN_EARLIER_DAYS.min };
   if (!ship?.courier) return { courier: null, courierName: '', trackingNo: '', trackingUrl: '', ...base };
-  const courier = courierChoiceOf(ship.courier, labels);
+  const courier = courierChoiceOf(ship.courier, couriers);
   const daysAgo = ship.handedAt === null ? 0 : Math.floor((now - ship.handedAt) / DAY_MS);
   return {
     courier,
-    courierName: courier === 'other' ? ship.courier : '',
+    courierName: courier === DEAL_COURIER_OTHER ? ship.courier : '',
     trackingNo: ship.trackingNo ?? '',
     trackingUrl: ship.trackingUrl ?? '',
     handed: daysAgo >= 2 ? 'earlier' : daysAgo === 1 ? 'yesterday' : 'today',
@@ -115,13 +116,14 @@ export const handedDaysAgo = (values: Pick<DealReturnFormValues, 'handed' | 'han
  */
 export const toReturnBody = (
   values: DealReturnFormValues,
-  labels: Readonly<Record<DealCourierChoice, string>>,
   now: number,
 ): Record<string, string> => {
   const url = safeTrackingUrl(values.trackingUrl);
   const days = handedDaysAgo(values);
+  const { courier, courierName: typed } = toCourierFields(values);
   return {
-    courier: courierName(values, labels),
+    courier,
+    ...(typed ? { courier_name: typed } : {}),
     tracking_no: values.trackingNo.trim(),
     ...(url ? { tracking_url: url } : {}),
     ...(days > 0 ? { handed_at: new Date(now - days * DAY_MS).toISOString() } : {}),

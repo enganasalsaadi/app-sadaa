@@ -13,6 +13,7 @@ import { useOpenSupport } from '@/domains/auth';
 import type { NoticeTone, TimelineStep } from '@/shared/ui';
 import { useGetTopUpQuery } from '../../../api/topUpApi';
 import { TOP_UP_STATUS_LOOK } from '../../../constants/topUp';
+import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
 import type { TopUp, TopUpReceipt } from '../../../types';
 import { formatExchangeRateSides } from '../../../utils/exchangeRateText';
 import { isReceiptLinkExpired, isTrustedReceiptUrl } from '../../../utils/receiptUrl';
@@ -74,12 +75,14 @@ export const useTopUpDetailScreen = () => {
     [lang, t],
   );
 
+  const { find: findChannel } = usePaymentChannels();
+
   const view = useMemo(() => {
     if (!topUp) return null;
     const completed = topUp.status === 'completed';
     const lost = topUp.status === 'rejected' || topUp.status === 'reversed';
     const sentInOther = topUp.amount.currency !== 'USD';
-    const channel = topUpChannelLabel(topUp, t);
+    const channel = topUpChannelLabel(topUp, findChannel(topUp.channel)?.name);
     const submittedAt = formatWhen(topUp.submitted_at);
 
     const steps: TimelineStep[] = [
@@ -181,7 +184,7 @@ export const useTopUpDetailScreen = () => {
       canRetry: lost && topUp.channel !== null,
       transactionReference: topUp.transaction_reference,
     };
-  }, [formatWhen, lang, processingTime, submitted, t, topUp]);
+  }, [findChannel, formatWhen, lang, processingTime, submitted, t, topUp]);
 
   const onCopyId = useCallback(() => {
     Clipboard.setString(id);

@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useLookupItems } from '@/core/api';
 import { useGetPayoutMethodsQuery } from '../api/payoutMethodApi';
 import { buildPayoutMethodView } from '../utils/payoutMethodView';
+import { usePaymentChannels } from './usePaymentChannels';
 
 interface UsePayoutMethodsOptions {
   /** Brands have no payout methods: no request at all. */
@@ -11,9 +11,9 @@ interface UsePayoutMethodsOptions {
 
 /** The creator's saved methods, ready to render (governorate names from `/lookups`). */
 export const usePayoutMethods = ({ skip = false }: UsePayoutMethodsOptions = {}) => {
-  const { t } = useTranslation();
   const query = useGetPayoutMethodsQuery(undefined, { skip });
   const governorates = useLookupItems('governorates');
+  const { find } = usePaymentChannels();
   const { items } = governorates;
 
   const governorateLabel = useCallback(
@@ -23,8 +23,8 @@ export const usePayoutMethods = ({ skip = false }: UsePayoutMethodsOptions = {})
 
   const { data } = query;
   const views = useMemo(
-    () => data?.map(method => buildPayoutMethodView(method, t, governorateLabel)) ?? [],
-    [data, governorateLabel, t],
+    () => data?.map(method => buildPayoutMethodView(method, governorateLabel, find)) ?? [],
+    [data, find, governorateLabel],
   );
 
   return {

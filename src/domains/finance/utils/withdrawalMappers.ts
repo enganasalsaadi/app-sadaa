@@ -1,5 +1,5 @@
 import type { AppApiError } from '@/core/api';
-import { PAYMENT_CHANNELS, WITHDRAWAL_REASON_CODES, WITHDRAWAL_STATUS } from '../types';
+import { WITHDRAWAL_REASON_CODES, WITHDRAWAL_STATUS } from '../types';
 import type {
   Withdrawal,
   WithdrawalBlock,
@@ -45,7 +45,7 @@ export const mapWithdrawal = (dto: WithdrawalDto): Withdrawal => ({
   net: toOptionalMoney(dto.net),
   net_payout: toOptionalMoney(dto.net_payout),
   exchange_rate: dto.exchange_rate || null,
-  channel: dto.channel && isOneOf(PAYMENT_CHANNELS, dto.channel) ? dto.channel : null,
+  channel: dto.channel || null,
   destination_label: dto.destination_label || null,
   receipt_number: dto.receipt_number || null,
   rejection_reason: dto.rejection_reason || null,

@@ -1,16 +1,11 @@
-import type { ParseKeys } from 'i18next';
 import { isCurrencyCode } from '@/core/money';
 import type { CurrencyCode } from '@/core/money';
-import { PAYMENT_CHANNEL_DEF, PAYMENT_GROUP_LABEL } from '../constants/paymentChannels';
-import { TOP_UP_DISABLED_LABEL, TOP_UP_MOCK_ACCOUNTS } from '../constants/topUp';
 import {
   PAYMENT_CHANNEL_GROUPS,
-  PAYMENT_CHANNELS,
   TOP_UP_DISABLED_REASONS,
   TOP_UP_STATUS,
 } from '../types';
 import type {
-  ExchangeRate,
   TopUp,
   TopUpAccount,
   TopUpAccountDto,
@@ -26,10 +21,7 @@ import type {
   TopUpsPage,
   TopUpsPageDto,
 } from '../types';
-import { fallbackLimits } from './topUpEstimate';
 import { isOneOf, toMoney, toOptionalMoney } from './walletMappers';
-
-type Translate = (key: ParseKeys) => string;
 
 const toCurrencies = (values: readonly string[]): CurrencyCode[] =>
   values.filter((value): value is CurrencyCode => isCurrencyCode(value));
@@ -52,11 +44,10 @@ const toAccounts = (dtos: TopUpAccountDto[] | null | undefined): TopUpAccount[] 
     return fields.length > 0 ? [{ id: account.id, fields }] : [];
   });
 
-/** An unknown channel is dropped (the POST would reject it); an unknown group uses the app's own. */
+/** The server's list is the market's: any channel code is kept. A group this build can't section is dropped. */
 const mapChannel = (dto: TopUpChannelDto): TopUpChannelOption[] => {
-  if (!isOneOf(PAYMENT_CHANNELS, dto.channel)) return [];
-  const def = PAYMENT_CHANNEL_DEF[dto.channel];
-  const group = isOneOf(PAYMENT_CHANNEL_GROUPS, dto.group) ? dto.group : def.group;
+  if (!dto.channel || !isOneOf(PAYMENT_CHANNEL_GROUPS, dto.group)) return [];
+  const group = dto.group;
   const currencies = toCurrencies(dto.currencies);
   const reason =
     dto.disabled_reason && isOneOf(TOP_UP_DISABLED_REASONS, dto.disabled_reason) ? dto.disabled_reason : null;
@@ -86,58 +77,7 @@ export const mapTopUpChannels = (dto: TopUpChannelsDto): TopUpChannels => ({
     ? { rate: dto.exchange_rate.rate, is_stale: dto.exchange_rate.is_stale, effective_at: dto.exchange_rate.effective_at }
     : null,
   payerReference: dto.payer_reference?.trim() || null,
-  source: 'server',
 });
-
-/**
- * Channels built on the device while the server predates the endpoint: the handoff's
- * fixed rules (cash wallets SYP only, SYP off without a fresh rate, $10 – $10,000).
- * Receiving accounts exist only as DEV samples (`mock`); otherwise none, and the
- * transfer step points the brand to support.
- */
-export const buildFallbackChannels = (
-  rate: ExchangeRate | null,
-  t: Translate,
-  mock: boolean,
-): TopUpChannels => {
-  const usableRate = rate && !rate.is_stale ? rate.rate : null;
-  const channels = PAYMENT_CHANNELS.map<TopUpChannelOption>(channel => {
-    const def = PAYMENT_CHANNEL_DEF[channel];
-    const currencies = def.currencies.filter(currency => currency === 'USD' || usableRate !== null);
-    const enabled = currencies.length > 0;
-    const disabledReason = enabled ? null : rate ? 'fx_rate_stale' : 'fx_rate_unavailable';
-    const limits: Partial<Record<CurrencyCode, TopUpLimits>> = {};
-    for (const currency of currencies) {
-      const range = fallbackLimits(currency, usableRate);
-      if (range) limits[currency] = range;
-    }
-    return {
-      channel,
-      label: t(def.labelKey),
-      group: def.group,
-      groupLabel: t(PAYMENT_GROUP_LABEL[def.group]),
-      currencies,
-      enabled,
-      disabledReason,
-      disabledLabel: disabledReason ? t(TOP_UP_DISABLED_LABEL[disabledReason]) : null,
-      limits,
-      accounts: mock
-        ? TOP_UP_MOCK_ACCOUNTS[def.group].map(account => ({
-            id: account.id,
-            fields: account.fields.map(field => ({ ...field, label: t(field.label) })),
-          }))
-        : [],
-      instructions: null,
-      processingTimeLabel: null,
-    };
-  });
-  return {
-    channels,
-    rate: rate ? { rate: rate.rate, is_stale: rate.is_stale, effective_at: rate.effective_at } : null,
-    payerReference: null,
-    source: 'fallback',
-  };
-};
 
 const toReceipt = (dto: TopUpReceiptDto | null | undefined): TopUpReceipt | null =>
   dto?.url
@@ -155,7 +95,7 @@ export const mapTopUp = (dto: TopUpDto): TopUp => ({
   id: dto.id,
   status: isOneOf(TOP_UP_STATUS, dto.status) ? dto.status : null,
   status_label: dto.status_label,
-  channel: isOneOf(PAYMENT_CHANNELS, dto.channel) ? dto.channel : null,
+  channel: dto.channel || null,
   channel_label: dto.channel_label || null,
   amount: toMoney(dto.amount),
   amount_usd: toOptionalMoney(dto.amount_usd),

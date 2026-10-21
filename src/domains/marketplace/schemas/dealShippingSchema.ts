@@ -1,15 +1,14 @@
 import * as yup from 'yup';
 import type { TFunction } from 'i18next';
+import { toMarketMobile, type MobileRule } from '@/core/market';
 import {
-  DEAL_COURIER_PRESETS,
+  DEAL_COURIER_OTHER,
   DEAL_ISSUE_REASON_DEF,
   DEAL_SHIPPING_LIMITS,
   type DealCourierChoice,
 } from '../constants/dealShipping';
 import { DEAL_SHIPPING_ISSUE_REASON, type DealShippingIssueReason } from '../types/deal';
-import { safeTrackingUrl, toSyrianMobile } from '../utils/dealShipping';
-
-const COURIER_CHOICES: readonly DealCourierChoice[] = [...DEAL_COURIER_PRESETS, 'other'];
+import { safeTrackingUrl } from '../utils/dealShipping';
 
 const maxLength = (t: TFunction, count: number) => t('validation.maxLength', { count });
 const minLength = (t: TFunction, count: number) => t('validation.minLength', { count });
@@ -26,18 +25,17 @@ export interface DealShipFormValues {
 export const createDealShipSchema = (t: TFunction): yup.ObjectSchema<DealShipFormValues> =>
   yup.object({
     courier: yup
-      .mixed<DealCourierChoice>()
-      .oneOf([...COURIER_CHOICES], t('validation.selectOne'))
+      .string()
       .nullable()
       .defined()
-      .test('courier', t('validation.selectOne'), value => value !== null),
+      .test('courier', t('validation.selectOne'), value => Boolean(value)),
     courierName: yup
       .string()
       .defined()
       .trim()
       .max(DEAL_SHIPPING_LIMITS.courier, maxLength(t, DEAL_SHIPPING_LIMITS.courier))
       .when('courier', ([courier], schema) =>
-        courier === 'other' ? schema.required(t('validation.required')) : schema,
+        courier === DEAL_COURIER_OTHER ? schema.required(t('validation.required')) : schema,
       ),
     trackingNo: yup
       .string()
@@ -106,7 +104,10 @@ const ranged = (t: TFunction, { min, max }: { min: number; max: number }) =>
     .min(min, minLength(t, min))
     .max(max, maxLength(t, max));
 
-export const createDealAddressSchema = (t: TFunction): yup.ObjectSchema<DealAddressFormValues> => {
+export const createDealAddressSchema = (
+  t: TFunction,
+  mobile: MobileRule,
+): yup.ObjectSchema<DealAddressFormValues> => {
   const limits = DEAL_SHIPPING_LIMITS.address;
   return yup.object({
     recipientName: ranged(t, limits.recipientName),
@@ -114,8 +115,8 @@ export const createDealAddressSchema = (t: TFunction): yup.ObjectSchema<DealAddr
       .string()
       .defined()
       .required(t('validation.required'))
-      .test('syrian-mobile', t('marketplace.deals.shipping.address.phoneError'), value =>
-        Boolean(value && toSyrianMobile(value)),
+      .test('market-mobile', t('marketplace.deals.shipping.address.phoneError'), value =>
+        Boolean(value && toMarketMobile(value, mobile)),
       ),
     governorateId: yup.string().defined().required(t('validation.selectOne')),
     city: ranged(t, limits.city),

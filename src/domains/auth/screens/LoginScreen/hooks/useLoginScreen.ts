@@ -9,7 +9,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { resolveInitialPhoneCountry } from '@/core/market';
 import type { AuthStackParamList } from '@/core/navigation';
 import { useLoginMutation } from '../../../api';
 import type { AccountType } from '../../../components/AccountTypeSheet';
@@ -21,17 +21,19 @@ const SERVER_FIELD_MAP = {
   password: 'password',
 } as const satisfies Record<string, keyof LoginFormValues>;
 
-const DEFAULT_VALUES: LoginFormValues = {
-  countryCode: DEFAULT_PHONE_COUNTRY,
+/** The country comes from the device region and the cached markets, read once per screen. */
+const createDefaultValues = (): LoginFormValues => ({
+  countryCode: resolveInitialPhoneCountry(),
   phone: '',
   password: '',
-};
+});
 
 export const useLoginScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Login'>>();
   const route = useRoute<RouteProp<AuthStackParamList, 'Login'>>();
   const schema = useMemo(() => createLoginSchema(t), [t]);
+  const defaultValues = useMemo(createDefaultValues, []);
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [accountSheetVisible, setAccountSheetVisible] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
@@ -40,7 +42,7 @@ export const useLoginScreen = () => {
     useForm<LoginFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
-      defaultValues: DEFAULT_VALUES,
+      defaultValues,
     });
 
   // Back from a password reset with the number already known: only the new

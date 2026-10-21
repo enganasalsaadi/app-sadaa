@@ -8,7 +8,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { resolveInitialPhoneCountry } from '@/core/market';
 import type {
   PasswordResetStackParamList,
   PasswordResetStackScreenProps,
@@ -41,7 +41,7 @@ export const useForgotPasswordScreen = () => {
       resolver: yupResolver(schema),
       defaultValues: {
         phone: params?.phone ?? '',
-        countryCode: params?.countryCode ?? DEFAULT_PHONE_COUNTRY,
+        countryCode: params?.countryCode ?? resolveInitialPhoneCountry(),
       },
     });
 

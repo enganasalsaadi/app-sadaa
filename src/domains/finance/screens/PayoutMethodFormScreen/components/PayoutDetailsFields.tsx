@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
 import type { TextInputProps } from 'react-native';
 import { Controller } from 'react-hook-form';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { Box, ChipGroup, CustomInput, FormSection, PhoneInput } from '@/shared/ui';
 import { PAYOUT_FIELD_LIMITS, type PayoutField } from '../../../constants/payoutMethods';
 import type { PayoutMethodFormScreenModel } from '../hooks/usePayoutMethodFormScreen';
@@ -60,7 +59,7 @@ const INPUT_DEF = {
   },
 } as const satisfies Record<InputField, InputDef>;
 
-// Payout phones are Syrian only: the field shows +963 without a picker.
+// Payout phones are the market's own mobiles: the field shows its calling code without a picker.
 const ignoreCountry = () => undefined;
 
 interface FieldProps {
@@ -111,10 +110,10 @@ const PhoneField = memo<{ vm: PayoutMethodFormScreenModel }>(({ vm }) => {
         <PhoneInput
           ref={ref}
           label={t('finance.payouts.form.phone')}
-          placeholder={t('finance.payouts.form.phonePlaceholder')}
+          placeholder={vm.mobile.placeholder ?? t('finance.payouts.form.phonePlaceholder')}
           value={value}
           onChangeText={onChange}
-          countryCode={DEFAULT_PHONE_COUNTRY}
+          countryCode={vm.mobile.countryCode}
           onChangeCountry={ignoreCountry}
           countryLocked
           returnKeyType="next"

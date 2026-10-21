@@ -67,7 +67,7 @@ ENVFILE=.env.staging npx react-native run-ios
 ```
 src/
   app/        App.tsx, navigation/RootNavigator, store/, bootstrap/, screens/ (Boot, ChooseLanguage, Onboarding, Maintenance, ForceUpdate)
-  core/       api/ config/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ upload/ hooks/
+  core/       api/ config/ market/ i18n/ theme/ storage/ store/ navigation/ toast/ notification/ permissions/ upload/ hooks/
   shared/     ui/ (UI kit) · context/ · utils/ · types/
   domains/    auth/ · identity/ · notifications/ · marketplace/ · finance/
   assets/     fonts/ images/ lottie/ locales/{ar,en}/common.json

@@ -7,18 +7,19 @@ import { useTranslation } from 'react-i18next';
 import { applyServerFieldErrors } from '@/core/api';
 import { HAPTIC_SUCCESS_MS } from '@/core/config';
 import { toastService } from '@/core/toast';
-import { dealCourierLabels } from '../constants/dealShipping';
 import { createDealReturnSchema, type DealReturnFormValues } from '../schemas/dealReturnSchema';
 import type { Deal, DealRole } from '../types';
 import { reportDealFailure } from '../utils/dealAction';
 import { dealReturnView, returnFormValues, toReturnBody, type DealReturnView } from '../utils/dealReturn';
 import { formatRemaining, timerSecondsLeft } from '../utils/dealTimer';
 import { useClock } from './useClock';
+import { useCourierOptions } from './useCourierOptions';
 import { useDealAction } from './useDealAction';
 
 const MINUTE_MS = 60_000;
 const FIELDS = {
-  courier: 'courierName',
+  courier: 'courier',
+  courier_name: 'courierName',
   tracking_no: 'trackingNo',
   tracking_url: 'trackingUrl',
   handed_at: 'handed',
@@ -45,22 +46,23 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
   const now = useClock(MINUTE_MS);
   const ship = deal?.returnShipment ?? null;
   const view = useMemo<DealReturnView | null>(() => (deal ? dealReturnView(deal, now) : null), [deal, now]);
-  const courierLabels = useMemo(() => dealCourierLabels(t), [t]);
+  const courierOptions = useCourierOptions();
+  const { couriers } = courierOptions;
 
   const [visible, setVisible] = useState(false);
   const schema = useMemo(() => createDealReturnSchema(t), [t]);
   const form = useForm<DealReturnFormValues>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
-    defaultValues: returnFormValues(null, courierLabels, now),
+    defaultValues: returnFormValues(null, couriers, now),
   });
   const action = useDealAction(ref);
 
   const resetForm = form.reset;
   const open = useCallback(() => {
-    resetForm(returnFormValues(ship, courierLabels, Date.now()));
+    resetForm(returnFormValues(ship, couriers, Date.now()));
     setVisible(true);
-  }, [courierLabels, resetForm, ship]);
+  }, [couriers, resetForm, ship]);
   const close = useCallback(() => setVisible(false), []);
 
   const run = action.run;
@@ -70,7 +72,7 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
     () =>
       submit(async values => {
         const editing = ship?.status.key === 'shipped';
-        const outcome = await run('return-shipment', { body: toReturnBody(values, courierLabels, Date.now()) });
+        const outcome = await run('return-shipment', { body: toReturnBody(values, Date.now()) });
         if (outcome.ok) {
           Vibration.vibrate(HAPTIC_SUCCESS_MS);
           toastService.success(
@@ -85,7 +87,7 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
         }
         if (!applyServerFieldErrors(outcome.error, FIELDS, setError)) reportDealFailure(outcome.error);
       }),
-    [courierLabels, run, setError, ship?.status.key, submit, t],
+    [run, setError, ship?.status.key, submit, t],
   );
   const onSave = useCallback(() => {
     save();
@@ -128,7 +130,7 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
     view,
     due,
     autoConfirm,
-    courierLabels,
+    courierOptions,
     visible,
     open,
     close,

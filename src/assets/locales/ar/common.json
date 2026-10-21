@@ -117,7 +117,6 @@
         },
         "fullName": "الاسم الكامل",
         "fullNamePlaceholder": "مثال: أحمد خليل",
-        "phoneSyriaOnly": "أدخل رقم جوال سوري (‎+963 9…)",
         "email": "البريد الإلكتروني (اختياري)",
         "emailPlaceholder": "name@example.com",
         "governorate": "المحافظة",
@@ -361,7 +360,8 @@
       "hidden": "المبلغ مخفي"
     },
     "support": {
-      "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}."
+      "openFailed": "تعذّر فتح واتساب. راسلنا على الرقم {{number}}.",
+      "unavailable": "الدعم غير متاح حالياً. حاول مجدداً لاحقاً."
     },
     "timeline": {
       "done": "مكتمل",
@@ -5015,10 +5015,6 @@
         },
         "holdA11y": "اضغط مطوّلاً لثانية للتأكيد",
         "couriers": {
-          "alqadmous": "القدموس",
-          "aramex": "أرامكس",
-          "syrianPost": "البريد السوري",
-          "direct": "توصيل مباشر",
           "other": "أخرى"
         },
         "toShip": {
@@ -5070,7 +5066,7 @@
           "recipientPlaceholder": "الاسم الكامل",
           "phone": "رقم الجوال",
           "phonePlaceholder": "09XX XXX XXX",
-          "phoneError": "أدخل رقم جوال سوري صحيحاً",
+          "phoneError": "أدخل رقم جوال صحيحاً لبلدك",
           "governorate": "المحافظة",
           "city": "المدينة",
           "cityPlaceholder": "مثال: دمشق",
@@ -6206,14 +6202,6 @@
       "estimateNote": "مبلغ تقديري، يُؤكَّد المبلغ النهائي عند الدفع."
     },
     "channels": {
-      "names": {
-        "haram": "الهرم",
-        "fouad": "الفؤاد",
-        "syriatelCash": "سيريتل كاش",
-        "mtnCash": "MTN كاش",
-        "shamCash": "شام كاش",
-        "bank": "حوالة بنكية"
-      },
       "groups": {
         "exchangeOffice": "مكاتب الحوالات",
         "eWallet": "المحافظ الإلكترونية",
@@ -6392,16 +6380,6 @@
         "emptyMessage": "اشحن محفظتك لتدفع لصنّاع المحتوى عبر الضمان.",
         "filteredEmptyTitle": "لا توجد طلبات بهذه الحالة",
         "showAll": "عرض الكل"
-      },
-      "mock": {
-        "recipientName": "اسم المستلم",
-        "phone": "رقم الهاتف",
-        "city": "المدينة",
-        "walletNumber": "رقم المحفظة",
-        "accountName": "اسم الحساب",
-        "bankName": "البنك",
-        "accountHolder": "صاحب الحساب",
-        "iban": "IBAN"
       }
     },
     "payouts": {
@@ -6453,7 +6431,7 @@
         "city": "المدينة أو المنطقة (اختياري)",
         "cityPlaceholder": "مثال: المزة",
         "bankName": "اسم البنك",
-        "bankNamePlaceholder": "مثال: المصرف التجاري السوري",
+        "bankNamePlaceholder": "مثال: المصرف التجاري",
         "accountNumber": "رقم الحساب",
         "accountNumberPlaceholder": "أرقام وحروف إنجليزية",
         "iban": "رقم IBAN (اختياري)",
@@ -6476,7 +6454,7 @@
         "deleted": "حُذفت طريقة الاستلام",
         "gone": "لم تعد هذه الطريقة موجودة",
         "errors": {
-          "phone": "أدخل رقم جوال سوري يبدأ بـ 9 (9 أرقام)",
+          "phone": "أدخل رقم جوال صحيحاً لبلدك",
           "accountNumber": "رقم الحساب من 6 إلى 30 خانة: أرقام وحروف إنجليزية فقط",
           "iban": "رقم IBAN غير صحيح. تحقّق منه أو اتركه فارغاً",
           "accountCode": "رمز الحساب من 4 إلى 64 خانة: حروف إنجليزية وأرقام وشرطات فقط"
@@ -6527,7 +6505,9 @@
         "label": "المبلغ من رصيدك",
         "available": "المتاح",
         "useAll": "سحب الكل",
-        "limits": "الحد الأدنى {{min}} · حتى {{max}} يومياً · سحب واحد كل {{days}} أيام",
+        "limitMin": "الحد الأدنى {{min}}",
+        "limitMax": "حتى {{max}} للسحب الواحد",
+        "limitCooldown": "سحب واحد كل {{days}} أيام",
         "blockedTitle": "لا يمكن السحب الآن",
         "blockedFallback": "لم يقبل الخادم هذا السحب. حاول لاحقاً.",
         "verifyToWithdraw": "وثّق هويتك للسحب",
@@ -6546,7 +6526,7 @@
           "method": "اختر أين نرسل المبلغ",
           "required": "أدخل المبلغ",
           "min": "الحد الأدنى {{amount}}",
-          "max": "الحد اليومي {{amount}}",
+          "max": "الحد الأقصى {{amount}}",
           "overBalance": "المتاح لديك {{amount}}"
         }
       },

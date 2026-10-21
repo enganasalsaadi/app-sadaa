@@ -98,11 +98,11 @@ const WalletScreenComponent: React.FC<WalletScreenProps> = ({ role }) => {
             </Box>
           ) : null}
 
-          {vm.rate.staleMessage ? (
+          {/* {vm.rate.staleMessage ? (
             <Box px="xl">
               <Notice tone="warning" title={t('finance.wallet.rate.staleTitle')} message={vm.rate.staleMessage} />
             </Box>
-          ) : null}
+          ) : null} */}
 
           <EscrowTickets vm={vm} />
 

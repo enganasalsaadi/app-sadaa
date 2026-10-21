@@ -7,7 +7,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { resolveInitialPhoneCountry } from '@/core/market';
 import { motion } from '@/core/theme';
 import { useWizardHeader } from '@/shared/ui';
 import { useBrandStep1Mutation } from '../../../api';
@@ -24,14 +24,15 @@ const SERVER_FIELD_MAP = {
   password_confirmation: 'passwordConfirmation',
 } as const satisfies Record<string, keyof BrandAccountFormValues>;
 
-const DEFAULT_VALUES: BrandAccountFormValues = {
+/** The country comes from the device region and the cached markets, read once per screen. */
+const createDefaultValues = (): BrandAccountFormValues => ({
   companyName: '',
   phone: '',
-  countryCode: DEFAULT_PHONE_COUNTRY,
+  countryCode: resolveInitialPhoneCountry(),
   email: '',
   password: '',
   passwordConfirmation: '',
-};
+});
 
 interface PendingAccount {
   values: BrandAccountFormValues;
@@ -44,6 +45,7 @@ export const useBrandAccountScreen = () => {
   const navigation = useNavigation();
   // Rebuilt only on language change, not on every render.
   const schema = useMemo(() => createBrandAccountSchema(t), [t]);
+  const defaultValues = useMemo(createDefaultValues, []);
   const [pending, setPending] = useState<PendingAccount | null>(null);
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [brandStep1, { isLoading }] = useBrandStep1Mutation();
@@ -53,7 +55,7 @@ export const useBrandAccountScreen = () => {
       // Errors appear after leaving a field, then update while typing.
       mode: 'onTouched',
       resolver: yupResolver(schema),
-      defaultValues: DEFAULT_VALUES,
+      defaultValues,
     });
 
   const step = BRAND_WIZARD_STEPS.account;

@@ -48,7 +48,9 @@ export interface CampaignShippingBoard {
 /** What the brand sends for one parcel (`POST /{id}/shipments`, `shipments[]`). */
 export interface CampaignShipmentInput {
   dealId: string;
+  /** A market courier's code, or `other` with `courierName`. */
   courier: string;
+  courierName: string | null;
   trackingNo: string;
   /** A well-formed https link, or `null` (left out of the body). */
   trackingUrl: string | null;

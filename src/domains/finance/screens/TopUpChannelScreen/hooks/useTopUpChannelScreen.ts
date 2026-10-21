@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import type { LucideIcon } from 'lucide-react-native';
 import type { TopUpStackScreenProps } from '@/core/navigation';
-import { channelCurrenciesKey, PAYMENT_CHANNEL_DEF } from '../../../constants/paymentChannels';
+import { channelCurrenciesKey, PAYMENT_GROUP_ICON } from '../../../constants/paymentChannels';
 import { useTopUpFlow } from '../../../hooks/useTopUpFlow';
 import { TOP_UP_STEP_FIELDS, type TopUpFormValues } from '../../../schemas/topUpSchema';
 import { PAYMENT_CHANNEL_GROUPS } from '../../../types';
@@ -66,7 +66,7 @@ export const useTopUpChannelScreen = () => {
             label: option.label,
             caption: captionOf(option),
             enabled: option.enabled,
-            icon: PAYMENT_CHANNEL_DEF[option.channel].icon,
+            icon: PAYMENT_GROUP_ICON[group],
           })),
         },
       ];

@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { createIdempotentAction, type IdempotentAction } from '@/core/api';
 import { useDiscardGuard } from '@/core/hooks';
+import { useActiveMarket, type MarketAmountLimit } from '@/core/market';
 import type { Money } from '@/core/money';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useGetWalletQuery } from '../api/walletApi';
@@ -37,6 +38,8 @@ export interface WithdrawFlow {
   loadStatus: WithdrawLoadStatus;
   retryLoad: () => void;
   available: Money | null;
+  /** The market's USD withdrawal range; `null` = unknown, a `null` bound = no limit. */
+  limits: MarketAmountLimit | null;
   methods: readonly PayoutMethod[];
   views: readonly PayoutMethodView[];
   method: PayoutMethod | null;
@@ -99,9 +102,14 @@ export const useWithdrawFlowState = () => {
         ? 'error'
         : 'loading';
 
+  const { market } = useActiveMarket();
+  const limits = useMemo(
+    () => market?.currencies.find(entry => entry.code === 'USD')?.withdraw ?? null,
+    [market],
+  );
   const schema = useMemo(
-    () => createWithdrawSchema(t, { available, lang: i18n.language }),
-    [available, i18n.language, t],
+    () => createWithdrawSchema(t, { available, limits, lang: i18n.language }),
+    [available, i18n.language, limits, t],
   );
   const form = useForm<WithdrawFormValues>({
     mode: 'onTouched',
@@ -256,6 +264,7 @@ export const useWithdrawFlowState = () => {
       loadStatus,
       retryLoad,
       available,
+      limits,
       methods: methods ?? [],
       views: payouts.views,
       method,
@@ -276,6 +285,7 @@ export const useWithdrawFlowState = () => {
     [
       addMethod,
       available,
+      limits,
       blockReasons,
       blocked,
       close,

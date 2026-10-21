@@ -10,14 +10,9 @@ import type { CurrencyCode } from '@/core/money';
 import type { TopUpStackParamList } from '@/core/navigation';
 import type { HueTone } from '@/core/theme';
 import type {
-  PaymentChannelGroup,
-  TopUpAccount,
   TopUpDisabledReason,
   TopUpStatus,
 } from '../types';
-
-/** USD-equivalent range of one top-up in cents (handoff §6), until the server sends limits. */
-export const TOP_UP_USD_LIMITS = { min: 1_000, max: 1_000_000 } as const;
 
 /** Receipt upload rules (handoff §6): image or PDF, 10 MB. `image/jpg` = some Android galleries. */
 export const TOP_UP_RECEIPT_MIME_TYPES: readonly string[] = [
@@ -81,45 +76,3 @@ export const TOP_UP_STATUS_LOOK = {
   // Money was taken back out of the wallet (top-ups v2 §5.3).
   reversed: { tone: 'danger', icon: Undo2, labelKey: 'finance.topUp.status.reversed' },
 } as const satisfies Record<TopUpStatus, TopUpStatusLook>;
-
-/**
- * DEV ONLY (`ENABLE_MOCK_DATA`): sample receiving accounts while the server has no
- * channels endpoint. Never shipped as real details: without the flag the brand is sent
- * to support instead, so no one can transfer money to an invented account.
- */
-export const TOP_UP_MOCK_ACCOUNTS = {
-  exchange_office: [
-    {
-      id: 'mock-office',
-      fields: [
-        { key: 'recipient_name', label: 'finance.topUp.mock.recipientName', value: 'Sada Marketing (DEV)', copyable: true },
-        { key: 'phone', label: 'finance.topUp.mock.phone', value: '+963 900 000 000', copyable: true },
-        { key: 'city', label: 'finance.topUp.mock.city', value: 'Damascus (DEV)', copyable: false },
-      ],
-    },
-  ],
-  e_wallet: [
-    {
-      id: 'mock-wallet',
-      fields: [
-        { key: 'wallet_number', label: 'finance.topUp.mock.walletNumber', value: '0900 000 000', copyable: true },
-        { key: 'account_name', label: 'finance.topUp.mock.accountName', value: 'Sada Marketing (DEV)', copyable: true },
-      ],
-    },
-  ],
-  bank: [
-    {
-      id: 'mock-bank',
-      fields: [
-        { key: 'bank_name', label: 'finance.topUp.mock.bankName', value: 'DEV Bank', copyable: false },
-        { key: 'account_holder', label: 'finance.topUp.mock.accountHolder', value: 'Sada Marketing (DEV)', copyable: true },
-        { key: 'iban', label: 'finance.topUp.mock.iban', value: 'SY00 0000 0000 0000 0000 0000', copyable: true },
-      ],
-    },
-  ],
-} as const satisfies Record<
-  PaymentChannelGroup,
-  readonly (Omit<TopUpAccount, 'fields'> & {
-    fields: readonly { key: string; label: ParseKeys; value: string; copyable: boolean }[];
-  })[]
->;

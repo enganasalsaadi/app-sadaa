@@ -2,9 +2,10 @@ import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react-native';
 import { ListGroup, ListRow, SheetFrame } from '@/shared/ui';
-import { channelCurrenciesKey, PAYMENT_CHANNEL_DEF, PAYMENT_GROUP_LABEL } from '../constants/paymentChannels';
+import { channelCurrenciesKey, PAYMENT_GROUP_LABEL } from '../constants/paymentChannels';
 import { PAYOUT_GROUP_DEF } from '../constants/payoutMethods';
-import { PAYMENT_CHANNEL_GROUPS, PAYMENT_CHANNELS } from '../types';
+import { usePaymentChannels } from '../hooks/usePaymentChannels';
+import { PAYMENT_CHANNEL_GROUPS } from '../types';
 import type { PaymentChannel } from '../types';
 
 export interface PayoutChannelSheetProps {
@@ -34,23 +35,22 @@ const ChannelOption = memo<ChannelOptionProps>(({ channel, icon, title, subtitle
 const PayoutChannelSheetComponent: React.FC<PayoutChannelSheetProps> = ({ visible, onClose, onPick, selected }) => {
   const { t } = useTranslation();
   const picked = useRef<PaymentChannel | null>(null);
+  const { payoutChannels } = usePaymentChannels();
 
   const groups = useMemo(
     () =>
-      PAYMENT_CHANNEL_GROUPS.map(group => ({
-        group,
-        title: t(PAYMENT_GROUP_LABEL[group]),
-        rows: PAYMENT_CHANNELS.filter(channel => PAYMENT_CHANNEL_DEF[channel].group === group).map(channel => {
-          const def = PAYMENT_CHANNEL_DEF[channel];
-          return {
-            channel,
-            icon: def.icon,
-            title: t(def.labelKey),
-            subtitle: `${t(PAYOUT_GROUP_DEF[group].captionKey)} · ${t(channelCurrenciesKey(def.currencies))}`,
-          };
-        }),
-      })),
-    [t],
+      PAYMENT_CHANNEL_GROUPS.flatMap(group => {
+        const rows = payoutChannels
+          .filter(channel => channel.group === group)
+          .map(channel => ({
+            channel: channel.code,
+            icon: channel.icon,
+            title: channel.name,
+            subtitle: `${t(PAYOUT_GROUP_DEF[group].captionKey)} · ${t(channelCurrenciesKey(channel.currencies))}`,
+          }));
+        return rows.length > 0 ? [{ group, title: t(PAYMENT_GROUP_LABEL[group]), rows }] : [];
+      }),
+    [payoutChannels, t],
   );
 
   const choose = useCallback(

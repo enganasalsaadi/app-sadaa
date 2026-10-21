@@ -98,6 +98,7 @@ export const useTopUpReviewScreen = () => {
           navigation.popTo('TopUpAmount');
           return;
         case 'channel_paused':
+        case 'channel_not_available':
           refetchChannels();
           setNotice('channelPaused');
           navigation.popTo('TopUpChannel');

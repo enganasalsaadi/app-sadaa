@@ -3,7 +3,6 @@ import { Controller } from 'react-hook-form';
 import type { ParseKeys } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MapPin } from 'lucide-react-native';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { ChipGroup, CustomButton, CustomInput, FormSection, PhoneInput, SheetFrame } from '@/shared/ui';
 import { DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
 import type { DealAddressFormModel } from '../hooks/useDealAddressForm';
@@ -163,10 +162,10 @@ const DealAddressSheetComponent: React.FC<DealAddressSheetProps> = ({
           <PhoneInput
             ref={ref}
             label={t('marketplace.deals.shipping.address.phone')}
-            placeholder={t('marketplace.deals.shipping.address.phonePlaceholder')}
+            placeholder={form.phonePlaceholder ?? t('marketplace.deals.shipping.address.phonePlaceholder')}
             value={value}
             onChangeText={onChange}
-            countryCode={DEFAULT_PHONE_COUNTRY}
+            countryCode={form.phoneCountry}
             onChangeCountry={ignoreCountry}
             countryLocked
             returnKeyType="next"

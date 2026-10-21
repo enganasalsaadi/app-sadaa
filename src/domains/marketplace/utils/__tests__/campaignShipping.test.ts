@@ -1,4 +1,3 @@
-import type { DealCourierChoice } from '../../constants/dealShipping';
 import type { CampaignShipmentInput, CampaignShippingRow } from '../../types/campaignShipping';
 import {
   buildShipmentInputs,
@@ -37,14 +36,6 @@ const row = (dealId: string, overrides: Partial<CampaignShippingRow> = {}): Camp
   address: null,
   ...overrides,
 });
-
-const LABELS: Record<DealCourierChoice, string> = {
-  alqadmous: 'القدموس',
-  aramex: 'أرامكس',
-  syrianPost: 'البريد',
-  direct: 'مباشر',
-  other: 'أخرى',
-};
 
 describe('campaignParcels', () => {
   it('locks a first shipment inside the creator brief window and opens it by the clock', () => {
@@ -161,11 +152,10 @@ describe('buildShipmentInputs', () => {
         c: draft({}),
         d: draft({ courier: 'other', courierName: ' توصيلنا ', trackingNo: 'T9', trackingUrl: 'http://bad' }),
       },
-      LABELS,
     );
     expect(inputs).toEqual<CampaignShipmentInput[]>([
-      { dealId: 'a', courier: 'أرامكس', trackingNo: 'AR-1', trackingUrl: 'https://track.example.com/AR-1' },
-      { dealId: 'd', courier: 'توصيلنا', trackingNo: 'T9', trackingUrl: null },
+      { dealId: 'a', courier: 'aramex', courierName: null, trackingNo: 'AR-1', trackingUrl: 'https://track.example.com/AR-1' },
+      { dealId: 'd', courier: 'other', courierName: 'توصيلنا', trackingNo: 'T9', trackingUrl: null },
     ]);
   });
 });
@@ -179,7 +169,7 @@ describe('chunking', () => {
   });
 
   it('signs the same chunk the same way and a changed waybill differently', () => {
-    const base: CampaignShipmentInput = { dealId: 'a', courier: 'x', trackingNo: '1', trackingUrl: null };
+    const base: CampaignShipmentInput = { dealId: 'a', courier: 'x', courierName: null, trackingNo: '1', trackingUrl: null };
     expect(shipmentChunkSignature([base])).toBe(shipmentChunkSignature([{ ...base }]));
     expect(shipmentChunkSignature([base])).not.toBe(shipmentChunkSignature([{ ...base, trackingNo: '2' }]));
   });

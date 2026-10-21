@@ -1,6 +1,5 @@
 import type { TFunction } from 'i18next';
 import type { ThemeColors } from '@/core/theme';
-import { PAYMENT_CHANNEL_DEF } from '../constants/paymentChannels';
 import { WITHDRAWAL_REASON_LABEL, WITHDRAWAL_STATUS_LOOK } from '../constants/withdraw';
 import type { Withdrawal, WithdrawalReason } from '../types';
 
@@ -8,10 +7,9 @@ import type { Withdrawal, WithdrawalReason } from '../types';
 export const formatReasonLabel = (reason: WithdrawalReason, t: TFunction): string =>
   reason.label ?? (reason.code ? t(WITHDRAWAL_REASON_LABEL[reason.code]) : '');
 
-/** Where it went: the server's copy of the destination, else the channel's name, else nothing. */
-export const withdrawalDestination = (withdrawal: Withdrawal, t: TFunction): string | null =>
-  withdrawal.destination_label ??
-  (withdrawal.channel ? t(PAYMENT_CHANNEL_DEF[withdrawal.channel].labelKey) : null);
+/** Where it went: the server's copy of the destination, else the market catalog's channel name, else nothing. */
+export const withdrawalDestination = (withdrawal: Withdrawal, catalogName?: string | null): string | null =>
+  withdrawal.destination_label ?? catalogName ?? null;
 
 /** Status pill label: the server's, else the app's for a known status. */
 export const withdrawalStatusLabel = (withdrawal: Withdrawal, t: TFunction): string =>

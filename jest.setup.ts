@@ -74,3 +74,6 @@ jest.mock('@react-native-clipboard/clipboard', () => ({
   __esModule: true,
   default: { setString: jest.fn(), getString: jest.fn() },
 }));
+
+// Native region module: the stock mock reports an `en-US` device.
+jest.mock('react-native-localize', () => require('react-native-localize/mock'));

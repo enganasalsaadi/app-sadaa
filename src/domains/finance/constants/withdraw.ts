@@ -4,11 +4,8 @@ import type { WithdrawStackParamList } from '@/core/navigation';
 import type { HueTone } from '@/core/theme';
 import type { WithdrawalReasonCode, WithdrawalStatus } from '../types';
 
-/**
- * Default rules in USD cents and days (handoff §8), shown up front as guidance until the
- * server sends them; the quote is what really decides.
- */
-export const WITHDRAW_LIMITS = { min: 2_500, dailyMax: 50_000, cooldownDays: 7 } as const;
+/** Days between two withdrawals (handoff §8), shown up front as guidance; the quote is what really decides. */
+export const WITHDRAW_COOLDOWN_DAYS = 7;
 
 /** Quiet time after the last keystroke before asking for a quote. */
 export const WITHDRAW_QUOTE_DEBOUNCE_MS = 400;

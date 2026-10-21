@@ -1,8 +1,7 @@
-import type { TFunction } from 'i18next';
-import type { LucideIcon } from 'lucide-react-native';
+import { Wallet, type LucideIcon } from 'lucide-react-native';
 import type { CurrencyCode } from '@/core/money';
-import { PAYMENT_CHANNEL_DEF } from '../constants/paymentChannels';
-import type { PayoutMethod } from '../types';
+import type { PaymentChannelInfo } from '../hooks/usePaymentChannels';
+import type { PaymentChannel, PayoutMethod } from '../types';
 import { maskTail } from './payoutMethodForm';
 
 const SEPARATOR = ' · ';
@@ -20,15 +19,17 @@ export interface PayoutMethodView {
   currencies: CurrencyCode[];
 }
 
-export const payoutChannelName = (method: PayoutMethod, t: TFunction): string =>
-  method.channel_label ?? t(PAYMENT_CHANNEL_DEF[method.channel].labelKey);
+/** The server's name for the channel, else the market catalog's, else the raw code. */
+export const payoutChannelName = (method: PayoutMethod, channel: PaymentChannelInfo | null): string =>
+  method.channel_label ?? channel?.name ?? method.channel;
 
 export const buildPayoutMethodView = (
   method: PayoutMethod,
-  t: TFunction,
   governorateLabel: (value: string) => string | undefined,
+  findChannel: (code: PaymentChannel) => PaymentChannelInfo | null,
 ): PayoutMethodView => {
-  const channelName = payoutChannelName(method, t);
+  const channel = findChannel(method.channel);
+  const channelName = payoutChannelName(method, channel);
   const { details } = method;
   const parts = [
     method.label ? channelName : null,
@@ -39,7 +40,7 @@ export const buildPayoutMethodView = (
 
   return {
     id: method.id,
-    icon: PAYMENT_CHANNEL_DEF[method.channel].icon,
+    icon: channel?.icon ?? Wallet,
     title: method.label ?? channelName,
     channelName,
     meta: parts.join(SEPARATOR),

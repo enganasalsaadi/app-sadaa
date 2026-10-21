@@ -40,16 +40,14 @@ const validAccount: InfluencerAccountFormValues = {
 describe('createInfluencerAccountSchema', () => {
   const schema = createInfluencerAccountSchema(t);
 
-  it('accepts a Syrian mobile with no email', () => {
+  it('accepts a mobile with no email', () => {
     expect(() => schema.validateSync(validAccount)).not.toThrow();
   });
 
-  it('rejects a valid non-Syrian number', () => {
-    expect(
-      messageOf(() =>
-        schema.validateSync({ ...validAccount, countryCode: 'AE', phone: '501234567' }),
-      ),
-    ).toBe('auth.influencerOnboarding.account.phoneSyriaOnly');
+  it('leaves the market of a valid foreign number to the server', () => {
+    expect(() =>
+      schema.validateSync({ ...validAccount, countryCode: 'AE', phone: '501234567' }),
+    ).not.toThrow();
   });
 
   it('requires a governorate', () => {

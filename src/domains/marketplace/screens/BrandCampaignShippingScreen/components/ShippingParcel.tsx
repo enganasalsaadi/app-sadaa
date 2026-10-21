@@ -126,7 +126,7 @@ const ShippingParcelComponent: React.FC<ShippingParcelProps> = ({
       ) : null}
       {state === 'locked' && parcel.addressMissing ? <ParcelNotice kind="address" /> : null}
       {canShip && selected ? <ParcelForm dealId={row.dealId} control={control} courierItems={courierItems} /> : null}
-      {canShip && !selected ? <ParcelHint dealId={row.dealId} control={control} /> : null}
+      {canShip && !selected ? <ParcelHint dealId={row.dealId} control={control} courierItems={courierItems} /> : null}
       {parcel.sent ? <ParcelSent sent={parcel.sent} /> : null}
     </Box>
   );

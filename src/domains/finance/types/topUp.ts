@@ -117,7 +117,7 @@ export interface TopUpAccount {
   fields: TopUpAccountField[];
 }
 
-/** One way to send money to Sada; labels are localized (server, or the app's own words on the fallback). */
+/** One way to send money to Sada; labels are localized by the server. */
 export interface TopUpChannelOption {
   channel: PaymentChannel;
   label: string;
@@ -148,8 +148,6 @@ export interface TopUpChannels {
   rate: TopUpRate | null;
   /** The brand writes it in the transfer note so finance can match the payment; optional. */
   payerReference: string | null;
-  /** `fallback` = built on the device because the server predates the endpoint. */
-  source: 'server' | 'fallback';
 }
 
 export interface TopUpReceipt {

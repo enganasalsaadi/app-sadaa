@@ -63,9 +63,10 @@ export const campaignBatchApi = baseApi.injectEndpoints({
         method: 'POST',
         headers: { [IDEMPOTENCY_HEADER]: idempotencyKey },
         body: {
-          shipments: shipments.map(({ dealId, courier, trackingNo, trackingUrl }) => ({
+          shipments: shipments.map(({ dealId, courier, courierName, trackingNo, trackingUrl }) => ({
             deal_id: dealId,
             courier,
+            ...(courierName ? { courier_name: courierName } : {}),
             tracking_no: trackingNo,
             ...(trackingUrl ? { tracking_url: trackingUrl } : {}),
           })),

@@ -1,6 +1,5 @@
-import { parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js';
-import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
-import { PAYMENT_CHANNEL_DEF } from '../constants/paymentChannels';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { matchesMobilePattern, toMarketMobile, type MobileRule } from '@/core/market';
 import {
   PAYOUT_CHANNEL_EXTRA_FIELDS,
   PAYOUT_FIELD_LIMITS,
@@ -8,10 +7,8 @@ import {
   type PayoutField,
 } from '../constants/payoutMethods';
 import type { PayoutMethodFormValues } from '../schemas/payoutMethodSchema';
-import type { PaymentChannel, PayoutDetails, PayoutMethod, PayoutMethodPatch } from '../types';
+import type { PaymentChannel, PaymentChannelGroup, PayoutDetails, PayoutMethod, PayoutMethodPatch } from '../types';
 
-/** The only phones a payout can go to: Syrian mobiles, `+9639XXXXXXXX` (handoff §7). */
-const SYRIAN_MOBILE = /^\+9639\d{8}$/;
 const ACCOUNT_NUMBER = /^[A-Z0-9]+$/;
 const IBAN_SHAPE = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
 const IBAN_MODULUS = 97;
@@ -21,15 +18,25 @@ const SPACES_AND_DASHES = /[\s-]+/g;
 const MASK = '••••';
 const TAIL_LENGTH = 4;
 
-export const payoutFields = (channel: PaymentChannel): readonly PayoutField[] => [
-  ...PAYOUT_GROUP_DEF[PAYMENT_CHANNEL_DEF[channel].group].fields,
-  ...(PAYOUT_CHANNEL_EXTRA_FIELDS[channel] ?? []),
+/** What the form needs to know about the channel: its code and which kind of details it takes. */
+export interface PayoutChannelRef {
+  code: PaymentChannel;
+  group: PaymentChannelGroup;
+}
+
+export const payoutFields = (channel: PayoutChannelRef): readonly PayoutField[] => [
+  ...PAYOUT_GROUP_DEF[channel.group].fields,
+  ...(PAYOUT_CHANNEL_EXTRA_FIELDS[channel.code] ?? []),
 ];
 
-/** E.164 of a typed Syrian mobile ("0944…", "944…"), or `null` for anything else. */
-export const toSyrianMobile = (national: string, country: CountryCode): string | null => {
-  const e164 = parsePhoneNumberFromString(national, country)?.number;
-  return e164 && SYRIAN_MOBILE.test(e164) ? e164 : null;
+/**
+ * The kind of details a saved method holds when its channel is no longer in the market's
+ * catalog: read off the details themselves, so the method can still be shown and deleted.
+ */
+export const inferPayoutGroup = (details: PayoutDetails): PaymentChannelGroup => {
+  if (details.bank_name || details.account_number || details.iban) return 'bank';
+  if (details.governorate || details.city) return 'exchange_office';
+  return 'e_wallet';
 };
 
 export const normalizeAccountNumber = (value: string): string =>
@@ -78,14 +85,18 @@ const toNationalPhone = (e164: string | undefined): string =>
 
 interface PayoutFormPrefill {
   holderName?: string;
-  /** The account phone (E.164); used only when it is a Syrian mobile. */
+  /** The account phone (E.164); used only when it is a mobile of the market. */
   phone?: string;
 }
 
-export const emptyPayoutMethodForm = (makeDefault: boolean, prefill: PayoutFormPrefill = {}): PayoutMethodFormValues => ({
+export const emptyPayoutMethodForm = (
+  makeDefault: boolean,
+  mobile: MobileRule,
+  prefill: PayoutFormPrefill = {},
+): PayoutMethodFormValues => ({
   holderName: prefill.holderName?.trim() ?? '',
-  countryCode: DEFAULT_PHONE_COUNTRY,
-  phone: prefill.phone && SYRIAN_MOBILE.test(prefill.phone) ? toNationalPhone(prefill.phone) : '',
+  countryCode: mobile.countryCode,
+  phone: prefill.phone && matchesMobilePattern(prefill.phone, mobile.mobilePattern) ? toNationalPhone(prefill.phone) : '',
   governorate: '',
   city: '',
   bankName: '',
@@ -96,9 +107,9 @@ export const emptyPayoutMethodForm = (makeDefault: boolean, prefill: PayoutFormP
   makeDefault,
 });
 
-export const toPayoutMethodForm = (method: PayoutMethod): PayoutMethodFormValues => ({
+export const toPayoutMethodForm = (method: PayoutMethod, mobile: MobileRule): PayoutMethodFormValues => ({
   holderName: method.details.holder_name,
-  countryCode: DEFAULT_PHONE_COUNTRY,
+  countryCode: mobile.countryCode,
   phone: toNationalPhone(method.details.phone),
   governorate: method.details.governorate ?? '',
   city: method.details.city ?? '',
@@ -111,14 +122,18 @@ export const toPayoutMethodForm = (method: PayoutMethod): PayoutMethodFormValues
 });
 
 /** Only the channel's keys, trimmed; empty optional ones left out (the server drops unknown keys anyway). */
-export const toPayoutDetails = (values: PayoutMethodFormValues, channel: PaymentChannel): PayoutDetails => {
+export const toPayoutDetails = (
+  values: PayoutMethodFormValues,
+  channel: PayoutChannelRef,
+  mobile: MobileRule | null,
+): PayoutDetails => {
   const details: PayoutDetails = { holder_name: values.holderName.trim() };
   for (const field of payoutFields(channel)) {
     switch (field) {
       case 'holderName':
         break;
       case 'phone': {
-        const phone = toSyrianMobile(values.phone, values.countryCode);
+        const phone = toMarketMobile(values.phone, mobile);
         if (phone) details.phone = phone;
         break;
       }
@@ -164,11 +179,16 @@ const sameDetails = (a: PayoutDetails, b: PayoutDetails): boolean =>
   DETAIL_KEYS.every(key => (a[key] ?? '') === (b[key] ?? ''));
 
 /** What changed: the label (empty clears it) and/or the whole details object. */
-export const toPayoutMethodPatch = (values: PayoutMethodFormValues, method: PayoutMethod): PayoutMethodPatch => {
+export const toPayoutMethodPatch = (
+  values: PayoutMethodFormValues,
+  method: PayoutMethod,
+  channel: PayoutChannelRef,
+  mobile: MobileRule | null,
+): PayoutMethodPatch => {
   const patch: PayoutMethodPatch = {};
   const label = values.label.trim();
   if (label !== (method.label ?? '')) patch.label = label || null;
-  const details = toPayoutDetails(values, method.channel);
+  const details = toPayoutDetails(values, channel, mobile);
   if (!sameDetails(details, method.details)) patch.details = details;
   return patch;
 };

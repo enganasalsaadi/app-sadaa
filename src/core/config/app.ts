@@ -9,9 +9,6 @@ export const MAX_SEARCH_HISTORY_ITEMS = 20;
 
 export const APP_NAME = 'sadaa';
 
-/** Registration-support line (wrong phone number during sign-up), E.164. */
-export const SUPPORT_WHATSAPP_NUMBER = '+963962401604';
-
 /** Pre-selected country in phone inputs (Syria-first). */
 export const DEFAULT_PHONE_COUNTRY: CountryCode = 'SY';
 

@@ -2411,6 +2411,28 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - RNLocalize (3.7.2):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RNNotifee (9.1.8):
     - React-Core
     - RNNotifee/NotifeeCore (= 9.1.8)
@@ -2829,6 +2851,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -3083,6 +3106,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNNotifee:
     :path: "../node_modules/@notifee/react-native"
   RNPermissions:
@@ -3228,6 +3253,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 7d25ca9c442de2b67ddd3c06326c5ee0a87bab2b
   RNGestureHandler: c7a5370fc94f6b072d35dd22ef7310870ec7b36c
   RNKeychain: 551d42b0ef53426f82551a0cc961cfa10ad33afa
+  RNLocalize: 294dafe569e94074123dd287fe562b9c5b09a248
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
   RNPermissions: 03504196f4f6822c5bf000ab20858b2b3b9810e9
   RNReanimated: 4d4ed89e02b7b292592f392a32f5c6e7c97ebdb6

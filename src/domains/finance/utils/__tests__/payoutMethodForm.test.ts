@@ -1,3 +1,4 @@
+import type { MobileRule } from '@/core/market';
 import type { PayoutMethodFormValues } from '../../schemas/payoutMethodSchema';
 import type { PayoutMethod } from '../../types';
 import {
@@ -5,19 +6,27 @@ import {
   isValidAccountCode,
   isValidAccountNumber,
   isValidIban,
+  inferPayoutGroup,
   maskTail,
+  type PayoutChannelRef,
   toPayoutDetails,
   toPayoutMethodForm,
   toPayoutMethodPatch,
-  toSyrianMobile,
 } from '../payoutMethodForm';
 
 jest.mock('lucide-react-native', () =>
   new Proxy({}, { get: (_target, name) => (name === '__esModule' ? undefined : name) }),
 );
 
+const SYRIA: MobileRule = { countryCode: 'SY', mobilePattern: '^\\+9639\\d{8}$', mobileExample: '+963944123456' };
+
+const HARAM: PayoutChannelRef = { code: 'haram', group: 'exchange_office' };
+const MTN: PayoutChannelRef = { code: 'mtn_cash', group: 'e_wallet' };
+const SHAM: PayoutChannelRef = { code: 'sham_cash', group: 'e_wallet' };
+const BANK: PayoutChannelRef = { code: 'bank', group: 'bank' };
+
 const values = (overrides: Partial<PayoutMethodFormValues> = {}): PayoutMethodFormValues => ({
-  ...emptyPayoutMethodForm(false),
+  ...emptyPayoutMethodForm(false, SYRIA),
   holderName: ' Anas Alsaadi ',
   phone: '0944123456',
   governorate: 'damascus',
@@ -38,19 +47,6 @@ const office: PayoutMethod = {
   details: { holder_name: 'Anas Alsaadi', phone: '+963944123456', governorate: 'damascus', city: 'Mezzeh' },
   currencies: ['USD', 'SYP'],
 };
-
-describe('toSyrianMobile', () => {
-  it('accepts Syrian mobiles typed with or without the leading 0', () => {
-    expect(toSyrianMobile('0944123456', 'SY')).toBe('+963944123456');
-    expect(toSyrianMobile('944123456', 'SY')).toBe('+963944123456');
-  });
-
-  it('rejects landlines, short numbers and other countries', () => {
-    expect(toSyrianMobile('112345678', 'SY')).toBeNull();
-    expect(toSyrianMobile('94412', 'SY')).toBeNull();
-    expect(toSyrianMobile('501234567', 'AE')).toBeNull();
-  });
-});
 
 describe('account number and IBAN', () => {
   it('allows spaces and dashes, 6 to 30 digits or Latin letters', () => {
@@ -90,14 +86,14 @@ describe('isValidAccountCode', () => {
 
 describe('toPayoutDetails', () => {
   it('sends only the channel keys, trimmed and in E.164', () => {
-    expect(toPayoutDetails(values(), 'haram')).toEqual({
+    expect(toPayoutDetails(values(), HARAM, SYRIA)).toEqual({
       holder_name: 'Anas Alsaadi',
       phone: '+963944123456',
       governorate: 'damascus',
       city: 'Mezzeh',
     });
-    expect(toPayoutDetails(values(), 'mtn_cash')).toEqual({ holder_name: 'Anas Alsaadi', phone: '+963944123456' });
-    expect(toPayoutDetails(values({ accountCode: ' Sc-0042 ' }), 'sham_cash')).toEqual({
+    expect(toPayoutDetails(values(), MTN, SYRIA)).toEqual({ holder_name: 'Anas Alsaadi', phone: '+963944123456' });
+    expect(toPayoutDetails(values({ accountCode: ' Sc-0042 ' }), SHAM, SYRIA)).toEqual({
       holder_name: 'Anas Alsaadi',
       phone: '+963944123456',
       account_code: 'Sc-0042',
@@ -105,34 +101,42 @@ describe('toPayoutDetails', () => {
   });
 
   it('normalises bank numbers and leaves an empty IBAN out', () => {
-    expect(toPayoutDetails(values(), 'bank')).toEqual({
+    expect(toPayoutDetails(values(), BANK, SYRIA)).toEqual({
       holder_name: 'Anas Alsaadi',
       bank_name: 'CBS',
       account_number: '010244103390',
       iban: 'GB82WEST12345698765432',
     });
-    expect(toPayoutDetails(values({ iban: ' ' }), 'bank')).not.toHaveProperty('iban');
+    expect(toPayoutDetails(values({ iban: ' ' }), BANK, SYRIA)).not.toHaveProperty('iban');
   });
 });
 
 describe('emptyPayoutMethodForm', () => {
-  it('prefills the name and a Syrian mobile only', () => {
-    const form = emptyPayoutMethodForm(true, { holderName: ' Anas ', phone: '+963944123456' });
+  it('prefills the name and a mobile of the market only', () => {
+    const form = emptyPayoutMethodForm(true, SYRIA, { holderName: ' Anas ', phone: '+963944123456' });
     expect(form).toMatchObject({ holderName: 'Anas', phone: '944123456', makeDefault: true });
-    expect(emptyPayoutMethodForm(false, { phone: '+971501234567' }).phone).toBe('');
+    expect(emptyPayoutMethodForm(false, SYRIA, { phone: '+971501234567' }).phone).toBe('');
   });
 });
 
 describe('toPayoutMethodPatch', () => {
   it('is empty when nothing changed', () => {
-    expect(toPayoutMethodPatch(toPayoutMethodForm(office), office)).toEqual({});
+    expect(toPayoutMethodPatch(toPayoutMethodForm(office, SYRIA), office, HARAM, SYRIA)).toEqual({});
   });
 
   it('clears an emptied label and sends the whole details when one changed', () => {
-    const patch = toPayoutMethodPatch({ ...toPayoutMethodForm(office), label: ' ', city: 'Kafr Souseh' }, office);
+    const patch = toPayoutMethodPatch({ ...toPayoutMethodForm(office, SYRIA), label: ' ', city: 'Kafr Souseh' }, office, HARAM, SYRIA);
     expect(patch).toEqual({
       label: null,
       details: { holder_name: 'Anas Alsaadi', phone: '+963944123456', governorate: 'damascus', city: 'Kafr Souseh' },
     });
+  });
+});
+
+describe('inferPayoutGroup', () => {
+  it('reads the kind of details off a method whose channel left the catalog', () => {
+    expect(inferPayoutGroup({ holder_name: 'A', bank_name: 'CBS', account_number: '123456' })).toBe('bank');
+    expect(inferPayoutGroup({ holder_name: 'A', phone: '+963944123456', governorate: 'damascus' })).toBe('exchange_office');
+    expect(inferPayoutGroup({ holder_name: 'A', phone: '+963944123456' })).toBe('e_wallet');
   });
 });

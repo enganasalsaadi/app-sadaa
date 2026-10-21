@@ -117,7 +117,6 @@
         },
         "fullName": "Full name",
         "fullNamePlaceholder": "e.g. Ahmad Khalil",
-        "phoneSyriaOnly": "Enter a Syrian mobile number (+963 9…)",
         "email": "Email (optional)",
         "emailPlaceholder": "name@example.com",
         "governorate": "Governorate",
@@ -361,7 +360,8 @@
       "hidden": "Amount hidden"
     },
     "support": {
-      "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}."
+      "openFailed": "Couldn’t open WhatsApp. Please message us on {{number}}.",
+      "unavailable": "Support isn’t available right now. Please try again later."
     },
     "timeline": {
       "done": "Done",
@@ -4731,10 +4731,6 @@
         },
         "holdA11y": "Press and hold for a second to confirm",
         "couriers": {
-          "alqadmous": "Al-Qadmous",
-          "aramex": "Aramex",
-          "syrianPost": "Syrian Post",
-          "direct": "Direct delivery",
           "other": "Other"
         },
         "toShip": {
@@ -4786,7 +4782,7 @@
           "recipientPlaceholder": "Full name",
           "phone": "Mobile number",
           "phonePlaceholder": "09XX XXX XXX",
-          "phoneError": "Enter a valid Syrian mobile number",
+          "phoneError": "Enter a valid mobile number for your country",
           "governorate": "Governorate",
           "city": "City",
           "cityPlaceholder": "e.g. Damascus",
@@ -5847,14 +5843,6 @@
       "estimateNote": "Estimate. The final amount is confirmed at checkout."
     },
     "channels": {
-      "names": {
-        "haram": "Al-Haram",
-        "fouad": "Al-Fouad",
-        "syriatelCash": "Syriatel Cash",
-        "mtnCash": "MTN Cash",
-        "shamCash": "Sham Cash",
-        "bank": "Bank transfer"
-      },
       "groups": {
         "exchangeOffice": "Exchange offices",
         "eWallet": "E-wallets",
@@ -6033,16 +6021,6 @@
         "emptyMessage": "Top up your wallet to pay creators through escrow.",
         "filteredEmptyTitle": "No top-ups with this status",
         "showAll": "Show all"
-      },
-      "mock": {
-        "recipientName": "Recipient name",
-        "phone": "Phone number",
-        "city": "City",
-        "walletNumber": "Wallet number",
-        "accountName": "Account name",
-        "bankName": "Bank",
-        "accountHolder": "Account holder",
-        "iban": "IBAN"
       }
     },
     "payouts": {
@@ -6094,7 +6072,7 @@
         "city": "City or area (optional)",
         "cityPlaceholder": "e.g. Mezzeh",
         "bankName": "Bank name",
-        "bankNamePlaceholder": "e.g. Commercial Bank of Syria",
+        "bankNamePlaceholder": "e.g. Commercial Bank",
         "accountNumber": "Account number",
         "accountNumberPlaceholder": "Digits and Latin letters",
         "iban": "IBAN (optional)",
@@ -6117,7 +6095,7 @@
         "deleted": "Payout method deleted",
         "gone": "This method no longer exists",
         "errors": {
-          "phone": "Enter a Syrian mobile number starting with 9 (9 digits)",
+          "phone": "Enter a valid mobile number for your country",
           "accountNumber": "Account number: 6 to 30 digits or Latin letters",
           "iban": "This IBAN is not valid. Check it or leave it empty",
           "accountCode": "Account code: 4 to 64 Latin letters, digits or dashes"
@@ -6168,7 +6146,9 @@
         "label": "Amount from your balance",
         "available": "Available",
         "useAll": "Withdraw all",
-        "limits": "Minimum {{min}} · up to {{max}} a day · one withdrawal every {{days}} days",
+        "limitMin": "Minimum {{min}}",
+        "limitMax": "up to {{max}} per withdrawal",
+        "limitCooldown": "one withdrawal every {{days}} days",
         "blockedTitle": "You can't withdraw right now",
         "blockedFallback": "The server didn't accept this withdrawal. Try again later.",
         "verifyToWithdraw": "Verify to withdraw",
@@ -6187,7 +6167,7 @@
           "method": "Choose where to send the money",
           "required": "Enter the amount",
           "min": "The minimum is {{amount}}",
-          "max": "The daily limit is {{amount}}",
+          "max": "The maximum is {{amount}}",
           "overBalance": "You have {{amount}} available"
         }
       },

@@ -4,8 +4,8 @@ import { Wallet } from 'lucide-react-native';
 import { formatDate, formatMoney } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, MoneyText, Pressable, StatusPill, Text } from '@/shared/ui';
-import { PAYMENT_CHANNEL_DEF } from '../../../constants/paymentChannels';
 import { TOP_UP_STATUS_LOOK } from '../../../constants/topUp';
+import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
 import type { TopUp } from '../../../types';
 import { topUpBadgeColors, topUpChannelLabel, topUpStatusLabel } from '../../../utils/topUpView';
 
@@ -27,9 +27,11 @@ const TopUpRowComponent: React.FC<TopUpRowProps> = ({ topUp, onPress }) => {
   const lang = i18n.language;
   const { colors, sizes } = useTheme();
 
-  const Icon = topUp.channel ? PAYMENT_CHANNEL_DEF[topUp.channel].icon : Wallet;
+  const { find } = usePaymentChannels();
+  const info = find(topUp.channel);
+  const Icon = info?.icon ?? Wallet;
   const badge = topUpBadgeColors(topUp, colors);
-  const channel = topUpChannelLabel(topUp, t);
+  const channel = topUpChannelLabel(topUp, info?.name);
   const title = channel
     ? t('finance.topUp.history.rowTitle', { channel })
     : t('finance.topUp.history.rowTitleNoChannel');

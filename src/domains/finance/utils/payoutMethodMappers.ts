@@ -1,7 +1,5 @@
 import { isCurrencyCode, type CurrencyCode } from '@/core/money';
-import { PAYMENT_CHANNELS } from '../types';
 import type { PayoutDetails, PayoutDetailsDto, PayoutMethod, PayoutMethodDto } from '../types';
-import { isOneOf } from './walletMappers';
 
 const text = (value: string | null | undefined): string | undefined => value?.trim() || undefined;
 
@@ -29,9 +27,9 @@ const pinPrimary = (methods: PayoutMethod[]): PayoutMethod[] => {
   return primary ? [primary, ...methods.filter(method => method !== primary)] : methods;
 };
 
-/** `null` for a channel this build doesn't know (a newer server): the list skips it. */
+/** `null` for a method without a channel code (nothing to show or edit): the list skips it. */
 export const mapPayoutMethod = (dto: PayoutMethodDto): PayoutMethod | null => {
-  if (!isOneOf(PAYMENT_CHANNELS, dto.channel)) return null;
+  if (!dto.channel) return null;
   return {
     id: dto.id,
     channel: dto.channel,

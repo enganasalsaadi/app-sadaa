@@ -7,7 +7,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { applyServerFieldErrors, normalizeApiError, type AppApiError } from '@/core/api';
 import { toastService } from '@/core/toast';
 import { useReportShipmentIssueMutation } from '../api/dealShippingApi';
-import { DEAL_SHIPPING_LIMITS, dealCourierLabels } from '../constants/dealShipping';
+import { DEAL_SHIPPING_LIMITS } from '../constants/dealShipping';
 import {
   createDealIssueSchema,
   createDealShipSchema,
@@ -27,6 +27,7 @@ import {
   transitDays,
 } from '../utils/dealShipping';
 import { useClock } from './useClock';
+import { useCourierOptions } from './useCourierOptions';
 import { useDealAction } from './useDealAction';
 import { useDealAddressForm } from './useDealAddressForm';
 import { useIssuePhotos } from './useIssuePhotos';
@@ -37,7 +38,8 @@ const MINUTE_MS = 60_000;
 export type DealShippingSheet = 'ship' | 'edit' | 'reship' | 'issue' | 'cancel' | 'address';
 
 const SHIP_FIELDS = {
-  courier: 'courierName',
+  courier: 'courier',
+  courier_name: 'courierName',
   tracking_no: 'trackingNo',
   tracking_url: 'trackingUrl',
 } as const;
@@ -69,14 +71,15 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
   const [sheet, setSheet] = useState<DealShippingSheet | null>(null);
   const close = useCallback(() => setSheet(null), []);
 
-  const courierLabels = useMemo(() => dealCourierLabels(t), [t]);
+  const courierOptions = useCourierOptions();
+  const { couriers } = courierOptions;
 
   // — Forms ——————————————————————————————————————————————————————————
   const shipSchema = useMemo(() => createDealShipSchema(t), [t]);
   const shipForm = useForm<DealShipFormValues>({
     mode: 'onTouched',
     resolver: yupResolver(shipSchema),
-    defaultValues: shipFormValues(null, courierLabels),
+    defaultValues: shipFormValues(null, couriers),
   });
   const issueSchema = useMemo(() => createDealIssueSchema(t), [t]);
   const issueForm = useForm<DealIssueFormValues>({
@@ -106,10 +109,10 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
       switch (next) {
         case 'ship':
         case 'reship':
-          resetShip(shipFormValues(null, courierLabels));
+          resetShip(shipFormValues(null, couriers));
           break;
         case 'edit':
-          resetShip(shipFormValues(current, courierLabels));
+          resetShip(shipFormValues(current, couriers));
           break;
         case 'issue':
           resetIssue(EMPTY_ISSUE);
@@ -128,7 +131,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
       }
       setSheet(next);
     },
-    [courierLabels, current, resetCancel, resetIssue, resetPhotos, resetShip, startAddress, viewAddress],
+    [couriers, current, resetCancel, resetIssue, resetPhotos, resetShip, startAddress, viewAddress],
   );
   const opens = useMemo(
     () =>
@@ -171,7 +174,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
         const editing = sheet === 'edit';
         const outcome = await runShip('shipment', {
           method: editing ? 'PUT' : 'POST',
-          body: toShipmentBody(values, courierLabels, editing),
+          body: toShipmentBody(values, editing),
         });
         const success =
           sheet === 'edit'
@@ -188,7 +191,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
           return applyServerFieldErrors(error, SHIP_FIELDS, setShipError);
         });
       }),
-    [courierLabels, party, runShip, setShipError, settle, sheet, shipSubmit, t],
+    [party, runShip, setShipError, settle, sheet, shipSubmit, t],
   );
 
   const runCancel = cancel.run;
@@ -311,7 +314,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
     close,
     shipControl: shipForm.control,
     shipFocus: shipForm.setFocus,
-    courierLabels,
+    courierOptions,
     onShip,
     shipping: ship.isRunning,
     onReceive,

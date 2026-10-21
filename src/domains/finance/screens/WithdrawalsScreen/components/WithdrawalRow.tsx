@@ -4,8 +4,8 @@ import { ArrowUpRight } from 'lucide-react-native';
 import { formatDate, formatMoney } from '@/core/i18n';
 import { useTheme } from '@/core/theme';
 import { Box, MoneyText, Pressable, StatusPill, Text } from '@/shared/ui';
-import { PAYMENT_CHANNEL_DEF } from '../../../constants/paymentChannels';
 import { WITHDRAWAL_STATUS_LOOK } from '../../../constants/withdraw';
+import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
 import type { Withdrawal } from '../../../types';
 import {
   isWithdrawalLost,
@@ -32,9 +32,11 @@ const WithdrawalRowComponent: React.FC<WithdrawalRowProps> = ({ withdrawal, onPr
   const lang = i18n.language;
   const { colors, sizes } = useTheme();
 
-  const Icon = withdrawal.channel ? PAYMENT_CHANNEL_DEF[withdrawal.channel].icon : ArrowUpRight;
+  const { find } = usePaymentChannels();
+  const info = find(withdrawal.channel);
+  const Icon = info?.icon ?? ArrowUpRight;
   const badge = withdrawalBadgeColors(withdrawal, colors);
-  const destination = withdrawalDestination(withdrawal, t);
+  const destination = withdrawalDestination(withdrawal, info?.name);
   const title = destination
     ? t('finance.withdraw.history.rowTitle', { destination })
     : t('finance.withdraw.history.rowTitleNoDestination');

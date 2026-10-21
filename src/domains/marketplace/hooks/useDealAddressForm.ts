@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { applyServerFieldErrors, useLookupItems } from '@/core/api';
+import { nationalMobileExample, resolveInitialPhoneCountry, useActiveMarket, type MobileRule } from '@/core/market';
 import { useAppSelector } from '@/core/store';
 import { selectUser } from '@/domains/auth';
 import { useLazyGetShippingAddressPrefillQuery } from '../api/dealShippingApi';
@@ -23,7 +24,13 @@ const EMPTY = addressFormValues(null, {});
 export const useDealAddressForm = () => {
   const { t } = useTranslation();
   const user = useAppSelector(selectUser);
-  const schema = useMemo(() => createDealAddressSchema(t), [t]);
+  const { market } = useActiveMarket();
+  // Until the market loads the pattern is empty (matches any): the number must still parse, the server decides the rest.
+  const mobile = useMemo<MobileRule>(
+    () => market ?? { countryCode: resolveInitialPhoneCountry(), mobilePattern: '', mobileExample: '' },
+    [market],
+  );
+  const schema = useMemo(() => createDealAddressSchema(t, mobile), [mobile, t]);
   const form = useForm<DealAddressFormValues>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
@@ -71,7 +78,7 @@ export const useDealAddressForm = () => {
     [setError],
   );
 
-  const toBody = useCallback(() => toAddressBody(getValues()), [getValues]);
+  const toBody = useCallback(() => toAddressBody(getValues(), mobile), [getValues, mobile]);
 
   /** The governorate's name in the app language, for the summaries. */
   const governorateLabel = useCallback(
@@ -89,6 +96,8 @@ export const useDealAddressForm = () => {
     toBody,
     governorates,
     governorateLabel,
+    phoneCountry: mobile.countryCode,
+    phonePlaceholder: nationalMobileExample(market ?? null),
     isLoadingLast: last.isFetching,
   };
 };

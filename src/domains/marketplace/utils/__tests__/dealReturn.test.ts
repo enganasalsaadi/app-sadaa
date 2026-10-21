@@ -1,3 +1,4 @@
+import type { MarketCourier } from '@/core/market';
 import type { DealReturnShipment } from '../../types';
 import { dealReturnAnswers, dealReturnView, handedDaysAgo, returnFormValues, toReturnBody } from '../dealReturn';
 
@@ -9,7 +10,10 @@ jest.mock('lucide-react-native', () =>
 const NOW = Date.parse('2026-10-20T10:00:00Z');
 const DAY = 86_400_000;
 
-const LABELS = { alqadmous: 'القدموس', aramex: 'أرامكس', syrianPost: 'البريد السوري', direct: 'تسليم مباشر', other: 'أخرى' };
+const COURIERS: MarketCourier[] = [
+  { code: 'alqadmous', name: 'القدموس' },
+  { code: 'aramex', name: 'أرامكس' },
+];
 
 const ship = (over: Partial<DealReturnShipment> = {}): DealReturnShipment => ({
   id: 'rs1',
@@ -100,7 +104,7 @@ describe('dealReturnView', () => {
 
 describe('returnFormValues', () => {
   it('starts empty and «today» for a fresh waybill', () => {
-    expect(returnFormValues(ship(), LABELS, NOW)).toEqual({
+    expect(returnFormValues(ship(), COURIERS, NOW)).toEqual({
       courier: null,
       courierName: '',
       trackingNo: '',
@@ -112,7 +116,7 @@ describe('returnFormValues', () => {
 
   it('opens the waybill on file: a preset by its label, a typed courier under «other»', () => {
     const base = ship({ courier: 'أرامكس', trackingNo: 'SY-1', trackingUrl: 'https://a.example/t', handedAt: NOW - DAY });
-    expect(returnFormValues(base, LABELS, NOW)).toMatchObject({
+    expect(returnFormValues(base, COURIERS, NOW)).toMatchObject({
       courier: 'aramex',
       courierName: '',
       trackingNo: 'SY-1',
@@ -120,7 +124,7 @@ describe('returnFormValues', () => {
       handed: 'yesterday',
     });
     const typed = ship({ courier: 'الفؤاد', trackingNo: 'F-9', handedAt: NOW - 4 * DAY });
-    expect(returnFormValues(typed, LABELS, NOW)).toMatchObject({
+    expect(returnFormValues(typed, COURIERS, NOW)).toMatchObject({
       courier: 'other',
       courierName: 'الفؤاد',
       handed: 'earlier',
@@ -140,24 +144,32 @@ describe('toReturnBody', () => {
   };
 
   it('leaves the link and the date out when they are not given', () => {
-    expect(toReturnBody(values, LABELS, NOW)).toEqual({ courier: 'أرامكس', tracking_no: 'SY-883' });
+    expect(toReturnBody(values, NOW)).toEqual({ courier: 'aramex', tracking_no: 'SY-883' });
   });
 
   it('sends a well-formed https link and a past handover date, never a future one', () => {
     expect(
-      toReturnBody({ ...values, trackingUrl: 'https://aramex.example/t/1', handed: 'yesterday' }, LABELS, NOW),
+      toReturnBody({ ...values, trackingUrl: 'https://aramex.example/t/1', handed: 'yesterday' }, NOW),
     ).toEqual({
-      courier: 'أرامكس',
+      courier: 'aramex',
       tracking_no: 'SY-883',
       tracking_url: 'https://aramex.example/t/1',
       handed_at: new Date(NOW - DAY).toISOString(),
     });
-    expect(toReturnBody({ ...values, handed: 'earlier', handedDays: 3 }, LABELS, NOW).handed_at).toBe(
+    expect(toReturnBody({ ...values, handed: 'earlier', handedDays: 3 }, NOW).handed_at).toBe(
       new Date(NOW - 3 * DAY).toISOString(),
     );
-    expect(toReturnBody({ ...values, trackingUrl: 'http://insecure.example' }, LABELS, NOW)).not.toHaveProperty(
+    expect(toReturnBody({ ...values, trackingUrl: 'http://insecure.example' }, NOW)).not.toHaveProperty(
       'tracking_url',
     );
+  });
+
+  it('sends «other» with the typed name', () => {
+    expect(toReturnBody({ ...values, courier: 'other', courierName: ' الفؤاد ' }, NOW)).toEqual({
+      courier: 'other',
+      courier_name: 'الفؤاد',
+      tracking_no: 'SY-883',
+    });
   });
 
   it('counts the days back from the choice', () => {

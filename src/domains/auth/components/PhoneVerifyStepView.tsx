@@ -70,11 +70,13 @@ export const PhoneVerifyStepView: React.FC<PhoneVerifyStepViewProps> = ({
         onConfirm={onContactSupport}
         cancelLabel={t('common.cancel')}
       >
-        <Box align="center" py="md" borderRadius="lg" bg={colors.surface.elevated}>
-          <Text variant="title" color={colors.text.primary}>
-            {supportNumber}
-          </Text>
-        </Box>
+        {supportNumber ? (
+          <Box align="center" py="md" borderRadius="lg" bg={colors.surface.elevated}>
+            <Text variant="title" color={colors.text.primary}>
+              {supportNumber}
+            </Text>
+          </Box>
+        ) : null}
       </ConfirmSheet>
     </Layout>
   );

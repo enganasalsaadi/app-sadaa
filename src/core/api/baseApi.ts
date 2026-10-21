@@ -5,6 +5,7 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
+import { Platform } from 'react-native';
 import { getVersion } from 'react-native-device-info';
 import { appStorage, StorageKeys } from '@/core/storage';
 import { getValidLanguage } from '@/core/i18n';
@@ -17,7 +18,6 @@ import {
   showForbiddenError,
 } from '@/core/store';
 import { toastService } from '../toast';
-import { navigate } from '@/core/navigation';
 import { retryRegistry } from './retryRegistry';
 import { apiUrl } from '@/core/config';
 import i18n from '@/core/i18n';
@@ -42,6 +42,8 @@ const rawBaseQuery = fetchBaseQuery({
     headers.set('Accept', 'application/json');
     headers.set('Accept-Language', validLanguage);
     headers.set('X-App-Version', getVersion());
+    // `/config` answers the update gate for this platform (only the gate reads it).
+    headers.set('X-Platform', Platform.OS);
 
     if (!headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
@@ -105,8 +107,8 @@ const baseQueryWithGlobalErrorHandler: BaseQueryFn<
         try {
           await authStorage.clearSession();
           api.dispatch({ type: 'auth/clearCredentials' });
+          // Cleared auth state flips AppStatus; RootNavigator mounts the Auth branch itself.
           api.dispatch(baseApi.util.resetApiState());
-          navigate('Login');
         } finally {
           isHandlingSessionExpiry = false;
         }
@@ -227,6 +229,7 @@ export const baseApi = createApi({
     'Verification',
     'Notification',
     'Lookups',
+    'Market',
     'OnboardingProgress',
     'MediaKit',
     'MediaKitStats',

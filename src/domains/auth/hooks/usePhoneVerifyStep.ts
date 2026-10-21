@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { AppApiError } from '@/core/api';
-import { SUPPORT_WHATSAPP_NUMBER } from '@/core/config';
+import { useSupportWhatsApp } from '@/core/market';
 import { useAppSelector } from '@/core/store';
 import { useWizardHeader } from '@/shared/ui';
 import { useResendPhoneOtpMutation, useVerifyPhoneOtpMutation } from '../api';
@@ -31,6 +31,7 @@ export const usePhoneVerifyStep = ({
 }: PhoneVerifyStepConfig) => {
   const { t } = useTranslation();
   const openWhatsAppSupport = useOpenSupport();
+  const supportWhatsApp = useSupportWhatsApp();
   const [supportVisible, setSupportVisible] = useState(false);
 
   const pendingPhone = useAppSelector(selectPendingPhone);
@@ -94,7 +95,7 @@ export const usePhoneVerifyStep = ({
     openSupport,
     closeSupport,
     onContactSupport,
-    supportNumber: formatPhoneForDisplay(SUPPORT_WHATSAPP_NUMBER),
+    supportNumber: supportWhatsApp ? formatPhoneForDisplay(supportWhatsApp) : null,
   };
 };
 

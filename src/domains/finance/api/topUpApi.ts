@@ -1,11 +1,8 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { baseApi, IDEMPOTENCY_HEADER, normalizeApiError } from '@/core/api';
-import { env } from '@/core/config';
-import i18n from '@/core/i18n';
+import { baseApi, IDEMPOTENCY_HEADER } from '@/core/api';
 import { TOP_UPS_PER_PAGE } from '../constants/topUp';
 import type {
   CreateTopUpArgs,
-  ExchangeRateDto,
   TopUp,
   TopUpChannels,
   TopUpChannelsDto,
@@ -14,10 +11,7 @@ import type {
   TopUpsPage,
   TopUpsPageDto,
 } from '../types';
-import { buildFallbackChannels, mapTopUp, mapTopUpChannels, mapTopUpsPage } from '../utils/topUpMappers';
-import { mapExchangeRate } from '../utils/walletMappers';
-
-const NOT_FOUND = 404;
+import { mapTopUp, mapTopUpChannels, mapTopUpsPage } from '../utils/topUpMappers';
 
 /** A response the app can't read (odd currency): fails like any other request. */
 const unreadable = (reason: unknown): FetchBaseQueryError => ({
@@ -29,11 +23,7 @@ const unreadable = (reason: unknown): FetchBaseQueryError => ({
 export const topUpApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
-    /**
-     * Channels, Sada's receiving accounts, limits and the rate in one call. A 404 means
-     * the server predates the endpoint: the app builds the channels itself from the
-     * handoff rules and today's rate (`buildFallbackChannels`).
-     */
+    /** Channels of the user's market, Sada's receiving accounts, limits and the rate in one call. */
     getTopUpChannels: builder.query<TopUpChannels, void>({
       async queryFn(_arg, _api, _extraOptions, baseQuery) {
         // Accounts and pause state change from the admin panel: never an HTTP-cached copy.
@@ -41,20 +31,9 @@ export const topUpApi = baseApi.injectEndpoints({
           url: '/wallet/top-ups/channels',
           headers: { 'Cache-Control': 'no-store' },
         });
-        if (!result.error) {
-          try {
-            return { data: mapTopUpChannels(result.data as TopUpChannelsDto) };
-          } catch (err) {
-            return { error: unreadable(err) };
-          }
-        }
-        if (normalizeApiError(result.error).statusCode !== NOT_FOUND) return { error: result.error };
-
-        const rateResult = await baseQuery({ url: '/finance/exchange-rate' });
-        if (rateResult.error) return { error: rateResult.error };
+        if (result.error) return { error: result.error };
         try {
-          const rate = mapExchangeRate(rateResult.data as ExchangeRateDto | null);
-          return { data: buildFallbackChannels(rate, key => i18n.t(key), env.ENABLE_MOCK_DATA) };
+          return { data: mapTopUpChannels(result.data as TopUpChannelsDto) };
         } catch (err) {
           return { error: unreadable(err) };
         }

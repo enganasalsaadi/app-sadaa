@@ -38,7 +38,7 @@ export type {
   WalletTransactionsPageDto,
   WalletTransactionType,
 } from './wallet';
-export { PAYMENT_CHANNEL_GROUPS, PAYMENT_CHANNELS } from './paymentChannel';
+export { PAYMENT_CHANNEL_GROUPS } from './paymentChannel';
 export type { PaymentChannel, PaymentChannelGroup } from './paymentChannel';
 export type {
   CreatePayoutMethodInput,

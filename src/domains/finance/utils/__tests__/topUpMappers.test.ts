@@ -1,69 +1,12 @@
-import type { ParseKeys } from 'i18next';
-import type { ExchangeRate, MoneyDto, TopUpChannelsDto, TopUpDto } from '../../types';
-import { buildFallbackChannels, mapTopUp, mapTopUpChannels, mapTopUpsPage } from '../topUpMappers';
+import type { MoneyDto, TopUpChannelsDto, TopUpDto } from '../../types';
+import { mapTopUp, mapTopUpChannels, mapTopUpsPage } from '../topUpMappers';
 
 // Channel icons are irrelevant to the mapping (lucide ships ESM).
 jest.mock('lucide-react-native', () =>
   new Proxy({}, { get: (_target, name) => (name === '__esModule' ? undefined : name) }),
 );
 
-const t = (key: ParseKeys) => `t:${key}`;
 const money = (amount: number, currency = 'USD'): MoneyDto => ({ amount, currency, formatted: String(amount) });
-
-const rate = (overrides: Partial<ExchangeRate> = {}): ExchangeRate => ({
-  rate: '14000',
-  base: 'USD',
-  quote: 'SYP',
-  source: 'admin',
-  is_stale: false,
-  locked_until: null,
-  effective_at: '2026-10-09T08:00:00Z',
-  ...overrides,
-});
-
-const byChannel = (channels: ReturnType<typeof buildFallbackChannels>['channels']) =>
-  Object.fromEntries(channels.map(option => [option.channel, option]));
-
-describe('buildFallbackChannels', () => {
-  it('offers both currencies on offices and banks, pounds only on cash wallets, with a fresh rate', () => {
-    const result = buildFallbackChannels(rate(), t, false);
-    const channels = byChannel(result.channels);
-    expect(result.source).toBe('fallback');
-    expect(channels.haram?.currencies).toEqual(['USD', 'SYP']);
-    expect(channels.syriatel_cash?.currencies).toEqual(['SYP']);
-    expect(channels.syriatel_cash?.enabled).toBe(true);
-    expect(channels.haram?.label).toBe('t:finance.channels.names.haram');
-    expect(channels.haram?.groupLabel).toBe('t:finance.channels.groups.exchangeOffice');
-    expect(channels.haram?.limits.SYP).toEqual({
-      min: { amount: 140_000, currency: 'SYP' },
-      max: { amount: 140_000_000, currency: 'SYP' },
-    });
-  });
-
-  it('drops pounds and pauses the cash wallets while the rate is stale', () => {
-    const channels = byChannel(buildFallbackChannels(rate({ is_stale: true }), t, false).channels);
-    expect(channels.haram?.currencies).toEqual(['USD']);
-    expect(channels.haram?.limits.SYP).toBeUndefined();
-    expect(channels.mtn_cash).toMatchObject({
-      enabled: false,
-      currencies: [],
-      disabledReason: 'fx_rate_stale',
-      disabledLabel: 't:finance.topUp.disabled.rateStale',
-    });
-  });
-
-  it('says the rate is missing when there is none', () => {
-    const result = buildFallbackChannels(null, t, false);
-    expect(result.rate).toBeNull();
-    expect(byChannel(result.channels).syriatel_cash?.disabledReason).toBe('fx_rate_unavailable');
-  });
-
-  it('shows sample accounts only in mock mode', () => {
-    expect(byChannel(buildFallbackChannels(rate(), t, false).channels).bank?.accounts).toEqual([]);
-    const bank = byChannel(buildFallbackChannels(rate(), t, true).channels).bank;
-    expect(bank?.accounts[0]?.fields[0]?.label).toBe('t:finance.topUp.mock.bankName');
-  });
-});
 
 describe('mapTopUpChannels', () => {
   const dto: TopUpChannelsDto = {
@@ -82,10 +25,11 @@ describe('mapTopUpChannels', () => {
         ],
       },
       { channel: 'western_union', label: 'WU', group: 'exchange_office', currencies: ['USD'], enabled: true },
+      { channel: 'mystery_pay', label: '?', group: 'mystery', currencies: ['USD'], enabled: true },
       {
         channel: 'mtn_cash',
         label: 'MTN',
-        group: 'mystery',
+        group: 'e_wallet',
         currencies: [],
         enabled: true,
         disabled_reason: 'channel_paused',
@@ -96,10 +40,9 @@ describe('mapTopUpChannels', () => {
     payer_reference: ' SD-7K3M9QXA ',
   };
 
-  it('keeps known channels, currencies and limits, and drops empty accounts', () => {
+  it('keeps every channel of the market, its currencies and limits, and drops empty accounts', () => {
     const result = mapTopUpChannels(dto);
-    expect(result.source).toBe('server');
-    expect(result.channels.map(option => option.channel)).toEqual(['haram', 'mtn_cash']);
+    expect(result.channels.map(option => option.channel)).toEqual(['haram', 'western_union', 'mtn_cash']);
     const haram = result.channels[0];
     expect(haram?.currencies).toEqual(['USD', 'SYP']);
     expect(haram?.limits).toEqual({ USD: { min: { amount: 1_000, currency: 'USD' }, max: { amount: 500_000, currency: 'USD' } } });
@@ -107,15 +50,19 @@ describe('mapTopUpChannels', () => {
     expect(result.payerReference).toBe('SD-7K3M9QXA');
   });
 
-  it('has no payer code when the server sends none (and none on the device fallback)', () => {
+  it('has no payer code when the server sends none', () => {
     expect(mapTopUpChannels({ ...dto, payer_reference: '' }).payerReference).toBeNull();
     expect(mapTopUpChannels({ channels: [] }).payerReference).toBeNull();
-    expect(buildFallbackChannels(rate(), t, true).payerReference).toBeNull();
   });
 
-  it('falls back to the app group and turns off a channel with nothing to send in', () => {
-    const mtn = mapTopUpChannels(dto).channels[1];
-    expect(mtn).toMatchObject({ group: 'e_wallet', enabled: false, disabledReason: 'channel_paused' });
+  it('drops a channel whose group this build cannot section, and turns off one with nothing to send in', () => {
+    const channels = mapTopUpChannels(dto).channels;
+    expect(channels.map(option => option.channel)).not.toContain('mystery_pay');
+    expect(channels.find(option => option.channel === 'mtn_cash')).toMatchObject({
+      group: 'e_wallet',
+      enabled: false,
+      disabledReason: 'channel_paused',
+    });
   });
 });
 
@@ -155,8 +102,8 @@ describe('mapTopUp', () => {
     expect(mapTopUp(topUpDto({ receipt })).receipt).toEqual(receipt);
   });
 
-  it('keeps unknown status and channel as null', () => {
-    expect(mapTopUp(topUpDto({ status: 'on_hold', channel: 'paypal' }))).toMatchObject({ status: null, channel: null });
+  it('keeps an unknown status as null and the channel code as sent', () => {
+    expect(mapTopUp(topUpDto({ status: 'on_hold', channel: 'paypal' }))).toMatchObject({ status: null, channel: 'paypal' });
   });
 
   it('skips unreadable items in a page', () => {

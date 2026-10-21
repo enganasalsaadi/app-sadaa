@@ -81,10 +81,10 @@ describe('mapWithdrawal', () => {
     expect(result.completed_at).toBeNull();
   });
 
-  it('turns an unknown status or channel into null', () => {
+  it('turns an unknown status into null and keeps the channel code', () => {
     const result = mapWithdrawal(withdrawal({ status: 'on_hold', channel: 'paypal' }));
     expect(result.status).toBeNull();
-    expect(result.channel).toBeNull();
+    expect(result.channel).toBe('paypal');
     expect(result.status_label).toBe('قيد التحويل');
   });
 
