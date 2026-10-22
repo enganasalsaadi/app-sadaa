@@ -144,8 +144,11 @@ export type WalletStackParamList = {
  * registers its own screens (rule 01). Ids only, so a push or link can open them too.
  */
 export type DealsStackParamList = {
-  /** Brand: needs action / active / drafts / closed · creator: new offers / active / closed. */
-  Deals: undefined;
+  /**
+   * Brand: needs action / active / drafts / closed · creator: new offers / active / closed.
+   * Creator only: `tab` opens that tab (Home's map tiles); none keeps the one open.
+   */
+  Deals: { tab?: 'new' | 'active' } | undefined;
   DealDetail: { id: string };
   /** The deal's signed contract and its addenda. */
   DealContract: { id: string };

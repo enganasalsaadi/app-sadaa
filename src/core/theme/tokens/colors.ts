@@ -274,19 +274,8 @@ export interface ThemeColors {
     spotlightBeam: string;
     spotlightSeat: string;
   };
-  /**
-   * Creator Home "storefront" (approved 2026-10-13): the tilted pass card on navy, the sign
-   * hanging from it, the audience bar and the price tags in the body.
-   */
+  /** Creator Home: the audience bar and the price tags hanging from their rail. */
   storefront: {
-    /** Pass card face, top-start → bottom-end. */
-    pass: string[];
-    /** Hairline that catches the light along the pass edge. */
-    passRim: string;
-    /** Light sweeping across the pass: clear → teal → mustard → clear. */
-    sheen: string[];
-    /** Strings the sign hangs on. */
-    string: string;
     /** Audience bar and swatches, one shade per platform in display order. */
     audience: string[];
     /** Soft shadow drawn under a price tag. */
@@ -480,12 +469,6 @@ const RATING = {
   wax: ['#6FC0CF', '#27506A', NAVY] as [string, string, string],
   waxRim: 'rgba(255, 255, 255, 0.4)',
 };
-const STOREFRONT_SHEEN = [
-  'rgba(159, 211, 220, 0)',
-  'rgba(159, 211, 220, 0.5)',
-  'rgba(217, 180, 106, 0.3)',
-  'rgba(217, 180, 106, 0)',
-];
 
 const lightText = {
   primary: '#0F1D2B',
@@ -675,10 +658,6 @@ export const lightColors: ThemeColors = {
   },
   profile: PROFILE_ORBIT,
   storefront: {
-    pass: [WHITE, '#F2F7F9', '#E3F0F2'],
-    passRim: 'rgba(255, 255, 255, 0.6)',
-    sheen: STOREFRONT_SHEEN,
-    string: 'rgba(201, 214, 224, 0.75)',
     audience: [NAVY, '#397D8C', '#6FC0CF', '#9FD3DC', '#2D6B78', '#C9D6E0'],
     tagShadow: 'rgba(28, 51, 73, 0.14)',
   },
@@ -845,10 +824,6 @@ export const darkColors: ThemeColors = {
   },
   profile: PROFILE_ORBIT,
   storefront: {
-    pass: ['#1B3046', '#152739', '#16303A'],
-    passRim: 'rgba(255, 255, 255, 0.12)',
-    sheen: STOREFRONT_SHEEN,
-    string: 'rgba(201, 214, 224, 0.45)',
     audience: ['#6FC0CF', '#397D8C', '#2D6B78', '#9FD3DC', '#1F4E5A', '#C9D6E0'],
     tagShadow: 'rgba(0, 0, 0, 0.45)',
   },

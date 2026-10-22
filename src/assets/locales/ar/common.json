@@ -2971,28 +2971,11 @@
       "openProfile": "افتح ملفي",
       "verified": "حساب موثّق",
       "storefront": {
-        "kickerOpen": "واجهتك مفتوحة للعلامات التجارية",
-        "kickerHidden": "واجهتك مغلقة أمام العلامات التجارية",
         "pass": {
-          "a11y": "واجهتك كما تراها العلامات التجارية. افتح المعاينة",
-          "addPhoto": "أضف صورتك",
-          "addPhotoHint": "صورتك أول ما يراه المعلنون",
-          "linkPlatform": "اربط منصّتك الأولى",
-          "copy": "نسخ",
           "linkFailed": "تعذّر تحميل رابطك. أعد المحاولة"
-        },
-        "watch": {
-          "title": "من يتفرّج عليك؟",
-          "period": "آخر 30 يوماً",
-          "brands": "علامة تجارية زارت واجهتك",
-          "views": "مشاهدة لملفك",
-          "pulseA11y": "مشاهدات ملفك يومياً خلال آخر 30 يوماً",
-          "a11y": "آخر 30 يوماً: {{brands}} علامة تجارية زارت واجهتك، و{{views}} مشاهدة لملفك. افتح كل الإحصائيات"
-        },
-        "share": "شارك واجهتك"
+        }
       },
       "kpi": {
-        "new": "جديد",
         "failed": "تعذّر تحميل الإحصائيات، اضغط لإعادة المحاولة",
         "retry": "تعذّر تحميل الإحصائيات. إعادة المحاولة"
       },
@@ -3008,19 +2991,13 @@
         }
       },
       "strength": {
-        "title": "قوة ملفك",
-        "benefit": "كلما اكتمل ملفك، زادت فرص ظهورك أمام الشركات.",
-        "nextStep": "الخطوة التالية",
         "stage": {
           "info": "معلوماتك",
           "avatar": "الصورة",
           "platforms": "المنصات",
           "rates": "الأسعار",
           "kyc": "التوثيق"
-        },
-        "complete": "ملفك مكتمل",
-        "completeBody": "العلامات التجارية ترى كل ما تحتاجه لحجزك.",
-        "progressA11y": "{{done}} من {{total}} مراحل مكتملة"
+        }
       },
       "platforms": {
         "title": "جمهورك",
@@ -3043,52 +3020,16 @@
         "newTag": "سعر جديد",
         "tagA11y": "{{service}}، {{where}}: {{price}}. تعديل أسعارك"
       },
-      "escrow": {
-        "label": "محجوز لك",
-        "kycAction": "وثّق هويتك"
-      },
       "campaigns": {
         "title": "حملات لك",
-        "subtitle": "مختارة حسب مجالك ومدينتك",
-        "seeAll": "كل الفرص",
-        "railA11y": "حملات مفتوحة لك ({{count}})",
-        "all": "كل الفرص",
-        "allA11y": "عرض كل الفرص ({{count}})",
-        "chips": {
-          "available_zero": "حملة متاحة",
-          "available_one": "حملة متاحة",
-          "available_two": "حملتان متاحتان",
-          "available_few": "حملات متاحة",
-          "available_many": "حملة متاحة",
-          "available_other": "حملة متاحة",
-          "invites_zero": "دعوة جديدة",
-          "invites_one": "دعوة جديدة",
-          "invites_two": "دعوتان جديدتان",
-          "invites_few": "دعوات جديدة",
-          "invites_many": "دعوة جديدة",
-          "invites_other": "دعوة جديدة",
-          "review_zero": "طلب قيد الدراسة",
-          "review_one": "طلب قيد الدراسة",
-          "review_two": "طلبان قيد الدراسة",
-          "review_few": "طلبات قيد الدراسة",
-          "review_many": "طلباً قيد الدراسة",
-          "review_other": "طلب قيد الدراسة"
-        },
         "quiet": {
           "title": "لا فرص مناسبة الآن",
           "message": "أكمل ملفك وأسعارك لتظهر لك حملات أكثر."
         }
       },
       "deals": {
-        "title": "دورك",
-        "waiting": "{{count}} تنتظرك",
-        "moving": "{{count}} تمشي بدونك",
-        "seeAll": "كل الصفقات",
         "left": "باقي {{time}}",
         "paused": "المهلة متوقفة",
-        "position": "{{index}} من {{count}}",
-        "nextLabel": "الصفقة التالية",
-        "deckHint": "اسحب البطاقة أو اضغط النقاط لترى الصفقة التالية",
         "cardLabel": "{{name}}: {{action}}",
         "cta": {
           "replyOffer": "افتح العرض",
@@ -3103,26 +3044,6 @@
           "rate": "قيّم البراند",
           "open": "افتح الصفقة"
         },
-        "chips": {
-          "newOffers_zero": "عروض جديدة",
-          "newOffers_one": "عرض جديد",
-          "newOffers_two": "عرضان جديدان",
-          "newOffers_few": "عروض جديدة",
-          "newOffers_many": "عرضاً جديداً",
-          "newOffers_other": "عرض جديد",
-          "pendingUpsells_zero": "ملاحق تنتظر ردّك",
-          "pendingUpsells_one": "ملحق ينتظر ردّك",
-          "pendingUpsells_two": "ملحقان ينتظران ردّك",
-          "pendingUpsells_few": "ملاحق تنتظر ردّك",
-          "pendingUpsells_many": "ملحقاً ينتظر ردّك",
-          "pendingUpsells_other": "ملحق ينتظر ردّك",
-          "liveStrikes_zero": "مخالفات فعّالة",
-          "liveStrikes_one": "مخالفة فعّالة",
-          "liveStrikes_two": "مخالفتان فعّالتان",
-          "liveStrikes_few": "مخالفات فعّالة",
-          "liveStrikes_many": "مخالفة فعّالة",
-          "liveStrikes_other": "مخالفة فعّالة"
-        },
         "quiet": {
           "title": "ما في شي ينتظرك",
           "message": "الكرة عند البراند الآن",
@@ -3133,6 +3054,216 @@
           "message": "لما يوصلك أول عرض ستجد هنا بطاقة تقول لك ماذا تفعل. جهّز واجهتك ليجدك البراند.",
           "setRates": "حدّد أسعارك",
           "linkPlatforms": "اربط حساباتك"
+        }
+      },
+      "hero": {
+        "linkPublic": "ملفك وبطاقتك · عامة",
+        "linkPrivate": "بطاقتك خاصة",
+        "linkLoading": "نجهّز رابطك…",
+        "share": "مشاركة",
+        "shareA11y": "شارك رابط واجهتك",
+        "copyA11y": "انسخ رابط واجهتك",
+        "copiedA11y": "نُسخ رابطك",
+        "previewA11y": "شاهد واجهتك كما تراها العلامات التجارية",
+        "pulse": {
+          "views": "مشاهدة لواجهتك",
+          "brands": "علامة زارتك",
+          "reach": "وصولك",
+          "period": "آخر 30 يوماً",
+          "a11y": "آخر 30 يوماً: {{views}} مشاهدة، {{brands}} علامة تجارية، ووصولك {{reach}}. افتح الإحصاءات"
+        }
+      },
+      "tasks": {
+        "position": "{{index}} من {{count}}",
+        "next": "البطاقة التالية",
+        "deckHint": "اسحب البطاقة أو اضغط «التالية» لترى المهمة التالية",
+        "startHere": "ابدأ هنا",
+        "attention": "يحتاج انتباهك",
+        "setup": "جهّز واجهتك",
+        "kicker": {
+          "replyOffer": "عرض جديد",
+          "confirmReceipt": "استلام منتج",
+          "submitDraft": "مسودة مطلوبة",
+          "reviseDraft": "تعديل مطلوب",
+          "publish": "وقت النشر",
+          "fixLiveUrl": "رابط النشر",
+          "answerUpsell": "طلب إضافة",
+          "addEvidence": "نزاع مفتوح",
+          "restorePost": "منشور محذوف",
+          "rate": "قيّم التجربة",
+          "open": "دورك"
+        },
+        "step": {
+          "info": {
+            "title": "أكمل معلوماتك",
+            "body": "اسمك ومدينتك ومجالك تساعد العلامات على إيجادك",
+            "cta": "أكمل معلوماتك"
+          },
+          "avatar": {
+            "title": "أضف صورتك",
+            "body": "الواجهات التي فيها صورة تحصل على مشاهدات أكثر",
+            "cta": "أضف صورة"
+          },
+          "platforms": {
+            "title": "اربط منصاتك",
+            "body": "حساباتك هي ما تحجزه العلامات التجارية",
+            "cta": "اربط منصة"
+          },
+          "rates": {
+            "title": "أضف أسعارك",
+            "body": "العلامات تحجزك بسعر ثابت تحدده أنت",
+            "cta": "أضف أول سعر"
+          },
+          "kyc": {
+            "title": "وثّق هويتك",
+            "body": "التوثيق يفتح لك سحب أرباحك إلى محفظتك",
+            "cta": "وثّق الآن"
+          }
+        }
+      },
+      "map": {
+        "title": "خريطة صدى",
+        "subtitle": "كل شيء في مكانه",
+        "offers": "العروض",
+        "deals": "صفقاتي",
+        "campaigns": "الحملات",
+        "notifications": "الإشعارات",
+        "wallet": "المحفظة",
+        "rates": "أسعاري",
+        "platforms": "منصاتي",
+        "kit": "بطاقتي",
+        "insights": "إحصاءاتي",
+        "tileA11y": "{{title}}: {{sub}}",
+        "sub": {
+          "newOffers_zero": "لا عروض جديدة",
+          "newOffers_one": "عرض جديد",
+          "newOffers_two": "عرضان جديدان",
+          "newOffers_few": "{{count}} عروض جديدة",
+          "newOffers_many": "{{count}} عرضاً جديداً",
+          "newOffers_other": "{{count}} عرض جديد",
+          "activeDeals_zero": "لا صفقات نشطة",
+          "activeDeals_one": "صفقة نشطة",
+          "activeDeals_two": "صفقتان نشطتان",
+          "activeDeals_few": "{{count}} صفقات نشطة",
+          "activeDeals_many": "{{count}} صفقة نشطة",
+          "activeDeals_other": "{{count}} صفقة نشطة",
+          "noDeals": "لا صفقات بعد",
+          "openCampaigns_zero": "لا حملات الآن",
+          "openCampaigns_one": "حملة مفتوحة",
+          "openCampaigns_two": "حملتان مفتوحتان",
+          "openCampaigns_few": "{{count}} حملات مفتوحة",
+          "openCampaigns_many": "{{count}} حملة مفتوحة",
+          "openCampaigns_other": "{{count}} حملة مفتوحة",
+          "unread_zero": "لا جديد",
+          "unread_one": "إشعار جديد",
+          "unread_two": "إشعاران جديدان",
+          "unread_few": "{{count}} إشعارات جديدة",
+          "unread_many": "{{count}} إشعاراً جديداً",
+          "unread_other": "{{count}} إشعار جديد",
+          "rates_zero": "أضف سعراً",
+          "rates_one": "سعر واحد",
+          "rates_two": "سعران",
+          "rates_few": "{{count}} أسعار",
+          "rates_many": "{{count}} سعراً",
+          "rates_other": "{{count}} سعر",
+          "platforms_zero": "اربط منصة",
+          "platforms_one": "منصة مربوطة",
+          "platforms_two": "منصتان مربوطتان",
+          "platforms_few": "{{count}} منصات مربوطة",
+          "platforms_many": "{{count}} منصة مربوطة",
+          "platforms_other": "{{count}} منصة مربوطة",
+          "platformsAction": "تحتاج إجراء",
+          "platformsReview": "قيد المراجعة",
+          "kitPublic": "عامة",
+          "kitPrivate": "خاصة",
+          "insights": "آخر 30 يوماً",
+          "loading": "…"
+        }
+      },
+      "strikes": {
+        "active_zero": "لا إنذارات نشطة",
+        "active_one": "لديك إنذار نشط واحد — اعرف السبب",
+        "active_two": "لديك إنذاران نشطان — اعرف السبب",
+        "active_few": "لديك {{count}} إنذارات نشطة — اعرف السبب",
+        "active_many": "لديك {{count}} إنذاراً نشطاً — اعرف السبب",
+        "active_other": "لديك {{count}} إنذار نشط — اعرف السبب"
+      },
+      "running": {
+        "title": "صفقاتك الجارية",
+        "subtitle": "الكرة عند العلامة",
+        "welcomeTitle": "صفقاتك",
+        "all": "كل الصفقات ({{count}})",
+        "empty": "لا صفقات تمشي بدونك الآن",
+        "rowA11y": "{{name}}، {{status}}، {{price}}",
+        "loadingA11y": "نحمّل صفقاتك"
+      },
+      "money": {
+        "title": "أموالك",
+        "wallet": "المحفظة",
+        "held": "محجوزة لك بأمان",
+        "fromDeals": "صفقاتك",
+        "toWallet": "محفظتك",
+        "caption": "تصل محفظتك تلقائياً عند إنجاز كل صفقة.",
+        "emptyTitle": "لا مبالغ محجوزة الآن",
+        "empty": "عند قبول صفقة تُحجز قيمتها هنا بأمان حتى تنجزها.",
+        "kycNudge": "وثّق هويتك لتسحب {{amount}} المتاحة الآن",
+        "kycNudgeHidden": "وثّق هويتك لتسحب رصيدك المتاح",
+        "a11y": "محجوز لك: {{amount}}. افتح المحفظة"
+      },
+      "look": {
+        "title": "واجهتك أمام العلامات",
+        "preview": "معاينة",
+        "brands_zero": "مشاهدة · لا علامات بعد",
+        "brands_one": "مشاهدة · علامة تجارية واحدة",
+        "brands_two": "مشاهدة · علامتان تجاريتان",
+        "brands_few": "مشاهدة · {{count}} علامات تجارية",
+        "brands_many": "مشاهدة · {{count}} علامة تجارية",
+        "brands_other": "مشاهدة · {{count}} علامة تجارية",
+        "public": "بطاقتك عامة — تظهر في البحث",
+        "private": "بطاقتك خاصة — لا تراها العلامات",
+        "a11y": "{{views}} مشاهدة لواجهتك في آخر 30 يوماً. افتح الإحصاءات",
+        "pulseA11y": "مشاهدات واجهتك يومياً خلال آخر 30 يوماً"
+      },
+      "campaignsB": {
+        "invites_zero": "لا دعوات",
+        "invites_one": "دعوة",
+        "invites_two": "دعوتان",
+        "invites_few": "{{count}} دعوات",
+        "invites_many": "{{count}} دعوة",
+        "invites_other": "{{count}} دعوة",
+        "invited": "دعوة لك",
+        "reviewing_zero": "طلباتي",
+        "reviewing_one": "طلباتي · طلب قيد المراجعة",
+        "reviewing_two": "طلباتي · طلبان قيد المراجعة",
+        "reviewing_few": "طلباتي · {{count}} طلبات قيد المراجعة",
+        "reviewing_many": "طلباتي · {{count}} طلباً قيد المراجعة",
+        "reviewing_other": "طلباتي · {{count}} طلب قيد المراجعة",
+        "browse": "تصفّح كل الفرص",
+        "seats_zero": "لا مقاعد",
+        "seats_one": "مقعد واحد",
+        "seats_two": "مقعدان",
+        "seats_few": "{{count}} مقاعد",
+        "seats_many": "{{count}} مقعداً",
+        "seats_other": "{{count}} مقعد",
+        "headerA11y": "حملات لك ({{count}}). افتح كل الفرص"
+      },
+      "readiness": {
+        "almost": "واجهتك شبه جاهزة",
+        "start": "لنكمل واجهتك",
+        "complete": "واجهتك مكتملة",
+        "completeBody": "العلامات التجارية ترى كل ما تحتاجه لحجزك.",
+        "left_zero": "واجهتك مكتملة",
+        "left_one": "بقيت خطوة واحدة لتظهر كاملة",
+        "left_two": "بقيت خطوتان لتظهر كاملة",
+        "left_few": "بقيت {{count}} خطوات لتظهر كاملة",
+        "left_many": "بقيت {{count}} خطوة لتظهر كاملة",
+        "left_other": "بقيت {{count}} خطوة لتظهر كاملة",
+        "ringA11y": "واجهتك جاهزة بنسبة {{percent}}",
+        "stageA11y": "{{stage}}: {{state}}",
+        "state": {
+          "done": "مكتملة",
+          "current": "التالية",
+          "upcoming": "لاحقاً"
         }
       }
     },

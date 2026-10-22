@@ -1,16 +1,113 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { formatNumber } from '@/core/i18n';
+import { ChevronLeft, ChevronRight, Compass, Megaphone, Star } from 'lucide-react-native';
+import { formatMoney, formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
-import { Box, Pressable, Rail, StaggerIn, Text } from '@/shared/ui';
-import { useClock } from '../../../hooks/useClock';
+import { Box, Divider, GradientSurface, Image, MoneyText, Pressable, Text } from '@/shared/ui';
+import type { CreatorCampaign } from '../../../types';
+import { netHeadline } from '../../../utils/opportunities';
 import type { CreatorHomeCampaignsModel } from '../hooks/useCreatorHomeCampaigns';
 import { CampaignsQuiet } from './CampaignsQuiet';
-import { CampaignTicket } from './CampaignTicket';
-import { CountChip } from './CountChip';
 
-const MORE_WIDTH = moderateScale(112);
-const MINUTE = 60_000;
+const THUMB = moderateScale(50);
+const SEAT_BAR = moderateScale(34);
+const SEAT_HEIGHT = moderateScale(4);
+const ROW_MIN_HEIGHT = moderateScale(72);
+
+/** The cover, or the brand gradient with what kind of campaign it is. */
+const Thumb = memo<{ campaign: CreatorCampaign }>(({ campaign }) => {
+  const { colors, sizes } = useTheme();
+  const uri = campaign.cover?.url ?? null;
+  const Icon = campaign.invited ? Star : Megaphone;
+  return (
+    <Box width={THUMB} height={THUMB} borderRadius="md" overflow="hidden" align="center" justify="center">
+      {uri ? (
+        <Image uri={uri} width={THUMB} height={THUMB} />
+      ) : (
+        <>
+          <GradientSurface variant="brand" style={StyleSheet.absoluteFill} />
+          <Icon size={sizes.icon.sm} color={colors.text.onBrand} />
+        </>
+      )}
+    </Box>
+  );
+});
+
+/** Seats still free as a short teal bar, then the words. */
+const Seats = memo<{ total: number; free: number }>(({ total, free }) => {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const share = total > 0 ? Math.min(1, free / total) : 0;
+  return (
+    <Box row align="center" gap="xs">
+      <Box width={SEAT_BAR} height={SEAT_HEIGHT} borderRadius="full" bg={colors.surface.elevated} overflow="hidden" row>
+        <Box flex={share} bg={colors.interactive.main} />
+        <Box flex={1 - share} />
+      </Box>
+      <Text variant="caption" color={colors.text.secondary}>
+        {t('marketplace.creatorHome.campaignsB.seats', { count: free })}
+      </Text>
+    </Box>
+  );
+});
+
+const CampaignRow = memo<{ campaign: CreatorCampaign; onOpen: (id: string) => void }>(({ campaign, onOpen }) => {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const open = useCallback(() => onOpen(campaign.id), [campaign.id, onOpen]);
+  const headline = netHeadline(campaign.pricing);
+  const net =
+    headline === null
+      ? ''
+      : headline.kind === 'fixed'
+        ? formatMoney(headline.net)
+        : `${formatMoney(headline.min)} – ${formatMoney(headline.max)}`;
+  const kind = campaign.invited
+    ? t('marketplace.creatorHome.campaignsB.invited')
+    : (campaign.activityType?.label ?? null);
+
+  return (
+    <Pressable
+      row
+      align="center"
+      gap="md"
+      py="md"
+      minHeight={ROW_MIN_HEIGHT}
+      onPress={open}
+      accessibilityRole="button"
+      accessibilityLabel={t('marketplace.campaign.feed.card.a11y', {
+        title: campaign.title,
+        brand: campaign.brand.name,
+        net,
+      })}
+    >
+      <Thumb campaign={campaign} />
+      <Box flex={1} gap="xs">
+        <Text variant="bodyMedium" numberOfLines={1}>
+          {campaign.title}
+        </Text>
+        <Box row align="center" gap="xs" wrap>
+          <Text
+            variant="caption"
+            color={campaign.invited ? colors.premium.text : colors.text.secondary}
+            numberOfLines={1}
+          >
+            {kind ? `${campaign.brand.name} · ${kind}` : campaign.brand.name}
+          </Text>
+          <Seats total={campaign.seats.total} free={campaign.seats.free} />
+        </Box>
+      </Box>
+      {headline?.kind === 'fixed' ? (
+        <MoneyText value={headline.net} size="sm" />
+      ) : net ? (
+        <Text variant="caption" color={colors.text.primary}>
+          {net}
+        </Text>
+      ) : null}
+    </Pressable>
+  );
+});
 
 type HomeCampaignsProps = Pick<
   CreatorHomeCampaignsModel,
@@ -18,9 +115,9 @@ type HomeCampaignsProps = Pick<
 > & { openRates: () => void };
 
 /**
- * «Campaigns for you»: count chips (open · new invitations · under review, each only above 0), then up
- * to three tickets the server ranked and a last tile to the whole feed; a calm card when nothing fits.
- * Hidden while the server sends no `campaigns` (flag off).
+ * «Campaigns for you» as one card: how many fit (and the new invitations), up to three the server
+ * ranked, each with what the creator takes home and the seats left, then the applications under
+ * review (or the whole feed). A calm card when nothing fits; hidden while the flag is off.
  */
 const HomeCampaignsComponent: React.FC<HomeCampaignsProps> = ({
   campaigns,
@@ -30,98 +127,67 @@ const HomeCampaignsComponent: React.FC<HomeCampaignsProps> = ({
   openRates,
 }) => {
   const { t } = useTranslation();
-  const { colors, sizes } = useTheme();
-  const now = useClock(MINUTE);
+  const { colors, sizes, isRTL } = useTheme();
+  const Chevron = isRTL ? ChevronLeft : ChevronRight;
   if (campaigns.kind === 'hidden') return null;
 
   const { feedCount, newInvites, openApplications: reviewing, items } = campaigns;
-  const quiet = items.length === 0 && feedCount === 0 && newInvites === 0;
+  if (items.length === 0 && feedCount === 0 && newInvites === 0 && reviewing === 0) {
+    return <CampaignsQuiet onSetRates={openRates} />;
+  }
+  const footer =
+    reviewing > 0
+      ? { label: t('marketplace.creatorHome.campaignsB.reviewing', { count: reviewing }), onPress: openApplications }
+      : { label: t('marketplace.creatorHome.campaignsB.browse'), onPress: openFeed };
 
   return (
-    <StaggerIn gap="md">
-      <Box row align="flex-end" justify="space-between" gap="md" px="xl">
-        <Box flex={1}>
-          <Text variant="h4" accessibilityRole="header">
-            {t('marketplace.creatorHome.campaigns.title')}
-          </Text>
-          <Text variant="bodySmall" color={colors.text.tertiary} numberOfLines={1}>
-            {t('marketplace.creatorHome.campaigns.subtitle')}
-          </Text>
+    <Box mx="xl" px="lg" pt="md" borderRadius="xl" bg={colors.surface.main} shadow="card">
+      <Pressable
+        row
+        align="center"
+        gap="sm"
+        minHeight={sizes.button.md}
+        onPress={openFeed}
+        accessibilityRole="button"
+        accessibilityLabel={t('marketplace.creatorHome.campaignsB.headerA11y', { count: feedCount })}
+      >
+        <Compass size={sizes.icon.sm} color={colors.text.secondary} />
+        <Text variant="buttonSmall" color={colors.text.secondary}>
+          {`${t('marketplace.creatorHome.campaigns.title')} · ${formatNumber(feedCount)}`}
+        </Text>
+        {newInvites > 0 ? (
+          <Box px="sm" py="xs" borderRadius="full" bg={colors.premium.soft}>
+            <Text variant="caption" color={colors.premium.text}>
+              {t('marketplace.creatorHome.campaignsB.invites', { count: newInvites })}
+            </Text>
+          </Box>
+        ) : null}
+        <Box flex={1} />
+        <Chevron size={sizes.icon.sm} color={colors.text.tertiary} />
+      </Pressable>
+      {items.map(campaign => (
+        <Box key={campaign.id}>
+          <Divider />
+          <CampaignRow campaign={campaign} onOpen={openCampaign} />
         </Box>
-        <Pressable
-          onPress={openFeed}
-          minHeight={sizes.button.md}
-          justify="center"
-          hitSlop={sizes.hitSlop.sm}
-          accessibilityRole="button"
-        >
-          <Text variant="buttonSmall" color={colors.interactive.text}>
-            {t('marketplace.creatorHome.campaigns.seeAll')}
-          </Text>
-        </Pressable>
-      </Box>
-      {feedCount + newInvites + reviewing > 0 ? (
-        <Box row wrap gap="sm" px="xl">
-          {feedCount > 0 ? (
-            <CountChip
-              count={feedCount}
-              label={t('marketplace.creatorHome.campaigns.chips.available', { count: feedCount })}
-              tone="info"
-              onPress={openFeed}
-            />
-          ) : null}
-          {newInvites > 0 ? (
-            <CountChip
-              count={newInvites}
-              label={t('marketplace.creatorHome.campaigns.chips.invites', { count: newInvites })}
-              tone="warning"
-              onPress={openFeed}
-            />
-          ) : null}
-          {reviewing > 0 ? (
-            <CountChip
-              count={reviewing}
-              label={t('marketplace.creatorHome.campaigns.chips.review', { count: reviewing })}
-              tone="info"
-              onPress={openApplications}
-            />
-          ) : null}
-        </Box>
-      ) : null}
-      {items.length > 0 ? (
-        <Rail
-          gap="md"
-          shadow="card"
-          accessibilityLabel={t('marketplace.creatorHome.campaigns.railA11y', { count: feedCount })}
-        >
-          {items.map(campaign => (
-            <CampaignTicket key={campaign.id} campaign={campaign} now={now} onOpen={openCampaign} />
-          ))}
-          {feedCount > items.length ? (
-            <Pressable
-              width={MORE_WIDTH}
-              align="center"
-              justify="center"
-              gap="xs"
-              p="md"
-              borderRadius="xl"
-              borderWidth="sm"
-              borderColor={colors.border.strong}
-              onPress={openFeed}
-              scaleOnPress
-              accessibilityRole="button"
-              accessibilityLabel={t('marketplace.creatorHome.campaigns.allA11y', { count: feedCount })}
-            >
-              <Text variant="amountTitle">{formatNumber(feedCount)}</Text>
-              <Text variant="buttonSmall" color={colors.interactive.text} align="center">
-                {t('marketplace.creatorHome.campaigns.all')}
-              </Text>
-            </Pressable>
-          ) : null}
-        </Rail>
-      ) : null}
-      {quiet ? <CampaignsQuiet onSetRates={openRates} /> : null}
-    </StaggerIn>
+      ))}
+      <Divider />
+      <Pressable
+        row
+        align="center"
+        justify="center"
+        gap="xs"
+        minHeight={sizes.button.md}
+        onPress={footer.onPress}
+        accessibilityRole="button"
+        accessibilityLabel={footer.label}
+      >
+        <Text variant="buttonSmall" color={colors.interactive.text}>
+          {footer.label}
+        </Text>
+        <Chevron size={sizes.icon.sm} color={colors.interactive.text} />
+      </Pressable>
+    </Box>
   );
 };
 

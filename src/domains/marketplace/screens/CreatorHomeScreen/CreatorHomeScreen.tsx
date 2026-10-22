@@ -7,29 +7,30 @@ import { Box, Layout, StaggerIn } from '@/shared/ui';
 import { useCreatorHomeScreen } from './hooks/useCreatorHomeScreen';
 import { AudienceSection } from './components/AudienceSection';
 import { CreatorHomeBar } from './components/CreatorHomeBar';
-import { EscrowLine } from './components/EscrowLine';
 import { HomeCampaigns } from './components/HomeCampaigns';
-import { HomeDeals } from './components/HomeDeals';
+import { HomeTasks } from './components/HomeTasks';
+import { MoneyCard } from './components/MoneyCard';
 import { PriceTagsSection } from './components/PriceTagsSection';
 import { ReadinessSection } from './components/ReadinessSection';
-import { ShareBar } from './components/ShareBar';
+import { RunningDeals } from './components/RunningDeals';
+import { SadaMap } from './components/SadaMap';
+import { StorefrontCard } from './components/StorefrontCard';
 import { StorefrontHero } from './components/StorefrontHero';
-import { WatchGrid } from './components/WatchGrid';
 
 /**
- * Creator dashboard «الواجهة» (approved 2026-10-13): Home is the creator's storefront as
- * brands meet it. Navy hero with drifting lights (only the tilted pass and the one blocker
- * hanging from it as a sign) behind a transparent header that pins the identity once the
- * hero scrolls away; the body slides over it as a sheet. Then, rising in one by one and
- * always present (each has its own empty state): «your turn» (the deals waiting on the creator;
- * leaves only if its read fails), «campaigns for you» (only while Public Campaigns is on) with the money held for them and a KYC nudge under it, who's looking in the last 30 days with the share bar, how ready
- * the storefront is, the audience by platform and the price tags. Sections without an API (wallet)
- * stay out until it exists.
+ * Creator dashboard (v3, approved 2026-10-22). Navy hero behind a transparent header: who the
+ * creator is, their link (copy · preview · share) and the last 30 days; the body is a sheet with
+ * rounded shoulders that never floats over it, and as it climbs the hero content sinks behind it
+ * while the header pins identity, share and the bell. Then, rising in one by one and each with
+ * its own empty state: the task deck (blocker, deals waiting, first-run steps), the Sada map with
+ * any live strike, running deals, campaigns for you (only while Public Campaigns is on), money,
+ * the storefront to brands, readiness, the audience and the price tags.
  */
 const CreatorHomeScreenComponent: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const vm = useCreatorHomeScreen();
+  const { share } = vm.mediaKit;
 
   return (
     <Layout
@@ -42,7 +43,13 @@ const CreatorHomeScreenComponent: React.FC = () => {
         title: t('tabs.home'),
         variant: 'brand',
         showBackButton: false,
-        leading: <CreatorHomeBar hero={vm.hero} onOpenProfile={vm.openProfile} />,
+        leading: (
+          <CreatorHomeBar
+            hero={vm.hero}
+            onOpenProfile={vm.openProfile}
+            onShare={vm.mediaKit.isPublic ? share.onShare : null}
+          />
+        ),
         actions: [
           {
             icon: Bell,
@@ -58,13 +65,11 @@ const CreatorHomeScreenComponent: React.FC = () => {
       hero={
         <StorefrontHero
           hero={vm.hero}
-          notice={vm.notice}
           kpis={vm.kpis}
-          platforms={vm.platforms}
           mediaKit={vm.mediaKit}
+          onOpenProfile={vm.openProfile}
           onOpenPreview={vm.openPreview}
-          onAddPhoto={vm.openAvatar}
-          onLinkPlatform={vm.openPlatforms}
+          onOpenInsights={vm.openInsights}
         />
       }
       scrollProps={{
@@ -78,29 +83,47 @@ const CreatorHomeScreenComponent: React.FC = () => {
         ),
       }}
     >
-      <Box pt="2xl" pb="5xl">
+      <Box pt="xl" pb="5xl">
         <StaggerIn gap="3xl">
+          {vm.deck.kind !== 'none' ? (
+            <HomeTasks
+              deck={vm.deck}
+              notice={vm.notice}
+              onStepStage={vm.onStepStage}
+              onOpenDeal={vm.homeDeals.openDeal}
+            />
+          ) : null}
+          <SadaMap
+            tiles={vm.mapTiles}
+            strikes={vm.strikes}
+            onOpenStrikes={vm.openStrikes}
+            amountsHidden={vm.amountsHidden}
+          />
           {vm.homeDeals.deals.kind !== 'hidden' ? (
-            <HomeDeals homeDeals={vm.homeDeals} openRates={vm.openRates} openPlatforms={vm.openPlatforms} />
+            <RunningDeals
+              deals={vm.homeDeals.deals}
+              onOpenDeal={vm.homeDeals.openDeal}
+              onOpenDeals={vm.homeDeals.openDeals}
+              onSetRates={vm.openRates}
+              onLinkPlatforms={vm.openPlatforms}
+            />
           ) : null}
           {vm.homeCampaigns.campaigns.kind !== 'hidden' ? (
             <HomeCampaigns {...vm.homeCampaigns} openRates={vm.openRates} />
           ) : null}
-          {vm.walletGlance.escrow || vm.walletGlance.kycNudge ? (
-            <EscrowLine
-              glance={vm.walletGlance}
-              hidden={vm.amountsHidden}
-              onOpenWallet={vm.openWallet}
-              onOpenKyc={vm.openKyc}
-            />
-          ) : null}
-          <Box px="xl" gap="lg">
-            <WatchGrid kpis={vm.kpis} onOpenInsights={vm.openInsights} />
-            <ShareBar mediaKit={vm.mediaKit} onOpenPreview={vm.openPreview} />
-          </Box>
-          <Box px="xl">
-            <ReadinessSection completion={vm.completion} onStepPress={vm.onStepPress} />
-          </Box>
+          <MoneyCard
+            glance={vm.walletGlance}
+            hidden={vm.amountsHidden}
+            onOpenWallet={vm.openWallet}
+            onOpenKyc={vm.openKyc}
+          />
+          <StorefrontCard
+            kpis={vm.kpis}
+            mediaKit={vm.mediaKit}
+            onOpenInsights={vm.openInsights}
+            onOpenPreview={vm.openPreview}
+          />
+          <ReadinessSection completion={vm.completion} onStepPress={vm.onStepStage} />
           <Box px="xl">
             <AudienceSection platforms={vm.platforms} onOpenPlatform={vm.openPlatform} onManage={vm.openPlatforms} />
           </Box>

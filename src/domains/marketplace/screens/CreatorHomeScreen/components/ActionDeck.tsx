@@ -3,44 +3,43 @@ import type { ViewStyle } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
-import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Pressable, Text } from '@/shared/ui';
+import { moderateScale, opacity, useStyles } from '@/core/theme';
+import { Box } from '@/shared/ui';
+import type { StrengthStageKey } from '@/domains/identity';
 import { useNextStepDeck } from '../../../hooks/useNextStepDeck';
-import type { CreatorActiveDeal } from '../../../types';
-import { ActionCard } from './ActionCard';
+import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
+import { homeTaskKey, type HomeTask } from '../utils/buildHomeTasks';
+import { TaskCard } from './TaskCard';
 
 /** How much of the next card, then of the one behind it, shows under the front card. */
-const PEEK_NEAR = moderateScale(16);
-const PEEK_FAR = moderateScale(30);
-const NEAR_INSET = moderateScale(14);
-const FAR_INSET = moderateScale(28);
+const PEEK_NEAR = moderateScale(11);
+const PEEK_FAR = moderateScale(21);
+const NEAR_INSET = moderateScale(12);
+const FAR_INSET = moderateScale(24);
 const GHOST_HEIGHT = moderateScale(90);
-const DOT = moderateScale(6);
-const DOT_ON = moderateScale(20);
-/** Dots beyond this would crowd the row; the «1 of 3» text still counts them all. */
-const MAX_DOTS = 6;
 /** Degrees of tilt per point of drag. */
 const TILT = 1 / 40;
 /** The next card rises from this far down, this much smaller. */
-const RISE = moderateScale(26);
-const RISE_SCALE = 0.06;
+const RISE = moderateScale(22);
+const RISE_SCALE = 0.05;
 
 interface ActionDeckProps {
-  deals: CreatorActiveDeal[];
-  onOpen: (id: string) => void;
+  tasks: readonly HomeTask[];
+  welcome: boolean;
+  notice: CreatorHomeScreenModel['notice'];
+  onOpenDeal: (id: string) => void;
+  onStep: (stage: StrengthStageKey) => void;
 }
 
 /**
- * The deals waiting on the creator as a deck: the most pressing card in front, the next ones
- * peeking from behind. Swipe (or tap «1 of 3») brings the next one up; the front card follows the
- * finger and tilts, then the next springs into place.
+ * Everything waiting on the creator as one deck, the most pressing card in front and the next
+ * ones peeking from behind. Swipe (or «next») throws the front card away and the next springs up.
  */
-const ActionDeckComponent: React.FC<ActionDeckProps> = ({ deals, onOpen }) => {
+const ActionDeckComponent: React.FC<ActionDeckProps> = ({ tasks, welcome, notice, onOpenDeal, onStep }) => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
-  const count = deals.length;
+  const count = tasks.length;
   const { gesture, drag, enter, index, next } = useNextStepDeck(count);
-  const deal = deals[index];
+  const task = tasks[index];
 
   const styles = useStyles(
     ({ radii, shadows, colors: palette }): Record<'stacked' | 'card' | 'near' | 'far', ViewStyle> => ({
@@ -56,6 +55,7 @@ const ActionDeckComponent: React.FC<ActionDeckProps> = ({ deals, onOpen }) => {
         height: GHOST_HEIGHT,
         borderRadius: radii.xl,
         backgroundColor: palette.surface.main,
+        opacity: opacity.deckNear,
       },
       far: {
         position: 'absolute',
@@ -65,7 +65,7 @@ const ActionDeckComponent: React.FC<ActionDeckProps> = ({ deals, onOpen }) => {
         height: GHOST_HEIGHT,
         borderRadius: radii.xl,
         backgroundColor: palette.surface.main,
-        opacity: 0.6,
+        opacity: opacity.deckFar,
       },
     }),
     [count],
@@ -81,49 +81,30 @@ const ActionDeckComponent: React.FC<ActionDeckProps> = ({ deals, onOpen }) => {
     ],
   }));
 
-  if (!deal) return null;
+  if (!task) return null;
 
   return (
-    <Box gap="md">
-      <Box mx="xl" style={styles.stacked}>
-        {count > 2 ? <Box style={styles.far} shadow="sm" pointerEvents="none" /> : null}
-        {count > 1 ? <Box style={styles.near} shadow="card" pointerEvents="none" /> : null}
-        <GestureDetector gesture={gesture}>
-          <Animated.View
-            style={[styles.card, cardStyle]}
-            accessibilityHint={count > 1 ? t('marketplace.creatorHome.deals.deckHint') : undefined}
-          >
-            <ActionCard deal={deal} onOpen={onOpen} />
-          </Animated.View>
-        </GestureDetector>
-      </Box>
-      {count > 1 ? (
-        <Pressable
-          row
-          align="center"
-          justify="center"
-          gap="sm"
-          minHeight={moderateScale(44)}
-          onPress={next}
-          accessibilityRole="button"
-          accessibilityLabel={t('marketplace.creatorHome.deals.nextLabel')}
+    <Box mx="xl" style={styles.stacked}>
+      {count > 2 ? <Box style={styles.far} shadow="sm" pointerEvents="none" /> : null}
+      {count > 1 ? <Box style={styles.near} shadow="card" pointerEvents="none" /> : null}
+      <GestureDetector gesture={gesture}>
+        <Animated.View
+          style={[styles.card, cardStyle]}
+          accessibilityHint={count > 1 ? t('marketplace.creatorHome.tasks.deckHint') : undefined}
         >
-          <Box row align="center" gap="xs" importantForAccessibility="no-hide-descendants">
-            {Array.from({ length: Math.min(count, MAX_DOTS) }, (_, dot) => (
-              <Box
-                key={dot}
-                width={dot === index ? DOT_ON : DOT}
-                height={DOT}
-                borderRadius="full"
-                bg={dot === index ? colors.interactive.main : colors.border.default}
-              />
-            ))}
-          </Box>
-          <Text variant="caption" color={colors.text.tertiary}>
-            {t('marketplace.creatorHome.deals.position', { index: index + 1, count })}
-          </Text>
-        </Pressable>
-      ) : null}
+          <TaskCard
+            key={homeTaskKey(task)}
+            task={task}
+            index={index}
+            count={count}
+            onNext={next}
+            notice={notice}
+            welcome={welcome}
+            onOpenDeal={onOpenDeal}
+            onStep={onStep}
+          />
+        </Animated.View>
+      </GestureDetector>
     </Box>
   );
 };

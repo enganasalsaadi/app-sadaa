@@ -22,7 +22,19 @@ const kyc = { allowed: false, reason: 'kyc_required' };
 
 describe('resolveWalletGlance', () => {
   it('shows nothing before the wallet loads', () => {
-    expect(resolveWalletGlance(undefined, kyc)).toEqual({ escrow: null, kycNudge: false });
+    expect(resolveWalletGlance(undefined, kyc)).toEqual({
+      loaded: false,
+      available: null,
+      escrow: null,
+      kycNudge: false,
+    });
+  });
+
+  it('passes the withdrawable balance through once loaded', () => {
+    expect(resolveWalletGlance(wallet({ available: 1000 }), undefined)).toMatchObject({
+      loaded: true,
+      available: usd(1000),
+    });
   });
 
   it('shows the escrow only when something is held', () => {

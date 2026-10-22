@@ -1,5 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRoute } from '@react-navigation/native';
+import type { DealsStackScreenProps } from '@/core/navigation';
 import { useGetDealStrikesQuery } from '../../../api/dealUpsellApi';
 import {
   CREATOR_DEAL_TABS,
@@ -9,6 +11,8 @@ import {
 import { useDealsList } from '../../../hooks/useDealsList';
 
 const TURN_TABS: readonly CreatorDealTab[] = ['new', 'active'];
+
+type Route = DealsStackScreenProps<'Deals'>['route'];
 
 /**
  * Creator «Deals» tab: new offers, ongoing, closed; «your turn» over the first two. Live strikes
@@ -25,7 +29,15 @@ export const useCreatorDealsScreen = () => {
   });
   const newOffers = list.countOf('new');
   const { data: strikes } = useGetDealStrikesQuery();
-  const { navigation } = list;
+  const { navigation, setTab } = list;
+  const requestedTab = useRoute<Route>().params?.tab;
+  // The tab stays mounted, so a Home tile asking for a tab arrives as a param change;
+  // it is cleared once applied so the same tile works again after the creator moved on.
+  useEffect(() => {
+    if (!requestedTab) return;
+    setTab(requestedTab);
+    navigation.setParams({ tab: undefined });
+  }, [navigation, requestedTab, setTab]);
   const openStrikes = useCallback(() => navigation.navigate('Strikes'), [navigation]);
 
   return {

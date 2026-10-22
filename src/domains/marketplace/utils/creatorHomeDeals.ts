@@ -19,17 +19,19 @@ export const creatorDealClock = (dueAt: number | null, now: number): CreatorDeal
 };
 
 /**
- * The server's list, split for Home: the cards waiting on the creator (in the server's order) and
- * the nearest deadline among the rest, for the quiet card's «next up» line.
+ * The server's list, split for Home: the cards waiting on the creator and the deals moving without
+ * them (each in the server's order), and the nearest deadline among those, for the quiet card's
+ * «next up» line.
  */
 export const splitCreatorDeals = (
   items: CreatorActiveDeal[],
-): { waiting: CreatorActiveDeal[]; nextUp: CreatorActiveDeal | null } => {
+): { waiting: CreatorActiveDeal[]; moving: CreatorActiveDeal[]; nextUp: CreatorActiveDeal | null } => {
   const waiting = items.filter(deal => deal.needsAction);
-  const rest = items.filter(deal => !deal.needsAction && deal.dueAt !== null);
-  const nextUp = rest.reduce<CreatorActiveDeal | null>(
-    (best, deal) => (best === null || (deal.dueAt ?? 0) < (best.dueAt ?? 0) ? deal : best),
+  const moving = items.filter(deal => !deal.needsAction);
+  const nextUp = moving.reduce<CreatorActiveDeal | null>(
+    (best, deal) =>
+      deal.dueAt === null ? best : best === null || deal.dueAt < (best.dueAt ?? 0) ? deal : best,
     null,
   );
-  return { waiting, nextUp };
+  return { waiting, moving, nextUp };
 };

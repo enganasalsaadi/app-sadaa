@@ -51,7 +51,10 @@ export const useCreatorHomeCampaigns = () => {
     };
   }, [data]);
 
-  return { campaigns, openCampaign, openFeed, openApplications };
+  /** `null` until the summary answers: Home's map waits before swapping the campaigns tile. */
+  const enabled = data ? data.campaignsEnabled : null;
+
+  return { campaigns, enabled, openCampaign, openFeed, openApplications };
 };
 
 export type CreatorHomeCampaignsModel = ReturnType<typeof useCreatorHomeCampaigns>;

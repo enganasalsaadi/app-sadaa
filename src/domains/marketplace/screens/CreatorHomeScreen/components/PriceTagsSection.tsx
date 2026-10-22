@@ -52,7 +52,7 @@ const NoRates = memo<{ onAdd: () => void }>(({ onAdd }) => {
 });
 
 /**
- * «أسعارك»: every saved price as a swing tag on a sideways rail, closed by a dashed
+ * «أسعارك»: every saved price as a tag hanging from one sideways rail, closed by a dashed
  * "new rate" tag. A creator's own list is bounded (one slot per service), so the rail
  * renders it whole. Tapping any tag opens the rates screen.
  */
@@ -88,9 +88,10 @@ const PriceTagsSectionComponent: React.FC<PriceTagsSectionProps> = ({ rates, onE
         </Box>
       );
     }
-    // Room for the tags' lean; their drop is drawn inside each tag.
+    // Room for the tags' lean and swing; their drop is drawn inside each tag. The `md` gap is the
+    // one each tag's rail segment bridges.
     return (
-      <Rail py="md">
+      <Rail gap="md" py="md">
         {rates.rows.map((row, index) => (
           <PriceTag key={row.key} row={row} index={index} onPress={onEdit} />
         ))}

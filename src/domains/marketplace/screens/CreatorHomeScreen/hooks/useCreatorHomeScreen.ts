@@ -6,11 +6,16 @@ import {
   useCreatorOverview,
   useMediaKitCard,
   type ProfileStepTarget,
+  type StrengthStageKey,
 } from '@/domains/identity';
 import { useAmountsHidden, useWalletGlance } from '@/domains/finance';
+import type { CreatorActiveDeal } from '../../../types';
 import { DAY_PART_GREETING, resolveDayPart } from '../../../utils/dayPart';
+import { HOME_STEP_DEF } from '../constants/homeSteps';
+import { buildHomeTasks, type HomeTask } from '../utils/buildHomeTasks';
 import { useCreatorHomeCampaigns } from './useCreatorHomeCampaigns';
 import { useCreatorHomeDeals } from './useCreatorHomeDeals';
+import { useHomeMap, type HomeMapTileKey } from './useHomeMap';
 import {
   HOME_NOTICE_DEF,
   resolveHomeNotice,
@@ -18,6 +23,13 @@ import {
 } from '../utils/resolveHomeNotice';
 
 type Navigation = HomeStackScreenProps<'CreatorHomeScreen'>['navigation'];
+
+/** The sheet's first section: a skeleton, the task deck, a calm card, or nothing. */
+export type HomeDeck =
+  | { kind: 'loading' }
+  | { kind: 'tasks'; tasks: HomeTask[]; welcome: boolean }
+  | { kind: 'quiet'; nextUp: CreatorActiveDeal | null }
+  | { kind: 'none' };
 
 const STEP_SCREEN = {
   editInfo: 'PersonalInfoScreen',
@@ -81,9 +93,13 @@ export const useCreatorHomeScreen = () => {
     [navigation],
   );
 
-  const openAvatar = useCallback(() => onStepPress('avatar'), [onStepPress]);
+  const onStepStage = useCallback(
+    (stage: StrengthStageKey) => onStepPress(HOME_STEP_DEF[stage].target),
+    [onStepPress],
+  );
   const openInsights = useCallback(() => navigation.navigate('MediaKitInsights'), [navigation]);
   const openPreview = useCallback(() => navigation.navigate('MediaKitPreview'), [navigation]);
+  const openKit = useCallback(() => navigation.navigate('MediaKitSettings'), [navigation]);
 
   const { onMakePublic, isMakingPublic } = mediaKit.share;
   const runNoticeAction = useCallback(
@@ -146,6 +162,55 @@ export const useCreatorHomeScreen = () => {
     [avatarUrl, dayPart, displayName, isVerified, primaryPlatform, t, tier],
   );
 
+  const { deals, counts, openDealsTab, openStrikes } = homeDeals;
+  const { stages } = overview.completion;
+  const deck = useMemo((): HomeDeck => {
+    if (deals.kind === 'loading') return { kind: 'loading' };
+    const welcome = deals.kind === 'welcome';
+    const tasks = buildHomeTasks({
+      notice: noticeKey,
+      waiting: deals.kind === 'deals' ? deals.waiting : [],
+      welcome,
+      stages,
+    });
+    if (tasks.length > 0) return { kind: 'tasks', tasks, welcome };
+    if (deals.kind === 'deals') return { kind: 'quiet', nextUp: deals.nextUp };
+    return { kind: 'none' };
+  }, [deals, noticeKey, stages]);
+
+  const { openFeed } = homeCampaigns;
+  const mapOpen = useMemo(
+    (): Record<HomeMapTileKey, () => void> => ({
+      offers: () => openDealsTab('new'),
+      deals: () => openDealsTab('active'),
+      campaigns: openFeed,
+      notifications: openNotifications,
+      wallet: openWallet,
+      rates: openRates,
+      platforms: openPlatforms,
+      kit: openKit,
+      insights: openInsights,
+    }),
+    [openDealsTab, openFeed, openInsights, openKit, openNotifications, openPlatforms, openRates, openWallet],
+  );
+  const glance = homeCampaigns.campaigns;
+  const mapTiles = useHomeMap({
+    newOffers: counts?.newOffers ?? null,
+    activeDeals: deals.kind === 'deals' ? deals.totalCount : deals.kind === 'welcome' ? 0 : null,
+    campaignsEnabled: homeCampaigns.enabled,
+    campaigns: glance.kind === 'strip' ? glance : null,
+    unreadNotifications: overview.unreadNotifications,
+    available: walletGlance.available,
+    rates: { count: overview.rates.rows.length, isLoading: overview.rates.isLoading },
+    platforms: {
+      count: overview.platforms.items.length,
+      isLoading: overview.platforms.isLoading,
+      reviewStatus: overview.platformsReviewStatus,
+    },
+    isKitPublic: mediaKit.isPublic,
+    open: mapOpen,
+  });
+
   const { refresh } = overview;
   const { refresh: refreshDeals } = homeDeals;
   const onRefresh = useCallback(async () => {
@@ -162,6 +227,10 @@ export const useCreatorHomeScreen = () => {
     kpis: overview.kpis,
     unreadNotifications: overview.unreadNotifications,
     notice,
+    deck,
+    mapTiles,
+    strikes: counts?.liveStrikes ?? 0,
+    openStrikes,
     mediaKit,
     homeDeals,
     homeCampaigns,
@@ -179,8 +248,7 @@ export const useCreatorHomeScreen = () => {
     openPlatforms,
     openPlatform,
     openRates,
-    onStepPress,
-    openAvatar,
+    onStepStage,
     openInsights,
     openPreview,
   };

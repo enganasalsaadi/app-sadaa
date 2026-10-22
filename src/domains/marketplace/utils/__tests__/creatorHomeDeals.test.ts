@@ -47,6 +47,7 @@ describe('splitCreatorDeals', () => {
       deal({ id: 'c', needsAction: true }),
     ];
     expect(splitCreatorDeals(items).waiting.map(item => item.id)).toEqual(['a', 'c']);
+    expect(splitCreatorDeals(items).moving.map(item => item.id)).toEqual(['b']);
   });
 
   it('picks the soonest deadline among the rest as next up', () => {
@@ -61,6 +62,6 @@ describe('splitCreatorDeals', () => {
 
   it('has no next up when nothing else has a deadline', () => {
     expect(splitCreatorDeals([deal()]).nextUp).toBeNull();
-    expect(splitCreatorDeals([])).toEqual({ waiting: [], nextUp: null });
+    expect(splitCreatorDeals([])).toEqual({ waiting: [], moving: [], nextUp: null });
   });
 });

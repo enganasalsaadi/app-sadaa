@@ -2,8 +2,12 @@ import type { Money } from '@/core/money';
 import type { Wallet } from '../types';
 import { resolveWalletBlocker, type WalletCapability } from './resolveWalletBlocker';
 
-/** What Creator Home shows of the wallet: money held for the creator, and the KYC nudge. */
+/** What Creator Home shows of the wallet: the balance, money held for the creator, and the KYC nudge. */
 export interface WalletGlance {
+  /** `GET /wallet` has answered; until then Home shows no amount, never 0. */
+  loaded: boolean;
+  /** Withdrawable now; `null` until the wallet loads. */
+  available: Money | null;
   /** Net held on active deals; `null` when nothing is held or the server doesn't send it. */
   escrow: Money | null;
   /** Money is waiting to be withdrawn but the withdrawal needs ID verification first. */
@@ -18,9 +22,11 @@ export const resolveWalletGlance = (
   wallet: Wallet | undefined,
   capability: WalletCapability | undefined,
 ): WalletGlance => {
-  if (!wallet) return { escrow: null, kycNudge: false };
+  if (!wallet) return { loaded: false, available: null, escrow: null, kycNudge: false };
   const escrow = wallet.summary.escrow;
   return {
+    loaded: true,
+    available: wallet.available,
     escrow: escrow && escrow.amount > 0 ? escrow : null,
     kycNudge:
       wallet.available.amount > 0 &&

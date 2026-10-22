@@ -2826,28 +2826,11 @@
       "openProfile": "Open my profile",
       "verified": "Verified account",
       "storefront": {
-        "kickerOpen": "Your storefront is open to brands",
-        "kickerHidden": "Your storefront is closed to brands",
         "pass": {
-          "a11y": "Your storefront as brands see it. Open the preview",
-          "addPhoto": "Add your photo",
-          "addPhotoHint": "Your photo is the first thing brands see",
-          "linkPlatform": "Link your first platform",
-          "copy": "Copy",
           "linkFailed": "Couldn't load your link. Try again"
-        },
-        "watch": {
-          "title": "Who's looking?",
-          "period": "Last 30 days",
-          "brands": "brands visited your storefront",
-          "views": "profile views",
-          "pulseA11y": "Your daily profile views over the last 30 days",
-          "a11y": "Last 30 days: {{brands}} brands visited your storefront, {{views}} profile views. Open all insights"
-        },
-        "share": "Share your storefront"
+        }
       },
       "kpi": {
-        "new": "New",
         "failed": "Couldn't load stats. Tap to retry",
         "retry": "Couldn't load stats. Retry"
       },
@@ -2863,19 +2846,13 @@
         }
       },
       "strength": {
-        "title": "Profile strength",
-        "benefit": "The more complete your profile, the more brands get to see you.",
-        "nextStep": "Next step",
         "stage": {
           "info": "Your info",
           "avatar": "Photo",
           "platforms": "Platforms",
           "rates": "Prices",
           "kyc": "ID"
-        },
-        "complete": "Your profile is complete",
-        "completeBody": "Brands see everything they need to book you.",
-        "progressA11y": "{{done}} of {{total}} stages done"
+        }
       },
       "platforms": {
         "title": "Your audience",
@@ -2898,40 +2875,16 @@
         "newTag": "New rate",
         "tagA11y": "{{service}}, {{where}}: {{price}}. Edit your rates"
       },
-      "escrow": {
-        "label": "Held for you",
-        "kycAction": "Verify ID"
-      },
       "campaigns": {
         "title": "Campaigns for you",
-        "subtitle": "Picked for your niche and city",
-        "seeAll": "All opportunities",
-        "railA11y": "Campaigns open to you ({{count}})",
-        "all": "All opportunities",
-        "allA11y": "See all opportunities ({{count}})",
-        "chips": {
-          "available_one": "campaign open",
-          "available_other": "campaigns open",
-          "invites_one": "new invitation",
-          "invites_other": "new invitations",
-          "review_one": "application under review",
-          "review_other": "applications under review"
-        },
         "quiet": {
           "title": "No matching opportunities right now",
           "message": "Complete your profile and rates to see more campaigns."
         }
       },
       "deals": {
-        "title": "Your turn",
-        "waiting": "{{count}} waiting for you",
-        "moving": "{{count}} moving without you",
-        "seeAll": "All deals",
         "left": "{{time}} left",
         "paused": "Clock paused",
-        "position": "{{index}} of {{count}}",
-        "nextLabel": "Next deal",
-        "deckHint": "Swipe the card or tap the dots to see the next deal",
         "cardLabel": "{{name}}: {{action}}",
         "cta": {
           "replyOffer": "Open the offer",
@@ -2946,14 +2899,6 @@
           "rate": "Rate the brand",
           "open": "Open the deal"
         },
-        "chips": {
-          "newOffers_one": "new offer",
-          "newOffers_other": "new offers",
-          "pendingUpsells_one": "add-on waiting for you",
-          "pendingUpsells_other": "add-ons waiting for you",
-          "liveStrikes_one": "active strike",
-          "liveStrikes_other": "active strikes"
-        },
         "quiet": {
           "title": "Nothing waits on you",
           "message": "The ball is with the brands right now",
@@ -2964,6 +2909,216 @@
           "message": "When it lands, one card here tells you what to do next. Get your storefront ready so brands find you.",
           "setRates": "Set your prices",
           "linkPlatforms": "Link your accounts"
+        }
+      },
+      "hero": {
+        "linkPublic": "Profile & media kit · public",
+        "linkPrivate": "Your kit is private",
+        "linkLoading": "Getting your link…",
+        "share": "Share",
+        "shareA11y": "Share your storefront link",
+        "copyA11y": "Copy your storefront link",
+        "copiedA11y": "Link copied",
+        "previewA11y": "See your storefront the way brands see it",
+        "pulse": {
+          "views": "storefront views",
+          "brands": "brands visited",
+          "reach": "your reach",
+          "period": "Last 30 days",
+          "a11y": "Last 30 days: {{views}} views, {{brands}} brands, reach {{reach}}. Open insights"
+        }
+      },
+      "tasks": {
+        "position": "{{index}} of {{count}}",
+        "next": "Next card",
+        "deckHint": "Swipe the card or tap Next to see the next task",
+        "startHere": "Start here",
+        "attention": "Needs your attention",
+        "setup": "Get your storefront ready",
+        "kicker": {
+          "replyOffer": "New offer",
+          "confirmReceipt": "Product delivery",
+          "submitDraft": "Draft needed",
+          "reviseDraft": "Changes requested",
+          "publish": "Time to post",
+          "fixLiveUrl": "Live link",
+          "answerUpsell": "Add-on request",
+          "addEvidence": "Open dispute",
+          "restorePost": "Post removed",
+          "rate": "Rate the deal",
+          "open": "Your turn"
+        },
+        "step": {
+          "info": {
+            "title": "Finish your info",
+            "body": "Your name, city and niche help brands find you",
+            "cta": "Finish your info"
+          },
+          "avatar": {
+            "title": "Add your photo",
+            "body": "Storefronts with a photo get more views",
+            "cta": "Add a photo"
+          },
+          "platforms": {
+            "title": "Link your platforms",
+            "body": "Your accounts are what brands book",
+            "cta": "Link a platform"
+          },
+          "rates": {
+            "title": "Add your prices",
+            "body": "Brands book you at a fixed price you set",
+            "cta": "Add your first price"
+          },
+          "kyc": {
+            "title": "Verify your ID",
+            "body": "Verifying lets you withdraw your earnings",
+            "cta": "Verify now"
+          }
+        }
+      },
+      "map": {
+        "title": "Sada map",
+        "subtitle": "Everything in its place",
+        "offers": "Offers",
+        "deals": "My deals",
+        "campaigns": "Campaigns",
+        "notifications": "Notifications",
+        "wallet": "Wallet",
+        "rates": "My prices",
+        "platforms": "My platforms",
+        "kit": "My media kit",
+        "insights": "My insights",
+        "tileA11y": "{{title}}: {{sub}}",
+        "sub": {
+          "newOffers_zero": "No new offers",
+          "newOffers_one": "1 new",
+          "newOffers_two": "{{count}} new",
+          "newOffers_few": "{{count}} new",
+          "newOffers_many": "{{count}} new",
+          "newOffers_other": "{{count}} new",
+          "activeDeals_zero": "None active",
+          "activeDeals_one": "1 active",
+          "activeDeals_two": "{{count}} active",
+          "activeDeals_few": "{{count}} active",
+          "activeDeals_many": "{{count}} active",
+          "activeDeals_other": "{{count}} active",
+          "noDeals": "No deals yet",
+          "openCampaigns_zero": "None open",
+          "openCampaigns_one": "1 open",
+          "openCampaigns_two": "{{count}} open",
+          "openCampaigns_few": "{{count}} open",
+          "openCampaigns_many": "{{count}} open",
+          "openCampaigns_other": "{{count}} open",
+          "unread_zero": "Nothing new",
+          "unread_one": "1 new",
+          "unread_two": "{{count}} new",
+          "unread_few": "{{count}} new",
+          "unread_many": "{{count}} new",
+          "unread_other": "{{count}} new",
+          "rates_zero": "Add a price",
+          "rates_one": "1 price",
+          "rates_two": "{{count}} prices",
+          "rates_few": "{{count}} prices",
+          "rates_many": "{{count}} prices",
+          "rates_other": "{{count}} prices",
+          "platforms_zero": "Link a platform",
+          "platforms_one": "1 linked",
+          "platforms_two": "{{count}} linked",
+          "platforms_few": "{{count}} linked",
+          "platforms_many": "{{count}} linked",
+          "platforms_other": "{{count}} linked",
+          "platformsAction": "Needs action",
+          "platformsReview": "In review",
+          "kitPublic": "Public",
+          "kitPrivate": "Private",
+          "insights": "Last 30 days",
+          "loading": "…"
+        }
+      },
+      "strikes": {
+        "active_zero": "No active strikes",
+        "active_one": "You have 1 active strike — see why",
+        "active_two": "You have {{count}} active strikes — see why",
+        "active_few": "You have {{count}} active strikes — see why",
+        "active_many": "You have {{count}} active strikes — see why",
+        "active_other": "You have {{count}} active strikes — see why"
+      },
+      "running": {
+        "title": "Your running deals",
+        "subtitle": "The ball is with the brand",
+        "welcomeTitle": "Your deals",
+        "all": "All deals ({{count}})",
+        "empty": "Nothing is moving without you right now",
+        "rowA11y": "{{name}}, {{status}}, {{price}}",
+        "loadingA11y": "Loading your deals"
+      },
+      "money": {
+        "title": "Your money",
+        "wallet": "Wallet",
+        "held": "Held safely for you",
+        "fromDeals": "Your deals",
+        "toWallet": "Your wallet",
+        "caption": "It reaches your wallet on its own as each deal is done.",
+        "emptyTitle": "Nothing held right now",
+        "empty": "When you accept a deal, its value is held here safely until you deliver.",
+        "kycNudge": "Verify your ID to withdraw the {{amount}} available now",
+        "kycNudgeHidden": "Verify your ID to withdraw your available balance",
+        "a11y": "Held for you: {{amount}}. Open wallet"
+      },
+      "look": {
+        "title": "Your storefront to brands",
+        "preview": "Preview",
+        "brands_zero": "views · no brands yet",
+        "brands_one": "views · 1 brand",
+        "brands_two": "views · {{count}} brands",
+        "brands_few": "views · {{count}} brands",
+        "brands_many": "views · {{count}} brands",
+        "brands_other": "views · {{count}} brands",
+        "public": "Your kit is public — it shows in search",
+        "private": "Your kit is private — brands can’t see it",
+        "a11y": "{{views}} storefront views in the last 30 days. Open insights",
+        "pulseA11y": "Your storefront views per day over the last 30 days"
+      },
+      "campaignsB": {
+        "invites_zero": "No invites",
+        "invites_one": "1 invite",
+        "invites_two": "{{count}} invites",
+        "invites_few": "{{count}} invites",
+        "invites_many": "{{count}} invites",
+        "invites_other": "{{count}} invites",
+        "invited": "Invited",
+        "reviewing_zero": "My applications",
+        "reviewing_one": "My applications · 1 in review",
+        "reviewing_two": "My applications · {{count}} in review",
+        "reviewing_few": "My applications · {{count}} in review",
+        "reviewing_many": "My applications · {{count}} in review",
+        "reviewing_other": "My applications · {{count}} in review",
+        "browse": "Browse all campaigns",
+        "seats_zero": "No seats",
+        "seats_one": "1 seat",
+        "seats_two": "{{count}} seats",
+        "seats_few": "{{count}} seats",
+        "seats_many": "{{count}} seats",
+        "seats_other": "{{count}} seats",
+        "headerA11y": "Campaigns for you ({{count}}). Open all"
+      },
+      "readiness": {
+        "almost": "Your storefront is almost ready",
+        "start": "Let’s finish your storefront",
+        "complete": "Your storefront is complete",
+        "completeBody": "Brands see everything they need to book you.",
+        "left_zero": "Your storefront is complete",
+        "left_one": "One step left to show in full",
+        "left_two": "{{count}} steps left to show in full",
+        "left_few": "{{count}} steps left to show in full",
+        "left_many": "{{count}} steps left to show in full",
+        "left_other": "{{count}} steps left to show in full",
+        "ringA11y": "Your storefront is {{percent}} ready",
+        "stageA11y": "{{stage}}: {{state}}",
+        "state": {
+          "done": "done",
+          "current": "next",
+          "upcoming": "later"
         }
       }
     },

@@ -160,3 +160,4 @@ npm test                # الاختبارات
 | `Failed to read key ... from store` | الـ alias خاطئ. افحص `keytool -list` |
 | قيم البيئة قديمة بعد التبديل | `./gradlew clean` ثم أعد البناء، أو `npx react-native start --reset-cache` |
 | Play يرفض الرفع: version code used | ارفع `versionCode` |
+| `Could not resolve com.android.tools.lint:lint-gradle:...` / `No route to host` | لا اتصال بالإنترنت من Gradle. أول بناء بعد تغيير نسخة AGP يحتاج تنزيل هذه الحزمة. اتصل بالشبكة (أوقف VPN/Proxy) وأعد المحاولة |

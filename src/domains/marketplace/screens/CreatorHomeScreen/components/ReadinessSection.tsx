@@ -1,11 +1,13 @@
 import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ParseKeys } from 'i18next';
-import { BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { BadgeCheck, Check } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { iconStroke, moderateScale, useTheme } from '@/core/theme';
-import { AnimatedNumber, Box, Card, Pressable, Skeleton, Text } from '@/shared/ui';
-import type { ProfileStepTarget, StrengthStage, StrengthStageKey } from '@/domains/identity';
+import { Box, CustomButton, Pressable, Skeleton, Text } from '@/shared/ui';
+import type { StrengthStage, StrengthStageKey } from '@/domains/identity';
+import { CampaignRing } from '../../../components/CampaignRing';
+import { HOME_STEP_DEF } from '../constants/homeSteps';
 import type { CreatorHomeScreenModel } from '../hooks/useCreatorHomeScreen';
 
 type Completion = CreatorHomeScreenModel['completion'];
@@ -18,171 +20,150 @@ const STAGE_LABEL = {
   kyc: 'marketplace.creatorHome.strength.stage.kyc',
 } as const satisfies Record<StrengthStageKey, ParseKeys>;
 
-const PIECE_HEIGHT = moderateScale(8);
-const SKELETON_HEIGHT = moderateScale(132);
+const STATE_LABEL = {
+  done: 'marketplace.creatorHome.readiness.state.done',
+  current: 'marketplace.creatorHome.readiness.state.current',
+  upcoming: 'marketplace.creatorHome.readiness.state.upcoming',
+} as const satisfies Record<StrengthStage['state'], ParseKeys>;
+
+/** Ring in design points (scaled inside `CampaignRing`). */
+const RING = 64;
+const RING_STROKE = 7;
+const NODE = moderateScale(32);
+const SKELETON_HEIGHT = moderateScale(168);
+/** Under this, the copy says «let's finish» instead of «almost ready». */
+const ALMOST = 60;
 
 const percent = (value: number) => formatNumber(value / 100, { style: 'percent' });
 
-/** One piece of the storefront per stage: lit when done, outlined teal while it's next. */
-const Pieces = memo<{ stages: readonly StrengthStage[] }>(({ stages }) => {
+/** One stage on the track: a teal check when done, a ringed glyph while it's next. Tap = go do it. */
+const StageNode = memo<{ stage: StrengthStage; onPress: (key: StrengthStageKey) => void }>(({ stage, onPress }) => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
-  const done = stages.filter(stage => stage.state === 'done').length;
+  const { colors, sizes } = useTheme();
+  const press = useCallback(() => onPress(stage.key), [onPress, stage.key]);
+  const done = stage.state === 'done';
+  const current = stage.state === 'current';
+  const Icon = done ? Check : HOME_STEP_DEF[stage.key].icon;
+  const label = t(STAGE_LABEL[stage.key]);
 
   return (
-    <Box
-      gap="sm"
-      accessible
-      accessibilityLabel={t('marketplace.creatorHome.strength.progressA11y', { done, total: stages.length })}
+    <Pressable
+      flex={1}
+      align="center"
+      gap="xs"
+      minHeight={sizes.button.lg}
+      onPress={press}
+      disabled={done}
+      accessibilityRole="button"
+      accessibilityLabel={t('marketplace.creatorHome.readiness.stageA11y', { stage: label, state: t(STATE_LABEL[stage.state]) })}
+      accessibilityState={{ disabled: done }}
     >
-      <Box row gap="xs">
-        {stages.map(stage => (
-          <Box
-            key={stage.key}
-            flex={1}
-            height={PIECE_HEIGHT}
-            borderRadius="full"
-            bg={
-              stage.state === 'done'
-                ? colors.interactive.main
-                : stage.state === 'current'
-                  ? colors.interactive.soft
-                  : colors.surface.elevated
-            }
-            borderWidth={stage.state === 'current' ? 'thin' : undefined}
-            borderColor={stage.state === 'current' ? colors.interactive.main : undefined}
-          />
-        ))}
+      <Box
+        width={NODE}
+        height={NODE}
+        borderRadius="sm"
+        align="center"
+        justify="center"
+        bg={done ? colors.interactive.main : current ? colors.interactive.soft : colors.surface.elevated}
+        borderWidth={current ? 'md' : undefined}
+        borderColor={current ? colors.interactive.main : undefined}
+      >
+        <Icon
+          size={sizes.icon.xs}
+          strokeWidth={iconStroke.bold}
+          color={done ? colors.text.onAccent : current ? colors.interactive.text : colors.text.tertiary}
+        />
       </Box>
-      <Box row gap="xs">
-        {stages.map(stage => (
-          <Box key={stage.key} flex={1}>
-            <Text
-              variant="caption"
-              align="center"
-              numberOfLines={1}
-              color={stage.state === 'upcoming' ? colors.text.tertiary : colors.interactive.text}
-            >
-              {t(STAGE_LABEL[stage.key])}
-            </Text>
-          </Box>
-        ))}
-      </Box>
-    </Box>
+      <Text
+        variant="caption"
+        align="center"
+        numberOfLines={1}
+        color={done ? colors.text.secondary : current ? colors.interactive.text : colors.text.tertiary}
+      >
+        {label}
+      </Text>
+    </Pressable>
   );
 });
 
-/** The one next step as a raised row: tapping it opens the screen that completes it. */
-const NextStepRow = memo<{ step: NonNullable<Completion['nextStep']>; onPress: () => void }>(
-  ({ step, onPress }) => {
-    const { t } = useTranslation();
-    const { colors, sizes, isRTL } = useTheme();
-    const Chevron = isRTL ? ChevronLeft : ChevronRight;
-    const Icon = step.meta.icon;
-    const title = t(step.meta.titleKey);
-    const points = `+${percent(step.points)}`;
-
-    return (
-      <Pressable
-        row
-        align="center"
-        gap="md"
-        p="md"
-        minHeight={sizes.button.xl}
-        borderRadius="lg"
-        bg={colors.layout.base}
-        onPress={onPress}
-        scaleOnPress
-        accessibilityRole="button"
-        accessibilityLabel={`${title}, ${points}`}
-        accessibilityHint={t('marketplace.creatorHome.strength.nextStep')}
-      >
-        <Box
-          width={sizes.iconButton.md}
-          height={sizes.iconButton.md}
-          borderRadius="md"
-          bg={colors.interactive.soft}
-          align="center"
-          justify="center"
-        >
-          <Icon size={sizes.icon.md} color={colors.interactive.main} strokeWidth={iconStroke.regular} />
-        </Box>
-        <Box flex={1} gap="xs">
-          <Text variant="caption" color={colors.text.secondary}>
-            {t('marketplace.creatorHome.strength.nextStep')}
-          </Text>
-          <Text variant="bodyMedium" numberOfLines={1}>
-            {title}
-          </Text>
-        </Box>
-        <Text variant="bodySmall" color={colors.interactive.text}>
-          {points}
-        </Text>
-        <Box
-          width={sizes.iconButton.sm}
-          height={sizes.iconButton.sm}
-          borderRadius="full"
-          bg={colors.button.primary.bg}
-          align="center"
-          justify="center"
-        >
-          <Chevron size={sizes.icon.sm} color={colors.button.primary.text} />
-        </Box>
-      </Pressable>
-    );
-  },
-);
-
 interface ReadinessSectionProps {
   completion: Completion;
-  onStepPress: (target: ProfileStepTarget) => void;
+  onStepPress: (key: StrengthStageKey) => void;
 }
 
 /**
- * How ready the storefront is: the percentage, five pieces (info → photo → platforms →
- * prices → ID) that light up as they're done, and the one next step. Always on Home: at
- * 100% it turns into a quiet "complete" card instead of disappearing.
+ * How ready the storefront is: a ring that draws to the percentage, the five stages (info →
+ * photo → platforms → prices → ID) and one button for the next. Always on Home: at 100% it turns
+ * into a quiet «complete» card instead of disappearing.
  */
 const ReadinessSectionComponent: React.FC<ReadinessSectionProps> = ({ completion, onStepPress }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const { nextStep, stages, percentage } = completion;
-  const target = nextStep?.meta.target ?? null;
+  const { stages, percentage } = completion;
   const complete = percentage >= 100;
-  const handleStep = useCallback(() => {
-    if (target) onStepPress(target);
-  }, [onStepPress, target]);
+  const left = stages.filter(stage => stage.state !== 'done').length;
+  const next = stages.find(stage => stage.state === 'current') ?? stages.find(stage => stage.state !== 'done');
+  const goNext = useCallback(() => {
+    if (next) onStepPress(next.key);
+  }, [next, onStepPress]);
 
   if (!completion.isLoaded) {
-    return <Skeleton width="100%" height={SKELETON_HEIGHT} borderRadius="lg" />;
+    return (
+      <Box px="xl">
+        <Skeleton width="100%" height={SKELETON_HEIGHT} borderRadius="xl" />
+      </Box>
+    );
   }
 
+  const title = complete
+    ? 'marketplace.creatorHome.readiness.complete'
+    : percentage >= ALMOST
+      ? 'marketplace.creatorHome.readiness.almost'
+      : 'marketplace.creatorHome.readiness.start';
+
   return (
-    <Card p="lg">
-      <Box gap="lg">
-        <Box row align="center" gap="md">
-          <Box flex={1} gap="xs">
-            <Text variant="title" numberOfLines={1}>
-              {t(complete ? 'marketplace.creatorHome.strength.complete' : 'marketplace.creatorHome.strength.title')}
-            </Text>
-            <Text variant="bodySmall" color={colors.text.secondary}>
-              {t(
-                complete
-                  ? 'marketplace.creatorHome.strength.completeBody'
-                  : 'marketplace.creatorHome.strength.benefit',
-              )}
-            </Text>
-          </Box>
+    <Box mx="xl" p="lg" gap="lg" borderRadius="xl" bg={colors.surface.main} shadow="card">
+      <Box row align="center" gap="lg">
+        <CampaignRing
+          progress={percentage / 100}
+          color={colors.interactive.main}
+          trackColor={colors.surface.elevated}
+          size={RING}
+          strokeWidth={RING_STROKE}
+          accessibilityLabel={t('marketplace.creatorHome.readiness.ringA11y', { percent: percent(percentage) })}
+        >
           {complete ? (
             <BadgeCheck size={sizes.icon.lg} color={colors.premium.main} />
           ) : (
-            <AnimatedNumber value={percent(percentage)} variant="h2" color={colors.interactive.text} />
+            <Text variant="title">{percent(percentage)}</Text>
           )}
+        </CampaignRing>
+        <Box flex={1} gap="xs">
+          <Text variant="title" accessibilityRole="header">
+            {t(title)}
+          </Text>
+          <Text variant="bodySmall" color={colors.text.secondary}>
+            {complete
+              ? t('marketplace.creatorHome.readiness.completeBody')
+              : t('marketplace.creatorHome.readiness.left', { count: left })}
+          </Text>
         </Box>
-        {stages.length > 1 ? <Pieces stages={stages} /> : null}
-        {nextStep && !complete ? <NextStepRow step={nextStep} onPress={handleStep} /> : null}
       </Box>
-    </Card>
+      {stages.length > 1 ? (
+        <Box row gap="xs">
+          {stages.map(stage => (
+            <StageNode key={stage.key} stage={stage} onPress={onStepPress} />
+          ))}
+        </Box>
+      ) : null}
+      {!complete && next ? (
+        <CustomButton
+          title={t(HOME_STEP_DEF[next.key].ctaKey)}
+          onPress={goNext}
+          fullWidth
+        />
+      ) : null}
+    </Box>
   );
 };
 

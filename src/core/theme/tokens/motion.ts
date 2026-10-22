@@ -23,6 +23,8 @@ export const motion = {
     unlock: 260,
     /** The green «unlocked» banner stays this long before it folds away. */
     unlockedHold: 1400,
+    /** A price tag swinging on its string once before it settles (Creator Home rates rail). */
+    swing: 1600,
   },
   /** Delay between siblings of a stagger rise. */
   stagger: 60,
@@ -41,10 +43,6 @@ export const motion = {
     sheen: 8000,
     /** Escrow ticket: one rise of the chevron toward the wallet (money arriving soon). */
     moneyRise: 1600,
-    /** Creator Home pass: one sweep of light across the card, then a rest. */
-    passSheen: 5200,
-    /** Creator Home sign: one full sway of the sign hanging under the pass (a blocker waiting). */
-    signSwing: 3400,
     /** Deal journey: one run of the comet from the current station to the next. */
     comet: 2600,
     /** Offer service card: one leg of the faint platform glyphs' drift (a picked card feels alive). */
