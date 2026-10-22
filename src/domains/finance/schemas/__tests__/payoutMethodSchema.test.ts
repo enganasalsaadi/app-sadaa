@@ -24,7 +24,7 @@ const ref = (code: keyof typeof GROUP_OF): PayoutChannelRef => ({ code, group: G
 const form = (overrides: Partial<PayoutMethodFormValues> = {}): PayoutMethodFormValues => ({
   ...emptyPayoutMethodForm(false, SYRIA),
   holderName: 'Anas Alsaadi',
-  phone: '944123456',
+  phone: '0944123456',
   ...overrides,
 });
 
@@ -66,8 +66,14 @@ describe('createPayoutMethodSchema', () => {
     expect(await errorsOf(ref('fouad'), form({ governorate: 'aleppo' }))).toEqual({});
   });
 
+  it('rejects a mobile typed without the leading 0', async () => {
+    expect(await errorsOf(ref('syriatel_cash'), form({ phone: '944123456' }))).toEqual({
+      phone: 'finance.payouts.form.errors.phone',
+    });
+  });
+
   it('rejects a landline or a number outside the market pattern', async () => {
-    expect(await errorsOf(ref('syriatel_cash'), form({ phone: '112345678' }))).toEqual({
+    expect(await errorsOf(ref('syriatel_cash'), form({ phone: '0112345678' }))).toEqual({
       phone: 'finance.payouts.form.errors.phone',
     });
   });

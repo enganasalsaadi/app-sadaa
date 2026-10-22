@@ -4,10 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError, useLookupItems } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { resolveInitialPhoneCountry } from '@/core/market';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { motion } from '@/core/theme';
 import { useWizardHeader } from '@/shared/ui';
 import { useInfluencerStep1Mutation } from '../../../api';
@@ -28,7 +27,7 @@ const SERVER_FIELD_MAP = {
 const createDefaultValues = (): InfluencerAccountFormValues => ({
   fullName: '',
   phone: '',
-  countryCode: resolveInitialPhoneCountry(),
+  countryCode: DEFAULT_PHONE_COUNTRY,
   governorate: '',
   email: '',
   password: '',
@@ -51,7 +50,7 @@ export const useInfluencerAccountScreen = () => {
   const [influencerStep1, { isLoading }] = useInfluencerStep1Mutation();
   const governorates = useLookupItems('governorates');
 
-  const { control, handleSubmit, setError, setFocus, setValue, trigger, getFieldState } =
+  const { control, handleSubmit, setError, setFocus } =
     useForm<InfluencerAccountFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
@@ -109,19 +108,11 @@ export const useInfluencerAccountScreen = () => {
     if (!isLoading) setPending(null);
   }, [isLoading]);
 
-  const onChangeCountry = useCallback(
-    (code: CountryCode) => {
-      setValue('countryCode', code);
-      if (getFieldState('phone').isTouched) trigger('phone');
-    },
-    [getFieldState, setValue, trigger],
-  );
 
   return {
     control,
     setFocus,
     governorates,
-    onChangeCountry,
     onContinue,
     confirmPhone: pending?.display ?? null,
     onConfirm,

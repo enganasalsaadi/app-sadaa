@@ -6,10 +6,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { resolveInitialPhoneCountry } from '@/core/market';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { toNationalDigits } from '@/core/market';
 import type { AuthStackParamList } from '@/core/navigation';
 import { useLoginMutation } from '../../../api';
 import type { AccountType } from '../../../components/AccountTypeSheet';
@@ -21,9 +21,9 @@ const SERVER_FIELD_MAP = {
   password: 'password',
 } as const satisfies Record<string, keyof LoginFormValues>;
 
-/** The country comes from the device region and the cached markets, read once per screen. */
+/** Numbers are typed the local way ("0944…"); there's no country picker. */
 const createDefaultValues = (): LoginFormValues => ({
-  countryCode: resolveInitialPhoneCountry(),
+  countryCode: DEFAULT_PHONE_COUNTRY,
   phone: '',
   password: '',
 });
@@ -38,7 +38,7 @@ export const useLoginScreen = () => {
   const [accountSheetVisible, setAccountSheetVisible] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
 
-  const { control, handleSubmit, setError, setFocus, setValue, getValues, trigger, getFieldState } =
+  const { control, handleSubmit, setError, setFocus, setValue, getValues } =
     useForm<LoginFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
@@ -52,7 +52,7 @@ export const useLoginScreen = () => {
     const parsed = prefillPhone ? parsePhoneNumberFromString(prefillPhone) : undefined;
     if (!parsed?.country) return;
     setValue('countryCode', parsed.country);
-    setValue('phone', parsed.nationalNumber);
+    setValue('phone', toNationalDigits(prefillPhone));
     setValue('password', '');
     setApiError(null);
     setFocus('password');
@@ -76,13 +76,6 @@ export const useLoginScreen = () => {
     })();
   }, [handleSubmit, isLoading, login, setError]);
 
-  const onChangeCountry = useCallback(
-    (code: CountryCode) => {
-      setValue('countryCode', code);
-      if (getFieldState('phone').isTouched) trigger('phone');
-    },
-    [getFieldState, setValue, trigger],
-  );
 
   // Carries the typed number over so it isn't entered twice.
   const onForgotPassword = useCallback(() => {
@@ -108,7 +101,6 @@ export const useLoginScreen = () => {
   return {
     control,
     setFocus,
-    onChangeCountry,
     onSubmit,
     isSubmitting: isLoading,
     apiError,

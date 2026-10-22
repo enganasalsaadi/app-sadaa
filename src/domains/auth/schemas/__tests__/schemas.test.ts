@@ -16,7 +16,7 @@ const t = ((key: string) => key) as unknown as TFunction;
 
 const validAccount: BrandAccountFormValues = {
   companyName: 'Sada Store',
-  phone: '944123456',
+  phone: '0944123456',
   countryCode: 'SY',
   email: 'hello@sada.sy',
   password: 'secret123',
@@ -52,7 +52,7 @@ describe('brandAccountSchema', () => {
 
   it('validates the phone against the selected country', () => {
     expect(
-      schema.isValidSync({ ...validAccount, countryCode: 'US', phone: '944123456' }),
+      schema.isValidSync({ ...validAccount, countryCode: 'US', phone: '0944123456' }),
     ).toBe(false);
   });
 
@@ -132,7 +132,7 @@ describe('toSocialLinksForm', () => {
 
 describe('loginSchema', () => {
   const schema = createLoginSchema(t);
-  const valid = { phone: '944123456', countryCode: 'SY' as const, password: 'x' };
+  const valid = { phone: '0944123456', countryCode: 'SY' as const, password: 'x' };
 
   it('accepts any non-empty password (server decides)', () => {
     expect(schema.isValidSync(valid)).toBe(true);
@@ -140,6 +140,12 @@ describe('loginSchema', () => {
 
   it('rejects a number invalid for the selected country', () => {
     expect(messageOf(() => schema.validateSyncAt('phone', { ...valid, countryCode: 'SA' }))).toBe(
+      'validation.invalidPhone',
+    );
+  });
+
+  it('rejects a number typed without the leading 0', () => {
+    expect(messageOf(() => schema.validateSyncAt('phone', { ...valid, phone: '944123456' }))).toBe(
       'validation.invalidPhone',
     );
   });

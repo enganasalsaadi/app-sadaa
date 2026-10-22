@@ -1,6 +1,3 @@
-import type { CountryCode } from 'libphonenumber-js';
-import { DEFAULT_PHONE_COUNTRY, getDeviceRegion } from '@/core/config';
-import { readCachedAppConfig } from '@/core/api/configCache';
 import type { MarketSummary } from './marketTypes';
 
 /**
@@ -19,14 +16,5 @@ export const pickGuestMarket = (
     active.find(market => market.code === defaultMarket) ??
     active[0] ??
     null
-  );
-};
-
-/** Country a phone input opens on: from the cached `/config`, never waits for the network. */
-export const resolveInitialPhoneCountry = (): CountryCode => {
-  const config = readCachedAppConfig();
-  return (
-    pickGuestMarket(config?.markets, config?.defaultMarket, getDeviceRegion())?.countryCode ??
-    DEFAULT_PHONE_COUNTRY
   );
 };

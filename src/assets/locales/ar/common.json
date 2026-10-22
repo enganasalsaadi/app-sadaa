@@ -1,7 +1,7 @@
 {
   "auth": {
     "phone": "رقم الجوال",
-    "phonePlaceholder": "مثال: 0944 123 456",
+    "phonePlaceholder": "مثال: 0962401604",
     "password": "كلمة المرور",
     "verifyCode": "تحقق من الرمز",
     "resendOtp": "إعادة إرسال رمز التحقق",
@@ -329,9 +329,6 @@
     "enabled": "مفعل",
     "disabled": "غير مفعل",
     "city": "المدينة",
-    "selectCountry": "اختر الدولة",
-    "searchCountry": "ابحث عن دولة...",
-    "allCountries": "جميع الدول",
     "profile": "شخصي",
     "reset": "إعادة تعيين",
     "selected": "محدد",
@@ -6556,7 +6553,7 @@
           "bank": "كما هو مسجّل في البنك"
         },
         "phone": "رقم الجوال",
-        "phonePlaceholder": "9XX XXX XXX",
+        "phonePlaceholder": "09XX XXX XXX",
         "governorate": "المحافظة",
         "governorateHint": "نرسل الحوالة إلى مكتب في محافظتك",
         "city": "المدينة أو المنطقة (اختياري)",
@@ -6909,9 +6906,7 @@
       "errorPlaceholder": "حقل مطلوب",
       "errorMessage": "هذا الحقل مطلوب",
       "phoneLabel": "رقم الهاتف",
-      "phonePlaceholder": "5XX XXX XXX",
-      "phoneLockedLabel": "هاتف بدولة ثابتة",
-      "phoneLockedPlaceholder": "9XX XXX XXX",
+      "phonePlaceholder": "09XX XXX XXX",
       "disabledLabel": "معطّل",
       "disabledValue": "قيمة للقراءة فقط",
       "passwordLabel": "كلمة المرور",

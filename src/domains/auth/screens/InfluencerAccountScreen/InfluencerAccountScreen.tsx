@@ -33,7 +33,6 @@ export const InfluencerAccountScreen: React.FC = () => {
     control,
     setFocus,
     governorates,
-    onChangeCountry,
     onContinue,
     confirmPhone,
     onConfirm,
@@ -42,7 +41,6 @@ export const InfluencerAccountScreen: React.FC = () => {
     isSubmitting,
     apiError,
   } = useInfluencerAccountScreen();
-  const countryCode = useWatch({ control, name: 'countryCode' });
 
   return (
     <Layout
@@ -92,8 +90,6 @@ export const InfluencerAccountScreen: React.FC = () => {
                   placeholder={t('auth.phonePlaceholder')}
                   value={value}
                   onChangeText={onChange}
-                  countryCode={countryCode}
-                  onChangeCountry={onChangeCountry}
                   returnKeyType="next"
                   onSubmitEditing={() => setFocus('email')}
                   error={fieldState.error?.message}

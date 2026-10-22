@@ -29,10 +29,11 @@ export interface MoneyParts {
   tail: string;
 }
 
-// Placed by hand, not by Intl: narrowSymbol prints `£` for SYP, and Hermes' compact notation differs per platform.
-const SYMBOLS: Record<CurrencyCode, Record<SupportedLanguage, string>> = {
+// Placed by hand, not by Intl: Hermes' compact notation differs per platform.
+// `null` = a bare amount in every display mode: SYP shows no symbol or code ("6,402,500").
+const SYMBOLS: Record<CurrencyCode, Record<SupportedLanguage, string> | null> = {
   USD: { ar: '$', en: '$' },
-  SYP: { ar: 'ل.س', en: 'SYP' },
+  SYP: null,
 };
 
 const COMPACT_UNITS = [
@@ -108,12 +109,13 @@ export const formatMoneyParts = (
       : signDisplay === 'exceptZero'
         ? '+'
         : '';
+  const symbol = SYMBOLS[money.currency];
   const currency =
-    currencyDisplay === 'none'
+    currencyDisplay === 'none' || !symbol
       ? ''
       : currencyDisplay === 'code'
         ? money.currency
-        : SYMBOLS[money.currency][language];
+        : symbol[language];
 
   if (language === 'ar') {
     return {
@@ -123,7 +125,7 @@ export const formatMoneyParts = (
     };
   }
 
-  // English: `$1,250.40`, but a letter code gets a space (`SYP 6,402,500`, `USD 1,250.40`).
+  // English: `$1,250.40`, but a letter code gets a space (`USD 1,250.40`).
   const prefix = currency === '$' ? currency : currency ? `${currency} ` : '';
   return {
     head: `${sign}${prefix}${magnitude.integer}`,

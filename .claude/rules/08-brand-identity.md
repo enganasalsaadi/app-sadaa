@@ -65,4 +65,4 @@ All free. Add tokens (radii, shadows, gradients/alphas of palette hues, motion c
 
 ## Currency
 
-`DEFAULT_CURRENCY = 'USD'` (`core/config/app.ts`). Money `{ amount: minorUnits, currency }` (rule 06). Display via `<MoneyText>` or `formatMoney` (`$1,250.00` / AR `1,250.00 $`, SYP whole `6,402,500 ل.س`). Sizes (tabular): `amountSmall` 14 · `amount` 16 · `amountTitle` 22 (card totals, pinned header balance) · `amountLarge` 32 · `amountHero` 44 · `amountDisplay` 58; add sizes as concept needs. Money color only for money flow (balance, earning, payout).
+`DEFAULT_CURRENCY = 'USD'` (`core/config/app.ts`). Money `{ amount: minorUnits, currency }` (rule 06). Display via `<MoneyText>` or `formatMoney` (`$1,250.00` / AR `1,250.00 $`, SYP whole and bare, no symbol: `6,402,500`). Sizes (tabular): `amountSmall` 14 · `amount` 16 · `amountTitle` 22 (card totals, pinned header balance) · `amountLarge` 32 · `amountHero` 44 · `amountDisplay` 58; add sizes as concept needs. Money color only for money flow (balance, earning, payout).

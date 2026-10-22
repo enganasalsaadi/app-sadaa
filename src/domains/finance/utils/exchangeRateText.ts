@@ -4,7 +4,7 @@ import type { CurrencyCode } from '@/core/money';
 import { MINOR_UNIT_DIGITS, parseAmountText } from '@/core/money';
 
 /**
- * Both sides of a rate line ("1 $" and "14,000 ل.س") from the server's decimal string,
+ * Both sides of a rate line ("1 $" and "14,000") from the server's decimal string,
  * never through float math; `null` when the string doesn't parse.
  */
 export const formatExchangeRateSides = (
@@ -22,7 +22,7 @@ export const formatExchangeRateSides = (
   };
 };
 
-/** "1 $ = 14,000 ل.س" ready to show; `null` when the rate doesn't parse. */
+/** "1 $ = 14,000" ready to show; `null` when the rate doesn't parse. */
 export const exchangeRateLine = (
   rate: string,
   base: CurrencyCode,

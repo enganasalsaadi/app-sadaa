@@ -5,10 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { resolveInitialPhoneCountry } from '@/core/market';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import type {
   PasswordResetStackParamList,
   PasswordResetStackScreenProps,
@@ -35,13 +34,13 @@ export const useForgotPasswordScreen = () => {
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [requestReset, { isLoading }] = useRequestPasswordResetMutation();
 
-  const { control, handleSubmit, setError, setValue, trigger, getFieldState } =
+  const { control, handleSubmit, setError } =
     useForm<PhoneFormValues>({
       mode: 'onTouched',
       resolver: yupResolver(schema),
       defaultValues: {
         phone: params?.phone ?? '',
-        countryCode: params?.countryCode ?? resolveInitialPhoneCountry(),
+        countryCode: params?.countryCode ?? DEFAULT_PHONE_COUNTRY,
       },
     });
 
@@ -82,13 +81,6 @@ export const useForgotPasswordScreen = () => {
     })();
   }, [handleSubmit, isLoading, navigation, requestReset, setError]);
 
-  const onChangeCountry = useCallback(
-    (code: CountryCode) => {
-      setValue('countryCode', code);
-      if (getFieldState('phone').isTouched) trigger('phone');
-    },
-    [getFieldState, setValue, trigger],
-  );
 
-  return { control, onChangeCountry, onSubmit, isSubmitting: isLoading, apiError };
+  return { control, onSubmit, isSubmitting: isLoading, apiError };
 };

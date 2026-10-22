@@ -29,7 +29,7 @@ const messageOf = (fn: () => unknown) => {
 
 const validAccount: InfluencerAccountFormValues = {
   fullName: 'Ahmad Khalil',
-  phone: '944123456',
+  phone: '0944123456',
   countryCode: 'SY',
   governorate: 'damascus',
   email: '',
@@ -46,7 +46,7 @@ describe('createInfluencerAccountSchema', () => {
 
   it('leaves the market of a valid foreign number to the server', () => {
     expect(() =>
-      schema.validateSync({ ...validAccount, countryCode: 'AE', phone: '501234567' }),
+      schema.validateSync({ ...validAccount, countryCode: 'AE', phone: '0501234567' }),
     ).not.toThrow();
   });
 

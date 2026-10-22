@@ -47,7 +47,7 @@ const DemoHero: React.FC = memo(() => {
 /** Auth/entry archetype (rule 09): navy hero + surface sheet; the hero trims when the keyboard opens. */
 const LayoutHeroSheetScreenComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { phone, setPhone, country, setCountry, password, setPassword } =
+  const { phone, setPhone, password, setPassword } =
     useLayoutHeroSheetScreen();
 
   return (
@@ -69,8 +69,6 @@ const LayoutHeroSheetScreenComponent: React.FC = () => {
             placeholder={t('devShowcase.inputs.phonePlaceholder')}
             value={phone}
             onChangeText={setPhone}
-            countryCode={country}
-            onChangeCountry={setCountry}
           />
           <CustomInput
             label={t('devShowcase.inputs.passwordLabel')}

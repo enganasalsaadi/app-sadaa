@@ -212,7 +212,7 @@ describe('address helpers', () => {
   it('fills the form from the address, else from the account', () => {
     expect(addressFormValues(ADDRESS, {})).toEqual({
       recipientName: 'سارة',
-      phone: '944123456',
+      phone: '0944123456',
       governorateId: '1',
       city: 'دمشق',
       area: 'المزة',
@@ -222,7 +222,7 @@ describe('address helpers', () => {
     });
     const blank = addressFormValues(null, { name: 'ليلى', phone: '+963933000111' });
     expect(blank.recipientName).toBe('ليلى');
-    expect(blank.phone).toBe('933000111');
+    expect(blank.phone).toBe('0933000111');
     expect(blank.city).toBe('');
   });
 

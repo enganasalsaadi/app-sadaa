@@ -1,5 +1,4 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { matchesMobilePattern, toMarketMobile, type MobileRule } from '@/core/market';
+import { matchesMobilePattern, toMarketMobile, toNationalDigits, type MobileRule } from '@/core/market';
 import {
   PAYOUT_CHANNEL_EXTRA_FIELDS,
   PAYOUT_FIELD_LIMITS,
@@ -79,10 +78,6 @@ export const maskTail = (value: string | undefined): string | null => {
   return compact.length >= TAIL_LENGTH ? `${MASK} ${compact.slice(-TAIL_LENGTH)}` : null;
 };
 
-/** National digits of a stored E.164 phone, for the phone field. */
-const toNationalPhone = (e164: string | undefined): string =>
-  (e164 && parsePhoneNumberFromString(e164)?.nationalNumber) || '';
-
 interface PayoutFormPrefill {
   holderName?: string;
   /** The account phone (E.164); used only when it is a mobile of the market. */
@@ -96,7 +91,7 @@ export const emptyPayoutMethodForm = (
 ): PayoutMethodFormValues => ({
   holderName: prefill.holderName?.trim() ?? '',
   countryCode: mobile.countryCode,
-  phone: prefill.phone && matchesMobilePattern(prefill.phone, mobile.mobilePattern) ? toNationalPhone(prefill.phone) : '',
+  phone: prefill.phone && matchesMobilePattern(prefill.phone, mobile.mobilePattern) ? toNationalDigits(prefill.phone) : '',
   governorate: '',
   city: '',
   bankName: '',
@@ -110,7 +105,7 @@ export const emptyPayoutMethodForm = (
 export const toPayoutMethodForm = (method: PayoutMethod, mobile: MobileRule): PayoutMethodFormValues => ({
   holderName: method.details.holder_name,
   countryCode: mobile.countryCode,
-  phone: toNationalPhone(method.details.phone),
+  phone: toNationalDigits(method.details.phone),
   governorate: method.details.governorate ?? '',
   city: method.details.city ?? '',
   bankName: method.details.bank_name ?? '',

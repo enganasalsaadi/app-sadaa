@@ -1,5 +1,4 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { toMarketMobile, type MarketCourier, type MobileRule } from '@/core/market';
+import { toMarketMobile, toNationalDigits, type MarketCourier, type MobileRule } from '@/core/market';
 import { DEAL_COURIER_OTHER, type DealCourierChoice } from '../constants/dealShipping';
 import type {
   DealAddressFormValues,
@@ -152,16 +151,13 @@ export const safeTrackingUrl = (raw: string | null): string | null => {
   return DOMAIN.test(host) ? url : null;
 };
 
-const toNationalPhone = (e164: string | null | undefined): string =>
-  (e164 && parsePhoneNumberFromString(e164)?.nationalNumber) || '';
-
 /** What the address form starts from: the deal's address, else the last one used, else the account. */
 export const addressFormValues = (
   address: DealShippingAddress | null,
   fallback: { name?: string | null; phone?: string | null },
 ): DealAddressFormValues => ({
   recipientName: address?.recipientName ?? fallback.name ?? '',
-  phone: toNationalPhone(address?.phone ?? fallback.phone),
+  phone: toNationalDigits(address?.phone ?? fallback.phone),
   governorateId: address?.governorate?.id ?? '',
   city: address?.city ?? '',
   area: address?.area ?? '',

@@ -31,7 +31,6 @@ export const BrandAccountScreen: React.FC = () => {
   const {
     control,
     setFocus,
-    onChangeCountry,
     onContinue,
     confirmPhone,
     onConfirm,
@@ -40,7 +39,6 @@ export const BrandAccountScreen: React.FC = () => {
     isSubmitting,
     apiError,
   } = useBrandAccountScreen();
-  const countryCode = useWatch({ control, name: 'countryCode' });
 
   return (
     <Layout
@@ -90,8 +88,6 @@ export const BrandAccountScreen: React.FC = () => {
                   placeholder={t('auth.phonePlaceholder')}
                   value={value}
                   onChangeText={onChange}
-                  countryCode={countryCode}
-                  onChangeCountry={onChangeCountry}
                   returnKeyType="next"
                   onSubmitEditing={() => setFocus('email')}
                   error={fieldState.error?.message}

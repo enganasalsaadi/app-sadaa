@@ -10,7 +10,7 @@ const isSameDay = (a: Date, b: Date): boolean =>
   a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
 /**
- * Today's USD → SYP rate as one line ("1 $ = 14,000 ل.س"), or the stale notice instead:
+ * Today's USD → SYP rate as one line ("1 $ = 14,000"), or the stale notice instead:
  * SYP top-ups and payouts are off until an admin updates it (handoff §5).
  */
 export const useWalletRate = (role: WalletRole) => {

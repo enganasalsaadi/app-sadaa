@@ -2,9 +2,10 @@ import * as yup from 'yup';
 import type { TFunction } from 'i18next';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
+import { hasTrunkZero } from '@/core/market';
 
 export interface PhoneFormValues {
-  /** National number as typed; E.164 is built with `countryCode` on submit. */
+  /** National number as typed, trunk 0 included; E.164 is built with `countryCode` on submit. */
   phone: string;
   countryCode: CountryCode;
 }
@@ -17,6 +18,6 @@ export const createPhoneFields = (t: TFunction) => ({
     .required(t('validation.required'))
     .test('phone', t('validation.invalidPhone'), function (value) {
       const { countryCode } = this.parent as { countryCode: CountryCode };
-      return !!value && isValidPhoneNumber(value, countryCode);
+      return !!value && hasTrunkZero(value) && isValidPhoneNumber(value, countryCode);
     }),
 });

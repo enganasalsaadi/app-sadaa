@@ -19,9 +19,10 @@ describe('formatMoney: standard', () => {
     expect(ar(usd(125040))).toBe('1,250.40 $');
   });
 
-  it('formats SYP as whole pounds with a fixed symbol', () => {
-    expect(en(syp(6402500))).toBe('SYP 6,402,500');
-    expect(ar(syp(6402500))).toBe('6,402,500 ل.س');
+  it('formats SYP as whole pounds with no symbol or code', () => {
+    expect(en(syp(6402500))).toBe('6,402,500');
+    expect(ar(syp(6402500))).toBe('6,402,500');
+    expect(en(syp(6402500), { currencyDisplay: 'code' })).toBe('6,402,500');
   });
 
   it('never emits Arabic-Indic digits', () => {
@@ -44,7 +45,7 @@ describe('formatMoney: standard', () => {
 describe('formatMoney: precision and rounding', () => {
   it('pads to the requested digits', () => {
     expect(en(usd(100000), { precision: 1 })).toBe('$1,000.0');
-    expect(ar(syp(1000), { precision: 1 })).toBe('1,000.0 ل.س');
+    expect(ar(syp(1000), { precision: 1 })).toBe('1,000.0');
   });
 
   it('rounds whole amounts by the chosen rule', () => {
@@ -63,8 +64,8 @@ describe('formatMoney: compact', () => {
     expect(en(usd(125040), { notation: 'compact' })).toBe('$1.2K');
     expect(en(usd(129999), { notation: 'compact' })).toBe('$1.2K');
     expect(ar(usd(125040), { notation: 'compact' })).toBe('1.2K $');
-    expect(ar(syp(6500000), { notation: 'compact' })).toBe('6.5M ل.س');
-    expect(en(syp(2000000000), { notation: 'compact' })).toBe('SYP 2B');
+    expect(ar(syp(6500000), { notation: 'compact' })).toBe('6.5M');
+    expect(en(syp(2000000000), { notation: 'compact' })).toBe('2B');
   });
 
   it('moves up a unit instead of printing 1000K', () => {

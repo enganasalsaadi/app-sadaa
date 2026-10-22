@@ -60,8 +60,6 @@ const INPUT_DEF = {
 } as const satisfies Record<InputField, InputDef>;
 
 // Payout phones are the market's own mobiles: the field shows its calling code without a picker.
-const ignoreCountry = () => undefined;
-
 interface FieldProps {
   vm: PayoutMethodFormScreenModel;
   field: InputField;
@@ -113,9 +111,6 @@ const PhoneField = memo<{ vm: PayoutMethodFormScreenModel }>(({ vm }) => {
           placeholder={vm.mobile.placeholder ?? t('finance.payouts.form.phonePlaceholder')}
           value={value}
           onChangeText={onChange}
-          countryCode={vm.mobile.countryCode}
-          onChangeCountry={ignoreCountry}
-          countryLocked
           returnKeyType="next"
           onSubmitEditing={next}
           error={fieldState.error?.message}

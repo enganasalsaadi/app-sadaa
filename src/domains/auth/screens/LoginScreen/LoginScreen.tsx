@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { useTheme } from '@/core/theme';
 import {
   Box,
@@ -37,7 +37,6 @@ export const LoginScreen: React.FC = () => {
   const {
     control,
     setFocus,
-    onChangeCountry,
     onSubmit,
     isSubmitting,
     apiError,
@@ -47,7 +46,6 @@ export const LoginScreen: React.FC = () => {
     closeAccountSheet,
     onSelectAccountType,
   } = useLoginScreen();
-  const countryCode = useWatch({ control, name: 'countryCode' });
 
   return (
     <HeroSheet header={<AuthLogoHero showTagline />}>
@@ -75,8 +73,6 @@ export const LoginScreen: React.FC = () => {
                   placeholder={t('auth.phonePlaceholder')}
                   value={value}
                   onChangeText={onChange}
-                  countryCode={countryCode}
-                  onChangeCountry={onChangeCountry}
                   returnKeyType="next"
                   onSubmitEditing={() => setFocus('password')}
                   error={fieldState.error?.message}

@@ -5,7 +5,7 @@ import { Box, LiveDot, Text } from '@/shared/ui';
 import { DashedRule } from './DashedRule';
 
 interface RateLineProps {
-  /** "1 $ = 14,000 ل.س", already formatted. */
+  /** "1 $ = 14,000", already formatted. */
   value: string;
   /** "Updated today · 9:00 AM". */
   updated: string | null;

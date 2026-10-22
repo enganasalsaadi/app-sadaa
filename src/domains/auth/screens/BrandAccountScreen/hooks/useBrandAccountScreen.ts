@@ -4,10 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import type { CountryCode } from 'libphonenumber-js';
 import { applyServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
-import { resolveInitialPhoneCountry } from '@/core/market';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
 import { motion } from '@/core/theme';
 import { useWizardHeader } from '@/shared/ui';
 import { useBrandStep1Mutation } from '../../../api';
@@ -28,7 +27,7 @@ const SERVER_FIELD_MAP = {
 const createDefaultValues = (): BrandAccountFormValues => ({
   companyName: '',
   phone: '',
-  countryCode: resolveInitialPhoneCountry(),
+  countryCode: DEFAULT_PHONE_COUNTRY,
   email: '',
   password: '',
   passwordConfirmation: '',
@@ -50,7 +49,7 @@ export const useBrandAccountScreen = () => {
   const [apiError, setApiError] = useState<AppApiError | null>(null);
   const [brandStep1, { isLoading }] = useBrandStep1Mutation();
 
-  const { control, handleSubmit, setError, setFocus, setValue, trigger, getFieldState } =
+  const { control, handleSubmit, setError, setFocus } =
     useForm<BrandAccountFormValues>({
       // Errors appear after leaving a field, then update while typing.
       mode: 'onTouched',
@@ -109,18 +108,10 @@ export const useBrandAccountScreen = () => {
     if (!isLoading) setPending(null);
   }, [isLoading]);
 
-  const onChangeCountry = useCallback(
-    (code: CountryCode) => {
-      setValue('countryCode', code);
-      if (getFieldState('phone').isTouched) trigger('phone');
-    },
-    [getFieldState, setValue, trigger],
-  );
 
   return {
     control,
     setFocus,
-    onChangeCountry,
     onContinue,
     confirmPhone: pending?.display ?? null,
     onConfirm,

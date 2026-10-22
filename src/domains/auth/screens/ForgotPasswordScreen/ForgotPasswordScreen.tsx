@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { useTheme } from '@/core/theme';
 import { Box, InlineError, Layout, LayoutFooter, PhoneInput, Text } from '@/shared/ui';
 import { useForgotPasswordScreen } from './hooks/useForgotPasswordScreen';
@@ -9,9 +9,8 @@ import { useForgotPasswordScreen } from './hooks/useForgotPasswordScreen';
 export const ForgotPasswordScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { control, onChangeCountry, onSubmit, isSubmitting, apiError } =
+  const { control, onSubmit, isSubmitting, apiError } =
     useForgotPasswordScreen();
-  const countryCode = useWatch({ control, name: 'countryCode' });
 
   return (
     <Layout
@@ -38,8 +37,6 @@ export const ForgotPasswordScreen: React.FC = () => {
                 placeholder={t('auth.phonePlaceholder')}
                 value={value}
                 onChangeText={onChange}
-                countryCode={countryCode}
-                onChangeCountry={onChangeCountry}
                 returnKeyType="send"
                 onSubmitEditing={onSubmit}
                 error={fieldState.error?.message}

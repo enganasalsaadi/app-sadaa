@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { applyServerFieldErrors, useLookupItems } from '@/core/api';
-import { nationalMobileExample, resolveInitialPhoneCountry, useActiveMarket, type MobileRule } from '@/core/market';
+import { DEFAULT_PHONE_COUNTRY } from '@/core/config';
+import { nationalMobileExample, useActiveMarket, type MobileRule } from '@/core/market';
 import { useAppSelector } from '@/core/store';
 import { selectUser } from '@/domains/auth';
 import { useLazyGetShippingAddressPrefillQuery } from '../api/dealShippingApi';
@@ -27,7 +28,7 @@ export const useDealAddressForm = () => {
   const { market } = useActiveMarket();
   // Until the market loads the pattern is empty (matches any): the number must still parse, the server decides the rest.
   const mobile = useMemo<MobileRule>(
-    () => market ?? { countryCode: resolveInitialPhoneCountry(), mobilePattern: '', mobileExample: '' },
+    () => market ?? { countryCode: DEFAULT_PHONE_COUNTRY, mobilePattern: '', mobileExample: '' },
     [market],
   );
   const schema = useMemo(() => createDealAddressSchema(t, mobile), [mobile, t]);
@@ -96,7 +97,6 @@ export const useDealAddressForm = () => {
     toBody,
     governorates,
     governorateLabel,
-    phoneCountry: mobile.countryCode,
     phonePlaceholder: nationalMobileExample(market ?? null),
     isLoadingLast: last.isFetching,
   };

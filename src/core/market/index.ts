@@ -1,9 +1,9 @@
 export { useGetMarketQuery, toMarketRules } from './marketApi';
 export { useActiveMarket, useActiveMarketCode } from './useActiveMarket';
 export { useSupportWhatsApp } from './useSupportWhatsApp';
-export { matchesMobilePattern, nationalMobileExample, toMarketMobile } from './mobile';
+export { hasTrunkZero, matchesMobilePattern, nationalMobileExample, toMarketMobile, toNationalDigits } from './mobile';
 export type { MobileRule } from './mobile';
-export { pickGuestMarket, resolveInitialPhoneCountry } from './resolveMarket';
+export { pickGuestMarket } from './resolveMarket';
 export type {
   MarketAmountLimit,
   MarketChannelGroup,

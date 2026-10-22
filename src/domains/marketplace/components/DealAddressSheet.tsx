@@ -9,8 +9,6 @@ import type { DealAddressFormModel } from '../hooks/useDealAddressForm';
 import type { DealAddressFormValues } from '../schemas/dealShippingSchema';
 
 const LIMITS = DEAL_SHIPPING_LIMITS.address;
-const ignoreCountry = () => undefined;
-
 type TextField = Exclude<keyof DealAddressFormValues, 'phone' | 'governorateId'>;
 
 export interface DealAddressSheetProps {
@@ -165,9 +163,6 @@ const DealAddressSheetComponent: React.FC<DealAddressSheetProps> = ({
             placeholder={form.phonePlaceholder ?? t('marketplace.deals.shipping.address.phonePlaceholder')}
             value={value}
             onChangeText={onChange}
-            countryCode={form.phoneCountry}
-            onChangeCountry={ignoreCountry}
-            countryLocked
             returnKeyType="next"
             onSubmitEditing={focusCity}
             error={fieldState.error?.message}

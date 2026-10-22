@@ -114,7 +114,7 @@ describe('toPayoutDetails', () => {
 describe('emptyPayoutMethodForm', () => {
   it('prefills the name and a mobile of the market only', () => {
     const form = emptyPayoutMethodForm(true, SYRIA, { holderName: ' Anas ', phone: '+963944123456' });
-    expect(form).toMatchObject({ holderName: 'Anas', phone: '944123456', makeDefault: true });
+    expect(form).toMatchObject({ holderName: 'Anas', phone: '0944123456', makeDefault: true });
     expect(emptyPayoutMethodForm(false, SYRIA, { phone: '+971501234567' }).phone).toBe('');
   });
 });
