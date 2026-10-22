@@ -348,7 +348,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.getsadaapp;
 				PRODUCT_NAME = Sadaa;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				PUBLIC_WEB_HOST = links.invalid;
+				PUBLIC_WEB_HOST = getsadaapp.com;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -385,7 +385,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.getsadaapp;
 				PRODUCT_NAME = Sadaa;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				PUBLIC_WEB_HOST = links.invalid;
+				PUBLIC_WEB_HOST = getsadaapp.com;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

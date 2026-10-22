@@ -179,6 +179,8 @@ export interface MediaKitStats {
   unique_brand_views: StatMetric;
   link_opens: StatMetric;
   shares: StatMetric;
+  /** Web page visitors who tapped a store / "open in app" button (deduped per visitor). Optional on older APIs. */
+  app_clicks?: StatMetric;
   /** `null` until the backend ships the metric: hide the tile. */
   search_impressions: StatMetric | null;
   offers_from_profile: StatMetric | null;
