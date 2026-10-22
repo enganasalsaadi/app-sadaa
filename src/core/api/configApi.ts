@@ -21,8 +21,8 @@ export interface AppConfig {
     whatsapp: string | null;
   };
   urls: {
-    privacy: string;
-    terms: string;
+    privacy: string | null;
+    terms: string | null;
   };
   /** Market slug used when the device region matches none (`sy`). Absent on older backends / old caches. */
   defaultMarket?: string;

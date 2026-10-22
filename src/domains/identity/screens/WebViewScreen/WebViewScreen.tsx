@@ -5,6 +5,7 @@ import { useTheme, useStyles, moderateScale } from '@/core/theme';
 import { Layout } from '@/shared/ui/Layout';
 import { Box } from '@/shared/ui/primitives/Box';
 import { useGetConfigQuery } from '@/core/api';
+import { LEGAL_URLS, isLegalUrlAllowed } from '@/core/config';
 import type { SettingsStackScreenProps } from '@/core/navigation';
 
 type Props = SettingsStackScreenProps<'WebViewScreen'>;
@@ -28,9 +29,9 @@ const WebViewScreenComponent: React.FC<Props> = ({ route }) => {
 
   const resolvedUrl =
     url === '__terms__'
-      ? config?.urls.terms ?? ''
+      ? config?.urls.terms || LEGAL_URLS.terms
       : url === '__privacy__'
-        ? config?.urls.privacy ?? ''
+        ? config?.urls.privacy || LEGAL_URLS.privacy
         : url;
 
   return (
@@ -46,6 +47,7 @@ const WebViewScreenComponent: React.FC<Props> = ({ route }) => {
             style={styles.webView}
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
+            onShouldStartLoadWithRequest={request => isLegalUrlAllowed(request.url)}
           />
           {loading && (
             <Box style={styles.loader}>

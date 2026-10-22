@@ -1,5 +1,6 @@
 export {env, isDev, isStaging, isProd, apiUrl} from './env';
 export type {AppEnv} from './env';
+export {LEGAL_URLS, isLegalUrlAllowed} from './legalUrls';
 export {openAppStore} from './openAppStore';
 export {getDeviceRegion} from './deviceRegion';
 export {

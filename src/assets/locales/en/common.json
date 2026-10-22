@@ -65,7 +65,7 @@
           "security": "Security"
         },
         "companyName": "Store / company name",
-        "companyNamePlaceholder": "e.g. Damascus Roastery",
+        "companyNamePlaceholder": "e.g. Jasmine Roastery",
         "phoneHint": "We will text a verification code to this number. It can’t be changed later.",
         "email": "Email",
         "emailPlaceholder": "name@company.com",
@@ -576,7 +576,7 @@
       "aboutSection": "About you",
       "aboutHint": "Shown on your media kit under your name. Keep it to a couple of lines.",
       "bio": "Bio",
-      "bioPlaceholder": "e.g. Food and lifestyle creator from Damascus",
+      "bioPlaceholder": "e.g. Food and lifestyle creator sharing my everyday finds",
       "saved": "Your info was saved"
     },
     "companyInfo": {
@@ -1104,7 +1104,7 @@
           "a11yItem": "{{label}} {{value}}",
           "engagement": "Engagement",
           "avgViews": "Avg. views",
-          "localAudience": "Audience in Syria",
+          "localAudience": "Local audience",
           "campaigns": "Campaigns done"
         },
         "audience": {
@@ -2016,7 +2016,7 @@
           "title": "Extend the deadline",
           "body": "Applications now close on {{date}}. Pick a later day.",
           "bodyNone": "Pick the day applications close.",
-          "rule": "Applications close at the end of the chosen day (Damascus time).",
+          "rule": "Applications close at the end of the chosen day (local time).",
           "confirm": "Extend",
           "confirmDate": "Extend to {{date}}",
           "closesAt": "Applications close on {{date}}",
@@ -2631,7 +2631,7 @@
             "inDays_many": "in {{count}} days",
             "inDays_other": "in {{count}} days",
             "sheetTitle": "Application deadline",
-            "sheetBody": "Applications are open until the end of this day, Damascus time."
+            "sheetBody": "Applications are open until the end of this day, local time."
           },
           "when": {
             "label": "When does the content go out?",
@@ -2646,10 +2646,10 @@
             "days_other": "{{count}} days",
             "dropHint": "Every creator publishes at the same moment, at least {{days}} days after applications close.",
             "dropPlaceholder": "Pick the drop day and time",
-            "zone": "Damascus time",
+            "zone": "Local time",
             "tooEarly": "The drop is too close to the deadline. Earliest allowed: {{date}}",
             "sheetTitle": "Drop moment",
-            "sheetBody": "Earliest allowed: {{date}} · Damascus time",
+            "sheetBody": "Earliest allowed: {{date}} · local time",
             "time": "Time",
             "noTime": "No time left on this day. Pick a later one."
           },
@@ -4940,7 +4940,7 @@
           "phoneError": "Enter a valid mobile number for your country",
           "governorate": "Governorate",
           "city": "City",
-          "cityPlaceholder": "e.g. Damascus",
+          "cityPlaceholder": "City name",
           "area": "Neighbourhood or area",
           "areaPlaceholder": "e.g. Mezzeh, Western Villas",
           "line": "Detailed address",
@@ -5914,8 +5914,8 @@
         "updatedToday": "Updated today · {{time}}",
         "updatedOn": "Updated {{date}}",
         "staleTitle": "Exchange rate out of date",
-        "staleCreator": "Last rate {{rate}}. Withdrawals in Syrian pounds are paused until it's updated.",
-        "staleBrand": "Last rate {{rate}}. Top-ups in Syrian pounds are paused until it's updated."
+        "staleCreator": "Last rate {{rate}}. Withdrawals in local currency are paused until it's updated.",
+        "staleBrand": "Last rate {{rate}}. Top-ups in local currency are paused until it's updated."
       },
       "activity": {
         "title": "Activity",
@@ -5985,7 +5985,7 @@
       "referenceCopied": "Reference copied",
       "amount": "Amount",
       "amountInUsd": "Amount in USD",
-      "amountInSyp": "Amount in SYP",
+      "amountInSyp": "Amount in local currency",
       "rate": "Exchange rate",
       "gross": "Deal amount",
       "commission": "Sada commission · {{rate}}%",
@@ -6004,9 +6004,9 @@
         "bank": "Banks"
       },
       "currencies": {
-        "both": "Dollar or Syrian pound",
+        "both": "Dollar or local currency",
         "usdOnly": "Dollar only",
-        "sypOnly": "Syrian pound only"
+        "sypOnly": "Local currency only"
       }
     },
     "reviewSection": {
@@ -6030,7 +6030,7 @@
       },
       "currency": {
         "usd": "Dollar",
-        "syp": "Syrian pound"
+        "syp": "Local currency"
       },
       "status": {
         "pendingReview": "In review",
@@ -6042,7 +6042,7 @@
         "title": "How will you send the money?",
         "subtitle": "Choose where you'll send the money from. We review every transfer before adding it to your wallet.",
         "required": "Choose how you'll send the money",
-        "staleNotice": "The Syrian pound rate is being updated, so e-wallets are paused for now. You can top up in dollars.",
+        "staleNotice": "The local currency rate is being updated, so e-wallets are paused for now. You can top up in dollars.",
         "pausedNotice": "This method was just paused. Choose another one.",
         "loadFailed": "Couldn't load the transfer methods.",
         "optionA11y": "{{channel}}, {{caption}}"
@@ -6051,7 +6051,7 @@
         "via": "Via {{channel}}",
         "currencyA11y": "Currency",
         "segmentUsd": "Dollar $",
-        "segmentSyp": "Syrian pound SYP",
+        "segmentSyp": "Local currency",
         "label": "Amount you'll send",
         "range": "From {{min}} to {{max}}",
         "rangeWithUsd": "From {{min}} to {{max}} ({{usd}})",
@@ -6296,7 +6296,7 @@
         "noMethodBody": "An exchange office, an e-wallet or a bank account. It takes a minute.",
         "addMethod": "Add payout method",
         "segmentUsd": "Dollar $",
-        "segmentSyp": "Syrian pound SYP",
+        "segmentSyp": "Local currency",
         "currencyA11y": "Currency you receive",
         "label": "Amount from your balance",
         "available": "Available",
@@ -6313,7 +6313,7 @@
           "gross": "Taken from your balance",
           "fee": "{{channel}} fee",
           "net": "You receive",
-          "payout": "You receive in pounds",
+          "payout": "You receive in local currency",
           "rate": "At today's rate {{rate}} · locked when you send"
         },
         "timing": "The transfer usually arrives within 24 hours",
@@ -6952,7 +6952,7 @@
       "applicants_other": "{{count}} creators applied"
     },
     "notice": {
-      "info": "Your campaign is visible to creators in Damascus.",
+      "info": "Your campaign is visible to creators in your city.",
       "success": "Draft approved. The creator can publish now.",
       "warning": "Payment is due in 2 days.",
       "danger": "This deal is under dispute.",
@@ -6988,7 +6988,7 @@
       "pressed": "Row pressed",
       "optionsTitle": "Single choice (selected)",
       "optionOffice": "Exchange office",
-      "optionOfficeCaption": "Dollar or Syrian pound",
+      "optionOfficeCaption": "Dollar or local currency",
       "optionBank": "Bank transfer",
       "optionWallet": "E-wallet",
       "optionWalletCaption": "Paused for now",
@@ -7016,8 +7016,8 @@
       "oneDecimal": "One decimal",
       "wholeDown": "Whole, rounded down",
       "compact": "Compact (stats only)",
-      "syp": "SYP (whole pounds)",
-      "sypCompact": "SYP compact",
+      "syp": "Local currency (whole units)",
+      "sypCompact": "Local currency compact",
       "code": "Currency code",
       "none": "No currency"
     },
@@ -7145,7 +7145,7 @@
       "adStory": "Story",
       "nicheBeauty": "Beauty",
       "nicheTech": "Tech",
-      "cityDamascus": "Damascus",
+      "cityDowntown": "Downtown",
       "cityAleppo": "Aleppo",
       "openPlatformSheet": "Open add-platform sheet"
     },

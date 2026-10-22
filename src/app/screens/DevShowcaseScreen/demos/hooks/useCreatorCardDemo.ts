@@ -35,7 +35,7 @@ export const useCreatorCardDemo = () => {
         slug: 'lina',
         displayName: t('devShowcase.sada.creatorName'),
         avatarUrl: MOCK_AVATAR_GROUP[4]?.uri ?? null,
-        governorate: { value: 'damascus', label: t('devShowcase.sada.cityDamascus') },
+        governorate: { value: 'downtown', label: t('devShowcase.sada.cityDowntown') },
         niches: [
           { value: 'food', label: t('devShowcase.chips.food') },
           { value: 'beauty', label: t('devShowcase.sada.nicheBeauty') },
