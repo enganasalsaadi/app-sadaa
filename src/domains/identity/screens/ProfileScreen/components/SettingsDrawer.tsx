@@ -8,6 +8,7 @@ import {
   FileText,
   Globe,
   KeyRound,
+  LifeBuoy,
   Palette,
   ShieldCheck,
   type LucideIcon,
@@ -71,6 +72,7 @@ interface SettingsDrawerProps {
   onDealGuide: () => void;
   onTerms: () => void;
   onPrivacy: () => void;
+  onSupport: () => void;
   onDevShowcase: () => void;
 }
 
@@ -85,6 +87,7 @@ const SettingsDrawerComponent: React.FC<SettingsDrawerProps> = ({
   onDealGuide,
   onTerms,
   onPrivacy,
+  onSupport,
   onDevShowcase,
 }) => {
   const { t } = useTranslation();
@@ -120,6 +123,7 @@ const SettingsDrawerComponent: React.FC<SettingsDrawerProps> = ({
         <DrawerRow icon={BookOpenText} label={t('marketplace.guide.title')} onPress={onDealGuide} />
         <DrawerRow icon={FileText} label={t('account.profile.terms')} onPress={onTerms} />
         <DrawerRow icon={ShieldCheck} label={t('account.profile.privacy')} onPress={onPrivacy} />
+        <DrawerRow icon={LifeBuoy} label={t('account.profile.support')} onPress={onSupport} />
         {/* Dev-only showcase entry, dropped from release builds with `__DEV__`. */}
         {__DEV__ ? <DrawerRow icon={Palette} label={t('devShowcase.entryLabel')} onPress={onDevShowcase} /> : null}
       </Box>

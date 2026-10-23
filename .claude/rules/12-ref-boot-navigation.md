@@ -30,10 +30,10 @@ Runs while native splash (symbol only) stays up:
 
 - One branch per status: `Maintenance` | `ForceUpdate` | `ChooseLanguage` | `Onboarding` | `Auth` | `OnboardingResume` | `Suspended` | `Main`.
 - `OnboardingScreen` finishes via `completeOnboarding` from `useAppBootstrap` (passed as prop).
-- `Main` = bottom tabs (`app/navigation/MainTabs`; `MainTabBar` reads `title`/`tabBarIcon`/`tabBarBadge` options; shown only on each tab's main screen via `isOnTabRoot` (`app/navigation/tabRoot.ts`, by route name: new tab stack → add its main screen there), 5 per role:
-  - brand: Explore · Campaigns · Messages · Wallet · Account
-  - creator: Home · Deals · Opportunities · Wallet · Profile (`OpportunitiesTab`, public campaigns; Messages placeholder takes its slot only once `useCampaignsEnabled('creator') === false`, `null` keeps the tab so a cold-start push finds its stack)
-- Real tabs: `HomeTab` (marketplace) · `DealsTab` (marketplace: `BrandDealsNavigator` / `CreatorDealsNavigator`, `DealsStackParamList` `Deals` / `DealDetail {id}` / `DealContract {id}` / `CampaignDetail {id}` brand-only / `Strikes` creator-only, still `DealsComingSoonScreen` until P8.1) · `WalletTab` (finance: `CreatorWalletNavigator` / `BrandWalletNavigator`, role picked here) · `SettingsTab` (identity). `OpportunitiesTab` (marketplace `CreatorOpportunitiesNavigator`, `OpportunitiesStackParamList` `Opportunities` / `CampaignDetail {id}`; placeholders until PC4). `MessagesTab` = `ComingSoonTabScreen` until built.
+- `Main` = bottom tabs (`app/navigation/MainTabs`; `MainTabBar` reads `title`/`tabBarIcon`/`tabBarBadge` options; shown only on each tab's main screen via `isOnTabRoot` (`app/navigation/tabRoot.ts`, by route name: new tab stack → add its main screen there):
+  - brand: Home · Deals · Wallet · Account
+  - creator: Home · Deals · Opportunities · Wallet · Profile (`OpportunitiesTab`, public campaigns; dropped only once `useCampaignsEnabled('creator') === false`, `null` keeps the tab so a cold-start push finds its stack)
+- Real tabs: `HomeTab` (marketplace) · `DealsTab` (marketplace: `BrandDealsNavigator` / `CreatorDealsNavigator`, `DealsStackParamList` `Deals` / `DealDetail {id}` / `DealContract {id}` / `CampaignDetail {id}` brand-only / `Strikes` creator-only, still `DealsComingSoonScreen` until P8.1) · `WalletTab` (finance: `CreatorWalletNavigator` / `BrandWalletNavigator`, role picked here) · `SettingsTab` (identity). `OpportunitiesTab` (marketplace `CreatorOpportunitiesNavigator`, `OpportunitiesStackParamList` `Opportunities` / `CampaignDetail {id}`; placeholders until PC4). `MessagesTab` route kept in types but not mounted (no "coming soon" tabs in store builds, App Review 2.1); add it back with real chat (+ report/block).
 - Route param types: `src/core/navigation/types.ts`. Imperative nav: `navigate/replace/goBack` from `@/core/navigation`.
 
 ## App.tsx

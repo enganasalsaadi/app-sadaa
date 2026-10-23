@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-22 | Phone fields typed the local way with no country picker; Syrian pound amounts shown without a symbol (🟡 not yet device tested). |
+| **Last updated** | 2026-10-23 | Store review prep: no "coming soon" spots, «Help & support» in Settings, unused Android permissions removed (🟡 not yet device tested). |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -338,10 +338,10 @@ APP LAUNCH
     │   shows only on each tab's main screen; icon + name on every tab; active
     │   tab in a teal squircle, a teal rail on the bar's top edge stretches to
     │   the tab being pressed 🟡)                                                    ✅
-    │   Five tabs, different per role:
-    │     brand:   Home · Deals · Messages · Wallet · Account
+    │   Tabs, different per role:
+    │     brand:   Home · Deals · Wallet · Account
     │     creator: Home · Deals · Opportunities · Wallet · My profile
-    │       (Opportunities takes the place of Messages while the service has campaigns open)
+    │       (Opportunities is hidden while the service has campaigns closed)
     ├── Home (creator) dashboard                                 🟡 built, awaiting device and live-server testing
     │     "v3": navy hero: photo, greeting, name, verified, tier (beside the bell)
     │       · the link strip: public / private · copy · preview · share (or make public)
@@ -513,7 +513,7 @@ APP LAUNCH
     │     │     evidence sheet · withdraw (opener)                    🟡 built
     │     └── Strikes (creator only): active count · one fuse card per
     │           strike with days left · clean-record state            🟡 built
-    ├── Messages tab                                             🟡 "coming soon" page   🔜
+    ├── Messages tab                                             🔜 hidden until built
     ├── Opportunities tab (creator)                              🟡 built, awaiting device and live-server testing
     │     one capsule at the top: For you · Saved · My applications
     │     ├── For you: opportunity tickets (cover and brand, the creator's take-home as the big
@@ -562,10 +562,11 @@ APP LAUNCH
           ├── Language                                           ✅
           ├── How a deal completes (opens the deal guide for the role)   🟡 built, awaiting device testing
           ├── Terms & Privacy (in-app web pages)                 ✅
+          ├── Help & support (opens Sada support, both roles)    🟡 built, awaiting device testing
           └── Delete my account (password-confirmed)             ✅
 ```
 
-**Tabs and campaigns 🟡:** brands and creators have **separate tab sets**. Brands: *Home · Deals · Messages · Wallet · Account*; the brand's Deals tab holds a «Public campaigns | Direct requests» pill (campaigns first; direct requests alone, without the pill, while campaigns are closed). Creators: *Home · Deals · Opportunities · Wallet · My profile*. Messages stays brand-only for now. Tabs for analytics and notifications follow as those features arrive.
+**Tabs and campaigns 🟡:** brands and creators have **separate tab sets**. Brands: *Home · Deals · Wallet · Account*; the brand's Deals tab holds a «Public campaigns | Direct requests» pill (campaigns first; direct requests alone, without the pill, while campaigns are closed). Creators: *Home · Deals · Opportunities · Wallet · My profile*. Messages has no tab until in-app chat is built (no "coming soon" pages in the store build). Tabs for analytics and notifications follow as those features arrive.
 
 ### 5.3 Core journeys in plain English
 
@@ -780,7 +781,7 @@ Deal files (drafts, publishing screenshots, brief files, dispute evidence, keep-
 
 #### Journey F2: Public campaigns 🟡 both sides built (brand: campaign, applicants, selection, invitations · creator: opportunities, the campaign page, applying, my applications · deal details, returns and restrictions)
 A brand can publish one campaign that many creators apply to, instead of asking creators one by one. Creators see it in their Opportunities tab, apply with their own price or the fixed one, and each chosen creator gets a normal direct deal. Today a brand can build a campaign, send it for review, follow it in My campaigns and manage it once live; reviewing applicants, selecting creators and inviting them are also built; on the creator side the feed, saved campaigns, the campaign page, applying and My applications are built; and the deal that comes out of a campaign now carries the campaign's own rules (below).
-- **Built (🟡):** the app understands campaign states, prices and a campaign notification or link opens the campaign page for each role (the brand's own page, or the creator's opportunity page). If the service says campaigns are closed, the Opportunities tab goes back to the Messages page.
+- **Built (🟡):** the app understands campaign states, prices and a campaign notification or link opens the campaign page for each role (the brand's own page, or the creator's opportunity page). If the service says campaigns are closed, the Opportunities tab is hidden.
 - **Built (🟡 not yet device or live-server tested), the brand campaign wizard:** four steps under the same navy header and step rail as the offer builder, with the campaign's name and cover replacing the title. The draft saves itself as the brand types (the title creates it; up to 20 drafts) and a step only moves on once its changes are saved. (1) Idea: cover, name, kind of activity, the public announcement every creator sees. (2) Required: the work wanted from each creator (from the service catalog, up to 20 units), who can apply (gender, minimum followers) and who is preferred (cities, niches; ranking only), one product question with three choices (no product, a gift, a sample that comes back; a product widens the gap before a drop from 5 to 10 days), and an optional private brief (talking points, don'ts, hashtags, mentions, links, discount code, tracking link, up to 5 files) that creators only see after funding. (3) Money and seats: a fixed price or bidding within a range (with an optional budget cap), 1 to 20 seats, the most that could be held (the service's estimate, never charged now) against the wallet, the apply deadline (up to 30 days), and either a delivery window or one synchronized drop in Damascus time. (4) Review: one row per part with what it holds or what is still missing and a way back to it, the brief shown locked as creators meet it, then the wallet and the brand's verification.
 - **Sending:** anything missing sends the brand to that step instead. Only verified brands can send: an unverified brand gets a sheet leading to company verification (the draft stays saved), and one whose verification is under review is told to wait. A brand with 5 campaigns already in review or live is told to close or cancel one. Once sent, the same screen turns into an «in review» page (handed-in ticket, sent → in review → published, a top-up nudge if the wallet can't cover every seat); nothing can be edited or cancelled while the team reviews.
 - **Changes requested (🟡):** the draft reopens fully editable with a strip under the header and the team's note on the review step; the brand sends it again from there.
@@ -955,6 +956,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 | **Internet / network state** | Android | Needed to connect to Sada and to show the offline banner | Automatic (no prompt) | ✅ |
 | **Vibration** | Android | Gentle feedback on notifications and errors | Automatic (no prompt) | ✅ |
 
+**Removed on Android:** storage access, exact alarms and the background-service slot that app libraries add on their own. Uploads use the system picker or the app's own files, and no notification is scheduled or runs in the background, so none of them is needed and the Play listing doesn't show them.
+
 **Not requested:** location. It was removed because no feature uses it. City-based matching will use the city the user picks in their profile. If a future feature needs the phone's location, it gets added back with its own explanation.
 
 **Principles:** ask at the point of use, always with a plain-language explanation in the user's language, and never request anything at app start except notifications after onboarding. If the user has turned a permission off for good, Sada explains in their language why it's needed and offers a button that opens the phone's Settings.
@@ -972,7 +975,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 | **Same app for everyone** | ✅ | No reviewer detection of any kind: no branching on IP, device language, account or app version (the version is used only for the update gate). Country comes only from the phone number. Country lists, payment channels and limits are server data, shown the same to every user of that country. |
 | **Payments and wallet** | 🔜 | Deals pay for real-world advertising services, not digital goods, so app-store in-app purchase rules should not apply to escrow. This needs confirming during review. Premium subscriptions, if added, need a separate review. |
 | **User-generated content** (drafts, bios, reviews) | 🔜 | Reporting, blocking and moderation tools are required once drafts, reviews and messaging go live. |
-| **Encryption export declaration** | 🔜 | Declare standard HTTPS use only, at submission. |
+| **Encryption export declaration** | ✅ | The iOS app declares it uses only standard encryption (HTTPS), so no export paperwork is asked at each upload. |
+| **Support reachable in the app** | 🟡 | A «Help & support» row in Settings for both roles opens Sada support. Not yet device tested. |
 | **Age rating and target audience** | 🔜 | Business audience. Set the rating and confirm minimum age in the terms. |
 | **Store listing** | 🔜 | Brand name "Sada" / «صدى», final icon ready (navy, Concentric Echo). Screenshots in Arabic and English needed. |
 
@@ -1049,6 +1053,7 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-23 | "Coming soon" spots removed before store review (🟡 not yet device tested): the Messages tab is gone for both roles (brands now have four tabs; creators have four while campaigns are closed); the sign-up account-type sheet no longer shows the unavailable agency option; the brief files note no longer promises a future viewer; a «Help & support» row in Settings for both roles; Android no longer lists storage, exact-alarm or background-service permissions; iOS declares standard encryption only. | Last updated, §5.2 screen map, §7.1, §7.2 |
 | 2026-10-22 | Phone entry and Syrian pound display simplified (🟡 not yet device tested): login, sign-up, password reset, payout and delivery-address phone fields no longer show a country picker or dial code; numbers are typed the local way and must start with 0 («0944 123 456»), and are still sent in full international form; profile and code screens show the number the same local way; Syrian pound amounts and the rate line show the bare number with no «ل.س» / "SYP" symbol. | Last updated, §4.5, §5.1 |
 | 2026-10-22 | Creator Home redesigned («v3», 🟡 not yet device tested): the hero puts the creator's link first (copy, preview, share or make public) with the last 30 days, and its content sinks behind a rounded sheet while scrolling; one task deck holds the blocker, the deals waiting and, before the first offer, the storefront steps; a «Sada map» of eight tiles leads to every place (offers and my deals open the right Deals tab) with a red bar for live strikes; running deals with a stage bar; campaigns as one card; money held with its flow and the ID nudge; the storefront to brands; a readiness ring; prices as tags hanging from a rail with the service never cut. | Last updated, §5.2 screen map, Journey A4, §6 look and motion |
 | 2026-10-20 | Country rules moved to the server (🟡 not yet device or live-server tested): phone format and example, currencies and top-up / withdrawal limits, payment channels, couriers, governorates and support contact are read per country instead of being fixed to Syria; wallet top-up and payout screens list only the user's country channels; shipping lists the country's couriers plus «other» with a typed name; delivery-address phones follow the country's rule; a new user's dial code is pre-filled from the phone's region setting, no location permission; demo / test-text switches are no longer used. | 5.1, 7.2 |
@@ -1058,4 +1063,3 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 | 2026-10-18 | The brand's Deals tab rebuilt (🟡 not yet device or live-server tested): the tab is now «Deals» for both roles; one page with a Public campaigns | Direct requests pill (an amber count when the other face waits on you) and scrolling filter chips with counts for each face (campaigns: All, Active, In review, Drafts, Finished; requests: All, Waiting on you, Awaiting reply, In progress, Drafts, Finished); campaign cards now carry activity · city, what is asked of each creator and a station track with a «time left» line, on the same soft card as deals; the «needs your decision» strip is gone (the pill count, the chip dot and the strip inside the card replace it); each chip has its own empty message with an action. | Header, §5.2 screen map, Journey F2, §5.3 |
 | 2026-10-17 | Notifications for public campaigns built (🟡 not yet device or live-server tested): every campaign and sample-return notice opens its screen for the right role and reloads what it changed (the campaign and its lists, the brand's applicants, the creator's application, Home glance and restrictions); the inbox gets All / Campaigns / Deals chips (local, by notice family) and a distinct icon and tone for each notice type. | 6.4, 7.3 |
 | 2026-10-17 | Returned samples and account restrictions built (🟡 not yet device or live-server tested): a ticket-shaped return card on the deal page for both sides with a small road and parcel (pulsing while owed, travelling, arriving, or staying with the creator); the creator's waybill sheet (courier, number, optional https link, when handed over) saved with a plain button that unlocks the account at once; an amber or red banner on Opportunities and a locked bar on the campaign page and on direct offers that explain the lock and lead to the waybill or My strikes; «severe» and «normal» chips and the service's reason text on My strikes; the brand's three final answers to a returned sample (confirm receipt, report a problem with a note and up to five photos, waive with an optional reason), each ending in a press-and-hold | Header, §4.5, §5.3 Journey F2, §7.3 |
-| 2026-10-17 | The brand's batch tools built (🟡 not yet device or live-server tested): a «Batch tools» card on the campaign page; the launch room (second-by-second countdown to the live link and the drop, who has posted, the team strip with late creators blinking, a row per creator); the shipping manifest (counts, tick and ship up to 20 parcels by press and hold with one courier for all, addresses hidden until tapped and a fixed «viewing is logged» line, held parcels with a clock, a stamp on shipped ones, failed ones rise editable with the service's reason); and broadcasts to every creator on a funded deal (three dots for today's real broadcasts, a locked clock at the limit with the text kept, a notice when nobody can receive it, press and hold to send, a history showing how many creators each reached). | Last updated, §4.5, §5.2 screen map, Journey F2, §7.3 |

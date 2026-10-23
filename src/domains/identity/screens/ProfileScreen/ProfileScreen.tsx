@@ -79,6 +79,7 @@ const ProfileSection: React.FC<SectionProps> = ({ section, vm }) => {
           onDealGuide={vm.openDealGuide}
           onTerms={vm.openTerms}
           onPrivacy={vm.openPrivacy}
+          onSupport={vm.contactSupport}
           onDevShowcase={vm.openDevShowcase}
         />
       );

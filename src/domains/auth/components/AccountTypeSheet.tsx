@@ -16,7 +16,7 @@ interface AccountTypeOptionDef {
   available: boolean;
 }
 
-// Flip `available` as each registration wizard ships.
+// Flip `available` as each registration wizard ships; unavailable types stay hidden.
 const OPTIONS: readonly AccountTypeOptionDef[] = [
   {
     type: 'brand',
@@ -40,6 +40,8 @@ const OPTIONS: readonly AccountTypeOptionDef[] = [
     available: false,
   },
 ];
+
+const VISIBLE_OPTIONS = OPTIONS.filter(option => option.available);
 
 interface AccountTypeOptionProps {
   option: AccountTypeOptionDef;
@@ -120,7 +122,7 @@ export const AccountTypeSheet: React.FC<AccountTypeSheetProps> = ({
 
   return (
     <SheetFrame visible={visible} onClose={onClose} title={t('auth.accountType.title')}>
-      {OPTIONS.map(option => (
+      {VISIBLE_OPTIONS.map(option => (
         <AccountTypeOption key={option.type} option={option} onSelect={onSelect} />
       ))}
     </SheetFrame>

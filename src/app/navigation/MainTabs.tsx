@@ -13,14 +13,12 @@ import {
   Compass,
   House,
   IdCard,
-  MessageCircle,
   Wallet,
   type LucideIcon,
 } from 'lucide-react-native';
 import { iconStroke } from '@/core/theme';
 import type { RootTabParamList } from '@/core/navigation';
 import { useAppSelector } from '@/core/store';
-import { ComingSoonTabScreen } from '@/app/screens';
 import {
   BrandDealsNavigator,
   BrandHomeNavigator,
@@ -49,28 +47,15 @@ interface MainTabDef {
   component: React.ComponentType;
 }
 
-const MessagesPlaceholder: React.FC = () => {
-  const { t } = useTranslation();
-  return <ComingSoonTabScreen title={t('tabs.messages')} icon={MessageCircle} />;
-};
-
 /** Same route names for both roles; label, icon and root screen differ. */
 const BRAND_TABS: readonly MainTabDef[] = [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: BrandHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: BrandDealsNavigator },
-  { name: 'MessagesTab', titleKey: 'tabs.messages', icon: MessageCircle, component: MessagesPlaceholder },
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: BrandWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.account', icon: CircleUser, component: SettingsNavigator },
 ];
 
-const MESSAGES_TAB: MainTabDef = {
-  name: 'MessagesTab',
-  titleKey: 'tabs.messages',
-  icon: MessageCircle,
-  component: MessagesPlaceholder,
-};
-
-/** The creator's third tab: public campaigns, or the Messages placeholder once the server says they're off. */
+/** The creator's third tab: public campaigns, dropped once the server says they're off. */
 const OPPORTUNITIES_TAB: MainTabDef = {
   name: 'OpportunitiesTab',
   titleKey: 'tabs.opportunities',
@@ -78,16 +63,16 @@ const OPPORTUNITIES_TAB: MainTabDef = {
   component: CreatorOpportunitiesNavigator,
 };
 
-const creatorTabs = (thirdTab: MainTabDef): readonly MainTabDef[] => [
+const creatorTabs = (thirdTab?: MainTabDef): readonly MainTabDef[] => [
   { name: 'HomeTab', titleKey: 'tabs.home', icon: House, component: CreatorHomeNavigator },
   { name: 'DealsTab', titleKey: 'tabs.deals', icon: Briefcase, component: CreatorDealsNavigator },
-  thirdTab,
+  ...(thirdTab ? [thirdTab] : []),
   { name: 'WalletTab', titleKey: 'tabs.wallet', icon: Wallet, component: CreatorWalletNavigator },
   { name: 'SettingsTab', titleKey: 'tabs.myProfile', icon: IdCard, component: SettingsNavigator },
 ];
 
 const CREATOR_TABS_WITH_CAMPAIGNS = creatorTabs(OPPORTUNITIES_TAB);
-const CREATOR_TABS_WITHOUT_CAMPAIGNS = creatorTabs(MESSAGES_TAB);
+const CREATOR_TABS_WITHOUT_CAMPAIGNS = creatorTabs();
 
 // Same docked bar for both roles; it shows only while the focused tab sits on its main screen.
 const renderTabBar = (props: BottomTabBarProps) => {

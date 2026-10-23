@@ -17,6 +17,7 @@ import {
   selectUser,
   useGetProfileQuery,
   useLogoutMutation,
+  useOpenSupport,
   type KycStatus,
 } from '@/domains/auth';
 import { useGetUserProfileQuery, useUpdateAvatarMutation } from '../../../api/accountApi';
@@ -58,6 +59,7 @@ export const useProfileScreen = () => {
   const details = useGetUserProfileQuery();
   const { items: nicheOptions } = useLookupItems('niches');
   const push = usePushPermissionStatus();
+  const openSupport = useOpenSupport();
 
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [updateAvatar, { isLoading: isUploadingAvatar }] = useUpdateAvatarMutation();
@@ -243,6 +245,10 @@ export const useProfileScreen = () => {
       }),
     [navigation, t],
   );
+  const contactSupport = useCallback(
+    () => openSupport(t('account.profile.supportMessage')),
+    [openSupport, t],
+  );
   const openDealGuide = useCallback(() => {
     const guide: DealGuideParams = { role: isBrand ? 'brand' : 'creator', context: 'general' };
     navigate('DealGuide', guide);
@@ -367,6 +373,7 @@ export const useProfileScreen = () => {
     openDealGuide,
     openTerms,
     openPrivacy,
+    contactSupport,
     openDevShowcase,
   };
 };
