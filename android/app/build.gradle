@@ -2,6 +2,11 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services' // <- Add this line
+// Release defaults to production config; without this it bakes `.env` (localhost API). ENVFILE still overrides.
+project.ext.envConfigFiles = [
+    debug: ".env",
+    release: ".env.production",
+]
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 /**
@@ -84,8 +89,8 @@ android {
         applicationId "com.getsadaapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.0"
         // App-link host (PUBLIC_WEB_HOST in .env*). An https filter without a host would claim
         // every https link, so an unset host falls back to the never-resolving `.invalid` TLD.
         def publicWebHost = (project.env.get("PUBLIC_WEB_HOST") ?: "").trim()

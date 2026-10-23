@@ -89,9 +89,12 @@ MYAPP_UPLOAD_KEY_PASSWORD=<كلمة المرور>
 ```bash
 cd android
 ./gradlew clean
-ENVFILE=.env.production ./gradlew bundleRelease
+./gradlew bundleRelease
 ```
 
+- نسخة Release تأخذ `.env.production` تلقائياً، عبر `project.ext.envConfigFiles` في `android/app/build.gradle` (`debug` ← `.env`، `release` ← `.env.production`). أوامر `assembleRelease` و`bundleRelease` تطابق `release`.
+- `ENVFILE=...` ما زال يتغلب على الإعداد الافتراضي إن حددته (مثلاً `ENVFILE=.env.staging ./gradlew bundleRelease`).
+- للتحقق: في ناتج Gradle يجب أن يظهر `Reading env from: .env.production`.
 - `clean` ضروري عند التبديل بين البيئات، لأن Gradle يخزن `BuildConfig` المولّد مؤقتاً (`org.gradle.caching=true`)، وقد تبقى قيم البيئة السابقة.
 - الناتج:
   `android/app/build/outputs/bundle/release/app-release.aab`
@@ -102,7 +105,7 @@ ENVFILE=.env.production ./gradlew bundleRelease
 ```bash
 cd android
 ./gradlew clean
-ENVFILE=.env.production ./gradlew assembleRelease
+./gradlew assembleRelease
 # android/app/build/outputs/apk/release/app-release.apk
 ```
 
@@ -118,14 +121,46 @@ ENVFILE=.env.production ./gradlew assembleRelease
 4. من Organizer: **Distribute App** ← App Store Connect.
 5. ارفع `CFBundleVersion` (Build) قبل كل أرشفة.
 
-ملف البيئة في الأرشفة: react-native-config على iOS يقرأ متغير `ENVFILE`.
-الأضمن إنشاء Scheme مخصصاً (مثل `Sadaa-Production`) وفي Build ← Pre-actions:
+### ملف البيئة في iOS (مهم)
 
-```bash
-echo ".env.production" > /tmp/envfile
+بدون ضبط، الأرشفة تدمج `.env` أي **127.0.0.1** (بيئة التطوير). هذا ما حدث في أول build رُفع إلى TestFlight (1.0.0 (1)).
+
+الحل مضبوط داخل الـ Scheme المشترك `Sadaa`
+(`ios/Sadaa.xcodeproj/xcshareddata/xcschemes/Sadaa.xcscheme`) ← Build ← Pre-actions، مع "Provide build settings from: Sadaa":
+
+```sh
+# /tmp/envfile beats ENVFILE in react-native-config, so an explicit ENVFILE wins here.
+if [ -n "$ENVFILE" ]; then
+  echo "$ENVFILE" > /tmp/envfile
+elif [ "$CONFIGURATION" = "Release" ]; then
+  echo ".env.production" > /tmp/envfile
+else
+  rm -f /tmp/envfile
+fi
 ```
 
-ثم الأرشفة بهذا الـ Scheme. (لم أتحقق من وجود Schemes جاهزة في المشروع. تحقق منها في Xcode.)
+| الحالة | الملف المستخدم |
+|---|---|
+| `ENVFILE` محدد من الطرفية | هو نفسه |
+| Release (Archive) | `.env.production` |
+| Debug | `.env` |
+
+- react-native-config على iOS يقرأ بالترتيب: `/tmp/envfile` ثم `ENVFILE` ثم `.env`.
+- الـ Archive يستخدم إعداد Release، لذلك يأخذ production تلقائياً.
+- لم يُتحقق إن كان `ENVFILE` من الطرفية يصل إلى الـ pre-action عند `run-ios`. إن لم يصل، يُبنى Debug على `.env`. Release لا يتأثر.
+- بعد أي تغيير في `.env*`: **Product ← Clean Build Folder** ثم Archive.
+
+### التحقق من الأرشيف قبل الرفع
+
+```bash
+APP=$(find ~/Library/Developer/Xcode/Archives -name "Sadaa.app" -path "*Products*" -print0 | xargs -0 ls -td | head -1)
+strings "$APP/Sadaa" | grep -E "127\.0\.0\.1|getsadaapp|^(development|staging|production)$"
+```
+
+المطلوب: يظهر `production` و`https://api.getsadaapp.com/api`، ولا يظهر `127.0.0.1`.
+(مسار الأرشيف قد يحوي مسافة غير عادية، لذلك استُخدم `find` بدل الكتابة اليدوية.)
+
+إن رُفعت نسخة خاطئة: App Store Connect ← TestFlight ← الـ build ← **Expire Build**، ثم ارفع Build أعلى.
 
 نطاق الروابط (`PUBLIC_WEB_HOST`) يُضبط أيضاً كـ Build Setting في Xcode، وليس في `.env*` فقط.
 
@@ -135,6 +170,8 @@ echo ".env.production" > /tmp/envfile
 
 - [ ] `API_BASE_URL` في `.env.production` يشير للخادم الحقيقي (حالياً staging وproduction يشيران لنفس النطاق).
 - [ ] `ENABLE_LOGS=false` و`ENABLE_MOCK_DATA=false`.
+- [ ] iOS: Clean Build Folder ثم Archive، وفحص `strings` على الأرشيف (لا `127.0.0.1`).
+- [ ] Android: ناتج `bundleRelease` يحوي `Reading env from: .env.production`.
 - [ ] `versionCode` / Build مرفوع.
 - [ ] Firebase: `google-services.json` و`GoogleService-Info.plist` للمشروع الجديد (`com.getsadaapp`).
 - [ ] `PUBLIC_WEB_HOST` مضبوط إن كانت روابط الـ App Links مفعّلة.

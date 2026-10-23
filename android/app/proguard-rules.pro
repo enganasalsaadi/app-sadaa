@@ -17,6 +17,11 @@
 -keep class com.airbnb.android.react.lottie.** { *; }
 -keep class com.reactnativekeyboardcontroller.** { *; }
 
+# Room (via WorkManager) instantiates <Db>_Impl reflectively. room-runtime 2.5.0's consumer rule keeps
+# the class but not its constructor, which R8 full mode then strips -> startup crash in
+# androidx.startup.InitializationProvider (WorkManagerInitializer).
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+
 # Glide (fast-image) generated module.
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule { <init>(...); }
