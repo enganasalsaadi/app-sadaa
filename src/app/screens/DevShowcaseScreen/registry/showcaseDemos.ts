@@ -8,7 +8,7 @@ import { ConfirmSheetDemo } from '../demos/ConfirmSheetDemo';
 import { DateRangePickerDemo } from '../demos/DateRangePickerDemo';
 import { FilePickerDemo } from '../demos/FilePickerDemo';
 import { FormSectionDemo } from '../demos/FormSectionDemo';
-import { GalleryDemo } from '../demos/GalleryDemo';
+import { FileViewerDemo } from '../demos/FileViewerDemo';
 import { GlassDemo } from '../demos/GlassDemo';
 import { LiveElementsDemo } from '../demos/LiveElementsDemo';
 import { GlobalErrorsDemo } from '../demos/GlobalErrorsDemo';
@@ -83,7 +83,7 @@ export const SHOWCASE_DEMOS: Record<ShowcaseEntryId, React.ComponentType> = {
   bottomSheet: BottomSheetDemo,
   confirmSheet: ConfirmSheetDemo,
   dateRangePicker: DateRangePickerDemo,
-  gallery: GalleryDemo,
+  fileViewer: FileViewerDemo,
   superList: SuperListDemo,
   screenHeader: ScreenHeaderDemo,
   layoutGallery: LayoutGalleryDemo,

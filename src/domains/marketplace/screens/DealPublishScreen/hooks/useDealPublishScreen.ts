@@ -237,11 +237,12 @@ export const useDealPublishScreen = () => {
           : t('marketplace.deals.publish.creator.aired.noLink'),
       canOpen: safeLiveUrl(latest?.url ?? null) !== null,
       proofs: latest?.proofs ?? [],
+      dealRef: { role: 'creator' as const, id },
       autoIn: !verified && item.dueAt && !item.timerPaused ? dueLeft : null,
       autoNote: item.timerPaused ? t('marketplace.deals.publish.creator.aired.paused') : null,
       share: latest ? windowShare(latest.submittedAt, item.dueAt, now) : 0,
     };
-  }, [brand, composing, dueLeft, i18n.language, item, latest, now, t]);
+  }, [brand, composing, dueLeft, i18n.language, id, item, latest, now, t]);
 
   const latestUrl = latest?.url ?? null;
   const onOpenLink = useCallback(async () => {

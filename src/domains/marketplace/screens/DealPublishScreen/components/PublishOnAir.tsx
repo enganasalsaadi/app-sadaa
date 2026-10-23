@@ -17,9 +17,9 @@ import { useTranslation } from 'react-i18next';
 import { Check, Clock, ExternalLink, Image as ImageIcon, Link2 } from 'lucide-react-native';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, motion, useStyles, useTheme } from '@/core/theme';
-import { Box, CustomButton, GalleryModal, GradientSurface, Image, Pressable, ProgressBar, Text } from '@/shared/ui';
-import { isViewableImage, useDealGallery } from '../../../hooks/useDealGallery';
-import type { DealFile } from '../../../types';
+import { Box, CustomButton, FileViewer, GradientSurface, Image, Pressable, ProgressBar, Text } from '@/shared/ui';
+import { useDealViewer } from '../../../hooks/useDealViewer';
+import type { DealFile, DealRef } from '../../../types';
 
 const RING = moderateScale(150);
 const CORE = moderateScale(96);
@@ -39,6 +39,8 @@ export interface PublishOnAirProps {
   /** The link is on an allow-listed platform host, so it may leave the app. */
   canOpen: boolean;
   proofs: DealFile[];
+  /** The deal the proofs belong to (a viewed proof refreshes its link from it). */
+  dealRef: DealRef;
   /** «47 h» until auto-verification; `null` once verified or while paused (then `autoNote`). */
   autoIn: string | null;
   autoNote: string | null;
@@ -57,16 +59,13 @@ const Ripple = memo<{ progress: SharedValue<number>; style: ViewStyle }>(({ prog
 });
 
 /** The screenshots handed in: up to three overlapping thumbnails and the count; a tap opens the viewer. */
-const ProofPeek = memo<{ proofs: DealFile[] }>(({ proofs }) => {
+const ProofPeek = memo<{ proofs: DealFile[]; dealRef: DealRef }>(({ proofs, dealRef }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const gallery = useDealGallery(proofs);
-  const shown = proofs.filter(isViewableImage).slice(0, PROOF_PEEK);
-  const first = shown[0];
-  const openGallery = gallery.open;
-  const open = useCallback(() => {
-    if (first) openGallery(first.id);
-  }, [first, openGallery]);
+  const viewer = useDealViewer(proofs, dealRef);
+  const shown = viewer.props.files.slice(0, PROOF_PEEK);
+  const openFirst = viewer.openAt;
+  const open = useCallback(() => openFirst(0), [openFirst]);
   const styles = useStyles(
     ({ radii, spacing, borderWidths }): Record<'peek' | 'thumb' | 'overlap', ViewStyle> => ({
       peek: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: sizes.button.md },
@@ -88,7 +87,7 @@ const ProofPeek = memo<{ proofs: DealFile[] }>(({ proofs }) => {
       {formatNumber(proofs.length)}
     </Text>
   );
-  if (!first) return count;
+  if (shown.length === 0) return count;
   return (
     <>
       <Pressable
@@ -100,19 +99,18 @@ const ProofPeek = memo<{ proofs: DealFile[] }>(({ proofs }) => {
       >
         <Box row>
           {shown.map((file, index) => (
-            <Box key={file.id} style={index > 0 ? [styles.thumb, styles.overlap] : styles.thumb}>
-              <Image uri={file.url} size={sizes.avatar.sm} resizeMode="cover" />
+            <Box key={file.id} style={index > 0 ? [styles.thumb, styles.overlap] : styles.thumb} align="center" justify="center">
+              {file.kind === 'image' && file.url ? (
+                <Image uri={file.url} size={sizes.avatar.sm} resizeMode="cover" />
+              ) : (
+                <ImageIcon size={sizes.icon.xs} color={colors.text.onBrand} />
+              )}
             </Box>
           ))}
         </Box>
         {count}
       </Pressable>
-      <GalleryModal
-        images={gallery.urls}
-        visible={gallery.index !== null}
-        initialIndex={gallery.index ?? 0}
-        onClose={gallery.close}
-      />
+      <FileViewer {...viewer.props} refreshUrl={viewer.refreshUrl} />
     </>
   );
 });
@@ -131,6 +129,7 @@ const PublishOnAirComponent: React.FC<PublishOnAirProps> = ({
   link,
   canOpen,
   proofs,
+  dealRef,
   autoIn,
   autoNote,
   share,
@@ -284,7 +283,7 @@ const PublishOnAirComponent: React.FC<PublishOnAirProps> = ({
             <Text variant="bodySmall" color={colors.text.onBrandMuted} style={styles.rowLabel}>
               {t('marketplace.deals.publish.creator.aired.proofs')}
             </Text>
-            <ProofPeek proofs={proofs} />
+            <ProofPeek proofs={proofs} dealRef={dealRef} />
           </Box>
           {verified ? null : (
             <Box gap="sm">

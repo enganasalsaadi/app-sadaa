@@ -1,11 +1,13 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, type LucideIcon } from 'lucide-react-native';
 import { formatDate } from '@/core/i18n';
 import { iconStroke, moderateScale, resolveHue, useTheme } from '@/core/theme';
-import { Box, GalleryModal, IconButton, Image, Pressable, Text } from '@/shared/ui';
+import { Box, FileViewer, IconButton, Image, Pressable, Text, useFileViewer } from '@/shared/ui';
 import { isolateLtr } from '@/shared/utils';
-import type { DealReturnShipment } from '../types';
+import { useDealFileRefresh } from '../hooks/useDealFileRefresh';
+import type { DealReturnShipment, DealRole } from '../types';
+import { isSaveable, photoViewerFiles } from '../utils/dealVault';
 
 const THUMB = moderateScale(64);
 const WHEN: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
@@ -131,28 +133,35 @@ export const ReturnNote = memo<{ label: string; text: string }>(({ label, text }
   );
 });
 
-/** The report's photos as thumbnails, opened in the gallery (read-only). */
-export const ReturnPhotos = memo<{ urls: readonly string[] }>(({ urls }) => {
+/** The report's photos as thumbnails, opened in the file viewer (zoom, save). */
+export const ReturnPhotos = memo<{ ship: DealReturnShipment; role: DealRole; dealId: string }>(({ ship, role, dealId }) => {
   const { t } = useTranslation();
-  const [photo, setPhoto] = useState<number | null>(null);
-  const closePhoto = useCallback(() => setPhoto(null), []);
-  if (urls.length === 0) return null;
+  const photos = useMemo(
+    () =>
+      photoViewerFiles(ship.issue?.photos ?? [], `return:${ship.id}`, n => t('marketplace.vault.photoName', { n })).filter(
+        isSaveable,
+      ),
+    [ship.id, ship.issue?.photos, t],
+  );
+  const viewer = useFileViewer(photos);
+  const refreshUrl = useDealFileRefresh(role, dealId);
+  if (photos.length === 0) return null;
   return (
     <>
       <Box row gap="sm" wrap>
-        {urls.map((url, at) => (
+        {photos.map((photo, at) => (
           <Pressable
-            key={url}
+            key={photo.id}
             scaleOnPress
-            onPress={() => setPhoto(at)}
+            onPress={() => viewer.openAt(at)}
             accessibilityRole="imagebutton"
             accessibilityLabel={t('marketplace.deals.return.card.photoA11y', { number: at + 1 })}
           >
-            <Image uri={url} width={THUMB} height={THUMB} borderRadius="md" resizeMode="cover" />
+            <Image uri={photo.url ?? undefined} width={THUMB} height={THUMB} borderRadius="md" resizeMode="cover" />
           </Pressable>
         ))}
       </Box>
-      <GalleryModal images={[...urls]} visible={photo !== null} initialIndex={photo ?? 0} onClose={closePhoto} />
+      <FileViewer {...viewer.props} refreshUrl={refreshUrl} />
     </>
   );
 });

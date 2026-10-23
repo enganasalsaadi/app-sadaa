@@ -113,7 +113,7 @@ const DealPublicationReviewScreenComponent: React.FC = () => {
         <Box px="xl" pt="2xl" pb="2xl">
           <StaggerIn gap="xl">
             {vm.banner ? <StatusBanner text={vm.banner} verified={item.status.key === 'verified'} /> : null}
-            {vm.latest ? <ProofReel proofs={vm.latest.proofs} /> : null}
+            {vm.latest ? <ProofReel proofs={vm.latest.proofs} dealId={vm.dealId} /> : null}
             {vm.fuse ? <VerifyFuseCard time={vm.fuse.time} share={vm.fuse.share} /> : null}
             <PublicationHistory publications={vm.publications} waiting={vm.verifying} />
           </StaggerIn>

@@ -216,7 +216,7 @@ export const SHOWCASE_ENTRIES = {
   progressBar: {
     category: 'display',
     titleKey: 'devShowcase.sections.progressBar',
-    covers: ['ProgressBar'],
+    covers: ['ProgressBar', 'ProgressRing'],
   },
   accordion: {
     category: 'display',
@@ -318,10 +318,10 @@ export const SHOWCASE_ENTRIES = {
     titleKey: 'devShowcase.sections.dateRangePicker',
     covers: ['DateRangePicker'],
   },
-  gallery: {
+  fileViewer: {
     category: 'overlays',
-    titleKey: 'devShowcase.sections.gallery',
-    covers: ['GalleryModal'],
+    titleKey: 'devShowcase.sections.fileViewer',
+    covers: ['FileViewer', 'useFileViewer'],
   },
   superList: {
     category: 'lists',

@@ -1302,6 +1302,73 @@
     "gallery": {
       "title": "Photo access is off",
       "message": "Sada uses your photos so you can choose a profile photo and upload verification documents or campaign content. Turn it on in Settings."
+    },
+    "photosSave": {
+      "title": "Saving to Photos is off",
+      "message": "Sada needs permission to add photos and videos to your library. Turn it on in Settings."
+    }
+  },
+  "files": {
+    "openWith": "Open with",
+    "toast": {
+      "batchSaved_one": "1 file saved",
+      "batchSaved_other": "{{count}} files saved",
+      "batchFailed_one": "Couldn't save 1 file",
+      "batchFailed_other": "Couldn't save {{count}} files",
+      "batchReady_one": "1 document ready to save to Files",
+      "batchReady_other": "{{count}} documents ready to save to Files",
+      "retry": "Retry",
+      "saveDocuments": "Save"
+    },
+    "viewer": {
+      "close": "Close",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "retry": "Retry",
+      "loadingPercent": "Loading {{percent}}%",
+      "loadFailed": "Couldn't show this file",
+      "loadFailedBody": "Check your connection and try again.",
+      "gone": "This file has expired",
+      "goneBody": "It was removed from the server after the retention period.",
+      "share": "Share",
+      "openIn": "Open in another app",
+      "save": {
+        "photos": "Save to Photos",
+        "files": "Save to Files",
+        "downloads": "Save to Downloads",
+        "sheet": "Save"
+      },
+      "saving": "Saving {{percent}}%",
+      "saved": "Saved",
+      "sharedAgain": "Share again",
+      "fullscreen": "Fullscreen",
+      "pages": "Pages",
+      "pagesTitle_one": "1 page",
+      "pagesTitle_other": "{{count}} pages",
+      "goToPage": "Go to page",
+      "goToPageNumber": "Page {{page}}",
+      "pageOf": "Page {{page}} of {{pages}}",
+      "pageCounter": "{{page}} / {{pages}}",
+      "speed": "Playback speed",
+      "speedValue": "{{rate}}×",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "zoomLevel": "{{zoom}}×",
+      "play": "Play",
+      "pause": "Pause",
+      "seek": "Playback position",
+      "position": "{{current}} of {{total}}: {{name}}",
+      "positionShort": "{{current}} of {{total}}",
+      "subtitle": "{{caption}} · {{position}}",
+      "unsupported": "This file type can't be shown here. Open it in another app or save it.",
+      "banner": {
+        "savedPhotos": "Saved to Photos",
+        "savedDownloads": "Saved to Downloads",
+        "shared": "Shared",
+        "failed": "Couldn't save",
+        "permission": "Allow Photos access in Settings to save",
+        "open": "Open"
+      }
     }
   },
   "validation": {
@@ -4147,7 +4214,6 @@
         },
         "fileA11y": "{{kind}}: {{name}}",
         "fileGone": "No longer available",
-        "filesNote": "Tap any photo to view it full screen.",
         "mode": "Deal type",
         "duration": "Work time",
         "durationHint": "Starts when the product arrives.",
@@ -5808,6 +5874,101 @@
         "q4": "What if the brand asks for lots of changes?",
         "a4": "Changes are limited to the agreed rounds. Any extra round is paid."
       }
+    },
+    "vault": {
+      "dealTitle": "Deal files",
+      "campaignTitle": "Campaign attachments",
+      "dealSubtitle": "Deal with {{name}}",
+      "dealKicker": "Every file on this deal",
+      "campaignKicker": "Everything attached to the campaign",
+      "files_one": "1 file",
+      "files_other": "{{count}} files",
+      "sectionMeta": "{{files}} · {{size}}",
+      "all": "All",
+      "filters": "Filter files",
+      "sections": {
+        "brief": "Brief",
+        "cover": "Cover",
+        "drafts": "Drafts",
+        "proofs": "Proof of publishing",
+        "dispute": "Dispute evidence",
+        "shipping": "Shipping photos",
+        "retention": "Post retention",
+        "returns": "Sample return"
+      },
+      "group": {
+        "round": "{{item}} · Round {{round}}",
+        "roundReviewed": "{{item}} · Round {{round}} · {{review}}",
+        "roundWaiting": "{{item}} · Round {{round}} · Awaiting review",
+        "publication": "{{item}} · Link {{sequence}}",
+        "dispute": "Dispute {{sequence}}",
+        "shipment": "Shipment {{sequence}}",
+        "retention": "{{item}}"
+      },
+      "photoName": "Photo {{n}}",
+      "caption": "{{section}} · {{group}}",
+      "select": {
+        "enter": "Select files",
+        "exit": "Done selecting",
+        "title_one": "1 selected",
+        "title_other": "{{count}} selected",
+        "all": "Select all",
+        "none": "Deselect all",
+        "section": "Select section",
+        "sectionClear": "Clear section"
+      },
+      "tile": {
+        "save": "Save {{name}}",
+        "saved": "{{name}}, saved. Tap to open",
+        "busy": "{{name}}, downloading {{percent}}%",
+        "queued": "{{name}}, waiting",
+        "failed": "{{name}}, couldn't save. Tap to retry",
+        "gone": "File expired",
+        "open": "Open {{name}}",
+        "selected": "Selected",
+        "notSelected": "Not selected"
+      },
+      "dock": {
+        "downloadAll": "Download all",
+        "hintIos": "Photos and videos to Photos · documents to Files",
+        "hintAndroid": "Photos and videos to Photos · documents to Downloads",
+        "downloadSelected_one": "Download 1 file",
+        "downloadSelected_other": "Download {{count}} files",
+        "go": "Download",
+        "running": "Downloading…",
+        "progress": "{{done}} of {{total}} · keep browsing",
+        "ring": "{{done}}/{{total}}",
+        "cancel": "Stop downloading",
+        "done_one": "1 file saved",
+        "done_other": "{{count}} files saved",
+        "failed_one": "1 failed",
+        "failed_other": "{{count}} failed",
+        "ready_one": "1 document waiting to be saved to Files",
+        "ready_other": "{{count}} documents waiting to be saved to Files",
+        "saveDocuments": "Save documents",
+        "retry": "Retry",
+        "dismiss": "Close"
+      },
+      "lock": {
+        "title": "Brief files are locked",
+        "body": "They open as soon as the brand funds the deal."
+      },
+      "empty": {
+        "title": "No files yet",
+        "deal": "Brief files, drafts and proof of publishing show up here as they're added to the deal.",
+        "campaign": "No files are attached to this campaign.",
+        "locked": "No other files yet.",
+        "section": "No files in this section."
+      },
+      "loadFailed": "Couldn't load the files",
+      "permission": "Allow Photos access in Settings to save",
+      "entry": {
+        "deal": "Files",
+        "campaign": "Campaign attachments",
+        "seeAll": "See all",
+        "seeAllLabel": "See all files ({{count}})",
+        "more": "+{{count}}"
+      }
     }
   },
   "finance": {
@@ -6475,7 +6636,6 @@
       "bottomSheet": "Bottom sheet & selection",
       "confirmSheet": "Confirm sheet",
       "dateRangePicker": "Date range picker",
-      "gallery": "Gallery",
       "superList": "SuperList",
       "iconButton": "Icon buttons",
       "fab": "Floating action button",
@@ -6511,7 +6671,8 @@
       "wallet": "Wallet",
       "gradientSurface": "Gradient surface",
       "platformEditing": "Platform & prices editing",
-      "mediaKitShareNotice": "Media kit share notice"
+      "mediaKitShareNotice": "Media kit share notice",
+      "fileViewer": "File viewer"
     },
     "typography": {
       "h1Label": "H1 · Heading",
@@ -6785,9 +6946,6 @@
       "pastTitle": "Past range (statements)",
       "openPast": "Pick a past period"
     },
-    "gallery": {
-      "open": "Open photo {{index}}"
-    },
     "superList": {
       "toggleLabel": "LayoutToggle · {{layout}}"
     },
@@ -6930,7 +7088,8 @@
     "progressBar": {
       "profile": "Profile completeness",
       "budget": "Budget spent",
-      "advance": "Advance"
+      "advance": "Advance",
+      "ring": "Progress rings"
     },
     "accordion": {
       "escrowQ": "How does escrow work?",
@@ -7154,6 +7313,11 @@
       "premiumBody": "Soft mustard wash for verified or top creators. Text stays neutral.",
       "glowTitle": "Live hero + GlowOrbs",
       "glowBody": "Deeper navy gradient with three soft lights drifting slowly, for dashboard heroes."
+    },
+    "fileViewer": {
+      "open": "Open {{name}}",
+      "hint": "Photos (zoom, minimap), a video (scrubber, speed), a PDF (pages), a Word file (open in another app) and an expired link.",
+      "lookOnly": "Look only (no saving)"
     }
   },
   "followerTier": {

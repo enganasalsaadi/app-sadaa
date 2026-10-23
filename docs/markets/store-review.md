@@ -112,6 +112,8 @@ the user taps upload), notifications (deal updates).
 
 ## 5. Google Play Console
 
+- **Listing URL:** https://play.google.com/store/apps/details?id=com.getsadaapp (package `com.getsadaapp`). Used by the in-app force-update button.
+
 - [?] **Developer account type.** Apps with financial features may require an **organisation** account (D-U-N-S verified). The current account is personal (2017). Check the current Play policy before uploading; the safe path is a new organisation account under the German company and publishing there from the first release (moving an app between accounts later is slower).
 - [ ] **Financial features declaration** (App content): declare a wallet / stored balance used for marketplace payments; not a bank, not a loan, not crypto, not peer-to-peer transfers.
 - [ ] **Payments policy:** real-world services are outside Play Billing. Nothing digital is sold.

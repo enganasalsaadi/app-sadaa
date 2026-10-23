@@ -8,7 +8,7 @@ import {
   Box,
   CustomButton,
   CustomInput,
-  GalleryModal,
+  FileViewer,
   Notice,
   Text,
   SheetFrame,
@@ -286,11 +286,9 @@ const DealRetentionSheetsComponent: React.FC<DealRetentionSheetsProps> = ({
       <RestoreSheet deal={deal} retention={retention} />
     ) : null}
     <NoteSheet deal={deal} retention={retention} />
-    <GalleryModal
-      images={retention.galleryImages}
-      visible={retention.galleryIndex !== null}
-      initialIndex={retention.galleryIndex ?? 0}
-      onClose={retention.closeGallery}
+    <FileViewer
+      {...retention.viewer}
+      refreshUrl={retention.refreshUrl}
     />
   </>
 );

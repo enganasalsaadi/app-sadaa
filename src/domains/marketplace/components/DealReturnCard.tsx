@@ -84,7 +84,6 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, re
   const key = ship.status.key;
   const brand = role === 'brand';
   const party = isolateText((brand ? deal.creator.name : deal.brand.name) ?? '');
-  const urls = (ship.issue?.photos ?? []).flatMap(item => (item.url ? [item.url] : []));
   const waybill = <ReturnWaybill ship={ship} onCopyTracking={ret.copyTracking} onCopyLink={ret.copyLink} />;
 
   const creatorBody = (() => {
@@ -177,7 +176,7 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, re
               text={ship.issue.note}
             />
           ) : null}
-          <ReturnPhotos urls={urls} />
+          <ReturnPhotos ship={ship} role={role} dealId={deal.id} />
           <ReturnLine icon={ShieldCheck} tone="warning" text={t('marketplace.deals.return.card.issueLine')} />
         </>
       );
@@ -222,7 +221,7 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, re
         <Box style={styles.notchEnd} />
       </Box>
       <Box px="lg" pb="lg" gap="md">
-        {brand ? <DealReturnBrandBody deal={deal} ret={ret} answer={answer} urls={urls} /> : creatorBody}
+        {brand ? <DealReturnBrandBody deal={deal} ret={ret} answer={answer} /> : creatorBody}
       </Box>
     </Box>
   );

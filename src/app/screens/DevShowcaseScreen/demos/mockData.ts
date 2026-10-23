@@ -1,7 +1,7 @@
 import type { CatalogService } from '@/core/api';
 import { DEFAULT_CURRENCY } from '@/core/config';
 import type { Money } from '@/core/money';
-import type { PickedFile } from '@/shared/ui';
+import type { PickedFile, ViewerFile } from '@/shared/ui';
 
 /** Dev-only placeholder photos (network required); real screens use sized thumbnails from the API. */
 export const MOCK_IMAGE_URIS = [
@@ -9,6 +9,47 @@ export const MOCK_IMAGE_URIS = [
   'https://picsum.photos/seed/sada-2/800/600',
   'https://picsum.photos/seed/sada-3/800/600',
   'https://picsum.photos/seed/sada-4/800/600',
+];
+
+/** Dev-only: one of every kind the file viewer handles, plus an expired link. */
+export const MOCK_VIEWER_FILES: ViewerFile[] = [
+  ...MOCK_IMAGE_URIS.slice(0, 2).map((url, index) => ({
+    id: `demo-photo-${index + 1}`,
+    url,
+    name: `photo-${index + 1}.jpg`,
+    mime: 'image/jpeg',
+    kind: 'image' as const,
+    size: 480_000,
+    caption: null,
+  })),
+  {
+    id: 'demo-video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    name: 'draft-round-2.mp4',
+    mime: 'video/mp4',
+    kind: 'video',
+    size: 2_500_000,
+    caption: null,
+  },
+  {
+    id: 'demo-pdf',
+    url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    name: 'brand-guide.pdf',
+    mime: 'application/pdf',
+    kind: 'document',
+    size: 13_000,
+    caption: null,
+  },
+  {
+    id: 'demo-docx',
+    url: 'https://calibre-ebook.com/downloads/demos/demo.docx',
+    name: 'talking-points.docx',
+    mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    kind: 'document',
+    size: 1_300_000,
+    caption: null,
+  },
+  { id: 'demo-gone', url: null, name: 'old-proof.jpg', mime: 'image/jpeg', kind: 'image', size: null, caption: null },
 ];
 
 export const MOCK_AVATAR_URI = 'https://i.pravatar.cc/200?img=12';

@@ -9,7 +9,7 @@ import {
   ConfirmSheet,
   EmptyState,
   ErrorState,
-  GalleryModal,
+  FileViewer,
   Layout,
   Notice,
   Skeleton,
@@ -139,12 +139,7 @@ const DealDisputeScreenComponent: React.FC<DealDisputeScreenProps> = ({ role }) 
           </StaggerIn>
         </Box>
       </Layout>
-      <GalleryModal
-        images={vm.gallery}
-        visible={vm.galleryIndex !== null}
-        initialIndex={vm.galleryIndex ?? 0}
-        onClose={vm.closeMedia}
-      />
+      <FileViewer {...vm.viewer} refreshUrl={vm.refreshUrl} />
       <DisputeEvidenceSheet evidence={vm.evidence} />
       <ConfirmSheet
         visible={vm.withdrawVisible}

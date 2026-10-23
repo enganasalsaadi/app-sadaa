@@ -14,6 +14,7 @@ import { CampaignJourney } from '../../components/CampaignJourney';
 import { CampaignNowCard } from '../../components/CampaignNowCard';
 import { CampaignQuickActions } from '../../components/CampaignQuickActions';
 import { CampaignTermsCard } from '../../components/CampaignTermsCard';
+import { VaultEntryStrip } from '../../components/VaultEntryStrip';
 import { CampaignActionsSheet } from './components/CampaignActionsSheet';
 import { CampaignAddSeatsSheet } from './components/CampaignAddSeatsSheet';
 import { CampaignDeadlineSheet } from './components/CampaignDeadlineSheet';
@@ -121,6 +122,15 @@ const BrandCampaignDetailScreenComponent: React.FC = () => {
               />
             ) : null}
             <CampaignTermsCard campaign={campaign} state={vm.termsState} onEdit={vm.editTerms} />
+            {vm.files ? (
+              <VaultEntryStrip
+                title={t('marketplace.vault.entry.campaign')}
+                count={vm.files.count}
+                files={vm.files.files}
+                refreshUrl={vm.files.refreshUrl}
+                onSeeAll={vm.files.onSeeAll}
+              />
+            ) : null}
             {vm.journey && vm.nowCard ? (
               <CampaignJourney stations={vm.journey} tone={vm.nowCard.tone} onOpenApplicants={vm.openApplicants} />
             ) : null}

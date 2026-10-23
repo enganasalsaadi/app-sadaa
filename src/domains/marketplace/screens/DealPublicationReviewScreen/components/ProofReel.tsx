@@ -2,21 +2,22 @@ import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useTheme } from '@/core/theme';
-import { Box, GalleryModal, Rail, Text } from '@/shared/ui';
+import { Box, FileViewer, Rail, Text } from '@/shared/ui';
 import { DealProofPhone } from '../../../components/DealProofPhone';
-import { isViewableImage, useDealGallery } from '../../../hooks/useDealGallery';
+import { useDealViewer } from '../../../hooks/useDealViewer';
 import type { DealFile } from '../../../types';
 
 const SHOT = moderateScale(150);
 
 export interface ProofReelProps {
   proofs: DealFile[];
+  /** Brand side: an expired proof link refreshes from this deal. */
+  dealId: string;
 }
 
-const Shot = memo<{ file: DealFile; index: number; total: number; onOpen: (id: string) => void }>(
-  ({ file, index, total, onOpen }) => {
+const Shot = memo<{ file: DealFile; viewable: boolean; index: number; total: number; onOpen: (id: string) => void }>(
+  ({ file, viewable, index, total, onOpen }) => {
     const { t } = useTranslation();
-    const viewable = isViewableImage(file);
     const open = useCallback(() => onOpen(file.id), [file.id, onOpen]);
     return (
       <DealProofPhone
@@ -36,10 +37,10 @@ const Shot = memo<{ file: DealFile; index: number; total: number; onOpen: (id: s
 );
 
 /** The screenshots as phone screens in a sideways reel; a tap opens the full-screen viewer to zoom in on the account name. */
-const ProofReelComponent: React.FC<ProofReelProps> = ({ proofs }) => {
+const ProofReelComponent: React.FC<ProofReelProps> = ({ proofs, dealId }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const gallery = useDealGallery(proofs);
+  const viewer = useDealViewer(proofs, { role: 'brand', id: dealId });
   if (proofs.length === 0) return null;
   return (
     <Box gap="sm">
@@ -53,15 +54,17 @@ const ProofReelComponent: React.FC<ProofReelProps> = ({ proofs }) => {
       </Box>
       <Rail shadow="card" gap="md" bleed gutter="xl">
         {proofs.map((file, index) => (
-          <Shot key={file.id} file={file} index={index + 1} total={proofs.length} onOpen={gallery.open} />
+          <Shot
+            key={file.id}
+            file={file}
+            viewable={viewer.canOpen(file.id)}
+            index={index + 1}
+            total={proofs.length}
+            onOpen={viewer.open}
+          />
         ))}
       </Rail>
-      <GalleryModal
-        images={gallery.urls}
-        visible={gallery.index !== null}
-        initialIndex={gallery.index ?? 0}
-        onClose={gallery.close}
-      />
+      <FileViewer {...viewer.props} refreshUrl={viewer.refreshUrl} />
     </Box>
   );
 };

@@ -7,7 +7,7 @@ import { Box, Image, Pressable, Text } from '@/shared/ui';
 
 const EVIDENCE_TILE = moderateScale(58);
 
-/** What a tile shows: a photo opens in the viewer; video and documents are marked; a purged file says so. */
+/** What a tile shows: a photo, a video or document mark (any of them opens in the viewer); a purged file says so. */
 export type EvidenceTileKind = 'image' | 'video' | 'document' | 'gone';
 
 export interface EvidenceTileProps {
@@ -47,7 +47,7 @@ const EvidenceTileComponent: React.FC<EvidenceTileProps> = ({ tileKey, kind, url
     }),
     [colors.brand.main, colors.overlay, colors.status.danger.soft, colors.surface.elevated, kind],
   );
-  const viewable = kind === 'image' && url !== null && onOpen !== undefined;
+  const viewable = kind !== 'gone' && url !== null && onOpen !== undefined;
   const onPress = useCallback(() => onOpen?.(tileKey), [onOpen, tileKey]);
 
   const body =

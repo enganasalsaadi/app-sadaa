@@ -2,20 +2,29 @@ import React, { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Eye } from 'lucide-react-native';
+import { mimeFromName } from '@/core/download';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { isSocialPlatform } from '@/shared/utils';
 import {
   Box,
-  GalleryModal,
+  FileViewer,
   Image,
   Pressable,
   SocialPlatformIcon,
   Text,
+  useFileViewer,
+  type ViewerFile,
 } from '@/shared/ui';
 import type { MediaKitPortfolioItem } from '../../types/mediaKit';
 import { MediaKitRise } from './MediaKitRise';
 import { MediaKitSectionTitle } from './MediaKitSectionTitle';
+
+/** A thumbnail URL without a known image extension still saves as a photo. */
+const imageMimeOf = (url: string): string => {
+  const mime = mimeFromName(url);
+  return mime.startsWith('image/') ? mime : 'image/jpeg';
+};
 
 /** Tiles shown before "See all" opens the rest in place. */
 const MAX_COLLAPSED = 4;
@@ -159,9 +168,22 @@ const MediaKitWorkMasonryComponent: React.FC<{
 }> = ({ items }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-  const [viewer, setViewer] = useState<number | null>(null);
   const shown = expanded ? items : items.slice(0, MAX_COLLAPSED);
-  const images = useMemo(() => items.map(item => item.thumbnail_url), [items]);
+  // Past work opens in the file viewer: zoom in, save the shot.
+  const files = useMemo<ViewerFile[]>(
+    () =>
+      items.map(item => ({
+        id: `portfolio:${item.id}`,
+        url: item.thumbnail_url,
+        name: item.title || item.brand_name || t('account.mediaKit.showcase.work.overline'),
+        mime: imageMimeOf(item.thumbnail_url),
+        kind: 'image',
+        size: null,
+        caption: item.title || null,
+      })),
+    [items, t],
+  );
+  const viewer = useFileViewer(files);
 
   const columns = useMemo(() => {
     const cols: {
@@ -179,8 +201,7 @@ const MediaKitWorkMasonryComponent: React.FC<{
     return cols;
   }, [shown]);
 
-  const onOpen = useCallback((index: number) => setViewer(index), []);
-  const onClose = useCallback(() => setViewer(null), []);
+  const onOpen = viewer.openAt;
   const toggle = useCallback(() => setExpanded(prev => !prev), []);
 
   if (items.length === 0) return null;
@@ -220,12 +241,7 @@ const MediaKitWorkMasonryComponent: React.FC<{
           </Box>
         ))}
       </Box>
-      <GalleryModal
-        images={images}
-        visible={viewer !== null}
-        initialIndex={viewer ?? 0}
-        onClose={onClose}
-      />
+      <FileViewer {...viewer.props} />
     </Box>
   );
 };

@@ -13,8 +13,6 @@ export interface DealReturnBrandBodyProps {
   deal: Deal;
   ret: DealReturnModel;
   answer: DealReturnAnswerModel;
-  /** The report's photo URLs (already filtered to the ones with an address). */
-  urls: readonly string[];
 }
 
 /**
@@ -24,7 +22,7 @@ export interface DealReturnBrandBodyProps {
  * report a problem, waive. Closed: the facts and a closing line; the brand's own report or reason
  * is shown back to it.
  */
-const DealReturnBrandBodyComponent: React.FC<DealReturnBrandBodyProps> = ({ deal, ret, answer, urls }) => {
+const DealReturnBrandBodyComponent: React.FC<DealReturnBrandBodyProps> = ({ deal, ret, answer }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const date = useReturnDate();
@@ -149,7 +147,7 @@ const DealReturnBrandBodyComponent: React.FC<DealReturnBrandBodyProps> = ({ deal
               text={ship.issue.note}
             />
           ) : null}
-          <ReturnPhotos urls={urls} />
+          <ReturnPhotos ship={ship} role="brand" dealId={deal.id} />
           <ReturnLine icon={ShieldCheck} tone="warning" text={t('marketplace.deals.return.brand.issueLine')} />
         </>
       );

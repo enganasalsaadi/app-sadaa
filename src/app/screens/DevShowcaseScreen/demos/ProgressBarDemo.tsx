@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, CustomButton, GradientSurface, ProgressBar } from '@/shared/ui';
+import { Box, CustomButton, GradientSurface, ProgressBar, ProgressRing, Text } from '@/shared/ui';
+import { useTheme } from '@/core/theme';
 import type { ProgressBarTone } from '@/shared/ui';
 import { formatMoney, formatNumber } from '@/core/i18n';
 import { MOCK_DEAL_SUMMARY } from './mockData';
@@ -11,6 +12,7 @@ const SPENT_RATIO = 0.3;
 
 const ProgressBarDemoComponent: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, sizes } = useTheme();
   const demo = useProgressBarDemo();
   const percent = formatNumber(demo.value, { style: 'percent' });
 
@@ -50,6 +52,33 @@ const ProgressBarDemoComponent: React.FC = () => {
           accessibilityLabel={t('devShowcase.progressBar.profile')}
         />
       </GradientSurface>
+      <Box row align="center" gap="lg" accessible accessibilityLabel={t('devShowcase.progressBar.ring')}>
+        <ProgressRing
+          progress={demo.value}
+          size={sizes.vault.tileBadge}
+          stroke={sizes.dot.sm / 2}
+          color={colors.interactive.main}
+          track={colors.border.default}
+        />
+        <ProgressRing
+          progress={demo.value}
+          size={sizes.vault.dockRing}
+          stroke={sizes.dot.sm / 2}
+          color={colors.interactive.main}
+          track={colors.border.default}
+        >
+          <Text variant="overline">{percent}</Text>
+        </ProgressRing>
+        <ProgressRing
+          progress={demo.value}
+          size={sizes.illustration.sm}
+          stroke={sizes.dot.md}
+          color={colors.status.success.main}
+          track={colors.border.default}
+        >
+          <Text variant="amountSmall">{percent}</Text>
+        </ProgressRing>
+      </Box>
       <CustomButton
         title={t('devShowcase.progressBar.advance')}
         variant="secondary"

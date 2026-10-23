@@ -53,6 +53,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Sada uses your camera so you can take a profile photo or photograph your ID or business documents for account verification.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Sada saves the photos and videos you choose from your deals (briefs, drafts, proof of publishing) to your library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Sada uses your photo library so you can choose a profile photo and upload verification documents or campaign content.</string>
 	<key>RCTNewArchEnabled</key>

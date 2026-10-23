@@ -59,16 +59,8 @@ export const dealRounds = (
   };
 };
 
-/** `0:12`, `4:05`, `1:02:03`: a video moment, always Western digits. */
-export const formatTimecode = (seconds: number): string => {
-  const whole = Math.max(0, Math.floor(seconds));
-  const hours = Math.floor(whole / 3600);
-  const minutes = Math.floor((whole % 3600) / 60);
-  const secs = String(whole % 60).padStart(2, '0');
-  return hours > 0
-    ? `${hours}:${String(minutes).padStart(2, '0')}:${secs}`
-    : `${minutes}:${secs}`;
-};
+// Moved to shared (the file viewer uses it too); the draft screens keep importing it from here.
+export { formatTimecode } from '@/shared/utils';
 
 /** The brief words a caption should carry, as the creator would type them. */
 export interface CaptionToken {

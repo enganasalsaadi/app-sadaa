@@ -45,6 +45,9 @@ export function SuperList<T>({
   errorMessage,
   layout = 'list',
   overrideItemLayout,
+  getItemType,
+  stickyHeaderIndices,
+  separators = true,
   scrollRestorationKey,
   onScroll,
   scrollEventThrottle = 16,
@@ -170,6 +173,8 @@ export function SuperList<T>({
         overrideItemLayout={
           overrideItemLayout as FlashListProps<T>['overrideItemLayout']
         }
+        getItemType={getItemType}
+        stickyHeaderIndices={stickyHeaderIndices}
         // ─── Pagination ─────────────────────────────────────────────────────
         onEndReached={hasNextPage ? onEndReached : undefined}
         onEndReachedThreshold={END_REACHED_THRESHOLD}
@@ -197,7 +202,7 @@ export function SuperList<T>({
         contentContainerStyle={resolvedContentStyle}
         style={style}
         testID={testID}
-        ItemSeparatorComponent={ItemSeparator}
+        ItemSeparatorComponent={separators ? ItemSeparator : undefined}
       />
     </ErrorBoundary>
   );

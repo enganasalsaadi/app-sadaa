@@ -8,7 +8,7 @@
 | **Market** | Syria first, Arabic first, built to expand across the region |
 | **Platforms** | iOS and Android (one shared codebase) |
 | **Document owner** | Mobile team |
-| **Last updated** | 2026-10-23 | Store review prep: no "coming soon" spots, «Help & support» in Settings, unused Android permissions removed (🟡 not yet device tested). |
+| **Last updated** | 2026-10-23 | Google Play link added; Files: one full-screen viewer for every file (zoom, video, PDF, save), a files vault per deal and per campaign with «Download all» (🟡 not yet device tested). |
 | **Status of this document** | Living. It is updated whenever a screen, flow, permission or business rule changes (see `.claude/rules/11-mobile-docs.md`). |
 
 **How to use this document**
@@ -503,6 +503,22 @@ APP LAUNCH
     │     │     (last one completes the deal) / ask for a fix (2 max)  🟡 built
     │     ├── Contract: Arabic / English · parties · deliverables · payment
     │     │     · schedule · terms · signatures + fingerprint · addenda
+    │     ├── Deal files (both roles, from a «Files» strip on the deal page):
+    │     │     a navy deck with the latest files fanned, how many and how
+    │     │     heavy · filters (brief, drafts, proof, dispute, shipping…) ·
+    │     │     a photo grid grouped by section and round; each tile saves
+    │     │     itself from its corner (ring → ✓); expired files stay,
+    │     │     striped · long-press to pick several · «Download all» dock
+    │     │     with a live count; a creator sees the brief locked until
+    │     │     the brand funds the deal                       🟡 built
+    │     ├── Campaign attachments (brand, from the campaign page): the
+    │     │     same vault for the campaign's cover and brief files  🟡 built
+    │     ├── File viewer (every photo, video and document in the app,
+    │     │     incl. media kit work and top-up receipts): pinch / double-
+    │     │     tap zoom with a minimap, swipe between files, swipe down to
+    │     │     close · videos with a scrubber and speed · PDFs read in the
+    │     │     app page by page · save to Photos / Downloads / Files, share
+    │     │     or open in another app                         🟡 built
     │     ├── Add to the deal (brand): a new service from the creator's
     │     │     prices or an add-on on a deliverable · server price · wallet
     │     │     check / top-up · hold to send                         🟡 built
@@ -952,11 +968,12 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 |---|---|---|---|---|
 | **Notifications** | iOS, Android 13+ | "So you hear the moment a brand sends an offer, a payment is secured, or your money is released." | Only after a friendly in-app explanation at a moment of value; never on first launch | ✅ |
 | **Photo library** | iOS (Android uses the system photo picker, which needs no permission) | "Sada uses your photo library so you can choose a profile photo and upload verification documents, brief files or deal drafts." Shown in Arabic or English to match the phone's language. | When the user taps to choose a photo | ✅ |
+| **Add to photo library** | iOS only (Android 10+ saves through the system media store with no permission; Android 7–9 hands the file to the share sheet) | "Sada saves the photos and videos you choose from your deals (briefs, drafts, proof of publishing) to your library." Add-only: Sada cannot see the rest of the library. Shown in Arabic or English. | The first time the user saves a photo or video (one tap, or «Download all»); a refusal shows a short note with a way to Settings | 🟡 built, not yet device tested |
 | **Camera** | iOS only (Android opens the phone's own camera app, which needs no permission) | "Sada uses your camera so you can take a profile photo or photograph your ID or business documents for account verification." Shown in Arabic or English. | When the user chooses to take a photo. No screen takes photos yet; it's ready for ID capture and content drafts | 🟡 explanation ready, not used by any screen yet |
 | **Internet / network state** | Android | Needed to connect to Sada and to show the offline banner | Automatic (no prompt) | ✅ |
 | **Vibration** | Android | Gentle feedback on notifications and errors | Automatic (no prompt) | ✅ |
 
-**Removed on Android:** storage access, exact alarms and the background-service slot that app libraries add on their own. Uploads use the system picker or the app's own files, and no notification is scheduled or runs in the background, so none of them is needed and the Play listing doesn't show them.
+**Removed on Android:** storage access (saving deal files uses the system media store, and older Android versions the share sheet, so it stays removed), exact alarms and the background-service slot that app libraries add on their own. Uploads use the system picker or the app's own files, and no notification is scheduled or runs in the background, so none of them is needed and the Play listing doesn't show them.
 
 **Not requested:** location. It was removed because no feature uses it. City-based matching will use the city the user picks in their profile. If a future feature needs the phone's location, it gets added back with its own explanation.
 
@@ -968,7 +985,8 @@ Notifications are central to a marketplace (new offers, payment secured, draft a
 |---|---|---|
 | **In-app account deletion** (Apple requirement) | ✅ | "Delete my account" is in Settings, on the Suspended screen and on every registration step, password-confirmed and connected to the Sada service. It works for unfinished, active and suspended accounts. |
 | **Privacy policy and terms** reachable in the app | ✅ | Opened as in-app pages from Settings. Final legal text and addresses still needed. |
-| **Clear permission explanations** | ✅ | The camera and photo explanations say exactly what Sada uses them for, in Arabic and English. Unused permissions (location, and camera on Android) were removed, so the store listings only show what the app really uses. |
+| **Clear permission explanations** | ✅ | The camera, photo and «add to photo library» explanations say exactly what Sada uses them for, in Arabic and English. Unused permissions (location, and camera on Android) were removed, so the store listings only show what the app really uses. |
+| **Public store page (Android)** | ✅ | Sada's Google Play page is live at https://play.google.com/store/apps/details?id=com.getsadaapp. The «update required» screen opens it in the Play app, or in the browser when the Play app is missing. The Apple page is still waiting for the first App Store release. |
 | **Secure connections only** | ✅ | Store builds on iOS and Android connect only over encrypted HTTPS and trust only the phone's built-in certificates. Insecure connections are allowed only in developer builds on a local network. |
 | **Privacy "nutrition label" (Apple) and Data Safety form (Google)** | 🔜 | Must declare: phone number, name, identity and business documents, social account handles, device notification token, and usage data. |
 | **Sign in with Apple** | ✅ not required | We use only phone and password, with no third-party social login. |
@@ -1053,6 +1071,8 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 
 | Date | Change | Sections updated |
 |---|---|---|
+| 2026-10-23 | Google Play link added: the update-required screen now sends Android users to Sada's live Google Play page when the Play app can't open it directly (✅). | §7.2 |
+| 2026-10-23 | Files everywhere (🟡 not yet device tested): one full-screen viewer replaces the old photo gallery on every file in the app (deal brief, drafts' proofs, dispute evidence, shipping and return photos, retention screenshots, media kit work, top-up receipts) with zoom, a minimap, video controls, in-app PDF reading, and save / share; a files vault per deal (both roles) and per campaign (brand) groups every file by section with per-file saving, multi-select and «Download all»; creators see brief files locked until funding; iOS asks add-only Photos access the first time a photo or video is saved, Android keeps no storage permission. | Last updated, §5.2 screen map, §7.1, §7.2 |
 | 2026-10-23 | "Coming soon" spots removed before store review (🟡 not yet device tested): the Messages tab is gone for both roles (brands now have four tabs; creators have four while campaigns are closed); the sign-up account-type sheet no longer shows the unavailable agency option; the brief files note no longer promises a future viewer; a «Help & support» row in Settings for both roles; Android no longer lists storage, exact-alarm or background-service permissions; iOS declares standard encryption only. | Last updated, §5.2 screen map, §7.1, §7.2 |
 | 2026-10-22 | Phone entry and Syrian pound display simplified (🟡 not yet device tested): login, sign-up, password reset, payout and delivery-address phone fields no longer show a country picker or dial code; numbers are typed the local way and must start with 0 («0944 123 456»), and are still sent in full international form; profile and code screens show the number the same local way; Syrian pound amounts and the rate line show the bare number with no «ل.س» / "SYP" symbol. | Last updated, §4.5, §5.1 |
 | 2026-10-22 | Creator Home redesigned («v3», 🟡 not yet device tested): the hero puts the creator's link first (copy, preview, share or make public) with the last 30 days, and its content sinks behind a rounded sheet while scrolling; one task deck holds the blocker, the deals waiting and, before the first offer, the storefront steps; a «Sada map» of eight tiles leads to every place (offers and my deals open the right Deals tab) with a red bar for live strikes; running deals with a stage bar; campaigns as one card; money held with its flow and the ID nudge; the storefront to brands; a readiness ring; prices as tags hanging from a rail with the service never cut. | Last updated, §5.2 screen map, Journey A4, §6 look and motion |
@@ -1061,5 +1081,3 @@ Every change to a screen, flow, permission or business rule adds a row here (new
 | 2026-10-19 | The brand's launch room top slimmed (🟡 not yet device tested): the navy top keeps only the title and the clock (small tiles, or the ring once on air) so nothing hides behind the body; the three stations (now with their times) and the creator reminders moved into the first card of the body. | Last updated, §5.2 screen map, Batch tools |
 | 2026-10-19 | The brand's campaign page redesigned (🟡 not yet device or live-server tested): a short cover (the photo, or rings on the brand gradient); quick-action circles for the status; one «now» card with a ring for the clock or count that matters, what is happening and what is asked of the brand as rows (lit when pressing, with the time left before the system acts), and the team's note when changes were requested; the terms as tiles with an edit / locked / fixed-during-review chip; the campaign tools as tiles; the five-stop journey; a history showing the latest three events; the bottom button now also reviews waiting applications or opens the chosen creators. | Last updated, §5.2 screen map, Journey F2 |
 | 2026-10-18 | The brand's Deals tab rebuilt (🟡 not yet device or live-server tested): the tab is now «Deals» for both roles; one page with a Public campaigns | Direct requests pill (an amber count when the other face waits on you) and scrolling filter chips with counts for each face (campaigns: All, Active, In review, Drafts, Finished; requests: All, Waiting on you, Awaiting reply, In progress, Drafts, Finished); campaign cards now carry activity · city, what is asked of each creator and a station track with a «time left» line, on the same soft card as deals; the «needs your decision» strip is gone (the pill count, the chip dot and the strip inside the card replace it); each chip has its own empty message with an action. | Header, §5.2 screen map, Journey F2, §5.3 |
-| 2026-10-17 | Notifications for public campaigns built (🟡 not yet device or live-server tested): every campaign and sample-return notice opens its screen for the right role and reloads what it changed (the campaign and its lists, the brand's applicants, the creator's application, Home glance and restrictions); the inbox gets All / Campaigns / Deals chips (local, by notice family) and a distinct icon and tone for each notice type. | 6.4, 7.3 |
-| 2026-10-17 | Returned samples and account restrictions built (🟡 not yet device or live-server tested): a ticket-shaped return card on the deal page for both sides with a small road and parcel (pulsing while owed, travelling, arriving, or staying with the creator); the creator's waybill sheet (courier, number, optional https link, when handed over) saved with a plain button that unlocks the account at once; an amber or red banner on Opportunities and a locked bar on the campaign page and on direct offers that explain the lock and lead to the waybill or My strikes; «severe» and «normal» chips and the service's reason text on My strikes; the brand's three final answers to a returned sample (confirm receipt, report a problem with a note and up to five photos, waive with an optional reason), each ending in a press-and-hold | Header, §4.5, §5.3 Journey F2, §7.3 |

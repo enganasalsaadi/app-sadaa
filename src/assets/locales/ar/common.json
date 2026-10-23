@@ -1350,6 +1350,89 @@
     "gallery": {
       "title": "الوصول إلى الصور متوقف",
       "message": "يستخدم صدى صورك لتتمكن من اختيار صورة ملفك الشخصي ورفع مستندات التوثيق أو محتوى الحملات. فعّله من الإعدادات."
+    },
+    "photosSave": {
+      "title": "الحفظ في الصور متوقف",
+      "message": "يحتاج صدى إذنًا لإضافة الصور والفيديو إلى مكتبتك. فعّله من الإعدادات."
+    }
+  },
+  "files": {
+    "openWith": "فتح باستخدام",
+    "toast": {
+      "batchSaved_zero": "لم يُحفظ أي ملف",
+      "batchSaved_one": "تم حفظ ملف واحد",
+      "batchSaved_two": "تم حفظ ملفين",
+      "batchSaved_few": "تم حفظ {{count}} ملفات",
+      "batchSaved_many": "تم حفظ {{count}} ملفًا",
+      "batchSaved_other": "تم حفظ {{count}} ملف",
+      "batchFailed_zero": "لم يفشل أي ملف",
+      "batchFailed_one": "تعذّر حفظ ملف واحد",
+      "batchFailed_two": "تعذّر حفظ ملفين",
+      "batchFailed_few": "تعذّر حفظ {{count}} ملفات",
+      "batchFailed_many": "تعذّر حفظ {{count}} ملفًا",
+      "batchFailed_other": "تعذّر حفظ {{count}} ملف",
+      "batchReady_zero": "لا مستندات جاهزة",
+      "batchReady_one": "مستند واحد جاهز للحفظ في الملفات",
+      "batchReady_two": "مستندان جاهزان للحفظ في الملفات",
+      "batchReady_few": "{{count}} مستندات جاهزة للحفظ في الملفات",
+      "batchReady_many": "{{count}} مستندًا جاهزًا للحفظ في الملفات",
+      "batchReady_other": "{{count}} مستند جاهز للحفظ في الملفات",
+      "retry": "إعادة المحاولة",
+      "saveDocuments": "حفظ"
+    },
+    "viewer": {
+      "close": "إغلاق",
+      "mute": "كتم الصوت",
+      "unmute": "تشغيل الصوت",
+      "retry": "إعادة المحاولة",
+      "loadingPercent": "جارٍ التحميل {{percent}}٪",
+      "loadFailed": "تعذّر عرض الملف",
+      "loadFailedBody": "تحقّق من اتصالك ثم أعد المحاولة.",
+      "gone": "انتهت صلاحية الملف",
+      "goneBody": "حُذف هذا الملف من الخادم بعد انتهاء مدة الاحتفاظ.",
+      "share": "مشاركة",
+      "openIn": "فتح في تطبيق آخر",
+      "save": {
+        "photos": "حفظ في الصور",
+        "files": "حفظ في الملفات",
+        "downloads": "حفظ في التنزيلات",
+        "sheet": "حفظ"
+      },
+      "saving": "جارٍ الحفظ {{percent}}٪",
+      "saved": "تم الحفظ",
+      "sharedAgain": "مشاركة مجددًا",
+      "fullscreen": "ملء الشاشة",
+      "pages": "الصفحات",
+      "pagesTitle_zero": "لا صفحات",
+      "pagesTitle_one": "صفحة واحدة",
+      "pagesTitle_two": "صفحتان",
+      "pagesTitle_few": "{{count}} صفحات",
+      "pagesTitle_many": "{{count}} صفحة",
+      "pagesTitle_other": "{{count}} صفحة",
+      "goToPage": "الانتقال إلى صفحة",
+      "goToPageNumber": "الصفحة {{page}}",
+      "pageOf": "الصفحة {{page}} من {{pages}}",
+      "pageCounter": "{{page}} / {{pages}}",
+      "speed": "سرعة التشغيل",
+      "speedValue": "{{rate}}×",
+      "zoomIn": "تكبير",
+      "zoomOut": "تصغير",
+      "zoomLevel": "{{zoom}}×",
+      "play": "تشغيل",
+      "pause": "إيقاف مؤقت",
+      "seek": "موضع التشغيل",
+      "position": "{{current}} من {{total}}: {{name}}",
+      "positionShort": "{{current}} من {{total}}",
+      "subtitle": "{{caption}} · {{position}}",
+      "unsupported": "لا يمكن عرض هذا النوع هنا. افتحه في تطبيق آخر أو احفظه.",
+      "banner": {
+        "savedPhotos": "تم الحفظ في الصور",
+        "savedDownloads": "تم الحفظ في التنزيلات",
+        "shared": "تمت المشاركة",
+        "failed": "تعذّر الحفظ",
+        "permission": "اسمح بالوصول إلى الصور من الإعدادات للحفظ",
+        "open": "فتح"
+      }
     }
   },
   "validation": {
@@ -4387,7 +4470,6 @@
         },
         "fileA11y": "{{kind}}: {{name}}",
         "fileGone": "لم يعد متاحاً",
-        "filesNote": "اضغط على أي صورة لعرضها بالحجم الكامل.",
         "mode": "نوع الصفقة",
         "duration": "مدة التنفيذ",
         "durationHint": "تبدأ من استلام المنتج.",
@@ -6135,6 +6217,125 @@
         "q4": "ماذا لو طلبت العلامة تعديلات كثيرة؟",
         "a4": "التعديلات محدودة بالجولات المتفق عليها. أي جولة إضافية تكون مدفوعة."
       }
+    },
+    "vault": {
+      "dealTitle": "ملفات الصفقة",
+      "campaignTitle": "مرفقات الحملة",
+      "dealSubtitle": "صفقة مع {{name}}",
+      "dealKicker": "كل ملفات الصفقة",
+      "campaignKicker": "كل ما أرفقته بالحملة",
+      "files_zero": "لا ملفات",
+      "files_one": "ملف واحد",
+      "files_two": "ملفان",
+      "files_few": "{{count}} ملفات",
+      "files_many": "{{count}} ملفًا",
+      "files_other": "{{count}} ملف",
+      "sectionMeta": "{{files}} · {{size}}",
+      "all": "الكل",
+      "filters": "تصفية الملفات",
+      "sections": {
+        "brief": "البريف",
+        "cover": "الغلاف",
+        "drafts": "المسودات",
+        "proofs": "إثبات النشر",
+        "dispute": "أدلة النزاع",
+        "shipping": "صور الشحن",
+        "retention": "بقاء المنشور",
+        "returns": "إرجاع العيّنة"
+      },
+      "group": {
+        "round": "{{item}} · الجولة {{round}}",
+        "roundReviewed": "{{item}} · الجولة {{round}} · {{review}}",
+        "roundWaiting": "{{item}} · الجولة {{round}} · بانتظار المراجعة",
+        "publication": "{{item}} · الرابط {{sequence}}",
+        "dispute": "النزاع {{sequence}}",
+        "shipment": "الشحنة {{sequence}}",
+        "retention": "{{item}}"
+      },
+      "photoName": "صورة {{n}}",
+      "caption": "{{section}} · {{group}}",
+      "select": {
+        "enter": "تحديد ملفات",
+        "exit": "إنهاء التحديد",
+        "title_zero": "اختر ملفات",
+        "title_one": "تم تحديد ملف",
+        "title_two": "تم تحديد ملفين",
+        "title_few": "تم تحديد {{count}} ملفات",
+        "title_many": "تم تحديد {{count}} ملفًا",
+        "title_other": "تم تحديد {{count}} ملف",
+        "all": "تحديد الكل",
+        "none": "إلغاء تحديد الكل",
+        "section": "تحديد القسم",
+        "sectionClear": "إلغاء القسم"
+      },
+      "tile": {
+        "save": "حفظ {{name}}",
+        "saved": "{{name}}، محفوظ. اضغط للفتح",
+        "busy": "{{name}}، جارٍ التنزيل {{percent}}٪",
+        "queued": "{{name}}، في الانتظار",
+        "failed": "{{name}}، تعذّر الحفظ. اضغط لإعادة المحاولة",
+        "gone": "انتهت صلاحية الملف",
+        "open": "فتح {{name}}",
+        "selected": "محدد",
+        "notSelected": "غير محدد"
+      },
+      "dock": {
+        "downloadAll": "تنزيل الكل",
+        "hintIos": "الصور والفيديو إلى الصور · المستندات إلى الملفات",
+        "hintAndroid": "الصور والفيديو إلى الصور · المستندات إلى التنزيلات",
+        "downloadSelected_zero": "اختر ملفات للتنزيل",
+        "downloadSelected_one": "تنزيل ملف واحد",
+        "downloadSelected_two": "تنزيل ملفين",
+        "downloadSelected_few": "تنزيل {{count}} ملفات",
+        "downloadSelected_many": "تنزيل {{count}} ملفًا",
+        "downloadSelected_other": "تنزيل {{count}} ملف",
+        "go": "تنزيل",
+        "running": "جارٍ التنزيل…",
+        "progress": "{{done}} من {{total}} · يمكنك المتابعة",
+        "ring": "{{done}}/{{total}}",
+        "cancel": "إيقاف التنزيل",
+        "done_zero": "لم يُحفظ أي ملف",
+        "done_one": "تم حفظ ملف واحد",
+        "done_two": "تم حفظ ملفين",
+        "done_few": "تم حفظ {{count}} ملفات",
+        "done_many": "تم حفظ {{count}} ملفًا",
+        "done_other": "تم حفظ {{count}} ملف",
+        "failed_zero": "",
+        "failed_one": "تعذّر ملف واحد",
+        "failed_two": "تعذّر ملفان",
+        "failed_few": "تعذّرت {{count}} ملفات",
+        "failed_many": "تعذّر {{count}} ملفًا",
+        "failed_other": "تعذّر {{count}} ملف",
+        "ready_zero": "",
+        "ready_one": "مستند واحد ينتظر الحفظ في الملفات",
+        "ready_two": "مستندان ينتظران الحفظ في الملفات",
+        "ready_few": "{{count}} مستندات تنتظر الحفظ في الملفات",
+        "ready_many": "{{count}} مستندًا ينتظر الحفظ في الملفات",
+        "ready_other": "{{count}} مستند ينتظر الحفظ في الملفات",
+        "saveDocuments": "حفظ المستندات",
+        "retry": "إعادة",
+        "dismiss": "إغلاق"
+      },
+      "lock": {
+        "title": "ملفات البريف مقفلة",
+        "body": "تُفتح فور تمويل العلامة للصفقة."
+      },
+      "empty": {
+        "title": "لا ملفات بعد",
+        "deal": "ستظهر هنا ملفات البريف والمسودات وإثبات النشر حين تُضاف إلى الصفقة.",
+        "campaign": "لم تُرفق ملفات بهذه الحملة.",
+        "locked": "لا ملفات أخرى حتى الآن.",
+        "section": "لا ملفات في هذا القسم."
+      },
+      "loadFailed": "تعذّر تحميل الملفات",
+      "permission": "اسمح بالوصول إلى الصور من الإعدادات للحفظ",
+      "entry": {
+        "deal": "الملفات",
+        "campaign": "مرفقات الحملة",
+        "seeAll": "عرض الكل",
+        "seeAllLabel": "عرض كل الملفات ({{count}})",
+        "more": "+{{count}}"
+      }
     }
   },
   "finance": {
@@ -6810,7 +7011,6 @@
       "bottomSheet": "الورقة السفلية والاختيار",
       "confirmSheet": "ورقة التأكيد",
       "dateRangePicker": "اختيار نطاق التاريخ",
-      "gallery": "المعرض",
       "superList": "SuperList",
       "iconButton": "أزرار الأيقونات",
       "fab": "زر الإجراء العائم",
@@ -6846,7 +7046,8 @@
       "wallet": "المحفظة",
       "gradientSurface": "سطح متدرّج",
       "platformEditing": "تعديل المنصات والأسعار",
-      "mediaKitShareNotice": "تنبيه مشاركة الملف الإعلامي"
+      "mediaKitShareNotice": "تنبيه مشاركة الملف الإعلامي",
+      "fileViewer": "عارض الملفات"
     },
     "typography": {
       "h1Label": "H1 · عنوان",
@@ -7120,9 +7321,6 @@
       "pastTitle": "فترة سابقة (كشوف الحساب)",
       "openPast": "اختر فترة سابقة"
     },
-    "gallery": {
-      "open": "فتح الصورة {{index}}"
-    },
     "superList": {
       "toggleLabel": "LayoutToggle · {{layout}}"
     },
@@ -7265,7 +7463,8 @@
     "progressBar": {
       "profile": "اكتمال الملف",
       "budget": "الميزانية المصروفة",
-      "advance": "تقدّم"
+      "advance": "تقدّم",
+      "ring": "حلقات التقدّم"
     },
     "accordion": {
       "escrowQ": "كيف يعمل الضمان؟",
@@ -7493,6 +7692,11 @@
       "premiumBody": "تدرّج خردلي هادئ للموثّقين وكبار المبدعين. النص يبقى محايداً.",
       "glowTitle": "هيدر حيّ + GlowOrbs",
       "glowBody": "تدرّج كحلي أعمق مع ثلاثة أضواء ناعمة تنجرف ببطء، لهيدر الشاشات الرئيسية."
+    },
+    "fileViewer": {
+      "open": "فتح {{name}}",
+      "hint": "صور (تكبير وخريطة)، فيديو (شريط وسرعة)، PDF (صفحات)، ملف Word (فتح في تطبيق آخر)، ورابط منتهي.",
+      "lookOnly": "عرض فقط (بلا حفظ)"
     }
   },
   "followerTier": {

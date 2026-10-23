@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import type { RefreshUrl } from '@/core/download';
 import { navigate, type DealsStackScreenProps } from '@/core/navigation';
 import { useGetCampaignHistoryQuery, useGetCampaignQuery } from '../../../api/brandCampaignsApi';
 import type { CampaignStatus } from '../../../types';
@@ -10,6 +11,7 @@ import { campaignJourney } from '../../../utils/campaignJourney';
 import { campaignNow, type CampaignNowTodo } from '../../../utils/campaignNow';
 import { campaignQuickActions, type CampaignQuickAction } from '../../../utils/campaignQuickActions';
 import { getCampaignStatusMeta } from '../../../utils/campaignStatus';
+import { buildCampaignVault, isSaveable, vaultFiles, vaultUrlOf } from '../../../utils/dealVault';
 import { useCampaignLifecycle } from './useCampaignLifecycle';
 
 type Route = DealsStackScreenProps<'CampaignDetail'>['route'];
@@ -69,6 +71,16 @@ export const useBrandCampaignDetailScreen = () => {
   const openShipping = useCallback(() => navigation.navigate('CampaignShipping', { id }), [id, navigation]);
   const openAnnouncements = useCallback(() => navigation.navigate('CampaignAnnouncements', { id }), [id, navigation]);
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const openFiles = useCallback(() => navigation.navigate('CampaignFiles', { id }), [id, navigation]);
+
+  // The attachments strip: every file, the ones that still open, a fresh link after one expired.
+  const attachments = useMemo(() => (campaign ? vaultFiles(buildCampaignVault(campaign)) : []), [campaign]);
+  const openable = useMemo(() => attachments.filter(isSaveable), [attachments]);
+  const refetchDetail = detail.refetch;
+  const refreshFileUrl = useCallback<RefreshUrl>(
+    async fileId => vaultUrlOf(buildCampaignVault(await refetchDetail().unwrap()), fileId),
+    [refetchDetail],
+  );
   const lifecycle = useCampaignLifecycle(campaign, goBack);
   const decide = lifecycle.decide;
 
@@ -173,6 +185,10 @@ export const useBrandCampaignDetailScreen = () => {
     openDrop,
     openShipping,
     openAnnouncements,
+    files:
+      attachments.length > 0
+        ? { count: attachments.length, files: openable, refreshUrl: refreshFileUrl, onSeeAll: openFiles }
+        : null,
     lifecycle,
     dock,
     dockPress,

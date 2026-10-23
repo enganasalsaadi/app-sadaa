@@ -1,12 +1,14 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Clock, ShieldCheck, TriangleAlert } from 'lucide-react-native';
 import { formatDate, formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, GalleryModal, Image, Pressable, Text } from '@/shared/ui';
+import { Box, FileViewer, Image, Pressable, Text, useFileViewer } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
+import { useDealFileRefresh } from '../hooks/useDealFileRefresh';
 import type { DealRole, DealShipment } from '../types';
+import { isSaveable, photoViewerFiles } from '../utils/dealVault';
 
 const ICON_BOX = moderateScale(42);
 const THUMB = moderateScale(64);
@@ -20,6 +22,7 @@ const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
 export interface DealShipmentIssueCardProps {
   shipment: DealShipment;
   role: DealRole;
+  dealId: string;
   /** The other side: the creator for the brand, the brand for the creator. */
   partyName: string;
   /** Creator: the brand missed its answer window and the free cancel is open. */
@@ -35,6 +38,7 @@ export interface DealShipmentIssueCardProps {
 const DealShipmentIssueCardComponent: React.FC<DealShipmentIssueCardProps> = ({
   shipment,
   role,
+  dealId,
   partyName,
   freeCancel,
   reshipsLeft,
@@ -42,12 +46,15 @@ const DealShipmentIssueCardComponent: React.FC<DealShipmentIssueCardProps> = ({
   const { t, i18n } = useTranslation();
   const { colors, sizes } = useTheme();
   const issue = shipment.issue;
-  const urls = useMemo(
-    () => (issue?.photos ?? []).flatMap(photo => (photo.url ? [photo.url] : [])),
-    [issue?.photos],
+  const photos = useMemo(
+    () =>
+      photoViewerFiles(issue?.photos ?? [], `shipment:${shipment.id}`, n =>
+        t('marketplace.vault.photoName', { n }),
+      ).filter(isSaveable),
+    [issue?.photos, shipment.id, t],
   );
-  const [index, setIndex] = useState<number | null>(null);
-  const close = useCallback(() => setIndex(null), []);
+  const viewer = useFileViewer(photos);
+  const refreshUrl = useDealFileRefresh(role, dealId);
   const styles = useStyles(
     ({ radii, spacing, borderWidths }): Record<'card' | 'icon' | 'quote' | 'clock', ViewStyle> => ({
       card: {
@@ -118,19 +125,19 @@ const DealShipmentIssueCardComponent: React.FC<DealShipmentIssueCardProps> = ({
         </Box>
       ) : null}
 
-      {urls.length > 0 ? (
+      {photos.length > 0 ? (
         <Box row gap="sm" wrap>
-          {urls.map((url, at) => (
+          {photos.map((photo, at) => (
             <Pressable
-              key={url}
+              key={photo.id}
               scaleOnPress
-              onPress={() => setIndex(at)}
+              onPress={() => viewer.openAt(at)}
               accessibilityRole="imagebutton"
               accessibilityLabel={t('marketplace.deals.shipping.issue.photoA11y', {
                 number: formatNumber(at + 1, {}, i18n.language),
               })}
             >
-              <Image uri={url} width={THUMB} height={THUMB} borderRadius="md" resizeMode="cover" />
+              <Image uri={photo.url ?? undefined} width={THUMB} height={THUMB} borderRadius="md" resizeMode="cover" />
             </Pressable>
           ))}
         </Box>
@@ -166,12 +173,7 @@ const DealShipmentIssueCardComponent: React.FC<DealShipmentIssueCardProps> = ({
         </Text>
       ) : null}
 
-      <GalleryModal
-        images={urls}
-        visible={index !== null}
-        initialIndex={index ?? 0}
-        onClose={close}
-      />
+      <FileViewer {...viewer.props} refreshUrl={refreshUrl} />
     </Box>
   );
 };

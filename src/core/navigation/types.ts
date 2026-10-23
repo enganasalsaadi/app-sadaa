@@ -152,6 +152,8 @@ export type DealsStackParamList = {
   DealDetail: { id: string };
   /** The deal's signed contract and its addenda. */
   DealContract: { id: string };
+  /** Both: every file on the deal (brief, rounds, proofs, evidence, courier photos) to view and save. */
+  DealFiles: { id: string };
   /** Creator only: hand in a deliverable's draft round, or look at the one waiting for review. */
   DealDraftUpload: { id: string; itemId: string };
   /** Brand only: review a deliverable's latest round (pins, approve, ask for changes). */
@@ -168,6 +170,8 @@ export type DealsStackParamList = {
   Strikes: undefined;
   /** Brand only: one of their campaigns (`sada://campaigns/{id}`). Creators open it in `OpportunitiesTab`. */
   CampaignDetail: { id: string };
+  /** Brand only: a campaign's attachments (cover + brief files) to view and save. */
+  CampaignFiles: { id: string };
   /** Brand only: the applicants table of one of their campaigns (Public Campaigns PC3). */
   CampaignApplicants: { id: string; closePrompt?: boolean };
   /** Brand only: one applicant of that campaign (`applicationId`), with the shortlist / reject decisions. */

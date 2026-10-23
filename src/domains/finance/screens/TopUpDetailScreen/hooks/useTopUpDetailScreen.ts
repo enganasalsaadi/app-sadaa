@@ -1,16 +1,16 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { normalizeApiError } from '@/core/api';
+import { fileKindOf } from '@/core/download';
 import { env } from '@/core/config';
 import { formatDate, formatMoney } from '@/core/i18n';
 import type { Money } from '@/core/money';
 import type { WalletStackScreenProps } from '@/core/navigation';
 import { useToast } from '@/core/toast';
 import { useOpenSupport } from '@/domains/auth';
-import type { NoticeTone, TimelineStep } from '@/shared/ui';
+import type { NoticeTone, TimelineStep, ViewerFile } from '@/shared/ui';
 import { useGetTopUpQuery } from '../../../api/topUpApi';
 import { TOP_UP_STATUS_LOOK } from '../../../constants/topUp';
 import { usePaymentChannels } from '../../../hooks/usePaymentChannels';
@@ -33,7 +33,6 @@ export interface DetailRow {
 const NOT_FOUND = 404;
 const DATE: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
 const TIME: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' };
-const IMAGE_MIME = /^image\//;
 
 /** What the wallet gets: the server's dollars, or the amount itself when sent in dollars. */
 const creditOf = (topUp: TopUp): Money | null =>
@@ -52,7 +51,7 @@ export const useTopUpDetailScreen = () => {
   const toast = useToast();
   const openSupport = useOpenSupport();
   const { data: topUp, error, isError, refetch } = useGetTopUpQuery(id);
-  const [galleryVisible, setGalleryVisible] = useState(false);
+  const [receiptFile, setReceiptFile] = useState<ViewerFile | null>(null);
 
   const status: TopUpDetailStatus = topUp
     ? 'ready'
@@ -192,7 +191,6 @@ export const useTopUpDetailScreen = () => {
   }, [id, t, toast]);
 
   const receipt = topUp?.receipt ?? null;
-  const isImageReceipt = receipt ? IMAGE_MIME.test(receipt.mime_type) : false;
   const openingReceipt = useRef(false);
   const showReceipt = useCallback(async () => {
     if (!receipt || openingReceipt.current) return;
@@ -212,20 +210,39 @@ export const useTopUpDetailScreen = () => {
       toast.error(t('finance.topUp.detail.receiptOpenFailed'));
       return;
     }
-    if (IMAGE_MIME.test(current.mime_type)) {
-      setGalleryVisible(true);
-      return;
-    }
+    // Rule 07: the viewer downloads it, so only our storage host is fetched.
     if (!isTrustedReceiptUrl(current.url, env.API_BASE_URL)) {
       toast.error(t('finance.topUp.detail.receiptOpenFailed'));
       return;
     }
-    await Linking.openURL(current.url).catch(() => toast.error(t('finance.topUp.detail.receiptOpenFailed')));
-  }, [receipt, refetch, t, toast]);
+    setReceiptFile({
+      id: `top-up-receipt:${id}`,
+      url: current.url,
+      name: current.name ?? t('finance.topUp.detail.receipt'),
+      mime: current.mime_type,
+      kind: fileKindOf(current.mime_type),
+      size: current.size_bytes,
+      caption: t('finance.topUp.detail.receipt'),
+    });
+  }, [id, receipt, refetch, t, toast]);
   const openReceipt = useCallback(() => {
     showReceipt().catch(() => undefined);
   }, [showReceipt]);
-  const closeGallery = useCallback(() => setGalleryVisible(false), []);
+  const closeReceipt = useCallback(() => setReceiptFile(null), []);
+  // A link that died while the viewer was open (or a save ran late): a new detail read issues one.
+  const refreshReceiptUrl = useCallback(async () => {
+    const fresh = (await refetch().unwrap()).receipt;
+    return fresh && isTrustedReceiptUrl(fresh.url, env.API_BASE_URL) ? fresh.url : null;
+  }, [refetch]);
+  const receiptViewer = useMemo(
+    () => ({
+      files: receiptFile ? [receiptFile] : [],
+      visible: receiptFile !== null,
+      onClose: closeReceipt,
+      refreshUrl: refreshReceiptUrl,
+    }),
+    [closeReceipt, receiptFile, refreshReceiptUrl],
+  );
 
   const backToWallet = useCallback(() => navigation.popTo('WalletScreen'), [navigation]);
   const openHistory = useCallback(() => navigation.replace('TopUps'), [navigation]);
@@ -257,9 +274,7 @@ export const useTopUpDetailScreen = () => {
     retry,
     onCopyId,
     openReceipt,
-    galleryImages: receipt && isImageReceipt ? [receipt.url] : [],
-    galleryVisible,
-    closeGallery,
+    receiptViewer,
     backToWallet,
     openHistory,
     newTopUp,

@@ -35,7 +35,7 @@ export interface MediaTileProps {
   aspectRatio?: number;
   upload?: MediaTileUpload;
   status?: MediaTileStatus;
-  /** Opens the viewer (`GalleryModal`). */
+  /** Opens the viewer (`FileViewer`). */
   onPress?: () => void;
   accessibilityLabel: string;
 }

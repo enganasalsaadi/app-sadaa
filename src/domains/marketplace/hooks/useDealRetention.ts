@@ -4,11 +4,13 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { useTranslation } from 'react-i18next';
 import { normalizeApiError } from '@/core/api';
 import { toastService } from '@/core/toast';
+import type { FileViewerProps, ViewerFile } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import { useConfirmDealRetentionMutation } from '../api/dealRetentionApi';
 import type { Deal, DealRetentionCase, DealRole } from '../types';
 import { reportDealFailure, toastDealConflict } from '../utils/dealAction';
 import { safeLiveUrl } from '../utils/dealPublish';
+import { isSaveable, toViewerFiles } from '../utils/dealVault';
 import {
   retentionCaseActions,
   retentionPhase,
@@ -17,6 +19,7 @@ import {
   type DealRetentionCaseAction,
   type DealRetentionPhase,
 } from '../utils/dealRetention';
+import { useDealFileRefresh } from './useDealFileRefresh';
 import { useRetentionNote } from './useRetentionNote';
 import { useRetentionReport } from './useRetentionReport';
 import { useRetentionRestore } from './useRetentionRestore';
@@ -142,21 +145,26 @@ export const useDealRetention = (
   }, [closeRestore, openNote, restoreCaseId]);
 
   // — Screenshots and the restored link ————————————————————————————————
-  const [galleryImages, setGalleryImages] = useState<string[]>([]);
-  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
+  // One viewer per case: its report shots, then its restore shots.
+  const [shots, setShots] = useState<{ files: ViewerFile[]; index: number } | null>(null);
   const openShot = useCallback(
     (caseId: string, url: string) => {
       const view = cases.find(entry => entry.retentionCase.id === caseId);
       if (!view) return;
-      const images = [...view.reportShots, ...view.restoreShots];
-      const at = images.indexOf(url);
-      if (at < 0) return;
-      setGalleryImages(images);
-      setGalleryIndex(at);
+      const files = toViewerFiles([...view.retentionCase.reportFiles, ...view.retentionCase.restoreFiles]).filter(
+        isSaveable,
+      );
+      const at = files.findIndex(file => file.url === url);
+      if (at >= 0) setShots({ files, index: at });
     },
     [cases],
   );
-  const closeGallery = useCallback(() => setGalleryIndex(null), []);
+  const closeShots = useCallback(() => setShots(null), []);
+  const viewer = useMemo<Pick<FileViewerProps, 'files' | 'visible' | 'initialIndex' | 'onClose'>>(
+    () => ({ files: shots?.files ?? [], visible: shots !== null, initialIndex: shots?.index ?? 0, onClose: closeShots }),
+    [closeShots, shots],
+  );
+  const refreshUrl = useDealFileRefresh(role, id);
 
   const onLink = useCallback(
     async (link: string) => {
@@ -188,10 +196,9 @@ export const useDealRetention = (
     confirmingId,
     restoreToContest,
     onDismissed,
-    galleryImages,
-    galleryIndex,
+    viewer,
+    refreshUrl,
     openShot,
-    closeGallery,
     onLink,
   };
 };

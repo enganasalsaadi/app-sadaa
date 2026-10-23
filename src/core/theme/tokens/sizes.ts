@@ -75,6 +75,26 @@ const BASE_SIZES = {
     md: 120,
     lg: 160,
   },
+  /** FileViewer chrome: minimap width, filmstrip thumbs, the save pill, the PDF page rail. */
+  viewer: {
+    minimap: 88,
+    thumb: 44,
+    thumbActive: 54,
+    save: 52,
+    saveRing: 24,
+    rail: 160,
+    railThumb: 28,
+    pageCell: 64,
+  },
+  /** File vault: deck previews, tile corner badge, the dock's run ring. */
+  vault: {
+    deck: 104,
+    deckHeight: 132,
+    tileBadge: 26,
+    dockRing: 44,
+    meter: 6,
+    flyer: 36,
+  },
 } as const;
 
 export type SizeCategory = keyof typeof BASE_SIZES;

@@ -77,3 +77,15 @@ jest.mock('@react-native-clipboard/clipboard', () => ({
 
 // Native region module: the stock mock reports an `en-US` device.
 jest.mock('react-native-localize', () => require('react-native-localize/mock'));
+
+// Native save / PDF modules (file viewer + vault): tests never touch the device library.
+jest.mock('@react-native-camera-roll/camera-roll', () => ({
+  CameraRoll: { saveAsset: jest.fn() },
+}));
+jest.mock('react-native-pdf', () => ({ __esModule: true, default: () => null }));
+
+// Connectivity (the download queue pauses offline): the stock mock reports online.
+jest.mock('@react-native-community/netinfo', () => require('@react-native-community/netinfo/jest/netinfo-mock.js'));
+
+// Runtime permissions (asked lazily, rule 07): the stock mock grants everything.
+jest.mock('react-native-permissions', () => require('react-native-permissions/mock'));

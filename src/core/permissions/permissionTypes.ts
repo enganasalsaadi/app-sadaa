@@ -9,7 +9,8 @@ import {
 } from 'react-native-permissions';
 
 // Only what the app requests: iOS via Podfile setup_permissions, Android notifications only.
-export type PermissionType = 'notification' | 'camera' | 'gallery';
+/** `photosSave` = add-only Photos access (iOS) to save deal files; Android saves through MediaStore without one. */
+export type PermissionType = 'notification' | 'camera' | 'gallery' | 'photosSave';
 
 export type UnifiedPermissionStatus = PermissionStatus;
 
@@ -39,6 +40,8 @@ export const getSystemPermission = (
         return PERMISSIONS.IOS.CAMERA;
       case 'gallery':
         return PERMISSIONS.IOS.PHOTO_LIBRARY;
+      case 'photosSave':
+        return PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY;
       default:
         return null;
     }
@@ -60,6 +63,10 @@ export const PERMISSION_BLOCKED_COPY = {
   gallery: {
     title: 'permissions.gallery.title',
     message: 'permissions.gallery.message',
+  },
+  photosSave: {
+    title: 'permissions.photosSave.title',
+    message: 'permissions.photosSave.message',
   },
 } as const satisfies Record<
   PermissionType,

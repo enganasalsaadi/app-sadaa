@@ -19,6 +19,7 @@ import { DealDisputeScreen } from '../screens/DealDisputeScreen';
 import { DealDraftUploadScreen } from '../screens/DealDraftUploadScreen';
 import { DealPublicationReviewScreen } from '../screens/DealPublicationReviewScreen';
 import { DealUpsellBuilderScreen } from '../screens/DealUpsellBuilderScreen';
+import { FileVaultScreen } from '../screens/FileVaultScreen';
 import { DealPublishScreen } from '../screens/DealPublishScreen';
 import { StrikesScreen } from '../screens/StrikesScreen';
 
@@ -30,6 +31,9 @@ const BrandContract: React.FC = () => <DealContractScreen role="brand" />;
 const CreatorContract: React.FC = () => <DealContractScreen role="creator" />;
 const BrandDispute: React.FC = () => <DealDisputeScreen role="brand" />;
 const CreatorDispute: React.FC = () => <DealDisputeScreen role="creator" />;
+const BrandDealFiles: React.FC = () => <FileVaultScreen source="deal" role="brand" />;
+const CreatorDealFiles: React.FC = () => <FileVaultScreen source="deal" role="creator" />;
+const BrandCampaignFiles: React.FC = () => <FileVaultScreen source="campaign" role="brand" />;
 
 /** Brand `DealsTab` (rule 01: MainTabs picks the role's navigator, screens never branch on it); reviews draft rounds (P6), verifies live posts (P7), adds to a running deal (M8), follows its dispute (P9.1) and opens its campaigns (Public Campaigns). */
 export const BrandDealsNavigator: React.FC = () => (
@@ -37,11 +41,13 @@ export const BrandDealsNavigator: React.FC = () => (
     <Stack.Screen name="Deals" component={BrandDealsScreen} />
     <Stack.Screen name="DealDetail" component={BrandDealDetailScreen} />
     <Stack.Screen name="DealContract" component={BrandContract} />
+    <Stack.Screen name="DealFiles" component={BrandDealFiles} />
     <Stack.Screen name="DealDraftReview" component={DealDraftReviewScreen} />
     <Stack.Screen name="DealPublicationReview" component={DealPublicationReviewScreen} />
     <Stack.Screen name="DealUpsellBuilder" component={DealUpsellBuilderScreen} />
     <Stack.Screen name="DealDispute" component={BrandDispute} />
     <Stack.Screen name="CampaignDetail" component={BrandCampaignDetailScreen} />
+    <Stack.Screen name="CampaignFiles" component={BrandCampaignFiles} />
     <Stack.Screen name="CampaignApplicants" component={BrandCampaignApplicantsScreen} />
     <Stack.Screen name="CampaignApplicant" component={BrandCampaignApplicantScreen} />
     <Stack.Screen name="CampaignCompare" component={BrandCampaignCompareScreen} />
@@ -58,6 +64,7 @@ export const CreatorDealsNavigator: React.FC = () => (
     <Stack.Screen name="Deals" component={CreatorDealsScreen} />
     <Stack.Screen name="DealDetail" component={CreatorDealDetailScreen} />
     <Stack.Screen name="DealContract" component={CreatorContract} />
+    <Stack.Screen name="DealFiles" component={CreatorDealFiles} />
     <Stack.Screen name="DealDraftUpload" component={DealDraftUploadScreen} />
     <Stack.Screen name="DealPublish" component={DealPublishScreen} />
     <Stack.Screen name="DealDispute" component={CreatorDispute} />

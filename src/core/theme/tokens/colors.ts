@@ -319,6 +319,42 @@ export interface ThemeColors {
     onPin: string;
   };
   /**
+   * The file viewer: one dark stage for photos, videos and PDFs, the same in both modes (media is
+   * never themed). Glass controls, the teal action, the saved check (status success, never mint).
+   */
+  viewer: {
+    backdrop: string;
+    glass: string;
+    glassBorder: string;
+    dock: string;
+    text: string;
+    muted: string;
+    accent: string;
+    onAccent: string;
+    saved: string;
+    danger: string;
+    ringTrack: string;
+    track: string;
+    /** PDF placeholders and filmstrip thumbs: a white page with grey lines. */
+    paper: string;
+    paperLine: string;
+  };
+  /**
+   * The files vault: the floating download dock, the corner disc on each tile,
+   * the purged tile's stripes, and the size meter on the navy deck (same in both modes).
+   */
+  vault: {
+    dock: string;
+    dockText: string;
+    dockMuted: string;
+    dockBorder: string;
+    dockRingTrack: string;
+    dockStop: string;
+    stripe: string;
+    tileScrim: string;
+    meter: string[];
+  };
+  /**
    * Going live (P7) over the navy hero: the «ON AIR» lamp dark and lit, the broadcast rings around
    * a handed-in post, the link well on glass, and the account badges (amber = not checked, teal =
    * matches the contract). Same in both modes: the hero is navy in both.
@@ -463,6 +499,24 @@ const LIVE = {
   okBorder: 'rgba(111, 192, 207, 0.35)',
   okText: '#BDE6EE',
 };
+const VIEWER = {
+  backdrop: '#05101A',
+  glass: 'rgba(255, 255, 255, 0.10)',
+  glassBorder: 'rgba(255, 255, 255, 0.14)',
+  dock: 'rgba(255, 255, 255, 0.08)',
+  text: WHITE,
+  muted: '#A5B5C4',
+  accent: '#6FC0CF',
+  onAccent: ON_TEAL_DARK,
+  saved: '#47CD89',
+  danger: '#F97066',
+  ringTrack: 'rgba(255, 255, 255, 0.14)',
+  track: 'rgba(255, 255, 255, 0.2)',
+  paper: WHITE,
+  paperLine: ON_BRAND_MUTED,
+};
+const VAULT_METER = ['#9FD3DC', '#6FC0CF', ON_BRAND_MUTED, WHITE, 'rgba(255, 255, 255, 0.35)', '#397D8C'];
+const VAULT_TILE_SCRIM = 'rgba(6, 18, 28, 0.5)';
 const RATING = {
   envelope: ['#27506A', NAVY] as [string, string],
   fold: 'rgba(255, 255, 255, 0.12)',
@@ -670,6 +724,18 @@ export const lightColors: ThemeColors = {
   },
   draft: { ...DRAFT, film: '#13263A' },
   live: LIVE,
+  viewer: VIEWER,
+  vault: {
+    dock: lightText.primary,
+    dockText: BG,
+    dockMuted: ON_BRAND_MUTED,
+    dockBorder: 'transparent',
+    dockRingTrack: 'rgba(255, 255, 255, 0.14)',
+    dockStop: 'rgba(255, 255, 255, 0.1)',
+    stripe: '#EDF1F4',
+    tileScrim: VAULT_TILE_SCRIM,
+    meter: VAULT_METER,
+  },
   rating: { ...RATING, padGlow: 'rgba(57, 125, 140, 0.45)', dashDone: '#9FD3DC' },
 };
 
@@ -836,6 +902,18 @@ export const darkColors: ThemeColors = {
   },
   draft: { ...DRAFT, film: '#081019' },
   live: LIVE,
+  viewer: VIEWER,
+  vault: {
+    dock: '#182B3D',
+    dockText: darkText.primary,
+    dockMuted: darkText.secondary,
+    dockBorder: '#22384C',
+    dockRingTrack: '#22384C',
+    dockStop: '#122131',
+    stripe: '#182B3D',
+    tileScrim: VAULT_TILE_SCRIM,
+    meter: VAULT_METER,
+  },
   rating: { ...RATING, padGlow: 'rgba(0, 0, 0, 0.5)', dashDone: '#2D6B78' },
 };
 

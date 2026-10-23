@@ -3,11 +3,12 @@ import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { FileText, ImageIcon, Play } from 'lucide-react-native';
 import type { ParseKeys } from 'i18next';
+import { fileKindOf } from '@/core/download';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, GalleryModal, Image, Pressable, Rail, Text } from '@/shared/ui';
+import { Box, FileViewer, Image, Pressable, Rail, Text } from '@/shared/ui';
 import { formatFileSize } from '@/shared/utils';
-import { isViewableImage, useDealGallery } from '../hooks/useDealGallery';
-import type { DealFile, DealFileKind } from '../types';
+import { useDealViewer } from '../hooks/useDealViewer';
+import type { DealFile, DealFileKind, DealRef } from '../types';
 
 const TILE = moderateScale(118);
 
@@ -19,13 +20,15 @@ const KIND_LABEL = {
 
 export interface DealDossierFilesProps {
   files: DealFile[];
+  dealRef: DealRef;
 }
 
-const FileTile = memo<{ file: DealFile; onOpen: (id: string) => void }>(
-  ({ file, onOpen }) => {
+const FileTile = memo<{ file: DealFile; openable: boolean; onOpen: (id: string) => void }>(
+  ({ file, openable, onOpen }) => {
     const { t } = useTranslation();
     const { colors, sizes } = useTheme();
-    const viewable = isViewableImage(file);
+    const viewable = openable;
+    const photo = fileKindOf(file.mime, file.kind) === 'image' ? file.url : null;
     const kind = file.kind ?? 'document';
     const styles = useStyles(
       ({ radii, spacing }): Record<'tile' | 'thumb' | 'kind', ViewStyle> => ({
@@ -85,9 +88,9 @@ const FileTile = memo<{ file: DealFile; onOpen: (id: string) => void }>(
           })}
         >
           <Box style={styles.thumb}>
-            {viewable ? (
+            {photo ? (
               <Image
-                uri={file.url}
+                uri={photo}
                 width={TILE}
                 height={TILE}
                 resizeMode="cover"
@@ -116,35 +119,23 @@ const FileTile = memo<{ file: DealFile; onOpen: (id: string) => void }>(
 );
 
 /**
- * The brief's attachments as tiles: photos show (and open full screen), videos and documents
- * show their kind, name and size. Opening those arrives with the drafts viewer in P5.
+ * The brief's attachments as tiles: photos show, videos and documents show their kind, name and
+ * size; any of them opens in the file viewer (zoom, play, read, save).
  */
 const DealDossierFilesComponent: React.FC<DealDossierFilesProps> = ({
   files,
+  dealRef,
 }) => {
-  const { t } = useTranslation();
-  const { colors } = useTheme();
-  const gallery = useDealGallery(files);
-  const onlyImages = files.every(isViewableImage);
+  const viewer = useDealViewer(files, dealRef);
 
   return (
-    <Box gap="sm">
+    <Box>
       <Rail bleed shadow="card" gap="md">
         {files.map(file => (
-          <FileTile key={file.id} file={file} onOpen={gallery.open} />
+          <FileTile key={file.id} file={file} openable={viewer.canOpen(file.id)} onOpen={viewer.open} />
         ))}
       </Rail>
-      {onlyImages ? null : (
-        <Text variant="caption" color={colors.text.tertiary}>
-          {t('marketplace.deals.dossier.filesNote')}
-        </Text>
-      )}
-      <GalleryModal
-        images={gallery.urls}
-        visible={gallery.index !== null}
-        initialIndex={gallery.index ?? 0}
-        onClose={gallery.close}
-      />
+      <FileViewer {...viewer.props} refreshUrl={viewer.refreshUrl} />
     </Box>
   );
 };

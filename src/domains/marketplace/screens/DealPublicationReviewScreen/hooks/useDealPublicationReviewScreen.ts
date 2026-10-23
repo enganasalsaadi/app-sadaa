@@ -173,6 +173,7 @@ export const useDealPublicationReviewScreen = () => {
         : t('marketplace.deals.publish.brand.banner.waitingPost', { name: creatorName });
 
   return {
+    dealId: id,
     deal,
     item,
     position: t('marketplace.deals.publish.creator.itemOf', {

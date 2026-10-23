@@ -25,6 +25,7 @@ import { DealDeliverables } from './DealDeliverables';
 import { DealDisputeCard } from './DealDisputeCard';
 import { DealDropCard } from './DealDropCard';
 import { DealDisputeSheet } from './DealDisputeSheet';
+import { DealFilesSection } from './DealFilesSection';
 import { DealDossier } from './DealDossier';
 import { DealExtensionRequestCard } from './DealExtensionRequestCard';
 import { DealFundingCard } from './DealFundingCard';
@@ -62,6 +63,7 @@ export type DealDetailSectionKey =
   | 'shipping'
   | 'retention'
   | 'dossier'
+  | 'files'
   | 'stage'
   | 'changes';
 
@@ -110,6 +112,9 @@ const DetailSection = memo<{
   vm: DealDetailModel;
 }>(({ section, deal, station, vm }) => {
   const party = vm.role === 'brand' ? deal.creator : deal.brand;
+
+  // The files strip knows it has files only after its own read, so it spaces itself.
+  if (section === 'files') return <DealFilesSection role={vm.role} dealId={deal.id} />;
 
   // Every empty section returns null here, never from its component: a component that renders
   // nothing still gets the spacing Box below and opens a gap on the page.
@@ -209,6 +214,9 @@ const DetailSection = memo<{
         ) : null;
       case 'dossier':
         return <DealDossier deal={deal} role={vm.role} />;
+      // Rendered above, with its own spacing.
+      case 'files':
+        return null;
       default: {
         const _exhaustive: never = section;
         return _exhaustive;

@@ -18,6 +18,7 @@ const SECTIONS: readonly DealDetailSectionKey[] = [
   'shipping',
   'retention',
   'dossier',
+  'files',
   'stage',
   'changes',
 ];

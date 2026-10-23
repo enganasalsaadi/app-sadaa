@@ -14,3 +14,4 @@ export { formatFileSize } from './formatFileSize';
 export { getErrorMessage } from './errorMessage';
 export { detectScript } from './textScript';
 export { isolateText, isolateLtr } from './bidi';
+export { formatTimecode } from './timecode';

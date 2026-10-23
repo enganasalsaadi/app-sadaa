@@ -107,7 +107,7 @@ const DealDossierComponent: React.FC<DealDossierProps> = ({ deal, role }) => {
           />
         ) : null;
       case 'files':
-        return <DealDossierFiles files={files} />;
+        return <DealDossierFiles files={files} dealRef={{ role, id: deal.id }} />;
       case 'logistics':
         return <DealDossierLogistics deal={deal} role={role} />;
       default: {

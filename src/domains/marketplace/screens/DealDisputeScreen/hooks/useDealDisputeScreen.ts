@@ -6,12 +6,16 @@ import { useNavigation, useRoute, type RouteProp } from '@react-navigation/nativ
 import { formatDate, formatNumber } from '@/core/i18n';
 import type { DealsStackParamList, DealsStackScreenProps } from '@/core/navigation';
 import { toastService } from '@/core/toast';
+import { mimeFromName } from '@/core/download';
+import { useFileViewer, type ViewerFile } from '@/shared/ui';
 import { isolateText } from '@/shared/utils';
 import { useGetDealDisputesQuery } from '../../../api/dealDisputeApi';
 import { useGetDealQuery } from '../../../api/dealsApi';
 import { useDealAction } from '../../../hooks/useDealAction';
+import { useDealFileRefresh } from '../../../hooks/useDealFileRefresh';
 import type { DealDisputeEntry, DealRole } from '../../../types';
 import { reportDealFailure } from '../../../utils/dealAction';
+import { toViewerFile, type PhotoName } from '../../../utils/dealVault';
 import {
   disputePhase,
   evidenceRoom,
@@ -32,26 +36,43 @@ const TARGET_FORMAT: Intl.DateTimeFormatOptions = { weekday: 'long', hour: 'nume
 /** Which pan the ruling weighs down, from the viewer's side. */
 export type DisputeLean = 'mine' | 'theirs' | 'even';
 
-/** Every image in the thread, in reading order, so one viewer pages through them all. */
-const galleryOf = (entries: readonly DealDisputeEntry[]) => {
-  const keys: string[] = [];
-  const urls: string[] = [];
+/**
+ * Every file in the thread, in reading order, so one viewer pages through them all: own uploads,
+ * pointed-at deal files (once, by their id) and courier photos (the vault's ids). Tile keys map to them.
+ */
+const viewerOf = (entries: readonly DealDisputeEntry[], photoName: PhotoName) => {
+  const files: ViewerFile[] = [];
+  const idOf = new Map<string, string>();
+  const add = (key: string, file: ViewerFile | null) => {
+    if (!file || file.url === null) return;
+    idOf.set(key, file.id);
+    if (!files.some(entry => entry.id === file.id)) files.push(file);
+  };
   entries.forEach(entry => {
-    entry.files.forEach(file => {
-      if (file.kind === 'image' && file.url) {
-        keys.push(file.id);
-        urls.push(file.url);
-      }
-    });
+    entry.files.forEach(file => add(file.id, toViewerFile(file)));
     entry.refs.forEach((ref, index) => {
-      const url = ref.type === 'file' ? (ref.file?.kind === 'image' ? ref.file.url : null) : ref.url;
-      if (url) {
-        keys.push(`${entry.id}:ref:${index}`);
-        urls.push(url);
+      const key = `${entry.id}:ref:${index}`;
+      if (ref.type === 'file') {
+        add(key, ref.file ? toViewerFile(ref.file) : null);
+        return;
       }
+      add(
+        key,
+        ref.url
+          ? {
+              id: `shipment:${ref.shipmentId}:${ref.index}`,
+              url: ref.url,
+              name: photoName(ref.index + 1),
+              mime: mimeFromName(ref.url),
+              kind: 'image',
+              size: null,
+              caption: null,
+            }
+          : null,
+      );
     });
   });
-  return { keys, urls };
+  return { files, idOf };
 };
 
 /**
@@ -123,16 +144,20 @@ export const useDealDisputeScreen = (role: DealRole) => {
   const target = dispute?.adminTargetAt ? formatDate(dispute.adminTargetAt, TARGET_FORMAT, i18n.language) : null;
 
   // — Thread media and links ———————————————————————————————————————————
-  const gallery = useMemo(() => galleryOf(thread), [thread]);
-  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
+  const media = useMemo(
+    () => viewerOf(thread, n => t('marketplace.vault.photoName', { n })),
+    [t, thread],
+  );
+  const viewer = useFileViewer(media.files);
+  const refreshUrl = useDealFileRefresh(role, id);
+  const openViewer = viewer.open;
   const openMedia = useCallback(
     (key: string) => {
-      const at = gallery.keys.indexOf(key);
-      if (at >= 0) setGalleryIndex(at);
+      const fileId = media.idOf.get(key);
+      if (fileId) openViewer(fileId);
     },
-    [gallery.keys],
+    [media.idOf, openViewer],
   );
-  const closeMedia = useCallback(() => setGalleryIndex(null), []);
 
   const onLink = useCallback(
     async (link: string) => {
@@ -215,10 +240,9 @@ export const useDealDisputeScreen = (role: DealRole) => {
     canWithdraw,
     disputesLeft: deal?.disputeWindow.disputesLeft ?? 0,
     evidence,
-    gallery: gallery.urls,
-    galleryIndex,
+    viewer: viewer.props,
+    refreshUrl,
     openMedia,
-    closeMedia,
     onLink,
     withdrawVisible,
     askWithdraw,

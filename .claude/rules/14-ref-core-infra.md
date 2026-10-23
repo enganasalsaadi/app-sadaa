@@ -24,6 +24,11 @@ paths:
 - `useFileUploads({ policy, requestSlot, limit })`: multi-file set, `entries` / `fileIds` / `add` (returns dropped) / `retry` (fresh slot) / `remove` / `move(key, toIndex)` (submit order) / `clear`, aborts on unmount.
 - Core holds no limits: domain passes `UploadPolicy` (`DEAL_UPLOAD_POLICY[purpose]`, `DEAL_UPLOAD_LIMIT`) + a `requestSlot` wrapping its slot mutation (`transformResponse: mapUploadSlot`, `.unwrap()`). PUT streams from disk via `react-native-blob-util`; signed URL never logged/persisted. Tests: root `__mocks__/react-native-blob-util.ts` (`fakePuts`, `fakeStat`) + explicit `jest.mock('react-native-blob-util')`.
 
+## Downloads (`@/core/download`)
+
+- One module-level queue (outside Redux; a run outlives its screen): 2 at a time, an expired link (4xx from storage; 404/410 = purged) asks `refreshUrl` once then retries, offline pauses until NetInfo says online, sign-out `downloads.reset()` (cache wiped). `downloads.save(job)` (one file; iOS asks add-only Photos access `photosSave` at the point of use) · `saveAll(jobs)` (one prompt, silent run) · `share(job)` (sheet / «open with») · `cache(job)` (local copy for the PDF reader) · `openSaved(file)` · `watchBatch()` (a screen showing the run silences the batch toast). Hooks `useDownloadEntry(id)` / `useDownloadEntries()` / `useDownloadBatch()`.
+- Where saves land (`saveDestination`): iOS photo/video → Photos, documents → Files sheet (`ready` in a batch until the user presents them); Android 10+ → MediaStore (Pictures / Movies / Downloads), no storage permission; Android 7–9 → share sheet only (`canBatchSave() === false`, no «download all»). Signed URLs and local paths are never logged or persisted.
+
 ## Feedback UI
 
 - Toasts: `toastService.success|error|warning|info` (`@/core/toast`) outside React; `useToast()` inside. `options.action { label, onPress }` = one inline button (Undo), hides the toast on press.

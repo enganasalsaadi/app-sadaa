@@ -53,6 +53,12 @@ export interface SuperListProps<T> {
   // ─── Performance ───────────────────────────────────────────────────────
   /** Override column span per item (FlashList v2: only `span` is supported) */
   overrideItemLayout?: FlashListProps<T>['overrideItemLayout'];
+  /** Row kinds recycled apart (section headers vs tiles in a grid). */
+  getItemType?: FlashListProps<T>['getItemType'];
+  /** Rows that pin to the top while their section scrolls (section headers). */
+  stickyHeaderIndices?: number[];
+  /** `false` drops the default gap between rows (a grid whose cells space themselves). */
+  separators?: boolean;
 
   // ─── Scroll restoration (persisted via MMKV across restarts) ──────────
   scrollRestorationKey?: string;

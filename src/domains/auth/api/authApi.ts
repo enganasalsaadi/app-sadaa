@@ -1,5 +1,6 @@
 import { authStorage } from '@/core/storage';
 import { notificationManager } from '@/core/notification';
+import { downloads } from '@/core/download';
 import {
   setUser,
   setToken,
@@ -74,6 +75,9 @@ export const authApi = baseApi.injectEndpoints({
           // signs out locally below.
         } finally {
           await authStorage.clearSession();
+          // Deal files cached for the viewer belong to the signed-out user: runs stop now, the
+          // cache folder is wiped in the background.
+          downloads.reset().catch(() => undefined);
           dispatch(clearCredentials());
           dispatch(baseApi.util.resetApiState());
         }
@@ -94,6 +98,7 @@ export const authApi = baseApi.injectEndpoints({
         await authStorage.clearSession();
         // Nothing of the deleted user may stay on the device.
         socialsDraftStorage.clear();
+        downloads.reset().catch(() => undefined);
         dispatch(clearCredentials());
         dispatch(baseApi.util.resetApiState());
       },

@@ -181,6 +181,7 @@ const DealShippingSectionComponent: React.FC<DealShippingSectionProps> = ({ deal
         <DealShipmentIssueCard
           shipment={current}
           role={role}
+          dealId={deal.id}
           partyName={party}
           freeCancel={view.freeCancel}
           reshipsLeft={view.reshipsLeft}

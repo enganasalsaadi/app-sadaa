@@ -8,7 +8,7 @@ import {
   CustomButton,
   Divider,
   ErrorState,
-  GalleryModal,
+  FileViewer,
   InlineError,
   KeyValueRow,
   Layout,
@@ -209,7 +209,7 @@ const TopUpDetailScreenComponent: React.FC = () => {
       footer={footer}
     >
       {body}
-      <GalleryModal images={vm.galleryImages} visible={vm.galleryVisible} onClose={vm.closeGallery} />
+      <FileViewer {...vm.receiptViewer} />
     </Layout>
   );
 };
