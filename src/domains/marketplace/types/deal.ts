@@ -238,6 +238,17 @@ export interface DealParty {
   avatarUrl: string | null;
 }
 
+/** M4: average of revealed scores (1 decimal) + how many; `null` below 3. Comments are never public. */
+export interface PublicRating {
+  average: number;
+  count: number;
+}
+
+/** `rating`: what creators gave this brand; sent to the creator only (`null` for the brand). */
+export interface DealBrandParty extends DealParty {
+  rating: PublicRating | null;
+}
+
 export interface DealCreatorParty extends DealParty {
   /** Media-kit slug; `null` when the creator has no public kit. */
   slug: string | null;
@@ -504,6 +515,8 @@ export interface DealRetentionCase {
   /** Moved back from the creator to the brand; `null` when nothing was. */
   clawback: Money | null;
   dueAt: Timestamp | null;
+  /** Account hold: the answer clock is paused (no escalation, no auto-close); `dueAt` is stale. */
+  onHold: boolean;
   reportedAt: Timestamp | null;
   closedAt: Timestamp | null;
 }
@@ -523,6 +536,8 @@ export interface DealRatingSide {
 export interface DealRating {
   open: boolean;
   dueAt: Timestamp | null;
+  /** Account hold: the window is paused (`open` stays true, `dueAt` is stale). */
+  onHold: boolean;
   revealedAt: Timestamp | null;
   brand: DealRatingSide;
   creator: DealRatingSide;
@@ -675,6 +690,13 @@ export interface DealReturnShipment {
   } | null;
   waivedAt: Timestamp | null;
   waiveNote: string | null;
+  /** Account hold: the creator's account is under review; no reminder or strike until it ends. */
+  onHold: boolean;
+}
+
+/** Account hold: paused while Sada reviews an account (never says whose). */
+export interface DealHold {
+  since: Timestamp;
 }
 
 export interface Deal {
@@ -689,9 +711,11 @@ export interface Deal {
   /** `null` until a returnable sample's return opens. */
   returnShipment: DealReturnShipment | null;
   status: Labeled<DealStatus>;
+  /** Read-only, timers stopped (`dueAt` values are stale); every action answers 409 `deal_party_suspended`. */
+  onHold: DealHold | null;
   /** Slowest item's status while `in_progress`; otherwise `null`. */
   stage: Labeled<DealItemStatus> | null;
-  brand: DealParty;
+  brand: DealBrandParty;
   creator: DealCreatorParty;
   items: DealItem[];
   itemsCount: number;

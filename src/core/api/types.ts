@@ -107,6 +107,8 @@ export const API_ERROR_CODES = [
   'deal_retention_not_awaiting',
   'deal_rating_closed',
   'deal_rating_already_submitted',
+  // Account hold (API 2026-10-23): a party is suspended, the deal is read-only (meta `held_at`).
+  'deal_party_suspended',
   // Public Campaigns (`docs/public campaigns/public-campaigns.md` §8). `feature_disabled` = the flag is off (404).
   'feature_disabled',
   'creator_restricted',

@@ -2,11 +2,12 @@ import { FOLLOWER_TIERS, type FollowerTierId } from '@/core/config';
 import type { Money } from '@/core/money';
 import { toPriceLockReason } from '@/domains/identity';
 import { mapBrandActiveCampaigns } from './campaignHomeMappers';
-import { mapBrandActiveDeal } from './dealMappers';
+import { mapBrandActiveDeal, mapPublicRating } from './dealMappers';
 import { parseExploreParams } from './exploreQuery';
 import {
   BRAND_HOME_ISLAND_TYPES,
   BRAND_HOME_RAIL_KEYS,
+  CREATOR_RESPONSE_BUCKETS,
   EXPLORE_SORTS,
   type BrandActiveDeals,
   type BrandHome,
@@ -19,7 +20,10 @@ import {
   type ExploreCreatorDto,
   type ExploreCreatorsPage,
   type ExploreCreatorsPageDto,
+  type CreatorCompletion,
   type CreatorPrice,
+  type CreatorResponse,
+  type CreatorResponseBucket,
   type ExploreCategory,
   type ExploreCategoryDto,
   type ExploreFilterOptions,
@@ -53,6 +57,20 @@ const mapPrice = (dto: ExploreCreatorDto['price']): CreatorPrice =>
         fromSypApprox: toSypApprox(dto.from_syp_approx, dto.syp_rate_stale),
       };
 
+/** Shared with the media kit (same wire shape): a rate outside 0–100 hides the line. */
+export const mapCreatorCompletion = (dto: ExploreCreatorDto['completion']): CreatorCompletion | null =>
+  dto && dto.rate >= 0 && dto.rate <= 100 && dto.count > 0
+    ? { rate: Math.floor(dto.rate), count: dto.count }
+    : null;
+
+export const mapCreatorResponse = (dto: ExploreCreatorDto['response']): CreatorResponse | null =>
+  dto?.label
+    ? {
+        bucket: includes<CreatorResponseBucket>(CREATOR_RESPONSE_BUCKETS, dto.bucket) ? dto.bucket : null,
+        label: dto.label,
+      }
+    : null;
+
 export const mapExploreCreator = (dto: ExploreCreatorDto): ExploreCreator => ({
   slug: dto.slug,
   displayName: dto.display_name,
@@ -75,6 +93,9 @@ export const mapExploreCreator = (dto: ExploreCreatorDto): ExploreCreator => ({
     isNew: dto.badges.new,
   },
   fastestDeliveryDays: dto.fastest_delivery_days,
+  rating: mapPublicRating(dto.rating),
+  completion: mapCreatorCompletion(dto.completion),
+  response: mapCreatorResponse(dto.response),
   price: mapPrice(dto.price),
   isShortlisted: dto.is_shortlisted,
 });
@@ -119,6 +140,7 @@ export const mapExploreFilters = (dto: ExploreFiltersDto): ExploreFilterOptions 
   categories: dto.categories.map(mapCategory),
   sorts: mapSortOptions(dto.sort),
   deliveryBuckets: dto.delivery_buckets.map(mapOption),
+  ratingBuckets: (dto.rating_buckets ?? []).map(mapOption),
 });
 
 const WHATSAPP_HOSTS = ['wa.me', 'api.whatsapp.com'];

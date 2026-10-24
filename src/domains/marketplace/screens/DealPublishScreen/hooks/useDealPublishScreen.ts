@@ -62,7 +62,7 @@ export const useDealPublishScreen = () => {
   const position = deal && item ? deal.items.indexOf(item) + 1 : 0;
   const publications = useMemo(() => history.data ?? [], [history.data]);
   const latest = publications[0] ?? null;
-  const composing = item !== null && dealDeliverableAction(item, 'creator') === 'publish';
+  const composing = item !== null && dealDeliverableAction(item, 'creator', deal?.onHold != null) === 'publish';
   // A drop keeps the live link shut until its opening moment; the screenshots can go up meanwhile.
   const now = useClock(MINUTE_MS);
   const opensAt = composing && deal ? dealPublishOpensAt(deal, now) : null;

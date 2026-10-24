@@ -72,6 +72,13 @@ describe('exploreFilters', () => {
     });
   });
 
+  it('round-trips the rating floor, counts it, and drops one outside 1–5', () => {
+    expect(applyFilterDraft({}, toFilterDraft({ minRating: 4.5 }))).toEqual({ minRating: 4.5 });
+    expect(countSheetFilters({ minRating: 4 })).toBe(1);
+    expect(applyFilterDraft({}, { ...toFilterDraft({}), minRating: '9' })).toEqual({});
+    expect(applyFilterDraft({}, { ...toFilterDraft({}), minRating: 'x' })).toEqual({});
+  });
+
   it('keeps digits only', () => {
     expect(sanitizeDigits('1,2a٣۴')).toBe('1234');
   });

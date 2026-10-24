@@ -76,6 +76,7 @@ const retentionCase = (
   adminNote: null,
   clawback: null,
   dueAt: NOW + DAY,
+  onHold: false,
   reportedAt: NOW - DAY,
   closedAt: null,
   ...overrides,

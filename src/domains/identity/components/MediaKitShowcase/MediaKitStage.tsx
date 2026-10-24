@@ -8,7 +8,7 @@ import { Check } from 'lucide-react-native';
 import { iconStroke, moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Image, Text, useLayoutInView } from '@/shared/ui';
 import type { PublicMediaKit } from '../../types/mediaKit';
-import { stageHandle } from '../../utils/mediaKitStage';
+import { buildStageReputation, stageHandle } from '../../utils/mediaKitStage';
 import { MediaKitRise } from './MediaKitRise';
 import { STAGE_COVER_SHARE } from './MediaKitStageBackdrop';
 import {
@@ -21,6 +21,7 @@ import {
 } from './MediaKitStageCanvas';
 import { MediaKitStageChips } from './MediaKitStageChips';
 import { MediaKitStageReach } from './MediaKitStageReach';
+import { MediaKitStageReputation } from './MediaKitStageReputation';
 
 const SEAL = moderateScale(30);
 const SEAL_INSET = moderateScale(14);
@@ -106,7 +107,8 @@ interface MediaKitStageProps {
 /**
  * «The stage», the media kit hero: the photo at the centre of a live navy stage, echo rings
  * leaving it and a mustard-teal ring turning around it (Skia, one canvas). Under it the name,
- * handle, bio, tier · niche · city pills, then the reach moment. Waves melt the stage into the
+ * handle, bio, tier · niche · city pills, the reputation strip (when there is a track record),
+ * then the reach moment. Waves melt the stage into the
  * page. The scene pauses once scrolled away or on blur, and holds still under reduced motion.
  * A cover photo, when set, shows faintly at the top and melts into the navy lower down, so it
  * never ends in a visible edge. It is only as tall as that fade, so no more of it is decoded.
@@ -120,6 +122,7 @@ const MediaKitStageComponent: React.FC<MediaKitStageProps> = ({ kit, nicheLabels
   const [height, setHeight] = useState(0);
   const name = kit.display_name ?? kit.slug;
   const handle = stageHandle(kit.platforms);
+  const reputation = buildStageReputation(kit);
 
   const padTop = top + sizes.iconButton.md + spacing.lg;
   const styles = useStyles(
@@ -186,6 +189,13 @@ const MediaKitStageComponent: React.FC<MediaKitStageProps> = ({ kit, nicheLabels
         <MediaKitRise delay={STEP * 4}>
           <MediaKitStageChips kit={kit} nicheLabels={nicheLabels} />
         </MediaKitRise>
+        {reputation ? (
+          <Box mt="md" width="100%">
+            <MediaKitRise delay={STEP * 5}>
+              <MediaKitStageReputation reputation={reputation} />
+            </MediaKitRise>
+          </Box>
+        ) : null}
         <Box mt="md" width="100%" align="center">
           <MediaKitStageReach platforms={kit.platforms} />
         </Box>

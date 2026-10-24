@@ -6,6 +6,7 @@ import { moderateScale, useStyles, useTheme } from '@/core/theme';
 import { Box, Text } from '@/shared/ui';
 import { ratingHoursLeft, type DealRatingView } from '../utils/dealRating';
 import { formatDuration } from '../utils/offerDuration';
+import { DealHoldNote } from './DealHoldNote';
 import { DealRatingEnvelope } from './DealRatingEnvelope';
 import { DealRatingWax } from './DealRatingWax';
 
@@ -95,11 +96,15 @@ const DealRatingEnvelopesCardComponent: React.FC<
           }
         />
       </Box>
-      <Text variant="caption" color={colors.text.tertiary} align="center">
-        {duration
-          ? t('marketplace.deals.rating.card.foot', { name, duration })
-          : t('marketplace.deals.rating.card.closing')}
-      </Text>
+      {view.onHold ? (
+        <DealHoldNote />
+      ) : (
+        <Text variant="caption" color={colors.text.tertiary} align="center">
+          {duration
+            ? t('marketplace.deals.rating.card.foot', { name, duration })
+            : t('marketplace.deals.rating.card.closing')}
+        </Text>
+      )}
     </Box>
   );
 };

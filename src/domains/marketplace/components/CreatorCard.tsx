@@ -18,6 +18,7 @@ import {
 import { PRICE_LOCK_FALLBACK, PRICE_LOCK_LABEL } from '../constants/priceLock';
 import type { ExploreCreator } from '../types/explore';
 import { monogramOf } from '../utils/creatorText';
+import { CreatorReputation } from './CreatorReputation';
 import { ShortlistHeart } from './ShortlistHeart';
 
 /** Photos are 4:5 portraits. */
@@ -216,6 +217,7 @@ const RowBody = memo<Part>(({ creator }) => {
           ) : null}
         </Box>
         <RowSignals creator={creator} />
+        <CreatorReputation creator={creator} />
         <PriceLine creator={creator} />
       </Box>
     </Box>
@@ -253,7 +255,8 @@ const RequestOfferButton = memo<{ name: string; onPress: () => void }>(({ name, 
 });
 
 /**
- * Creator result (handoff `CreatorCard`) for Explore and Shortlist: photo beside the details.
+ * Creator result (handoff `CreatorCard`) for Explore and Shortlist: photo beside the details,
+ * with the reputation seal (★ · ✓ · ⏱) when the server has a track record.
  * The ❤️ (top-end) and the offer disc (bottom-end) sit beside the card, not inside it, so screen
  * readers reach every button.
  * List item — keep it memoised and pass stable handlers.

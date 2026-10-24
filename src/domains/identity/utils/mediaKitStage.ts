@@ -1,5 +1,5 @@
 import type { SocialPlatform } from '@/shared/utils';
-import type { MediaKitPlatform } from '../types/mediaKit';
+import type { MediaKitPlatform, PublicMediaKit } from '../types/mediaKit';
 
 /** One platform on the stage: its slice of the follower bar and its tile. */
 export interface StagePlatform {
@@ -43,3 +43,34 @@ export const stageHandle = (platforms: readonly MediaKitPlatform[]): string | nu
 
 /** Platform tiles per row: one centred, two side by side, more in a 2-wide grid. */
 export const stageGridColumns = (count: number): 1 | 2 => (count <= 1 ? 1 : 2);
+
+/** The stage's reputation strip; each part `null` when the server has too little history. */
+export interface StageReputation {
+  rating: { average: number; count: number } | null;
+  /** Whole percent 0–100. */
+  completion: { rate: number; count: number } | null;
+  /** Server-localized, shown as-is. */
+  response: string | null;
+}
+
+const RATING_MAX = 5;
+const PERCENT_MAX = 100;
+
+/** Validates the raw kit fields (malformed → dropped, never shown wrong); all `null` → no strip. */
+export const buildStageReputation = (
+  kit: Pick<PublicMediaKit, 'rating' | 'completion' | 'response'>,
+): StageReputation | null => {
+  const { rating, completion, response } = kit;
+  const reputation: StageReputation = {
+    rating:
+      rating && Number.isFinite(rating.average) && rating.average >= 0 && rating.average <= RATING_MAX && rating.count > 0
+        ? { average: rating.average, count: rating.count }
+        : null,
+    completion:
+      completion && Number.isFinite(completion.rate) && completion.rate >= 0 && completion.rate <= PERCENT_MAX && completion.count > 0
+        ? { rate: Math.floor(completion.rate), count: completion.count }
+        : null,
+    response: response?.label?.trim() ? response.label.trim() : null,
+  };
+  return reputation.rating || reputation.completion || reputation.response ? reputation : null;
+};

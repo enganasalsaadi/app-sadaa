@@ -8,6 +8,7 @@ import { isolateText } from '@/shared/utils';
 import type { DealReturnAnswerModel } from '../hooks/useDealReturnAnswer';
 import type { DealReturnModel } from '../hooks/useDealReturn';
 import type { Deal, DealRole } from '../types';
+import { DealHoldNote } from './DealHoldNote';
 import { DealReturnBrandBody } from './DealReturnBrandBody';
 import { ReturnLine, ReturnNote, ReturnPhotos, ReturnWaybill, useReturnDate } from './DealReturnParts';
 import { ReturnRoute, type ReturnRouteMode } from './ReturnRoute';
@@ -106,18 +107,21 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, re
               })}
             </Text>
           ) : null}
+          {ret.onHold ? <DealHoldNote /> : null}
           <ReturnLine
             icon={view.late ? TriangleAlert : Lock}
             tone={view.late ? 'danger' : 'warning'}
             text={t(view.late ? 'marketplace.deals.return.card.lockLate' : 'marketplace.deals.return.card.lockOwed')}
           />
-          <CustomButton
-            title={t('marketplace.deals.return.card.enter')}
-            size="lg"
-            fullWidth
-            leftIcon={<Package />}
-            onPress={ret.open}
-          />
+          {ret.readOnly ? null : (
+            <CustomButton
+              title={t('marketplace.deals.return.card.enter')}
+              size="lg"
+              fullWidth
+              leftIcon={<Package />}
+              onPress={ret.open}
+            />
+          )}
         </>
       );
     }
@@ -140,13 +144,15 @@ const DealReturnCardComponent: React.FC<DealReturnCardProps> = ({ deal, role, re
             </Text>
           ) : null}
           <ReturnLine icon={LockOpen} tone="success" text={t('marketplace.deals.return.card.unlocked')} />
-          <CustomButton
-            title={t('marketplace.deals.return.card.edit')}
-            variant="outline"
-            size="md"
-            fullWidth
-            onPress={ret.open}
-          />
+          {ret.readOnly ? null : (
+            <CustomButton
+              title={t('marketplace.deals.return.card.edit')}
+              variant="outline"
+              size="md"
+              fullWidth
+              onPress={ret.open}
+            />
+          )}
         </>
       );
     }

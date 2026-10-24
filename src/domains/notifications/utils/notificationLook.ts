@@ -9,6 +9,9 @@ import {
   Hourglass,
   LockOpen,
   Mail,
+  Pause,
+  Play,
+  Scale,
   Megaphone,
   PackageCheck,
   Rocket,
@@ -91,6 +94,12 @@ const TYPE_LOOK: Record<string, NotificationLook> = {
   deal_return_overdue: { icon: Hourglass, tone: 'danger' },
   deal_return_shipped: { icon: Truck, tone: 'interactive' },
   deal_return_overdue_brand: { icon: Hourglass, tone: 'warning' },
+
+  // Account hold: a deal paused while Sada reviews an account, and how the pause ends.
+  deal_on_hold: { icon: Pause, tone: 'warning' },
+  deal_hold_released: { icon: Play, tone: 'success' },
+  deal_cancelled_on_hold: { icon: Ban, tone: 'neutral' },
+  deal_hold_resolved: { icon: Scale, tone: 'interactive' },
 };
 
 // Every other `deal_<kind>` is the Direct Deals set: one handshake, its title says what happened.

@@ -1,5 +1,5 @@
 import type { MediaKitPlatform } from '../../types/mediaKit';
-import { buildStageReach, stageGridColumns, stageHandle } from '../mediaKitStage';
+import { buildStageReach, buildStageReputation, stageGridColumns, stageHandle } from '../mediaKitStage';
 
 const platform = (overrides: Partial<MediaKitPlatform>): MediaKitPlatform => ({
   platform: 'instagram',
@@ -64,5 +64,38 @@ describe('stageGridColumns', () => {
     expect(stageGridColumns(1)).toBe(1);
     expect(stageGridColumns(2)).toBe(2);
     expect(stageGridColumns(4)).toBe(2);
+  });
+});
+
+describe('buildStageReputation', () => {
+  it('keeps every part the server sent, flooring the completion rate', () => {
+    expect(
+      buildStageReputation({
+        rating: { average: 4.7, count: 12 },
+        completion: { rate: 92.6, count: 12 },
+        response: { bucket: 'within_hour', label: ' يرد عادةً خلال ساعة ' },
+      }),
+    ).toEqual({
+      rating: { average: 4.7, count: 12 },
+      completion: { rate: 92, count: 12 },
+      response: 'يرد عادةً خلال ساعة',
+    });
+  });
+
+  it('drops malformed parts on their own', () => {
+    expect(
+      buildStageReputation({
+        rating: { average: Number.NaN, count: 12 },
+        completion: { rate: 140, count: 3 },
+        response: { bucket: 'within_day', label: 'Usually replies within a day' },
+      }),
+    ).toEqual({ rating: null, completion: null, response: 'Usually replies within a day' });
+    expect(buildStageReputation({ rating: { average: 4.2, count: 0 } })).toBeNull();
+  });
+
+  it('is null when there is no history at all (no strip, never «no ratings»)', () => {
+    expect(buildStageReputation({})).toBeNull();
+    expect(buildStageReputation({ rating: null, completion: null, response: null })).toBeNull();
+    expect(buildStageReputation({ response: { bucket: 'within_hour', label: '  ' } })).toBeNull();
   });
 });

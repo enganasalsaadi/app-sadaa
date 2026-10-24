@@ -43,8 +43,12 @@ export const useExploreFilterDraft = (filters: ExploreFilters, visible: boolean)
     setDraft(prev => ({ ...prev, maxDeliveryDays: prev.maxDeliveryDays === value ? null : value }));
   }, []);
 
+  const toggleRating = useCallback((value: string) => {
+    setDraft(prev => ({ ...prev, minRating: prev.minRating === value ? null : value }));
+  }, []);
+
   const reset = useCallback(() => setDraft(EMPTY_DRAFT), []);
   const showAllNiches = useCallback(() => setAllNiches(true), []);
 
-  return { draft, setList, setText, setFlag, toggleDelivery, reset, allNiches, showAllNiches };
+  return { draft, setList, setText, setFlag, toggleDelivery, toggleRating, reset, allNiches, showAllNiches };
 };

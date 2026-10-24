@@ -44,6 +44,7 @@ import {
   type DealDetail,
   type DealDispute,
   type DealDisputeDetail,
+  type DealHold,
   type DealDisputeEntry,
   type DealDisputeRef,
   type DealDraft,
@@ -71,6 +72,7 @@ import {
   type DealUpsell,
   type DealUpsellQuote,
   type Labeled,
+  type PublicRating,
   type Timestamp,
 } from '../types/deal';
 import type {
@@ -98,6 +100,7 @@ import type {
   DealPublicationDto,
   DealRatingDto,
   DealRatingEntryDto,
+  PublicRatingDto,
   DealRatingSideDto,
   DealRetentionCaseDto,
   DealReturnShipmentDto,
@@ -304,6 +307,7 @@ const mapReturnShipment = (dto: DealReturnShipmentDto): DealReturnShipment => ({
   },
   waivedAt: toTimestampOrNull(dto.waived_at),
   waiveNote: dto.waive_note,
+  onHold: dto.on_hold ?? false,
 });
 
 const mapExtension = (dto: DealExtensionDto): DealExtension => ({
@@ -408,6 +412,7 @@ export const mapDealRetentionCase = (dto: DealRetentionCaseDto): DealRetentionCa
   adminNote: dto.admin_note,
   clawback: parseUsdOrNull(dto.clawback_usd),
   dueAt: toTimestampOrNull(dto.due_at),
+  onHold: dto.on_hold ?? false,
   reportedAt: toTimestampOrNull(dto.reported_at),
   closedAt: toTimestampOrNull(dto.closed_at),
 });
@@ -430,6 +435,7 @@ const mapRatingSide = (dto: DealRatingSideDto): DealRatingSide => ({
 const mapRating = (dto: DealRatingDto): DealRating => ({
   open: dto.open,
   dueAt: toTimestampOrNull(dto.due_at),
+  onHold: dto.on_hold ?? false,
   revealedAt: toTimestampOrNull(dto.revealed_at),
   brand: mapRatingSide(dto.brand),
   creator: mapRatingSide(dto.influencer),
@@ -443,6 +449,17 @@ export const mapBrief = (dto: DealBriefDto): DealBrief => ({
   promoCode: dto.promo_code,
   trackingLink: dto.tracking_link,
 });
+
+/** A malformed `since` still holds the deal: the pause matters more than its date. */
+const mapHold = (dto: DealDto['on_hold']): DealHold | null => {
+  if (!dto) return null;
+  const since = Date.parse(dto.since);
+  return { since: Number.isNaN(since) ? 0 : since };
+};
+
+/** Only a finite average with at least one rating is shown; anything else hides the stars. */
+export const mapPublicRating = (dto: PublicRatingDto | null | undefined): PublicRating | null =>
+  dto && Number.isFinite(dto.average) && dto.count > 0 ? { average: dto.average, count: dto.count } : null;
 
 const mapSignature = (dto: DealSignatureDto): DealSignature => ({
   party: toRole(dto.party),
@@ -463,8 +480,9 @@ export const mapDeal = (dto: DealDto): Deal => ({
     : null,
   returnShipment: dto.return_shipment ? mapReturnShipment(dto.return_shipment) : null,
   status: toLabeled(DEAL_STATUS, dto.status),
+  onHold: mapHold(dto.on_hold),
   stage: toLabeledOrNull(DEAL_ITEM_STATUS, dto.stage),
-  brand: { name: dto.brand.name, avatarUrl: dto.brand.avatar_url },
+  brand: { name: dto.brand.name, avatarUrl: dto.brand.avatar_url, rating: mapPublicRating(dto.brand.rating) },
   creator: mapCreatorParty(dto.creator),
   items: dto.items.map(mapItem),
   itemsCount: dto.items_count,

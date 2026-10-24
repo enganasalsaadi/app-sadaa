@@ -68,6 +68,13 @@ describe('dealDeliverableAction', () => {
     expect(dealDeliverableAction(item('verified'), 'brand')).toBe('view');
   });
 
+  it('leaves only reading on an account hold', () => {
+    expect(dealDeliverableAction(item('pending'), 'creator', true)).toBeNull();
+    expect(dealDeliverableAction(item('draft_submitted'), 'brand', true)).toBe('view');
+    expect(dealDeliverableAction(item('revision_requested', true), 'brand', true)).toBe('view');
+    expect(dealDeliverableAction(item('approved_to_publish'), 'creator', true)).toBe('view');
+  });
+
   it('lets either side look at a round once one exists', () => {
     expect(dealDeliverableAction(item('draft_submitted'), 'creator')).toBe('view');
     expect(dealDeliverableAction(item('approved_to_publish'), 'brand')).toBe('view');

@@ -128,7 +128,7 @@ const ExploreFilterSheetComponent: React.FC<ExploreFilterSheetProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const { draft, setList, setText, setFlag, toggleDelivery, reset, allNiches, showAllNiches } =
+  const { draft, setList, setText, setFlag, toggleDelivery, toggleRating, reset, allNiches, showAllNiches } =
     useExploreFilterDraft(filters, visible);
   const apply = useCallback(() => onApply(draft), [draft, onApply]);
 
@@ -233,6 +233,18 @@ const ExploreFilterSheetComponent: React.FC<ExploreFilterSheetProps> = ({
           accessibilityLabel={t('marketplace.explore.filterSheet.delivery')}
         />
       </FormSection>
+      {/* Hidden on a server that predates public ratings (no buckets) once loaded. */}
+      {loading || (options?.ratingBuckets.length ?? 0) > 0 ? (
+        <FormSection title={t('marketplace.explore.filterSheet.rating')}>
+          <ChipGroup
+            items={options?.ratingBuckets ?? []}
+            value={draft.minRating}
+            onChange={toggleRating}
+            loading={loading}
+            accessibilityLabel={t('marketplace.explore.filterSheet.rating')}
+          />
+        </FormSection>
+      ) : null}
       <FormSection title={t('marketplace.explore.filterSheet.more')}>
         <Box gap="sm">
           <FlagBox field="kycVerified" label={t('marketplace.explore.filterSheet.kycVerified')} checked={draft.kycVerified} onChange={setFlag} />

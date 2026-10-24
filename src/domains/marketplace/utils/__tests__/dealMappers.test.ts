@@ -471,6 +471,36 @@ describe('mapDeal', () => {
     expect(mapped?.issue?.photos).toHaveLength(1);
     const unknown = mapDeal(dealDto({ return_shipment: { ...returnDto, status: { key: 'v9', label: 'New' }, issue: null } }));
     expect(unknown.returnShipment?.status).toEqual({ key: null, label: 'New' });
+    expect(mapped?.onHold).toBe(false);
+    expect(mapDeal(dealDto({ return_shipment: { ...returnDto, on_hold: true } })).returnShipment?.onHold).toBe(true);
+  });
+
+  it('maps the account hold everywhere it pauses a clock, and defaults it on older servers', () => {
+    const plain = mapDeal(dealDto());
+    expect(plain.onHold).toBeNull();
+    expect(plain.rating?.onHold).toBe(false);
+    expect(plain.retentionCases[0]?.onHold).toBe(false);
+
+    const base = dealDto();
+    const held = mapDeal(
+      dealDto({
+        on_hold: { since: T0 },
+        rating: base.rating && { ...base.rating, on_hold: true },
+        retention_cases: [retentionCaseDto({ on_hold: true })],
+      }),
+    );
+    expect(held.onHold).toEqual({ since: T0_MS });
+    expect(held.rating?.onHold).toBe(true);
+    expect(held.retentionCases[0]?.onHold).toBe(true);
+    // A malformed date still holds the deal.
+    expect(mapDeal(dealDto({ on_hold: { since: 'soon' } })).onHold).toEqual({ since: 0 });
+  });
+
+  it("maps the brand's public rating, hiding it below the threshold", () => {
+    expect(mapDeal(dealDto()).brand.rating).toBeNull();
+    const rated = mapDeal(dealDto({ brand: { name: 'Cafe Sham', avatar_url: null, rating: { average: 4.6, count: 9 } } }));
+    expect(rated.brand).toEqual({ name: 'Cafe Sham', avatarUrl: null, rating: { average: 4.6, count: 9 } });
+    expect(mapDeal(dealDto({ brand: { name: 'Cafe Sham', avatar_url: null, rating: null } })).brand.rating).toBeNull();
   });
 
   it('renames the influencer side to creator', () => {

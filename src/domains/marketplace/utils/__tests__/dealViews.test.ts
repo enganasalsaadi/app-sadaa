@@ -4,7 +4,7 @@ import type { Deal, DealItemStatus, DealStatus, DealTimelineRow } from '../../ty
 import { dealNextStep, isDealOnYou } from '../dealNextStep';
 import { dealStation, stationOfStatus } from '../dealStation';
 import { groupTimelineByStation } from '../dealTimelineEvents';
-import { dealTimer, formatRemaining, timerElapsedShare } from '../dealTimer';
+import { dealTimeView, dealTimer, formatRemaining, timerElapsedShare } from '../dealTimer';
 
 const NOW = Date.UTC(2026, 9, 14, 12);
 const HOUR = 3_600_000;
@@ -22,6 +22,7 @@ type DealInput = Pick<
   | 'dueAt'
   | 'deliveryHours'
   | 'extendedDeliveryHours'
+  | 'onHold'
 >;
 
 const item = (status: DealItemStatus): Deal['items'][number] => ({
@@ -62,6 +63,7 @@ const deal = (
   dispute: null,
   rating: null,
   dueAt: null,
+  onHold: null,
   deliveryHours: 120,
   extendedDeliveryHours: null,
   ...extra,
@@ -186,6 +188,7 @@ describe('dealNextStep', () => {
     const rating = {
       open: true,
       dueAt: null,
+      onHold: false,
       revealedAt: null,
       brand: { answered: false, revealed: null },
       creator: { answered: true, revealed: null },
@@ -201,6 +204,14 @@ describe('dealNextStep', () => {
     expect(isDealOnYou(deal('pending_influencer'), 'creator')).toBe(true);
     expect(isDealOnYou(deal('pending_influencer'), 'brand')).toBe(false);
   });
+
+  it('hands an account hold to Sada, whatever the deal was waiting on', () => {
+    const held = deal('pending_influencer', { onHold: { since: NOW } });
+    expect(dealNextStep(held, 'creator')).toEqual({ key: 'onHold', actor: 'sada' });
+    expect(dealNextStep(withStage('draft_submitted'), 'brand')?.key).toBe('brandReviewDraft');
+    expect(dealNextStep({ ...withStage('draft_submitted'), onHold: { since: NOW } }, 'brand')?.key).toBe('onHold');
+    expect(isDealOnYou(held, 'creator')).toBe(false);
+  });
 });
 
 describe('dealTimer', () => {
@@ -209,6 +220,13 @@ describe('dealTimer', () => {
     expect(dealTimer(deal('disputed')).paused).toBe(true);
     expect(dealTimer(deal('in_progress')).paused).toBe(false);
     expect(dealTimer(deal('completed', { dueAt: NOW }))).toEqual({ dueAt: null, paused: false, windowHours: null });
+  });
+
+  it('stops every clock on an account hold, ignoring the stale due_at', () => {
+    const held = deal('pending_influencer', { dueAt: NOW + HOUR, onHold: { since: NOW } });
+    expect(dealTimer(held)).toEqual({ dueAt: null, paused: true, windowHours: null });
+    expect(dealTimeView({ ...held, updatedAt: null }, NOW)).toEqual({ kind: 'held' });
+    expect(dealTimeView({ ...deal('pending_influencer', { dueAt: NOW + HOUR }), updatedAt: null }, NOW).kind).toBe('left');
   });
 
   it('measures the window gone only when its length is known', () => {

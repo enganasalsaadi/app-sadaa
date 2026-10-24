@@ -31,6 +31,7 @@ const ship = (over: Partial<DealReturnShipment> = {}): DealReturnShipment => ({
   issue: null,
   waivedAt: null,
   waiveNote: null,
+  onHold: false,
   ...over,
 });
 

@@ -9,6 +9,7 @@ import { HomeSkeleton } from './HomeSkeleton';
 import { RailHeading } from './RailHeading';
 import { RingsRail } from './RingsRail';
 import { StoryDeck } from './StoryDeck';
+import { TopRatedRail } from './TopRatedRail';
 import { VerifiedTiles } from './VerifiedTiles';
 
 type HomeRailsProps = Pick<
@@ -23,7 +24,7 @@ interface RailProps {
   onSeeAll: (rail: BrandHomeRail) => void;
 }
 
-/** Every rail gets its own shape: deck, tall tiles, ruled list or story rings. */
+/** Every rail gets its own shape: deck, rated portraits, tall tiles, ruled list or story rings. */
 const Rail = memo<RailProps>(({ rail, onOpen, onToggleShortlist, onSeeAll }) => {
   const { t } = useTranslation();
   const seeAll = useCallback(() => onSeeAll(rail), [onSeeAll, rail]);
@@ -39,6 +40,17 @@ const Rail = memo<RailProps>(({ rail, onOpen, onToggleShortlist, onSeeAll }) => 
             onSeeAll={onSeeAllOrNone}
           />
           <StoryDeck creators={rail.items} onOpen={onOpen} onToggleShortlist={onToggleShortlist} />
+        </Box>
+      );
+    case 'top_rated':
+      return (
+        <Box gap="md">
+          <RailHeading
+            title={rail.title}
+            subtitle={t('marketplace.brandHome.topRated.subtitle')}
+            onSeeAll={onSeeAllOrNone}
+          />
+          <TopRatedRail creators={rail.items} onOpen={onOpen} />
         </Box>
       );
     case 'verified':

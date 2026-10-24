@@ -38,6 +38,7 @@ export type DealActionInput = Pick<
   | 'rating'
   | 'retention'
   | 'retentionCases'
+  | 'onHold'
 >;
 
 /**
@@ -49,6 +50,8 @@ export const getDealActions = (
   role: DealRole,
   now: number = Date.now(),
 ): DealAction[] => {
+  // Account hold: both sides are read-only until Sada resumes the deal (every action answers 409).
+  if (deal.onHold) return [];
   const status = deal.status.key;
   const actions: DealAction[] = status === null ? [] : [...DEAL_STATUS_ACTIONS[status][role]];
   const brand = role === 'brand';

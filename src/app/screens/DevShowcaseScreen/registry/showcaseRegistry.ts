@@ -271,7 +271,7 @@ export const SHOWCASE_ENTRIES = {
   ratingStars: {
     category: 'display',
     titleKey: 'devShowcase.sections.ratingStars',
-    covers: ['RatingStars'],
+    covers: ['RatingStars', 'RatingMark'],
   },
   toasts: {
     category: 'feedback',

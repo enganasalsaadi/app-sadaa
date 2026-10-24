@@ -58,6 +58,8 @@ export const useDealRetention = (
 
   const items = deal?.items;
   const retentionCases = deal?.retentionCases;
+  // Account hold on the deal: every case is read-only until it resumes.
+  const held = deal?.onHold != null;
   const cases = useMemo<DealRetentionCaseView[]>(
     () =>
       sortRetentionCases(retentionCases ?? []).map(retentionCase => {
@@ -66,14 +68,14 @@ export const useDealRetention = (
         return {
           retentionCase,
           phase,
-          actions: retentionCaseActions(phase, role),
+          actions: held ? [] : retentionCaseActions(phase, role),
           title: item?.title ?? '',
           platform: item?.platform ?? null,
           reportShots: retentionShots(retentionCase.reportFiles),
           restoreShots: retentionShots(retentionCase.restoreFiles),
         };
       }),
-    [items, retentionCases, role],
+    [held, items, retentionCases, role],
   );
   const hasLives =
     deal?.status.key === 'completed' &&

@@ -143,16 +143,18 @@ export const useDealDetail = (
   const retention = useDealRetention(role, id, deal);
 
   const status = deal?.status.key ?? null;
+  // Account hold: the page is read-only until Sada resumes the deal (pushes refetch it).
+  const held = deal?.onHold != null;
   // Rounds only exist once the work has started; the first deliverable waiting on the viewer
   // gets the next-step button.
   const deliverables = status === 'in_progress' && deal ? deal.items : null;
   const focusItem = useMemo(() => {
     for (const item of deliverables ?? []) {
-      const action = dealDeliverableAction(item, role);
+      const action = dealDeliverableAction(item, role, held);
       if (action !== null && action !== 'view') return { itemId: item.id, action };
     }
     return null;
-  }, [deliverables, role]);
+  }, [deliverables, held, role]);
 
   const items = deal?.items;
   const openItem = useCallback(
@@ -176,6 +178,7 @@ export const useDealDetail = (
     selected: Math.min(selected, Math.max(0, count - 1)),
     select,
     stopped,
+    held,
     hasContract: deal?.contract !== null && deal?.contract !== undefined,
     isLoading: !deal && detail.isFetching,
     error: !deal && detail.isError ? detail.error : null,

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, MailOpen } from 'lucide-react-native';
 import { useStyles, useTheme } from '@/core/theme';
 import { Box, CustomButton, Text } from '@/shared/ui';
+import { DealHoldNote } from './DealHoldNote';
 import { DealRatingClock } from './DealRatingClock';
 
 export interface DealRatingInviteProps {
@@ -12,6 +13,8 @@ export interface DealRatingInviteProps {
   /** The other side has rated already: rating back opens both now. */
   theirsAnswered: boolean;
   dueAt: number | null;
+  /** Account hold: the paused note replaces the clock. */
+  onHold: boolean;
   now: number;
   onStart: () => void;
 }
@@ -25,6 +28,7 @@ const DealRatingInviteComponent: React.FC<DealRatingInviteProps> = ({
   questions,
   theirsAnswered,
   dueAt,
+  onHold,
   now,
   onStart,
 }) => {
@@ -65,8 +69,9 @@ const DealRatingInviteComponent: React.FC<DealRatingInviteProps> = ({
             })}
           </Text>
         </Box>
-        <DealRatingClock dueAt={dueAt} now={now} />
+        {dueAt !== null ? <DealRatingClock dueAt={dueAt} now={now} /> : null}
       </Box>
+      {onHold ? <DealHoldNote /> : null}
       {theirsAnswered ? (
         <Box style={styles.tease}>
           <MailOpen size={sizes.icon.sm} color={colors.interactive.main} />

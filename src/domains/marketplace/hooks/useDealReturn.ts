@@ -96,11 +96,13 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
   const dueAt = view?.dueAt ?? null;
   const late = view?.late ?? false;
   const dueShare = view?.dueShare ?? 0;
+  // Account hold on the creator: no reminder or strike until it ends, so no countdown either.
+  const onHold = ship?.onHold ?? false;
   const due = useMemo<DealReturnClock | null>(() => {
-    if (dueAt === null) return null;
+    if (dueAt === null || onHold) return null;
     const seconds = late ? Math.max(0, Math.floor((now - dueAt) / 1000)) : timerSecondsLeft(dueAt, now);
     return { text: formatRemaining(t, seconds), at: dueAt, share: dueShare };
-  }, [dueAt, dueShare, late, now, t]);
+  }, [dueAt, dueShare, late, now, onHold, t]);
   const shippedAt = ship?.shippedAt ?? null;
   const autoConfirm = useMemo<DealReturnClock | null>(() => {
     if (!view?.confirmBy) return null;
@@ -129,6 +131,9 @@ export const useDealReturn = (role: DealRole, id: string, deal: Deal | null) => 
     ship,
     view,
     due,
+    onHold,
+    /** The deal is on account hold: the waybill can't be entered or edited until it resumes. */
+    readOnly: deal?.onHold != null,
     autoConfirm,
     courierOptions,
     visible,

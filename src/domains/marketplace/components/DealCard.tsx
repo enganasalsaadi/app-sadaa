@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/core/theme';
 import { ShieldCheck } from 'lucide-react-native';
-import { Avatar, Box, Card, Countdown, MoneyText, Text } from '@/shared/ui';
+import { Avatar, Box, Card, Countdown, MoneyText, StatusPill, Text } from '@/shared/ui';
 import type { Deal, DealRole } from '../types';
 import { getDealStatusMeta } from '../utils';
 import { DealProgress } from './DealProgress';
@@ -55,7 +55,12 @@ const DealCardComponent: React.FC<DealCardProps> = ({ deal, role, showProgress =
         ) : null}
         <Box row align="center" justify="space-between" gap="md">
           <MoneyText value={deal.total} />
-          <Countdown endsAt={deal.dueAt} size="sm" />
+          {/* Account hold: `due_at` is stale, so the chip replaces the countdown. */}
+          {deal.onHold ? (
+            <StatusPill label={t('marketplace.deals.timer.held')} tone="neutral" size="sm" />
+          ) : (
+            <Countdown endsAt={deal.dueAt} size="sm" />
+          )}
         </Box>
         {heldInEscrow ? (
           <Box row align="center" gap="sm" px="md" py="sm" borderRadius="md" bg={colors.money.soft}>

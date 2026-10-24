@@ -83,7 +83,7 @@ const DealShippingSectionComponent: React.FC<DealShippingSectionProps> = ({ deal
       address={view.address}
       partyName={party}
       onCopy={brand ? shipping.onCopyAddress : undefined}
-      onEdit={view.addressEditable ? shipping.opens.address : undefined}
+      onEdit={view.addressEditable && !deal.onHold ? shipping.opens.address : undefined}
     />
   );
 
@@ -160,8 +160,8 @@ const DealShippingSectionComponent: React.FC<DealShippingSectionProps> = ({ deal
     }
   })();
 
-  // The brand edits the label until receipt or a report (server PUT window).
-  const canEdit = brand && view.phase === 'inTransit';
+  // The brand edits the label until receipt or a report (server PUT window); never while on hold.
+  const canEdit = brand && view.phase === 'inTransit' && !deal.onHold;
 
   return (
     <Box gap="lg">

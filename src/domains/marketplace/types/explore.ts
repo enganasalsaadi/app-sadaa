@@ -3,7 +3,7 @@ import type { FollowerTierId } from '@/core/config';
 import type { Money } from '@/core/money';
 import type { ExploreFilters, ExploreSortParam } from '@/core/navigation';
 import type { PriceLockReason } from '@/domains/identity';
-import type { BrandActiveDeal, Timestamp } from './deal';
+import type { BrandActiveDeal, PublicRating, Timestamp } from './deal';
 import type { BrandActiveDealDto } from './dealDto';
 import type { BrandActiveCampaigns, BrandActiveCampaignsDto } from './campaignHome';
 
@@ -17,11 +17,13 @@ export const EXPLORE_SORTS = [
   'delivery_asc',
   'price_asc',
   'price_desc',
+  'rating_desc',
 ] as const satisfies readonly ExploreSortParam[];
 export type ExploreSort = (typeof EXPLORE_SORTS)[number];
 
 export const BRAND_HOME_RAIL_KEYS = [
   'near_you',
+  'top_rated',
   'verified',
   'fast_delivery',
   'new',
@@ -187,8 +189,29 @@ export interface ExploreCreator {
     isNew: boolean;
   };
   fastestDeliveryDays: number | null;
+  /** What brands gave them; `null` below 3 revealed ratings (show nothing). */
+  rating: PublicRating | null;
+  /** Own-fault completion; `null` below 3 finished deals. */
+  completion: CreatorCompletion | null;
+  /** Server-localized «usually replies within …»; `null` below 3 offers. */
+  response: CreatorResponse | null;
   price: CreatorPrice;
   isShortlisted: boolean;
+}
+
+/** `rate` 0–100, floored by the server. */
+export interface CreatorCompletion {
+  rate: number;
+  count: number;
+}
+
+export const CREATOR_RESPONSE_BUCKETS = ['within_hour', 'within_day', 'within_days'] as const;
+export type CreatorResponseBucket = (typeof CREATOR_RESPONSE_BUCKETS)[number];
+
+/** Unknown bucket → `null` key, the server label still shows. */
+export interface CreatorResponse {
+  bucket: CreatorResponseBucket | null;
+  label: string;
 }
 
 export interface ExploreCreatorsPage {
@@ -223,6 +246,8 @@ export interface ExploreFilterOptions {
   categories: ExploreCategory[];
   sorts: ExploreSortOption[];
   deliveryBuckets: ExploreOption[];
+  /** `min_rating` chips; empty from a server that predates them. */
+  ratingBuckets: ExploreOption[];
 }
 
 export interface BrandHomeIsland {

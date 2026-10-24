@@ -38,9 +38,11 @@ export type DealReturnAnswerSheet = 'receive' | 'issue' | 'waive';
 export const useDealReturnAnswer = (role: DealRole, id: string, deal: Deal | null) => {
   const { t } = useTranslation();
   const ref = useMemo(() => ({ role, id }), [id, role]);
+  // Nothing to answer on a deal under account hold.
+  const held = deal?.onHold != null;
   const allowed = useMemo(
-    () => dealReturnAnswers(role === 'brand' ? (deal?.returnShipment?.status.key ?? null) : null),
-    [deal?.returnShipment?.status.key, role],
+    () => dealReturnAnswers(role === 'brand' && !held ? (deal?.returnShipment?.status.key ?? null) : null),
+    [deal?.returnShipment?.status.key, held, role],
   );
 
   const [sheet, setSheet] = useState<DealReturnAnswerSheet | null>(null);

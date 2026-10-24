@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { BadgeCheck } from 'lucide-react-native';
 import type { TextStyle } from 'react-native';
 import { iconStroke, moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, Image, Text } from '@/shared/ui';
+import { Box, Image, RatingMark, Text } from '@/shared/ui';
 import type { CreatorCampaignBrand } from '../types/campaign';
 import { monogramOf } from '../utils/creatorText';
 
@@ -13,7 +13,10 @@ export interface OpportunityBrandPillProps {
   brand: CreatorCampaignBrand;
 }
 
-/** The brand over the cover: frosted pill with its avatar (or first letter), name and the verified tick. */
+/**
+ * The brand over the cover: frosted pill with its avatar (or first letter), name, the verified tick
+ * and its public ★ rating when the server has one.
+ */
 const OpportunityBrandPillComponent: React.FC<OpportunityBrandPillProps> = ({ brand }) => {
   const { colors, sizes } = useTheme();
   const styles = useStyles((): Record<'name', TextStyle> => ({ name: { maxWidth: NAME_MAX_WIDTH } }));
@@ -52,6 +55,9 @@ const OpportunityBrandPillComponent: React.FC<OpportunityBrandPillProps> = ({ br
       </Text>
       {brand.verified ? (
         <BadgeCheck size={sizes.icon.xs} color={colors.text.onBrand} strokeWidth={iconStroke.bold} />
+      ) : null}
+      {brand.rating ? (
+        <RatingMark value={brand.rating.average} count={brand.rating.count} surface="onBrand" />
       ) : null}
     </Box>
   );

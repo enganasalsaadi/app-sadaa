@@ -68,6 +68,15 @@ describe('buildExploreQuery', () => {
   });
 });
 
+describe('min_rating', () => {
+  it('sends and reads the rating floor', () => {
+    expect(decode(buildExploreQuery({ minRating: 4.5, sort: 'rating_desc' }, null, 20))).toBe(
+      'min_rating=4.5&sort=rating_desc&per_page=20',
+    );
+    expect(parseExploreParams({ min_rating: 4.5, sort: 'rating_desc' })).toEqual({ minRating: 4.5, sort: 'rating_desc' });
+  });
+});
+
 describe('parseExploreParams', () => {
   it('reads server see_all params into app filters', () => {
     expect(

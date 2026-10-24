@@ -1115,7 +1115,15 @@
           "reach_other": "متابع عبر {{count}} منصة",
           "moreCount": "+{{count}}",
           "moreNiches": "عرض كل التخصصات",
-          "lessNiches": "إخفاء التخصصات الإضافية"
+          "lessNiches": "إخفاء التخصصات الإضافية",
+          "ratings_zero": "{{count}} تقييم",
+          "ratings_one": "تقييم واحد",
+          "ratings_two": "تقييمان",
+          "ratings_few": "{{count}} تقييمات",
+          "ratings_many": "{{count}} تقييماً",
+          "ratings_other": "{{count}} تقييم",
+          "completionRate": "{{rate}}%",
+          "completed": "أنجز صفقاته"
         },
         "metrics": {
           "overline": "بالأرقام",
@@ -3037,6 +3045,10 @@
       "deliveryDays_other": "{{count}} يوم",
       "onSite": "في الموقع",
       "new": "جديد",
+      "reputation": {
+        "completion": "{{rate}}% أنجز",
+        "completionA11y": "أنجز {{rate}}% من صفقاته ({{deals}})"
+      },
       "priceLock": {
         "verify": "وثّق لرؤية السعر",
         "pending": "السعر بعد التوثيق",
@@ -3465,6 +3477,10 @@
       "railCount_other": "{{count}} صانع محتوى",
       "verifiedSubtitle": "هوية وأرقام متابعين موثّقة",
       "fastSubtitle": "يسلّمون المحتوى خلال أيام",
+      "topRated": {
+        "subtitle": "تقييمات حقيقية من صفقات مكتملة",
+        "outOf": "من {{max}}"
+      },
       "fastRowLabel": "{{name}}، أسرع تسليم: {{delivery}}",
       "deliveryWithin_zero": "خلال أقل من يوم",
       "deliveryWithin_one": "خلال يوم",
@@ -3638,6 +3654,7 @@
         "max": "إلى",
         "any": "أي عدد",
         "delivery": "مدة التسليم",
+        "rating": "التقييم",
         "more": "المزيد",
         "kycVerified": "صانع محتوى موثّق",
         "followersVerified": "متابعون موثّقون",
@@ -4249,6 +4266,7 @@
       "timer": {
         "left": "متبقية",
         "paused": "المهلة متوقفة",
+        "held": "معلّقة",
         "closedOn": "أُغلقت {{date}}",
         "minutes_zero": "{{count}} دقيقة",
         "minutes_one": "دقيقة واحدة",
@@ -4256,6 +4274,9 @@
         "minutes_few": "{{count}} دقائق",
         "minutes_many": "{{count}} دقيقة",
         "minutes_other": "{{count}} دقيقة"
+      },
+      "hold": {
+        "paused": "متوقفة ريثما يراجع فريق صدى أحد الحسابات"
       },
       "nextLabel": "التالي",
       "actor": {
@@ -4357,6 +4378,10 @@
           "title": "تتحقق {{name}} من منشورك",
           "body": "إن لم تتحقق خلال المهلة يُعتمد تلقائياً ويُحرَّر مبلغك."
         },
+        "onHold": {
+          "title": "معلّقة ريثما يراجع فريق صدى أحد الحسابات",
+          "body": "الصفقة معلّقة مؤقتاً ريثما يراجع فريق صدى أحد الحسابات. المؤقتات متوقفة، ولا يمكن القيام بأي إجراء حتى تُستأنف."
+        },
         "dispute": {
           "title": "النزاع لدى فريق صدى",
           "body": "المهل متوقفة حتى القرار. أضف أدلتك ما دامت النافذة مفتوحة."
@@ -4430,6 +4455,7 @@
         "now": "الآن",
         "left": "متبقية",
         "paused": "متوقفة",
+        "held": "معلّقة",
         "done": "اكتملت",
         "stopped": "توقفت",
         "disputed": "قيد النزاع"

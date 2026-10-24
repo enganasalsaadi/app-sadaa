@@ -43,6 +43,9 @@ const creator = (slug: string): ExploreCreator => ({
   platforms: [],
   badges: { kycVerified: false, followersVerified: false, rush: false, onSite: false, isNew: false },
   fastestDeliveryDays: null,
+  rating: null,
+  completion: null,
+  response: null,
   price: { locked: false, from: null, fromSypApprox: null },
   isShortlisted: true,
 });

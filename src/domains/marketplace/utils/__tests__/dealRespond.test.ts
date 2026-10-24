@@ -9,7 +9,7 @@ import {
   dealFundingState,
 } from '../dealRespond';
 
-const status = (key: DealStatus) => ({ status: { key, label: key } });
+const status = (key: DealStatus) => ({ status: { key, label: key }, onHold: null });
 
 const extension = (patch: Partial<DealExtension> = {}): DealExtension => ({
   addendumId: 'add-1',
@@ -35,6 +35,11 @@ describe('dealDockKind', () => {
     expect(dealDockKind(status('awaiting_payment'), 'brand')).toBe('brandFunding');
   });
 
+  it('has no bar on an account hold', () => {
+    expect(dealDockKind({ ...status('pending_influencer'), onHold: { since: 1 } }, 'creator')).toBeNull();
+    expect(dealDockKind({ ...status('awaiting_payment'), onHold: { since: 1 } }, 'brand')).toBeNull();
+  });
+
   it('shows the creator nothing while the brand decides or pays', () => {
     expect(dealDockKind(status('negotiating_deadline'), 'creator')).toBeNull();
     expect(dealDockKind(status('awaiting_payment'), 'creator')).toBeNull();
@@ -48,7 +53,7 @@ describe('dealDockKind', () => {
       expect(dealDockKind(status(key), 'brand')).toBeNull();
       expect(dealDockKind(status(key), 'creator')).toBeNull();
     }
-    expect(dealDockKind({ status: { key: null, label: '?' } }, 'creator')).toBeNull();
+    expect(dealDockKind({ status: { key: null, label: '?' }, onHold: null }, 'creator')).toBeNull();
   });
 });
 

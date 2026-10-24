@@ -11,6 +11,8 @@ const RATING_MAX = 5;
 const STARS = Array.from({ length: RATING_MAX }, (_, index) => index + 1);
 
 export type RatingStarsSize = 'sm' | 'md';
+/** `onBrand`: over navy — empty stars as a light outline, figures in white. */
+export type RatingStarsSurface = 'default' | 'onBrand';
 
 export interface RatingStarsProps {
   /** 0–5; display rounds to the nearest half star. */
@@ -22,6 +24,8 @@ export interface RatingStarsProps {
   size?: RatingStarsSize;
   /** Makes it an input: whole stars 1–5, 44pt targets. */
   onChange?: (value: number) => void;
+  /** Display mode only. Default `default`. */
+  surface?: RatingStarsSurface;
 }
 
 type Fill = 'full' | 'half' | 'empty';
@@ -29,7 +33,7 @@ type Fill = 'full' | 'half' | 'empty';
 const fillFor = (star: number, rounded: number): Fill =>
   rounded >= star ? 'full' : rounded >= star - 0.5 ? 'half' : 'empty';
 
-const StarIcon = memo<{ fill: Fill; size: number }>(({ fill, size }) => {
+const StarIcon = memo<{ fill: Fill; size: number; onBrand?: boolean }>(({ fill, size, onBrand = false }) => {
   const { colors, isRTL } = useTheme();
   const styles = useStyles(
     () => ({
@@ -47,7 +51,11 @@ const StarIcon = memo<{ fill: Fill; size: number }>(({ fill, size }) => {
 
   return (
     <Box>
-      <Star size={size} color={fill === 'full' ? on : colors.border.strong} fill={fill === 'full' ? on : colors.layout.transparent} />
+      <Star
+        size={size}
+        color={fill === 'full' ? on : onBrand ? colors.glass.border : colors.border.strong}
+        fill={fill === 'full' ? on : colors.layout.transparent}
+      />
       {fill === 'half' ? (
         <Box style={styles.half}>
           <StarHalf size={size} color={on} fill={on} />
@@ -94,6 +102,7 @@ const RatingStarsComponent: React.FC<RatingStarsProps> = ({
   showValue = true,
   size = 'sm',
   onChange,
+  surface = 'default',
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
@@ -117,6 +126,7 @@ const RatingStarsComponent: React.FC<RatingStarsProps> = ({
     );
   }
 
+  const onBrand = surface === 'onBrand';
   const rounded = Math.round(clamped * 2) / 2;
   const valueLabel = formatNumber(clamped, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const a11y = [
@@ -130,14 +140,19 @@ const RatingStarsComponent: React.FC<RatingStarsProps> = ({
     <Box row align="center" gap="xs" accessible accessibilityRole="text" accessibilityLabel={a11y}>
       <Box row gap="xs">
         {STARS.map(star => (
-          <StarIcon key={star} fill={fillFor(star, rounded)} size={iconSize} />
+          <StarIcon key={star} fill={fillFor(star, rounded)} size={iconSize} onBrand={onBrand} />
         ))}
       </Box>
       {showValue ? (
-        <Text variant={size === 'md' ? 'bodyMedium' : 'bodySmall'}>{valueLabel}</Text>
+        <Text variant={size === 'md' ? 'bodyMedium' : 'bodySmall'} color={onBrand ? colors.text.onBrand : undefined}>
+          {valueLabel}
+        </Text>
       ) : null}
       {count !== undefined ? (
-        <Text variant={size === 'md' ? 'bodySmall' : 'caption'} color={colors.text.secondary}>
+        <Text
+          variant={size === 'md' ? 'bodySmall' : 'caption'}
+          color={onBrand ? colors.text.onBrandMuted : colors.text.secondary}
+        >
           {t('common.rating.countShort', { count: formatNumber(count) })}
         </Text>
       ) : null}

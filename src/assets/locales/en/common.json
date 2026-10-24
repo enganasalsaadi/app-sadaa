@@ -1095,7 +1095,11 @@
           "reach_other": "followers across {{count}} platforms",
           "moreCount": "+{{count}}",
           "moreNiches": "Show all niches",
-          "lessNiches": "Hide extra niches"
+          "lessNiches": "Hide extra niches",
+          "ratings_one": "{{count}} rating",
+          "ratings_other": "{{count}} ratings",
+          "completionRate": "{{rate}}%",
+          "completed": "of deals completed"
         },
         "metrics": {
           "overline": "By the numbers",
@@ -2876,6 +2880,10 @@
       "deliveryDays_other": "{{count}} days",
       "onSite": "On site",
       "new": "New",
+      "reputation": {
+        "completion": "{{rate}}% completed",
+        "completionA11y": "Completed {{rate}}% of their deals ({{deals}})"
+      },
       "priceLock": {
         "verify": "Verify to see price",
         "pending": "Price after verification",
@@ -3280,6 +3288,10 @@
       "railCount_other": "{{count}} creators",
       "verifiedSubtitle": "Verified identity and follower counts",
       "fastSubtitle": "Deliver content within days",
+      "topRated": {
+        "subtitle": "Real ratings from completed deals",
+        "outOf": "of {{max}}"
+      },
       "fastRowLabel": "{{name}}, fastest delivery: {{delivery}}",
       "deliveryWithin_one": "Within {{count}} day",
       "deliveryWithin_other": "Within {{count}} days",
@@ -3434,6 +3446,7 @@
         "max": "Max",
         "any": "Any",
         "delivery": "Delivery within",
+        "rating": "Rating",
         "more": "More",
         "kycVerified": "Verified creator",
         "followersVerified": "Verified followers",
@@ -3997,9 +4010,13 @@
       "timer": {
         "left": "left",
         "paused": "Timer paused",
+        "held": "On hold",
         "closedOn": "Closed {{date}}",
         "minutes_one": "{{count}} minute",
         "minutes_other": "{{count}} minutes"
+      },
+      "hold": {
+        "paused": "Paused while Sada reviews an account"
       },
       "nextLabel": "Next",
       "actor": {
@@ -4101,6 +4118,10 @@
           "title": "{{name}} is checking your post",
           "body": "Not checked in time? It's verified automatically and your money is released."
         },
+        "onHold": {
+          "title": "Paused while Sada reviews an account",
+          "body": "This deal is paused while Sada's team reviews an account. Timers are stopped, and nothing can be done on it until it resumes."
+        },
         "dispute": {
           "title": "The dispute is with Sada's team",
           "body": "Timers are paused until the decision. Add your evidence while the window is open."
@@ -4174,6 +4195,7 @@
         "now": "Now",
         "left": "left",
         "paused": "Paused",
+        "held": "On hold",
         "done": "Completed",
         "stopped": "Stopped",
         "disputed": "In dispute"

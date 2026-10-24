@@ -223,7 +223,8 @@ export type ExploreSortParam =
   | 'newest'
   | 'delivery_asc'
   | 'price_asc'
-  | 'price_desc';
+  | 'price_desc'
+  | 'rating_desc';
 
 /** Explore query in app terms; also the cache key, so each filter set keeps its own pages. */
 export interface ExploreFilters {
@@ -241,6 +242,8 @@ export interface ExploreFilters {
   rush?: boolean;
   onSite?: boolean;
   maxDeliveryDays?: number;
+  /** Lowest public rating (4, 4.5): one of the filters' `rating_buckets`. */
+  minRating?: number;
   /** 🔒 verified brands only (whole dollars). */
   priceMin?: number;
   /** 🔒 */

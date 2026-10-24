@@ -15,6 +15,7 @@ const NUMBER_PARAMS: readonly [KeysOfType<number>, string][] = [
   ['minFollowers', 'min_followers'],
   ['maxFollowers', 'max_followers'],
   ['maxDeliveryDays', 'max_delivery_days'],
+  ['minRating', 'min_rating'],
   ['priceMin', 'price_min'],
   ['priceMax', 'price_max'],
 ];

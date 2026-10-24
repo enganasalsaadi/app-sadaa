@@ -52,7 +52,7 @@ export const useDealDraftUploadScreen = () => {
   const rounds = item ? dealRounds(item) : null;
   const ask = useMemo(() => dealRevisionAsk(drafts.data ?? []), [drafts.data]);
   const latest = drafts.data?.[0] ?? null;
-  const composing = item !== null && dealDeliverableAction(item, 'creator') === 'submit';
+  const composing = item !== null && dealDeliverableAction(item, 'creator', deal?.onHold != null) === 'submit';
 
   const [requestSlot] = useRequestDraftUploadSlotMutation();
   const uploads = useFileUploads({

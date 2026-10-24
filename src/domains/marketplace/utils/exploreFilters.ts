@@ -5,6 +5,9 @@ import { EXPLORE_QUERY_MAX, EXPLORE_QUERY_MIN } from './exploreQuery';
 /** Server bounds for `max_delivery_days`. */
 const DELIVERY_DAYS_MIN = 1;
 const DELIVERY_DAYS_MAX = 14;
+/** Public ratings run 1–5; a bucket outside that is dropped. */
+const RATING_MIN = 1;
+const RATING_MAX = 5;
 
 /** Filter sheet form: numbers stay text while typed, parsed once on apply. */
 export interface ExploreFilterDraft {
@@ -16,6 +19,8 @@ export interface ExploreFilterDraft {
   maxFollowers: string;
   /** Delivery bucket value (days), `null` = any. */
   maxDeliveryDays: string | null;
+  /** Rating bucket value (`4`, `4.5`), `null` = any. */
+  minRating: string | null;
   kycVerified: boolean;
   followersVerified: boolean;
   rush: boolean;
@@ -61,6 +66,7 @@ export const countSheetFilters = (filters: ExploreFilters): number =>
     !!filters.tier?.length,
     filters.minFollowers !== undefined || filters.maxFollowers !== undefined,
     filters.maxDeliveryDays !== undefined,
+    filters.minRating !== undefined,
     !!filters.kycVerified,
     !!filters.followersVerified,
     !!filters.rush,
@@ -91,6 +97,7 @@ export const toFilterDraft = (filters: ExploreFilters): ExploreFilterDraft => ({
   minFollowers: toText(filters.minFollowers),
   maxFollowers: toText(filters.maxFollowers),
   maxDeliveryDays: filters.maxDeliveryDays === undefined ? null : String(filters.maxDeliveryDays),
+  minRating: filters.minRating === undefined ? null : String(filters.minRating),
   kycVerified: !!filters.kycVerified,
   followersVerified: !!filters.followersVerified,
   rush: !!filters.rush,
@@ -147,6 +154,10 @@ export const applyFilterDraft = (
   const days = draft.maxDeliveryDays === null ? undefined : parseWhole(draft.maxDeliveryDays);
   if (days !== undefined) {
     next.maxDeliveryDays = Math.min(Math.max(days, DELIVERY_DAYS_MIN), DELIVERY_DAYS_MAX);
+  }
+  const rating = draft.minRating === null ? NaN : Number(draft.minRating);
+  if (Number.isFinite(rating) && rating >= RATING_MIN && rating <= RATING_MAX) {
+    next.minRating = rating;
   }
   (['kycVerified', 'followersVerified', 'rush', 'onSite', 'withinBudget'] as const).forEach(key => {
     if (draft[key]) next[key] = true;

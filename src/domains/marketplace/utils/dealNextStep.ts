@@ -31,6 +31,7 @@ export const DEAL_NEXT_STEPS = [
   'creatorPublish',
   'creatorWaitVerify',
   // both
+  'onHold',
   'dispute',
   'rate',
   'done',
@@ -44,7 +45,7 @@ export interface DealNextStep {
 
 type NextStepInput = Pick<
   Deal,
-  'status' | 'stage' | 'items' | 'shipping' | 'rating'
+  'status' | 'stage' | 'items' | 'shipping' | 'rating' | 'onHold'
 >;
 
 const step = (key: DealNextStepKey, actor: DealNextActor): DealNextStep => ({
@@ -67,6 +68,8 @@ export const dealNextStep = (
   role: DealRole,
 ): DealNextStep | null => {
   const brand = role === 'brand';
+  // Paused while Sada reviews an account: nobody can move until it resumes.
+  if (deal.onHold) return step('onHold', 'sada');
   if (deal.rating?.open && !deal.rating[role].answered)
     return step('rate', 'you');
 

@@ -59,7 +59,7 @@ export const useDealShipping = (role: DealRole, id: string, deal: Deal | null) =
   const ref = useMemo(() => ({ role, id }), [id, role]);
   const now = useClock(MINUTE_MS);
   const view = useMemo(() => (deal ? dealShippingView(deal, role, now) : null), [deal, now, role]);
-  const dock = dealShippingDock(view, role);
+  const dock = deal?.onHold ? null : dealShippingDock(view, role);
   const party = (role === 'brand' ? deal?.creator.name : deal?.brand.name) ?? '';
 
   const ship = useDealAction(ref);

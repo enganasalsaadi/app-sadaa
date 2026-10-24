@@ -27,6 +27,7 @@ const opened = (overall: number | null): DealRatingSide => ({
 const rating = (patch: Partial<DealRating> = {}): DealRating => ({
   open: true,
   dueAt: 100 * HOUR,
+  onHold: false,
   revealedAt: null,
   brand: waiting(false),
   creator: waiting(false),
@@ -42,6 +43,12 @@ describe('dealRatingView', () => {
     const view = dealRatingView(rating({ creator: waiting(true) }), 'brand');
     expect(view?.stage).toBe('invite');
     expect(view?.theirs.answered).toBe(true);
+  });
+
+  it('keeps the invite but stops the clock on an account hold', () => {
+    const view = dealRatingView(rating({ onHold: true }), 'brand');
+    expect(view).toMatchObject({ stage: 'invite', onHold: true, dueAt: null });
+    expect(dealRatingView(rating(), 'brand')).toMatchObject({ onHold: false, dueAt: 100 * HOUR });
   });
 
   it('seals a side that answered and waits for the other', () => {

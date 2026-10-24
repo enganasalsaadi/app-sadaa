@@ -9,7 +9,8 @@ const HOURS_PER_DAY = 24;
  */
 export type DealDockKind = 'creatorOffer' | 'brandOffer' | 'brandExtension' | 'brandFunding';
 
-export const dealDockKind = (deal: Pick<Deal, 'status'>, role: DealRole): DealDockKind | null => {
+export const dealDockKind = (deal: Pick<Deal, 'status' | 'onHold'>, role: DealRole): DealDockKind | null => {
+  if (deal.onHold) return null;
   switch (deal.status.key) {
     case 'pending_influencer':
       return role === 'creator' ? 'creatorOffer' : 'brandOffer';

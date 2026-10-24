@@ -21,6 +21,8 @@ const STRIPE = 10;
 export type DealTimerBarTime =
   | { kind: 'left'; text: string; late: boolean }
   | { kind: 'paused' }
+  /** Account hold: same stripes, says the deal itself is paused. */
+  | { kind: 'held' }
   | { kind: 'closed'; text: string }
   | { kind: 'none' };
 
@@ -113,7 +115,7 @@ const DealTimerBarComponent: React.FC<DealTimerBarProps> = ({
       accessible
       accessibilityLabel={timeLabel(t, label, time)}
     >
-      {time.kind === 'paused' ? <PausedStripes color={hue.main} /> : null}
+      {time.kind === 'paused' || time.kind === 'held' ? <PausedStripes color={hue.main} /> : null}
       {share !== null && time.kind === 'left' ? (
         <Box style={styles.fill} pointerEvents="none" />
       ) : null}
@@ -133,11 +135,11 @@ const DealTimerBarComponent: React.FC<DealTimerBarProps> = ({
             {t('marketplace.deals.timer.left')}
           </Text>
         </Box>
-      ) : time.kind === 'paused' ? (
+      ) : time.kind === 'paused' || time.kind === 'held' ? (
         <Box row align="center" gap="xs">
           <Pause size={sizes.icon.xs} color={hue.text} />
           <Text variant="caption" color={hue.text}>
-            {t('marketplace.deals.timer.paused')}
+            {t(time.kind === 'held' ? 'marketplace.deals.timer.held' : 'marketplace.deals.timer.paused')}
           </Text>
         </Box>
       ) : time.kind === 'closed' ? (
@@ -159,6 +161,8 @@ const timeLabel = (
       return `${label}, ${time.text} ${t('marketplace.deals.timer.left')}`;
     case 'paused':
       return `${label}, ${t('marketplace.deals.timer.paused')}`;
+    case 'held':
+      return `${label}, ${t('marketplace.deals.timer.held')}`;
     case 'closed':
       return `${label}, ${time.text}`;
     case 'none':

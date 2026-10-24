@@ -54,6 +54,9 @@ describe('mapExploreCreator', () => {
       platforms: ['instagram'],
       badges: { kycVerified: true, followersVerified: true, rush: false, onSite: true, isNew: true },
       fastestDeliveryDays: 2,
+      rating: null,
+      completion: null,
+      response: null,
       price: {
         locked: false,
         from: { amount: 4000, currency: 'USD' },
@@ -61,6 +64,35 @@ describe('mapExploreCreator', () => {
       },
       isShortlisted: false,
     });
+  });
+
+  it('maps the public track record and hides what is below the server threshold', () => {
+    const card = mapExploreCreator(
+      creatorDto({
+        rating: { average: 4.7, count: 12 },
+        completion: { rate: 92, count: 12 },
+        response: { bucket: 'within_hour', label: 'يرد عادةً خلال ساعة' },
+      }),
+    );
+    expect(card.rating).toEqual({ average: 4.7, count: 12 });
+    expect(card.completion).toEqual({ rate: 92, count: 12 });
+    expect(card.response).toEqual({ bucket: 'within_hour', label: 'يرد عادةً خلال ساعة' });
+    const hidden = mapExploreCreator(creatorDto({ rating: null, completion: null, response: null }));
+    expect([hidden.rating, hidden.completion, hidden.response]).toEqual([null, null, null]);
+  });
+
+  it('drops a malformed track record instead of showing it wrong', () => {
+    const card = mapExploreCreator(
+      creatorDto({
+        rating: { average: Number.NaN, count: 4 },
+        completion: { rate: 140, count: 5 },
+        response: { bucket: 'someday' as 'within_day', label: 'Soon' },
+      }),
+    );
+    expect(card.rating).toBeNull();
+    expect(card.completion).toBeNull();
+    expect(card.response).toEqual({ bucket: null, label: 'Soon' });
+    expect(mapExploreCreator(creatorDto({ rating: { average: 4, count: 0 } })).rating).toBeNull();
   });
 
   it('hides SYP when the rate is stale', () => {
@@ -138,6 +170,20 @@ describe('mapExploreFilters', () => {
     delivery_buckets: [option(3)],
   };
 
+  it('reads the rating buckets, empty on a server that predates them', () => {
+    expect(mapExploreFilters(dto).ratingBuckets).toEqual([]);
+    expect(mapExploreFilters({ ...dto, rating_buckets: [option(4), option(4.5)] }).ratingBuckets.map(b => b.value)).toEqual([
+      '4',
+      '4.5',
+    ]);
+  });
+
+  it('keeps the rating sort', () => {
+    expect(mapExploreFilters({ ...dto, sort: [option('rating_desc')] }).sorts.map(sort => sort.value)).toEqual([
+      'rating_desc',
+    ]);
+  });
+
   it('normalises values to strings and drops unknown sorts', () => {
     const filters = mapExploreFilters(dto);
     expect(filters.deliveryBuckets).toEqual([{ value: '3', label: '3', requiresVerification: false }]);
@@ -214,6 +260,23 @@ describe('mapBrandHome', () => {
     expect(rails.map(rail => rail.key)).toEqual(['near_you', 'recently_viewed']);
     expect(rails[0]?.seeAll).toEqual({ governorate: ['damascus'] });
     expect(rails[1]?.seeAll).toBeNull();
+  });
+
+  it('keeps the top_rated rail and its see-all (min rating + rating sort)', () => {
+    const { rails } = mapBrandHome(
+      homeDto({
+        rails: [
+          {
+            key: 'top_rated',
+            title: 'Top rated',
+            items: [creatorDto()],
+            see_all: { min_rating: 4.5, sort: 'rating_desc' },
+          },
+        ],
+      }),
+    );
+    expect(rails.map(rail => rail.key)).toEqual(['top_rated']);
+    expect(rails[0]?.seeAll).toEqual({ minRating: 4.5, sort: 'rating_desc' });
   });
 
   it('hides stale SYP, unknown island and non-WhatsApp support links', () => {

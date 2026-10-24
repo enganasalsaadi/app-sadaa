@@ -110,7 +110,7 @@ export const useDealUpsells = (role: DealRole, id: string, deal: Deal | null) =>
   return {
     pending,
     history: view?.history ?? [],
-    canPropose: role === 'brand' && deal?.upsellWindow.open === true,
+    canPropose: role === 'brand' && deal?.upsellWindow.open === true && deal.onHold === null,
     openBuilder,
     sheet,
     close,

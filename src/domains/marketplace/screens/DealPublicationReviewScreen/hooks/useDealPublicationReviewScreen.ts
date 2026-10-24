@@ -49,7 +49,7 @@ export const useDealPublicationReviewScreen = () => {
   const position = deal && item ? deal.items.indexOf(item) + 1 : 0;
   const publications = useMemo(() => history.data ?? [], [history.data]);
   const latest = publications[0] ?? null;
-  const verifying = item !== null && dealDeliverableAction(item, 'brand') === 'verify';
+  const verifying = item !== null && dealDeliverableAction(item, 'brand', deal?.onHold != null) === 'verify';
   const fixes = useMemo(() => (item ? dealFixCount(item, publications) : null), [item, publications]);
   const creatorName = deal?.creator.name ?? '';
   const last = deal !== null && verifying && isLastToVerify(deal, itemId);

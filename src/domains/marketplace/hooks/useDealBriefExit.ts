@@ -75,7 +75,8 @@ export const useDealBriefExit = (role: DealRole, id: string, deal: Deal | null) 
   }, [run, setError, submit, t]);
 
   return {
-    available: exitWindow !== null,
+    // Never offered while the deal is on account hold (the exit would answer 409).
+    available: exitWindow !== null && deal?.onHold == null,
     until: exitWindow?.until ?? null,
     visible,
     open,

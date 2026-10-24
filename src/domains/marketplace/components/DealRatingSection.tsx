@@ -39,6 +39,7 @@ const DealRatingSectionComponent: React.FC<DealRatingSectionProps> = ({
             questions={view.criteria.length}
             theirsAnswered={view.theirs.answered}
             dueAt={view.dueAt}
+            onHold={view.onHold}
             now={now}
             onStart={rating.open}
           />

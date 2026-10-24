@@ -22,6 +22,7 @@ const input = (status: DealStatus | null, extra: Partial<DealActionInput> = {}):
   rating: null,
   retention: [],
   retentionCases: [],
+  onHold: null,
   ...extra,
 });
 
@@ -129,6 +130,20 @@ describe('getDealActions', () => {
     expect(getDealActions(at(NOW - 1), 'brand', NOW)).not.toContain('freeCancel');
   });
 
+  it('offers nothing on an account hold, even with every window open', () => {
+    const held = input('in_progress', {
+      onHold: { since: NOW },
+      cancellation: null,
+      upsellWindow: { open: true, closedReason: null, pendingUpsellId: null },
+      disputeWindow: { open: true, closedReason: null, disputesLeft: 1 },
+    });
+    expect(getDealActions(held, 'brand', NOW)).toEqual([]);
+    expect(getDealActions(held, 'creator', NOW)).toEqual([]);
+    expect(getDealActions({ ...held, onHold: null }, 'brand', NOW)).toEqual(
+      expect.arrayContaining(['proposeUpsell', 'openDispute']),
+    );
+  });
+
   it('follows the upsell, dispute, retention and rating windows', () => {
     const deal = input('completed', {
       upsellWindow: { open: true, closedReason: null, pendingUpsellId: null },
@@ -137,6 +152,7 @@ describe('getDealActions', () => {
       rating: {
         open: true,
         dueAt: null,
+        onHold: false,
         revealedAt: null,
         brand: { answered: true, revealed: null },
         creator: { answered: false, revealed: null },

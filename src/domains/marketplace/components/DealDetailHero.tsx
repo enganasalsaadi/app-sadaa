@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCountdown } from '@/core/hooks';
 import { formatNumber } from '@/core/i18n';
 import { moderateScale, useStyles, useTheme } from '@/core/theme';
-import { Box, MoneyText, Text } from '@/shared/ui';
+import { Box, MoneyText, RatingMark, Text } from '@/shared/ui';
 import { useClock } from '../hooks/useClock';
 import type { Deal, DealRole } from '../types';
 import type { DealStationView } from '../utils/dealStation';
@@ -61,6 +61,8 @@ const OrbitCore = memo<{
       ? t('marketplace.deals.orbit.done')
       : station.state === 'stopped'
       ? t('marketplace.deals.orbit.stopped')
+      : view.kind === 'held'
+      ? t('marketplace.deals.orbit.held')
       : view.kind === 'paused'
       ? t('marketplace.deals.orbit.paused')
       : view.kind === 'left'
@@ -100,7 +102,8 @@ const OrbitCore = memo<{
 
 /**
  * Navy detail hero, transparent (Layout paints the live gradient and its lights, and the body
- * slides over it like every hero in the app): the other side's name, the deal orbit with its
+ * slides over it like every hero in the app): the other side's name (+ the brand's ★ for the
+ * creator), the deal orbit with its
  * clock, then the server's status and the deal total.
  */
 const DealDetailHeroComponent: React.FC<DealDetailHeroProps> = ({
@@ -117,9 +120,11 @@ const DealDetailHeroComponent: React.FC<DealDetailHeroProps> = ({
   const now = useClock(MINUTE);
   const view = dealTimeView(deal, now);
   const party = role === 'brand' ? deal.creator : deal.brand;
+  // The brand's public score is sent to the creator only; the brand never sees its own here.
+  const brandRating = role === 'creator' ? deal.brand.rating : null;
 
   const styles = useStyles(
-    (): Record<'container' | 'titleRow', ViewStyle> => ({
+    (): Record<'container' | 'titleRow' | 'name', ViewStyle> => ({
       // Same top as the overlay ScreenHeader's icon row.
       container: { paddingTop: top + spacing.sm },
       // Clears the back button and the two header actions.
@@ -128,21 +133,27 @@ const DealDetailHeroComponent: React.FC<DealDetailHeroProps> = ({
         paddingStart: sizes.iconButton.md + spacing.sm,
         paddingEnd: sizes.iconButton.md * 2 + spacing.sm * 2,
       },
+      name: { flexShrink: 1 },
     }),
     [sizes.iconButton.md, spacing.sm, top],
   );
 
   return (
     <Box style={styles.container} px="xl" pb="4xl" gap="lg">
-      <Box justify="center" style={styles.titleRow}>
-        <Text
-          variant="h4"
-          color={colors.text.onBrand}
-          numberOfLines={1}
-          accessibilityRole="header"
-        >
-          {party.name ?? ''}
-        </Text>
+      <Box row align="center" gap="sm" style={styles.titleRow}>
+        <Box style={styles.name}>
+          <Text
+            variant="h4"
+            color={colors.text.onBrand}
+            numberOfLines={1}
+            accessibilityRole="header"
+          >
+            {party.name ?? ''}
+          </Text>
+        </Box>
+        {brandRating ? (
+          <RatingMark value={brandRating.average} count={brandRating.count} surface="onBrand" pill />
+        ) : null}
       </Box>
 
       {deal.campaign ? (

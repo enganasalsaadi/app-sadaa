@@ -22,6 +22,7 @@ import type { DealRetentionCaseView } from '../hooks/useDealRetention';
 import type { DealRole } from '../types';
 import { parseLiveUrl } from '../utils/dealPublish';
 import type { DealRetentionCaseAction } from '../utils/dealRetention';
+import { DealHoldNote } from './DealHoldNote';
 import { DealDisputeClock } from './DealDisputeClock';
 import { EvidenceTile } from './EvidenceTile';
 
@@ -348,7 +349,9 @@ const DealRetentionCaseCardComponent: React.FC<DealRetentionCaseCardProps> = ({
               {t('marketplace.deals.retention.case.escalatedNote')}
             </Text>
           ) : null}
-          {clock && c.dueAt !== null ? (
+          {open && c.onHold ? (
+            <DealHoldNote />
+          ) : clock && c.dueAt !== null ? (
             <CaseClock dueAt={c.dueAt} lead={clock.lead} after={clock.after} />
           ) : null}
           {actions.length > 0 ? (

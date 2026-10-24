@@ -84,7 +84,7 @@ import type {
 } from '../types/campaignDto';
 import { DEAL_SHIPPING_MODE, DEAL_STATUS } from '../types/deal';
 import type { DealLabeledDto } from '../types/dealDto';
-import { mapDealFunding, oneOf, toLabeled, toLabeledOrNull, toTimestamp, toTimestampOrNull } from './dealMappers';
+import { mapDealFunding, mapPublicRating, oneOf, toLabeled, toLabeledOrNull, toTimestamp, toTimestampOrNull } from './dealMappers';
 
 // DTO → domain for every Public Campaigns resource (rule 04). Same stance as the deal mappers: unknown
 // enum values become `null` (labels still render); malformed money or required timestamps throw.
@@ -337,7 +337,12 @@ export const mapCreatorCampaign = (dto: CreatorCampaignDto): CreatorCampaign => 
   acceptingApplications: dto.accepting_applications,
   title: dto.title,
   activityType: toLabeledOrNull(CAMPAIGN_ACTIVITY_TYPE, dto.activity_type),
-  brand: { name: dto.brand.name, avatarUrl: dto.brand.avatar_url, verified: dto.brand.verified },
+  brand: {
+    name: dto.brand.name,
+    avatarUrl: dto.brand.avatar_url,
+    verified: dto.brand.verified,
+    rating: mapPublicRating(dto.brand.rating),
+  },
   cover: dto.cover ? mapCampaignFile(dto.cover) : null,
   pricing: mapCreatorPricing(dto.pricing),
   seats: { total: dto.seats.total, free: dto.seats[SEATS_FREE_KEY] },

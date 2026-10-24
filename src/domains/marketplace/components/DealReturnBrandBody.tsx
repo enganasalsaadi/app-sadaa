@@ -7,6 +7,7 @@ import { isolateText } from '@/shared/utils';
 import type { DealReturnModel } from '../hooks/useDealReturn';
 import type { DealReturnAnswerModel } from '../hooks/useDealReturnAnswer';
 import type { Deal } from '../types';
+import { DealHoldNote } from './DealHoldNote';
 import { ReturnLine, ReturnNote, ReturnPhotos, ReturnWaybill, useReturnDate } from './DealReturnParts';
 
 export interface DealReturnBrandBodyProps {
@@ -51,6 +52,7 @@ const DealReturnBrandBodyComponent: React.FC<DealReturnBrandBodyProps> = ({ deal
               })}
             </Text>
           ) : null}
+          {ret.onHold ? <DealHoldNote /> : null}
           <ReturnLine
             icon={view.late ? TriangleAlert : Hourglass}
             tone={view.late ? 'danger' : 'warning'}

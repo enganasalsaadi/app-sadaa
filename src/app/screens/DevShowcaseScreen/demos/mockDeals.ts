@@ -43,8 +43,9 @@ export const buildMockDeal = ({
     drop: null,
     returnShipment: null,
     status: labeled(status, statusLabel),
+    onHold: null,
     stage: stage ? labeled(stage) : null,
-    brand: party,
+    brand: { ...party, rating: null },
     creator: { ...party, slug: null },
     items: [
       {

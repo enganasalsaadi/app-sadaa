@@ -1,5 +1,5 @@
 import type { Money } from '@/core/money';
-import type { DealFunding, DealShippingMode, DealStatus, Labeled, Timestamp } from './deal';
+import type { DealFunding, DealShippingMode, DealStatus, Labeled, PublicRating, Timestamp } from './deal';
 
 // Mirrors the backend Public Campaigns enums (`docs/public campaigns/public-campaigns.md` §2). Adding a
 // value breaks every `Record<CampaignStatus, …>` map until it is handled; unknown values from a newer
@@ -333,6 +333,8 @@ export interface CreatorCampaignBrand {
   name: string;
   avatarUrl: string | null;
   verified: boolean;
+  /** What creators gave this brand; `null` below 3 ratings (show nothing). */
+  rating: PublicRating | null;
 }
 
 export interface CreatorCampaignPricing {

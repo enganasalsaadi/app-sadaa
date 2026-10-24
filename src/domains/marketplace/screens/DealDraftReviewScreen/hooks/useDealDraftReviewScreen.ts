@@ -73,7 +73,7 @@ export const useDealDraftReviewScreen = () => {
   const rounds = item ? dealRounds(item) : null;
   const latest = drafts.data?.[0] ?? null;
   const history = useMemo(() => drafts.data?.slice(1) ?? [], [drafts.data]);
-  const mode = item ? dealDeliverableAction(item, 'brand') : null;
+  const mode = item ? dealDeliverableAction(item, 'brand', deal?.onHold != null) : null;
 
   const files = useMemo(() => latest?.files ?? [], [latest]);
   const [fileIndex, setFileIndex] = useState(0);

@@ -16,8 +16,10 @@ export type DealDeliverableAction = 'submit' | 'review' | 'approveAsIs' | 'publi
 export const dealDeliverableAction = (
   item: Pick<DealItem, 'status' | 'approveAsIsAvailable'>,
   role: DealRole,
+  /** The deal is on account hold: whatever was handed in can be read, nothing can be done. */
+  held = false,
 ): DealDeliverableAction | null => {
-  const actions = getDealItemActions(item, role);
+  const actions = held ? [] : getDealItemActions(item, role);
   if (actions.includes('submitDraft')) return 'submit';
   if (actions.includes('reviewDraft')) return 'review';
   if (actions.includes('approveAsIs')) return 'approveAsIs';

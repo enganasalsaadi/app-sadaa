@@ -30,6 +30,7 @@ type TimerInput = Pick<
   | 'shipping'
   | 'deliveryHours'
   | 'extendedDeliveryHours'
+  | 'onHold'
 >;
 
 const FREEZING = new Set(['shipping_issue', 'disputed']);
@@ -67,6 +68,8 @@ export const dealTimer = (deal: TimerInput): DealTimer => {
   const status = deal.status.key;
   const open = status !== null && DEAL_STATUS_META[status].outcome === 'open';
   if (!open) return { dueAt: null, paused: false, windowHours: null };
+  // Account hold: `due_at` keeps its old value but nothing counts down.
+  if (deal.onHold) return { dueAt: null, paused: true, windowHours: null };
   return {
     dueAt: deal.dueAt,
     paused: deal.dueAt === null && FREEZING.has(status),
@@ -128,6 +131,8 @@ export const formatRemaining = (t: TFunction, seconds: number): string => {
 export type DealTimeView =
   | { kind: 'left'; seconds: number; share: number | null; late: boolean }
   | { kind: 'paused' }
+  /** Account hold: paused while Sada reviews an account. */
+  | { kind: 'held' }
   | { kind: 'closed'; at: number | null }
   | { kind: 'none' };
 
@@ -140,6 +145,7 @@ export const dealTimeView = (
   const status = deal.status.key;
   if (status !== null && DEAL_STATUS_META[status].outcome !== 'open')
     return { kind: 'closed', at: deal.updatedAt };
+  if (deal.onHold) return { kind: 'held' };
   const timer = dealTimer(deal);
   if (timer.paused) return { kind: 'paused' };
   if (timer.dueAt === null) return { kind: 'none' };

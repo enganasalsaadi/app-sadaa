@@ -125,6 +125,10 @@ export const DEAL_NEXT_STEP_COPY = {
     title: 'marketplace.deals.next.creatorWaitVerify.title',
     body: 'marketplace.deals.next.creatorWaitVerify.body',
   },
+  onHold: {
+    title: 'marketplace.deals.next.onHold.title',
+    body: 'marketplace.deals.next.onHold.body',
+  },
   dispute: {
     title: 'marketplace.deals.next.dispute.title',
     body: 'marketplace.deals.next.dispute.body',

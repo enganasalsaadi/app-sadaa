@@ -33,6 +33,8 @@ const ACTION_LABEL = {
 export interface DealDeliverablesProps {
   items: DealItem[];
   role: DealRole;
+  /** Account hold: rows open read-only and no clock runs. */
+  held?: boolean;
   onOpen: (itemId: string) => void;
 }
 
@@ -40,9 +42,10 @@ export interface DealDeliverablesProps {
  * «Due in…» for the side that must act; the brand's review and verify windows end in an automatic
  * approval / verification.
  */
-const useDueLine = (item: DealItem, action: DealDeliverableAction | null) => {
+const useDueLine = (item: DealItem, action: DealDeliverableAction | null, held: boolean) => {
   const { t } = useTranslation();
   const now = useClock(MINUTE_MS);
+  if (held) return t('marketplace.deals.timer.held');
   if (item.timerPaused)
     return t('marketplace.deals.drafts.deliverables.paused');
   if (item.dueAt === null || action === null || action === 'view') return null;
@@ -55,12 +58,13 @@ const useDueLine = (item: DealItem, action: DealDeliverableAction | null) => {
 const DeliverableRow = memo<{
   item: DealItem;
   role: DealRole;
+  held: boolean;
   onOpen: (itemId: string) => void;
-}>(({ item, role, onOpen }) => {
+}>(({ item, role, held, onOpen }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
-  const action = dealDeliverableAction(item, role);
-  const due = useDueLine(item, action);
+  const action = dealDeliverableAction(item, role, held);
+  const due = useDueLine(item, action, held);
   const hue = resolveHue(colors, getDealItemStatusMeta(item.status.key).tone);
   const StatusIcon = item.status.key
     ? DEAL_ITEM_STATUS_ICON[item.status.key]
@@ -164,6 +168,7 @@ const DeliverableRow = memo<{
 const DealDeliverablesComponent: React.FC<DealDeliverablesProps> = ({
   items,
   role,
+  held = false,
   onOpen,
 }) => {
   const { t } = useTranslation();
@@ -175,7 +180,7 @@ const DealDeliverablesComponent: React.FC<DealDeliverablesProps> = ({
         {t('marketplace.deals.drafts.deliverables.title')}
       </Text>
       {items.map(item => (
-        <DeliverableRow key={item.id} item={item} role={role} onOpen={onOpen} />
+        <DeliverableRow key={item.id} item={item} role={role} held={held} onOpen={onOpen} />
       ))}
     </Box>
   );

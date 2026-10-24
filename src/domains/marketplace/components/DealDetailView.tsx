@@ -130,6 +130,8 @@ const DetailSection = memo<{
           <DealReturnCard deal={deal} role={vm.role} ret={vm.returns} answer={vm.returnAnswer} />
         ) : null;
       case 'next': {
+        // Account hold: the pause is the only next step, above everything else.
+        if (vm.held && vm.next) return <DealNextStepCard step={vm.next} name={party.name ?? ''} />;
         // A dispute (open or ruled) is the next step and the outcome: its card says so (P9.1).
         if (vm.dispute.showCard) return null;
         if (vm.stopped) return <DealOutcomeCard deal={deal} />;
@@ -179,7 +181,7 @@ const DetailSection = memo<{
           <DealRetentionSection deal={deal} retention={vm.retention} />
         ) : null;
       case 'upsell':
-        return vm.stopped || !vm.upsells.pending ? null : (
+        return vm.stopped || vm.held || !vm.upsells.pending ? null : (
           <DealUpsellSection deal={deal} role={vm.role} upsells={vm.upsells} />
         );
       case 'changes':
@@ -195,6 +197,7 @@ const DetailSection = memo<{
           <DealDeliverables
             items={vm.deliverables}
             role={vm.role}
+            held={vm.held}
             onOpen={vm.openItem}
           />
         ) : null;
@@ -285,7 +288,7 @@ const DealDetailViewComponent: React.FC<DealDetailViewProps> = ({
         header={{ title: party.name ?? '', variant: 'brand', actions }}
         footerBehavior="docked"
         footer={
-          vm.respond.dock ? (
+          vm.held ? undefined : vm.respond.dock ? (
             <DealRespondDock
               deal={deal}
               respond={vm.respond}

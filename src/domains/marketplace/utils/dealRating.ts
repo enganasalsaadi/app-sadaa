@@ -25,7 +25,10 @@ export interface DealRatingView {
   criteria: readonly DealRatingCriterion[];
   /** What the other side rated the viewer on. */
   theirCriteria: readonly DealRatingCriterion[];
+  /** `null` while on account hold: nothing counts down. */
   dueAt: Timestamp | null;
+  /** Account hold: the window is paused (rating is still allowed). */
+  onHold: boolean;
   revealedAt: Timestamp | null;
   mine: DealRatingSide;
   theirs: DealRatingSide;
@@ -62,7 +65,8 @@ export const dealRatingView = (
     stage,
     criteria: ratingCriteriaOf(role),
     theirCriteria: ratingCriteriaOf(otherRole(role)),
-    dueAt: rating.dueAt,
+    dueAt: rating.onHold ? null : rating.dueAt,
+    onHold: rating.onHold,
     revealedAt: rating.revealedAt,
     mine,
     theirs,
