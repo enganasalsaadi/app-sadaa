@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { Platform, StyleSheet, type LayoutChangeEvent, type ViewStyle } from 'react-native';
+import { StyleSheet, type LayoutChangeEvent, type ViewStyle } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedReaction,
@@ -142,11 +142,11 @@ const LayoutFooterSlotComponent: React.FC<LayoutFooterSlotProps> = ({
     </Animated.View>
   );
 
-  // iOS reports the keyboard with the home-indicator area in it, so the inset padding drops behind
-  // the keyboard. Android reports it without the navigation bar, so the padding already fills that
-  // gap; dropping it there too sank the CTA under the keyboard by the bar's height.
+  // The keyboard height includes the bottom inset on both platforms (iOS home indicator; Android
+  // nav bar, since edge-to-edge makes keyboard-controller treat it as translucent), so the inset
+  // padding drops behind the keyboard instead of leaving a gap above it.
   const placed = sticky ? (
-    <KeyboardStickyView offset={{ opened: Platform.OS === 'ios' ? bottom : 0 }}>{content}</KeyboardStickyView>
+    <KeyboardStickyView offset={{ opened: bottom }}>{content}</KeyboardStickyView>
   ) : (
     content
   );

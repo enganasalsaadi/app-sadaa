@@ -5748,9 +5748,9 @@
     "semantic_hash": ""
   },
   "src/shared/ui/Layout/LayoutFooterSlot.tsx": {
-    "mtime": 1792062730.0072932,
-    "seen": 1792158021.192805,
-    "ast_hash": "a395504b4e0e59597389064ac799c92e",
+    "mtime": 1792851433.6015677,
+    "seen": 1792851484.1227908,
+    "ast_hash": "e73853dfbb1fab61610099185fcedf03",
     "semantic_hash": ""
   },
   "src/shared/ui/Layout/LayoutHeaderSlot.tsx": {
