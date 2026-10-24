@@ -1,0 +1,15 @@
+appId: com.getsadaapp
+name: Login — empty form shows field errors
+tags:
+  - auth
+  - smoke
+---
+- runFlow: ../subflows/launch-to-login.yaml
+- tapOn:
+    id: login.submit
+- assertVisible:
+    id: login.phone.error
+- assertVisible:
+    id: login.password.error
+- assertNotVisible:
+    id: login.error

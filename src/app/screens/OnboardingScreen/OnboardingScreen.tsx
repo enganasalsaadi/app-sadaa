@@ -82,12 +82,13 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onFinish }) 
         </GestureDetector>
 
         <Box gap="sm">
-          <CustomButton title={ctaLabel} variant="onBrand" onPress={onNext} fullWidth />
+          <CustomButton title={ctaLabel} variant="onBrand" onPress={onNext} fullWidth testID="onboarding.next" />
           <Pressable
             height={sizes.button.md}
             align="center"
             justify="center"
             onPress={onSkip}
+            testID="onboarding.skip"
             disabled={isLast}
             opacity={isLast ? 0 : 1}
             accessibilityRole="button"

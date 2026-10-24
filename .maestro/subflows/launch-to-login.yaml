@@ -1,0 +1,35 @@
+# Fresh install → Arabic → skip onboarding → Login.
+appId: com.getsadaapp
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- extendedWaitUntil:
+    visible:
+      id: chooseLanguage\.next|onboarding\.skip|login\.submit
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: chooseLanguage.next
+    commands:
+      - tapOn:
+          id: chooseLanguage.option.ar
+      - tapOn:
+          id: chooseLanguage.next
+      # Switching direction restarts the app.
+      - extendedWaitUntil:
+          visible:
+            id: onboarding\.skip|login\.submit
+          timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: onboarding.skip
+    commands:
+      - tapOn:
+          id: onboarding.skip
+- extendedWaitUntil:
+    visible:
+      id: login.submit
+    timeout: 15000

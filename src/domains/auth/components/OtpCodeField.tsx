@@ -11,10 +11,11 @@ interface OtpCodeFieldProps {
   /** Server-side rejection message. */
   error?: string;
   editable?: boolean;
+  testID?: string;
 }
 
 /** OTP cells + "didn't receive it?" resend row with a live cooldown. */
-export const OtpCodeField: React.FC<OtpCodeFieldProps> = ({ otp, error, editable = true }) => {
+export const OtpCodeField: React.FC<OtpCodeFieldProps> = ({ otp, error, editable = true, testID }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
   const canResend = otp.cooldown === 0 && !otp.isResending;
@@ -39,6 +40,7 @@ export const OtpCodeField: React.FC<OtpCodeFieldProps> = ({ otp, error, editable
             error={fieldState.error?.message ?? otp.notice ?? error}
             autoFocus
             accessibilityLabel={t('auth.otp.codeLabel', { count: otp.length })}
+            testID={testID}
           />
         )}
       />

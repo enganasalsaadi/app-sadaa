@@ -61,6 +61,7 @@ export const ChooseLanguageScreen: React.FC = () => {
           title={nextButtonTitle}
           onPress={handleNext}
           accessibilityHint={nextButtonHint}
+          testID="chooseLanguage.next"
         />
       </>
     </Layout>

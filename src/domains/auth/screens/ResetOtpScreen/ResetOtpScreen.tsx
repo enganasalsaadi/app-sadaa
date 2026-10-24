@@ -21,12 +21,13 @@ export const ResetOtpScreen: React.FC = () => {
             label: t('auth.verifyCode'),
             onPress: otp.onSubmit,
             disabled: otp.blocked,
+            testID: 'reset.otp.submit',
           }}
         />
       }
     >
       <Box gap="3xl">
-        <OtpCodeField otp={otp} error={error ?? undefined} />
+        <OtpCodeField otp={otp} error={error ?? undefined} testID="reset.otp" />
 
         <Pressable
           onPress={onChangeNumber}

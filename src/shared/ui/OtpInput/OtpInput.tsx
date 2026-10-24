@@ -43,6 +43,8 @@ export interface OtpInputProps {
   editable?: boolean;
   autoFocus?: boolean;
   accessibilityLabel: string;
+  /** Lands on the hidden input that receives the typed digits. */
+  testID?: string;
 }
 
 const SHAKE_STEP_MS = motion.duration.base / 5;
@@ -81,6 +83,7 @@ const OtpInputComponent = forwardRef<OtpInputHandle, OtpInputProps>(
       editable = true,
       autoFocus,
       accessibilityLabel,
+      testID,
     },
     ref,
   ) => {
@@ -220,6 +223,7 @@ const OtpInputComponent = forwardRef<OtpInputHandle, OtpInputProps>(
           autoFocus={autoFocus}
           caretHidden
           accessibilityLabel={accessibilityLabel}
+          testID={testID}
         />
 
         {error ? (

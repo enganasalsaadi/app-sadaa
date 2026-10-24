@@ -76,6 +76,7 @@ export const LoginScreen: React.FC = () => {
                   returnKeyType="next"
                   onSubmitEditing={() => setFocus('password')}
                   error={fieldState.error?.message}
+                  testID="login.phone"
                 />
               )}
             />
@@ -100,6 +101,7 @@ export const LoginScreen: React.FC = () => {
                     returnKeyType="go"
                     onSubmitEditing={onSubmit}
                     error={fieldState.error?.message}
+                    testID="login.password"
                   />
                 )}
               />
@@ -110,6 +112,7 @@ export const LoginScreen: React.FC = () => {
                 justify="center"
                 accessibilityRole="link"
                 accessibilityLabel={t('auth.login.forgotPassword')}
+                testID="login.forgotPassword"
               >
                 <Text variant="bodyMedium" color={colors.interactive.text}>
                   {t('auth.login.forgotPassword')}
@@ -118,7 +121,7 @@ export const LoginScreen: React.FC = () => {
             </Box>
           </Box>
 
-          <InlineError error={apiError} />
+          <InlineError error={apiError} testID="login.error" />
 
           <Box gap="lg">
             <CustomButton
@@ -127,6 +130,7 @@ export const LoginScreen: React.FC = () => {
               loading={isSubmitting}
               disabled={isSubmitting}
               fullWidth
+              testID="login.submit"
             />
             <OrDivider />
             <Box gap="sm" align="center">

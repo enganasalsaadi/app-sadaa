@@ -10,6 +10,7 @@ export interface LayoutFooterAction {
   /** Shows the button spinner and blocks presses (double-submit guard). */
   loading?: boolean;
   disabled?: boolean;
+  testID?: string;
 }
 
 export interface LayoutFooterProps {
@@ -44,6 +45,7 @@ const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({
           onPress={primary.onPress}
           loading={primary.loading}
           disabled={primary.disabled}
+          testID={primary.testID}
           variant={primary.variant}
         />
       ) : null}
@@ -53,6 +55,7 @@ const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({
           onPress={secondary.onPress}
           loading={secondary.loading}
           disabled={secondary.disabled}
+          testID={secondary.testID}
           variant={secondary.variant ?? 'ghost'}
         />
       ) : null}
@@ -62,6 +65,7 @@ const LayoutFooterComponent: React.FC<LayoutFooterProps> = ({
           onPress={tertiary.onPress}
           loading={tertiary.loading}
           disabled={tertiary.disabled}
+          testID={tertiary.testID}
           variant="ghost"
         />
       ) : null}

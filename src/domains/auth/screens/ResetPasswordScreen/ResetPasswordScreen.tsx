@@ -28,6 +28,7 @@ export const ResetPasswordScreen: React.FC = () => {
             label: t('auth.passwordReset.password.submit'),
             onPress: onSubmit,
             loading: isSubmitting,
+            testID: 'reset.password.submit',
           }}
         />
       }
@@ -54,6 +55,7 @@ export const ResetPasswordScreen: React.FC = () => {
                 returnKeyType="next"
                 onSubmitEditing={() => setFocus('passwordConfirmation')}
                 error={fieldState.error?.message}
+                testID="reset.password"
               />
               <WatchedPasswordStrength control={control} />
             </Box>
@@ -77,10 +79,11 @@ export const ResetPasswordScreen: React.FC = () => {
               returnKeyType="done"
               onSubmitEditing={onSubmit}
               error={fieldState.error?.message}
+              testID="reset.passwordConfirmation"
             />
           )}
         />
-        <InlineError error={apiError} />
+        <InlineError error={apiError} testID="reset.password.error" />
       </Box>
     </Layout>
   );

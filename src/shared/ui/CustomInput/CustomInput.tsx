@@ -83,6 +83,7 @@ const CustomInputInner = React.forwardRef(
       mb: mbProp,
       onFocus,
       onBlur,
+      testID,
       ...rest
     }: CustomInputProps,
     ref: React.ForwardedRef<TextInputInstance>,
@@ -244,6 +245,7 @@ const CustomInputInner = React.forwardRef(
             accessibilityState={{ disabled: !editable }}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            testID={testID}
             {...rest}
           />
 
@@ -266,6 +268,7 @@ const CustomInputInner = React.forwardRef(
                   variant="caption"
                   color={theme.colors.form.input.error}
                   accessibilityRole="alert"
+                  testID={testID ? `${testID}.error` : undefined}
                 >
                   {error}
                 </Text>

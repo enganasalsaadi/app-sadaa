@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "e2e": "maestro test .maestro",
+    "e2e:smoke": "maestro test --include-tags=smoke .maestro",
     "prestart": "rm -f node_modules/react-native-config/ios/ReactNativeConfig/GeneratedDotEnv.m node_modules/react-native-config/android/build/generated/source/buildConfig/debug/com/lugg/RNCConfig/BuildConfig.java node_modules/react-native-config/android/build/generated/source/buildConfig/release/com/lugg/RNCConfig/BuildConfig.java",
     "postinstall": "patch-package"
   },

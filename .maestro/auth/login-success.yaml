@@ -1,0 +1,19 @@
+appId: com.getsadaapp
+name: Login — valid credentials leave the auth stack
+tags:
+  - auth
+  - smoke
+---
+- runFlow: ../subflows/launch-to-login.yaml
+- runFlow:
+    file: ../subflows/fill-login.yaml
+    env:
+      PHONE: ${MAESTRO_E2E_PHONE}
+      PASSWORD: ${MAESTRO_E2E_PASSWORD}
+# AppStatus flips → RootNavigator swaps the branch.
+- extendedWaitUntil:
+    notVisible:
+      id: login.submit
+    timeout: 20000
+- assertNotVisible:
+    id: login.phone.error

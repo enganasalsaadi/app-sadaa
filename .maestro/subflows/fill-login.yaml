@@ -1,0 +1,12 @@
+# Params: PHONE, PASSWORD.
+appId: com.getsadaapp
+---
+- tapOn:
+    id: login.phone
+- inputText: ${PHONE}
+- tapOn:
+    id: login.password
+- inputText: ${PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: login.submit

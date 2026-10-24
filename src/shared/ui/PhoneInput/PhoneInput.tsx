@@ -32,6 +32,7 @@ export interface PhoneInputProps {
   editable?: boolean;
   returnKeyType?: TextInputProps['returnKeyType'];
   onSubmitEditing?: () => void;
+  testID?: string;
 }
 
 const PhoneInputInner = React.forwardRef(
@@ -48,6 +49,7 @@ const PhoneInputInner = React.forwardRef(
       editable = true,
       returnKeyType,
       onSubmitEditing,
+      testID,
     }: PhoneInputProps,
     ref: React.ForwardedRef<TextInputInstance>,
   ) => {
@@ -122,6 +124,7 @@ const PhoneInputInner = React.forwardRef(
             accessibilityLabel={label}
             returnKeyType={returnKeyType}
             onSubmitEditing={onSubmitEditing}
+            testID={testID}
           />
         </Box>
 
@@ -131,6 +134,7 @@ const PhoneInputInner = React.forwardRef(
             color={theme.colors.form.input.error}
             mt="sm"
             accessibilityRole="alert"
+            testID={testID ? `${testID}.error` : undefined}
           >
             {error}
           </Text>

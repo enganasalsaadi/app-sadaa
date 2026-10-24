@@ -21,6 +21,7 @@ export const ForgotPasswordScreen: React.FC = () => {
             label: t('auth.passwordReset.phone.submit'),
             onPress: onSubmit,
             loading: isSubmitting,
+            testID: 'reset.phone.submit',
           }}
         />
       }
@@ -40,6 +41,7 @@ export const ForgotPasswordScreen: React.FC = () => {
                 returnKeyType="send"
                 onSubmitEditing={onSubmit}
                 error={fieldState.error?.message}
+                testID="reset.phone"
               />
               <Text variant="caption" color={colors.text.secondary}>
                 {t('auth.passwordReset.phone.hint')}
@@ -47,7 +49,7 @@ export const ForgotPasswordScreen: React.FC = () => {
             </Box>
           )}
         />
-        <InlineError error={apiError} />
+        <InlineError error={apiError} testID="reset.phone.error" />
       </Box>
     </Layout>
   );

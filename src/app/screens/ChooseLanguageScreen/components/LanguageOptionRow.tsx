@@ -37,6 +37,7 @@ export const LanguageOptionRow = React.memo<LanguageOptionRowProps>(
         accessibilityLabel={t(`${base}.a11yLabel`)}
         accessibilityHint={t(`${base}.a11yHint`)}
         shadow="sm"
+        testID={`chooseLanguage.option.${id}`}
       >
         <Text
           variant="h4"

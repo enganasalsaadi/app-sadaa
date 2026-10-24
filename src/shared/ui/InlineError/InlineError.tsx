@@ -8,9 +8,10 @@ import { Card, Text } from '../primitives';
 export interface InlineErrorProps {
   error?: string | Error | { message: string } | unknown;
   mb?: SpacingToken;
+  testID?: string;
 }
 
-export const InlineError: React.FC<InlineErrorProps> = ({ error, mb }) => {
+export const InlineError: React.FC<InlineErrorProps> = ({ error, mb, testID }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -31,6 +32,7 @@ export const InlineError: React.FC<InlineErrorProps> = ({ error, mb }) => {
         color={colors.status.danger.text}
         accessibilityRole="alert"
         accessibilityLiveRegion="polite"
+        testID={testID}
       >
         {message}
       </Text>
