@@ -1,10 +1,16 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { baseApi } from '@/core/api';
 import type { DealRef } from '../types/deal';
-import type { DealDisputeDto, DealDraftDto, DealDto, DealPublicationDto } from '../types/dealDto';
-import { mapDeal, mapDealDisputeDetail, mapDealDraft, mapDealPublication } from '../utils/dealMappers';
+import type { DealDto, DealVaultFilesDto } from '../types/dealDto';
+import { mapDeal, mapDealVaultFile } from '../utils/dealMappers';
 import { buildDealUrl } from '../utils/dealQuery';
-import { vaultDraftItems, vaultPublishItems, type DealVaultSource } from '../utils/dealVault';
+import type { DealVaultSource } from '../utils/dealVault';
+
+/**
+ * Signed links on a vault read stay fresh this long: the vault re-reads when opened on an older
+ * read, and a burst of expired-link refreshes shares one read inside the window.
+ */
+export const DEAL_FILES_FRESH_SECONDS = 60;
 
 const unreadable = (reason: unknown): FetchBaseQueryError => ({
   status: 'CUSTOM_ERROR',
@@ -12,43 +18,28 @@ const unreadable = (reason: unknown): FetchBaseQueryError => ({
 });
 
 /**
- * The deal vault (every file on one deal), read from the routes that already carry them: the deal,
- * each item's rounds and publications, the dispute thread. Only items that can have files are
- * asked; any failed read fails the vault, so it never shows a partial list as complete.
+ * The deal vault (every file on one deal): the deal's file list, signed afresh on every read, next
+ * to the deal itself (titles, brief lock, courier photos, retention screenshots), both at once.
+ * Either failing fails the vault, so it never shows a partial list as complete. Silent: the deal
+ * page shows the vault as a side strip, so its failures never raise the global error UI.
  */
 export const dealFilesApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
     getDealFiles: builder.query<DealVaultSource, DealRef>({
       async queryFn(ref, _api, _extraOptions, baseQuery) {
-        const head = await baseQuery(buildDealUrl(ref));
+        const [head, list] = await Promise.all([baseQuery(buildDealUrl(ref)), baseQuery(buildDealUrl(ref, 'files'))]);
         if (head.error) return { error: head.error };
+        if (list.error) return { error: list.error };
         try {
           const deal = mapDeal(head.data as DealDto);
-          const reads = await Promise.all([
-            ...vaultDraftItems(deal).map(item => baseQuery(buildDealUrl(ref, `items/${item.id}/drafts`))),
-            ...vaultPublishItems(deal).map(item => baseQuery(buildDealUrl(ref, `items/${item.id}/publications`))),
-            ...(deal.dispute ? [baseQuery(buildDealUrl(ref, 'disputes'))] : []),
-          ]);
-          const failed = reads.find(read => read.error);
-          if (failed?.error) return { error: failed.error };
-
-          const draftCount = vaultDraftItems(deal).length;
-          const publishCount = vaultPublishItems(deal).length;
-          const drafts = reads
-            .slice(0, draftCount)
-            .flatMap(read => (read.data as DealDraftDto[]).map(mapDealDraft));
-          const publications = reads
-            .slice(draftCount, draftCount + publishCount)
-            .flatMap(read => (read.data as DealPublicationDto[]).map(mapDealPublication));
-          const disputes = reads
-            .slice(draftCount + publishCount)
-            .flatMap(read => (read.data as DealDisputeDto[]).map(mapDealDisputeDetail));
-          return { data: { deal, drafts, publications, disputes } };
+          const files = (list.data as DealVaultFilesDto).items.map(mapDealVaultFile);
+          return { data: { deal, files } };
         } catch (err) {
           return { error: unreadable(err) };
         }
       },
+      extraOptions: { silent: true },
       providesTags: (_result, _error, { id }) => [
         { type: 'Deal', id },
         { type: 'DealHistory', id },

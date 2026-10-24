@@ -1,4 +1,4 @@
-import { extractServerFieldErrors, normalizeApiError } from '@/core/api';
+import { createIdempotentAction, extractServerFieldErrors, normalizeApiError } from '@/core/api';
 import type { AppApiError } from '@/core/api';
 import type { CampaignDetail } from '../types/campaign';
 import type {
@@ -41,7 +41,8 @@ export interface CampaignDraftSyncState {
 }
 
 export interface CampaignDraftSyncDeps {
-  create: (body: CampaignDraftRequest) => Promise<CampaignDetail>;
+  /** `idempotencyKey`: one per draft the brand starts, so a lost answer never makes a second draft. */
+  create: (body: CampaignDraftRequest, idempotencyKey: string) => Promise<CampaignDetail>;
   update: (id: string, body: CampaignDraftRequest) => Promise<CampaignDetail>;
   onChange: (state: CampaignDraftSyncState) => void;
   onCreated: (campaignId: string) => void;
@@ -49,6 +50,8 @@ export interface CampaignDraftSyncDeps {
   delayMs: number | null;
   /** The wire parts of a form; default every draft part. A live campaign leaves some out. */
   sectionsOf?: (values: CampaignDraftValues) => CampaignDraftSections;
+  /** Key factory for the create; default a uuid v4. */
+  newKey?: () => string;
 }
 
 export interface CampaignDraftSyncer {
@@ -95,6 +98,10 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
   let state = INITIAL;
   let timer: ReturnType<typeof setTimeout> | null = null;
   let running: Promise<void> | null = null;
+  const createIntent = createIdempotentAction(deps.newKey);
+  // What the open create key was first sent with. A retry after a lost answer resends it as is (a
+  // new title under the same key is `idempotency_key_reused`); a newer title follows as a PUT.
+  let createBody: CampaignDraftRequest | null = null;
 
   const setState = (patch: Partial<CampaignDraftSyncState>) => {
     state = { ...state, ...patch };
@@ -118,11 +125,14 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
   };
 
   const save = async (section: CampaignDraftSection) => {
-    const fragment = desired[section];
-    if (!fragment) return;
+    const wanted = desired[section];
+    if (!wanted) return;
+    const creating = campaignId === null;
+    const fragment = creating ? (createBody ??= wanted) : wanted;
     try {
       if (campaignId === null) {
-        const created = await deps.create(fragment);
+        const created = await createIntent.run(key => deps.create(fragment, key));
+        createBody = null;
         campaignId = created.id;
         // The server's own defaults are the baseline, so untouched parts aren't re-sent.
         saved = sectionsOf(draftValuesFromCampaign(created));
@@ -136,6 +146,11 @@ export const createCampaignDraftSyncer = (deps: CampaignDraftSyncDeps): Campaign
       setState({ refused: withRefusal(section, null) });
     } catch (err) {
       const failure = toFailure(err);
+      // Only a lost answer may have made the draft; any other refusal means nothing was stored.
+      if (creating && failure.kind !== 'network') {
+        createBody = null;
+        createIntent.reset();
+      }
       if (failure.kind === 'invalid') {
         refusedKeys[section] = draftSectionKey(fragment);
         setState({

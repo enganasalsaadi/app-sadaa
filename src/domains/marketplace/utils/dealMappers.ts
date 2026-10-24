@@ -18,6 +18,7 @@ import {
   DEAL_RETENTION_ESCALATION,
   DEAL_RETENTION_REASON,
   DEAL_RETENTION_STATUS,
+  DEAL_VAULT_FILE_SOURCE,
   DEAL_RETENTION_TERM,
   DEAL_RETURN_STATUS,
   DEAL_SHIPPING_ISSUE_REASON,
@@ -48,6 +49,7 @@ import {
   type DealDraft,
   type DealExtension,
   type DealFile,
+  type DealVaultFile,
   type DealFunding,
   type DealItem,
   type DealPublication,
@@ -89,6 +91,7 @@ import type {
   DealDto,
   DealExtensionDto,
   DealFileDto,
+  DealVaultFileDto,
   DealFundingDto,
   DealItemDto,
   DealLabeledDto,
@@ -169,6 +172,19 @@ export const mapDealFile = (dto: DealFileDto): DealFile => ({
   size: dto.size,
   status: oneOf(DEAL_FILE_STATUS, dto.status),
   url: dto.url,
+});
+
+export const mapDealVaultFile = (dto: DealVaultFileDto): DealVaultFile => ({
+  id: dto.id,
+  kind: oneOf(DEAL_FILE_KIND, dto.kind),
+  name: dto.name,
+  mime: dto.mime,
+  size: dto.size,
+  status: oneOf(DEAL_FILE_STATUS, dto.status),
+  url: dto.url,
+  source: oneOf(DEAL_VAULT_FILE_SOURCE, dto.source),
+  itemId: dto.item_id,
+  round: dto.round,
 });
 
 const mapCreatorParty = (dto: DealCreatorPartyDto): DealCreatorParty => ({

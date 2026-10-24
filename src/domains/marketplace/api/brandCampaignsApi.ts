@@ -61,6 +61,12 @@ import {
   buildBrandCampaignsUrl,
 } from '../utils/campaignQuery';
 
+export interface CreateCampaignArgs {
+  body: CampaignDraftRequest;
+  /** One per draft the brand starts (rule 06): kept across resends until one is answered. */
+  idempotencyKey: string;
+}
+
 /** A `withMeta` action response: the campaign in `data`, the `submit` wallet check maybe in `meta`. */
 interface CampaignActionEnvelopeDto {
   data: CampaignActionDataDto;
@@ -180,7 +186,10 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
             { type: 'CampaignApplicants', id },
             { type: 'Campaign', id },
             { type: 'DealList', id: 'LIST' },
+            // A covered seat is held in escrow at once: the balance, the escrow and the ledger move.
             'Wallet',
+            'WalletEscrow',
+            { type: 'WalletTransaction', id: 'LIST' },
             ...campaignChangedTags(id),
           ];
         }
@@ -226,9 +235,17 @@ export const brandCampaignsApi = baseApi.injectEndpoints({
       transformResponse: (dto: CampaignQuoteDto) => mapCampaignQuote(dto),
       providesTags: (_result, _error, id) => [{ type: 'CampaignQuote', id }],
     }),
-    /** Starts a draft from the first part (the title); answers the full campaign, which seeds the cache. */
-    createCampaign: builder.mutation<CampaignDetail, CampaignDraftRequest>({
-      query: body => ({ url: BRAND_CAMPAIGNS_URL, method: 'POST', body }),
+    /**
+     * Starts a draft from the first part (the title); answers the full campaign, which seeds the cache.
+     * The key makes a resend after a lost answer replay the same draft (contract «Draft Idempotency»).
+     */
+    createCampaign: builder.mutation<CampaignDetail, CreateCampaignArgs>({
+      query: ({ body, idempotencyKey }) => ({
+        url: BRAND_CAMPAIGNS_URL,
+        method: 'POST',
+        body,
+        headers: { [IDEMPOTENCY_HEADER]: idempotencyKey },
+      }),
       transformResponse: (dto: CampaignDetailDto) => mapCampaignDetail(dto),
       async onQueryStarted(_body, { dispatch, queryFulfilled }) {
         try {

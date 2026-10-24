@@ -53,7 +53,7 @@ const FileVaultScreenComponent: React.FC<FileVaultScreenProps> = ({ source, role
   const { t } = useTranslation();
   const onScroll = useJSScrollHandler();
   const vm = useFileVaultScreen(source, role);
-  const { sectionName, groupName, entries, selecting, selected, toggleMany, toggle, enterSelect, saveOne, viewer } = vm;
+  const { sectionName, groupName, selecting, selected, toggleMany, toggle, enterSelect, saveOne, viewer } = vm;
 
   const styles = useStyles(
     ({ spacing, sizes }): Record<'list' | 'header', ViewStyle> => ({
@@ -87,7 +87,6 @@ const FileVaultScreenComponent: React.FC<FileVaultScreenProps> = ({ source, role
           return (
             <VaultTile
               file={item.file}
-              entry={entries[item.file.id]}
               selecting={selecting}
               selected={selected.has(item.file.id)}
               selectable={vm.canBatch}
@@ -103,10 +102,10 @@ const FileVaultScreenComponent: React.FC<FileVaultScreenProps> = ({ source, role
         }
       }
     },
-    [entries, enterSelect, groupName, saveOne, sectionName, selected, selecting, toggle, toggleMany, viewer.open, vm.canBatch],
+    [enterSelect, groupName, saveOne, sectionName, selected, selecting, toggle, toggleMany, viewer.open, vm.canBatch],
   );
 
-  const rowState = useMemo(() => [entries, selecting, selected], [entries, selected, selecting]);
+  const rowState = useMemo(() => [selecting, selected], [selected, selecting]);
   const { setFilter, chips } = vm;
   const pick = useCallback(
     (value: string) => {
@@ -146,12 +145,12 @@ const FileVaultScreenComponent: React.FC<FileVaultScreenProps> = ({ source, role
     </Box>
   ) : null;
 
-  const { exitSelect, toggleAll, allSelected, title, subtitle } = vm;
+  const { exitSelect, toggleAll, allSelected, title, subtitle, selectedCount } = vm;
   const canSelect = vm.canBatch;
   const header = useMemo<LayoutHeaderConfig>(() => {
     if (selecting) {
       return {
-        title: t('marketplace.vault.select.title', { count: selected.size }),
+        title: t('marketplace.vault.select.title', { count: selectedCount }),
         backIcon: 'close',
         onBackPress: exitSelect,
         actions: [
@@ -171,7 +170,7 @@ const FileVaultScreenComponent: React.FC<FileVaultScreenProps> = ({ source, role
         ? [{ icon: ListChecks, accessibilityLabel: t('marketplace.vault.select.enter'), onPress: () => enterSelect() }]
         : undefined,
     };
-  }, [allSelected, canSelect, enterSelect, exitSelect, selected.size, selecting, subtitle, t, title, toggleAll]);
+  }, [allSelected, canSelect, enterSelect, exitSelect, selecting, subtitle, t, title, toggleAll, selectedCount]);
 
   const dockMode = useMemo<VaultDockMode | null>(() => {
     if (vm.batch) {

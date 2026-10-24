@@ -154,6 +154,8 @@ export const creatorCampaignsApi = baseApi.injectEndpoints({
             { type: 'CreatorCampaignList', id: 'FEED' },
             { type: 'CreatorCampaignList', id: 'SAVED' },
             { type: 'CampaignApplicationList', id: 'LIST' },
+            // The home glance counts the feed and the open applications.
+            'CreatorDealSummary',
           ];
         }
         const code = normalizeApiError(error).code;
@@ -162,7 +164,9 @@ export const creatorCampaignsApi = baseApi.injectEndpoints({
     }),
     /**
      * Takes a pending application back (contract §4.3): no penalty, no way to apply again. A decided one
-     * answers 409, and either way the lists are re-read so the card lands in its real tab.
+     * answers 409, and either way the lists are re-read so the card lands in its real tab. Success
+     * already cached the answer, so only a refusal re-reads the application itself; the campaign page
+     * (no more Apply) and the home glance's open count move with it.
      */
     withdrawCampaignApplication: builder.mutation<CreatorApplication, string>({
       query: id => ({ url: buildCreatorWithdrawUrl(id), method: 'POST' }),
@@ -175,10 +179,17 @@ export const creatorCampaignsApi = baseApi.injectEndpoints({
           // The sheet reports the refusal.
         }
       },
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'CampaignApplication', id },
-        { type: 'CampaignApplicationList', id: 'LIST' },
-      ],
+      invalidatesTags: (result, _error, id) =>
+        result
+          ? [
+              { type: 'CampaignApplicationList', id: 'LIST' },
+              { type: 'CreatorCampaign', id: result.campaign.id },
+              'CreatorDealSummary',
+            ]
+          : [
+              { type: 'CampaignApplication', id },
+              { type: 'CampaignApplicationList', id: 'LIST' },
+            ],
     }),
   }),
 });

@@ -1,11 +1,10 @@
-import type { CampaignFile, Deal, DealDraft, DealFile, DealItemStatus, DealPublication } from '../../types';
+import type { CampaignFile, Deal, DealFile, DealItemStatus } from '../../types';
+import type { DealVaultFile } from '../../types/deal';
 import {
   buildCampaignVault,
   buildDealVault,
   toViewerFile,
-  vaultDraftItems,
   vaultFiles,
-  vaultPublishItems,
   vaultRows,
   vaultTotals,
   vaultUrlOf,
@@ -28,7 +27,6 @@ const item = (id: string, key: DealItemStatus) =>
 
 const deal = (overrides: Partial<VaultDeal> = {}): VaultDeal => ({
   items: [item('a', 'verified'), item('b', 'draft_submitted')],
-  briefAttachments: [file('brief-1'), file('brief-2', { kind: 'document', mime: 'application/pdf', name: 'b.pdf' })],
   briefHidden: false,
   shipping: null,
   retentionCases: [],
@@ -36,28 +34,19 @@ const deal = (overrides: Partial<VaultDeal> = {}): VaultDeal => ({
   ...overrides,
 });
 
-const draft = (id: string, itemId: string, round: number, files: DealFile[]): DealDraft => ({
-  id,
-  itemId,
-  round,
-  caption: null,
-  submittedAt: 0,
-  files,
-  review: null,
-});
+const listed = (
+  id: string,
+  source: DealVaultFile['source'],
+  overrides: Partial<DealVaultFile> = {},
+): DealVaultFile => ({ ...file(id), source, itemId: null, round: null, ...overrides });
 
-const publication = (id: string, itemId: string, sequence: number, proofs: DealFile[]): DealPublication => ({
-  id,
-  itemId,
-  sequence,
-  url: null,
-  platform: null,
-  handle: null,
-  handleChecked: true,
-  submittedAt: 0,
-  proofs,
-  review: null,
-});
+const round = (id: string, itemId: string, n: number, overrides: Partial<DealVaultFile> = {}) =>
+  listed(id, 'draft_round', { itemId, round: n, ...overrides });
+
+const brief = [
+  listed('brief-1', 'brief'),
+  listed('brief-2', 'brief', { kind: 'document', mime: 'application/pdf', name: 'b.pdf' }),
+];
 
 const photoName = (n: number) => `photo ${n}`;
 
@@ -69,16 +58,8 @@ describe('toViewerFile', () => {
   });
 });
 
-describe('vault items', () => {
-  it('asks rounds of items past pending and publications of items that reached publishing', () => {
-    const shape = { items: [item('p', 'pending'), item('d', 'revision_requested'), item('v', 'verifying_live')] };
-    expect(vaultDraftItems(shape).map(entry => entry.id)).toEqual(['d', 'v']);
-    expect(vaultPublishItems(shape).map(entry => entry.id)).toEqual(['v']);
-  });
-});
-
 describe('buildDealVault', () => {
-  it('groups brief, rounds by item (newest first), proofs and courier photos in screen order', () => {
+  it('groups brief, rounds by item (newest first), proofs, evidence and courier photos in screen order', () => {
     const vault = buildDealVault(
       {
         deal: deal({
@@ -110,44 +91,49 @@ describe('buildDealVault', () => {
             ],
           },
         }),
-        drafts: [
-          draft('b1', 'b', 1, [file('b1f')]),
-          draft('a1', 'a', 1, [file('a1f')]),
-          draft('a2', 'a', 2, [file('a2f'), file('a2p', { status: 'pending' })]),
-          draft('empty', 'a', 3, []),
+        files: [
+          listed('ev', 'dispute'),
+          round('b1f', 'b', 1),
+          round('a2f', 'a', 2),
+          listed('proof', 'publication', { itemId: 'a' }),
+          round('a2g', 'a', 2),
+          round('a1f', 'a', 1),
+          round('a2p', 'a', 2, { status: 'pending' }),
+          listed('ship-0', 'shipment', { kind: null }),
+          listed('odd', null),
+          ...brief,
         ],
-        publications: [publication('p1', 'a', 1, [file('proof')])],
-        disputes: [],
       },
       'brand',
       photoName,
     );
 
-    expect(vault.sections.map(entry => entry.key)).toEqual(['brief', 'drafts', 'proofs', 'shipping']);
+    expect(vault.sections.map(entry => entry.key)).toEqual(['brief', 'drafts', 'proofs', 'dispute', 'shipping']);
     const rounds = vault.sections[1]?.groups ?? [];
-    expect(rounds.map(entry => entry.id)).toEqual(['draft:a2', 'draft:a1', 'draft:b1']);
-    expect(rounds[0]?.label).toEqual({ type: 'round', item: 'T:a', round: 2, review: null });
-    expect(rounds[0]?.files.map(entry => entry.id)).toEqual(['a2f']);
-    expect(vault.sections[3]?.groups[0]?.files[0]).toMatchObject({ id: 'shipment:s1:0', name: 'photo 1' });
-    expect(vaultFiles(vault)).toHaveLength(7);
+    expect(rounds.map(entry => entry.id)).toEqual(['draft:a:2', 'draft:a:1', 'draft:b:1']);
+    expect(rounds[0]?.label).toEqual({ type: 'round', item: 'T:a', round: 2 });
+    expect(rounds[0]?.files.map(entry => entry.id)).toEqual(['a2f', 'a2g']);
+    expect(vault.sections[2]?.groups[0]?.label).toEqual({ type: 'publication', item: 'T:a' });
+    expect(vault.sections[4]?.groups[0]?.files[0]).toMatchObject({ id: 'shipment:s1:0', name: 'photo 1' });
+    expect(vaultFiles(vault)).toHaveLength(9);
     expect(vault.briefLocked).toBe(false);
   });
 
   it('locks the brief for a creator before funding, and drops empty sections', () => {
     const vault = buildDealVault(
-      { deal: deal({ briefHidden: true, briefAttachments: [] }), drafts: [], publications: [], disputes: [] },
+      { deal: deal({ briefHidden: true }), files: [] },
       'creator',
       photoName,
     );
     expect(vault).toEqual({ sections: [], briefLocked: true });
     expect(
-      buildDealVault({ deal: deal({ briefHidden: true }), drafts: [], publications: [], disputes: [] }, 'brand', photoName)
+      buildDealVault({ deal: deal({ briefHidden: true }), files: brief }, 'brand', photoName)
         .briefLocked,
     ).toBe(false);
   });
 
   it('finds a fresh link by id, null once gone', () => {
-    const vault = buildDealVault({ deal: deal(), drafts: [], publications: [], disputes: [] }, 'brand', photoName);
+    const vault = buildDealVault({ deal: deal(), files: brief }, 'brand', photoName);
     expect(vaultUrlOf(vault, 'brief-1')).toBe('https://files.test/brief-1');
     expect(vaultUrlOf(vault, 'missing')).toBeNull();
   });
@@ -179,10 +165,12 @@ describe('buildCampaignVault', () => {
 describe('vaultRows', () => {
   const vault = buildDealVault(
     {
-      deal: deal({ briefAttachments: [file('b1'), file('gone', { status: 'purged', size: 99 })] }),
-      drafts: [draft('d1', 'a', 1, [file('f1', { size: 4000 })])],
-      publications: [],
-      disputes: [],
+      deal: deal(),
+      files: [
+        listed('b1', 'brief'),
+        listed('gone', 'brief', { status: 'purged', size: 99 }),
+        round('f1', 'a', 1, { size: 4000 }),
+      ],
     },
     'brand',
     photoName,

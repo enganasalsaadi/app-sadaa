@@ -68,6 +68,12 @@ export interface ExploreCreatorDto {
     new: boolean;
   };
   fastest_delivery_days: number | null;
+  /** M4: brand scores on revealed deals; `null` below 3 ratings. */
+  rating?: { average: number; count: number } | null;
+  /** M4: own-fault completion %; `null` below 3 finished deals. */
+  completion?: { rate: number; count: number } | null;
+  /** M4: response badge (`within_hour` | `within_day` | `within_days`), server-localized label; `null` below 3 offers. */
+  response?: { bucket: 'within_hour' | 'within_day' | 'within_days'; label: string } | null;
   price: {
     locked: boolean;
     lock_reason: string | null;
@@ -106,6 +112,8 @@ export interface ExploreFiltersDto {
   categories: ExploreCategoryDto[];
   sort: ExploreOptionDto[];
   delivery_buckets: ExploreOptionDto[];
+  /** M4: `min_rating` chips (4, 4.5). */
+  rating_buckets?: ExploreOptionDto[];
 }
 
 export interface BrandHomeDto {

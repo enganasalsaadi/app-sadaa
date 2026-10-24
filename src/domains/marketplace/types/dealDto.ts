@@ -14,6 +14,12 @@ export interface DealPartyDto {
   avatar_url: string | null;
 }
 
+/** M4: average of revealed scores; `null` below 3 ratings. Comments are never public. */
+export interface PublicRatingDto {
+  average: number;
+  count: number;
+}
+
 export interface DealCreatorPartyDto extends DealPartyDto {
   slug: string | null;
 }
@@ -27,6 +33,27 @@ export interface DealFileDto {
   sha256: string | null;
   status: string;
   url: string | null;
+}
+
+/** One row of `GET deals/{id}/files`: newest first, links freshly signed on every read. */
+export interface DealVaultFileDto {
+  id: string;
+  kind: string | null;
+  name: string;
+  mime: string;
+  size: number;
+  status: string;
+  url: string | null;
+  url_expires_at: string | null;
+  source: string;
+  item_id: string | null;
+  round: number | null;
+  uploaded_by: string;
+  created_at: string;
+}
+
+export interface DealVaultFilesDto {
+  items: DealVaultFileDto[];
 }
 
 /** Creative guidelines (`DealBrief::toArray`); lists drop blanks server-side. */
@@ -240,6 +267,8 @@ export interface DealRetentionCaseDto {
   admin_note: string | null;
   clawback_usd: string | null;
   due_at: string | null;
+  /** Account hold: answer clock paused while a party is suspended. */
+  on_hold?: boolean;
   reported_at: string | null;
   closed_at: string | null;
 }
@@ -257,6 +286,8 @@ export interface DealRatingSideDto {
 export interface DealRatingDto {
   open: boolean;
   due_at: string | null;
+  /** Account hold: window paused while a party is suspended (don't count down). */
+  on_hold?: boolean;
   revealed_at: string | null;
   brand: DealRatingSideDto;
   influencer: DealRatingSideDto;
@@ -287,6 +318,8 @@ export interface DealReturnShipmentDto {
   } | null;
   waived_at: string | null;
   waive_note: string | null;
+  /** Account hold (API 2026-10-23): the creator's account is under review; no reminder or strike until it ends. */
+  on_hold?: boolean;
 }
 
 export interface DealDto {
@@ -298,8 +331,14 @@ export interface DealDto {
   drop?: { drop_at: string; publish_opens_at: string; publish_open: boolean } | null;
   return_shipment?: DealReturnShipmentDto | null;
   status: DealLabeledDto;
+  /**
+   * Account hold (API 2026-10-23): paused while Sada reviews an account. Read-only,
+   * timers stopped; every action answers 409 `deal_party_suspended`. Absent on older servers.
+   */
+  on_hold?: { since: string } | null;
   stage: DealLabeledDto | null;
-  brand: DealPartyDto;
+  /** `rating`: what creators gave this brand; sent to the creator only (null for the brand). */
+  brand: DealPartyDto & { rating?: PublicRatingDto | null };
   creator: DealCreatorPartyDto;
   items: DealItemDto[];
   items_count: number;

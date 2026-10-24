@@ -180,6 +180,23 @@ describe('creatorCampaignsApi', () => {
       expect(listCalls.length).toBeGreaterThan(1);
     });
 
+    it('re-reads the campaign page so Apply goes away, without re-reading the cached application', async () => {
+      const store = makeStore();
+      jest.spyOn(global, 'fetch').mockImplementationOnce(async () => ok(creatorCampaignDto({ id: 'c1' })));
+      await store.dispatch(creatorCampaignsApi.endpoints.getCreatorCampaign.initiate('c1'));
+      const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+        const { pathname } = new URL((input as Request).url);
+        return pathname.endsWith('/withdraw') ? ok(withdrawn()) : ok(creatorCampaignDto({ id: 'c1' }));
+      });
+
+      await store.dispatch(creatorCampaignsApi.endpoints.withdrawCampaignApplication.initiate('p1'));
+      await jest.advanceTimersByTimeAsync(0);
+
+      const paths = spy.mock.calls.map(([input]) => new URL((input as Request).url).pathname);
+      expect(paths.some(path => /\/influencer\/campaigns\/c1$/.test(path))).toBe(true);
+      expect(paths.some(path => /\/campaign-applications\/p1$/.test(path))).toBe(false);
+    });
+
     it('re-reads the lists when the server says it was already decided', async () => {
       const store = makeStore();
       jest.spyOn(global, 'fetch').mockImplementationOnce(async () => page([applicationDto()]));

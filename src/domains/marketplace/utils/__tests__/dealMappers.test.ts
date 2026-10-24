@@ -12,6 +12,7 @@ import type {
   DealRetentionCaseDto,
   DealTimelineRowDto,
   DealUpsellQuoteDto,
+  DealVaultFileDto,
 } from '../../types/dealDto';
 import {
   mapBrandActiveDeal,
@@ -28,6 +29,7 @@ import {
   mapDealRatingEntry,
   mapDealRetentionCase,
   mapDealStrikes,
+  mapDealVaultFile,
   mapDealTimelineRow,
   mapDealUpsellQuote,
   mapDealsPage,
@@ -586,6 +588,46 @@ describe('mapDealFile', () => {
       status: null,
       url: null,
     });
+  });
+});
+
+describe('mapDealVaultFile', () => {
+  const listedDto = (overrides: Partial<DealVaultFileDto> = {}): DealVaultFileDto => ({
+    id: 'f1',
+    kind: 'video',
+    name: 'cut.mp4',
+    mime: 'video/mp4',
+    size: 1024,
+    status: 'ready',
+    url: 'https://files.test/f1',
+    url_expires_at: '2026-10-23T10:00:00Z',
+    source: 'draft_round',
+    item_id: 'i1',
+    round: 2,
+    uploaded_by: 'influencer',
+    created_at: '2026-10-23T09:00:00Z',
+    ...overrides,
+  });
+
+  it('keeps where the file belongs', () => {
+    expect(mapDealVaultFile(listedDto())).toEqual({
+      id: 'f1',
+      kind: 'video',
+      name: 'cut.mp4',
+      mime: 'video/mp4',
+      size: 1024,
+      status: 'ready',
+      url: 'https://files.test/f1',
+      source: 'draft_round',
+      itemId: 'i1',
+      round: 2,
+    });
+  });
+
+  it('nulls an unknown source and a missing kind, and keeps a purged file without a link', () => {
+    expect(
+      mapDealVaultFile(listedDto({ source: 'retention', kind: null, status: 'purged', url: null, url_expires_at: null })),
+    ).toMatchObject({ source: null, kind: null, status: 'purged', url: null });
   });
 });
 

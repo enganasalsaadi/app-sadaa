@@ -5898,12 +5898,8 @@
       },
       "group": {
         "round": "{{item}} · Round {{round}}",
-        "roundReviewed": "{{item}} · Round {{round}} · {{review}}",
-        "roundWaiting": "{{item}} · Round {{round}} · Awaiting review",
-        "publication": "{{item}} · Link {{sequence}}",
-        "dispute": "Dispute {{sequence}}",
         "shipment": "Shipment {{sequence}}",
-        "retention": "{{item}}"
+        "item": "{{item}}"
       },
       "photoName": "Photo {{n}}",
       "caption": "{{section}} · {{group}}",
@@ -5924,6 +5920,7 @@
         "queued": "{{name}}, waiting",
         "failed": "{{name}}, couldn't save. Tap to retry",
         "gone": "File expired",
+        "goneLabel": "{{name}}, file expired",
         "open": "Open {{name}}",
         "selected": "Selected",
         "notSelected": "Not selected"

@@ -200,7 +200,7 @@ describe('brandCampaignsApi', () => {
     const store = makeStore();
 
     const created = await store
-      .dispatch(brandCampaignsApi.endpoints.createCampaign.initiate({ title: 'Ramadan' }))
+      .dispatch(brandCampaignsApi.endpoints.createCampaign.initiate({ body: { title: 'Ramadan' }, idempotencyKey: 'k1' }))
       .unwrap();
     await settle();
 
@@ -208,6 +208,7 @@ describe('brandCampaignsApi', () => {
     const post = spy.mock.calls.map(([input]) => input as Request).find(r => r.method === 'POST');
     expect(new URL(post?.url ?? '').pathname).toMatch(/\/brand\/campaigns$/);
     expect(await post?.clone().json()).toEqual({ title: 'Ramadan' });
+    expect(post?.headers.get('Idempotency-Key')).toBe('k1');
     expect(brandCampaignsApi.endpoints.getCampaign.select('c9')(store.getState()).data?.status.key).toBe('draft');
   });
 
@@ -552,6 +553,37 @@ describe('select applicant', () => {
     expect(
       brandCampaignsApi.endpoints.getCampaignApplicant.select({ id: 'c1', applicationId: 'a1' })(store.getState()).data?.status.key,
     ).toBe('selected');
+  });
+
+  it('re-reads the escrow and the ledger: a covered seat is held at once', async () => {
+    const probes = baseApi.injectEndpoints({
+      endpoints: builder => ({
+        probeEscrow: builder.query<unknown, void>({ query: () => 'probe/escrow', providesTags: ['WalletEscrow'] }),
+        probeLedger: builder.query<unknown, void>({
+          query: () => 'probe/ledger',
+          providesTags: [{ type: 'WalletTransaction', id: 'LIST' }],
+        }),
+      }),
+    });
+    const spy = jest.spyOn(global, 'fetch').mockImplementation(async input => {
+      const request = input as Request;
+      if (request.method === 'POST') return json(201, { success: true, message: 'ok', data: selectDto, meta: {} });
+      return ok({});
+    });
+    const store = makeStore();
+    const escrow = store.dispatch(probes.endpoints.probeEscrow.initiate());
+    const ledger = store.dispatch(probes.endpoints.probeLedger.initiate());
+    await Promise.all([escrow, ledger]);
+    const before = spy.mock.calls.length;
+
+    await store.dispatch(brandCampaignsApi.endpoints.selectCampaignApplicant.initiate(args)).unwrap();
+    await settle();
+
+    const paths = spy.mock.calls.slice(before).map(([input]) => new URL((input as Request).url).pathname);
+    expect(paths.some(path => path.endsWith('/probe/escrow'))).toBe(true);
+    expect(paths.some(path => path.endsWith('/probe/ledger'))).toBe(true);
+    escrow.unsubscribe();
+    ledger.unsubscribe();
   });
 
   it('refetches the card, the table and the campaign after a refusal, and rejects with the status', async () => {

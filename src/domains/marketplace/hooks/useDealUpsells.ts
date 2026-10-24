@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -39,6 +39,12 @@ export const useDealUpsells = (role: DealRole, id: string, deal: Deal | null) =>
   const accept = useDealAction(ref, { idempotent: true });
   const decline = useDealAction(ref);
   const withdraw = useDealAction(ref);
+
+  // A new proposal is a new intent: a key kept from a failed accept of the last one must not carry over.
+  const resetAcceptIntent = accept.resetIntent;
+  useEffect(() => {
+    resetAcceptIntent();
+  }, [pendingId, resetAcceptIntent]);
 
   const [sheet, setSheet] = useState<DealUpsellSheet | null>(null);
   const close = useCallback(() => setSheet(null), []);

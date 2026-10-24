@@ -201,7 +201,8 @@ export interface CreatorCampaignDto {
   accepting_applications: boolean;
   title: string;
   activity_type: DealLabeledDto | null;
-  brand: { name: string; avatar_url: string | null; verified: boolean };
+  /** `rating` (M4): what creators gave this brand; `null` below 3 ratings. */
+  brand: { name: string; avatar_url: string | null; verified: boolean; rating?: { average: number; count: number } | null };
   cover: CampaignFileDto | null;
   pricing: CreatorCampaignPricingDto;
   seats: { total: number; left: number };

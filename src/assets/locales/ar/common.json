@@ -6245,12 +6245,8 @@
       },
       "group": {
         "round": "{{item}} · الجولة {{round}}",
-        "roundReviewed": "{{item}} · الجولة {{round}} · {{review}}",
-        "roundWaiting": "{{item}} · الجولة {{round}} · بانتظار المراجعة",
-        "publication": "{{item}} · الرابط {{sequence}}",
-        "dispute": "النزاع {{sequence}}",
         "shipment": "الشحنة {{sequence}}",
-        "retention": "{{item}}"
+        "item": "{{item}}"
       },
       "photoName": "صورة {{n}}",
       "caption": "{{section}} · {{group}}",
@@ -6275,6 +6271,7 @@
         "queued": "{{name}}، في الانتظار",
         "failed": "{{name}}، تعذّر الحفظ. اضغط لإعادة المحاولة",
         "gone": "انتهت صلاحية الملف",
+        "goneLabel": "{{name}}، انتهت صلاحية الملف",
         "open": "فتح {{name}}",
         "selected": "محدد",
         "notSelected": "غير محدد"

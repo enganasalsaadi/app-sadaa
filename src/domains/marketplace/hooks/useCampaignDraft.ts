@@ -82,7 +82,7 @@ export const useCampaignDraft = (
   const syncer = useMemo(
     () =>
       createCampaignDraftSyncer({
-        create: body => createRef.current(body).unwrap(),
+        create: (body, idempotencyKey) => createRef.current({ body, idempotencyKey }).unwrap(),
         update: (id, body) => updateRef.current({ id, body }).unwrap(),
         onChange: state => {
           syncRef.current = state;

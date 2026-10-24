@@ -3,7 +3,7 @@ import type { ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from 'react-native-reanimated';
 import { Check, Download, Ellipsis, Play, RotateCcw } from 'lucide-react-native';
-import { extensionOf, type DownloadEntry } from '@/core/download';
+import { extensionOf, useDownloadEntry, type DownloadEntry } from '@/core/download';
 import { iconStroke, motion, useStyles, useTheme } from '@/core/theme';
 import { Box, Image, Pressable, ProgressRing, Text, type ViewerFile } from '@/shared/ui';
 
@@ -14,7 +14,6 @@ const PAPER_LINES = 3;
 
 export interface VaultTileProps {
   file: ViewerFile;
-  entry: DownloadEntry | undefined;
   selecting: boolean;
   selected: boolean;
   /** Long-press starts select mode (only where «download all» works). */
@@ -55,7 +54,6 @@ const cornerOf = (entry: DownloadEntry | undefined): CornerState => {
  */
 const VaultTileComponent: React.FC<VaultTileProps> = ({
   file,
-  entry,
   selecting,
   selected,
   selectable,
@@ -66,6 +64,8 @@ const VaultTileComponent: React.FC<VaultTileProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, sizes } = useTheme();
+  // Its own entry only: a «download all» tick re-renders the tile it moves, not the grid.
+  const entry = useDownloadEntry(file.id);
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
 
@@ -114,7 +114,7 @@ const VaultTileComponent: React.FC<VaultTileProps> = ({
           justify="center"
           px="sm"
           accessible
-          accessibilityLabel={`${file.name}، ${t('marketplace.vault.tile.gone')}`}
+          accessibilityLabel={t('marketplace.vault.tile.goneLabel', { name: file.name })}
         >
           <Text variant="caption" color={colors.text.secondary} align="center" numberOfLines={3}>
             {t('marketplace.vault.tile.gone')}

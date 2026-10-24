@@ -3,12 +3,11 @@ import type { ViewerFile } from '@/shared/ui';
 import type { CampaignDetail, CampaignFile } from '../types/campaign';
 import type {
   Deal,
-  DealDisputeDetail,
-  DealDraft,
   DealFile,
-  DealPublication,
   DealRole,
   DealShipmentPhoto,
+  DealVaultFile,
+  DealVaultFileSource,
 } from '../types/deal';
 
 /** The vault's sections, in screen order. A deal fills the first ones, a campaign `cover` + `brief`. */
@@ -27,9 +26,8 @@ export type VaultSectionKey = (typeof VAULT_SECTION)[number];
 /** What a group's heading says; the screen words it (rounds, publications, shipments…). */
 export type VaultGroupLabel =
   | { type: 'none' }
-  | { type: 'round'; item: string; round: number; review: string | null }
-  | { type: 'publication'; item: string; sequence: number }
-  | { type: 'dispute'; sequence: number }
+  | { type: 'round'; item: string; round: number }
+  | { type: 'publication'; item: string }
   | { type: 'shipment'; sequence: number }
   | { type: 'retention'; item: string };
 
@@ -50,19 +48,17 @@ export interface FileVault {
   briefLocked: boolean;
 }
 
-/** Everything a deal's vault reads: the deal plus the per-item rounds and the dispute thread. */
+/**
+ * Everything a deal's vault reads: the file list (brief, rounds, proofs, evidence) and the deal for
+ * the rest (item titles, the creator's brief lock, courier photos, retention screenshots).
+ */
 export interface DealVaultSource {
   deal: Deal;
-  drafts: readonly DealDraft[];
-  publications: readonly DealPublication[];
-  disputes: readonly DealDisputeDetail[];
+  files: readonly DealVaultFile[];
 }
 
 /** The parts of a deal the vault reads. */
-export type VaultDeal = Pick<
-  Deal,
-  'items' | 'briefAttachments' | 'briefHidden' | 'shipping' | 'retentionCases' | 'returnShipment'
->;
+export type VaultDeal = Pick<Deal, 'items' | 'briefHidden' | 'shipping' | 'retentionCases' | 'returnShipment'>;
 
 /** Names a photo that came without one (courier-issue photos): «صورة ٢». */
 export type PhotoName = (position: number) => string;
@@ -106,57 +102,55 @@ const group = (id: string, label: VaultGroupLabel, files: ViewerFile[]): VaultGr
 const section = (key: VaultSectionKey, groups: VaultGroup[]): VaultSection[] =>
   groups.length > 0 ? [{ key, groups }] : [];
 
-/** Items that may have rounds (a pending item has none yet), and those that reached publishing. */
-export const vaultDraftItems = (deal: Pick<Deal, 'items'>) => deal.items.filter(item => item.status.key !== 'pending');
-export const vaultPublishItems = (deal: Pick<Deal, 'items'>) =>
-  deal.items.filter(
-    item =>
-      item.status.key === 'approved_to_publish' ||
-      item.status.key === 'verifying_live' ||
-      item.status.key === 'verified',
-  );
+interface FileRun {
+  key: string;
+  head: DealVaultFile;
+  files: DealVaultFile[];
+}
+
+/** Neighbouring files that share a key (the list is sorted by it), in list order. */
+const runsOf = (files: readonly DealVaultFile[], keyOf: (file: DealVaultFile) => string): FileRun[] =>
+  files.reduce<FileRun[]>((runs, file) => {
+    const key = keyOf(file);
+    const last = runs[runs.length - 1];
+    if (last?.key === key) last.files.push(file);
+    else runs.push({ key, head: file, files: [file] });
+    return runs;
+  }, []);
 
 /** Every file a deal carries, grouped the way the vault shows it. */
 export const buildDealVault = (
-  { deal, drafts, publications, disputes }: Omit<DealVaultSource, 'deal'> & { deal: VaultDeal },
+  { deal, files }: { deal: VaultDeal; files: readonly DealVaultFile[] },
   role: DealRole,
   photoName: PhotoName,
 ): FileVault => {
-  const titleOf = (itemId: string) => deal.items.find(item => item.id === itemId)?.title ?? '';
-  const itemOrder = (itemId: string) => deal.items.findIndex(item => item.id === itemId);
+  const titleOf = (itemId: string | null) => deal.items.find(item => item.id === itemId)?.title ?? '';
+  const itemOrder = (itemId: string | null) => deal.items.findIndex(item => item.id === itemId);
+  // Courier photos stay on the deal read: their ids are the ones the deal page refreshes by.
+  const from = (source: DealVaultFileSource) => files.filter(file => file.source === source);
 
-  const rounds = [...drafts]
-    .sort((a, b) => itemOrder(a.itemId) - itemOrder(b.itemId) || b.round - a.round)
-    .flatMap(draft =>
-      group(
-        `draft:${draft.id}`,
-        {
-          type: 'round',
-          item: titleOf(draft.itemId),
-          round: draft.round,
-          review: draft.review?.decision.label ?? null,
-        },
-        toViewerFiles(draft.files),
-      ),
-    );
-
-  const proofs = [...publications]
-    .sort((a, b) => itemOrder(a.itemId) - itemOrder(b.itemId) || b.sequence - a.sequence)
-    .flatMap(publication =>
-      group(
-        `publication:${publication.id}`,
-        { type: 'publication', item: titleOf(publication.itemId), sequence: publication.sequence },
-        toViewerFiles(publication.proofs),
-      ),
-    );
-
-  const evidence = disputes.flatMap((dispute, index) =>
+  // Per item in deal order, newest round first; the sort is stable, so a round keeps the list's order.
+  const rounds = runsOf(
+    from('draft_round').sort(
+      (a, b) => itemOrder(a.itemId) - itemOrder(b.itemId) || (b.round ?? 0) - (a.round ?? 0),
+    ),
+    file => `${file.itemId ?? ''}:${file.round ?? 0}`,
+  ).flatMap(run =>
     group(
-      `dispute:${dispute.id}`,
-      disputes.length > 1 ? { type: 'dispute', sequence: index + 1 } : { type: 'none' },
-      dispute.entries.flatMap(entry => toViewerFiles(entry.files)),
+      `draft:${run.key}`,
+      { type: 'round', item: titleOf(run.head.itemId), round: run.head.round ?? 0 },
+      toViewerFiles(run.files),
     ),
   );
+
+  const proofs = runsOf(
+    from('publication').sort((a, b) => itemOrder(a.itemId) - itemOrder(b.itemId)),
+    file => file.itemId ?? '',
+  ).flatMap(run =>
+    group(`publication:${run.key}`, { type: 'publication', item: titleOf(run.head.itemId) }, toViewerFiles(run.files)),
+  );
+
+  const evidence = group('dispute', { type: 'none' }, toViewerFiles(from('dispute')));
 
   const shipments = deal.shipping?.shipments ?? [];
   const shipping = shipments.flatMap(shipment =>
@@ -181,7 +175,7 @@ export const buildDealVault = (
 
   return {
     sections: [
-      ...section('brief', group('brief', { type: 'none' }, toViewerFiles(deal.briefAttachments))),
+      ...section('brief', group('brief', { type: 'none' }, toViewerFiles(from('brief')))),
       ...section('drafts', rounds),
       ...section('proofs', proofs),
       ...section('dispute', evidence),

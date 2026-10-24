@@ -16,7 +16,10 @@ export interface ShipCampaignBatchArgs {
   id: string;
   /** 1–20 parcels, distinct deals (the screen sends them in chunks). */
   shipments: CampaignShipmentInput[];
-  /** One per user intent and chunk (rule 06): a retry of the same chunk replays instead of shipping twice. */
+  /**
+   * One per user intent and chunk (rule 06). The server dedups per row instead: a row whose deal's
+   * latest shipment has the same courier + tracking number answers `ok` with that shipment.
+   */
   idempotencyKey: string;
 }
 

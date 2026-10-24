@@ -118,6 +118,12 @@ export interface PublicMediaKit {
   tier: FollowerTierId | null;
   tier_label: string | null;
   is_verified: boolean;
+  /** M4: brand scores on revealed deals; `null` below 3 ratings. */
+  rating?: { average: number; count: number } | null;
+  /** M4: own-fault completion %; `null` below 3 finished deals. */
+  completion?: { rate: number; count: number } | null;
+  /** M4: response badge (`within_hour` | `within_day` | `within_days`), server-localized label; `null` below 3 offers. */
+  response?: { bucket: 'within_hour' | 'within_day' | 'within_days'; label: string } | null;
   niches: string[];
   platforms: MediaKitPlatform[];
   /** Handoff §5 shape; platform cards only for available, non-rejected platforms. */

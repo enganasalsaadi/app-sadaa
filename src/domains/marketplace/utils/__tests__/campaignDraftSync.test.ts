@@ -42,7 +42,8 @@ const blankDraft = (): CampaignDetail =>
   });
 
 const setup = () => {
-  const create = jest.fn<Promise<CampaignDetail>, [CampaignDraftRequest]>(async () => blankDraft());
+  let keys = 0;
+  const create = jest.fn<Promise<CampaignDetail>, [CampaignDraftRequest, string]>(async () => blankDraft());
   const update = jest.fn<Promise<CampaignDetail>, [string, CampaignDraftRequest]>(async () => blankDraft());
   const states: CampaignDraftSyncState[] = [];
   const onCreated = jest.fn();
@@ -52,6 +53,7 @@ const setup = () => {
     onChange: state => states.push(state),
     onCreated,
     delayMs: DELAY,
+    newKey: () => `k${++keys}`,
   });
   return { create, update, states, onCreated, syncer, last: () => states[states.length - 1] };
 };
@@ -66,7 +68,7 @@ describe('draft syncer: creating', () => {
     jest.advanceTimersByTime(DELAY - 1);
     expect(create).not.toHaveBeenCalled();
     await jest.advanceTimersByTimeAsync(1);
-    expect(create).toHaveBeenCalledWith({ title: 'Ramadan' });
+    expect(create).toHaveBeenCalledWith({ title: 'Ramadan' }, 'k1');
     expect(onCreated).toHaveBeenCalledWith('new1');
     expect(update).not.toHaveBeenCalled();
   });
@@ -85,7 +87,7 @@ describe('draft syncer: creating', () => {
     syncer.want(sections({ title: 'Ramadan' }));
     await jest.advanceTimersByTimeAsync(DELAY);
     expect(create).toHaveBeenCalledTimes(1);
-    expect(create).toHaveBeenCalledWith({ title: 'Ramadan' });
+    expect(create).toHaveBeenCalledWith({ title: 'Ramadan' }, 'k1');
   });
 
   it('does not re-send the parts the server already has by default', async () => {
@@ -208,6 +210,34 @@ describe('draft syncer: failures', () => {
     await syncer.flush();
     expect(last()?.failure).toBeNull();
     expect(update).toHaveBeenLastCalledWith('new1', { seats_total: 4 });
+  });
+
+  it('resends a lost create with the same key and title, then sends the newer title as a PUT', async () => {
+    const { create, update, syncer, last } = setup();
+    create.mockRejectedValueOnce({ status: 'FETCH_ERROR', error: 'offline' });
+    syncer.want(sections({ title: 'Ramadan' }));
+    await syncer.flush();
+    expect(last()?.failure?.kind).toBe('network');
+
+    syncer.want(sections({ title: 'Ramadan sale' }));
+    await syncer.flush();
+    expect(create.mock.calls).toEqual([
+      [{ title: 'Ramadan' }, 'k1'],
+      [{ title: 'Ramadan' }, 'k1'],
+    ]);
+    expect(update).toHaveBeenLastCalledWith('new1', { title: 'Ramadan sale' });
+    expect(last()?.failure).toBeNull();
+  });
+
+  it('starts a new key and body after a create the server refused', async () => {
+    const { create, syncer } = setup();
+    create.mockRejectedValueOnce(apiError(422, null, { title: ['taken'] }));
+    syncer.want(sections({ title: 'Ramadan' }));
+    await syncer.flush();
+
+    syncer.want(sections({ title: 'Ramadan sale' }));
+    await syncer.flush();
+    expect(create).toHaveBeenLastCalledWith({ title: 'Ramadan sale' }, 'k2');
   });
 
   it('reports saving and pending around a save', async () => {

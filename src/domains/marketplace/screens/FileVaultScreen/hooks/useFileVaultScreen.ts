@@ -14,7 +14,7 @@ import type { DealsStackParamList } from '@/core/navigation';
 import { useToast } from '@/core/toast';
 import { useFileViewer, type ViewerFile } from '@/shared/ui';
 import { useGetCampaignQuery } from '../../../api/brandCampaignsApi';
-import { useGetDealFilesQuery } from '../../../api/dealFilesApi';
+import { DEAL_FILES_FRESH_SECONDS, useGetDealFilesQuery } from '../../../api/dealFilesApi';
 import { useDealFileRefresh } from '../../../hooks/useDealFileRefresh';
 import type { DealRole } from '../../../types';
 import {
@@ -77,8 +77,16 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
   const { params } = useRoute<RouteProp<DealsStackParamList, 'DealFiles' | 'CampaignFiles'>>();
   const { id } = params;
 
-  const dealQuery = useGetDealFilesQuery({ role, id }, { skip: source !== 'deal' });
-  const campaignQuery = useGetCampaignQuery(id, { skip: source !== 'campaign' });
+  // The deal page keeps an older read alive underneath; its signed links may have run out.
+  const dealQuery = useGetDealFilesQuery(
+    { role, id },
+    { skip: source !== 'deal', refetchOnMountOrArgChange: DEAL_FILES_FRESH_SECONDS },
+  );
+  // Same for the campaign page underneath: its covers and brief files carry signed links too.
+  const campaignQuery = useGetCampaignQuery(id, {
+    skip: source !== 'campaign',
+    refetchOnMountOrArgChange: DEAL_FILES_FRESH_SECONDS,
+  });
   const query = source === 'deal' ? dealQuery : campaignQuery;
   const refreshDealUrl = useDealFileRefresh(role, id);
   const refetchCampaign = campaignQuery.refetch;
@@ -99,25 +107,19 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
         case 'none':
           return null;
         case 'round':
-          if (label.review) return t('marketplace.vault.group.roundReviewed', { ...label, review: label.review });
-          return role === 'brand'
-            ? t('marketplace.vault.group.roundWaiting', label)
-            : t('marketplace.vault.group.round', label);
-        case 'publication':
-          return t('marketplace.vault.group.publication', label);
-        case 'dispute':
-          return t('marketplace.vault.group.dispute', label);
+          return t('marketplace.vault.group.round', label);
         case 'shipment':
           return t('marketplace.vault.group.shipment', label);
+        case 'publication':
         case 'retention':
-          return t('marketplace.vault.group.retention', label);
+          return t('marketplace.vault.group.item', label);
         default: {
           const _exhaustive: never = label;
           return _exhaustive;
         }
       }
     },
-    [role, t],
+    [t],
   );
 
   // Each file carries where it belongs, for the viewer's top bar.
@@ -163,13 +165,18 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
   const viewerFiles = useMemo(() => shownFiles.filter(isSaveable), [shownFiles]);
   const viewer = useFileViewer(viewerFiles);
 
+  // Every openable file whatever the filter: a selection made under one chip survives the next.
+  const saveableFiles = useMemo(
+    () => (vault ? vault.sections.flatMap(entry => entry.groups.flatMap(item => item.files)) : []).filter(isSaveable),
+    [vault],
+  );
+
   const previews = useMemo<VaultDeckPreview[]>(
     () =>
-      (vault ? vault.sections.flatMap(entry => entry.groups.flatMap(item => item.files)) : [])
-        .filter(isSaveable)
+      saveableFiles
         .slice(-DECK_PREVIEWS)
         .map(file => ({ id: file.id, uri: file.kind === 'image' ? file.url : null, kind: file.kind })),
-    [vault],
+    [saveableFiles],
   );
 
   const chips = useMemo(
@@ -245,9 +252,10 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
 
   const denied = useCallback(() => toast.error(t('marketplace.vault.permission')), [t, toast]);
 
+  // Read at tap time, so the callback (and every tile holding it) stays put while a run ticks.
   const saveOne = useCallback(
     (file: ViewerFile) => {
-      const entry = entries[file.id];
+      const entry = downloads.queue.getEntries()[file.id];
       if (entry?.status === 'saved') {
         const opening =
           entry.target === 'shared' ? downloads.share({ file, refreshUrl }) : downloads.openSaved(file);
@@ -266,7 +274,7 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
         })
         .catch(() => undefined);
     },
-    [denied, entries, refreshUrl],
+    [denied, refreshUrl],
   );
 
   const runBatch = useCallback(
@@ -283,7 +291,7 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
   );
 
   const downloadAll = useCallback(() => runBatch(viewerFiles), [runBatch, viewerFiles]);
-  const selectedFiles = useMemo(() => viewerFiles.filter(file => selected.has(file.id)), [selected, viewerFiles]);
+  const selectedFiles = useMemo(() => saveableFiles.filter(file => selected.has(file.id)), [saveableFiles, selected]);
   const downloadSelected = useCallback(() => {
     runBatch(selectedFiles);
     exitSelect();
@@ -324,9 +332,9 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
     const saved = batch.ids.filter(fileId => entries[fileId]?.status === 'saved');
     const fresh = saved.find(fileId => !savedBefore.current.has(fileId));
     savedBefore.current = new Set(saved);
-    const file = fresh ? shownFiles.find(entry => entry.id === fresh) : undefined;
+    const file = fresh ? saveableFiles.find(entry => entry.id === fresh) : undefined;
     if (file) setFlyer({ id: file.id, uri: file.kind === 'image' ? file.url : null, kind: file.kind });
-  }, [batch, entries, shownFiles]);
+  }, [batch, entries, saveableFiles]);
 
   const cancelBatch = useCallback(() => downloads.queue.cancelBatch(), []);
   const dismissBatch = useCallback(() => downloads.queue.clearBatch(), []);
@@ -382,7 +390,6 @@ export const useFileVaultScreen = (source: VaultSource, role: DealRole) => {
     sticky,
     sectionName,
     groupName,
-    entries,
     viewer,
     refreshUrl,
     selecting,

@@ -291,6 +291,17 @@ export interface DealFile {
   url: string | null;
 }
 
+/** Where a listed deal file belongs (`GET deals/{id}/files`). */
+export const DEAL_VAULT_FILE_SOURCE = ['brief', 'draft_round', 'publication', 'dispute', 'shipment'] as const;
+export type DealVaultFileSource = (typeof DEAL_VAULT_FILE_SOURCE)[number];
+
+/** One file of the deal's file list; `round` only on a draft round's files. */
+export interface DealVaultFile extends DealFile {
+  source: DealVaultFileSource | null;
+  itemId: string | null;
+  round: number | null;
+}
+
 export interface DealShipmentPhoto {
   url: string | null;
   mime: string;
