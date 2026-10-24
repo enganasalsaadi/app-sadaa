@@ -175,7 +175,7 @@ strings "$APP/Sadaa" | grep -E "127\.0\.0\.1|getsadaapp|^(development|staging|pr
 - [ ] `versionCode` / Build مرفوع.
 - [ ] Firebase: `google-services.json` و`GoogleService-Info.plist` للمشروع الجديد (`com.getsadaapp`).
 - [ ] `PUBLIC_WEB_HOST` مضبوط إن كانت روابط الـ App Links مفعّلة.
-- [ ] `IOS_APP_STORE_ID` بعد أول إصدار على App Store.
+- [x] رابط App Store: https://apps.apple.com/app/id6825926070 (ثابت في الكود، لا متغير بيئة).
 - [ ] نسخة احتياطية من `release.keystore` وكلمة المرور.
 - [ ] `npx tsc --noEmit && npm run lint && npm test` تمر.
 

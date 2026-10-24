@@ -13,9 +13,6 @@ interface EnvConfig {
   ENABLE_LOGS: boolean;
   ENABLE_MOCK_DATA: boolean;
 
-  /** Numeric App Store id for the force-update link; empty until the app is published. */
-  IOS_APP_STORE_ID: string;
-
   /** Host of the public media kit pages (`https://<host>/c/{slug}`); empty = universal links off. */
   PUBLIC_WEB_HOST: string;
 }
@@ -67,8 +64,6 @@ export const env: EnvConfig = {
 
   ENABLE_LOGS: getBooleanValue('ENABLE_LOGS', true),
   ENABLE_MOCK_DATA: getBooleanValue('ENABLE_MOCK_DATA', false),
-
-  IOS_APP_STORE_ID: getStringValue('IOS_APP_STORE_ID'),
 
   PUBLIC_WEB_HOST: getStringValue('PUBLIC_WEB_HOST').trim().toLowerCase(),
 };

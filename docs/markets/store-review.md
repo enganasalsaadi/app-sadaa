@@ -42,6 +42,8 @@ Reviewers cannot pay with Syrian channels or receive SMS on Syrian numbers. Ever
 
 ## 4. App Store Connect
 
+- **Listing URL:** https://apps.apple.com/app/id6825926070 (App Store id `6825926070`). Used by the in-app force-update button.
+
 ### 4.1 Account and listing
 - [x] Published under the company (organisation) Apple Developer account: required for apps that hold or move money (guideline 5.1.1(ix)).
 - [ ] Seller name and support URL match the company.

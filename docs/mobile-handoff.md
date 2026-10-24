@@ -93,7 +93,7 @@ The TS types are in Appendix §17.9. Replace the proposal's §17.7 types entirel
 
 ## 5. Send these to the backend owner (needed for universal links + the web page's app buttons)
 
-- iOS: Team ID, bundle IDs (prod + dev), App Store ID.
+- iOS: Team ID, bundle IDs (prod + dev), App Store ID `6825926070` (https://apps.apple.com/app/id6825926070).
 - Android: package name, SHA-256 signing fingerprints (debug + release + Play App Signing).
 - The custom URL scheme (used by the web page's "Open in app" button, `scheme://c/{slug}`).
 

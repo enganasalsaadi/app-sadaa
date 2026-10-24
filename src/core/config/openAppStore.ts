@@ -1,9 +1,11 @@
 import { Linking, Platform } from 'react-native';
 import { getBundleId } from 'react-native-device-info';
-import { env } from './env';
 
 /** Public Play Store listing (`com.getsadaapp`). */
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.getsadaapp';
+/** Public App Store listing (id 6825926070). */
+const APP_STORE_ID = '6825926070';
+const APP_STORE_URL = `https://apps.apple.com/app/id${APP_STORE_ID}`;
 
 // URLs are built locally (never from server/user input), so they are safe to open directly (rule 07).
 const storeUrls = (): string[] => {
@@ -12,10 +14,7 @@ const storeUrls = (): string[] => {
     // Web fallback for devices without the Play Store app.
     return [`market://details?id=${id}`, PLAY_STORE_URL];
   }
-  // No id before first release → open the App Store app itself.
-  return env.IOS_APP_STORE_ID
-    ? [`itms-apps://apps.apple.com/app/id${env.IOS_APP_STORE_ID}`, `https://apps.apple.com/app/id${env.IOS_APP_STORE_ID}`]
-    : ['itms-apps://apps.apple.com'];
+  return [`itms-apps://apps.apple.com/app/id${APP_STORE_ID}`, APP_STORE_URL];
 };
 
 /** Opens this app's store page; tries each URL until one succeeds. */
