@@ -112967,7 +112967,7 @@
       "file_type": "code",
       "norm_label": "styles",
       "source_file": "src/shared/ui/BottomSheet/BottomSheet.tsx",
-      "source_location": "L214"
+      "source_location": "L220"
     },
     {
       "id": "src_shared_ui_bottomsheet_index",
@@ -642522,7 +642522,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/shared/ui/BottomSheet/BottomSheet.tsx",
-      "source_location": "L214",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -673247,5 +673247,5 @@
       "source_file": "README.md"
     }
   ],
-  "built_at_commit": "4df0a02d04b891bde37eb02373498e8d80b4b694"
+  "built_at_commit": "216401482fb10a679550e9e1acf62a97f9155a23"
 }

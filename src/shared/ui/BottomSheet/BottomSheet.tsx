@@ -131,6 +131,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   // Android draws the gesture bar over the sheet, so pad a little extra.
   const bottomSpacer =
     insets.bottom + (Platform.OS === 'android' ? spacing.xl : 0);
+  // The footer pads itself. The iOS home indicator needs only part of its inset clear; the Android
+  // inset is the nav bar itself, so it stays whole.
+  const footerSpacer =
+    Platform.OS === 'ios'
+      ? Math.max(insets.bottom - spacing['5xl'], 0)
+      : insets.bottom;
 
   const handle = showHandle ? (
     <Box align="center" pt="md" pb="sm">
@@ -194,7 +200,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 borderColor={colors.border.default}
               >
                 {footer}
-                {insets.bottom > 0 && <Box height={bottomSpacer} />}
+                {footerSpacer > 0 && <Box height={footerSpacer} />}
               </Box>
             ) : (
               insets.bottom > 0 && (

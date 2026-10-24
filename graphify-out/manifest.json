@@ -804,9 +804,9 @@
     "semantic_hash": "d5974abdee0ea05a1d2edc5f7e06aa19"
   },
   "src/shared/ui/BottomSheet/BottomSheet.tsx": {
-    "mtime": 1792063152.3938856,
-    "seen": 1792158021.1927621,
-    "ast_hash": "721267ac6ca2fbf71b12c1569a37b3e1",
+    "mtime": 1792852404.9162378,
+    "seen": 1792852449.531842,
+    "ast_hash": "2cab3f18c25ce83d5194524d3edb42ed",
     "semantic_hash": ""
   },
   "src/shared/ui/BottomSheet/index.ts": {
@@ -12414,8 +12414,8 @@
     "semantic_hash": ""
   },
   "src/shared/ui/SheetFrame/SheetFrame.tsx": {
-    "mtime": 1792329938.3749838,
-    "seen": 1792330147.344217,
+    "mtime": 1792852241.1604042,
+    "seen": 1792852303.836174,
     "ast_hash": "bf1433ea2b868761c118d62d9caf9e32",
     "semantic_hash": ""
   },
